@@ -4,12 +4,9 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 var LotSchema = new Schema({
-  user_Id:String,
+  user_id:String,
   lotNumber:String,
-  primaryImg:String,
-  auction_Id:String,
-  assetId:String,
-  assetDesc:String,
+  auction_id:String,
   startingPrice:Number,
   reservePrice:Number,
   startDate:Date,

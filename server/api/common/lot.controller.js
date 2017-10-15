@@ -12,6 +12,10 @@ exports.create = function(req, res) {
   async.series({ 
     saveLot: function(callback) {
       //console.log("I am here save");
+      if(req.body.hasOwnProperty('auctionId')){
+        req.body.auction_id=req.body.auctionId;
+       delete req.body.auctionId;
+      }
       var model = new Lot(req.body);
       model.save(function(err, st) {
         if (err) return callback(err);
@@ -41,6 +45,10 @@ exports.create = function(req, res) {
 exports.updateLotData = function(req, res) {
   var options={};
   req.body.updatedAt = new Date();
+  if(req.body.hasOwnProperty('auctionId')){
+        req.body.auction_id=req.body.auctionId;
+       delete req.body.auctionId;
+      }
   delete req.body._id;
   Lot.update({
     _id: req.params.id
@@ -61,13 +69,13 @@ exports.updateLotData = function(req, res) {
 
 };
 
-exports.deleteLotMaster = function(req, res) {
-  
-};
-
 exports.updateProductLotData = function(req, res) {
    var options={};
     req.body.updatedAt = new Date();
+    if(req.body.hasOwnProperty('auctionId')){
+        req.body.auction_id=req.body.auctionId;
+       delete req.body.auctionId;
+      }
     Lot.update({
       "_id": req.params.id
     }, {
@@ -86,27 +94,30 @@ exports.updateProductLotData = function(req, res) {
     });
   };
 
+exports.updatelotsisdeleted=function(req,res){
+  Lot.update({},{$set:{"isDeleted":false}},{multi: true})
+  .exec(function(err,result){
+    if(err) return handleError(res,err);
+    return res.status(200).json({message:"updated Successfully"});
+  });
+}
+
+
 exports.getLotData = function(req, res) {
   var filter = {};
   var query={};
+  console.log("req.query",req.query);
   if(req.query.hasOwnProperty('isDeleted'))
     filter.isDeleted=req.query.isDeleted;
-   if(req.query.auction_Id && req.query.distinct){
-  filter.auction_Id=req.query.auction_Id;
+   if(req.query.auctionId){
+  filter.auction_id=req.query.auctionId;
+}
   console.log("the filter",filter);
-query = Lot.find(filter).distinct('lotNumber');
-   }
-else if(req.query){
-  if(req.query.auction_Id)
-  filter.auction_Id=req.query.auction_Id;
-  if(req.query.assetId)
-  filter.assetId=req.query.assetId;
+
  if(req.query.lotNumber)
   filter.lotNumber=req.query.lotNumber;
  
  query = Lot.find(filter);
-
-}
   query.exec(function(err, result) {
     if (err) {
       res.status(err.status || 500).send(err);

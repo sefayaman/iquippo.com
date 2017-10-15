@@ -1060,20 +1060,20 @@
           <div class="col-sm-7 form-group">
                 <select class="form-control" name="auctionDate" ng-model="lot.lotNumber" ng-change="checkForLot(lot.lotNumber,auctionReq.dbAuctionId)">
                   <option value="">Select Lot</option>
-                  <option  ng-repeat="lot in lots" value="{{lot}}">{{lot}}</option>
+                  <option  ng-repeat="lot in lots" value="{{lot._id}}">{{lot.lotNumber}}</option>
                 </select>
                 <i class="caret"></i>
               </div>
         </div>
         <div class="row">
           <div class="form-group col-sm-5">Lot Start Date and End Date</div>
-          <div class="col-sm-3 form-group" ng-class="{'has-error': lot.startDate.$invalid && submitted }">
+          <div class="col-sm-3 form-group">
             <div class="input-group">
               <input class="form-control" id="lotstart" datetime-picker readonly name="startDate" ng-model="lot.startDate" placeholder="Lot Start Date &amp; Time*" date-format="MM/dd/yyyy hh:mm a" disabled />
               <label class="input-group-addon" for="lotstart"><i class="fa fa-calendar"></i></label>
             </div>
           </div>
-          <div class="col-sm-3 form-group" ng-class="{'has-error': lot.endDate.$invalid && submitted }">            
+          <div class="col-sm-3 form-group">            
             <div class="input-group">
               <input class="form-control" id="lotend" datetime-picker readonly name="endDate" ng-model="lot.endDate" placeholder="Lot End Date &amp; Time*" date-format="MM/dd/yyyy hh:mm a" disabled/>
               <label class="input-group-addon" for="lotend"><i class="fa fa-calendar"></i></label>
@@ -1083,7 +1083,7 @@
         
         <div class="row">
          <div class="form-group col-sm-5">Starting Price<span class="text-warning">*</span></div>
-          <div class="form-group col-sm-7" ng-class="{'has-error': form.startPrice.$invalid && submitted}">
+          <div class="form-group col-sm-7">
               <div class="input-group">
                 <span class="input-group-addon">
                  <i class="fa fa-inr"></i>
@@ -1214,7 +1214,7 @@
 
          <div class="row" ng-if="isCustomer()">
           <div class="form-group col-sm-5">Last Minute Bid  <span class="text-warning">*</span></div>
-            <div class="form-group col-sm-7" ng-class="{'has-error': form.lastMintBid.$invalid && submitted}">
+            <div class="form-group col-sm-7">
          
               <input type="text" placeholder="Last Mint Bid" ng-value="lot.lastMintBid" ng-model="lot.lastMintBid" name="lastMintBid" class="form-control">
        
@@ -1223,7 +1223,7 @@
 
         <div class="row" ng-if="isCustomer()">
           <div class="form-group col-sm-5">Extended To<span class="text-warning">*</span></div>
-            <div class="form-group col-sm-7" ng-class="{'has-error': form.extendedTo.$invalid && submitted}">
+            <div class="form-group col-sm-7">
              <input type="text" placeholder="Extended To" ng-value="lot.extendedTo" ng-model="lot.extendedTo" name="extendedTo" class="form-control">
           </div> 
         </div>

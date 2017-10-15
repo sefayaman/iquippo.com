@@ -2,7 +2,7 @@
 'use strict';
 
 angular.module('sreizaoApp').factory("AuctionSvc",AuctionSvc);
-function AuctionSvc($http,$q,notificationSvc,Auth){
+function AuctionSvc($http,$q,notificationSvc,Auth,$httpParamSerializer){
   var auctionId="";
   var svc = {};
   //svc.auctionData = null;
@@ -73,7 +73,12 @@ throw err;
 
     function liveAuctionRoomData(filter) {
       var path = "http://auctionsoftwaremarketplace.com:3007/bidapi/LiveAuctionRoom";
-      return $http.post(path,filter)
+       var queryParam = "";
+            if (filter)
+                queryParam = $httpParamSerializer(filter);
+            if (queryParam)
+                path = path + "?" + queryParam;
+      return $http.get(path,filter)
         .then(function(res) {
           console.log("Api result call",res);
           return res;

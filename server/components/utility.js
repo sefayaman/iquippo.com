@@ -200,16 +200,16 @@ function sendCompiledData(options, cb) {
   console.log("totalData", options);
   //filter._id = emdDataAs.auctionId
   //console.log(options.dataToSend, options.dataType)
-   if(options.dataToSend.__v === 0)
+   if(options.dataToSend.hasOwnProperty('__v'))
     delete options.dataToSend.__v;
  /* if (options.dataToSend.auctionId && options.dataType!=="auctionData"){
     filter._id = options.dataToSend.auctionId;
   }*/
-  if (options.dataToSend.startDate && options.dataToSend.endDate) {
+  if (options.dataToSend.hasOwnProperty('startDate') && options.dataToSend.hasOwnProperty('endDate')) {
     options.dataToSend.startDate = options.dataToSend.startDate.toString();
     options.dataToSend.endDate = options.dataToSend.endDate.toString();
   }
-  if (options.dataToSend && options.dataToSend.updatedAt &&  options.dataToSend.createdAt){
+  if (options.dataToSend.hasOwnProperty('updatedAt') &&  options.dataToSend.hasOwnProperty('createdAt')){
     delete options.dataToSend.updatedAt;
     delete options.dataToSend.createdAt;
   }
@@ -232,18 +232,20 @@ function compileData(options, callback) {
   switch (options.dataType) {
     case "userInfo":
       //dataFormat = "users";
+      console.log("users are here");
       callback(null, options);
       break;
     case "lotData":
       // dataFormat = "lots";
-      if (options.dataToSend.assetDir)
+      if (options.dataToSend.hasOwnProperty('assetDir'))
         delete options.dataToSend.assetDir;
-      if (!options.dataToSend.emdAmount)
-        options.dataToSend.emdAmount = "";
-
        callback(null, options);
       break;
     case "emdData":
+       if(options.dataToSend.auctionId){
+        options.dataToSend.auction_id=options.dataToSend.auctionId;
+      delete options.dataToSend.auctionId;
+    }
       //dataFormat = "emd";
       callback(null, options);
       break;
@@ -252,13 +254,20 @@ function compileData(options, callback) {
       if(isEmpty(options.dataToSend.bidIncrement)){
         delete options.dataToSend.bidIncrement;
       }
-      if(options.dataToSend.bidInfo)
+      if(options.dataToSend.hasOwnProperty('staticIncrement'))
+        delete options.dataToSend.staticIncrement;
+      if(options.dataToSend.hasOwnProperty('rangeIncrement'))
+        delete options.dataToSend.rangeIncrement;
+      if(options.dataToSend.hasOwnProperty('bidInfo'))
         delete options.dataToSend.bidInfo;
-      if (options.dataToSend.auctionOwner && options.dataToSend.auctionOwnerMobile) {
+      if (options.dataToSend.hasOwnProperty('auctionOwner') && options.dataToSend.hasOwnProperty('auctionOwnerMobile')) {
         delete options.dataToSend.auctionOwner;
         delete options.dataToSend.auctionOwnerMobile;
       }
        callback(null, options);
+      break;
+      case "assetData" :
+      callback(null,options);
       break;
   }
 }
@@ -271,7 +280,8 @@ function sendData(options, callback) {
     "userInfo": "users",
     "lotData": "lots",
     "auctionData": "auctions",
-    "emdData": "emd"
+    "emdData": "emd",
+    "assetData":"assets"
   };
   var format = "";
   format = dataFormat[options.dataType];
@@ -283,6 +293,8 @@ function sendData(options, callback) {
     "userInfo": 'registered-user-update',
     "lotData": 'new-lots',
     "auctionData": 'new-auction',
+    "emdData":'emd',
+    "assetData":'assetdata'
   };
 
   var url = 'http://auctionsoftwaremarketplace.com:3007/api_call/' + obj[options.dataType];

@@ -28,7 +28,7 @@
           }         
 
           function getLotData(filter){
-            //console.log("filter",filter);
+            console.log("filter",filter);
             LotSvc.getData(filter)
             .then(function(res){
               //console.log("res",res);
@@ -44,13 +44,14 @@
           }
 
           function onSelectAuction(data) {
+            console.log("datya",data);
             var filter={};
             filter._id  = data;
             console.log("filter",filter);
             AuctionSvc.getAuctionDateData(filter).then(function(res) {
               console.log("items",res);
             vm.auctionName = res.items[0].name;
-            getLotData({auctionId:res.items[0].auctionId,distinct:true});
+            getLotData({auctionId:res.items[0]._id});
             }).catch(function(err){
 
             });

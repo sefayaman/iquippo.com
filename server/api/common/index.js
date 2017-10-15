@@ -164,4 +164,5 @@ router.post('/valuationcancellationfee',auth.hasRole('admin'),valuationCancellat
 router.put('/valuationcancellationfee/:id',auth.hasRole('admin'),valuationCancellationCtrl.validate,valuationCancellationCtrl.update);
 router.delete('/valuationcancellationfee/:id',auth.hasRole('admin'),valuationCancellationCtrl.destroy);
 
+router.get('/updatelots/isdeleted',lotCtrl.updatelotsisdeleted);
 module.exports = router;

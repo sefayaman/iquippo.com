@@ -13,7 +13,7 @@ function PaymentResponseCtrl($scope,Modal,$stateParams,$state,notificationSvc,Pa
  	vm.success = true;
   var dataToSendToAs={};
  	function init(){
- 		
+ 		console.log("getting loaded");
  		var tid = $stateParams.tid;
  		var tidFromCookie = $cookieStore.get("tid");
  		if(!tidFromCookie || tid != tidFromCookie){
@@ -29,7 +29,8 @@ function PaymentResponseCtrl($scope,Modal,$stateParams,$state,notificationSvc,Pa
  				Modal.alert("Invalid payment access");
  			}
  			vm.payTransaction = result[0];
-       if(vm.payTransaction.requestType == "UserRegAuc" && vm.payTransaction.status == "completed")
+      console.log("vm.payTransaction",vm.payTransaction);
+       if(vm.payTransaction.status == "completed")
        {
           dataToSendToAs.user={};
           dataToSendToAs.user={
@@ -41,6 +42,7 @@ function PaymentResponseCtrl($scope,Modal,$stateParams,$state,notificationSvc,Pa
           };
           dataToSendToAs.amountPaid=vm.payTransaction.totalAmount;
           dataToSendToAs.selectedLots=vm.payTransaction.selectedLots;
+          console.log("sendinb----",dataToSendToAs);
           userRegForAuctionSvc.sendUserData(dataToSendToAs)
           .then(function(res){
            return res;

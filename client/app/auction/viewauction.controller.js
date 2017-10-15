@@ -49,8 +49,12 @@
            auctionRegislogin.currentAuction = auction;
             Modal.openDialog('auctionRegislogin',auctionRegislogin);
         }else{
+          console.log("auction",auction);
             var regUserAuctionScope = $rootScope.$new();
             regUserAuctionScope.currentAuction = auction;
+            regUserAuctionScope.params={
+              emdTax: auction.emdTax
+            }
             Modal.openDialog('auctionRegistration', regUserAuctionScope);
         }
       });

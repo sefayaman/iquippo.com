@@ -4,14 +4,22 @@ var _ = require('lodash');
 var Emd = require('./emd.model');
 var ApiError = require('../../components/_error');
 var async = require('async');
+var Util=require('../../components/utility');
 
 exports.create = function(req, res, next) {
-
+  console.log("emdsD",req.body);
+  var options={};
   var model = new Emd(req.body);
   model.save(function(err, st) {
     if (err) {
       return res.status(err.status || 500).send(err);
     }
+    options.dataToSend=st;
+    options.dataType="emdData";
+    Util.sendCompiledData(options,function(err,results){
+      if(err) handleError(res,err);
+      console.log("emds",results);
+    });
     return res.status(200).json({
       message: "Data saved sucessfully"
     });
@@ -170,3 +178,7 @@ exports.destroy = function(req, res, next) {
     });
   });
 };
+
+function handleError(res,err){
+  return res,status(500).json(err);
+}

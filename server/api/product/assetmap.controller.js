@@ -1,0 +1,56 @@
+'use strict';
+
+//var _ = require('lodash');
+//var Lot = require('./lot.model');
+//var AuctionMaster = require('../auction/auctionmaster.model');
+var async= require('async');
+//var ApiError = require('../../components/_error');
+var Util=require('../../components/utility');
+var AssetsInAuction=require('./productlotmap.model');
+
+exports.create=function(req,res){
+	console.log("body Data inactive",req.body);
+	if(req.body.hasOwnProperty('auctionId'))
+		delete req.body.auctionId;
+	if(req.body.hasOwnProperty('lotNumber')){
+		req.body.lot_id=req.body.lotNumber;
+		delete req.body.lotNumber;
+	}
+	var options={};
+	AssetsInAuction.create(req.body,function(err,result){
+		if(err) return handleError(res,err);
+		options.dataToSend=result;
+		options.dataType="assetData";
+		Util.sendCompiledData(options,function(err,results){
+			if(err) return handleError(res,err);
+			console.log("result",results);	
+		});
+		return res.status(200).json({message:"save successfully"});
+	})
+};
+
+exports.update = function(req, res) {
+   console.log("req.body active");
+   var options={};
+    req.body.updatedAt = new Date();
+    if(req.body.hasOwnProperty('auctionId')){
+        req.body.auction_id=req.body.auctionId;
+       delete req.body.auctionId;
+      }
+    AssetsInAuction.update({
+      "_id": req.params.id
+    }, {
+      $set: req.body
+    }, function(err) {
+      if (err) {
+        res.status(err.status || 500).send(err);
+      }
+    options.dataToSend=req.body;
+    options.dataType="lotData";
+      Util.sendCompiledData(options,function(err,result){
+      if(err) return handleError(res,err);
+      console.log(result);
+    });
+      return res.status(200).json(req.body);
+    });
+  };

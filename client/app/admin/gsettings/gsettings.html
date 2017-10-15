@@ -2805,7 +2805,7 @@
 			        	<label>Select Auction Id</label>
 		 		       	<select class="form-control" name="auctionId" ng-model="emdVm.dataModel.auctionId"  ng-change="onSelectAuction(emdVm.dataModel.auctionId)" required> 
 							 <option value=""> Select Auction Id </option> 
-					        <option value="{{product._id}}"  ng-repeat="product in emdVm.auctionListing">{{product.auctionId}}</option>
+					        <option value="{{product._id}}"  ng-repeat="product in emdVm.auctionListing">{{product.name}}</option>
 				       	</select>
 					</div>
 					
@@ -2815,7 +2815,7 @@
 					</div>
                     <div class="col-sm-3" ng-class="{'has-error':emdVm.selectedLots.$invalid && submitted}">
                     <label>Select the lot</label>
-						<select class="form-control" name="selectedLots" id="selectedLots" style="height: 80px;" ng-options="lots as lots for lots in emdVm.dataModel.lotList" ng-model="emdVm.dataModel.selectedLots.lotNumber" multiple>
+						<select class="form-control" name="selectedLots" id="selectedLots" style="height: 80px;" ng-options="lots.lotNumber as lots.lotNumber for lots in emdVm.dataModel.lotList" ng-model="emdVm.dataModel.selectedLots.lotNumber" multiple>
 			           
 					    </select>
 			            
@@ -2824,7 +2824,7 @@
                    </div>
 					<div class="col-sm-3 form-group" ng-class="{'has-error':emdVm.amount.$invalid && submitted}">
 						<label>EMD Amount</label>
-		 		       	<input type="text" class="form-control" name="amount" ng-model="emdVm.dataModel.amount" placeholder="Enter Emd Amount" required>
+		 		       	<input type="text" class="form-control" name="amount" ng-model="emdVm.dataModel.emdAmount" placeholder="Enter Emd Amount" required>
 					</div>
 					<div class="col-sm-2 pull-right">
 				       <button type="button" class="btn btn-block btn-primary"   ng-if="isEdit" ng-click="emdVm.update(emdform)">Update</button>
@@ -2883,7 +2883,7 @@
 		<form class="techInformationForm" name="lotform" novalidate>
 			<div class="row form-group">
 				<div class="col-sm-3" ng-class="{'has-error':lotVm.auctionId.$invalid && submitted}">
-			       	<select class="form-control" name="auctionId" ng-model="lotVm.dataModel.auction_Id"  required> 
+			       	<select class="form-control" name="auctionId" ng-model="lotVm.dataModel.auctionId"  required> 
 						<option value=""> Select Auction  Id </option> 
 						<option value="{{product._id}}"  ng-repeat="product in lotVm.auctionListing">{{product.name}}</option>
 			   		</select>				
@@ -2893,7 +2893,7 @@
 				</div>
 
 				 <div class="col-sm-3" ng-class="{'has-error':lotVm.lotNumber.$invalid && submitted}">
-					<input type="text" class="form-control" name="lotNumber" ng-model="lotVm.dataModel.lotNumber" ng-blur="lotVm.checkForLot(lotVm.dataModel.lotNumber,lotVm.dataModel.auction_Id)" ng-disabled="!lotVm.dataModel.auction_Id" value="{{lotVm.lotNumber}}" placeholder="Enter Lot Number">
+					<input type="text" class="form-control" name="lotNumber" ng-model="lotVm.dataModel.lotNumber" ng-blur="lotVm.checkForLot(lotVm.dataModel.lotNumber,lotVm.dataModel.auctionId)" ng-disabled="!lotVm.dataModel.auctionId" value="{{lotVm.lotNumber}}" placeholder="Enter Lot Number">
 					
 				</div>
 				 <div class="col-sm-3" ng-class="{'has-error':lotVm.assetDesc.$invalid && submitted}">
