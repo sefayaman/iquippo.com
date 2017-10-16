@@ -2,7 +2,7 @@
  'use strict';
  angular.module("product").factory("productSvc",productSvc);
 
- function productSvc($http,$rootScope,$q,Auth){
+ function productSvc($http,$rootScope,$q,Auth,$httpParamSerializer){
       var prdService = {};
       var path = '/api/products';
       
@@ -47,6 +47,7 @@
       prdService.createOrUpdateAuction = createOrUpdateAuction;
       prdService.getProductOnSellerId = getProductOnSellerId;
       prdService.updateAssetMap=updateAssetMap;
+      prdService.getAssetMapData=getAssetMapData
 
        function getFeaturedProduct(id){
           var deferred = $q.defer();
@@ -90,6 +91,24 @@
                             .catch(function(err) {
                                 throw err;
                             });
+         }
+
+         function getAssetMapData(filter){
+          var svcPath = path + "/assetmap/getdata";
+            var queryParam = "";
+            if (filter)
+                queryParam = $httpParamSerializer(filter);
+            if (queryParam)
+                svcPath = svcPath + "?" + queryParam;
+            console.log("path",svcPath);
+            return $http.get(svcPath)
+                .then(function(res) {
+                    return res.data;
+                })
+                .catch(function(err) {
+                    throw err;
+                });
+
          }
 
       function getProductOnId(id,fromServer){
@@ -364,7 +383,7 @@
             })
       }
 
-      function userWiseProductCount(dataToSend){
+     function userWiseProductCount(dataToSend){
          return $http.post(path + "/userwiseproductcount", dataToSend).then(function(res){
           var countObj = {};
           if(res && res.data && res.data.length > 0){

@@ -115,7 +115,7 @@ exports.getLotData = function(req, res) {
   console.log("the filter",filter);
 
  if(req.query.lotNumber)
-  filter.lotNumber=req.query.lotNumber;
+  filter._id=req.query.lotNumber;
  
  query = Lot.find(filter);
   query.exec(function(err, result) {

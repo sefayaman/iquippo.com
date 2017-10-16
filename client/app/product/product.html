@@ -1088,7 +1088,7 @@
                 <span class="input-group-addon">
                  <i class="fa fa-inr"></i>
                 </span>
-                <input type="number"  placeholder="20,000"  name="startingPrice" min="0" ng-value="lot.startingPrice" class="form-control" ng-model="lot.startingPrice" ng-required="!lot.startingPrice">
+                <input type="number"  placeholder="20,000"  name="startingPrice" min="0" ng-value="lot.startingPrice" class="form-control" ng-model="lot.startingPrice" ng-required="!lot.startingPrice" disabled>
               </div>
           </div>
         </div>  
@@ -1147,10 +1147,10 @@
             </div>-->
             <div class="row">
 								<div class="col-xs-6 ">
-									<input type="checkbox" name="staticIncrement" ng-model="lot.staticIncrement" ng-change ="checkBidIncrement(lot.staticIncrement,'static')" value="Static"> Static
+									<input type="checkbox" name="staticIncrement" ng-model="lot.staticIncrement" ng-change ="checkBidIncrement(lot.staticIncrement,'static')" value="Static" disabled> Static
 								</div>
 								<div class="col-xs-6">
-									<input type="checkbox" name="rangeIncrement" ng-model="lot.rangeIncrement" ng-change ="checkBidIncrement(lot.rangeIncrement,'bid')" value="Range"> Bid Range
+									<input type="checkbox" name="rangeIncrement" ng-model="lot.rangeIncrement" ng-change ="checkBidIncrement(lot.rangeIncrement,'bid')" value="Range" disabled> Bid Range
 								</div>
 							</div>
           </div>
@@ -1160,7 +1160,7 @@
               Bid Static Increment
             </div>
             <div class="col-sm-7 form-group">                   
-              <input type="text" class="form-control" ng-model="lot.static_increment" name="" value="" placeholder="Bid Increment">
+              <input type="text" class="form-control" ng-model="lot.static_increment" name="" value="" placeholder="Bid Increment" disabled>
             </div>
           </div>
         <div class="row" ng-if="lot.rangeIncrement == true">
@@ -1170,17 +1170,17 @@
           <div class="col-sm-7">
             <div class="row" ng-repeat="bidinfo in lot.bidInfo">
               <div class="col-sm-3 form-group">
-                <input type="text" class="form-control" name="" ng-model="bidinfo.bidFrom" value="" placeholder="Bid From">
+                <input type="text" class="form-control" name="" ng-model="bidinfo.bidFrom" value="" placeholder="Bid From" disabled>
               </div>
               <div class="col-sm-3 form-group">
-                <input type="text" class="form-control" ng-model="bidinfo.bidTo" name="" value="" placeholder="Bid To">
+                <input type="text" class="form-control" ng-model="bidinfo.bidTo" name="" value="" placeholder="Bid To" disabled>
               </div>
               <div class="col-sm-3 form-group">
-                <input type="text" class="form-control" ng-model="bidinfo.bidIncrement" name="" value="" placeholder="Increment">
+                <input type="text" class="form-control" ng-model="bidinfo.bidIncrement" name="" value="" placeholder="Increment" disabled>
               </div>
               <div class="col-sm-3 form-group ">
-               <button type="button" class="btn btn-default" ng-click="lot.bidInfo.push({})" ng-if="$last">Add More</button>
-							<button type="button" class="btn btn-default" ng-click="lot.bidInfo.splice($index,1)" ng-if="!$last">Delete</button>
+               <button type="button" class="btn btn-default" ng-click="lot.bidInfo.push({})" ng-if="$last" disabled>Add More</button>
+							<button type="button" class="btn btn-default" ng-click="lot.bidInfo.splice($index,1)" ng-if="!$last" disabled>Delete</button>
               </div>
             </div>
           </div>
@@ -1212,19 +1212,19 @@
           </div>
         </div>
 
-         <div class="row" ng-if="isCustomer()">
+         <div class="row">
           <div class="form-group col-sm-5">Last Minute Bid  <span class="text-warning">*</span></div>
             <div class="form-group col-sm-7">
          
-              <input type="text" placeholder="Last Mint Bid" ng-value="lot.lastMintBid" ng-model="lot.lastMintBid" name="lastMintBid" class="form-control">
+              <input type="text" placeholder="Last Mint Bid" ng-value="lot.lastMintBid" ng-model="lot.lastMintBid" name="lastMintBid" class="form-control" disabled>
        
             </div>
          </div>
 
-        <div class="row" ng-if="isCustomer()">
+        <div class="row">
           <div class="form-group col-sm-5">Extended To<span class="text-warning">*</span></div>
             <div class="form-group col-sm-7">
-             <input type="text" placeholder="Extended To" ng-value="lot.extendedTo" ng-model="lot.extendedTo" name="extendedTo" class="form-control">
+             <input type="text" placeholder="Extended To" ng-value="lot.extendedTo" ng-model="lot.extendedTo" name="extendedTo" class="form-control" disabled>
           </div> 
         </div>
         <div class="row">

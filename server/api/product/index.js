@@ -40,7 +40,8 @@ router.get('/script/featured',scriptController.script);
 //v1 version of bulk create product
 router.post('/v1/import',auth.isAuthenticated(),controller.parseImportExcel,controller.validateExcelData,controller.createProductReq);
 router.post('/assetmap',assetCtrl.create);
-router.post('/assetmap/update',assetCtrl.update);
+router.post('/assetmap/update/:id',assetCtrl.update);
+router.get('/assetmap/getdata',assetCtrl.getData);
 router.get('/script/modifyproducttype',scriptController.modifyProductTypeId);
 
 
