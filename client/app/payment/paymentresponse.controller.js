@@ -41,7 +41,9 @@ function PaymentResponseCtrl($scope,Modal,$stateParams,$state,notificationSvc,Pa
             mobile:vm.payTransaction.user.mobile
           };
           dataToSendToAs.amountPaid=vm.payTransaction.totalAmount;
+          dataToSendToAs.auction_id=vm.payTransaction.
           dataToSendToAs.selectedLots=vm.payTransaction.selectedLots;
+
           console.log("sendinb----",dataToSendToAs);
           userRegForAuctionSvc.sendUserData(dataToSendToAs)
           .then(function(res){

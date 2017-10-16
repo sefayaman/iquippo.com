@@ -103,6 +103,7 @@
             console.log("path",svcPath);
             return $http.get(svcPath)
                 .then(function(res) {
+                     console.log("res message",res);
                     return res.data;
                 })
                 .catch(function(err) {

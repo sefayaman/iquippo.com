@@ -31,7 +31,7 @@ exports.create=function(req,res){
 };
 
 exports.update = function(req, res) {
-   console.log("req.body active");
+   console.log("req.body active",req.body);
    delete req.body._id;
    var options={};
     req.body.updatedAt = new Date();
@@ -95,7 +95,7 @@ exports.update = function(req, res) {
         }
     }
     else{
-    return res.status(409).json({message:"No map found"});
+    return res.status(200).json({message:"No map found"});
     }  
   });
 };

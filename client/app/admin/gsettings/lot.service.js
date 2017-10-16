@@ -34,6 +34,7 @@
                 path = path + "?" + queryParam;
             return $http.get(path)
                 .then(function(res) {
+                    console.log("res.data",res.data);
                     return res.data;
                 })
                 .catch(function(err) {

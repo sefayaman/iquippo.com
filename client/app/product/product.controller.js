@@ -334,7 +334,8 @@
 
           if (product.auctionListing) {
             prevAuctionStatus = "request submitted";
-
+          }
+            
             if (product.auction && product.auction._id) {
               var serData = {};
               serData._id = product.auction._id;
@@ -376,14 +377,16 @@
                     productSvc.getAssetMapData(filter)
                       .then(function(res) {
                         console.log("lot data edit", res);
-                        if (!isEmpty(res)) {
+                        if (!isEmpty(res) && !res.message) {
                           //console.log("LOT info",res[0]);
+                          $scope.lot={};
                           $scope.assetMapCreation = false;
                           if (res.lot.hasOwnProperty('lotNumber')) {
                             $scope.lot.lotNumber = res.lot.lotNumber + "";
                             console.log($scope.lot.lotNumber);
                           }
                           if (res.asset._id) {
+                            $scope.assetMapId = "";
                             $scope.assetMapId = res.asset._id;
                           }
 
@@ -396,7 +399,7 @@
                           }
 
                           if (res.lot.hasOwnProperty('startingPrice'))
-                            $scope.lot.startingPrice = res.startingPrice;
+                            $scope.lot.startingPrice = Number(res.lot.startingPrice);
                           if (res.lot.startDate && res.lot.endDate) {
                             $scope.lot.startDate = res.lot.startDate;
                             $scope.lot.endDate = res.lot.endDate;
@@ -422,9 +425,10 @@
                             $scope.lot.bidInfo = [{}];
                           }
                         } else {
-                          //$scope.lotCreation=true;
+                          $scope.assetMapCreation=true;
+                           console.log("creation");
                         }
-
+                        console.log("$scope.lot",$scope.lot);
                       })
                       .catch(function(err) {
                         throw err;
@@ -432,8 +436,6 @@
                   }
                 })
             }
-
-          }
           if (!product.auction)
             product.auction = {};
 
@@ -1032,6 +1034,18 @@
         goToSecondStep();
         return;
       } else {
+
+        if($scope.assetMapId){
+          filter._id=$scope.assetMapId;
+          filter.isDeleted=true;
+          productSvc.updateAssetMap(filter)
+          .then(function(res){
+            console.log("res deletd",res);
+          })
+          .catch(function(err){
+            throw err;
+          })
+        }
         var cb = null;
         if ($scope.valuationReq.valuate)
           cb = postValuationRequest;
@@ -1842,19 +1856,23 @@
         //$scope.lotsaved.auctionId = result.items[0]._id;
         filter.isDeleted = false;
         filter.lotNumber = lotNumber;
-        filter.auctionId = result.items[0]._id;
+        //filter.auctionId = result.items[0]._id;
         console.log("filter for lot", filter);
 
         LotSvc.getData(filter)
           .then(function(res) {
+            console.log("product lot",res);
             if (res.length > 0) {
               if (res[0] && res[0].startDate && res[0].endDate) {
                 //$scope.lotDate = true;
                 $scope.lot.startDate = res[0].startDate;
                 $scope.lot.endDate = res[0].endDate;
               }
+
+              if(res[0]._id)
+                $scope.lot._id=res[0]._id;
               if (res[0] && res[0].startingPrice)
-                $scope.lot.startingPrice = res[0].startingPrice;
+                $scope.lot.startingPrice = Number(res[0].startingPrice);
 
             if (res[0].static_increment) {
               $scope.lot.static_increment = res[0].static_increment;
@@ -1876,6 +1894,7 @@
             } else {
               $scope.lot.bidInfo = [{}];
             }
+            console.log("checked lot",$scope.lot);
           }
              else {
               alert("create lot Data from lot master table");
@@ -1966,8 +1985,8 @@
                 alert("works");
                 $scope.lotsaved.assetId = $scope.product.assetId;
                 $scope.lotsaved.assetDesc = $scope.product.name;
-                $scope.lotsaved.lotNumber = $scope.lot.lotNumber;
-                $scope.lotsaved.lot_id = $scope.lot.lotNumber;
+                //$scope.lotsaved.lotNumber = $scope.lot.lotNumber;
+                $scope.lotsaved.lot_id = $scope.lot._id;
                 $scope.lotsaved.images = $scope.product.images;
                 $scope.lotsaved.seller = $scope.product.seller;
                 //$scope.lotSaved._id = $scope.assetMapId
@@ -2052,7 +2071,7 @@
                 //$scope.lotsaved.assetDir = $scope.product.assetDir;
                 //$scope.lotsaved.userId = Auth.getCurrentUser().customerId;
                 
-                $scope.lotsaved.lot_id = $scope.lot.lotNumber;
+                $scope.lotsaved.lot_id = $scope.lot._id;
                 $scope.lotsaved._id=$scope.assetMapId;
                 console.log("lotSaved", $scope.lotsaved);
                 productSvc.updateAssetMap($scope.lotsaved)
