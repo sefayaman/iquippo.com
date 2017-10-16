@@ -3,6 +3,7 @@
 var _ = require('lodash');
 var crypto = require('crypto');
 var Payment = require('./payment.model');
+var Offline = require('./offline.model');
 var  xlsx = require('xlsx');
 var config = require('./../../config/environment');
 
@@ -35,15 +36,32 @@ exports.create = function(req, res) {
   });
 };
 
+exports.createoffline = function(req, res) {
+  req.body.createdAt = new Date();
+  req.body.updatedAt = new Date();
+  Offline.create(req.body, function(err, payment) {
+        return res.status(201).json(payment);
+  });
+};
+
 //search based on filter
 exports.getOnFilter = function(req, res) {
   var filter = {};
   if(req.body._id)
     filter["_id"] = req.body._id;
-  console.log("filters",filter);
+
 
   if(req.body.userId)
     filter["user._id"] = req.body.userId;
+
+    if(req.body.auction){
+     filter["requestType"] = "Auction Listing";
+
+     console.log("filterscsvdv",filter);
+    }
+
+    console.log("filters",filter);
+
 
   var query = Payment.find(filter);
   query.exec(
