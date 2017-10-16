@@ -85,7 +85,7 @@ function exportUsers(res) {
                 console.log(err);
             } else {
                
-                Utility.uploadFileOnS3(localFilePath, dirName, function(err, val){
+                Utility.uploadMultipartFileOnS3(localFilePath, dirName, function(err, val){
                   if (err) {
                     console.log(err)
                     //return cb(err);
