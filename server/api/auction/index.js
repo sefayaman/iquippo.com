@@ -46,6 +46,6 @@ router.post('/userregforauction/export', auth.hasRole('admin'), userRegForAuctio
 router.post('/upload/excel',controller.bulkUpload);
 
 router.post('/auctionmaster/getauctionwiseproductdata', controller.getAuctionWiseProductData);
-router.get('/updateauctions/isdeleted',controller.updateauctionsisdeleted)
+router.get('/updateauctions/isdeleted',controller.updateauctionsisdeleted);
 
 module.exports = router;
