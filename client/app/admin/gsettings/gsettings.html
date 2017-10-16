@@ -17,6 +17,7 @@
 						<option value="paymnt">Payment Master</option>
 						<option value="manu">Manufacturer</option>
 						<option value="banner">Banner Setting</option>
+						<option value="inputform">Input Form Master</option>
 						<option value="technical">Technical Information</option>
 						<option value="svcfeemaster">Service Fee Master</option>
 						<option value="svctaxmaster">Service Tax Master</option>
@@ -885,7 +886,7 @@
 					</div>
 				</div>
 				<div class="form-group col-sm-2">
-					Express Interest :
+					Express Interest / Input Form:
 					<div class="row">
 						<div class="col-xs-6 col-sm-6">
 							<input type="radio" name="hyperlink" ng-model="gsettingVm.banner.hyperlink" value="Yes"> Yes
@@ -990,6 +991,82 @@
 			</div>
 			
 		</form>
+	</div>
+	<!-- Input Form Master -->
+	<div ng-if="gsettingVm.tabValue == 'inputform'">
+		<form name="" novalidate class="">
+			<h4>Input Form Master Master</h4>
+			<legend></legend>
+			<div class="row">
+				<div class="col-sm-4 form-group">
+					<select class="form-control">
+						<option>Select Category</option>
+					</select>
+				</div>
+				<div class="col-sm-4 form-group">
+					<select class="form-control">
+						<option>Select Brand</option>
+					</select>
+				</div>
+				<div class="col-sm-4 form-group">
+					<select class="form-control">
+						<option>Select Model</option>
+					</select>
+				</div>
+				<!-- <div class="col-sm-3 form-group">
+					<select class="form-control">
+						<option>Select Manufacturer</option>
+					</select>
+				</div> -->
+			</div>
+			<div class="row">
+				<div class="col-sm-3 form-group">
+					<input type="number" class="form-control" name="" value="" placeholder="Tenure">
+				</div>
+				<div class="col-sm-3 form-group">
+					<input type="number" class="form-control" name="" value="" placeholder="Installment">
+				</div>
+				<div class="col-sm-3 form-group">
+					<input type="text" class="form-control" name="" value="" placeholder="Remarks">
+				</div>
+				<div class="col-sm-3 form-group">
+					<button type="button" class="btn btn-default">Delete</button>
+					<button type="button" class="btn btn-default">Add More</button>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-offset-10 col-sm-2">
+					<button type="button" class="btn btn-primary btn-block">Save</button>
+				</div>
+			</div>
+		</form>
+		<legend></legend>
+
+		<div class="table-responsive">
+			<table class="table table-bordered table-striped">
+				<thead>
+					<tr>
+						<th>Category</th>
+						<th>Brand</th>
+						<th>Model</th>						
+						<th>Action</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>						
+						<td></td>
+						<td></td>
+						<td></td>
+						<td>
+							<a href="javascript:void(0);" class="btn btn-primary btn-sm" uib-popover="Edit" popover-trigger="mouseenter">
+								<i class="fa fa-pencil"></i>
+							</a>
+							<a href="javascript:void(0);" class="btn btn-danger btn-sm" uib-popover="Edit" popover-trigger="mouseenter"><i class="fa fa-trash" ></i></a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
 	</div>
 	<!-- Select Technical Information -->
 	<div ng-if="gsettingVm.tabValue == 'technical'">
