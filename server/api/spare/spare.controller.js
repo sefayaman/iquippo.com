@@ -402,7 +402,11 @@ function placeWatermark(req,res,imgPath,cb){
         var imgRef = gm(imgPath);
         imgRef.size(function(err,val){
           if(err){
-            return handleError(res, err);
+            req.images[req.imgCounter].waterMarked = false;
+            req.imgCounter ++;
+            checkAndCopyImage(req,res,cb);
+            return;
+            //return handleError(res, err);
           }
           var ptx = val.width - waterMarkWidth;
           var pty = val.height - waterMarkHeight;
@@ -419,7 +423,11 @@ function placeWatermark(req,res,imgPath,cb){
         })
       }catch(e){
         console.log("exception------",e);
-        return handleError(res, err);
+        req.images[req.imgCounter].waterMarked = false;
+        req.imgCounter ++;
+        checkAndCopyImage(req,res,cb);
+        return;
+        //return handleError(res, err);
       }
 }
 
