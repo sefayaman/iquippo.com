@@ -1,0 +1,59 @@
+<div id="wrapper">
+  <div id="page-wrapper">
+    <div class="container-fluid">
+        <div class="row">
+        <div class="col-sm-6">
+          <h3> Auction Transactions</h3>
+        </div>
+        <div class="col-sm-6 text-right">
+          <h3><button class="btn btn-success btn-md" ng-click="auctionPaymentListingVm.exportExcel()"><i class="fa fa-file-excel-o"></i> Export</button></h3>
+        </div>     
+      </div>
+      <hr>
+      
+      
+     
+        <div class="clearfix form-group"></div>
+        <div class="table-responsive">
+            <table datatable="ng" dt-options="dtOptions" class="table table-bordred table-striped">
+
+              <thead>
+                <th width="40"><input type="checkbox" ng-model="auctionPaymentListingVm.master"> All</th> 
+                <th>Transaction ID</th>                                
+                <th>Category</th>
+                <th>Asset Name</th>
+                <th>Asset Status</th>
+                <th>Location</th>
+                <th>Request Type</th>
+                <th>Request Status</th>
+                <th>Request Date</th>
+                <th>Payment Mode</th>
+                <th width="90">Action</th>
+               
+              </thead>
+              <tbody>
+              <tr ng-repeat="tns in auctionPaymentListingVm.transactions">
+                <td><input type="checkbox" ng-checked="auctionPaymentListingVm.master" ng-click="auctionPaymentListingVm.updateSelection($event,tns._id)"></td>
+                <td>{{tns.transactionId}}</td>
+                <td>{{tns.product.category}}</td>
+                <td>{{tns.product.name}}</td>
+                <td>{{tns.product.status}}</td>
+                <td>{{tns.product.city}}</td>
+                <td>{{tns.requestType}}</td>
+                <td>{{getStatusOnCode(transactionStatuses,tns.status).name}}</td>
+                <td>{{tns.createdAt | date:'MM/dd/yyyy'}}</td>
+                <td>{{tns.paymentMode}}</td>
+                 <td>
+                 <a class="btn btn-primary" ng-if="tns.status != 'completed' && tns.paymentMode == 'online'" href="/payment/{{tns._id}}">Pay Now</a>
+                 <a class="btn btn-primary" ng-if="tns.status != 'completed' && tns.paymentMode != 'online' && isAdmin()" href="/offlinepayment/{{tns._id}}">Add Payment</a>
+                  <!-- <a class="btn btn-info btn-md" href="javascript:void(0);" ng-click="gsettingVm.editState($index)"><i class="fa fa-pencil"></i> </a>
+                  <a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deleteState($index)"><i class="fa fa-trash"></i> </a> -->
+                </td>
+               
+               </tr>
+              </tbody>
+            </table>
+        </div>
+    </div>
+  </div>
+</div>

@@ -15,6 +15,7 @@ function PaymentSvc($http,$q,Auth,notificationSvc){
   svc.export = exportValuation;
   svc.encrypt = encrypt;
   svc.sendNotification = sendNotification;
+  svc.saveoffline = saveoffline;
 
   function getAll(){
         return $http.get(path)
@@ -59,6 +60,17 @@ function PaymentSvc($http,$q,Auth,notificationSvc){
 
     function save(data){
       return $http.post(path,data)
+        .then(function(res){
+          return res.data;
+        })
+        .catch(function(err){
+          throw err
+        })
+    }
+
+    function saveoffline(data){
+      var offpath = "/api/payment/offline";
+      return $http.post(offpath,data)
         .then(function(res){
           return res.data;
         })
