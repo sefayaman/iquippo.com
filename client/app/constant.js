@@ -94,11 +94,6 @@ var Modals = {
   DoUpload:{
     tplUrl:'app/assetsale/doupload.html',
     Ctrl:'DoUploadCtrl as doUploadVm'
-  },
-
-  auctionRegislogin : {
-    tplUrl : "app/auction/auctloginregis.html",
-    Ctrl : 'AuctionRegisCtrl as auctionRegisVm'
   }
 };
 
