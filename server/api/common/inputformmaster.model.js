@@ -9,11 +9,11 @@ var InputFormMasterSchema = new Schema({
 			name:String
 			},
 	brand:{
-			categoryId:{type:Schema.Types.ObjectId,ref:'Category'},
+			brandId:{type:Schema.Types.ObjectId,ref:'Category'},
 			name:String
 			},
 	model:{
-			categoryId:{type:Schema.Types.ObjectId,ref:'Category'},
+			modelId:{type:Schema.Types.ObjectId,ref:'Category'},
 			name:String
 			},
   	additionalInfo:[{}],

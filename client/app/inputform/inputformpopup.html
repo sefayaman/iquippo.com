@@ -21,7 +21,7 @@
       </div>
       <div class="row">
         <div class="col-sm-6 form-group" ng-class="{'has-error':inputFormReqForm.model.$invalid && submitted}">
-          <select class="form-control" name="model" ng-model="inputFormVm.inputFormReqInfo.model" ng-change="inputFormVm.getInputFormData()"required>
+          <select class="form-control" name="model" ng-model="inputFormVm.inputFormReqInfo.model" ng-change="inputFormVm.onModelChange()" required>
             <option value="">*Select Model</option>
             <option value="{{md.name}}" ng-repeat="md in inputFormVm.modelList | orderBy:'name'" ng-if="md.name != 'Other'">{{md.name}}</option>
           </select>
@@ -30,7 +30,7 @@
           <!-- <input type="number" class="form-control" name="tenure" ng-model="inputFormVm.inputFormReqInfo.tenure" placeholder="Tenure" required> -->
           <select class="form-control" name="tenure" ng-model="inputFormVm.inputFormReqInfo.tenure" ng-change="inputFormVm.getInstallmentPerUnit(inputFormVm.inputFormReqInfo.tenure)" required>
             <option value="">*Select Tenure</option>
-            <option value="{{ten.tenure}}" ng-repeat="ten in inputFormVm.masterData | orderBy:'tenure'">{{ten.tenure}}</option>
+            <option value="{{ten.tenure}}" ng-repeat="ten in inputFormVm.inputFormMasterData | orderBy:'tenure'">{{ten.tenure}}</option>
           </select>
         </div>        
       </div>

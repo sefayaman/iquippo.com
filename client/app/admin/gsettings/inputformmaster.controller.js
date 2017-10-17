@@ -20,6 +20,7 @@ function InputFormMasterCtrl($scope,$rootScope,$state,categorySvc, modelSvc, bra
     vm.dataModel.category = {};
     vm.dataModel.brand = {};
     vm.dataModel.model = {};
+    vm.container = {};
     vm.dataModel.additionalInfo = [{}];
     var initFilter = {};
     var filter = {};
@@ -52,8 +53,8 @@ function InputFormMasterCtrl($scope,$rootScope,$state,categorySvc, modelSvc, bra
           vm.dataModel.category = {};
         }
 
-        vm.dataModel.brandId = "";
-        vm.dataModel.modelId = "";
+        vm.container.brandId = "";
+        vm.container.modelId = "";
       }
 
       vm.brandList = [];
@@ -63,7 +64,7 @@ function InputFormMasterCtrl($scope,$rootScope,$state,categorySvc, modelSvc, bra
         return;
       
       filter = {};
-      filter['categoryId'] = categoryId;
+      filter.categoryId = categoryId;
       brandSvc.getBrandOnFilter(filter)
         .then(function(result) {
           vm.brandList = result;
@@ -85,12 +86,12 @@ function InputFormMasterCtrl($scope,$rootScope,$state,categorySvc, modelSvc, bra
           });
           if (brd.length == 0)
             return;
-          vm.dataModel.brand.categoryId = brd[0]._id;
+          vm.dataModel.brand.brandId = brd[0]._id;
           vm.dataModel.brand.name = brd[0].name;
         } else {
           vm.dataModel.brand = {};
         }
-        vm.dataModel.modelId = "";
+        vm.container.modelId = "";
       }
 
       vm.modelList = [];
@@ -98,7 +99,7 @@ function InputFormMasterCtrl($scope,$rootScope,$state,categorySvc, modelSvc, bra
         return;
       
       filter = {};
-      filter['brandId'] = brandId;
+      filter.brandId = brandId;
       modelSvc.getModelOnFilter(filter)
         .then(function(result) {
           vm.modelList = result;
@@ -123,7 +124,7 @@ function InputFormMasterCtrl($scope,$rootScope,$state,categorySvc, modelSvc, bra
       }
       
       if (md) {
-        vm.dataModel.model.categoryId = md._id;
+        vm.dataModel.model.modelId = md._id;
         vm.dataModel.model.name = md.name;
       } else
         vm.dataModel.model = {};
@@ -162,6 +163,7 @@ function InputFormMasterCtrl($scope,$rootScope,$state,categorySvc, modelSvc, bra
         InputFormMasterSvc.save(createData)
         .then(function(){
             vm.dataModel = {};
+            resetValue();
             fireCommand(true);
             Modal.alert('Data saved successfully!');
         })
@@ -172,16 +174,13 @@ function InputFormMasterCtrl($scope,$rootScope,$state,categorySvc, modelSvc, bra
     }
 
     function editClicked(rowData){
-        // vm.dataModel = {};
-        // vm.dataModel._id  = rowData._id;
-        //vm.dataModel.kycType = rowData.kycType;
-        //vm.dataModel.docName = rowData.docName;
+        vm.dataModel = {};
         vm.dataModel = angular.copy(rowData);
-        vm.dataModel.categoryId = rowData.category.categoryId;
+        vm.container.categoryId = rowData.category.categoryId;
         onCategoryChange(rowData.category.categoryId, true);
         onBrandChange(rowData.brand.brandId, true);
-        vm.dataModel.brandId = rowData.brand.brandId;
-        vm.dataModel.modelId = rowData.model.modelId;
+        vm.container.brandId = rowData.brand.brandId;
+        vm.container.modelId = rowData.model.modelId;
         $scope.isEdit = true;
     }
 
@@ -192,7 +191,8 @@ function InputFormMasterCtrl($scope,$rootScope,$state,categorySvc, modelSvc, bra
         }
         InputFormMasterSvc.update(vm.dataModel)
         .then(function(){
-             vm.dataModel = {};
+            vm.dataModel = {};
+            resetValue();
             $scope.isEdit = false;
             fireCommand(true);
             Modal.alert('Data updated successfully!');
@@ -208,6 +208,16 @@ function InputFormMasterCtrl($scope,$rootScope,$state,categorySvc, modelSvc, bra
         if(ret == "yes")
             confirmDestory(id);
         });
+    }
+
+    function resetValue() {
+      vm.container = {};
+      vm.container.categoryId = "";
+      vm.container.brandId = "";
+      vm.container.modelId = "";
+      vm.brandList = [];
+      vm.modelList = [];
+      vm.dataModel.additionalInfo = [{}];
     }
 
     function confirmDestory(id){

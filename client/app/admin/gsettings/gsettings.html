@@ -999,19 +999,19 @@
 			<legend></legend>
 			<div class="row">
 				<div class="col-sm-4 form-group" ng-class="{'has-error':inputFormMaster.category.$invalid && submitted}">
-					<select class="form-control" name="category" ng-model="inputFormMastetVm.dataModel.categoryId" ng-change="inputFormMastetVm.onCategoryChange(inputFormMastetVm.dataModel.categoryId)" required>
+					<select class="form-control" name="category" ng-model="inputFormMastetVm.container.categoryId" ng-change="inputFormMastetVm.onCategoryChange(inputFormMastetVm.container.categoryId)" required>
 						<option value="">*Select Category</option>
 						<option value="{{cat._id}}" ng-repeat="cat in inputFormMastetVm.allCategory | orderBy:'name'" ng-if="cat.name != 'Other'">{{cat.name}}</option>
 					</select>
 				</div>
 				<div class="col-sm-4 form-group" ng-class="{'has-error':inputFormMaster.brand.$invalid && submitted}">
-					<select class="form-control" name="brand" ng-model="inputFormMastetVm.dataModel.brandId" ng-change="inputFormMastetVm.onBrandChange(inputFormMastetVm.dataModel.brandId)" required>
+					<select class="form-control" name="brand" ng-model="inputFormMastetVm.container.brandId" ng-change="inputFormMastetVm.onBrandChange(inputFormMastetVm.container.brandId)" required>
 						<option value="">*Select Brand</option>
 						<option value="{{br._id}}" ng-repeat="br in inputFormMastetVm.brandList | orderBy:'name'" ng-if="br.name != 'Other'">{{br.name}}</option>
 					</select>
 				</div>
 				<div class="col-sm-4 form-group" ng-class="{'has-error':inputFormMaster.model.$invalid && submitted}">
-					<select class="form-control" name="model" ng-model="inputFormMastetVm.dataModel.modelId" ng-change="inputFormMastetVm.onModelChange(inputFormMastetVm.dataModel.modelId)" required>
+					<select class="form-control" name="model" ng-model="inputFormMastetVm.container.modelId" ng-change="inputFormMastetVm.onModelChange(inputFormMastetVm.container.modelId)" required>
 						<option value="">*Select Model</option>
 						<option value="{{md._id}}" ng-repeat="md in inputFormMastetVm.modelList | orderBy:'name'" ng-if="md.name != 'Other'">{{md.name}}</option>
 					</select>
