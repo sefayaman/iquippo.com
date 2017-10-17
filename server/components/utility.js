@@ -312,19 +312,28 @@ function sendCompiledData(options, cb) {
     delete options.dataToSend.updatedAt;
     delete options.dataToSend.createdAt;
   }
-  async.series([function(next) {
+  async.series([function(next){
+fetchAuctionId(options,next);
+  },function(next) {
     compileData(options, next);
   }, function(next) {
     sendData(options, next);
   }], function(err, results) {
     if (err) {
       console.log(err);
-      console.log(results);
+      console.log("Output",results);
       return cb(null, results);
     }
   });
 }
-
+function fetchAuctionId(options,callback){
+  if(options.dataToSend && options.dataToSend.auction_id && options.dataType !=="auctionData")
+    AuctionMaster.find({"_id":options.dataToSend.auction_id},function(err,auctionData){
+       if(err) return callback(err);
+       options.dataToSend.auction_id=auctionData[0].auctionId;
+       return callback(null,options);
+    });
+}
 
 function compileData(options, callback) {
   console.log("options compile", options);
@@ -387,7 +396,7 @@ function sendData(options, callback) {
   format = dataFormat[options.dataType];
   var data = {};
   data[format] = serviceData;
-  //console.log("serviceDatas", data);
+  console.log("serviceDatas", data);
 
   var obj = {
     "userInfo": 'registered-user-update',

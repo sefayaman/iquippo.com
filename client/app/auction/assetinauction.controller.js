@@ -12,7 +12,9 @@
     console.log("userId", Auth.getCurrentUser()._id);
     var aswidgetUrl = "http://auctionsoftwaremarketplace.com:3007/bidwidget/{{lot.auctionId}}/{{lot.id}}/{{userId}}";
     $scope.asWidgetURLSCE = $sce.trustAsResourceUrl(aswidgetUrl);
-    console.log("url", aswidgetUrl);
+     var liveAuctionUrl="http://auctionsoftwaremarketplace.com:3007/liveAuction/"+query.auctionId+"/"+Auth.getCurrentUser()._id;
+    $scope.liveAuctionURLSCE=$sce.trustAsResourceUrl(liveAuctionUrl);
+    console.log("url", $scope.liveAuctionURLSCE);
 
     $scope.auctionType = $location.search().auctionType;
     //$scope.auctionTypeValue = $location.search().auctionTypeValue;

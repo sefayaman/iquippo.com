@@ -341,6 +341,10 @@
             prevAuctionStatus = "request submitted";
           }
             
+            if(product.auction && product.auction.id){
+            product.auction._id=product.auction.id;
+            delete product.auction.id;
+          }
             if (product.auction && product.auction._id) {
               var serData = {};
               serData._id = product.auction._id;
