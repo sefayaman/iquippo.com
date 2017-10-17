@@ -993,24 +993,27 @@
 		</form>
 	</div>
 	<!-- Input Form Master -->
-	<div ng-if="gsettingVm.tabValue == 'inputform'">
-		<form name="" novalidate class="">
+	<div ng-if="gsettingVm.tabValue == 'inputform'" ng-controller="InputFormMasterCtrl as inputFormMastetVm">
+		<form name="inputFormMaster" novalidate class="inputFormMaster">
 			<h4>Input Form Master Master</h4>
 			<legend></legend>
 			<div class="row">
-				<div class="col-sm-4 form-group">
-					<select class="form-control">
-						<option>Select Category</option>
+				<div class="col-sm-4 form-group" ng-class="{'has-error':inputFormMaster.category.$invalid && submitted}">
+					<select class="form-control" name="category" ng-model="inputFormMastetVm.dataModel.categoryId" ng-change="inputFormMastetVm.onCategoryChange(inputFormMastetVm.dataModel.categoryId)" required>
+						<option value="">*Select Category</option>
+						<option value="{{cat._id}}" ng-repeat="cat in inputFormMastetVm.allCategory | orderBy:'name'" ng-if="cat.name != 'Other'">{{cat.name}}</option>
 					</select>
 				</div>
-				<div class="col-sm-4 form-group">
-					<select class="form-control">
-						<option>Select Brand</option>
+				<div class="col-sm-4 form-group" ng-class="{'has-error':inputFormMaster.brand.$invalid && submitted}">
+					<select class="form-control" name="brand" ng-model="inputFormMastetVm.dataModel.brandId" ng-change="inputFormMastetVm.onBrandChange(inputFormMastetVm.dataModel.brandId)" required>
+						<option value="">*Select Brand</option>
+						<option value="{{br._id}}" ng-repeat="br in inputFormMastetVm.brandList | orderBy:'name'" ng-if="br.name != 'Other'">{{br.name}}</option>
 					</select>
 				</div>
-				<div class="col-sm-4 form-group">
-					<select class="form-control">
-						<option>Select Model</option>
+				<div class="col-sm-4 form-group" ng-class="{'has-error':inputFormMaster.model.$invalid && submitted}">
+					<select class="form-control" name="model" ng-model="inputFormMastetVm.dataModel.modelId" ng-change="inputFormMastetVm.onModelChange(inputFormMastetVm.dataModel.modelId)" required>
+						<option value="">*Select Model</option>
+						<option value="{{md._id}}" ng-repeat="md in inputFormMastetVm.modelList | orderBy:'name'" ng-if="md.name != 'Other'">{{md.name}}</option>
 					</select>
 				</div>
 				<!-- <div class="col-sm-3 form-group">
@@ -1019,29 +1022,39 @@
 					</select>
 				</div> -->
 			</div>
-			<div class="row">
+			<div class="row" ng-repeat="addInfo in inputFormMastetVm.dataModel.additionalInfo">
 				<div class="col-sm-3 form-group">
-					<input type="number" class="form-control" name="" value="" placeholder="Tenure">
+					<input type="number" class="form-control" name="tenure" ng-model="addInfo.tenure" placeholder="Tenure">
 				</div>
 				<div class="col-sm-3 form-group">
-					<input type="number" class="form-control" name="" value="" placeholder="Installment">
+					<input type="number" class="form-control" name="tenure" ng-model="addInfo.installment" placeholder="Installment">
 				</div>
 				<div class="col-sm-3 form-group">
-					<input type="text" class="form-control" name="" value="" placeholder="Remarks">
+					<input type="text" class="form-control" name="tenure" ng-model="addInfo.remarks" placeholder="Remarks">
 				</div>
 				<div class="col-sm-3 form-group">
-					<button type="button" class="btn btn-default">Delete</button>
-					<button type="button" class="btn btn-default">Add More</button>
+					<button type="button" class="btn btn-default" ng-click="inputFormMastetVm.dataModel.additionalInfo.splice($index,1)" ng-if="!$last">Delete</button>
+					<button type="button" class="btn btn-default" ng-click="inputFormMastetVm.dataModel.additionalInfo.push({})" ng-if="$last">Add More</button>
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-sm-offset-10 col-sm-2">
-					<button type="button" class="btn btn-primary btn-block">Save</button>
+				<div class="col-sm-offset-10 col-sm-2 form-group">
+					<button type="button" class="btn btn-block btn-primary" ng-if="isEdit" ng-click="inputFormMastetVm.update(inputFormMaster)">Update</button>
+					<button type="button" class="btn btn-primary btn-block" ng-if="!isEdit" ng-click="inputFormMastetVm.save(inputFormMaster)">Save</button>
 				</div>
 			</div>
 		</form>
 		<legend></legend>
-
+		<div class="row">
+			<div class="col-sm-6">
+				Showing : {{inputFormMastetVm.totalItems}} Records
+			</div>
+			<div class="col-sm-offset-3 col-sm-3 text-right">
+				<div class="tablesearch form-group">
+					Search: <input type="text" placeholder="Search..." ng-model="inputFormMastetVm.searchStr" ng-change="inputFormMastetVm.fireCommand(true)" ng-model-options="{debounce:500}">
+				</div>
+			</div>
+		</div>
 		<div class="table-responsive">
 			<table class="table table-bordered table-striped">
 				<thead>
@@ -1053,19 +1066,20 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr>						
-						<td></td>
-						<td></td>
-						<td></td>
+					<tr ng-repeat="inputform in inputFormMastetVm.filteredList">						
+						<td>{{inputform.category.name}}</td>
+						<td>{{inputform.brand.name}}</td>
+						<td>{{inputform.model.name}}</td>
 						<td>
-							<a href="javascript:void(0);" class="btn btn-primary btn-sm" uib-popover="Edit" popover-trigger="mouseenter">
+							<a href="javascript:void(0);" class="btn btn-primary btn-sm" uib-popover="Edit" ng-click="inputFormMastetVm.editClicked(inputform)" popover-trigger="mouseenter">
 								<i class="fa fa-pencil"></i>
 							</a>
-							<a href="javascript:void(0);" class="btn btn-danger btn-sm" uib-popover="Edit" popover-trigger="mouseenter"><i class="fa fa-trash" ></i></a>
+							<a href="javascript:void(0);" class="btn btn-danger btn-sm" uib-popover="Delete" ng-click="inputFormMastetVm.destroy(inputform._id)" popover-trigger="mouseenter"><i class="fa fa-trash" ></i></a>
 						</td>
 					</tr>
 				</tbody>
 			</table>
+			<uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" ng-change="inputFormMastetVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
 		</div>
 	</div>
 	<!-- Select Technical Information -->

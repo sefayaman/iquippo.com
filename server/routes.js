@@ -38,6 +38,7 @@ module.exports = function(app) {
   app.use('/api/spare', require('./api/spare'));
   app.use('/api/messages', require('./api/messages'));  
   app.use('/api/bid', require('./api/bid'));
+  app.use('/api/inputform', require('./api/inputform'));
   app.use('/api/pricetrend', require('./api/pricetrend'));
   app.use('/api/reports',require('./api/reports'));
   app.use('/api/product/information',require('./api/productinfo'));
