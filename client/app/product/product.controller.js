@@ -2007,7 +2007,7 @@
                   });
 
               } else {
-                alert("works");
+                //alert("works");
                 $scope.lotsaved.assetId = $scope.product.assetId;
                 $scope.lotsaved.assetDesc = $scope.product.name;
                 //$scope.lotsaved.lotNumber = $scope.lot.lotNumber;
