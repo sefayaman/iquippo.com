@@ -10,6 +10,7 @@
         svc.saveLot = saveLot;
         svc.getData = getData;
         svc.destroy = destroy;
+        svc.getLotsInAuction=getLotsInAuction;
         svc.update = update;
         svc.updateProductLot =updateProductLot;
 	svc.removeLotData = removeLotData;
@@ -40,6 +41,23 @@
                 .catch(function(err) {
                     throw err;
                 });
+        }
+
+        function getLotsInAuction(filter){
+         var path = svcPath + "/lot/lotsinauction";
+            var queryParam = "";
+            if (filter)
+                queryParam = $httpParamSerializer(filter);
+            if (queryParam)
+                path = path + "?" + queryParam;
+            return $http.get(path)
+                .then(function(res) {
+                    console.log("res.data",res.data);
+                    return res.data;
+                })
+                .catch(function(err) {
+                    throw err;
+                });   
         }
 
         function update(data) {

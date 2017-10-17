@@ -120,6 +120,8 @@ function uploadFileOnS3(localFilePath, dirName, cb) {
 }
 
 function uploadMultipartFileOnS3(localFilePath, dirName, files, cb) {
+  if(!files[0])
+    return;
   var file = files[0];
   var buffer = fs.readFileSync(file.path);
   var startTime = new Date();
@@ -369,6 +371,7 @@ function compileData(options, callback) {
   }
 }
 
+
 function sendData(options, callback) {
   var serviceData = [];
   serviceData.push(options.dataToSend);
@@ -384,7 +387,7 @@ function sendData(options, callback) {
   format = dataFormat[options.dataType];
   var data = {};
   data[format] = serviceData;
-  console.log("serviceDatas", data);
+  //console.log("serviceDatas", data);
 
   var obj = {
     "userInfo": 'registered-user-update',

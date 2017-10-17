@@ -22,7 +22,12 @@
     };
 
     var prevAssetStatus = assetStatuses[0].code;
+    if(Auth.isAdmin()){
     var prevAuctionStatus = auctionStatuses[0].code;
+    }
+    else{
+     var prevAuctionStatus = auctionStatuses[2].code; 
+    }
     $rootScope.isSuccess = false;
     $rootScope.isError = false;
     $scope.assetDir = "";
@@ -1314,10 +1319,20 @@
         $scope.auctionReq.seller.email = productObj.seller.email;
         $scope.auctionReq.seller.mobile = productObj.seller.mobile;
         $scope.auctionReq.seller.countryCode = productObj.seller.countryCode;
-        $scope.auctionReq.status = auctionStatuses[0].code;
+        if(Auth.isAdmin()){
+        $scope.auctionReq.status = auctionStatuses[2].code;
+      }
+      else{
+       $scope.auctionReq.status = auctionStatuses[0].code; 
+      }
         $scope.auctionReq.statuses = [];
         stsObj.createdAt = new Date();
-        stsObj.status = auctionStatuses[0].code;
+        if(Auth.isAdmin()){
+        stsObj.status = auctionStatuses[2].code;
+      }
+      else{
+       stsObj.status = auctionStatuses[0].code; 
+      }
         stsObj.userId = Auth.getCurrentUser()._id;
         $scope.auctionReq.statuses[$scope.auctionReq.statuses.length] = stsObj;
       }
@@ -1339,10 +1354,20 @@
         $scope.auctionReq.seller.email = productObj.seller.email;
         $scope.auctionReq.seller.mobile = productObj.seller.mobile;
         $scope.auctionReq.seller.countryCode = productObj.seller.countryCode;
-        $scope.auctionReq.status = auctionStatuses[0].code;
+         if(Auth.isAdmin()){
+        $scope.auctionReq.status = auctionStatuses[2].code;
+      }
+      else{
+       $scope.auctionReq.status = auctionStatuses[0].code; 
+      }
         $scope.auctionReq.statuses = [];
         stsObj.createdAt = new Date();
-        stsObj.status = auctionStatuses[0].code;
+        if(Auth.isAdmin()){
+        stsObj.status = auctionStatuses[2].code;
+      }
+      else{
+       stsObj.status= auctionStatuses[0].code; 
+      }
         stsObj.userId = Auth.getCurrentUser()._id;
         $scope.auctionReq.statuses[$scope.auctionReq.statuses.length] = stsObj;
 
@@ -1762,13 +1787,13 @@
                 $scope.lotsaved.assetId = $scope.product.assetId;
                 $scope.lotsaved.assetDesc = $scope.product.name;
                // $scope.lotsaved.auctionId = result.items[0]._id;
-                $//scope.lotsaved.lotNumber = $scope.lot.lotNumber;
+              //scope.lotsaved.lotNumber = $scope.lot.lotNumber;
                 ///$scope.lotsaved.assetDir = $scope.product.assetDir;
                 //$scope.lotsaved.userId = Auth.isAdmin().customerId;
                 //$scope.lotsaved.primaryImg = $scope.product.primaryImg;
                 $scope.lotsaved.images = $scope.product.images;
 
-                $scope.lotsaved.lot_id=$scope.lot.lotNumber;
+                $scope.lotsaved.lot_id=$scope.lot._id;
                 productSvc.saveAssetMap($scope.lotsaved)
                   .then(function(result) {});
 

@@ -103,7 +103,7 @@
               
                vm.duplicate.auctionId = vm.dataModel.auctionId
                vm.duplicate.assetId = vm.dataModel.assetId;
-               vm.duplicate.lotNumber = vm.dataModel.lotNumber;
+               vm.duplicate.lot = vm.dataModel.lotNumber;
 		/*if(vm.dataModel.rangeIncrement == true){
                     vm.dataModel.bidInfo.forEach(function(item) {
                         var range = item.bidFrom+"-"+item.bidTo;
@@ -271,8 +271,8 @@
           
           function checkForLot(lotNumber,auctionId){
             var filter={};
-            
-            filter.lotNumber=lotNumber;
+            filter.isDeleted=false;
+            filter.lot=lotNumber;
             filter.auctionId=auctionId;
             if(auctionId && lotNumber){
                 LotSvc.getData(filter)

@@ -157,6 +157,7 @@ router.delete('/lot/:id',auth.hasRole('admin'), lotCtrl.destroy);
 router.post('/lot',lotCtrl.create);
 router.put('/lot/:id', auth.hasRole('admin'),lotCtrl.updateLotData);
 router.put('/lot/updateproductlot/:id', auth.hasRole('admin'),lotCtrl.updateProductLotData);
+router.get('/lot/lotsinauction',lotCtrl.getLotsInAuction);
 //Valuation Cancellation Fee master
 router.get('/valuationcancellationfee',auth.hasRole('admin'),valuationCancellationCtrl.get);
 router.get('/findcancellationfee',valuationCancellationCtrl.getValuationRequest,valuationCancellationCtrl.getCancellationFee);
