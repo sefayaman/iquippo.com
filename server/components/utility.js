@@ -21,6 +21,10 @@ var s3Options = {
   sslEnabled: true
 };
 var dateFormat = require('dateformat');
+var multiparty = require('connect-multiparty'),
+multipartyMiddleware = multiparty();
+AWS.config.update({accessKeyId: config.awsAccessKeyId, secretAccessKey: config.awsSecretAccessKey});
+AWS.config.region = 'ap-south-1';
 
 var awsS3Client = new AWS.S3(s3Options);
 var options = {
@@ -38,13 +42,14 @@ exports.excel_from_data = excel_from_data;
 exports.validateExcelHeader = validateExcelHeader;
 exports.toJSON = toJSON;
 exports.uploadFileS3 = uploadFileS3;
-exports.uploadDirToS3 = uploadDirToS3;
-exports.uploadZipFileToS3 = uploadZipFileToS3;
+//exports.uploadDirToS3 = uploadDirToS3;
+//exports.uploadZipFileToS3 = uploadZipFileToS3;
 exports.downloadFromS3 = downloadFromS3;
 exports.deleteFromS3 = deleteFromS3;
 exports.uploadFileOnS3 = uploadFileOnS3;
 exports.getListObjectS3 = getListObjectS3;
 exports.deleteS3File = deleteS3File;
+exports.uploadMultipartFileOnS3 = uploadMultipartFileOnS3;
 
 Date.prototype.addDays = function(days) {
   this.setDate(this.getDate() + parseInt(days));
@@ -111,8 +116,99 @@ function uploadFileOnS3(localFilePath, dirName, cb) {
     return cb();
   });
 }
+
+function uploadMultipartFileOnS3(localFilePath, dirName, files, cb) {
+  var file = files[0];
+  var buffer = fs.readFileSync(file.path);
+  var startTime = new Date();
+  var partNum = 0;
+  var partSize = 1024 * 1024 * 5; // 5mb chunks except last part
+  var numPartsLeft = Math.ceil(buffer.length / partSize);
+  var maxUploadTries = 3;
+
+  var multipartParams = {
+    Bucket: config.awsBucket,
+    Key: dirName,
+    ContentType: file.mimetype
+  };
+
+  var multipartMap = {
+    Parts: []
+  };
+
+  awsS3Client.createMultipartUpload(multipartParams, function(mpErr, multipart) {
+    if (mpErr) {
+      console.error('Error!', mpErr);
+      return cb(err);
+    }
+    //console.log('Got upload ID', multipart.UploadId);
+    for (var start = 0; start < buffer.length; start += partSize) {
+      partNum++;
+      var end = Math.min(start + partSize, buffer.length);
+      var partParams = {
+        Body: buffer.slice(start, end),
+        Bucket: multipartParams.Bucket,
+        Key: multipartParams.Key,
+        PartNumber: String(partNum),
+        UploadId: multipart.UploadId
+      };
+      
+      uploadPart(awsS3Client, multipart, partParams);
+    }
+  });
+
+  function completeMultipartUpload(awsS3Client, doneParams) {
+    awsS3Client.completeMultipartUpload(doneParams, function(err, data) {
+      if (err) {
+        console.error('An error occurred while completing multipart upload');
+        return cb(err);
+      }
+      var delta = (new Date() - startTime) / 1000;
+      console.log('Completed upload in', delta, 'seconds');
+      console.log('Final upload data:', data);
+      return cb();
+    });
+  }
+
+  function uploadPart(awsS3Client, multipart, partParams, tryNum) {
+    var tryNum = tryNum || 1;
+    awsS3Client.uploadPart(partParams, function(multiErr, mData) {
+      console.log('started');
+      if (multiErr) {
+        console.log('Upload part error:', multiErr);
+
+        if (tryNum < maxUploadTries) {
+          console.log('Retrying upload of part: #', partParams.PartNumber);
+          uploadPart(awsS3Client, multipart, partParams, tryNum + 1);
+        } else {
+          console.log('Failed uploading part: #', partParams.PartNumber);
+        }
+        // return;
+      }
+
+      multipartMap.Parts[this.request.params.PartNumber - 1] = {
+        ETag: mData.ETag,
+        PartNumber: Number(this.request.params.PartNumber)
+      };
+      //console.log('Completed part', this.request.params.PartNumber);
+      //console.log('mData', mData);
+      if (--numPartsLeft > 0) return; // complete only when all parts uploaded
+
+      var doneParams = {
+        Bucket: multipartParams.Bucket,
+        Key: multipartParams.Key,
+        MultipartUpload: multipartMap,
+        UploadId: multipart.UploadId
+      };
+
+      //console.log('Completing upload...');
+      completeMultipartUpload(awsS3Client, doneParams);
+    }).on('httpUploadProgress', function(progress) {  console.log(Math.round(progress.loaded/progress.total*100)+ '% done') });
+  }
+  }
+
 //AA:Upload a directory to S3
-function uploadZipFileToS3(localDirPath, filename, cb) {
+/*function uploadZipFileToS3(localDirPath, filename, cb) {
   fs.readFile(localDirPath, function(err, data) {
     if (err) {
       console.log(err);
@@ -134,7 +230,7 @@ function uploadZipFileToS3(localDirPath, filename, cb) {
       return cb();
     });
   });
-}
+}*/
 
 function downloadFromS3(opts, cb) {
   var params = {
@@ -306,6 +402,8 @@ function sendData(options, callback) {
 }
 
 
+//function uploadDirToS3(localDirPath, cb) {
+//AA:Upload a directory to S3
 function uploadDirToS3(localDirPath, cb) {
   var params = {
     localDir: localDirPath,
@@ -368,6 +466,7 @@ function deleteS3File(fileName) {
         }
     });
 }
+
 
 function convertQVAPLStatus(qvaplStatus){
   

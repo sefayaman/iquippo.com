@@ -175,7 +175,7 @@ function getNotifications() {
     createdAt: {
       $lt: new Date()
     },
-    isSent: false
+    isSent : false
   }).limit(1).exec(function(err, data) {
     if (err) {
       return console.log(err);

@@ -19,6 +19,7 @@ var emdChargeCtrl = require('./emdcharge.controller');
 var apiCtrl=require('./api.controller');	
 var bulkUploadCtrl = require('./uploadrequest/uploadrequest.controller');
 var valuationCancellationCtrl = require('./valuationcancellationfee.controller');
+var inputFormCtrl = require('./inputformmaster.controller');
 var json2xls = require('json2xls');
 var router = express.Router();
 
@@ -163,5 +164,12 @@ router.get('/findcancellationfee',valuationCancellationCtrl.getValuationRequest,
 router.post('/valuationcancellationfee',auth.hasRole('admin'),valuationCancellationCtrl.validate, valuationCancellationCtrl.create);
 router.put('/valuationcancellationfee/:id',auth.hasRole('admin'),valuationCancellationCtrl.validate,valuationCancellationCtrl.update);
 router.delete('/valuationcancellationfee/:id',auth.hasRole('admin'),valuationCancellationCtrl.destroy);
+
+module.exports = router;
+router.get('/inputform',auth.hasRole('admin'), inputFormCtrl.get);
+router.post('/inputform', auth.hasRole('admin'),inputFormCtrl.create);
+router.put('/inputform/:id', auth.hasRole('admin'),inputFormCtrl.update);
+router.delete('/inputform/:id',auth.hasRole('admin'), inputFormCtrl.destroy);
+router.post('/inputform/search',inputFormCtrl.search);
 
 module.exports = router;

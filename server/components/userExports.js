@@ -79,7 +79,7 @@ function exportUsers(res) {
       var localFilePath = config.uploadPath+'user-exports/'+filename;
       if (!fs.existsSync(localDir)){
          fs.mkdirSync(localDir);
-      }
+      }  
      
       fs.writeFile(localFilePath, wbout,"binary",function(err) {
             if (err) {
