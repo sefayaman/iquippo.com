@@ -33,15 +33,14 @@ function InputFormCtrl($scope, $rootScope, Modal, Auth, categorySvc, LocationSvc
 		vm.inputFormReqInfo.bannerInfo._id = $scope.slideInfo._id;
 		vm.inputFormReqInfo.bannerInfo.name = $scope.slideInfo.name;
 		vm.inputFormReqInfo.bannerInfo.code = $scope.slideInfo.code;
-		//vm.inputFormReqInfo.bannerInfo.ticker = $scope.slideInfo.ticker;
 		loadAllCategory();
 	}
 	init();
 
 	function loadAllCategory() {
-        categorySvc.getAllCategory()
-        .then(function(result) {
-            vm.allCategory = result;
+        InputFormMasterSvc.search({})
+        .then(function(result){
+			vm.allCategory = result;
         });
     }
 
@@ -93,13 +92,12 @@ function InputFormCtrl($scope, $rootScope, Modal, Auth, categorySvc, LocationSvc
 
         if (!catName)
             return;
-        brandSvc.getBrandOnFilter({
-            categoryName: catName
+        InputFormMasterSvc.search({
+            category: catName
         })
         .then(function(result) {
             vm.brandList = result;
         });
-
     }
 
     function onBrandChange(brandName, reset) {
@@ -110,8 +108,8 @@ function InputFormCtrl($scope, $rootScope, Modal, Auth, categorySvc, LocationSvc
         }
         if (!brandName)
             return;
-        modelSvc.getModelOnFilter({
-            brandName: brandName
+        InputFormMasterSvc.search({
+            brand: brandName
         })
         .then(function(result) {
             vm.modelList = result;

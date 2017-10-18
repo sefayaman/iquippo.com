@@ -43,24 +43,37 @@ exports.search = function(req, res) {
   var body = req.body;
   var filter = {};
   
-  if (queryParam.category)
-    filter['category.name'] = queryParam.category;
-  if (queryParam.brand)
-    filter['brand.name'] = queryParam.brand;
-  if (queryParam.model)
-    filter['model.name'] = queryParam.model;
-  if (body.status)
-    filter.status = body.status;
-
-  console.log("filter", filter);
+  if (body.category)
+    filter['category.name'] = body.category;
+  if (body.brand)
+    filter['brand.name'] = body.brand;
+  if (body.model)
+    filter['model.name'] = body.model;
+  //console.log("filter", filter);
 
   var query = Model.find(filter);
   query.exec(function(err, result) {
     if (err) {
       return handleError(res, err);
     }
-    console.log("result",result);
-    return res.status(200).json(result);
+    var tempArr = [];
+    var orignalArr = [];
+    var searchVal = "";
+    result.forEach(function(item){
+      if(Object.keys(filter).length === 0)
+        searchVal = item.category.name;
+      else if(body.category)
+        searchVal = item.brand.name;
+      else if(body.brand)
+        searchVal = item.model.name;
+
+      if (tempArr.indexOf(searchVal) === -1) {
+          tempArr.push(searchVal);
+          orignalArr.push(item);
+      }
+    });
+
+    return res.status(200).json(orignalArr);
   });
 };
 
@@ -90,7 +103,6 @@ exports.create = function(req, res, next) {
 };
 
 function _getRecord(data, cb) {
-  console.log("data#####", data);
   var filter = {};
   filter['category.name'] = data.category.name;
   filter['brand.name'] = data.brand.name;
