@@ -1516,7 +1516,8 @@
       var certified = $scope.auctionReq.cerification;
       if (Auth.isAdmin() && !productObj.auction._id && productObj.auctionListing) {
         payObj = {};
-        var pyMaster = PaymentMasterSvc.getPaymentMasterOnSvcCode("Auction");
+        var pyMaster={};
+        pyMaster = PaymentMasterSvc.getPaymentMasterOnSvcCode("Auction");
         payObj.type = "auctionreq";
         payObj.charge = pyMaster.fees || 0;
         paymentTransaction.totalAmount += payObj.charge;
@@ -1547,7 +1548,8 @@
 
       if (!Auth.isAdmin() && !productObj.auction._id && productObj.auctionListing && certified == "No") {
         payObj = {};
-        var pyMaster = PaymentMasterSvc.getPaymentMasterOnSvcCode("Auction");
+        var pyMaster={};
+        pyMaster = PaymentMasterSvc.getPaymentMasterOnSvcCode("Auction");
         payObj.type = "auctionreqData";
         payObj.charge = pyMaster.fees || 0;
         paymentTransaction.totalAmount = payObj.charge;
