@@ -34,6 +34,7 @@ var assetSaleTracker = require('./components/assetsaletracker.js');
 var BulkProductUpload = require('./components/bulkProductUpload.js');
 var utility = require('./components/utility.js');
 var path = require('path');
+var userExportsService = require('./components/userExports.js');
 
 // Connect to database
 mongoose.connect(config.mongo.uri, config.mongo.options);
@@ -426,6 +427,7 @@ server.listen(config.port, config.ip, function() {
   assetSaleTracker.start();
   checkQuickQueryNotificationService.start();
   checkSearchMatchingNotificationService.start();
+  userExportsService.start();
 });
 
 // Expose app

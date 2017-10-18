@@ -131,7 +131,7 @@ function InputFormCtrl($scope, $rootScope, Modal, Auth, categorySvc, LocationSvc
 					var dataToSend = {};
 					angular.copy(res.data, dataToSend);
 					dataToSend.promoname = vm.inputFormReqInfo.bannerInfo.name;
-					dataToSend.referenceNo = res.referenceNo;
+					dataToSend.referenceNo = res.data.referenceNo;
 					if (dataToSend.user.email)
 						data.to = dataToSend.user.email;
 					data.subject = 'No Reply: Input Form Request';

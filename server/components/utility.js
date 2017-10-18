@@ -44,6 +44,10 @@ exports.downloadFromS3 = downloadFromS3;
 exports.deleteFromS3 = deleteFromS3;
 exports.uploadMultipartFileOnS3 = uploadMultipartFileOnS3;
 
+exports.uploadFileOnS3 = uploadFileOnS3;
+exports.getListObjectS3 = getListObjectS3;
+exports.deleteS3File = deleteS3File;
+
 Date.prototype.addDays = function(days) {
   this.setDate(this.getDate() + parseInt(days));
   //this.setMinutes(this.getMinutes() + parseInt(days));
@@ -83,7 +87,32 @@ function uploadFileS3(localFilePath, dirName, cb) {
     return cb();
   });
 }
+function uploadFileOnS3(localFilePath, dirName, cb) {
+  var params = {
+    localFile: localFilePath,
+    s3Params: {
+      Bucket: config.awsBucket,
+      Key: dirName
+    }
+  };
+ 
+  var uploader = client.uploadFile(params);
+  uploader.on('error', function(err) {
+    if (err) {
+      debug(err);
+      return cb(err);
+    }
+  });
+    /*uploader.on('progress', function() {
+    console.log("progress", uploader.progressMd5Amount,
+      uploader.progressAmount, uploader.progressTotal);
+  });*/
 
+  uploader.on('end', function() {
+    //console.log("done uploading");
+    return cb();
+  });
+}
 function uploadMultipartFileOnS3(localFilePath, dirName, files, cb) {
   var file = files[0];
   var buffer = fs.readFileSync(file.path);
@@ -244,7 +273,47 @@ function deleteFromS3(opts, cb) {
   });
 
 }
-
+//s3 listobject
+function getListObjectS3(localDirPath, cb) {
+  var params = {
+  Bucket: config.awsBucket, 
+  Prefix: "downloads/user-export"
+  //MaxKeys: 2
+ };
+    awsS3Client.listObjects(params, function(err, data) {
+      if (err){
+          console.log(err, err.stack); // an error occurred
+      }else{   
+        var oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds
+          data.Contents.forEach(function(entry) {
+          //console.log("entry key",entry.Key);
+          var d = new Date(entry.LastModified);
+          var fileTimeStamp = d.getTime(); 
+          var currentTimeStamp = new Date().getTime();
+          var diffDays = Math.round(Math.abs((currentTimeStamp - fileTimeStamp)/(oneDay)));
+          if(diffDays >1){
+            deleteS3File(entry.Key);
+          }
+        });
+        
+      }
+    });
+}
+// delete s3 file
+function deleteS3File(fileName) {
+    var params = {
+        Bucket: config.awsBucket,
+        Key: fileName
+    };
+    awsS3Client.deleteObject(params, function (err, data) {
+        if (data) {
+            //console.log("File deleted successfully");
+        }
+        else {
+            console.log("Check if you have sufficient permissions : "+err);
+        }
+    });
+}
 
 
 //AA:Upload a directory to S3
