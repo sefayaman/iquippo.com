@@ -221,6 +221,7 @@ function viewData(options, callback) {
     lotObj[x.lotNumber].assetDescription.push(x.assetId);
     lotObj[x.lotNumber].amount=lotInfo[x.lot_id].amount;
     lotObj[x.lotNumber].id=x.lot_id;
+    if(x.primaryImg !== "")
     lotObj[x.lotNumber].primaryImg=x.primaryImg;
     console.log("object of me",x.primaryImg);
   });

@@ -364,10 +364,9 @@
                     auctionexpiredata._id = $scope.auctionReq.dbAuctionId;
 
 
-                  AuctionSvc.getAuctionExpire(auctionexpiredata).then(function(result) {
+                  AuctionSvc.getAuctionExpire(auctionexpiredata).then(function(results) {
                     $scope.date = new Date();
-                    if (result != "") {
-
+                    if (results != "") {
                       $scope.auctionReq.auctionexpire = "expire";
                       $scope.auctionReq.auctionname = result[0].name;
                       $scope.isExpire = true;
@@ -2038,8 +2037,8 @@
                  $scope.lotsaved.bidIncrement = $scope.bidIncrementObj;
                  console.log("lotSaved",$scope.lotsaved);*/
                 productSvc.saveAssetMap($scope.lotsaved)
-                  .then(function(result) {
-                    //console.log("result",result);
+                  .then(function(resData) {
+                  console.log("resData",resData);
                   });
 
 
@@ -2078,7 +2077,7 @@
                 $scope.lotsaved.bidIncrement = $scope.bidIncrementObj;
                 console.log("lotSaved", $scope.lotsaved);
                 productSvc.updateAssetMap($scope.lotsaved)
-                  .then(function(result) {
+                  .then(function(resData) {
                     //console.log("lot update",result);
                   });
 
@@ -2103,14 +2102,14 @@
                   $scope.lotsaved._id = $scope.assetMapId;
                   console.log("lotSaved", $scope.lotsaved);
                   productSvc.updateAssetMap($scope.lotsaved)
-                    .then(function(result) {
+                    .then(function(resultData) {
                       //console.log("update lot admin",result);
                     });
                 } else {
                   $scope.lotsaved._id = $scope.assetMapId;
                   $scope.isDeleted = true;
                   productSvc.updateAssetMap($scope.lotsaved)
-                    .then(function(result) {
+                    .then(function(results) {
 
                     });
                 }
