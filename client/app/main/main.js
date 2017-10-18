@@ -317,6 +317,13 @@ angular.module('sreizaoApp')
         authenticate:true,
         layout:'admin'
       })
+      .state('inputform', {
+        url: '/inputform',
+        templateUrl: 'app/inputform/inputformrequests.html',
+        controller: 'InputFormListingCtrl as inputformListingVm',
+        authenticate:true,
+        layout:'admin'
+      })
       .state('reports', {
         url: '/reports',
         templateUrl: 'app/admin/reports/reports.html',
