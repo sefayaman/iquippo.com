@@ -173,7 +173,7 @@ function InputFormListingCtrl($scope, $rootScope, Modal, Auth, PagerSvc, InputFo
 		        initFilter.pagination = true;
 		        angular.copy(initFilter, filter);
 				if (!Auth.isAdmin())
-					filter.mobile = Auth.getCurrentUser()._id;
+					filter.userId = Auth.getCurrentUser()._id;
 
 				// dataToSend.pagination = true;
 				// dataToSend.itemsPerPage = vm.itemsPerPage;

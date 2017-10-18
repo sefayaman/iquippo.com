@@ -22,7 +22,9 @@ exports.get = function(req, res) {
     filter.brand = queryParam.brand;
   if (queryParam.model)
     filter.model = queryParam.model;
-  
+  if (queryParam.userId)
+    filter['user.userData'] = queryParam.userId;
+
   if (queryParam.pagination) {
     Utility.paginatedResult(req, res, InputFormReq, filter, {});
     return;
