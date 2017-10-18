@@ -341,10 +341,10 @@
             prevAuctionStatus = "request submitted";
           }
             
-            if(product.auction && product.auction.id){
+            /*if(product.auction && product.auction.id){
             product.auction._id=product.auction.id;
             delete product.auction.id;
-          }
+          }*/
             if (product.auction && product.auction._id) {
               var serData = {};
               serData._id = product.auction._id;
@@ -1794,7 +1794,7 @@
               //scope.lotsaved.lotNumber = $scope.lot.lotNumber;
                 ///$scope.lotsaved.assetDir = $scope.product.assetDir;
                 //$scope.lotsaved.userId = Auth.isAdmin().customerId;
-                //$scope.lotsaved.primaryImg = $scope.product.primaryImg;
+                $scope.lotsaved.primaryImg = $rootScope.uploadImagePrefix + $scope.product.assetId + "/" + $scope.product.primaryImg;
                 $scope.lotsaved.images = $scope.product.images;
 
                 $scope.lotsaved.lot_id=$scope.lot._id;
@@ -2017,9 +2017,13 @@
                 //$scope.lotsaved.lotNumber = $scope.lot.lotNumber;
                 $scope.lotsaved.lot_id = $scope.lot._id;
                 $scope.lotsaved.images = $scope.product.images;
+                $scope.lotsaved.images.forEach(function(x){
+                  x.src=$rootScope.uploadImagePrefix+$scope.product.assetId+"/"+x.src;
+                })
+                console.log("images",$scope.lotsaved.images);
                 $scope.lotsaved.seller = $scope.product.seller;
                 //$scope.lotSaved._id = $scope.assetMapId
-                  //$scope.lotsaved.primaryImg=$scope.product.primaryImg;
+                $scope.lotsaved.primaryImg=$rootScope.uploadImagePrefix+$scope.product.assetId+"/"+$scope.product.primaryImg;
                   //$scope.lotsaved.primaryImg = $rootScope.uploadImagePrefix+$scope.product.assetId+"/"+$scope.product.primaryImg;
                   //$scope.lotsaved.assetDir=$scope.product.assetDir;
                   //$scope.lotsaved.userId = Auth.getCurrentUser().customerId;
@@ -2096,7 +2100,12 @@
                 //$scope.lotsaved.auctionId = result.items[0]._id;
                 //$scope.lotsaved.lotNumber = $scope.lot.lotNumber;
                 //$scope.lotsaved.primaryImg=$scope.product.primaryImg;
+                $scope.lotsaved.primaryImg = $rootScope.uploadImagePrefix + $scope.product.assetId + "/" + $scope.product.primaryImg;
                 $scope.lotsaved.images= $scope.product.images;
+                $scope.lotsaved.images.forEach(function(x){
+                  x.src=$rootScope.uploadImagePrefix+$scope.product.assetId+"/"+x.src;
+                })
+                console.log("images",$scope.lotsaved.images);
                 //$scope.lotsaved.assetDir = $scope.product.assetDir;
                 //$scope.lotsaved.userId = Auth.getCurrentUser().customerId;
                 

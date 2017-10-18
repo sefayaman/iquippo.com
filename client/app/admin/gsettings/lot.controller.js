@@ -228,7 +228,7 @@
             filter.isDeleted=false;
               LotSvc.getData(filter)
               .then(function(result){
-
+              console.log("result lotData",result);
               vm.LotData = result;
               vm.filteredList = result;
               //console.log(vm.LotData);

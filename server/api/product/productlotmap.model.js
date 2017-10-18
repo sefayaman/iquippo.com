@@ -8,6 +8,7 @@ var AssetsInAuctionSchema = new Schema({
   assetId:String,
   auction_id:String,
   assetDesc:String,
+  primaryImg:String,
   images:[],
   seller:{},
   lot_id:String,

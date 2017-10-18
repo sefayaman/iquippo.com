@@ -196,7 +196,7 @@ function uploadMultipartFileOnS3(localFilePath, dirName, files, cb) {
       };
       //console.log('Completed part', this.request.params.PartNumber);
       //console.log('mData', mData);
-      if (--numPartsLeft > 0) return; // complete only when all parts uploaded
+      if (numPartsLeft > 0) return; // complete only when all parts uploaded
 
       var doneParams = {
         Bucket: multipartParams.Bucket,
@@ -312,9 +312,11 @@ function sendCompiledData(options, cb) {
     delete options.dataToSend.updatedAt;
     delete options.dataToSend.createdAt;
   }
+  console.log("I am here");
   async.series([function(next){
 fetchAuctionId(options,next);
-  },function(next) {
+},function(next) {
+    console.log("compiling ----");
     compileData(options, next);
   }, function(next) {
     sendData(options, next);
@@ -327,15 +329,22 @@ fetchAuctionId(options,next);
   });
 }
 function fetchAuctionId(options,callback){
-  if(options.dataToSend && options.dataToSend.auction_id && options.dataType !=="auctionData")
+  console.log("I am in first");
+  if(options.dataToSend && options.dataToSend.auction_id && options.dataType !== 'auctionData'){
     AuctionMaster.find({"_id":options.dataToSend.auction_id},function(err,auctionData){
        if(err) return callback(err);
        options.dataToSend.auction_id=auctionData[0].auctionId;
        return callback(null,options);
     });
+  }
+  else
+  {
+    return callback(null,options);
+  }
 }
 
 function compileData(options, callback) {
+  console.log("I am in first");
   console.log("options compile", options);
   switch (options.dataType) {
     case "userInfo":

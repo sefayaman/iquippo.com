@@ -298,6 +298,7 @@
              obj.assetDesc=res[key].assetDescription;
              obj.amount=res[key].amount;
              obj.id=res[key].id;
+             obj.primaryImg=res[key].primaryImg;
              obj.url="http://auctionsoftwaremarketplace.com:3007/bidwidget/" + query.auctionId + "/" + obj.id + "/" + $scope.userId;
              console.log("object",obj);
              vm.lotListing.push(obj);

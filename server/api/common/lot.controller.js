@@ -133,7 +133,7 @@ exports.getLotData = function(req, res) {
     if (err) {
       res.status(err.status || 500).send(err);
     }
-    console.log("lot result", result);
+    //console.log("lot result", result);
     return res.status(200).json(result);
   });
 };
@@ -141,7 +141,7 @@ exports.getLotData = function(req, res) {
 exports.getLotsInAuction = function(req, res) {
   var options = {};
   var filter = {};
-  console.log("req.query", req.query);
+  //console.log("req.query", req.query);
   filter.isDeleted = false;
   filter.auction_id = req.query._id;
   async.series([
@@ -157,7 +157,7 @@ exports.getLotsInAuction = function(req, res) {
   ], function(err, results) {
     if (err) return handleError(res, err);
     if(results && results.length && results[2]){
-      console.log("The data", results[2]);
+      //console.log("The data", results[2]);
       return res.status(200).json(results[2]);
     }
     
@@ -170,17 +170,17 @@ function fetchLots(filter, options, callback) {
   Lot.find(filter, function(err, result) {
     if (err) callback(err);
     if (result.length > 0) {
-      console.log("lots", result);
+      //console.log("lots", result);
       options.lotData = result;
       result.forEach(function(x){
         lotInfo[x._id] = {}; 
         lotInfo[x._id].lotNumber = x.lotNumber;
         lotInfo[x._id].amount = x.startingPrice;
       })
-      console.log("info",lotInfo);
+      //console.log("info",lotInfo);
       return callback(null, options);
     } else {
-      return callback(new Error('No Lots present in the auction '));
+      return callback(null,{msg:'No Lots present in the auction '});
     }
   });
 }
@@ -194,11 +194,11 @@ function fetchAssetsInLot(options, callback) {
   AssetsInAuction.find({
     lot_id: {
       '$in': lotsIdArray
-    }
+    },isDeleted:false
   }, function(err, results) {
     if (err) callback(err);
     options.assetData = results;
-    console.log("assets",results);
+    //console.log("assets",results);
     return callback(null, options);
   });
 }
@@ -221,6 +221,8 @@ function viewData(options, callback) {
     lotObj[x.lotNumber].assetDescription.push(x.assetId);
     lotObj[x.lotNumber].amount=lotInfo[x.lot_id].amount;
     lotObj[x.lotNumber].id=x.lot_id;
+    lotObj[x.lotNumber].primaryImg=x.primaryImg;
+    console.log("object of me",x.primaryImg);
   });
   
   return callback(null, lotObj);
