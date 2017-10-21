@@ -6,7 +6,7 @@ var ApiError = require('../../components/_error');
 var async = require('async');
 var Util=require('../../components/utility');
 
-exports.create = function(req, res, next) {
+exports.create = function(req, res) {
   console.log("emdsD",req.body);
   var options={};
   var model = new Emd(req.body);

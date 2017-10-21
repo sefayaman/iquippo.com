@@ -12,13 +12,13 @@
           $scope.onSelectAuction = onSelectAuction; 
           vm.EmdData = [];
           vm.filteredList = [];
-           vm.filteredduplicate = null;
+          vm.filteredduplicate = null;
           vm.editClicked = editClicked;
           $scope.isEdit = false;
           vm.update = update;
           vm.destroy = destroy;
           vm.searchFn = searchFn;
-          vm.dataModel.lotList=[];
+          $scope.lotList=[];
         
           function init(){
               getAuctions();
@@ -32,7 +32,7 @@
             LotSvc.getData(filter)
             .then(function(res){
               //console.log("res",res);
-            vm.dataModel.lotList=res;
+            $scope.lotList=res;
             //console.log("list",vm.lotList);          
             });
           }
@@ -60,6 +60,7 @@
 
           function editClicked(rowData){
 
+            console.log("row data",rowData);
             getAuctions();
             vm.dataModel = {};
             vm.dataModel._id  = rowData._id;
@@ -94,11 +95,13 @@
                        vm.dataModel={};
                        return;
                    }else{
+                      console.log("what is this",vm.dataModel);
                        EmdSvc.saveEmd(vm.dataModel).then(function(){
                         vm.dataModel = {};
                         getEmdData();
                         Modal.alert('Data saved successfully!');
-                        vm.dataModel={};  
+                        vm.dataModel={};
+                        $scope.lotList=[];  
                         })
                     .catch(function(err){
                        if(err.data)
@@ -168,16 +171,19 @@
               vm.EmdData = result;
               result.forEach(function(x){
                 console.log("I am X",x);
-                filter._id=x.auctionId;
+                filter._id=x.auction_id;
                 AuctionMasterSvc.get(filter)
                 .then(function(res){
                   console.log("auctions",res);
+                  x.auctionName=res[0].name;
                   x.auctionId=res[0].auctionId;
-                  x.lots=x.selectedLots.toString();
-                })
+                  if(x.selectedLots && x.selectedLots[0].lotNumber.length > 0){
+                  x.lots=x.selectedLots[0].lotNumber.toString();
+                }
+                });
               });
               vm.filteredList = result;
-              console.log(vm.EmdData);
+              console.log("result after alteration",vm.EmdData);
               })
               .catch(function(res){
               });
