@@ -143,9 +143,12 @@
     }
 
     function fetchLot(filter) {
+      console.log("filter for lots",filter);
       LotSvc.getData(filter)
         .then(function(res) {
-          return $scope.lots = res;
+          $scope.lots = res;
+          console.log("fetched",res);
+          return;   
         })
         .catch(function(err) {
           if (err) throw err;
@@ -378,7 +381,7 @@
                   });
 
                   console.log("auctiondata", $scope.auctionReq);
-                  //onAuctionSelection({auctionId:$scope.auctionReq._id});
+                  onAuctionSelection($scope.auctionReq.dbAuctionId);
                   console.log("filter", filter);
                   filter.isDeleted = false;
                   productSvc.getAssetMapData(filter)
@@ -388,9 +391,9 @@
                         //console.log("LOT info",res[0]);
                         $scope.lot = {};
                         $scope.assetMapCreation = false;
-                        if (res.lot.hasOwnProperty('lotNumber')) {
-                          $scope.lot.lotNumber = res.lot.lotNumber + "";
-                          console.log($scope.lot.lotNumber);
+                        if (res.lot.hasOwnProperty('_id')) {
+                          $scope.lot.lot_id = res.lot._id;
+                          console.log($scope.lot.lot_id);
                         }
                         if (res.asset._id) {
                           $scope.assetMapId = "";
@@ -1765,7 +1768,7 @@
                 $scope.lotsaved.assetId = $scope.product.assetId;
                 $scope.lotsaved.assetDesc = $scope.product.name;
                 $scope.lotsaved.auctionId = result.items[0]._id;
-                $scope.lotsaved.lotNumber = $scope.lot.lotNumber;
+                $scope.lotsaved.lotNumber = $scope.lot.lot_id;
                 $scope.lotsaved.assetDir = $scope.product.assetDir;
                 $scope.lotsaved.primaryImg = $rootScope.uploadImagePrefix + $scope.product.assetId + "/" + $scope.product.primaryImg;
                 $scope.lotsaved.userId = Auth.getCurrentUser().customerId;
@@ -1882,7 +1885,7 @@
         console.log("what result", result);
         //$scope.lotsaved.auctionId = result.items[0]._id;
         filter.isDeleted = false;
-        filter.lotNumber = lotNumber;
+        filter._id = lotNumber;
         //filter.auctionId = result.items[0]._id;
         console.log("filter for lot", filter);
 
@@ -1890,6 +1893,7 @@
           .then(function(res) {
             console.log("product lot", res);
             if (res.length > 0) {
+              $scope.lot.lot_id=lotNumber;
               if (res[0] && res[0].startDate && res[0].endDate) {
                 //$scope.lotDate = true;
                 $scope.lot.startDate = res[0].startDate;
@@ -1983,7 +1987,7 @@
                 $scope.lotsaved.assetId = $scope.product.assetId;
                 $scope.lotsaved.assetDesc = $scope.product.name;
                 $scope.lotsaved.auctionId = result.items[0]._id;
-                $scope.lotsaved.lotNumber = $scope.lot.lotNumber;
+                $scope.lotsaved.lotNumber = $scope.lot.lot_id;
                 // $scope.lotsaved.primaryImg=$scope.product.primaryImg;
                 $scope.lotsaved.primaryImg = $rootScope.uploadImagePrefix + $scope.product.assetId + "/" + $scope.product.primaryImg;
                 $scope.lotsaved.assetDir = $scope.product.assetDir;
@@ -2059,7 +2063,7 @@
                 $scope.lotsaved.assetId = $scope.product.assetId;
                 $scope.lotsaved.assetDesc = $scope.product.name;
                 $scope.lotsaved.auctionId = result.items[0]._id;
-                $scope.lotsaved.lotNumber = $scope.lot.lotNumber;
+                $scope.lotsaved.lotNumber = $scope.lot.lot_id;
                 //$scope.lotsaved.primaryImg=$scope.product.primaryImg;
                 $scope.lotsaved.primaryImg = $rootScope.uploadImagePrefix + $scope.product.assetId + "/" + $scope.product.primaryImg;
                 $scope.lotsaved.assetDir = $scope.product.assetDir;

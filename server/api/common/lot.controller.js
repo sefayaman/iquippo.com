@@ -122,8 +122,8 @@ exports.getLotData = function(req, res) {
   if (req.query.auctionId) {
     filter.auction_id = req.query.auctionId;
   }
-  if (req.query.lotNumber)
-    filter._id = req.query.lotNumber;
+  if (req.query._id)
+    filter._id = req.query._id;
   if(req.query.lot)
     filter.lotNumber=req.query.lot;
 
