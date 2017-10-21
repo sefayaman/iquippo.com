@@ -30,8 +30,13 @@ exports.create = function(req, res) {
 };
 
 exports.updateEmdData = function(req, res) {
-
+  var options={};
   req.body.updatedAt = new Date();
+  if(req.body._id)
+  delete req.body._id;
+ 
+   if(req.body.auctionName)
+    delete req.body.auctionName;
   Emd.update({
     _id: req.params.id
   }, {
@@ -40,6 +45,12 @@ exports.updateEmdData = function(req, res) {
     if (err) {
       res.status(err.status || 500).send(err);
     }
+    options.dataToSend=req.body;
+    options.dataType="emdData";
+    Util.sendCompiledData(options,function(err,results){
+      if(err) handleError(res,err);
+    console.log("sent Data",results);
+    });
     return res.status(200).json(req.body);
   });
 
@@ -57,6 +68,7 @@ exports.getEmdData = function(req, res) {
       $in: req.body.selectedLots.lotNumber
     }
   }
+  filter.isDeleted=false;
   console.log("filter for checking EmdData", filter);
   var query = Emd.find(filter);
   query.exec(function(err, result) {
@@ -110,6 +122,7 @@ exports.getEmdAmountData = function(req, res, callback) {
 }
 
 function fetchEmdAmount(filter,res,callback){
+filter.isDeleted=false;
 var query = Emd.find(filter);
   query.exec(function(err, result) {
     if (err) {
@@ -132,6 +145,7 @@ function calculateEmdAmount(lots,filter,callback){
       filter["selectedLots.lotNumber"] = [];
       filter["selectedLots.lotNumber"].push(item);
       console.log("item", filter);
+      filter.isDeleted=false;
       Emd.find(filter, function(err, result) {
         if (result.length > 0) {
           emdamount.push(result[0].amount);
@@ -160,23 +174,26 @@ function arraySum(array) {
   return total;
 };
 
-exports.destroy = function(req, res, next) {
-  Emd.findById(req.params.id, function(err, oneRow) {
+exports.destroy = function(req, res) {
+  var options={};
+  Emd.update({'_id':req.params.id},{$set:{'isDeleted':true}}, function(err, data) {
     if (err) {
       res.status(err.status || 500).send(err);
     }
-    if (!oneRow) {
-      return next(new ApiError(404, "Not found"));
-    }
-    oneRow.remove(function(err) {
-      if (err) {
-        res.status(err.status || 500).send(err);
-      }
-      return res.status(204).send({
+    options.dataToSend={};
+    options.dataToSend={
+      '_id':req.params.id,
+      'isDeleted':true
+    };
+    options.dataType="emdData";
+    Util.sendCompiledData(options,function(err,results){
+     if(err) handleError(res,err);
+     console.log("deleted",results);
+    });
+      return res.status(200).send({
         message: "Data Successfully deleted!!!"
       });
     });
-  });
 };
 
 function handleError(res,err){

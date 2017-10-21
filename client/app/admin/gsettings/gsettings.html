@@ -2989,10 +2989,10 @@
 							<tr>
 								<th>Auction Id</th>
 								<th>Lot Number</th>
-								<th>Asset Id</th>
-								<th>Asset Description</th>
 								<th>Start Price</th>
 								<th>Reserve Price</th>
+								<th>Last Minute Bid</th>
+								<th>Extended To</th>
 								<th>Static Bid Increment</th>
 								<th>Range Bid Increment</th>
 								<th>Start Date</th>
@@ -3004,11 +3004,11 @@
 							<tr ng-repeat="lotdata in lotVm.filteredList">
 								<td>{{lotdata.auction_id}}</td>
 								<td>{{lotdata.lotNumber}}</td>
-								<td>{{lotdata.assetId}}</td>
-								<td>{{lotdata.assetDesc}}</td>
 								<td>{{lotdata.startingPrice}}</td>
 								<td>{{lotdata.reservePrice}}</td>
-								<td>{{}}</td>
+								<td>{{lotdata.lastMintBid}}</td>
+								<td>{{lotdata.extendedTo}}</td>
+								<td><a href="javascript:void(0);">View Range</a></td>
 								<td><a href="javascript:void(0);">View Range</a></td>
 								<td>{{lotdata.startDate | date:'MM/dd/yyyy'}}</td>
 								<td>{{lotdata.endDate | date:'MM/dd/yyyy'}}</td>

@@ -51,7 +51,7 @@
             AuctionSvc.getAuctionDateData(filter).then(function(res) {
               console.log("items",res);
             vm.auctionName = res.items[0].name;
-            getLotData({auctionId:res.items[0]._id});
+            getLotData({auctionId:res.items[0]._id,isDeleted:false});
             }).catch(function(err){
 
             });
@@ -63,11 +63,14 @@
             console.log("row data",rowData);
             getAuctions();
             vm.dataModel = {};
-            vm.dataModel._id  = rowData._id;
-            vm.dataModel.auctionId = rowData.auctionId;
+            //vm.dataModel._id  = rowData._id;
+            vm.dataModel.auction_id = rowData.auction_id;
+            getLotData({auctionId:rowData.auction_id,isDeleted:false});
+            vm.dataModel.selectedLots={};
+            vm.dataModel.selectedLots.lotNumber=rowData.selectedLots[0].lotNumber;
             vm.dataModel.auctionName = rowData.auctionName;
-            vm.dataModel.lotId = rowData.lotId;
-            vm.dataModel.amount = rowData.amount;
+            vm.dataModel._id = rowData._id;
+            vm.dataModel.emdAmount = rowData.emdAmount;
             $scope.isEdit = true;
           }
 
@@ -96,6 +99,7 @@
                        return;
                    }else{
                       console.log("what is this",vm.dataModel);
+                      vm.dataModel.isDeleted=false;
                        EmdSvc.saveEmd(vm.dataModel).then(function(){
                         vm.dataModel = {};
                         getEmdData();
@@ -165,6 +169,7 @@
           }
           function getEmdData(){
               var filter={};
+              filter.isDeleted=false;
               EmdSvc.getData()
               .then(function(result){
 
