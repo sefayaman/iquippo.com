@@ -74,11 +74,17 @@ function InputFormCtrl($scope, $rootScope, Modal, Auth, categorySvc, LocationSvc
 		vm.inputFormReqInfo.totalInstallment = "";
 		for(var i=0; i < vm.inputFormMasterData.length; i++){
 			if(vm.inputFormMasterData[i].tenure == val){
-			  vm.inputFormReqInfo.installmentPerUnit = vm.inputFormMasterData[i].installment;
-			  break;
+			  	vm.inputFormReqInfo.installmentPerUnit = vm.inputFormMasterData[i].installment;
+			  	vm.inputFormReqInfo.remark = vm.inputFormMasterData[i].remarks;
+			  	vm.inputFormReqInfo.totalInstallment = vm.inputFormReqInfo.quantity * vm.inputFormMasterData[i].installment;
+				vm.inputFormReqInfo.totalMargin = vm.inputFormReqInfo.quantity * vm.inputFormMasterData[i].marginPerUnit;
+				vm.inputFormReqInfo.totalProcessingFee = vm.inputFormReqInfo.quantity * vm.inputFormMasterData[i].processingFee;
+			  	break;
 			}
 		}
-		vm.inputFormReqInfo.totalInstallment = val * vm.inputFormReqInfo.installmentPerUnit;
+		// vm.inputFormReqInfo.totalInstallment = vm.inputFormReqInfo.quantity * vm.inputFormReqInfo.installmentPerUnit;
+		// vm.inputFormReqInfo.totalMargin = vm.inputFormReqInfo.quantity * vm.inputFormReqInfo.marginPerUnit;
+		// vm.inputFormReqInfo.totalProcessingFee = vm.inputFormReqInfo.quantity * vm.inputFormReqInfo.processingFee;
     }
 
     function onCategoryChange(catName, reset) {

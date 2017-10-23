@@ -1023,14 +1023,32 @@
 				</div> -->
 			</div>
 			<div class="row" ng-repeat="addInfo in inputFormMastetVm.dataModel.additionalInfo">
-				<div class="col-sm-3 form-group">
-					<input type="number" class="form-control" name="tenure" ng-model="addInfo.tenure" placeholder="Tenure">
-				</div>
-				<div class="col-sm-3 form-group">
-					<input type="number" class="form-control" name="tenure" ng-model="addInfo.installment" placeholder="Installment">
-				</div>
-				<div class="col-sm-3 form-group">
-					<input type="text" class="form-control" name="tenure" ng-model="addInfo.remarks" placeholder="Remarks">
+				<div class="col-sm-9">
+					<div class="row">
+						<div class="col-sm-4 form-group">
+							<input type="number" class="form-control" name="tenure" ng-model="addInfo.tenure" placeholder="Tenure in months">
+						</div>
+						<div class="col-sm-4 form-group">
+							<input type="number" class="form-control" name="tenure" ng-model="addInfo.installment" placeholder="Installment">
+						</div>
+						<div class="col-sm-4 form-group">
+							<input type="number" class="form-control" name="marginPerUnit" ng-model="addInfo.marginPerUnit" placeholder="Margin per unit">
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-4 form-group">
+							<input type="number" class="form-control" name="processingFee" ng-model="addInfo.processingFee" placeholder="Processing fee per unit">
+						</div>
+						<div class="col-sm-4 form-group">
+							<select class="form-control">
+								<option>Select State</option>
+								<option></option>
+							</select>
+						</div>
+						<div class="col-sm-4 form-group">
+							<input type="text" class="form-control" name="tenure" ng-model="addInfo.remarks" placeholder="Remarks">
+						</div>
+					</div>
 				</div>
 				<div class="col-sm-3 form-group">
 					<button type="button" class="btn btn-default" ng-click="inputFormMastetVm.dataModel.additionalInfo.splice($index,1)" ng-if="!$last">Delete</button>
