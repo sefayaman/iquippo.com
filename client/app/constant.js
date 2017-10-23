@@ -43,6 +43,10 @@ var Modals = {
     tplUrl:"app/bidValue/bidnow.html",
     Ctrl:'BidCtrl as bidVm'
   },
+  inputFormReq:{
+    tplUrl:"app/inputform/inputformpopup.html",
+    Ctrl:'InputFormCtrl as inputFormVm'
+  },
   locationList : {
     tplUrl : "app/spare/locationList.html",
     Ctrl : 'SpareUploadCtrl as spareVm'

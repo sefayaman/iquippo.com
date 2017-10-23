@@ -435,8 +435,15 @@ function sendData(options, callback) {
   });
 }
 
+
 //AA:Upload a directory to S3
 /*function uploadDirToS3(localDirPath, cb) {
+=======
+
+//function uploadDirToS3(localDirPath, cb) {
+//AA:Upload a directory to S3
+function uploadDirToS3(localDirPath, cb) {
+>>>>>>> master
   var params = {
     localDir: localDirPath,
     s3Params: {
@@ -456,7 +463,11 @@ function sendData(options, callback) {
   uploader.on('end', function() {
     return cb();
   });
+<<<<<<< HEAD
 }*/
+
+
+}
 
 //s3 listobject
 function getListObjectS3(localDirPath, cb) {
@@ -500,6 +511,7 @@ function deleteS3File(fileName) {
         }
     });
 }
+
 
 function convertQVAPLStatus(qvaplStatus){
   

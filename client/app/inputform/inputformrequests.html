@@ -1,0 +1,63 @@
+<div id="wrapper">
+  <div id="page-wrapper">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-12">
+          <h3>
+            Input Form Requests
+          </h3>
+          <hr>
+        </div>
+        <p class="text-right"></p>
+        <div class="col-sm-12">
+          <div class="row"> 
+            <div class="col-sm-9">
+              Showing : {{inputformListingVm.totalItems}} Records
+            </div>                    
+            <div class="col-sm-3 pull-right">
+              <div class="tablesearch text-right form-group">
+                 Search: <input type="text" placeholder="Search..." ng-model="inputformListingVm.searchStr" ng-change="inputformListingVm.fireCommand(true)" ng-model-options="{debounce:500}">
+              </div>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table id="bid_listing_table" class="table table-bordred table-striped">
+              <thead>
+                <tr>
+                  <th>Reference No</th>
+                  <th>Category</th>
+                  <th>Brand</th>
+                  <th>Model</th>
+                  <th>Tenure</th>
+                  <th>Installment Per Unit</th>
+                  <th>Total Installment</th>
+                  <th>Name of Customer</th>
+                  <th>Mobile No</th>
+                  <th>Email ID</th>
+                  <th>Date of Request</th>
+                </tr>               
+              </thead>
+              <tbody>
+              <tr ng-repeat="data in inputformListingVm.filteredList">
+                <td>{{data.referenceNo}}</td>
+                <td>{{data.category}}</td>
+                <td>{{data.brand}}</td>
+                <td>{{data.model}}</td>
+                <td>{{data.tenure}}</td>
+                <td>{{data.installmentPerUnit}}</td>
+                <td>{{data.totalInstallment}}</td>
+                <td>{{data.user.fname}} {{data.user.lname}}</td>
+                <td>{{data.user.mobile}}</td>
+                <td>{{data.user.email}}</td>
+                <td>{{data.createdAt | date:'MM/dd/yyyy'}}</td>
+                </tr>
+              </tbody>
+            </table>            
+          </div>
+          <uib-pagination total-items="inputformListingVm.totalItems" ng-model="inputformListingVm.currentPage" items-per-page="inputformListingVm.itemsPerPage" max-size="inputformListingVm.maxSize" ng-change="inputformListingVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+        </div>
+         
+        </div>
+      </div>   
+    </div>
+  </div>
