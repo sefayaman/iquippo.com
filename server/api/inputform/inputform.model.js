@@ -23,6 +23,7 @@ var InputFormRequestSchema = new Schema({
   totalInstallment:Number,
   totalMargin:Number,
   totalProcessingFee:Number,
+  remark:String,
   bannerInfo:{
     bannerData : {type:Schema.Types.ObjectId,ref:'Banner'},
     name:String,
