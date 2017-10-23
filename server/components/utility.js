@@ -23,8 +23,11 @@ var s3Options = {
 var dateFormat = require('dateformat');
 
 var multiparty = require('connect-multiparty'),
-multipartyMiddleware = multiparty();
-AWS.config.update({accessKeyId: config.awsAccessKeyId, secretAccessKey: config.awsSecretAccessKey});
+  multipartyMiddleware = multiparty();
+AWS.config.update({
+  accessKeyId: config.awsAccessKeyId,
+  secretAccessKey: config.awsSecretAccessKey
+});
 AWS.config.region = 'ap-south-1';
 
 var awsS3Client = new AWS.S3(s3Options);
@@ -78,7 +81,7 @@ function uploadFileS3(localFilePath, dirName, cb) {
       Prefix: "assets/uploads/" + dirName
     }
   };
-  
+
   var uploader = client.uploadDir(params);
   uploader.on('error', function(err) {
     if (err) {
@@ -100,7 +103,7 @@ function uploadFileOnS3(localFilePath, dirName, cb) {
       Key: dirName
     }
   };
- 
+
   var uploader = client.uploadFile(params);
   uploader.on('error', function(err) {
     if (err) {
@@ -108,7 +111,7 @@ function uploadFileOnS3(localFilePath, dirName, cb) {
       return cb(err);
     }
   });
-    /*uploader.on('progress', function() {
+  /*uploader.on('progress', function() {
     console.log("progress", uploader.progressMd5Amount,
       uploader.progressAmount, uploader.progressTotal);
   });*/
@@ -120,7 +123,7 @@ function uploadFileOnS3(localFilePath, dirName, cb) {
 }
 
 function uploadMultipartFileOnS3(localFilePath, dirName, files, cb) {
-  if(!files[0])
+  if (!files[0])
     return;
   var file = files[0];
   var buffer = fs.readFileSync(file.path);
@@ -156,7 +159,7 @@ function uploadMultipartFileOnS3(localFilePath, dirName, files, cb) {
         PartNumber: String(partNum),
         UploadId: multipart.UploadId
       };
-      
+
       uploadPart(awsS3Client, multipart, partParams);
     }
   });
@@ -194,9 +197,7 @@ function uploadMultipartFileOnS3(localFilePath, dirName, files, cb) {
         ETag: mData.ETag,
         PartNumber: Number(this.request.params.PartNumber)
       };
-      //console.log('Completed part', this.request.params.PartNumber);
-      //console.log('mData', mData);
-      if (numPartsLeft > 0) return; // complete only when all parts uploaded
+      if (--numPartsLeft > 0) return; // complete only when all parts uploaded
 
       var doneParams = {
         Bucket: multipartParams.Bucket,
@@ -205,36 +206,13 @@ function uploadMultipartFileOnS3(localFilePath, dirName, files, cb) {
         UploadId: multipart.UploadId
       };
 
-      //console.log('Completing upload...');
       completeMultipartUpload(awsS3Client, doneParams);
-    }).on('httpUploadProgress', function(progress) {  console.log(Math.round(progress.loaded/progress.total*100)+ '% done') });
-  }
-  }
-
-//AA:Upload a directory to S3
-/*function uploadZipFileToS3(localDirPath, filename, cb) {
-  fs.readFile(localDirPath, function(err, data) {
-    if (err) {
-      console.log(err);
-      return cb(err);
-    }
-    //var base64data = new Buffer(data, 'binary').toString('base64');
-
-    var s3Params = {
-      Bucket: config.awsBucket,
-      Key: 'assets/uploads/temp/' + filename,
-      ContentType: 'application/zip',
-      Body: data
-    };
-
-    awsS3Client.putObject(s3Params, function(perr, presp) {
-      if (perr) {
-        return cb(perr)
-      }
-      return cb();
+    }).on('httpUploadProgress', function(progress) {
+      console.log(Math.round(progress.loaded / progress.total * 100) + '% done')
     });
-  });
-}*/
+  }
+}
+
 
 function downloadFromS3(opts, cb) {
   var params = {
@@ -282,13 +260,13 @@ function deleteFromS3(opts, cb) {
 }
 
 function isEmpty(myObject) {
-    for(var key in myObject) {
-        if (myObject.hasOwnProperty(key)) {
-            return false;
-        }
+  for (var key in myObject) {
+    if (myObject.hasOwnProperty(key)) {
+      return false;
     }
+  }
 
-    return true;
+  return true;
 }
 
 exports.sendCompiledData = sendCompiledData;
@@ -299,23 +277,23 @@ function sendCompiledData(options, cb) {
   console.log("totalData", options);
   //filter._id = emdDataAs.auctionId
   //console.log(options.dataToSend, options.dataType)
-   if(options.dataToSend.hasOwnProperty('__v'))
+  if (options.dataToSend.hasOwnProperty('__v'))
     delete options.dataToSend.__v;
- /* if (options.dataToSend.auctionId && options.dataType!=="auctionData"){
-    filter._id = options.dataToSend.auctionId;
-  }*/
+  /* if (options.dataToSend.auctionId && options.dataType!=="auctionData"){
+     filter._id = options.dataToSend.auctionId;
+   }*/
   if (options.dataToSend.hasOwnProperty('startDate') && options.dataToSend.hasOwnProperty('endDate')) {
     options.dataToSend.startDate = options.dataToSend.startDate.toString();
     options.dataToSend.endDate = options.dataToSend.endDate.toString();
   }
-  if (options.dataToSend.hasOwnProperty('updatedAt') &&  options.dataToSend.hasOwnProperty('createdAt')){
+  if (options.dataToSend.hasOwnProperty('updatedAt') && options.dataToSend.hasOwnProperty('createdAt')) {
     delete options.dataToSend.updatedAt;
     delete options.dataToSend.createdAt;
   }
   console.log("I am here");
-  async.series([function(next){
-fetchAuctionId(options,next);
-},function(next) {
+  async.series([function(next) {
+    fetchAuctionId(options, next);
+  }, function(next) {
     console.log("compiling ----");
     compileData(options, next);
   }, function(next) {
@@ -323,23 +301,24 @@ fetchAuctionId(options,next);
   }], function(err, results) {
     if (err) {
       console.log(err);
-      console.log("Output",results);
+      console.log("Output", results);
       return cb(null, results);
     }
   });
 }
-function fetchAuctionId(options,callback){
+
+function fetchAuctionId(options, callback) {
   console.log("I am in first");
-  if(options.dataToSend && options.dataToSend.auction_id && options.dataType !== 'auctionData'){
-    AuctionMaster.find({"_id":options.dataToSend.auction_id},function(err,auctionData){
-       if(err) return callback(err);
-       options.dataToSend.auction_id=auctionData[0].auctionId;
-       return callback(null,options);
+  if (options.dataToSend && options.dataToSend.auction_id && options.dataType !== 'auctionData') {
+    AuctionMaster.find({
+      "_id": options.dataToSend.auction_id
+    }, function(err, auctionData) {
+      if (err) return callback(err);
+      options.dataToSend.auction_id = auctionData[0].auctionId;
+      return callback(null, options);
     });
-  }
-  else
-  {
-    return callback(null,options);
+  } else {
+    return callback(null, options);
   }
 }
 
@@ -356,35 +335,35 @@ function compileData(options, callback) {
       // dataFormat = "lots";
       if (options.dataToSend.hasOwnProperty('assetDir'))
         delete options.dataToSend.assetDir;
-       callback(null, options);
+      callback(null, options);
       break;
     case "emdData":
-       if(options.dataToSend.auctionId){
-        options.dataToSend.auction_id=options.dataToSend.auctionId;
-      delete options.dataToSend.auctionId;
-    }
+      if (options.dataToSend.auctionId) {
+        options.dataToSend.auction_id = options.dataToSend.auctionId;
+        delete options.dataToSend.auctionId;
+      }
       //dataFormat = "emd";
       callback(null, options);
       break;
     case "auctionData":
       // dataFormat = "auctions";
-      if(isEmpty(options.dataToSend.bidIncrement)){
+      if (isEmpty(options.dataToSend.bidIncrement)) {
         delete options.dataToSend.bidIncrement;
       }
-      if(options.dataToSend.hasOwnProperty('staticIncrement'))
+      if (options.dataToSend.hasOwnProperty('staticIncrement'))
         delete options.dataToSend.staticIncrement;
-      if(options.dataToSend.hasOwnProperty('rangeIncrement'))
+      if (options.dataToSend.hasOwnProperty('rangeIncrement'))
         delete options.dataToSend.rangeIncrement;
-      if(options.dataToSend.hasOwnProperty('bidInfo'))
+      if (options.dataToSend.hasOwnProperty('bidInfo'))
         delete options.dataToSend.bidInfo;
       if (options.dataToSend.hasOwnProperty('auctionOwner') && options.dataToSend.hasOwnProperty('auctionOwnerMobile')) {
         delete options.dataToSend.auctionOwner;
         delete options.dataToSend.auctionOwnerMobile;
       }
-       callback(null, options);
+      callback(null, options);
       break;
-      case "assetData" :
-      callback(null,options);
+    case "assetData":
+      callback(null, options);
       break;
   }
 }
@@ -399,7 +378,7 @@ function sendData(options, callback) {
     "lotData": "lots",
     "auctionData": "auctions",
     "emdData": "emd",
-    "assetData":"assets"
+    "assetData": "assets"
   };
   var format = "";
   format = dataFormat[options.dataType];
@@ -411,8 +390,8 @@ function sendData(options, callback) {
     "userInfo": 'registered-user-update',
     "lotData": 'new-lots',
     "auctionData": 'new-auction',
-    "emdData":'emd',
-    "assetData":'assetdata'
+    "emdData": 'emd',
+    "assetData": 'assetdata'
   };
 
   var url = 'http://auctionsoftwaremarketplace.com:3007/api_call/' + obj[options.dataType];
@@ -436,92 +415,57 @@ function sendData(options, callback) {
 }
 
 
-//AA:Upload a directory to S3
-/*function uploadDirToS3(localDirPath, cb) {
-=======
-
-//function uploadDirToS3(localDirPath, cb) {
-//AA:Upload a directory to S3
-function uploadDirToS3(localDirPath, cb) {
->>>>>>> master
-  var params = {
-    localDir: localDirPath,
-    s3Params: {
-      Bucket: config.awsBucket,
-      Prefix: "assets/"
-
-    }
-  };
-
-  var uploader = client.uploadDir(params);
-  uploader.on('error', function(err) {
-    if (err) {
-      util.log(err);
-      cb(new Error('Unable to upload file'));
-    }
-  });
-  uploader.on('end', function() {
-    return cb();
-  });
-<<<<<<< HEAD
-}*/
-
-
-}
-
-//s3 listobject
 function getListObjectS3(localDirPath, cb) {
   var params = {
-  Bucket: config.awsBucket, 
-  Prefix: "downloads/user-export"
-  //MaxKeys: 2
- };
-    awsS3Client.listObjects(params, function(err, data) {
-      if (err){
-          console.log(err, err.stack); // an error occurred
-      }else{   
-        var oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds
-          data.Contents.forEach(function(entry) {
-          //console.log("entry key",entry.Key);
-          var d = new Date(entry.LastModified);
-          var fileTimeStamp = d.getTime(); 
-          var currentTimeStamp = new Date().getTime();
-          var diffDays = Math.round(Math.abs((currentTimeStamp - fileTimeStamp)/(oneDay)));
-          if(diffDays >1){
-            deleteS3File(entry.Key);
-          }
-        });
-        
-      }
-    });
+    Bucket: config.awsBucket,
+    Prefix: "downloads/user-export"
+      //MaxKeys: 2
+  };
+  awsS3Client.listObjects(params, function(err, data) {
+    if (err) {
+      console.log(err, err.stack); // an error occurred
+    } else {
+      var oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
+      data.Contents.forEach(function(entry) {
+        //console.log("entry key",entry.Key);
+        var d = new Date(entry.LastModified);
+        var fileTimeStamp = d.getTime();
+        var currentTimeStamp = new Date().getTime();
+        var diffDays = Math.round(Math.abs((currentTimeStamp - fileTimeStamp) / (oneDay)));
+        if (diffDays > 1) {
+          deleteS3File(entry.Key);
+        }
+      });
+
+    }
+  });
 }
 
 // delete s3 file
 function deleteS3File(fileName) {
-    var params = {
-        Bucket: config.awsBucket,
-        Key: fileName
-    };
-    awsS3Client.deleteObject(params, function (err, data) {
-        if (data) {
-            //console.log("File deleted successfully");
-        }
-        else {
-            console.log("Check if you have sufficient permissions : "+err);
-        }
-    });
+  var params = {
+    Bucket: config.awsBucket,
+    Key: fileName
+  };
+  awsS3Client.deleteObject(params, function(err, data) {
+    if (data) {
+      //console.log("File deleted successfully");
+    } else {
+      console.log("Check if you have sufficient permissions : " + err);
+    }
+  });
 }
 
 
-function convertQVAPLStatus(qvaplStatus){
-  
+function convertQVAPLStatus(qvaplStatus) {
+
   var statusMapping = {
-    created : "Request Submitted",
-    assign :  "Request Submitted",
+    created: "Request Submitted",
+    assign: "Request Submitted",
     accept: "Inspection In Progress",
-    complete : "Inspection Completed",
-    updated : "Valuation Report Submitted",
-    cancel : 'Cancelled'
+    complete: "Inspection Completed",
+    updated: "Valuation Report Submitted",
+    cancel: 'Cancelled'
   }
   return statusMapping[qvaplStatus];
 }
