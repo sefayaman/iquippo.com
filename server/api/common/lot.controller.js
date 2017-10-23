@@ -129,23 +129,28 @@ console.log("getLots");
   })
 };
 
-var lotsDatainauctions = [];
+var lotsDataInAuctions = [];
 var lotsData = [];
-var newLots=[];
 function fetchLotData(callback) {
   var filter = {};
   filter.isDeleted = false;
   console.log("fetchLots");
-  Lot.find({"auction_id":{
-    $in:['59e6f304f02b88712a36ba1b']},"isDeleted":false}, function(err, lots) {
+  Lot.find(filter, function(err, lots) {
     if (err) callback(err);
-    lotsData=lots;
+    /*lotsData=lots;
     var obj={};
     lotsData.forEach(function(l){
      obj=JSON.parse(JSON.stringify(l));
      newLots.push(obj);
+    })*/
+    lots=JSON.parse(JSON.stringify(lots));
+    lots.forEach(function(item){
+      if(item.auction_id)
+      lotsDataInAuctions.push(item.auction_id)
     })
-    console.log("lotsAuct",newLots);
+    lotsData=lots;
+    console.log("lotsAuct",lotsData);
+    console.log("lotsAuct",lotsDataInAuctions);
     return callback(null);
   });
 }
@@ -154,9 +159,11 @@ var auctionsData = [];
 function fetchAuctions(callback) {
   var filter = {};
   console.log("filter",filter);
-  AuctionMaster.find({"auctionId":{$in:['1234']},'auctionType':{$ne:"S"}}, function(err, auctions) {
+  AuctionMaster.find({"_id":{$in:lotsDataInAuctions},'auctionType':{$ne:"S"}}, function(err, auctions) {
     if (err) callback(err);
-    auctionsData = auctions;
+    /*auctionsData = auctions;*/
+    auctions=JSON.parse(JSON.stringify(auctions));
+    auctionsData=auctions;
     console.log("auctions", auctionsData);
     return callback(null);
   });
@@ -165,16 +172,14 @@ function fetchAuctions(callback) {
 
 
 function compileData(callback) {
-  var newAuction=[];
-  var obj={};
-auctionsData.forEach(function(item){
+/*auctionsData.forEach(function(item){
       obj=JSON.parse(JSON.stringify(item));
       console.log("The item",obj);
       newAuction.push(obj);
     });
-  console.log("array",newAuction);
-  var mergedList = _.map(newLots, function(item) {
-    return _.extend(item, _.findWhere(newAuction, {
+  console.log("array",newAuction);*/
+  var mergedList = _.map(lotsData, function(item) {
+    return _.extend(item, _.findWhere(auctionsData, {
       "_id":item.auction_id
     }));
   });
