@@ -35,7 +35,7 @@
       </div>
       <div class="row">
         <div class="col-sm-6 form-group" ng-class="{'has-error':inputFormReqForm.quantity.$invalid && submitted}">
-          <input type="number" class="form-control" name="quantity" ng-model="inputFormVm.inputFormReqInfo.quantity" placeholder="Quantity" required>
+          <input type="number" class="form-control" name="quantity" ng-model="inputFormVm.inputFormReqInfo.quantity" ng-keyup="inputFormVm.getInstallmentPerUnit(inputFormVm.inputFormReqInfo.tenure)" typeahead-focus-first = "false" typeahead-wait-ms="100"  autocomplete="off" placeholder="Quantity" required>
         </div>
         <div class="col-sm-6 form-group" ng-class="{'has-error':inputFormReqForm.tenure.$invalid && submitted}">
           <select class="form-control" name="tenure" ng-model="inputFormVm.inputFormReqInfo.tenure" ng-change="inputFormVm.getInstallmentPerUnit(inputFormVm.inputFormReqInfo.tenure)" required>

@@ -63,9 +63,10 @@ function InputFormCtrl($scope, $rootScope, Modal, Auth, categorySvc, LocationSvc
 			result.forEach(function(item){
 				if(item.additionalInfo)
 					vm.orignalInputFormMasterData = item.additionalInfo;
-					vm.inputFormMasterData = item.additionalInfo;
+					//vm.inputFormMasterData = item.additionalInfo;
+					onStateChange();
 			});
-			vm.inputFormMasterData.forEach(function(item){
+			vm.orignalInputFormMasterData.forEach(function(item){
 				if($scope.inputFormState.indexOf(item.state) === -1 && item.state) {
 					$scope.inputFormState[$scope.inputFormState.length] = item.state;
 				}
@@ -77,12 +78,12 @@ function InputFormCtrl($scope, $rootScope, Modal, Auth, categorySvc, LocationSvc
 		resetValue()
 		vm.inputFormReqInfo.tenure = "";
 		vm.inputFormMasterData = [];
-		if(!state) {
-			angular.copy(vm.orignalInputFormMasterData, vm.inputFormMasterData);
-		}
+		// if(!state) {
+		// 	angular.copy(vm.orignalInputFormMasterData, vm.inputFormMasterData);
+		// }
 
 		vm.orignalInputFormMasterData.forEach(function(item){
-			if(item.state === state)
+			if(angular.isUndefined(item.state) || item.state === "" || item.state === state)
 				vm.inputFormMasterData[vm.inputFormMasterData.length] = item;
 		});
 	}
@@ -97,6 +98,8 @@ function InputFormCtrl($scope, $rootScope, Modal, Auth, categorySvc, LocationSvc
 
     function getInstallmentPerUnit(val) {
     	resetValue();
+		if(!val)
+			return;
 		for(var i=0; i < vm.inputFormMasterData.length; i++){
 			if(vm.inputFormMasterData[i].tenure == val){
 			  	vm.inputFormReqInfo.installmentPerUnit = vm.inputFormMasterData[i].installment;
@@ -150,8 +153,8 @@ function InputFormCtrl($scope, $rootScope, Modal, Auth, categorySvc, LocationSvc
 			return;
 		}
 		$scope.submitted = false;
-		// if(vm.inputFormReqInfo.state)
-  //       	vm.inputFormReqInfo.country = LocationSvc.getCountryByState(vm.inputFormReqInfo.state);
+		//if(vm.inputFormReqInfo.state)
+			//vm.inputFormReqInfo.country = LocationSvc.getCountryByState(vm.inputFormReqInfo.state);
 		InputFormSvc.save(vm.inputFormReqInfo)
 			.then(function(res) {
 				if (res.errorCode == 0) {
