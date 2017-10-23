@@ -224,9 +224,7 @@
 
 
           function getLotData(){
-            var filter={}
-            filter.isDeleted=false;
-              LotSvc.getData(filter)
+              LotSvc.getLotsData()
               .then(function(result){
               console.log("result lotData",result);
               vm.LotData = result;

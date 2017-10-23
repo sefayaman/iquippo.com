@@ -153,6 +153,7 @@ router.get('/emd/amount',emdCtrl.getEmdAmountData);
 router.put('/emd/:id', auth.hasRole('admin'),emdCtrl.updateEmdData);
 router.delete('/emd/:id',auth.hasRole('admin'), emdCtrl.destroy);
 router.get('/lot',lotCtrl.getLotData);
+router.get('/lotdata',lotCtrl.getLots);
 router.delete('/lot/:id',auth.hasRole('admin'), lotCtrl.destroy);
 router.post('/lot',lotCtrl.create);
 router.put('/lot/:id', auth.hasRole('admin'),lotCtrl.updateLotData);
