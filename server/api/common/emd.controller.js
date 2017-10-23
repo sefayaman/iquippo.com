@@ -88,7 +88,7 @@ exports.getEmdAmountData = function(req, res, callback) {
     arr.push(req.query.selectedLots);
   var filter = {};
   if (req.query.auctionId) {
-    filter.auctionId = req.query.auctionId;
+    filter.auction_id = req.query.auctionId;
   }
   if (req.query.selectedLots) {
     //console.log("selectedLots",req.body.selectedLots);

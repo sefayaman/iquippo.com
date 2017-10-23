@@ -36,6 +36,7 @@ router.get('/checkforasset/asset',controller.getAssetInfo);
 //router.get('/userregforauction', userRegForAuction.get);
 router.post('/userregforauction', userRegForAuction.create);
 router.post('/userregforauction/checkUserRegis',userRegForAuction.checkUserRegis);
+router.post('/userregforauction/saveOfflineRequest',userRegForAuction.saveOfflineRequest);
 router.post('/userregforauction/filterregisteruser', userRegForAuction.getFilterOnRegisterUser);
 router.post('/userregforauction/senddata',userRegForAuction.sendUserToAs);
 //router.put('/userregforauction/:id', userRegForAuction.update);

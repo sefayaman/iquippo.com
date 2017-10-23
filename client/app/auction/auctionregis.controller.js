@@ -110,7 +110,7 @@
                                            dataObj.user.email = Auth.getCurrentUser().email;
 
                                          console.log("result",result);
-                                           save(dataObj,result[0].amount);
+                                           save(dataObj,result[0].emdAmount);
                                        }).catch(function(err){
                                      });
                                }
@@ -140,7 +140,7 @@
           $rootScope.loading = false;
           closeDialog();
 
-           Modal.confirm('Your emd amount is ' + amount,function(isGo){
+           /*Modal.confirm('Your emd amount is ' + amount,function(isGo){
         if(isGo == 'no')
           return;
         $rootScope.loading = true;
@@ -159,8 +159,47 @@
             tid: result.transactionId
         });
         }
-      });
+      });*/
           
+      Modal.confirm('Your emd amount is ' + amount, function(isGo) {
+        if(isGo == 'no'){
+           return;
+        }else{
+
+          Modal.confirm('Do you want to pay online', function(isGo) {
+            if (isGo == 'no'){
+
+             dataObj.paymentMode = "offline";
+             dataObj.transactionId = result.transactionId;
+            
+             userRegForAuctionSvc.saveOfflineRequest(dataObj).then(function(rd){
+              Modal.alert("data saved Successfully"); 
+
+              });
+             
+            }else{
+                 $rootScope.loading = true;
+
+                 if(result && result.errorCode != 0){
+                      $state.go('main');
+                      return;
+                 }
+                
+                  if (result.transactionId) {
+                        $rootScope.loading = false;
+                        $state.go('payment', {
+                        tid: result.transactionId
+                        });
+                  }
+
+            }
+
+
+          });
+
+
+        }
+      });
       })
       .catch(function(err){
          if(err.data)
