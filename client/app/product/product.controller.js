@@ -1893,7 +1893,7 @@
           .then(function(res) {
             console.log("product lot", res);
             if (res.length > 0) {
-              $scope.lot.lot_id=lotNumber;
+              $scope.lot.lot_id=lotNumber;s
               if (res[0] && res[0].startDate && res[0].endDate) {
                 //$scope.lotDate = true;
                 $scope.lot.startDate = res[0].startDate;
