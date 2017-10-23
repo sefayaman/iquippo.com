@@ -10,12 +10,13 @@ var config = require('./../../config/environment');
 var trasactionStatuses = ['failed','pending','completed'];
 
 // Get list of payment transaction
-exports.getAll = function(req, res) {
+exports.getAll = function(req,res){
 
   Payment.find({status:{$eq:'listed'}},function (err, payments) {
     if(err) { return handleError(res, err); }
     return res.status(200).json(payments);
   });
+  
 };
 
 // Get a single Payment

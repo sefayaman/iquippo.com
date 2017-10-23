@@ -120,6 +120,11 @@ exports.checkUserRegis = function(req,res){
     filter['user.mobile'] = req.body.user.mobile;
 
   }
+  if(req.body.paymentMode){
+    
+        filter['user.mobile'] = req.body.paymentMode;
+    
+  }
   if(req.body.lotNumber){
 
     filter['lotNumber'] ={
@@ -158,6 +163,20 @@ exports.checkUserRegis = function(req,res){
        }); 
 };
 
+
+exports.saveOfflineRequest = function(req,res){
+    var data = req.body.paymentMode;
+ 
+      console.log("filterdata",filter);
+  
+      Payment.update({_id:req.body.transactionId},{$set:data},function(err){
+        if (err) { return handleError(res, err); }
+        return res.status(200).json({ message: "Request Saved Sucessfully"});
+    });
+           
+         
+  };
+
 exports.sendUserToAs=function(req,res){
   var options={};
   console.log("req.body",req.body);
@@ -178,7 +197,7 @@ exports.sendUserToAs=function(req,res){
 exports.create = function(req, res,next) {
 
    _getRecord(req.body,function(err,result){
-    if(err) { return handleError(res, err); }
+    if(err){ return handleError(res, err); }
     if(result.length > 0)
       return  next(new ApiError(409,"You have already register for this auction!!!"));
     else
