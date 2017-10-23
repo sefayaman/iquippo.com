@@ -1040,9 +1040,9 @@
 							<input type="number" class="form-control" name="processingFee" ng-model="addInfo.processingFee" placeholder="Processing fee per unit">
 						</div>
 						<div class="col-sm-4 form-group">
-							<select class="form-control">
-								<option>Select State</option>
-								<option></option>
+							<select class="form-control" name="state" ng-model="addInfo.state">
+								<option value="">Select State</option>
+					            <option ng-repeat="state in stateList | orderBy:'name'" value="{{state.name}}">{{state.name}}</option>
 							</select>
 						</div>
 						<div class="col-sm-4 form-group">

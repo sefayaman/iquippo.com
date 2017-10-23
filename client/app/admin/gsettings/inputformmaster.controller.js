@@ -3,7 +3,7 @@
 
 angular.module('admin').controller('InputFormMasterCtrl', InputFormMasterCtrl);
 
-function InputFormMasterCtrl($scope,$rootScope,$state,categorySvc, modelSvc, brandSvc, Modal,Auth,PagerSvc,$filter,InputFormMasterSvc){
+function InputFormMasterCtrl($scope,$rootScope,$state,categorySvc, modelSvc, brandSvc, Modal,LocationSvc, Auth,PagerSvc,$filter,InputFormMasterSvc){
 	var vm  = this;
     vm.dataModel = {};
     $scope.isEdit = false;
@@ -31,8 +31,16 @@ function InputFormMasterCtrl($scope,$rootScope,$state,categorySvc, modelSvc, bra
         initFilter.pagination = true;
         angular.copy(initFilter, filter);
         loadAllCategory();
+        loadAllState();
         loadViewData(filter);
     } 
+
+    function loadAllState(){
+      LocationSvc.getAllState()
+        .then(function(result) {
+          $scope.stateList = result;
+      })
+    }
 
     function loadAllCategory() {
         categorySvc.getAllCategory()

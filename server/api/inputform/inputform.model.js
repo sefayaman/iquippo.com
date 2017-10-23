@@ -16,9 +16,13 @@ var InputFormRequestSchema = new Schema({
   category:String,
   brand:String,
   model:String,
+  state:String,
+  quantity:Number,
   tenure:Number,
   installmentPerUnit:Number,
   totalInstallment:Number,
+  totalMargin:Number,
+  totalProcessingFee:Number,
   bannerInfo:{
     bannerData : {type:Schema.Types.ObjectId,ref:'Banner'},
     name:String,

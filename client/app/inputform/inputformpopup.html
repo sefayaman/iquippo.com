@@ -27,9 +27,9 @@
           </select>
         </div> 
         <div class="col-sm-6 form-group" ng-class="{'has-error':inputFormReqForm.tenure.$invalid && submitted}">
-          <select class="form-control">
-            <option>Select State</option>
-            <option></option>
+          <select class="form-control" ng-change="inputFormVm.onStateChange(inputFormVm.inputFormReqInfo.state)" name="tenure" ng-model="inputFormVm.inputFormReqInfo.state">
+            <option value="">Select State</option>
+            <option ng-repeat="state in inputFormState | orderBy:'state'" value="{{state}}">{{state}}</option>
           </select>
         </div>        
       </div>

@@ -17,6 +17,7 @@ function InputFormCtrl($scope, $rootScope, Modal, Auth, categorySvc, LocationSvc
     vm.onBrandChange = onBrandChange;
     vm.onModelChange = onModelChange;
     vm.getInstallmentPerUnit =getInstallmentPerUnit;
+    vm.onStateChange = onStateChange;
 
 	function init() {
 		Auth.isLoggedInAsync(function(loggedIn) {
@@ -53,20 +54,42 @@ function InputFormCtrl($scope, $rootScope, Modal, Auth, categorySvc, LocationSvc
     	filter.category = vm.inputFormReqInfo.category;
     	filter.brand = vm.inputFormReqInfo.brand;
     	filter.model = vm.inputFormReqInfo.model;
+		$scope.inputFormState = [];
     	InputFormMasterSvc.get(filter)
         .then(function(result){
 			result.forEach(function(item){
 				if(item.additionalInfo)
+					vm.orignalInputFormMasterData = item.additionalInfo;
 					vm.inputFormMasterData = item.additionalInfo;
 			});
+			vm.inputFormMasterData.forEach(function(item){
+				if($scope.inputFormState.indexOf(item.state) === -1 && item.state) {
+					$scope.inputFormState[$scope.inputFormState.length] = item.state;
+				}
+	        });
         });
     }
     
+	function onStateChange(state){
+		vm.inputFormMasterData = [];
+		if(!state) {
+			angular.copy(vm.orignalInputFormMasterData, vm.inputFormMasterData);
+		}
+
+		vm.orignalInputFormMasterData.forEach(function(item){
+			if(item.state === state)
+				vm.inputFormMasterData[vm.inputFormMasterData.length] = item;
+		});
+	}
+
     function resetValue() {
 		vm.inputFormMasterData = [];
+		vm.inputFormReqInfo.state = "";
 		vm.inputFormReqInfo.tenure = "";
 		vm.inputFormReqInfo.installmentPerUnit = "";
 		vm.inputFormReqInfo.totalInstallment = "";
+		vm.inputFormReqInfo.totalMargin = "";
+		vm.inputFormReqInfo.totalProcessingFee = "";
     }
 
     function getInstallmentPerUnit(val) {
@@ -82,10 +105,7 @@ function InputFormCtrl($scope, $rootScope, Modal, Auth, categorySvc, LocationSvc
 			  	break;
 			}
 		}
-		// vm.inputFormReqInfo.totalInstallment = vm.inputFormReqInfo.quantity * vm.inputFormReqInfo.installmentPerUnit;
-		// vm.inputFormReqInfo.totalMargin = vm.inputFormReqInfo.quantity * vm.inputFormReqInfo.marginPerUnit;
-		// vm.inputFormReqInfo.totalProcessingFee = vm.inputFormReqInfo.quantity * vm.inputFormReqInfo.processingFee;
-    }
+	}
 
     function onCategoryChange(catName, reset) {
         vm.brandList = [];
@@ -128,6 +148,8 @@ function InputFormCtrl($scope, $rootScope, Modal, Auth, categorySvc, LocationSvc
 			return;
 		}
 		$scope.submitted = false;
+		// if(vm.inputFormReqInfo.state)
+  //       	vm.inputFormReqInfo.country = LocationSvc.getCountryByState(vm.inputFormReqInfo.state);
 		InputFormSvc.save(vm.inputFormReqInfo)
 			.then(function(res) {
 				if (res.errorCode == 0) {
