@@ -4,6 +4,7 @@
   angular.module('sreizaoApp').controller('ShippingCtrl', ShippingCtrl);
   angular.module('sreizaoApp').controller('ValuationCtrl', ValuationCtrl);
   angular.module('sreizaoApp').controller('FinanceCtrl', FinanceCtrl);
+  angular.module('sreizaoApp').controller('FinanceCmeCtrl', FinanceCmeCtrl);
   angular.module('sreizaoApp').controller('InsuranceCtrl', InsuranceCtrl);
   angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl', CetifiedByiQuippoCtrl);
 
@@ -357,7 +358,7 @@
       }
 
       var ret = false;
-      if ($scope.valuationQuote.country && $scope.valuationQuote.mobile) {
+      /*if ($scope.valuationQuote.country && $scope.valuationQuote.mobile) {
         var value = UtilSvc.validateMobile($scope.valuationQuote.country, $scope.valuationQuote.mobile);
         if (!value) {
           form.mobile.$invalid = true;
@@ -366,7 +367,7 @@
           form.mobile.$invalid = false;
           ret = false;
         }
-      }
+      }*/
 
       if ($scope.valuationQuote.schedule == 'yes') {
         if (angular.isUndefined($scope.valuationQuote.scheduleDate))
@@ -732,6 +733,26 @@
 
 
   }
+  //CME controller
+  function FinanceCmeCtrl($state, $scope, $rootScope, $http,$location, Auth,$uibModal,Modal,notificationSvc, AuctionSvc,$window) {
+  
+    var userId = "";
+      Auth.removeCookies();
+      function init(){
+        if(Auth.getCurrentUser()._id)
+        userId = Auth.getCurrentUser()._id;
+        $http.get("/api/common/redirecttorapid?_id=" + userId)
+        .then(function(res){
+          $window.location.href = res.data;
+          //$window.open(res.data,"_blank");
+        });
+      }
+     Auth.isLoggedInAsync(function(loggedIn){
+       init();
+     })
+      
+  }
+
   //Valuation controller function
   function InsuranceCtrl($scope, $rootScope, Auth, $http, Modal, notificationSvc, LocationSvc, categorySvc, brandSvc, modelSvc, MarketingSvc, UtilSvc) {
     var facebookConversionSent = false;

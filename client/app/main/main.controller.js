@@ -100,11 +100,19 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
     function openBidModal(currentSlide){
       if(Auth.isAdmin())
         return;
-      var biddingScope = $rootScope.$new();
+      if (!Auth.getCurrentUser()._id) {
+        Modal.alert("Please Login/Register for submitting your request!", true);
+        return;
+      }
+      /*var biddingScope = $rootScope.$new();
       biddingScope.slideInfo = currentSlide;
       biddingScope.isPayNow = false;
       vm.myInterval = 1*2*60*60*1000;
-      Modal.openDialog('biddingReq', biddingScope);
+      Modal.openDialog('biddingReq', biddingScope);*/
+      var inputFormScope = $rootScope.$new();
+      inputFormScope.slideInfo = currentSlide;
+      vm.myInterval = 1*2*60*60*1000;
+      Modal.openDialog('inputFormReq', inputFormScope);
     }
 
     vm.toggleCategory = function(){

@@ -30,6 +30,7 @@ angular.module('sreizaoApp')
     vm.getProductData = getProductData;
     $scope.getConcatData = [];
     $scope.userInfo = {};
+    vm.getUserExportFileName = getUserExportFileName;
     $scope.$on('updateUserList',function(){
       fireCommand(true);
    });
@@ -163,6 +164,7 @@ angular.module('sreizaoApp')
           dataToSend.itemsPerPage = vm.itemsPerPage;
           getUser(dataToSend);
         }
+         getUserExportFileName();
       });
 
     }
@@ -184,6 +186,15 @@ angular.module('sreizaoApp')
           last_id = vm.userList[vm.userList.length - 1]._id;
         }
       })
+      .catch(function(err){
+        Modal.alert("Error in geting user");
+      })
+    }
+    function getUserExportFileName(){
+
+      userSvc.getUserExportFileName().then(function(result){
+        vm.userExportLink =result;
+       })
       .catch(function(err){
         Modal.alert("Error in geting user");
       })

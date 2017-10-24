@@ -209,6 +209,16 @@ angular.module('sreizaoApp')
           $rootScope.metaDescription=pagesTitles.financing.meta;
         }
       })
+      .state('cme', {
+        url:"/financing/CME",
+        //templateUrl: 'app/staticpages/financingcme.html',
+        controller:"FinanceCmeCtrl",
+        layout:'client',
+        onEnter:function($rootScope){
+          $rootScope.choosenTitle=pagesTitles.financing.title;
+          $rootScope.metaDescription=pagesTitles.financing.meta;
+        }
+      })
       .state('insurance', {
         url:"/insurance",
         templateUrl: 'app/staticpages/insurance.html',
@@ -304,6 +314,13 @@ angular.module('sreizaoApp')
         url: '/bidValue',
         templateUrl: 'app/bidValue/bidlisting.html',
         controller: 'BidListingCtrl as bidListingVm',
+        authenticate:true,
+        layout:'admin'
+      })
+      .state('inputform', {
+        url: '/inputform',
+        templateUrl: 'app/inputform/inputformrequests.html',
+        controller: 'InputFormListingCtrl as inputformListingVm',
         authenticate:true,
         layout:'admin'
       })

@@ -20,6 +20,7 @@ var async = require('async');
 var APIError = require('../../components/_error');
 var USER_REG_REQ="userRegEmailFromAdminChannelPartner";
 var Seqgen = require('./../../components/seqgenerator').sequence();
+var AppSetting = require('../common/setting.model');
 var validationError = function(res, err) {
   return res.status(422).json(err);
 }; 
@@ -1640,7 +1641,23 @@ exports.exportUsers = function(req, res) {
       // res.end(wbout);
     });
 }
-
+exports.exportUsersList = function(req, res) {
+  AppSetting.find({
+		key: 'user_list_file_name'
+	}, function(err, result) {
+		if (err) {
+			return handleError(result, err)
+		} else{
+      var downloadDir = 'downloads/user-exports';
+      var s3Url = config.awsUrl;
+      var s3Bucket = config.awsBucket;
+      var path = s3Url+s3Bucket+'/'+downloadDir+'/'+result[0].value;
+     
+      return res.status(200).json(path);
+      
+    }
+  })
+}
 function getProductData(req, res, users, userIds) {
   var filter = {};
   filter.deleted = false;
@@ -1682,7 +1699,8 @@ function getProductData(req, res, users, userIds) {
           users[i].have_products = "No";
         }
         //console.log("users[" + i +"]" + users[i]._id + " # " + users[i].total_products+ "#" + users[i].have_products);
-      }*/console.log("users====",users);
+      }*/
+        //console.log("users====",users);
       var ws_name = "users"
       var wb = new Workbook();
       var ws = excel_from_data(users);

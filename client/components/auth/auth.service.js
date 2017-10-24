@@ -278,13 +278,23 @@ angular.module('sreizaoApp')
       isPartner: function() {
         return currentUser.isPartner;
       },
+      isValuationPartner:function(){
+        if(currentUser && currentUser.isPartner && currentUser.partnerInfo && currentUser.partnerInfo.services.length > 0)
+          return currentUser.partnerInfo.services.indexOf("Valuation") > -1 || currentUser.partnerInfo.services.indexOf("Inspection") > -1 ? true : false;
+        else
+          return false;
+      },
       isAuctionPartner: function() {
-        if(currentUser && currentUser.partnerInfo && currentUser.partnerInfo.services.length > 0)
+        if(currentUser && currentUser.isPartner && currentUser.partnerInfo && currentUser.partnerInfo.services.length > 0)
           return currentUser.partnerInfo.services.indexOf("Auction") > -1 ? true : false;
+        else
+          return false;
       },
       isFAgencyPartner: function() {
         if(currentUser && currentUser.isPartner && currentUser.partnerInfo && currentUser.partnerInfo.services.length > 0)
           return currentUser.partnerInfo.services.indexOf("Sale Fulfilment") > -1 ? true : false;
+        else
+          return false;
       },
       isBuySaleApprover:function(){
         if(this.isAdmin())
