@@ -115,7 +115,7 @@
                      
                       <p>Lot Number - {{lot.lotNumber}}</p>
                       <p>Asset Description : 
-                    <span ng-repeat="assetId in lot.assetDesc">
+                    <span ng-repeat="assetId in lot.assetDesc track by $index">
                       <a href="javascript:void(0)" ng-click="fetchAsset(assetId,lot.lotNumber,false)"> {{assetId}} ,</a>
                     </span>
                     </p>

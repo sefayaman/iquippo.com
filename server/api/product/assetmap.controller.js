@@ -62,9 +62,8 @@ exports.getData = function(req, res) {
   var compiledObj = {};
   var filter = {};
   var query = {};
-  console.log("req.query", req.query);
-  if (req.query.hasOwnProperty('isDeleted'))
-    filter.isDeleted = req.query.isDeleted;
+  //console.log("req.query", req.query);
+    filter.isDeleted = false;
   if (req.query.assetId) {
     filter.assetId = req.query.assetId;
   }
@@ -79,7 +78,8 @@ exports.getData = function(req, res) {
       console.log(typeof result[0]);
       if (result[0].lot_id) {
         Lot.find({
-          "_id": result[0].lot_id
+          "_id": result[0].lot_id,
+          'isDeleted':false
         }, function(err, data) {
           if (err) return handleError(res, err);
           console.log("the data", typeof data[0]);

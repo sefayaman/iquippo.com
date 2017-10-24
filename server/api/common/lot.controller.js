@@ -114,7 +114,7 @@ exports.updatelotsisdeleted = function(req, res) {
 }
 
 exports.getLots = function(req, res) {
-console.log("getLots");  
+  console.log("getLots");
   async.series([function(next) {
       fetchLotData(next);
     },
@@ -133,6 +133,7 @@ console.log("getLots");
 
 var lotsDataInAuctions = [];
 var lotsData = [];
+
 function fetchLotData(callback) {
   var filter = {};
   filter.isDeleted = false;
@@ -145,14 +146,16 @@ function fetchLotData(callback) {
      obj=JSON.parse(JSON.stringify(l));
      newLots.push(obj);
     })*/
-    lots=JSON.parse(JSON.stringify(lots));
-    lots.forEach(function(item){
-      if(item.auction_id && validator.isMongoId(item.auction_id))
+    lots = JSON.parse(JSON.stringify(lots));
+    lots.forEach(function(item) {
+      if (item.auction_id && validator.isMongoId(item.auction_id))
         lotsDataInAuctions.push(item.auction_id)
+      item.lot_mongo_id = item._id;
     })
-    lotsData=lots;
-    console.log("lotsAuct",lotsData);
-    console.log("lotsAuct",lotsDataInAuctions);
+    lotsData = lots;
+
+    console.log("lotsAuct", lotsData);
+    console.log("lotsAuct", lotsDataInAuctions);
     return callback(null);
   });
 }
@@ -160,17 +163,24 @@ var auctionsData = [];
 
 function fetchAuctions(callback) {
   var filter = {};
-  console.log("filter",filter);
-  AuctionMaster.find({"_id":{$in:lotsDataInAuctions},'auctionType':{$ne:"S"},'isDeleted':false}, function(err, auctions) {
+  console.log("filter", filter);
+  AuctionMaster.find({
+    "_id": {
+      $in: lotsDataInAuctions
+    },
+    'auctionType': {
+      $ne: "S"
+    },
+    'isDeleted': false
+  }, function(err, auctions) {
     if (err) return callback(err);
     /*auctionsData = auctions;*/
-    try{
-    auctions=JSON.parse(JSON.stringify(auctions));  
-    }
-    catch(e){
+    try {
+      auctions = JSON.parse(JSON.stringify(auctions));
+    } catch (e) {
       return callback(null);
     }
-    auctionsData=auctions;
+    auctionsData = auctions;
     console.log("auctions", auctionsData);
     return callback(null);
   });
@@ -179,18 +189,18 @@ function fetchAuctions(callback) {
 
 
 function compileData(callback) {
-/*auctionsData.forEach(function(item){
-      obj=JSON.parse(JSON.stringify(item));
-      console.log("The item",obj);
-      newAuction.push(obj);
-    });
-  console.log("array",newAuction);*/
+  /*auctionsData.forEach(function(item){
+        obj=JSON.parse(JSON.stringify(item));
+        console.log("The item",obj);
+        newAuction.push(obj);
+      });
+    console.log("array",newAuction);*/
   var mergedList = _.map(lotsData, function(item) {
     return _.extend(item, _.findWhere(auctionsData, {
-      "_id":item.auction_id
+      "_id": item.auction_id
     }));
   });
-  console.log("mergedList",mergedList);
+  console.log("mergedList", mergedList);
   return callback(null, mergedList);
 }
 
@@ -256,11 +266,11 @@ function fetchLots(filter, options, callback) {
       console.log("lots", result);
       options.lotData = result;
       result.forEach(function(x) {
-          lotInfo[x._id] = {};
-          lotInfo[x._id].lotNumber = x.lotNumber;
-          lotInfo[x._id].amount = x.startingPrice;
-        });
-        console.log("info",lotInfo);
+        lotInfo[x._id] = {};
+        lotInfo[x._id].lotNumber = x.lotNumber;
+        lotInfo[x._id].amount = x.startingPrice;
+      });
+      console.log("info", lotInfo);
       return callback(null, options);
     } else {
       return callback(null, {
@@ -342,7 +352,7 @@ exports.destroy = function(req, res) {
   var options = {};
   console.log("id", req.params.id);
   Lot.update({
-      _id: req.params.id
+      '_id': req.params.id
     }, {
       "$set": {
         "isDeleted": true
@@ -363,12 +373,23 @@ exports.destroy = function(req, res) {
         if (err) return handleError(res, err);
         console.log("result", result);
       });
-      return res.status(200).send({
-        errorCode: 0,
-        message: "Lot master deleted sucessfully!!!"
-      });
+      AssetsInAuction.update({
+        'lot_id': req.params.id
+      }, {
+        $set: {
+          'isDeleted': true
+        }
+      }, {
+        multi: true
+      }, function(aucErr, resultData) {
+        if (aucErr)
+          return handleError(res, err);
+        return res.status(200).send({
+          errorCode: 0,
+          message: "Lot master deleted sucessfully!!!"
+        });
+      })
     });
-
 };
 exports.removeLotData = function(req, res) {
   //req.body.updatedAt = new Date();

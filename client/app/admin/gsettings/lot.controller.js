@@ -229,7 +229,7 @@
               console.log("result lotData",result);
               vm.LotData = result;
               vm.filteredList = result;
-              //console.log(vm.LotData);
+            console.log("result lot",result);
               })
               .catch(function(res){
               });
