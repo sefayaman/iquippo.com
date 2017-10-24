@@ -162,7 +162,12 @@ function fetchAuctions(callback) {
   AuctionMaster.find({"_id":{$in:lotsDataInAuctions},'auctionType':{$ne:"S"}}, function(err, auctions) {
     if (err) callback(err);
     /*auctionsData = auctions;*/
-    auctions=JSON.parse(JSON.stringify(auctions));
+    try{
+    auctions=JSON.parse(JSON.stringify(auctions));  
+    }
+    catch(e){
+      return callback(null);
+    }
     auctionsData=auctions;
     console.log("auctions", auctionsData);
     return callback(null);
