@@ -159,8 +159,8 @@ var auctionsData = [];
 function fetchAuctions(callback) {
   var filter = {};
   console.log("filter",filter);
-  AuctionMaster.find({"_id":{$in:lotsDataInAuctions},'auctionType':{$ne:"S"}}, function(err, auctions) {
-    if (err) callback(err);
+  AuctionMaster.find({"_id":{$in:lotsDataInAuctions},'auctionType':{$ne:"S"},'isDeleted':false}, function(err, auctions) {
+    if (err) return callback(err);
     /*auctionsData = auctions;*/
     try{
     auctions=JSON.parse(JSON.stringify(auctions));  

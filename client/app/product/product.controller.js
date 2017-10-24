@@ -387,7 +387,7 @@
                   productSvc.getAssetMapData(filter)
                     .then(function(res) {
                       console.log("lot data edit", res);
-                      if (!isEmpty(res) && !res.message) {
+                      if (!isEmpty(res) && !res.message && res.lot && res.asset) {
                         //console.log("LOT info",res[0]);
                         $scope.lot = {};
                         $scope.assetMapCreation = false;
@@ -1982,7 +1982,7 @@
         $scope.autoSuccessMessage(20);
         var auctionfilter = {};
         auctionfilter._id = $scope.product.auctId;
-        if ($scope.product.auctionListing == true) {
+        if ($scope.product.auctionListing == true){
           if ($scope.assetMapCreation) {
             AuctionSvc.getAuctionDateData(auctionfilter).then(function(result) {
               if (!Auth.isAdmin()) {
