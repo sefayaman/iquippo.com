@@ -7,6 +7,8 @@ var AssetsInAuction = require('../product/productlotmap.model');
 var async = require('async');
 var ApiError = require('../../components/_error');
 var Util = require('../../components/utility');
+var validator = require('validator');
+
 exports.create = function(req, res) {
   //console.log("I am here 1",req.body);
   var options = {};
@@ -145,8 +147,8 @@ function fetchLotData(callback) {
     })*/
     lots=JSON.parse(JSON.stringify(lots));
     lots.forEach(function(item){
-      if(item.auction_id)
-      lotsDataInAuctions.push(item.auction_id)
+      if(item.auction_id && validator.isMongoId(item.auction_id))
+        lotsDataInAuctions.push(item.auction_id)
     })
     lotsData=lots;
     console.log("lotsAuct",lotsData);
