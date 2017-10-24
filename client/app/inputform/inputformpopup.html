@@ -60,10 +60,13 @@
           <input type="number" class="form-control" name="totalProcessingFee" ng-model="inputFormVm.inputFormReqInfo.totalProcessingFee" disabled="disabled" placeholder="Total Processing Fee" required>
         </div>        
       </div>
-      <p class="text-left">{{inputFormVm.inputFormReqInfo.remark}}</p>
+      <p class="text-left form-group" ng-if="inputFormVm.inputFormReqInfo.remark != ''"><strong>Note :</strong> {{inputFormVm.inputFormReqInfo.remark}}</p>
+
+      <legend></legend>
+      <div class="text-right">
+        <button type="button" class="btn btn-lg btn-warning" ng-click="inputFormVm.submit(inputFormReqForm)">Submit</button>
+      </div>
     </form>
   </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-lg btn-warning" ng-click="inputFormVm.submit(inputFormReqForm)">Submit</button>
-  </div>
+  
 </div>

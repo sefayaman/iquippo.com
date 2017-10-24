@@ -20,6 +20,7 @@ function InputFormCtrl($scope, $rootScope, Modal, Auth, categorySvc, LocationSvc
     vm.onStateChange = onStateChange;
 
 	function init() {
+		resetValue();
 		Auth.isLoggedInAsync(function(loggedIn) {
 			if (loggedIn) {
 				vm.inputFormReqInfo.user.userData = Auth.getCurrentUser()._id;
