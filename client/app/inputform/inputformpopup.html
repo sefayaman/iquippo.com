@@ -39,7 +39,7 @@
         </div>
         <div class="col-sm-6 form-group" ng-class="{'has-error':inputFormReqForm.tenure.$invalid && submitted}">
           <select class="form-control" name="tenure" ng-model="inputFormVm.inputFormReqInfo.tenure" ng-change="inputFormVm.getInstallmentPerUnit(inputFormVm.inputFormReqInfo.tenure)" required>
-            <option value="">*Select Tenure</option>
+            <option value="">*Select Tenure in months</option>
             <option value="{{ten.tenure}}" ng-repeat="ten in inputFormVm.inputFormMasterData | orderBy:'tenure'">{{ten.tenure}}</option>
           </select>
         </div>
