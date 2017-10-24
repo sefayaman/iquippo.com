@@ -103,7 +103,7 @@
 
       <div>
         <div>
-         <div class="row auction-list auction-details lots-buttons form-group" ng-repeat="lot in auctionDetailsVm.lotListing" ng-if="auctionOrientation !== 'L'"> 
+         <div class="row auction-list auction-details lots-buttons form-group" ng-repeat="lot in auctionDetailsVm.lotListing track by $index" ng-if="auctionOrientation !== 'L'"> 
               <div class="col-sm-6">
                 <div class="media form-group">
                     <a  ng-if="auctionDateVm.getProductData(product._id, 'total_products') != 0" class="pull-left" href="/assetinauction?auctionType={{product.auctionValue}}&auctionId={{product.auctionId}}&id={{product._id}}">
@@ -227,7 +227,7 @@
                       </a>
                    
                       <div class="media-body">
-                       
+  
                         <p>Lot Number - {{lot.lotNumber}}</p>
                         <p>Asset Description :
                       <span ng-repeat="assetId in lot.assetDesc">

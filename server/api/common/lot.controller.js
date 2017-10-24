@@ -233,7 +233,7 @@ exports.getLotsInAuction = function(req, res) {
   ], function(err, results) {
     if (err) return handleError(res, err);
     if (results && results.length && results[2]) {
-      //console.log("The data", results[2]);
+      console.log("The data", results[2]);
       return res.status(200).json(results[2]);
     }
 
@@ -246,7 +246,7 @@ function fetchLots(filter, options, callback) {
   Lot.find(filter, function(err, result) {
     if (err) callback(err);
     if (result.length > 0) {
-      //console.log("lots", result);
+      console.log("lots", result);
       options.lotData = result;
       result.forEach(function(x) {
           lotInfo[x._id] = {};

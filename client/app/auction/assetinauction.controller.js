@@ -295,7 +295,8 @@
                var obj={};
                console.log("key",key);
              obj.lotNumber=key;
-             obj.assetDesc=res[key].assetDescription;
+             obj.assetDesc=[];
+             obj.assetDesc.push(res[key].assetDescription);
              obj.amount=res[key].amount;
              obj.id=res[key].id;
              obj.primaryImg=res[key].primaryImg;
