@@ -104,6 +104,8 @@ function InputFormCtrl($scope, $rootScope, Modal, Auth, categorySvc, LocationSvc
 		for(var i=0; i < vm.inputFormMasterData.length; i++){
 			if(vm.inputFormMasterData[i].tenure == val){
 			  	vm.inputFormReqInfo.installmentPerUnit = vm.inputFormMasterData[i].installment;
+			  	vm.inputFormReqInfo.marginPerUnit = vm.inputFormMasterData[i].marginPerUnit;
+			  	vm.inputFormReqInfo.processingFee = vm.inputFormMasterData[i].processingFee;
 			  	vm.inputFormReqInfo.remark = vm.inputFormMasterData[i].remarks;
 			  	vm.inputFormReqInfo.totalInstallment = vm.inputFormReqInfo.quantity * vm.inputFormMasterData[i].installment;
 				vm.inputFormReqInfo.totalMargin = vm.inputFormReqInfo.quantity * vm.inputFormMasterData[i].marginPerUnit;

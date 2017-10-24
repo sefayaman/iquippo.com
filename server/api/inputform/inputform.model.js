@@ -20,6 +20,8 @@ var InputFormRequestSchema = new Schema({
   quantity:Number,
   tenure:Number,
   installmentPerUnit:Number,
+  marginPerUnit:Number,
+  processingFee:Number,
   totalInstallment:Number,
   totalMargin:Number,
   totalProcessingFee:Number,

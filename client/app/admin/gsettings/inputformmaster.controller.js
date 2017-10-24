@@ -220,6 +220,9 @@ function InputFormMasterCtrl($scope,$rootScope,$state,categorySvc, modelSvc, bra
 
     function resetValue() {
       vm.container = {};
+      vm.dataModel.category = {};
+      vm.dataModel.brand = {};
+      vm.dataModel.model = {};
       vm.container.categoryId = "";
       vm.container.brandId = "";
       vm.container.modelId = "";
