@@ -1108,10 +1108,12 @@
       if ($stateParams.id && !Auth.isAdmin()) {
         var auctiond = {};
         auctiond._id = $scope.product.auction._id;
+        auction.isDeleted=false;
 
         $scope.auctionReq.dbAuctionId = $scope.product.auction._id;
         AuctionMasterSvc.get(auctiond).then(function(result) {
-
+        
+          console.log("after second Step",result);
           $scope.lot.auctname = result[0].name;
           $scope.lot.auctionId = result[0].auctionId;
           $scope.lot.emdTax = result[0].emdTax;
@@ -2056,7 +2058,8 @@
                   .then(function(res) {});
               }
             });
-          } else {
+          } 
+          else {
             AuctionSvc.getAuctionDateData(auctionfilter).then(function(result) {
               //console.log("auctiondata",result.items[0].auctionId);
               if (!Auth.isAdmin()) {
@@ -2138,6 +2141,18 @@
 
 
             });
+          }
+        }
+        else{
+          if(!$scope.assetMapCreation){
+                filter={};
+                filter.isDeleted=true;
+                filter._id=$scope.assetMapId;
+                     productSvc.updateAssetMap(filter)
+                    .then(function(resultData) {
+                      //console.log("update lot admin",result);
+                    });
+             
           }
         }
 

@@ -287,6 +287,7 @@
     }
 
     function getLotsInAuction(filter) {
+      console.log("getLotsInAuction",filter);
       LotSvc.getLotsInAuction(filter)
         .then(function(res) {
           console.log(res);
@@ -295,8 +296,7 @@
                var obj={};
                console.log("key",key);
              obj.lotNumber=key;
-             obj.assetDesc=[];
-             obj.assetDesc.push(res[key].assetDescription);
+             obj.assetDesc=res[key].assetDescription;
              obj.amount=res[key].amount;
              obj.id=res[key].id;
              obj.primaryImg=res[key].primaryImg;
@@ -310,7 +310,7 @@
         .catch(function(err) {
           throw err;
         });
-
+       console.log("$scope.listing",vm.lotListing);
     }
 
     /*function getAssetsInAuction(filter) {

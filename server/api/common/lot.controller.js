@@ -252,8 +252,8 @@ function fetchLots(filter, options, callback) {
           lotInfo[x._id] = {};
           lotInfo[x._id].lotNumber = x.lotNumber;
           lotInfo[x._id].amount = x.startingPrice;
-        })
-        //console.log("info",lotInfo);
+        });
+        console.log("info",lotInfo);
       return callback(null, options);
     } else {
       return callback(null, {
@@ -268,7 +268,6 @@ function fetchAssetsInLot(options, callback) {
   options.lotData.forEach(function(lot) {
     lotsIdArray.push(lot._id);
   });
-
   AssetsInAuction.find({
     lot_id: {
       '$in': lotsIdArray
