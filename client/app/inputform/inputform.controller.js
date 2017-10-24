@@ -17,6 +17,7 @@ function InputFormCtrl($scope, $rootScope, Modal, Auth, categorySvc, LocationSvc
     vm.onBrandChange = onBrandChange;
     vm.onModelChange = onModelChange;
     vm.getInstallmentPerUnit =getInstallmentPerUnit;
+    vm.onStateChange = onStateChange;
 
 	function init() {
 		Auth.isLoggedInAsync(function(loggedIn) {
@@ -47,39 +48,69 @@ function InputFormCtrl($scope, $rootScope, Modal, Auth, categorySvc, LocationSvc
     function onModelChange() {
     	var filter = {};
 		resetValue();
-    	if(!vm.inputFormReqInfo.category || !vm.inputFormReqInfo.brand || !vm.inputFormReqInfo.model)
+		vm.inputFormMasterData = [];
+		vm.inputFormReqInfo.state = "";
+		vm.inputFormReqInfo.tenure = "";
+		if(!vm.inputFormReqInfo.category || !vm.inputFormReqInfo.brand || !vm.inputFormReqInfo.model)
     		return;
 
     	filter.category = vm.inputFormReqInfo.category;
     	filter.brand = vm.inputFormReqInfo.brand;
     	filter.model = vm.inputFormReqInfo.model;
+		$scope.inputFormState = [];
     	InputFormMasterSvc.get(filter)
         .then(function(result){
 			result.forEach(function(item){
 				if(item.additionalInfo)
-					vm.inputFormMasterData = item.additionalInfo;
+					vm.orignalInputFormMasterData = item.additionalInfo;
+					//vm.inputFormMasterData = item.additionalInfo;
+					onStateChange();
 			});
+			vm.orignalInputFormMasterData.forEach(function(item){
+				if($scope.inputFormState.indexOf(item.state) === -1 && item.state) {
+					$scope.inputFormState[$scope.inputFormState.length] = item.state;
+				}
+	        });
         });
     }
     
-    function resetValue() {
-		vm.inputFormMasterData = [];
+	function onStateChange(state){
+		resetValue()
 		vm.inputFormReqInfo.tenure = "";
+		vm.inputFormMasterData = [];
+		// if(!state) {
+		// 	angular.copy(vm.orignalInputFormMasterData, vm.inputFormMasterData);
+		// }
+
+		vm.orignalInputFormMasterData.forEach(function(item){
+			if(angular.isUndefined(item.state) || item.state === "" || item.state === state)
+				vm.inputFormMasterData[vm.inputFormMasterData.length] = item;
+		});
+	}
+
+    function resetValue() {
 		vm.inputFormReqInfo.installmentPerUnit = "";
 		vm.inputFormReqInfo.totalInstallment = "";
+		vm.inputFormReqInfo.totalMargin = "";
+		vm.inputFormReqInfo.totalProcessingFee = "";
+		vm.inputFormReqInfo.remark = "";
     }
 
     function getInstallmentPerUnit(val) {
-		vm.inputFormReqInfo.installmentPerUnit = "";
-		vm.inputFormReqInfo.totalInstallment = "";
+    	resetValue();
+		if(!val)
+			return;
 		for(var i=0; i < vm.inputFormMasterData.length; i++){
 			if(vm.inputFormMasterData[i].tenure == val){
-			  vm.inputFormReqInfo.installmentPerUnit = vm.inputFormMasterData[i].installment;
-			  break;
+			  	vm.inputFormReqInfo.installmentPerUnit = vm.inputFormMasterData[i].installment;
+			  	vm.inputFormReqInfo.remark = vm.inputFormMasterData[i].remarks;
+			  	vm.inputFormReqInfo.totalInstallment = vm.inputFormReqInfo.quantity * vm.inputFormMasterData[i].installment;
+				vm.inputFormReqInfo.totalMargin = vm.inputFormReqInfo.quantity * vm.inputFormMasterData[i].marginPerUnit;
+				vm.inputFormReqInfo.totalProcessingFee = vm.inputFormReqInfo.quantity * vm.inputFormMasterData[i].processingFee;
+			  	break;
 			}
 		}
-		vm.inputFormReqInfo.totalInstallment = val * vm.inputFormReqInfo.installmentPerUnit;
-    }
+	}
 
     function onCategoryChange(catName, reset) {
         vm.brandList = [];
@@ -122,6 +153,8 @@ function InputFormCtrl($scope, $rootScope, Modal, Auth, categorySvc, LocationSvc
 			return;
 		}
 		$scope.submitted = false;
+		//if(vm.inputFormReqInfo.state)
+			//vm.inputFormReqInfo.country = LocationSvc.getCountryByState(vm.inputFormReqInfo.state);
 		InputFormSvc.save(vm.inputFormReqInfo)
 			.then(function(res) {
 				if (res.errorCode == 0) {

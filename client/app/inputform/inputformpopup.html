@@ -27,22 +27,40 @@
           </select>
         </div> 
         <div class="col-sm-6 form-group" ng-class="{'has-error':inputFormReqForm.tenure.$invalid && submitted}">
-          <!-- <input type="number" class="form-control" name="tenure" ng-model="inputFormVm.inputFormReqInfo.tenure" placeholder="Tenure" required> -->
-          <select class="form-control" name="tenure" ng-model="inputFormVm.inputFormReqInfo.tenure" ng-change="inputFormVm.getInstallmentPerUnit(inputFormVm.inputFormReqInfo.tenure)" required>
-            <option value="">*Select Tenure</option>
-            <option value="{{ten.tenure}}" ng-repeat="ten in inputFormVm.inputFormMasterData | orderBy:'tenure'">{{ten.tenure}}</option>
+          <select class="form-control" ng-change="inputFormVm.onStateChange(inputFormVm.inputFormReqInfo.state)" name="tenure" ng-model="inputFormVm.inputFormReqInfo.state">
+            <option value="">Select State</option>
+            <option ng-repeat="state in inputFormState | orderBy:'state'" value="{{state}}">{{state}}</option>
           </select>
         </div>        
       </div>
-       <div class="row">
-        <div class="col-sm-6 form-group" ng-class="{'has-error':inputFormReqForm.installmentPerUnit.$invalid && submitted}">
-          <input type="number" class="form-control" name="installmentPerUnit" ng-model="inputFormVm.inputFormReqInfo.installmentPerUnit" disabled="disabled" placeholder="Installment per Unit" required>
+      <div class="row">
+        <div class="col-sm-6 form-group" ng-class="{'has-error':inputFormReqForm.quantity.$invalid && submitted}">
+          <input type="number" class="form-control" name="quantity" ng-model="inputFormVm.inputFormReqInfo.quantity" ng-keyup="inputFormVm.getInstallmentPerUnit(inputFormVm.inputFormReqInfo.tenure)" typeahead-focus-first = "false" typeahead-wait-ms="100"  autocomplete="off" placeholder="Quantity" required>
         </div>
-        <div class="col-sm-6 form-group" ng-class="{'has-error':inputFormReqForm.totalInstallment.$invalid && submitted}">
-          <input type="number" class="form-control" name="totalInstallment" ng-model="inputFormVm.inputFormReqInfo.totalInstallment" disabled="disabled" placeholder="Total Installment" required>
+        <div class="col-sm-6 form-group" ng-class="{'has-error':inputFormReqForm.tenure.$invalid && submitted}">
+          <select class="form-control" name="tenure" ng-model="inputFormVm.inputFormReqInfo.tenure" ng-change="inputFormVm.getInstallmentPerUnit(inputFormVm.inputFormReqInfo.tenure)" required>
+            <option value="">*Select Tenure in months</option>
+            <option value="{{ten.tenure}}" ng-repeat="ten in inputFormVm.inputFormMasterData | orderBy:'tenure'">{{ten.tenure}}</option>
+          </select>
+        </div>
+      </div>
+       <div class="row">
+        <div class="col-sm-6 form-group">
+          <input type="number" class="form-control" name="installmentPerUnit" ng-model="inputFormVm.inputFormReqInfo.installmentPerUnit" disabled="disabled" placeholder="Installment per Unit">
+        </div>
+        <div class="col-sm-6 form-group">
+          <input type="number" class="form-control" name="totalInstallment" ng-model="inputFormVm.inputFormReqInfo.totalInstallment" disabled="disabled" placeholder="Total Installment">
         </div>        
       </div>
-      
+      <div class="row">
+        <div class="col-sm-6 form-group">
+          <input type="number" class="form-control" name="totalMargin" ng-model="inputFormVm.inputFormReqInfo.totalMargin" disabled="disabled" placeholder="Total Margin" >
+        </div>
+        <div class="col-sm-6 form-group">
+          <input type="number" class="form-control" name="totalProcessingFee" ng-model="inputFormVm.inputFormReqInfo.totalProcessingFee" disabled="disabled" placeholder="Total Processing Fee" required>
+        </div>        
+      </div>
+      <p class="text-left">{{inputFormVm.inputFormReqInfo.remark}}</p>
     </form>
   </div>
   <div class="modal-footer">

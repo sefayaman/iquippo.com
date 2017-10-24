@@ -1147,6 +1147,11 @@
             	$scope.submitted = true;
             	return;
             }*/
+            if (vm.banner.hyperlink === 'Yes' && vm.banner.isClickable === 'Yes') {
+                Modal.alert("Please select any one from Express Interest or Hyperlink!", true);
+                return;
+            }
+
             if (!vm.banner.webImg) {
                 Modal.alert("Please upload image for web.", true);
                 return;
@@ -1168,8 +1173,8 @@
                         vm.banner = {};
                         resetData();
                         getAllBanner();
-                    } else
-                        Modal.alert(res.message);
+                    }
+                    Modal.alert(res.message);
                 })
 
         }
@@ -1186,6 +1191,10 @@
             	$scope.submitted = true;
             	return;
             }*/
+            if (vm.banner.hyperlink === 'Yes' && vm.banner.isClickable === 'Yes') {
+                Modal.alert("Please select any one from Express Interest or Hyperlink!", true);
+                return;
+            }
             if (!vm.banner.mobileImg && vm.banner.showInMobile == 'Yes') {
                 Modal.alert("Please upload image for mobile.", true);
                 return;
@@ -1205,8 +1214,8 @@
                         resetData();
                         vm.bannerEdit = false;
                         getAllBanner();
-                    } else
-                        Modal.alert(res.message);
+                    }
+                    Modal.alert(res.message);
                 })
         }
 

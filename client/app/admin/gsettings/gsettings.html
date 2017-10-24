@@ -999,18 +999,21 @@
 			<legend></legend>
 			<div class="row">
 				<div class="col-sm-4 form-group" ng-class="{'has-error':inputFormMaster.category.$invalid && submitted}">
+					<label>Select Category</label>
 					<select class="form-control" name="category" ng-model="inputFormMastetVm.container.categoryId" ng-change="inputFormMastetVm.onCategoryChange(inputFormMastetVm.container.categoryId)" required>
 						<option value="">*Select Category</option>
 						<option value="{{cat._id}}" ng-repeat="cat in inputFormMastetVm.allCategory | orderBy:'name'" ng-if="cat.name != 'Other'">{{cat.name}}</option>
 					</select>
 				</div>
 				<div class="col-sm-4 form-group" ng-class="{'has-error':inputFormMaster.brand.$invalid && submitted}">
+					<label>Select Brand</label>
 					<select class="form-control" name="brand" ng-model="inputFormMastetVm.container.brandId" ng-change="inputFormMastetVm.onBrandChange(inputFormMastetVm.container.brandId)" required>
 						<option value="">*Select Brand</option>
 						<option value="{{br._id}}" ng-repeat="br in inputFormMastetVm.brandList | orderBy:'name'" ng-if="br.name != 'Other'">{{br.name}}</option>
 					</select>
 				</div>
 				<div class="col-sm-4 form-group" ng-class="{'has-error':inputFormMaster.model.$invalid && submitted}">
+					<label>Select Model</label>
 					<select class="form-control" name="model" ng-model="inputFormMastetVm.container.modelId" ng-change="inputFormMastetVm.onModelChange(inputFormMastetVm.container.modelId)" required>
 						<option value="">*Select Model</option>
 						<option value="{{md._id}}" ng-repeat="md in inputFormMastetVm.modelList | orderBy:'name'" ng-if="md.name != 'Other'">{{md.name}}</option>
@@ -1023,18 +1026,42 @@
 				</div> -->
 			</div>
 			<div class="row" ng-repeat="addInfo in inputFormMastetVm.dataModel.additionalInfo">
-				<div class="col-sm-3 form-group">
-					<input type="number" class="form-control" name="tenure" ng-model="addInfo.tenure" placeholder="Tenure">
+				<div class="col-sm-9">
+					<div class="row">
+						<div class="col-sm-4 form-group">
+							<label>Tenure in months</label>
+							<input type="number" class="form-control" name="tenure" ng-model="addInfo.tenure" placeholder="Tenure in months">
+						</div>
+						<div class="col-sm-4 form-group">
+							<label>Installment</label>
+							<input type="number" class="form-control" name="tenure" ng-model="addInfo.installment" placeholder="Installment">
+						</div>
+						<div class="col-sm-4 form-group">
+							<label>Margin per unit</label>
+							<input type="number" class="form-control" name="marginPerUnit" ng-model="addInfo.marginPerUnit" placeholder="Margin per unit">
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-4 form-group">
+							<label>Processing fee per unit</label>
+							<input type="number" class="form-control" name="processingFee" ng-model="addInfo.processingFee" placeholder="Processing fee per unit">
+						</div>
+						<div class="col-sm-4 form-group">
+							<label>Select State</label>
+							<select class="form-control" name="state" ng-model="addInfo.state">
+								<option value="">Select State</option>
+					            <option ng-repeat="state in stateList | orderBy:'name'" value="{{state.name}}">{{state.name}}</option>
+							</select>
+						</div>
+						<div class="col-sm-4 form-group">
+							<label>Remarks</label>
+							<input type="text" class="form-control" name="tenure" ng-model="addInfo.remarks" placeholder="Remarks">
+						</div>
+					</div>
 				</div>
 				<div class="col-sm-3 form-group">
-					<input type="number" class="form-control" name="tenure" ng-model="addInfo.installment" placeholder="Installment">
-				</div>
-				<div class="col-sm-3 form-group">
-					<input type="text" class="form-control" name="tenure" ng-model="addInfo.remarks" placeholder="Remarks">
-				</div>
-				<div class="col-sm-3 form-group">
-					<button type="button" class="btn btn-default" ng-click="inputFormMastetVm.dataModel.additionalInfo.splice($index,1)" ng-if="!$last">Delete</button>
-					<button type="button" class="btn btn-default" ng-click="inputFormMastetVm.dataModel.additionalInfo.push({})" ng-if="$last">Add More</button>
+					<button type="button" class="btn btn-default verticalButton" ng-click="inputFormMastetVm.dataModel.additionalInfo.splice($index,1)" ng-if="!$last">Delete</button>
+					<button type="button" class="btn btn-default verticalButton" ng-click="inputFormMastetVm.dataModel.additionalInfo.push({})" ng-if="$last">Add More</button>
 				</div>
 			</div>
 			<div class="row">
