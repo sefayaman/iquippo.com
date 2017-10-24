@@ -169,7 +169,7 @@ exports.saveOfflineRequest = function(req,res){
  
       console.log("filterdata",filter);
   
-      Payment.update({_id:req.body.transactionId},{$set:data},function(err){
+      Payment.update({_id:req.body.transactionId},{$set:req.body},function(err){
         if (err) { return handleError(res, err); }
         return res.status(200).json({ message: "Request Saved Sucessfully"});
     });

@@ -194,7 +194,7 @@
 
     }
 
-    function createReqData(auctionData, userData, lotData) {
+    function createReqData(auctionData,userData,lotData) {
       var dataObj = {};
       dataObj.auction = {};
       dataObj.user = {};
@@ -223,24 +223,51 @@
            if(result.data =="undone"){
 
                 Modal.confirm("You have done partial registration, payment part is pending with lotnumbers "+" "+ result.lotNumber,function(isGo){
-                     if(isGo == 'no')
-                       return;
-                     $rootScope.loading = true;
-                    
-                      if(result && result.errorCode != 0) { 
-                           //Modal.alert(result.message, true);  
-                           $state.go('main');
-                           return;
-                     }
                      
-                     if(result.transactionId){
+                  if(isGo == 'no'){
+                      return;
+                   }else{
+       
+                     Modal.confirm('Do you want to pay online', function(isGo) {
+                       if (isGo == 'no'){
 
-                       $rootScope.loading = false;
-                       $state.go('payment', {
-                         tid: result.transactionId
+                        dataObj = {};
+                        dataObj.paymentMode = "offline";
+                        dataObj.transactionId = result.transactionId;
+                       
+                        userRegForAuctionSvc.saveOfflineRequest(dataObj).then(function(rd){
+                         Modal.alert("data saved Successfully"); 
+                         
+       
+                         });
+                        
+                       }else{
+                            $rootScope.loading = true;
+       
+                            if(result && result.errorCode != 0){
+                                 $state.go('main');
+                                 return;
+                            }
+                           
+                             if (result.transactionId) {
+                                   $rootScope.loading = false;
+                                   $state.go('payment', {
+                                   tid: result.transactionId
+                                   });
+                             }
+       
+                       }
+       
+       
                      });
-                     }
+       
+       
+                   }
+                                       
+
+
                    });
+                   
             }
         }else{
            if (auctionData.emdTax == "overall") {
@@ -299,14 +326,13 @@
 
               Modal.confirm('Do you want to pay online', function(isGo) {
                 if (isGo == 'no'){
-
+                  dataObj = {};
                  dataObj.paymentMode = "offline";
                  dataObj.transactionId = result.transactionId;
                 
                  userRegForAuctionSvc.saveOfflineRequest(dataObj).then(function(rd){
                   Modal.alert("data saved Successfully"); 
                   
-
                   });
                  
                 }else{
