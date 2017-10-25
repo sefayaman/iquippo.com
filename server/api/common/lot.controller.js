@@ -5,7 +5,7 @@ var Lot = require('./lot.model');
 var AuctionMaster = require('../auction/auctionmaster.model');
 var AssetsInAuction = require('../product/productlotmap.model');
 var async = require('async');
-var ApiError = require('../../components/_error');
+var APIError = require('../../components/_error');
 var Util = require('../../components/utility');
 var validator = require('validator');
 
@@ -151,6 +151,12 @@ function fetchLotData(callback) {
       if (item.auction_id && validator.isMongoId(item.auction_id))
         lotsDataInAuctions.push(item.auction_id)
       item.lot_mongo_id = item._id;
+      item.lot_startDate = item.startDate;
+      item.lot_endDate = item.endDate;
+      item.lot_bidIncrement = item.bidIncrement;
+      item.lot_static_increment = item.static_increment;
+      item.lot_lastMintBid = item.lastMintBid;
+      item.lot_extendedTo = item.extendedTo;
     })
     lotsData = lots;
 
@@ -248,6 +254,7 @@ exports.getLotsInAuction = function(req, res) {
       viewData(options, next);
     }
   ], function(err, results) {
+    console.log("error",err);
     if (err) return handleError(res, err);
     if (results && results.length && results[2]) {
       console.log("The data", results[2]);
@@ -260,6 +267,7 @@ exports.getLotsInAuction = function(req, res) {
 var lotInfo = {};
 
 function fetchLots(filter, options, callback) {
+  filter.isDeleted = false;
   Lot.find(filter, function(err, result) {
     if (err) callback(err);
     if (result.length > 0) {
@@ -273,9 +281,9 @@ function fetchLots(filter, options, callback) {
       console.log("info", lotInfo);
       return callback(null, options);
     } else {
-      return callback(null, {
-        msg: 'No Lots present in the auction '
-      });
+      console.log("Error");
+      return callback(new APIError(404, 'No Assets present in the auction'));
+        
     }
   });
 }
@@ -292,9 +300,13 @@ function fetchAssetsInLot(options, callback) {
     isDeleted: false
   }, function(err, results) {
     if (err) callback(err);
+    if(results.length > 0){
     options.assetData = results;
-    //console.log("assets",results);
-    return callback(null, options);
+  return callback(null, options);
+  }
+  else
+    return callback(new Error({message:"No assets in auction"}));
+    //console.log("assets",results);  
   });
 }
 
@@ -418,5 +430,6 @@ exports.removeLotData = function(req, res) {
 };
 
 function handleError(res, err) {
-  return res.status(500).json(err);
+  console.log("err",err);
+  return res.status(404).json(err);
 }

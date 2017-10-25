@@ -42,6 +42,7 @@
     $scope.currentAuction = {};
     $scope.fetchAsset = fetchAsset;
     $scope.isVisible = false;
+    $scope.msg="";
     //$scope.liveAuctionView=liveAuctionView;
     var temp = [];
     //registering category brand functions
@@ -290,7 +291,7 @@
       console.log("getLotsInAuction",filter);
       LotSvc.getLotsInAuction(filter)
         .then(function(res) {
-          console.log(res);
+          console.log("gets",res);
           if (res && Object.keys(res).length) {
             Object.keys(res).forEach(function(key) {
                var obj={};
@@ -302,10 +303,38 @@
              obj.primaryImg=res[key].primaryImg;
              obj.url="http://auctionsoftwaremarketplace.com:3007/bidwidget/" + query.auctionId + "/" + obj.id + "/" + $scope.userId;
              console.log("object",obj);
+             var dataObj={};
+                  dataObj.auction = {};
+                  dataObj.user = {};
+                  dataObj.auction.dbAuctionId = query.id;
+                  dataObj.user._id = Auth.getCurrentUser()._id;
+                  dataObj.lotNumber = obj.lotNumber;
+                  userRegForAuctionSvc.checkUserRegis(dataObj)
+                    .then(function(result) {
+                      console.log("User regis",result);
+                      if (result.data) {
+                        if (result.data == "done") {
+
+                          obj.isVisible = true;
+
+
+                        }
+                        if (result.message == "No Data") {
+                          obj.isVisible = false;
+
+                        }
+                      } else {
+                        obj.isVisible = false;
+                      }
+                    })
              vm.lotListing.push(obj);
-            console.log("$scope.lotlist",vm.lotListing);
+            console.log("$scope.lotlist",vm.lotListing);     
             });
           }
+          else{
+          $scope.msg=res.message;
+          console.log("msg",$scope.msg);
+        }
         })
         .catch(function(err) {
           throw err;

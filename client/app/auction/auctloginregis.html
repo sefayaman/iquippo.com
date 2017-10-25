@@ -10,8 +10,10 @@
           <div class="row">
             <div class="col-sm-offset-2 col-sm-8 form-group" ng-class="{'has-error': form.userId.$invalid && form.submitted }">
 <!-- ng-if="emdTax == 'lotWise'" -->
+                <div ng-if="lotSelection">
                 <select class="form-control form-group" name="selectedLots" id="selectedLots" style="height: 80px;" ng-options="lots.lotNumber as lots.lotNumber for lots in auctionRegisVm.lotList" ng-model="auctionRegisVm.dataToSend.selectedLots" multiple>
               </select>
+              </div>
               <div class="text-right">
                 <button type="button" class="btn btn-danger" ng-click="auctionRegisVm.openAuctionModel(form)">Submit</button>
               </div>

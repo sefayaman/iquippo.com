@@ -75,6 +75,7 @@
           }
 
           function save(form){
+            console.log("the form",form);
               if(form.$invalid){
               $scope.submitted = true;
               return;

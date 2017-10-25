@@ -1304,6 +1304,7 @@ exports.getFilterOnAuctionMaster = function(req, res) {
     });
   }
    console.log("get auction data",filter);
+   console.log("req.body",req.body);
   var query = AuctionMaster.find(filter);
   query.exec(
     function(err, items) {

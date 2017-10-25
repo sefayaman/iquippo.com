@@ -103,7 +103,8 @@ exports.validateUser = function(req, res){
 
 
 exports.checkUserRegis = function(req,res){
-
+ var arr=[];
+   console.log("checkUser",req.body);
   var filter = {};
 
   if(req.body.auction.dbAuctionId){
@@ -126,9 +127,9 @@ exports.checkUserRegis = function(req,res){
     
   }
   if(req.body.lotNumber){
-
+   arr.push(req.body.lotNumber);
     filter['lotNumber'] ={
-      $in:req.body.lotNumber
+      $in:arr
     } 
 
   }
@@ -138,6 +139,7 @@ exports.checkUserRegis = function(req,res){
 
   query.exec(
      function(err, data){
+      console.log("data formed",data);
         if(data && data.length > 0){
                   var filter ={};
                   filter['_id'] = data[0].transactionId;

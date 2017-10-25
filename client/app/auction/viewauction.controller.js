@@ -45,8 +45,12 @@
     function openAuctionLot(auction){
       Auth.isLoggedInAsync(function(loggedIn) {
         if (loggedIn) {
+           console.log("auction",auction);
            var auctionRegislogin = $rootScope.$new();
            auctionRegislogin.currentAuction = auction;
+           auctionRegislogin.params={
+              emdTax: auction.emdTax
+            }
             Modal.openDialog('auctionRegislogin',auctionRegislogin);
         }else{
           console.log("auction",auction);

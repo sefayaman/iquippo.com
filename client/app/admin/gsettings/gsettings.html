@@ -404,8 +404,8 @@
 								</div>
 							</div>
 						</div>
-						<div class="col-sm-3 form-group">
-							<select class="form-control"  name="emd&Tax" ng-model="gsettingVm.auctionData.emdTax">
+						<div class="col-sm-3 form-group" ng-class="{'has-error': auctionDateForm.emdTax.$invalid && submitted }">
+							<select class="form-control"  name="emdTax" ng-model="gsettingVm.auctionData.emdTax" required>
 								<option value="">EMD and Tax Applicability</option>
 								<option value="lotWise">Lot Wise</option>
 								<option value="overall">Overall</option>					
@@ -413,16 +413,16 @@
 						</div>					
 					</div>
 					<div class="row">
-						<div class="col-sm-3 form-group" ng-if="gsettingVm.auctionData.emdTax === 'overall'">
+						<div class="col-sm-3 form-group" ng-if="gsettingVm.auctionData.emdTax === 'overall'" ng-class="{'has-error': auctionDateForm.emdAmount.$invalid && submitted }" >
 							
 							<!-- <input type="Number" class="form-control" name="regCharges" ng-model="gsettingVm.auctionData.regCharges" placeholder="Registration Charges for Auction" disabled> -->
-							<input type="Number" class="form-control" name="emdAmount" ng-model="gsettingVm.auctionData.emdAmount" placeholder="EMD Amount">
+							<input type="Number" class="form-control" name="emdAmount" ng-model="gsettingVm.auctionData.emdAmount" placeholder="EMD Amount" required>
 						</div>
-						<div class="col-sm-3 form-group">
-							<input type="Number" class="form-control" ng-model="gsettingVm.auctionData.factorCreditlimit" name="" value="" placeholder="*Multiplier Factor for Credit Limit">
+						<div class="col-sm-3 form-group" ng-class="{'has-error': auctionDateForm.multiplierFactor.$invalid && submitted }">
+							<input type="Number" class="form-control" ng-model="gsettingVm.auctionData.factorCreditlimit" name="multiplierFactor" value="" placeholder="*Multiplier Factor for Credit Limit" required>
 						</div>
-						<div class="col-sm-3 form-group">
-							<select class="form-control" ng-model="gsettingVm.auctionData.taxApplicability">
+						<div class="col-sm-3 form-group" ng-class="{'has-error': auctionDateForm.tax.$invalid && submitted }" >
+							<select class="form-control" name="tax" ng-model="gsettingVm.auctionData.taxApplicability" required>
 								<option value="">*Tax Applicability</option>
 								<option value="included">Tax included</option>
 								<option value="notIncluded">Tax not included</option>						
@@ -501,8 +501,8 @@
 								<legend></legend>
 								<h5>Bid Static Increment</h5>
 								<div class="row">
-									<div class="col-sm-3 form-group">										
-										<input type="text" class="form-control" ng-model="gsettingVm.auctionData.static_increment" name="" value="" placeholder="Static Increment">
+									<div class="col-sm-3 form-group" ng-class="{'has-error': auctionDateForm.bidStatic.$invalid && submitted }">										
+										<input type="text" class="form-control" ng-model="gsettingVm.auctionData.static_increment" name="bidStatic" value="" placeholder="Static Increment" ng-required="gsettingVm.auctionData.staticIncrement && !gsettingVm.auctionData.rangeIncrement">
 									</div>
 								</div>
 							</div>
@@ -510,14 +510,14 @@
 								<legend></legend>
 								<h5>Bid Range Increment</h5>
 								<div class="row" ng-repeat="bidinfo in gsettingVm.auctionData.bidInfo">
-									<div class="col-sm-3 form-group">
-										<input type="text" class="form-control"  ng-model="bidinfo.bidFrom" name="" value="" placeholder="Bid From">
+									<div class="col-sm-3 form-group" ng-class="{'has-error': auctionDateForm.bidFrom.$invalid && submitted }">
+										<input type="text" class="form-control"  ng-model="bidinfo.bidFrom" name="bidFrom" value="" placeholder="Bid From" ng-required="!gsettingVm.auctionData.staticIncrement && gsettingVm.auctionData.rangeIncrement">
 									</div>
-									<div class="col-sm-3 form-group">
-										<input type="text" class="form-control" ng-model="bidinfo.bidTo" name="" value="" placeholder="Bid To">
+									<div class="col-sm-3 form-group" ng-class="{'has-error': auctionDateForm.bidTo.$invalid && submitted }">
+										<input type="text" class="form-control" ng-model="bidinfo.bidTo" name="bidTo" value="" placeholder="Bid To" ng-required="!gsettingVm.auctionData.staticIncrement && gsettingVm.auctionData.rangeIncrement">
 									</div>
-									<div class="col-sm-3 form-group">
-										<input type="text" class="form-control" ng-model="bidinfo.bidIncrement" name="" value="" placeholder="Increment">
+									<div class="col-sm-3 form-group" ng-class="{'has-error': auctionDateForm.bidIncrement.$invalid && submitted }">
+										<input type="text" class="form-control" ng-model="bidinfo.bidIncrement" name="bidIncrement" value="" placeholder="Increment" ng-required="!gsettingVm.auctionData.staticIncrement && gsettingVm.auctionData.rangeIncrement">
 									</div>
 									<div class="col-sm-3 form-group ">
 										<button type="button" class="btn btn-default" ng-click="gsettingVm.auctionData.bidInfo.push({})" ng-if="$last">Add More</button>
@@ -2890,9 +2890,9 @@
 		<h4>Add EMD Auction</h4>
 		<legend></legend>
 		<div class="form-group">
-			<form class="techInformationForm" name="emdform" novalidate>
+			<form class="emdFormInfo" name="emdform" novalidate>
 				 <div class="row form-group">
-			        <div class="col-sm-3" ng-class="{'has-error':emdVm.auctId.$invalid && submitted}">
+			        <div class="col-sm-3" ng-class="{'has-error':emdform.auctionId.$invalid && submitted}">
 			        	<label>Select Auction Id</label>
 		 		       	<select class="form-control" name="auctionId" ng-model="emdVm.dataModel.auction_id"  ng-change="onSelectAuction(emdVm.dataModel.auction_id)" required> 
 							 <option value=""> Select Auction Id </option> 
@@ -2900,20 +2900,20 @@
 				       	</select>
 					</div>
 					
-				     <div class="col-sm-3" ng-class="{'has-error':emdVm.auctionName.$invalid && submitted}">
+				     <div class="col-sm-3" ng-class="{'has-error':emdform.auctionName.$invalid && submitted}">
 				     	<label>Auction Name </label>
 						<input type="text" class="form-control" name="auctionName" ng-model="emdVm.dataModel.auctionName" value="{{emdVm.auctionName}}" placeholder="{{emdVm.auctionName}}" disabled>
 					</div>
-                    <div class="col-sm-3" ng-class="{'has-error':emdVm.selectedLots.$invalid && submitted}">
+                    <div class="col-sm-3" ng-class="{'has-error':emdform.selectedLots.$invalid && submitted}">
                     <label>Select the lot</label>
-						<select class="form-control" name="selectedLots" id="selectedLots" style="height: 80px;" ng-options="lots.lotNumber as lots.lotNumber for lots in lotList" ng-model="emdVm.dataModel.selectedLots.lotNumber" multiple>
+						<select class="form-control" name="selectedLots" id="selectedLots" style="height: 80px;" ng-options="lots.lotNumber as lots.lotNumber for lots in lotList" ng-model="emdVm.dataModel.selectedLots.lotNumber" multiple required>
 			           
 					    </select>
 			            
 						<!-- <input type="text" class="form-control" name="lotId" ng-model="emdVm.dataModel.lotId" placeholder="Enter Lot Id's" required>
 						<i>Enter comma seperated value</i> -->					
                    </div>
-					<div class="col-sm-3 form-group" ng-class="{'has-error':emdVm.amount.$invalid && submitted}">
+					<div class="col-sm-3 form-group" ng-class="{'has-error':emdform.amount.$invalid && submitted}">
 						<label>EMD Amount</label>
 		 		       	<input type="text" class="form-control" name="amount" ng-model="emdVm.dataModel.emdAmount" placeholder="Enter Emd Amount" required>
 					</div>
@@ -3030,8 +3030,8 @@
 						<legend></legend>
 						<h5>Bid Static Increment</h5>
 						<div class="row">
-							<div class="col-sm-3 form-group">										
-								<input type="text" class="form-control" ng-model="lotVm.dataModel.static_increment" name="" value="" placeholder="Bid Increment">
+							<div class="col-sm-3 form-group" ng-class="{'has-error':lotform.bidStatic.$invalid && submitted}">										
+								<input type="text" class="form-control" ng-model="lotVm.dataModel.static_increment" name="bidStatic" value="" placeholder="Bid Increment" ng-required="lotVm.dataModel.staticIncrement && !lotVm.dataModel.rangeIncrement">
 							</div>
 						</div>
 					</div>
@@ -3039,14 +3039,14 @@
 						<legend></legend>
 						<h5>Bid Range Increment</h5>
 						<div class="row" ng-repeat="bidinfo in lotVm.dataModel.bidInfo">
-							<div class="col-sm-3 form-group">
-								<input type="text" class="form-control"  ng-model="bidinfo.bidFrom" name="" value="" placeholder="Bid From">
+							<div class="col-sm-3 form-group" ng-class="{'has-error':lotform.bidFrom.$invalid && submitted}">
+								<input type="text" class="form-control"  ng-model="bidinfo.bidFrom" name="bidFrom" value="" placeholder="Bid From" ng-required="!lotVm.dataModel.staticIncrement && lotVm.dataModel.rangeIncrement">
 							</div>
-							<div class="col-sm-3 form-group">
-								<input type="text" class="form-control" ng-model="bidinfo.bidTo" name="" value="" placeholder="Bid To">
+							<div class="col-sm-3 form-group" ng-class="{'has-error':lotform.bidTo.$invalid && submitted}">
+								<input type="text" class="form-control" ng-model="bidinfo.bidTo" name="bidTo" value="" placeholder="Bid To" ng-required="!lotVm.dataModel.staticIncrement && lotVm.dataModel.rangeIncrement">
 							</div>
-							<div class="col-sm-3 form-group">
-								<input type="text" class="form-control" ng-model="bidinfo.bidIncrement" name="" value="" placeholder="Increment">
+							<div class="col-sm-3 form-group" ng-class="{'has-error':lotform.bidIncrement.$invalid && submitted}">
+								<input type="text" class="form-control" ng-model="bidinfo.bidIncrement" name="bidIncrement" value="" placeholder="Increment" ng-required="!lotVm.dataModel.staticIncrement && lotVm.dataModel.rangeIncrement">
 							</div>
 							<div class="col-sm-3 form-group ">
 								<button type="button" class="btn btn-default" ng-click="lotVm.dataModel.bidInfo.push({})" ng-if="$last">Add More</button>
@@ -3097,12 +3097,12 @@
 								<td>{{lotdata.lotNumber}}</td>
 								<td>{{lotdata.startingPrice}}</td>
 								<td>{{lotdata.reservePrice}}</td>
-								<td>{{lotdata.lastMintBid}}</td>
-								<td>{{lotdata.extendedTo}}</td>
+								<td>{{lotdata.lot_lastMintBid}}</td>
+								<td>{{lotdata.lot_extendedTo}}</td>
 								<td><a href="javascript:void(0);">View Range</a></td>
 								<td><a href="javascript:void(0);">View Range</a></td>
-								<td>{{lotdata.startDate | date:'MM/dd/yyyy'}}</td>
-								<td>{{lotdata.endDate | date:'MM/dd/yyyy'}}</td>
+								<td>{{lotdata.lot_startDate | date:'MM/dd/yyyy'}}</td>
+								<td>{{lotdata.lot_endDate | date:'MM/dd/yyyy'}}</td>
 								<td>
 									<a href="javascript:void(0);" class="btn btn-primary btn-sm" uib-popover="Edit" popover-trigger="mouseenter" ng-click="lotVm.editClicked(lotdata)">
 										<i class="fa fa-pencil"></i>

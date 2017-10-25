@@ -10,11 +10,20 @@
     vm.auctionListing = [];
     vm.dataModel = {};
     vm.lotList=[];
+    $scope.lotSelection=false;
     var dataToSend = {};
     var filter = {};
     vm.openAuctionModel =openAuctionModel;
     vm.auctionId ="";
     vm.log =[];
+    vm.closeDialog=closeDialog;
+    var query=$scope.params;
+    console.log("emdTax",query.emdTax)
+    if(query.emdTax == "lotWise"){
+      $scope.lotSelection=true;
+      console.log($scope.lotSelection);
+    }
+
     // $scope.currentAuction = {};
 
     function init() {
