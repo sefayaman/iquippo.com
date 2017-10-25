@@ -138,6 +138,7 @@
       $scope.lot = "";
       filter = {};
       filter.auctionId = dbAuctionId;
+      filter.isDeleted=false;
       console.log("filter", filter);
       fetchLot(filter);
     }
