@@ -94,6 +94,8 @@ function InputFormCtrl($scope, $rootScope, Modal, Auth, categorySvc, LocationSvc
 		vm.inputFormReqInfo.totalInstallment = "";
 		vm.inputFormReqInfo.totalMargin = "";
 		vm.inputFormReqInfo.totalProcessingFee = "";
+		vm.inputFormReqInfo.marginPerUnit = "";
+		vm.inputFormReqInfo.processingFee = "";
 		vm.inputFormReqInfo.remark = "";
     }
 
