@@ -8,8 +8,9 @@
         <img  data-ng-src="{{uploadImagePrefix}}banner/{{slide.webImg}}" data-ng-if="!slide.default">
       </a>
       <a ng-href="javascript:void(0);" data-ng-if="slide.hyperlink == 'Yes'" data-ng-click="mainVm.openBidModal(slide)">
-        <img  data-ng-src="{{uploadImagePrefix}}banner/{{slide.webImg}}" data-ng-if="!slide.default">        
+        <img  data-ng-src="{{uploadImagePrefix}}banner/{{slide.webImg}}" data-ng-if="!slide.default">
       </a>
+      <img  data-ng-src="{{uploadImagePrefix}}banner/{{slide.webImg}}" data-ng-if="!slide.default && slide.hyperlink != 'Yes' && slide.isClickable != 'Yes'">
       <img  data-ng-src="assets/images/{{slide.webImg}}" data-ng-if="slide.default">
         <!-- <div class="carousel-caption" data-ng-if="!slide.default">
           <h1>{{slide.name}}</h1>          
