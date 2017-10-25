@@ -55,6 +55,7 @@
             dataObj.auction.emdAmount = $scope.currentAuction.emdAmount;
             dataObj.auction.auctionOwnerMobile = $scope.currentAuction.auctionOwnerMobile;
 
+            dataObj.user.customerId=Auth.getCurrentUser().customerId;
             dataObj.user._id = Auth.getCurrentUser()._id;
             dataObj.user.fname = Auth.getCurrentUser().fname;
             dataObj.user.lname = Auth.getCurrentUser().lname;

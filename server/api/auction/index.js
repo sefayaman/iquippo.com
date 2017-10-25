@@ -33,7 +33,7 @@ router.get('/checkforasset/asset',controller.getAssetInfo);
 //router.get('/auctionmaster/getAuctionItemsCount',auctionDetailController.count);
 //router.get('/auctionmaster/fetchAuctionItemsData',auctionDetailController.fetch);
 
-//router.get('/userregforauction', userRegForAuction.get);
+router.get('/userregforauction/getdata', userRegForAuction.get);
 router.post('/userregforauction', userRegForAuction.create);
 router.post('/userregforauction/checkUserRegis',userRegForAuction.checkUserRegis);
 router.post('/userregforauction/saveOfflineRequest',userRegForAuction.saveOfflineRequest);

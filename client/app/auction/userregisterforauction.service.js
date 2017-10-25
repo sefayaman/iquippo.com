@@ -28,7 +28,7 @@ angular.module('admin').factory("userRegForAuctionSvc", userRegForAuctionSvc);
 
 
    function get(filter){
-      var path = svcPath; 
+      var path = svcPath + '/getdata'; 
       var queryParam = "";
         if(filter)
           queryParam = $httpParamSerializer(filter);

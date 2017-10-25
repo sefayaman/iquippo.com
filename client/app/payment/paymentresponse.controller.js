@@ -5,6 +5,7 @@ angular.module('sreizaoApp').controller('PaymentResponseCtrl',PaymentResponseCtr
 
 function PaymentResponseCtrl($scope,Modal,$stateParams,$state,notificationSvc,PaymentSvc,Auth,ValuationSvc,AuctionSvc,userRegForAuctionSvc,BuyContactSvc,$cookieStore) {
  	var vm = this;
+  var filter={};
  	vm.payTransaction = null;
  	vm.enablePayment = false;
  	var valuationReq = null;
@@ -32,25 +33,30 @@ function PaymentResponseCtrl($scope,Modal,$stateParams,$state,notificationSvc,Pa
       console.log("vm.payTransaction",vm.payTransaction);
        if(vm.payTransaction.status == "completed")
        {
-          dataToSendToAs.user={};
-          dataToSendToAs.user={
-            userId:vm.payTransaction.user.customerId,
-            lname:vm.payTransaction.user.lname,
-            fname:vm.payTransaction.user.fname,
-            email:vm.payTransaction.user.email,
-            mobile:vm.payTransaction.user.mobile
+            filter={};
+            filter.transactionId=vm.payTransaction._id;
+          userRegForAuctionSvc.get(filter)
+          .then(function(userdata){
+            console.log("userData",userdata);
+            dataToSendToAs.user={};
+            dataToSendToAs.user={
+            user_id:userdata[0].user._id,
+            lname:userdata[0].user.lname,
+            fname:userdata[0].user.fname,
+            email:userdata[0].user.email,
+            iq_id:userdata[0].user.customerId,
+            mobile:userdata[0].user.mobile
           };
           dataToSendToAs.amountPaid=vm.payTransaction.totalAmount;
-          dataToSendToAs.auction_id=vm.payTransaction.
-          dataToSendToAs.selectedLots=vm.payTransaction.selectedLots;
-
-          console.log("sendinb----",dataToSendToAs);
-          userRegForAuctionSvc.sendUserData(dataToSendToAs)
-          .then(function(res){
-           return res;
+          dataToSendToAs.auction_id=userdata[0].auction.dbAuctionId;
+          dataToSendToAs.selectedLots=userdata[0].lotNumber;
+          return userRegForAuctionSvc.sendUserData(dataToSendToAs);
+          })
+          .then(function(datasent){
+            return datasent;
           })
           .catch(function(err){
-
+            throw err;
           });
        }
 

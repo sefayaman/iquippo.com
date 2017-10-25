@@ -196,6 +196,23 @@ exports.sendUserToAs=function(req,res){
 };
 
 
+exports.get=function(req,res){
+  console.log("req.query",req.query);
+  var filter={};
+  if(req.query.transactionId)
+     filter.transactionId=req.query.transactionId;
+     Model.find(filter,function(err,userdata){
+       if(err) return handleError(res,err);
+       if(userdata.length > 0){
+        return res.status(200).json(userdata);
+       }
+       else{
+        return res.status(404).json({"msg":'No transatcions'});
+       }
+     });    
+};
+
+
 exports.create = function(req, res,next) {
 
    _getRecord(req.body,function(err,result){
