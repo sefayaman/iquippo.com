@@ -38,6 +38,7 @@ function PaymentResponseCtrl($scope,Modal,$stateParams,$state,notificationSvc,Pa
           userRegForAuctionSvc.get(filter)
           .then(function(userdata){
             console.log("userData",userdata);
+            if(userdata.length > 0){
             dataToSendToAs.user={};
             dataToSendToAs.user={
             user_id:userdata[0].user._id,
@@ -51,6 +52,10 @@ function PaymentResponseCtrl($scope,Modal,$stateParams,$state,notificationSvc,Pa
           dataToSendToAs.auction_id=userdata[0].auction.dbAuctionId;
           dataToSendToAs.selectedLots=userdata[0].lotNumber;
           return userRegForAuctionSvc.sendUserData(dataToSendToAs);
+        }
+        else{
+          return;
+        }
           })
           .then(function(datasent){
             return datasent;
