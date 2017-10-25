@@ -34,6 +34,7 @@ var assetSaleTracker = require('./components/assetsaletracker.js');
 var BulkProductUpload = require('./components/bulkProductUpload.js');
 var utility = require('./components/utility.js');
 var path = require('path');
+var userExportsService = require('./components/userExports.js');
 
 // Connect to database
 mongoose.connect(config.mongo.uri, config.mongo.options);
@@ -90,7 +91,6 @@ app.post('/api/uploads', function(req, res) {
   req.uplPath = relativePath;
   upload(req, res, function(err, data) {
     if (err) {
-      console.log("I am Vara");
       return res.end("Error uploading file.");
     }
     if (resize == 'y') {
@@ -102,8 +102,23 @@ app.post('/api/uploads', function(req, res) {
       req.total = 1;
       resizeImg(req, res, assetDir, dimension, false);
     } else {
-      var localDirPath = config.uploadPath + assetDir;
-      if (assetDir === 'temp') {
+      //var localDirPath = config.uploadPath + assetDir;
+      var localDirPath = config.uploadPath + assetDir + "/" +req.files[0].filename;
+      var s3DirPath = "assets/uploads/" + assetDir + "/" +req.files[0].filename;
+
+      if(!assetDir || !localDirPath)
+        return res.status(500);
+
+      utility.uploadMultipartFileOnS3(localDirPath, s3DirPath, req.files, function(uploadErr, s3res) {
+        if (uploadErr) {
+          throw err;
+        }
+        return res.status(200).json({
+          assetDir: assetDir,
+          filename: req.files[0].filename
+        });
+      });
+      /*if (assetDir === 'temp') {
         localDirPath = req.files && req.files[0] && req.files[0].path;
         var filename  = req.files && req.files[0] && req.files[0].filename;
         
@@ -129,7 +144,7 @@ app.post('/api/uploads', function(req, res) {
             filename: req.files[0].filename
           });
         });
-      }
+      }*/
     }
   });
 });
@@ -174,6 +189,7 @@ function resizeImg(req, res, assetDir, dimension, isMultiple) {
         extPart = extPart.toLowerCase();
       var namePart = fileNameParts[0];
       var originalFilePath = config.uploadPath + assetDir + "/" + namePart + "_original." + extPart;
+      var s3DirPath = "assets/uploads/" + assetDir + "/" + fileName;
       fsExtra.copy(imgPath, originalFilePath, {
         replace: true
       }, function(err, result) {
@@ -201,11 +217,17 @@ function resizeImg(req, res, assetDir, dimension, isMultiple) {
 
                     if (err)
                       throw err;
-                    utility.uploadFileS3(config.uploadPath + assetDir, assetDir, function(err, s3res) {
+
+                    //var s3DirPath = "assets/uploads/" + assetDir + "/" +req.files[0].filename;
+                    if(!assetDir || !imgPath)
+                      return res.status(500);
+
+                    utility.uploadMultipartFileOnS3(imgPath, s3DirPath, req.files, function(err, s3res) {
+                    //utility.uploadFileS3(config.uploadPath + assetDir, assetDir, function(err, s3res) {
                       if (err) {
                         throw err;
                       }
-                      console.log("res", s3res);
+
                       req.counter++;
                       return resizeImg(req, res, assetDir, dimension, isMultiple);
                     });
@@ -224,9 +246,13 @@ function resizeImg(req, res, assetDir, dimension, isMultiple) {
                       throw err;
                     fs.writeFile(imgPath, buffer, function(err) {
 
-                      if (err) throw err;
-                      utility.uploadFileS3(config.uploadPath + assetDir, assetDir, function(err, s3res) {
+                    if (err) throw err;
+                    //assetDir = "assets/uploads/" +assetDir + "/" +req.files[0].filename;
+                    if(!assetDir || !imgPath)
+                      return res.status(500);
 
+                    utility.uploadMultipartFileOnS3(imgPath, s3DirPath, req.files, function(err, s3res) {
+                      //utility.uploadFileS3(config.uploadPath + assetDir, assetDir, function(err, s3res) {
                         if (err)
                           throw err;
                         req.counter++;
@@ -401,6 +427,7 @@ server.listen(config.port, config.ip, function() {
   assetSaleTracker.start();
   checkQuickQueryNotificationService.start();
   checkSearchMatchingNotificationService.start();
+  userExportsService.start();
 });
 
 // Expose app

@@ -1277,12 +1277,12 @@ exports.submitRequest = function(req,res){
     return res.status(400).send("Invalid type parameter");
   if(!ids.length)
     return res.status(400).send("Invalid request");
-  
   var fieldMap = fieldsConfig.SUBMITTED_TO_AGENCY_FIELD;
   EnterpriseValuation.find({_id:{$in:ids},deleted:false},function(err,valReqs){
     if(err) return handleError(res, err);
-    if(!valReqs.length)
+    if(!valReqs.length){
       return res.status(200).send("No record found to submit");
+    }
       postRequest(valReqs);
   });
 
@@ -1312,14 +1312,13 @@ exports.submitRequest = function(req,res){
 
       var s3Path = "";
       if(item.assetDir)
-        s3Path = config.awsUrl + config.awsBucket + "/" + item.assetDir + "/";
+        s3Path = config.awsUrl + config.awsBucket + config.awsBucketPrefix + item.assetDir + "/";
       if(s3Path && item.invoiceDoc&& item.invoiceDoc.filename)
           obj.invoiceDoc = s3Path + item.invoiceDoc.filename;
       if(s3Path && item.rcDoc && item.rcDoc.filename)
       obj.rcDoc = s3Path + item.rcDoc.filename;
       dataArr[dataArr.length] = obj;
     });
-
     if(!dataArr.length)
       return res.status(200).send("There is no request to post.");
     request({

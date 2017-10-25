@@ -191,9 +191,10 @@
                   if (vm.user.email) {
                     data['to'] = vm.user.email;
                     notificationSvc.sendNotification('userRegEmail', data, dataToSend, 'email');
-                    closeDialog();
+                    //closeDialog();
                     vm.user = {};
                   }
+                  closeDialog(); // 
                 }
           });
            // notificationSvc.sendNotification('manpowerRegSmsToUser', data, dataToSend, 'sms');

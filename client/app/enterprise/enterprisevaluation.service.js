@@ -149,7 +149,7 @@ function EnterpriseSvc($http,$rootScope ,$q,$timeout, notificationSvc,Auth,UtilS
               deferred.resolve(resData);
               return;
             }
-            submitToAgency([resData._id],'Mjobupdation',deferred);
+            submitToAgency([resData._id],'Mjobcreation',deferred);
       })
     }
 

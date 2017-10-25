@@ -3,16 +3,20 @@
   <div id="slides_control">
     <uib-carousel interval="mainVm.myInterval" no-wrap="noWrapSlides">
       <uib-slide data-ng-repeat="slide in mainVm.slides">
-      <div class="overlay" data-ng-if="slide.isClickable != 'Yes'"></div>
-      <a ng-href="{{slide.linkUrl}}" target="_blank" data-ng-if="slide.isClickable == 'Yes'" class="overlay"></a>
-      <img  data-ng-src="assets/images/{{slide.webImg}}" data-ng-if="slide.default">        
-      <img  data-ng-src="{{uploadImagePrefix}}banner/{{slide.webImg}}" data-ng-if="!slide.default">
+      <!-- <div class="overlay" data-ng-if="slide.isClickable != 'Yes'"></div> -->
+      <a ng-href="{{slide.linkUrl}}" target="_blank" data-ng-if="slide.isClickable == 'Yes'">
+        <img  data-ng-src="{{uploadImagePrefix}}banner/{{slide.webImg}}" data-ng-if="!slide.default">
+      </a>
+      <a ng-href="javascript:void(0);" data-ng-if="slide.hyperlink == 'Yes'" data-ng-click="mainVm.openBidModal(slide)">
+        <img  data-ng-src="{{uploadImagePrefix}}banner/{{slide.webImg}}" data-ng-if="!slide.default">        
+      </a>
+      <img  data-ng-src="assets/images/{{slide.webImg}}" data-ng-if="slide.default">
         <!-- <div class="carousel-caption" data-ng-if="!slide.default">
           <h1>{{slide.name}}</h1>          
           <h2>Promocode: {{slide.code}}</h2>
           <button type="button" class="btn btn-md btn-primary">Bid Now</button>          
         </div> -->
-        <a href="javascript:void(0);" data-ng-if="slide.hyperlink == 'Yes'" data-ng-click="mainVm.openBidModal(slide)" class="bid-gif"><img src="assets/images/bid-now.gif"></a>
+        <!-- <a href="javascript:void(0);" data-ng-if="slide.hyperlink == 'Yes'" data-ng-click="mainVm.openBidModal(slide)" class="bid-gif"><img src="assets/images/bid-now.gif"></a> -->
       </uib-slide>
       <div class="tricker" data-ng-if="mainVm.getBids != 0">
         <marquee><span data-ng-repeat="bids in mainVm.getBids">{{bids.name}}: {{bids.bidValuesStr}}  </span></marquee>
