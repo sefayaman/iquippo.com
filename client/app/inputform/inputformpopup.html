@@ -1,7 +1,7 @@
 <div id="inputformReq-modal">
   <div class="modal-header">
     <button type="button" class="close" ng-click="inputFormVm.closeDialog()" aria-hidden="true">&times;</button>
-    <h4 class="modal-title text-center">Request Form</h4>
+    <h4 class="modal-title text-left">Request Form</h4>
   </div>
   <div class="modal-body">
     <form name="inputFormReqForm" novalidate class="form">
@@ -44,33 +44,33 @@
           </select>
         </div>
       </div>
-      <div class="row">
+      <div class="row text-left">
         <div class="col-sm-6 form-group">
-          <label>Down-payment Per Unit</label>
+          <span>Down-payment Per Unit</span>
           <input type="number" class="form-control" name="marginPerUnit" ng-model="inputFormVm.inputFormReqInfo.marginPerUnit" disabled="disabled" placeholder="Down-payment Per Unit">
         </div> 
         <div class="col-sm-6 form-group">
-          <label>Down-payment</label>
+          <span>Down-payment</span>
           <input type="number" class="form-control" name="totalMargin" ng-model="inputFormVm.inputFormReqInfo.totalMargin" disabled="disabled" placeholder="Down-payment" >
         </div>
       </div>
-      <div class="row">
+      <div class="row text-left">
         <div class="col-sm-6 form-group">
-          <label>Processing Fee Per Unit</label>
+          <span>Processing Fee Per Unit</span>
           <input type="number" class="form-control" name="totalMargin" ng-model="inputFormVm.inputFormReqInfo.processingFee" disabled="disabled" placeholder="Processing Fee Per Unit" >
         </div>
         <div class="col-sm-6 form-group">
-          <label>One Time Processing Fees</label>
+          <span>One Time Processing Fees</span>
           <input type="number" class="form-control" name="totalProcessingFee" ng-model="inputFormVm.inputFormReqInfo.totalProcessingFee" disabled="disabled" placeholder="One Time Processing Fees">
         </div>        
       </div>
-      <div class="row">
+      <div class="row text-left">
         <div class="col-sm-6 form-group">
-          <label>Monthly Repayment Per Unit</label>
+          <span>Monthly Repayment Per Unit</span>
           <input type="number" class="form-control" name="installmentPerUnit" ng-model="inputFormVm.inputFormReqInfo.installmentPerUnit" disabled="disabled" placeholder="Monthly Repayment Per Unit">
         </div>
         <div class="col-sm-6 form-group">
-          <label>Total Monthly Repayment</label>
+          <span>Total Monthly Repayment</span>
           <input type="number" class="form-control" name="totalInstallment" ng-model="inputFormVm.inputFormReqInfo.totalInstallment" disabled="disabled" placeholder="Total Monthly Repayment">
         </div>        
       </div>
