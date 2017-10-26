@@ -31,8 +31,7 @@ function InputFormCtrl($scope, $rootScope, Modal, Auth, categorySvc, LocationSvc
 				vm.inputFormReqInfo.user.email = Auth.getCurrentUser().email;
 			}
 		});
-
-		vm.inputFormReqInfo.bannerInfo._id = $scope.slideInfo._id;
+		vm.inputFormReqInfo.bannerInfo.bannerData = $scope.slideInfo._id;
 		vm.inputFormReqInfo.bannerInfo.name = $scope.slideInfo.name;
 		vm.inputFormReqInfo.bannerInfo.code = $scope.slideInfo.code;
 		loadAllCategory();
@@ -170,7 +169,7 @@ function InputFormCtrl($scope, $rootScope, Modal, Auth, categorySvc, LocationSvc
 					dataToSend.referenceNo = res.data.referenceNo;
 					if (dataToSend.user.email)
 						data.to = dataToSend.user.email;
-					data.subject = 'No Reply: Input Form Request';
+					data.subject = 'No Reply: Input Form Request with Reference No ' + res.data.referenceNo;
 					dataToSend.serverPath = serverPath;
 					notificationSvc.sendNotification('inputformReqEmailToCustomer', data, dataToSend, 'email');
 					if (dataToSend.user.mobile)
