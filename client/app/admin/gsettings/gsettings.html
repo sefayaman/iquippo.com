@@ -639,7 +639,7 @@
 			</div>
 			<div class="col-sm-2">
 				<button class="btn btn-success btn-block" ng-click="gsettingVm.addAssetInAuctionClicked()">
-				<i class="fa "  ng-class="{'fa-minus': !isAssetCollapsed, 'fa-plus': isAssetCollapsed}"></i> Add New
+				<i class="fa " ng-class="{'fa-minus': !isAssetCollapsed, 'fa-plus': isAssetCollapsed}"></i> Add New
 				</button>
 			</div>
 			<div class="col-sm-2" >
@@ -658,11 +658,11 @@
 						<i class="caret"></i>
 					</div>
 					<div class="col-sm-3 form-group" ng-class="{'has-error' : assetAuctionForm.lotNo.$invalid && submitted}">
-						<select class="form-control" name="auctionDate" ng-model="gsettingVm.auctionProduct.lotNo" ng-change="checkForLot(settingVm.auctionProduct.lotNo,gsettingVm.auctionProduct.dbAuctionId)">
-                  <option value="">Select Lot</option>
-                  <option  ng-repeat="lot in lots" value="{{lot._id}}">{{lot.lotNumber}}</option>
-                </select>
-                <i class="caret"></i>
+						<select class="form-control" name="lotNo" ng-model="gsettingVm.auctionProduct.lotNo" ng-change="checkForLot(settingVm.auctionProduct.lotNo,gsettingVm.auctionProduct.dbAuctionId)">
+                        <option value="">Select Lot</option>
+                        <option  ng-repeat="lot in lots" value="{{lot._id}}">{{lot.lotNumber}}</option>
+                        </select>
+                        <i class="caret"></i>
 					</div>
 					<div class="col-sm-3 form-group">
 						<span class="btn btn-warning fileinput-button">

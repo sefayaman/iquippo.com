@@ -67,15 +67,15 @@ exports.getData = function(req, res) {
   if (req.query.assetId) {
     filter.assetId = req.query.assetId;
   }
-  console.log("the filter", filter);
-
+  
+console.log("the asset filter", filter);
   query = AssetsInAuction.find(filter);
   query.exec(function(err, result) {
     if (err) {
       return handleError(res, err);
     }
-    if (result.length > 0) {
-      console.log(typeof result[0]);
+    if (result.length > 0 && result.length < 2) {
+      console.log("assetData",result[0]);
       if (result[0].lot_id) {
         Lot.find({
           "_id": result[0].lot_id,
@@ -97,6 +97,14 @@ exports.getData = function(req, res) {
         });
       }
     } else {
+      AssetsInAuction.update({
+        "assetId":req.query.assetId
+      },{
+        $set:{'isDeleted':true}
+      },{multi:true},function(asseterr,assresp){
+       if (err) return handleError(res,err)
+       console.log("response asset",assresp);
+      })
       return res.status(200).json({
         message: "No map found"
       });

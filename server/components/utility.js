@@ -401,7 +401,7 @@ function sendData(options, callback) {
     "assetData": 'assetdata'
   };
 
-  var url = 'http://auctionsoftwaremarketplace.com:3007/api_call/' + obj[options.dataType];
+  var url = 'https://auctionsoftwaremarketplace.com:3007/api_call/' + obj[options.dataType];
   request.post({
     url: url,
     form: data
