@@ -61,18 +61,16 @@ exports.search = function(req, res) {
     var searchVal = "";
     result.forEach(function(item){
       if(Object.keys(filter).length === 0)
-        searchVal = item.category.categoryId;
+        searchVal = item.category.categoryId + "";
       else if(body.category)
-        searchVal = item.brand.brandId;
+        searchVal = item.brand.brandId + "";
       else if(body.brand)
-        searchVal = item.model.modelId;
-
+        searchVal = item.model.modelId + "";
       if (tempArr.indexOf(searchVal) === -1) {
           tempArr.push(searchVal);
           orignalArr.push(item);
       }
     });
-
     return res.status(200).json(orignalArr);
   });
 };
