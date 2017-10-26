@@ -58,9 +58,10 @@
            getAuctions();
             vm.dataModel = {};
             vm.dataModel._id  = rowData._id;
-            vm.dataModel.auctionId = rowData.auctionId;
+            vm.dataModel.auctionId = rowData.auction_id;
             vm.dataModel.assetId = rowData.assetId;
             vm.dataModel.lotNumber = rowData.lotNumber;
+            vm.dataModel.lot_mongo_id=rowData.lot_mongo_id;
             vm.dataModel.assetDesc = rowData.assetDesc;
             vm.dataModel.startingPrice = rowData.startingPrice;
             vm.dataModel.reservePrice = rowData.reservePrice;
@@ -68,6 +69,7 @@
             vm.dataModel.endDate = rowData.endDate;
             vm.dataModel.bidIncrement = rowData.bidIncrement;
 	    vm.dataModel.static_increment = rowData.static_increment;
+      console.log("lot edit",rowData);
             if(vm.dataModel.static_increment){
                 vm.dataModel.staticIncrement = true;
             }else{

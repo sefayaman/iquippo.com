@@ -1979,7 +1979,6 @@
       productSvc.updateProduct(product).then(function(result) {
         $rootScope.loading = false;
         setScroll(0);
-        $scope.successMessage = "Product updated successfully";
         $scope.autoSuccessMessage(20);
         var auctionfilter = {};
         auctionfilter._id = $scope.product.auctId;
@@ -2048,6 +2047,7 @@
                 productSvc.saveAssetMap($scope.lotsaved)
                   .then(function(resData) {
                   console.log("resData",resData);
+                  $scope.successMessage = "Product updated successfully";
                   });
 
 
@@ -2114,6 +2114,7 @@
                   productSvc.updateAssetMap($scope.lotsaved)
                     .then(function(resultData) {
                       //console.log("update lot admin",result);
+                    $scope.successMessage = "Product updated successfully";
                     });
                 } else {
                   $scope.lotsaved._id = $scope.assetMapId;
