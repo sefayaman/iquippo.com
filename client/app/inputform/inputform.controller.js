@@ -47,16 +47,17 @@ function InputFormCtrl($scope, $rootScope, Modal, Auth, categorySvc, LocationSvc
     }
 
     function onModelChange(modelId) {
+		resetValue();
+		vm.inputFormMasterData = [];
+		$scope.inputFormState = [];
+		vm.inputFormReqInfo.state = "";
+		vm.inputFormReqInfo.tenure = "";
+
 		if (!modelId) {
 	        vm.container.modelId = "";
 	        return;
 	    }
-    	var filter = {};
-		resetValue();
-		vm.inputFormMasterData = [];
-		vm.inputFormReqInfo.state = "";
-		vm.inputFormReqInfo.tenure = "";
-
+		var filter = {};
 		var mod = [];
 		mod = vm.modelList.filter(function(item) {
 			return item.model.modelId == modelId;
@@ -71,8 +72,7 @@ function InputFormCtrl($scope, $rootScope, Modal, Auth, categorySvc, LocationSvc
     	filter.category = vm.inputFormReqInfo.category;
     	filter.brand = vm.inputFormReqInfo.brand;
     	filter.model = vm.inputFormReqInfo.model;
-		$scope.inputFormState = [];
-    	InputFormMasterSvc.get(filter)
+		InputFormMasterSvc.get(filter)
         .then(function(result){
 			result.forEach(function(item){
 				if(item.additionalInfo)
@@ -133,6 +133,8 @@ function InputFormCtrl($scope, $rootScope, Modal, Auth, categorySvc, LocationSvc
     function onCategoryChange(categoryId, reset) {
         vm.brandList = [];
         vm.modelList = [];
+        vm.inputFormMasterData = [];
+        $scope.inputFormState = [];
         resetValue();
         if (reset) {
 			if (categoryId) {
@@ -141,6 +143,8 @@ function InputFormCtrl($scope, $rootScope, Modal, Auth, categorySvc, LocationSvc
 	        }
             vm.container.brandId = "";
             vm.container.modelId = "";
+            vm.inputFormReqInfo.state = "";
+			vm.inputFormReqInfo.tenure = "";
         }
 
         if (!categoryId)
@@ -155,9 +159,13 @@ function InputFormCtrl($scope, $rootScope, Modal, Auth, categorySvc, LocationSvc
 
     function onBrandChange(brandId, reset) {
         vm.modelList = [];
+        vm.inputFormMasterData = [];
+        $scope.inputFormState = [];
         resetValue();
         if (reset) {
             vm.container.modelId = "";
+            vm.inputFormReqInfo.state = "";
+			vm.inputFormReqInfo.tenure = "";
         }
         if (!brandId)
             return;

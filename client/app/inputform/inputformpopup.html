@@ -26,9 +26,9 @@
             <option value="{{md.model.modelId}}" ng-repeat="md in inputFormVm.modelList | orderBy:'model.name'">{{md.model.name}}</option>
           </select>
         </div> 
-        <div class="col-sm-6 form-group" ng-class="{'has-error':inputFormReqForm.tenure.$invalid && submitted}">
-          <select class="form-control" ng-change="inputFormVm.onStateChange(inputFormVm.inputFormReqInfo.state)" name="tenure" ng-model="inputFormVm.inputFormReqInfo.state">
-            <option value="">Select State</option>
+        <div class="col-sm-6 form-group" ng-class="{'has-error':inputFormReqForm.state.$invalid && submitted}">
+          <select class="form-control" ng-change="inputFormVm.onStateChange(inputFormVm.inputFormReqInfo.state)" name="state" ng-model="inputFormVm.inputFormReqInfo.state" required>
+            <option value="">*Select State</option>
             <option ng-repeat="state in inputFormState | orderBy:'state'" value="{{state}}">{{state}}</option>
           </select>
         </div>        
