@@ -380,23 +380,20 @@
 
                   AuctionSvc.getAuctionExpire(auctionexpiredata).then(function(results) {
                     $scope.date = new Date();
-                    if (results != "") {
+                    console.log("expired results",results);
+                    if (results.length > 0) {
                       $scope.auctionReq.auctionexpire = "expire";
                       $scope.auctionReq.auctionname = result[0].name;
                       $scope.isExpire = true;
+                      $scope.assetMapCreation=true;
                     } else {
                       $scope.isExpire = false;
-
-                    }
-
-                  });
-
-                  console.log("auctiondata", $scope.auctionReq);
+                       console.log("auctiondata", $scope.auctionReq);
                   onAuctionSelection($scope.auctionReq.dbAuctionId);
                   console.log("filter", filter);
                   fetchLot(filter);
                   assetfilter.isDeleted = false;
-                  console.log("filteredr assets", assetfilter);
+                  console.log("filteredr assets", $scope.isExpire);
                   if($scope.assetMapCreationPossibility){
                   productSvc.getAssetMapData(assetfilter)
                     .then(function(res) {
@@ -463,6 +460,10 @@
                     console.log("possible not");
                   $scope.assetMapCreationPossibility=false;
                   }
+                    }
+
+                  });
+                  
                 } else {
                   $scope.assetMapCreation = true;
                 }

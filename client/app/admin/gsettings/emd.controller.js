@@ -87,7 +87,7 @@
               vm.dataModel.createdBy.name = Auth.getCurrentUser().fname + " " + Auth.getCurrentUser().lname;
               console.log("vm.dataModel",vm.dataModel);
               
-               vm.duplicate._id = vm.dataModel.auctionId
+               vm.duplicate._id = vm.dataModel.auction_id
                vm.duplicate.selectedLots = vm.dataModel.selectedLots;
                console.log("vm.duplicate",vm.duplicate);
                
