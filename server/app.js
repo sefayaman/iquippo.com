@@ -427,7 +427,7 @@ server.listen(config.port, config.ip, function() {
   assetSaleTracker.start();
   checkQuickQueryNotificationService.start();
   checkSearchMatchingNotificationService.start();
-  userExportsService.start();
+  //userExportsService.start();
 });
 
 // Expose app
