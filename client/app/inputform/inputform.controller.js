@@ -58,7 +58,7 @@ function InputFormCtrl($scope, $rootScope, Modal, Auth, categorySvc, LocationSvc
 		vm.inputFormReqInfo.tenure = "";
 
 		var mod = [];
-		mod = vm.brandList.filter(function(item) {
+		mod = vm.modelList.filter(function(item) {
 			return item.model.modelId == modelId;
 		});
 		if (mod.length == 0)
@@ -78,7 +78,7 @@ function InputFormCtrl($scope, $rootScope, Modal, Auth, categorySvc, LocationSvc
 				if(item.additionalInfo)
 					vm.orignalInputFormMasterData = item.additionalInfo;
 					//vm.inputFormMasterData = item.additionalInfo;
-					onStateChange();
+					//onStateChange();
 			});
 			vm.orignalInputFormMasterData.forEach(function(item){
 				if($scope.inputFormState.indexOf(item.state) === -1 && item.state) {
