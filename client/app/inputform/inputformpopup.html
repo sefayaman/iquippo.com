@@ -6,24 +6,24 @@
   <div class="modal-body">
     <form name="inputFormReqForm" novalidate class="form">
       <div class="row">
-        <div class="col-sm-6 form-group" ng-class="{'has-error':inputFormReqForm.category.$invalid && submitted}">
-          <select class="form-control" name="category" ng-model="inputFormVm.inputFormReqInfo.category" ng-change="inputFormVm.onCategoryChange(inputFormVm.inputFormReqInfo.category, true)" required>
+        <div class="col-sm-6 form-group" ng-class="{'has-error':inputFormReqForm.categoryId.$invalid && submitted}">
+          <select class="form-control" name="categoryId" ng-model="inputFormVm.container.categoryId" ng-change="inputFormVm.onCategoryChange(inputFormVm.container.categoryId, true)" required>
             <option value="">*Select Category</option>
-            <option value="{{cat.category.name}}" ng-repeat="cat in inputFormVm.allCategory | orderBy:'category.name'">{{cat.category.name}}</option>
+            <option value="{{cat.category.categoryId}}" ng-repeat="cat in inputFormVm.allCategory | orderBy:'category.name'">{{cat.category.name}}</option>
           </select>
         </div>
-        <div class="col-sm-6 form-group" ng-class="{'has-error':inputFormReqForm.brand.$invalid && submitted}">
-          <select class="form-control" name="brand" ng-model="inputFormVm.inputFormReqInfo.brand" ng-change="inputFormVm.onBrandChange(inputFormVm.inputFormReqInfo.brand, true)" required>
+        <div class="col-sm-6 form-group" ng-class="{'has-error':inputFormReqForm.brandId.$invalid && submitted}">
+          <select class="form-control" name="brandId" ng-model="inputFormVm.container.brandId" ng-change="inputFormVm.onBrandChange(inputFormVm.container.brandId, true)" required>
             <option value="">*Select Brand</option>
-            <option value="{{br.brand.name}}" ng-repeat="br in inputFormVm.brandList | orderBy:'brand.name'">{{br.brand.name}}</option>
+            <option value="{{br.brand.brandId}}" ng-repeat="br in inputFormVm.brandList | orderBy:'brand.name'">{{br.brand.name}}</option>
           </select>
         </div>        
       </div>
       <div class="row">
-        <div class="col-sm-6 form-group" ng-class="{'has-error':inputFormReqForm.model.$invalid && submitted}">
-          <select class="form-control" name="model" ng-model="inputFormVm.inputFormReqInfo.model" ng-change="inputFormVm.onModelChange()" required>
+        <div class="col-sm-6 form-group" ng-class="{'has-error':inputFormReqForm.modelId.$invalid && submitted}">
+          <select class="form-control" name="modelId" ng-model="inputFormVm.container.modelId" ng-change="inputFormVm.onModelChange(inputFormVm.container.modelId)" required>
             <option value="">*Select Model</option>
-            <option value="{{md.model.name}}" ng-repeat="md in inputFormVm.modelList | orderBy:'model.name'">{{md.model.name}}</option>
+            <option value="{{md.model.modelId}}" ng-repeat="md in inputFormVm.modelList | orderBy:'model.name'">{{md.model.name}}</option>
           </select>
         </div> 
         <div class="col-sm-6 form-group" ng-class="{'has-error':inputFormReqForm.tenure.$invalid && submitted}">

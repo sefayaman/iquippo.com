@@ -11,6 +11,7 @@ function InputFormCtrl($scope, $rootScope, Modal, Auth, categorySvc, LocationSvc
 	vm.inputFormReqInfo.bannerInfo = {};
 	vm.inputFormReqInfo.paymentInfo = {};
 	vm.inputFormMasterData = [];
+	vm.container = {};
 	vm.closeDialog = closeDialog;
 	vm.submit = submit;
 	vm.onCategoryChange = onCategoryChange;
@@ -45,12 +46,25 @@ function InputFormCtrl($scope, $rootScope, Modal, Auth, categorySvc, LocationSvc
         });
     }
 
-    function onModelChange() {
+    function onModelChange(modelId) {
+		if (!modelId) {
+	        vm.container.modelId = "";
+	        return;
+	    }
     	var filter = {};
 		resetValue();
 		vm.inputFormMasterData = [];
 		vm.inputFormReqInfo.state = "";
 		vm.inputFormReqInfo.tenure = "";
+
+		var mod = [];
+		mod = vm.brandList.filter(function(item) {
+			return item.model.modelId == modelId;
+		});
+		if (mod.length == 0)
+			return;
+		vm.inputFormReqInfo.model = mod[0].model.name;
+
 		if(!vm.inputFormReqInfo.category || !vm.inputFormReqInfo.brand || !vm.inputFormReqInfo.model)
     		return;
 
@@ -116,35 +130,49 @@ function InputFormCtrl($scope, $rootScope, Modal, Auth, categorySvc, LocationSvc
 		}
 	}
 
-    function onCategoryChange(catName, reset) {
+    function onCategoryChange(categoryId, reset) {
         vm.brandList = [];
         vm.modelList = [];
         resetValue();
         if (reset) {
-            vm.inputFormReqInfo.brand = "";
-            vm.inputFormReqInfo.model = "";
+			if (categoryId) {
+	          var ct = categorySvc.getCategoryOnId(categoryId);
+	          vm.inputFormReqInfo.category = ct.name;
+	        }
+            vm.container.brandId = "";
+            vm.container.modelId = "";
         }
 
-        if (!catName)
+        if (!categoryId)
             return;
         InputFormMasterSvc.search({
-            category: catName
+            category: categoryId
         })
         .then(function(result) {
             vm.brandList = result;
         });
     }
 
-    function onBrandChange(brandName, reset) {
+    function onBrandChange(brandId, reset) {
         vm.modelList = [];
         resetValue();
         if (reset) {
-            vm.inputFormReqInfo.model = "";
+            vm.container.modelId = "";
         }
-        if (!brandName)
+        if (!brandId)
             return;
+        else {
+			var brd = [];
+			brd = vm.brandList.filter(function(item) {
+			return item.brand.brandId == brandId;
+			});
+			if (brd.length == 0)
+				return;
+			vm.inputFormReqInfo.brand = brd[0].brand.name;
+        }
+
         InputFormMasterSvc.search({
-            brand: brandName
+            brand: brandId
         })
         .then(function(result) {
             vm.modelList = result;

@@ -44,11 +44,11 @@ exports.search = function(req, res) {
   var filter = {};
   
   if (body.category)
-    filter['category.name'] = body.category;
+    filter['category.categoryId'] = body.category;
   if (body.brand)
-    filter['brand.name'] = body.brand;
+    filter['brand.brandId'] = body.brand;
   if (body.model)
-    filter['model.name'] = body.model;
+    filter['model.modelId'] = body.model;
   //console.log("filter", filter);
 
   var query = Model.find(filter);
@@ -61,11 +61,11 @@ exports.search = function(req, res) {
     var searchVal = "";
     result.forEach(function(item){
       if(Object.keys(filter).length === 0)
-        searchVal = item.category.name;
+        searchVal = item.category.categoryId;
       else if(body.category)
-        searchVal = item.brand.name;
+        searchVal = item.brand.brandId;
       else if(body.brand)
-        searchVal = item.model.name;
+        searchVal = item.model.modelId;
 
       if (tempArr.indexOf(searchVal) === -1) {
           tempArr.push(searchVal);
