@@ -46,6 +46,7 @@
     function openAuctionModel(lotData){
       Auth.isLoggedInAsync(function(loggedIn) {
           if (loggedIn) {  
+            console.log("auctionData",$scope.currentAuction);
             var dataObj = {};
             dataObj.auction = {};
             dataObj.user = {};
@@ -62,11 +63,10 @@
             dataObj.user.countryCode = LocationSvc.getCountryCode(Auth.getCurrentUser().country);
             dataObj.user.mobile = Auth.getCurrentUser().mobile;
             dataObj.lotNumber =  vm.dataToSend.selectedLots;
-                   
 
             userRegForAuctionSvc.checkUserRegis(dataObj)
             .then(function(result){
-
+               console.log("the registration",result);
              if(result.data){
               closeDialog();
                 if(result.data =="done"){
@@ -133,7 +133,7 @@
                                   save(dataObj,vm.emdamount);
                               
                               }else{
-                                    vm.dataModel.auctionId = $scope.currentAuction._id;
+                                    vm.dataModel.auction_id = $scope.currentAuction._id;
                   
                                     vm.dataModel.selectedLots = vm.dataToSend.selectedLots;
                                     closeDialog();
@@ -150,11 +150,7 @@
                              
 
               }
-            });
-
-
-          
-            
+            }); 
           } else {
              closeDialog();
             var regUserAuctionScope = $rootScope.$new();

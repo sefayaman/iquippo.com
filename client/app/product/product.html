@@ -1058,9 +1058,9 @@
         <div class="row">
           <div class="form-group col-sm-5">Lot Number<span class="text-warning">*</span></div>
           <div class="col-sm-7 form-group">
-                <select class="form-control" name="auctionDate" ng-model="lot.lot_id" ng-change="checkForLot(lot.lot_id,auctionReq.dbAuctionId)">
+                <select class="form-control" name="auctionDate" ng-model="lot.lot_id" ng-change="checkForLot(lot.lot_id)">
                   <option value="">Select Lot</option>
-                  <option  ng-repeat="lot in lots" value="{{lot._id}}">{{lot.lotNumber}}</option>
+                  <option  ng-repeat="lotdata in lots" value="{{lot._id}}">{{lotdata.lotNumber}}</option>
                 </select>
                 <i class="caret"></i>
               </div>

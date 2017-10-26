@@ -423,8 +423,8 @@
                         if (res.lot.hasOwnProperty('startingPrice'))
                           $scope.lot.startingPrice = Number(res.lot.startingPrice);
                         if (res.lot.startDate && res.lot.endDate) {
-                          $scope.lot.startDate = res.lot.startDate;
-                          $scope.lot.endDate = res.lot.endDate;
+                          $scope.lot.startDate = moment(res.lot.startDate).format('MM/DD/YYYY hh:mm A');
+                          $scope.lot.endDate = moment(res.lot.endDate).format('MM/DD/YYYY hh:mm A');;
                         }
                         if (res.lot.hasOwnProperty('static_increment')) {
                           $scope.lot.static_increment = res.lot.static_increment;
@@ -1897,18 +1897,10 @@
 
 
 
-    function checkForLot(lotNumber, auctionId) {
+    function checkForLot(lotNumber) {
       $scope.lot = {};
       console.log("called");
       filter = {};
-
-      var auctionfilter = {};
-      auctionfilter._id = auctionId;
-
-      AuctionSvc.getAuctionDateData(auctionfilter).then(function(result) {
-
-
-        console.log("what result", result);
         //$scope.lotsaved.auctionId = result.items[0]._id;
         filter.isDeleted = false;
         filter._id = lotNumber;
@@ -1922,14 +1914,14 @@
               $scope.lot.lot_id = lotNumber;
               if (res[0] && res[0].startDate && res[0].endDate) {
                 //$scope.lotDate = true;
-                $scope.lot.startDate = res[0].startDate;
-                $scope.lot.endDate = res[0].endDate;
+                $scope.lot.startDate = moment(res[0].startDate).format('MM/DD/YYYY hh:mm A');
+                $scope.lot.endDate = moment(res[0].endDate).format('MM/DD/YYYY hh:mm A');
               }
 
               if (res[0]._id)
                 $scope.lot._id = res[0]._id;
               if (res[0] && res[0].startingPrice)
-                $scope.lot.startingPrice = Number(res[0].startingPrice);
+                $scope.lot.startingPrice = res[0].startingPrice;
 
               if (res[0].static_increment) {
                 $scope.lot.static_increment = res[0].static_increment;
@@ -1953,13 +1945,13 @@
               }
               console.log("checked lot", $scope.lot);
             } else {
-              alert("create lot Data from lot master table");
+              modal.alert("create lot Data from lot master table");
+              return;
             }
           })
           .catch(function(err) {
             throw err;
           });
-      });
     }
 
 

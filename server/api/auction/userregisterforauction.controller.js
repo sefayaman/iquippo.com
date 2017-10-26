@@ -127,7 +127,7 @@ exports.checkUserRegis = function(req,res){
     
   }
   if(req.body.lotNumber){
-   arr.push(req.body.lotNumber);
+   arr=req.body.lotNumber;
     filter['lotNumber'] ={
       $in:arr
     } 

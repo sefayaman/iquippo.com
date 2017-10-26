@@ -60,7 +60,7 @@ exports.getEmdData = function(req, res) {
   console.log("req query",req.query);
   var filter = {};
   if (req.body._id) {
-    filter["auctionId"] = req.body._id;
+    filter["auction_id"] = req.body._id;
   }
   if (req.body.selectedLots && req.body.selectedLots.lotNumber) {
     //console.log("selectedLots",req.body.selectedLots);
@@ -80,12 +80,11 @@ exports.getEmdData = function(req, res) {
   });
 };
 
-exports.getEmdAmountData = function(req, res, callback) {
-
+exports.getEmdAmountData = function(req, res, callback){
   console.log("getEmdAmountData", req.query);
   var arr=[]
   if(req.query.selectedLots)
-    arr.push(req.query.selectedLots);
+    arr=req.query.selectedLots;
   var filter = {};
   if (req.query.auctionId) {
     filter.auction_id = req.query.auctionId;
@@ -93,18 +92,16 @@ exports.getEmdAmountData = function(req, res, callback) {
   if (req.query.selectedLots) {
     //console.log("selectedLots",req.body.selectedLots);
     filter["selectedLots.lotNumber"] = {
-      $in: arr
+      $eq: arr
     }
   }
   console.log("filter for checking EmdData", filter);
+  console.log("filter for arr EmdData", arr);
 
   var data = req.query.selectedLots;
-
-
   if (data instanceof Array) {
     var lots = data;
   } else {
-
     var lots = [data];
   }
   console.log("lots", lots);
@@ -118,7 +115,6 @@ exports.getEmdAmountData = function(req, res, callback) {
   console.log("results",results[1]);
   return res.json(results[1]); 
  });
-
 }
 
 function fetchEmdAmount(filter,res,callback){
@@ -146,7 +142,8 @@ function calculateEmdAmount(lots,filter,callback){
       filter["selectedLots.lotNumber"].push(item);
       console.log("item", filter);
       filter.isDeleted=false;
-      Emd.find(filter, function(err, result) {
+      console.log("emdAmount filter",filter);
+      Emd.find(filter, function(err, result){
         if (result.length > 0) {
           emdamount.push(result[0].amount);
         }
