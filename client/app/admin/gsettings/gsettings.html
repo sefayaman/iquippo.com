@@ -396,11 +396,11 @@
 						<div class="col-sm-3 form-group">
 							Auction Type
 							<div class="row">
-								<div class="col-xs-5 padd-right">
-									<input type="radio" id="inlineRadio1" name="auctionType" ng-model="gsettingVm.auctionData.auctionType" value="L"> Live Auction
+								<div class="col-xs-5 padd-right" ng-class="{'has-error': auctionDateForm.auctionType.$invalid && submitted}">
+									<input type="radio" id="inlineRadio1" name="auctionType" ng-model="gsettingVm.auctionData.auctionType" value="L" ng-required="!gsettingVm.auctionData.auctionType"> Live Auction
 								</div>
-								<div class="col-xs-7">
-									<input type="radio" id="inlineRadio2" name="auctionType" ng-model="gsettingVm.auctionData.auctionType" value="A"> On-Line Auction
+								<div class="col-xs-7" ng-class="{'has-error': auctionDateForm.auctionType.$invalid && submitted}">
+									<input type="radio" id="inlineRadio2" name="auctionType" ng-model="gsettingVm.auctionData.auctionType" value="A" ng-required="!gsettingVm.auctionData.auctionType"> On-Line Auction
 								</div>
 							</div>
 						</div>
@@ -488,11 +488,11 @@
 							<div class="row">
 								<div class="col-sm-3 form-group">									
 									<div class="row">
-										<div class="col-xs-6 ">
-											<input type="checkbox" name="staticIncrement" ng-model="gsettingVm.auctionData.staticIncrement" ng-change ="gsettingVm.checkBidIncrementAuction(gsettingVm.auctionData.staticIncrement,'static')" value="Static"> Static
+										<div class="col-xs-6 " ng-class="{'has-error': auctionDateForm.staticIncrement.$invalid && submitted}">
+											<input type="checkbox" name="staticIncrement" ng-model="gsettingVm.auctionData.staticIncrement" ng-change ="gsettingVm.checkBidIncrementAuction(gsettingVm.auctionData.staticIncrement,'static')" value="Static" ng-required="!gsettingVm.auctionData.rangeIncrement"> Static
 										</div>
-										<div class="col-xs-6">
-											<input type="checkbox" name="rangeIncrement" ng-model="gsettingVm.auctionData.rangeIncrement" ng-change ="gsettingVm.checkBidIncrementAuction(gsettingVm.auctionData.rangeIncrement,'bid')" value="Range"> Bid Range
+										<div class="col-xs-6" ng-class="{'has-error': auctionDateForm.rangeIncrement.$invalid && submitted}">
+											<input type="checkbox" name="rangeIncrement" ng-model="gsettingVm.auctionData.rangeIncrement" ng-change ="gsettingVm.checkBidIncrementAuction(gsettingVm.auctionData.rangeIncrement,'bid')" value="Range" ng-required="!gsettingVm.auctionData.staticIncrement"> Bid Range
 										</div>
 									</div>
 								</div>								
@@ -651,14 +651,18 @@
 			<form class="assetAuctionForm" name="assetAuctionForm" novalidate>
 				<div class="row">
 					<div class="col-sm-3 form-group" ng-class="{'has-error' : assetAuctionForm.auctionId.$invalid && submitted}">
-						<select class="form-control" name="auctionId" ng-model="gsettingVm.auctionProduct.dbAuctionId" required>
+						<select class="form-control" name="auctionId" ng-model="gsettingVm.auctionProduct.dbAuctionId" ng-change="onAuctionSelection(gsettingVm.auctionProduct.dbAuctionId)" required>
 							<option value=""> Select Auction Id</option>
 							<option ng-repeat="auct in gsettingVm.upcomingAuctions" value="{{auct._id}}">{{auct.auctionId}}({{auct.name}})</option>
 						</select>
 						<i class="caret"></i>
 					</div>
 					<div class="col-sm-3 form-group" ng-class="{'has-error' : assetAuctionForm.lotNo.$invalid && submitted}">
-						<input type="text" class="form-control" name="lotNo" placeholder="Lot No*" ng-model="gsettingVm.auctionProduct.lotNo" ng-blur="checkForLot(gsettingVm.auctionProduct.lotNo,gsettingVm.auctionProduct.dbAuctionId)" required>
+						<select class="form-control" name="auctionDate" ng-model="gsettingVm.auctionProduct.lotNo" ng-change="checkForLot(settingVm.auctionProduct.lotNo,gsettingVm.auctionProduct.dbAuctionId)">
+                  <option value="">Select Lot</option>
+                  <option  ng-repeat="lot in lots" value="{{lot._id}}">{{lot.lotNumber}}</option>
+                </select>
+                <i class="caret"></i>
 					</div>
 					<div class="col-sm-3 form-group">
 						<span class="btn btn-warning fileinput-button">

@@ -101,6 +101,8 @@
         vm.updateFinanceMaster = updateFinanceMaster;
         //import location
         $scope.importLocation = importLocation;
+        $scope.checkForLot=checkForLot;
+        $scope.onAuctionSelection=onAuctionSelection;
 
 
         //vm.auctionSearchFilter = {};
@@ -152,6 +154,28 @@
         function closeTechInfo() {
             return $scope.isTechCollapsed = !$scope.isTechCollapsed;
         }
+
+      function onAuctionSelection(dbAuctionId) {
+      $scope.lot = "";
+      filter = {};
+      filter.auctionId = dbAuctionId;
+      filter.isDeleted=false;
+      console.log("filter", filter);
+      fetchLot(filter);
+    }
+
+    function fetchLot(filter) {
+      console.log("filter for lots",filter);
+      LotSvc.getData(filter)
+        .then(function(res) {
+          $scope.lots = res;
+          console.log("fetched",res);
+          return;   
+        })
+        .catch(function(err) {
+          if (err) throw err;
+        });
+    }
 
 
         function uploadDoc(files,_this,flag) {
@@ -216,7 +240,7 @@
                     getAuctionMaster(dataToSend);
                     loadAuctionData();
                     loadAllCategory();
-                    //checkForLot();
+                    checkForLot();
                     break;
                 case 'inv':
                     getInvitationMasterData();
@@ -1453,7 +1477,7 @@
    
            AuctionSvc.getAuctionDateData(auctionfilter).then(function(result){
         
-            filter = {};
+            var filter = {};
             filter.lotNumber = lotNumber;
             filter.auctionId = result.items[0].auctionId;
            

@@ -400,7 +400,18 @@ exports.destroy = function(req, res) {
           errorCode: 0,
           message: "Lot master deleted sucessfully!!!"
         });
-      })
+      });
+      /*Emd.update({
+        'lot_id':req.params.id
+      },{
+        $set:{
+          'isDeleted':true
+        }
+      },function(emdErr,emdData){
+        if(emdErr)
+          return handleError(res,err);
+        return res.status(200).send()
+      })*/
     });
 };
 exports.removeLotData = function(req, res) {

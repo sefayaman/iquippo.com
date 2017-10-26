@@ -31,6 +31,7 @@ exports.create = function(req, res) {
 
 exports.updateEmdData = function(req, res) {
   var options={};
+  options.dataToSend=req.body;
   req.body.updatedAt = new Date();
   if(req.body._id)
   delete req.body._id;
@@ -45,7 +46,6 @@ exports.updateEmdData = function(req, res) {
     if (err) {
       res.status(err.status || 500).send(err);
     }
-    options.dataToSend=req.body;
     options.dataType="emdData";
     Util.sendCompiledData(options,function(err,results){
       if(err) handleError(res,err);

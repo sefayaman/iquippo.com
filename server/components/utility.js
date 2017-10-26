@@ -314,7 +314,9 @@ function fetchAuctionId(options, callback) {
       "_id": options.dataToSend.auction_id
     }, function(err, auctionData) {
       if (err) return callback(err);
-      options.dataToSend.auction_id = auctionData[0].auctionId;
+      console.log("the auctiondata",auctionData[0]);
+      options.dataToSend.auctionId = auctionData[0].auctionId;
+       console.log("emdoptions",options);
       return callback(null, options);
     });
   } else {
@@ -333,14 +335,19 @@ function compileData(options, callback) {
       break;
     case "lotData":
       // dataFormat = "lots";
+      if(options.dataToSend.lot_mongo_id){
+        options.dataToSend._id=options.dataToSend.lot_mongo_id;
+        delete options.dataToSend.lot_mongo_id;
+      }
+
       if (options.dataToSend.hasOwnProperty('assetDir'))
         delete options.dataToSend.assetDir;
       callback(null, options);
       break;
     case "emdData":
       if (options.dataToSend.auctionId) {
-        options.dataToSend.auction_id = options.dataToSend.auctionId;
-        delete options.dataToSend.auctionId;
+        //options.dataToSend.auctionId = options.dataToSend.auctionId;
+        delete options.dataToSend.auction_id;
       }
       //dataFormat = "emd";
       callback(null, options);
