@@ -20,11 +20,11 @@
           </div>
         </div>
       </div>
-      {{option.select}}
+      
       <div ng-if="option.select == 'yes'">
         <form class="aucform" name="aucform" novalidate>
           <div class="row">
-            <div class="col-sm-offset-2 col-sm-8 form-group" ng-if="" ng-class="{'has-error': aucform.userId.$invalid && form.submitted }">
+            <div class="col-sm-offset-2 col-sm-8 form-group" ng-class="{'has-error': aucform.userId.$invalid && form.submitted }">
               <input type="text" class="form-control form-group" name="userId" placeholder="Enter Mobile/Email Id" ng-model="auctionRegVm.userId" required>
               <input class="form-control form-group" placeholder="Password" type="password" name="passwordlogin" ng-model="auctionRegVm.passwordlogin" required>
               <select class="form-control form-group" name="selectedLots" id="selectedLots" style="height: 80px;" ng-options="lots.lotNumber as lots.lotNumber for lots in auctionRegVm.lotList" ng-model="auctionRegVm.selectedLots.lotNumber" multiple>

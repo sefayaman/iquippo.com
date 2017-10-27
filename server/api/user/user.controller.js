@@ -43,7 +43,7 @@ exports.index = function(req, res) {
 /**
  * Creates a new user
  */
-exports.signUp = function(req, res, next) {
+exports.signUp = function(req, res) {
   var newUser = new User(req.body);
   console.log("username::::" + req.body.name);
   newUser.createdAt = new Date();
