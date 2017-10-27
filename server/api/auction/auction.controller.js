@@ -1442,10 +1442,7 @@ exports.getAuctionWiseProductData = function(req, res) {
 exports.auctiondetail = function(req, res) {
   var filter = {};
   var queryObj = req.query;
-
-
   var currentDate = new Date();
-
   filter.endDate = {
     '$lt': currentDate
   };

@@ -135,16 +135,14 @@
 
 
     function onAuctionSelection(dbAuctionId) {
-      $scope.lot = "";
+      $scope.lot = {};
       filter = {};
       filter.auctionId = dbAuctionId;
       filter.isDeleted = false;
-      console.log("filter", filter);
       fetchLot(filter);
     }
 
     function fetchLot(filter) {
-      console.log("filter for lots", filter);
       LotSvc.getData(filter)
         .then(function(res) {
           $scope.lots = res;
@@ -284,9 +282,6 @@
             $state.go('main');
             return;
           }
-
-
-
           product = $scope.product = response[0];
 
           $scope.imagesEngine = [];
@@ -348,18 +343,15 @@
             product.auction._id=product.auction.id;
             delete product.auction.id;
           }*/
-          console.log("The product put into auction", product);
-          if ($scope.product.tradeType === 'SELL' || $scope.product.tradeType === 'BOTH'){
-              $scope.assetMapCreationPossibility = true;
-            console.log("possible");
-          }
-          else{
+          if ($scope.product.tradeType === 'SELL' || $scope.product.tradeType === 'BOTH') {
+            $scope.assetMapCreationPossibility = true;
+          } else {
             $scope.assetMapCreationPossibility = false;
           }
+
           if (product.auction && (product.auction._id || product.auction.id)) {
             var serData = {};
             serData._id = product.auction._id;
-            console.log("The serData", serData);
             AuctionSvc.getOnFilter(serData)
               .then(function(result) {
                 if (result.length > 0) {
@@ -370,112 +362,99 @@
                   //filter.auctionId=$scope.auctionReq.dbAuctionId;
                   assetfilter.assetId = $scope.product.assetId;
                   assetfilter.auction_id = $scope.auctionReq.dbAuctionId;
-
-                  console.log("The asset filter", filter);
                   var auctionexpiredata = {};
                   auctionexpiredata.auctionType = "expireauction";
                   if ($scope.auctionReq.auctionId)
                     auctionexpiredata._id = $scope.auctionReq.dbAuctionId;
 
-
                   AuctionSvc.getAuctionExpire(auctionexpiredata).then(function(results) {
                     $scope.date = new Date();
-                    console.log("expired results",results);
                     if (results.length > 0) {
-                      $scope.auctionReq.auctionexpire = "expire";
-                      $scope.auctionReq.auctionname = result[0].name;
-                      $scope.isExpire = true;
-                      $scope.assetMapCreation=true;
+                      $scope.assetMapCreation = true;
+                      $scope.lot = {};
                     } else {
                       $scope.isExpire = false;
-                       console.log("auctiondata", $scope.auctionReq);
-                  onAuctionSelection($scope.auctionReq.dbAuctionId);
-                  console.log("filter", filter);
-                  fetchLot(filter);
-                  assetfilter.isDeleted = false;
-                  console.log("filteredr assets", $scope.isExpire);
-                  if($scope.assetMapCreationPossibility){
-                  productSvc.getAssetMapData(assetfilter)
-                    .then(function(res) {
-                      console.log("lot data edit", res);
-                      if (res.asset && res.asset._id) {
-                          $scope.assetMapId = "";
-                          $scope.assetMapId = res.asset._id;
-                        $scope.assetMapCreation = false;
-                        }
-                      if (!isEmpty(res) && !res.message && res.lot && res.asset) {
-                        //console.log("LOT info",res[0]);
-                        $scope.lot = {};
-                        $scope.assetMapCreation = false;
-                        if (res.lot.hasOwnProperty('_id')) {
-                          $scope.lot.lot_id = res.lot._id;
-                          console.log($scope.lot.lot_id);
-                        }
+                      onAuctionSelection($scope.auctionReq.dbAuctionId);
+                      fetchLot(filter);
+                      assetfilter.isDeleted = false;
+                      if ($scope.assetMapCreationPossibility) {
+                        productSvc.getAssetMapData(assetfilter)
+                          .then(function(res) {
+                            console.log("lot data edit", res);
+                            if (res.asset && res.asset._id) {
+                              $scope.assetMapId = "";
+                              $scope.assetMapId = res.asset._id;
+                              $scope.assetMapCreation = false;
+                            }
+                            if (!isEmpty(res) && !res.message && res.lot && res.asset) {
+                              //console.log("LOT info",res[0]);
+                              $scope.lot = {};
+                              $scope.assetMapCreation = false;
+                              if (res.lot.hasOwnProperty('_id')) {
+                                $scope.lot.lot_id = res.lot._id;
+                                console.log($scope.lot.lot_id);
+                              }
 
-                        if (res.lot.hasOwnProperty('lastMintBid')) {
-                          $scope.lot.lastMintBid = res.lot.lastMintBid;
-                        }
+                              if (res.lot.hasOwnProperty('lastMintBid')) {
+                                $scope.lot.lastMintBid = res.lot.lastMintBid;
+                              }
 
-                        if (res.lot.hasOwnProperty('extendedTo')) {
-                          $scope.lot.extendedTo = res.lot.extendedTo;
-                        }
+                              if (res.lot.hasOwnProperty('extendedTo')) {
+                                $scope.lot.extendedTo = res.lot.extendedTo;
+                              }
 
-                        if (res.lot.hasOwnProperty('startingPrice'))
-                          $scope.lot.startingPrice = Number(res.lot.startingPrice);
-                        if (res.lot.startDate && res.lot.endDate) {
-                          $scope.lot.startDate = moment(res.lot.startDate).format('MM/DD/YYYY hh:mm A');
-                          $scope.lot.endDate = moment(res.lot.endDate).format('MM/DD/YYYY hh:mm A');;
-                        }
-                        if (res.lot.hasOwnProperty('static_increment')) {
-                          $scope.lot.static_increment = res.lot.static_increment;
-                          $scope.lot.staticIncrement = true;
-                        }
-                        if (res.lot.hasOwnProperty('bidIncrement')) {
-                          $scope.lot.rangeIncrement = true;
-                          $scope.lot.bidInfo = [];
-                          //console.log("bidincrement===",res[0].bidIncrement);
-                          var range = Object.keys(res.lot.bidIncrement);
-                          Object.keys(res.lot.bidIncrement).forEach(function(item, index) {
-                            var arr = item.split('-');
-                            $scope.lot.bidInfo[index] = {
-                              bidFrom: arr[0],
-                              bidTo: arr[1],
-                              bidIncrement: res.lot.bidIncrement[item]
-                            };
+                              if (res.lot.hasOwnProperty('startingPrice'))
+                                $scope.lot.startingPrice = Number(res.lot.startingPrice);
+                              if (res.lot.startDate && res.lot.endDate) {
+                                $scope.lot.startDate = moment(res.lot.startDate).format('MM/DD/YYYY hh:mm A');
+                                $scope.lot.endDate = moment(res.lot.endDate).format('MM/DD/YYYY hh:mm A');;
+                              }
+                              if (res.lot.hasOwnProperty('static_increment')) {
+                                $scope.lot.static_increment = res.lot.static_increment;
+                                $scope.lot.staticIncrement = true;
+                              }
+                              if (res.lot.hasOwnProperty('bidIncrement')) {
+                                $scope.lot.rangeIncrement = true;
+                                $scope.lot.bidInfo = [];
+                                //console.log("bidincrement===",res[0].bidIncrement);
+                                var range = Object.keys(res.lot.bidIncrement);
+                                Object.keys(res.lot.bidIncrement).forEach(function(item, index) {
+                                  var arr = item.split('-');
+                                  $scope.lot.bidInfo[index] = {
+                                    bidFrom: arr[0],
+                                    bidTo: arr[1],
+                                    bidIncrement: res.lot.bidIncrement[item]
+                                  };
+                                });
+                              } else {
+                                $scope.lot.bidInfo = [{}];
+                              }
+                            } else {
+                              $scope.assetMapCreation = true;
+                              console.log("creation");
+                            }
+                            console.log("$scope.lot", $scope.lot);
+                          })
+                          .catch(function(err) {
+                            throw err;
                           });
-                        } else {
-                          $scope.lot.bidInfo = [{}];
-                        }
                       } else {
-                        $scope.assetMapCreation = true;
-                        console.log("creation");
+                        console.log("possible not");
+                        $scope.assetMapCreationPossibility = false;
                       }
-                      console.log("$scope.lot", $scope.lot);
-                    })
-                    .catch(function(err) {
-                      throw err;
-                    });
-                  }
-                  else{
-                    console.log("possible not");
-                  $scope.assetMapCreationPossibility=false;
-                  }
                     }
-
                   });
-                  
                 } else {
                   $scope.assetMapCreation = true;
                 }
               });
           } else {
-               if($scope.assetMapCreationPossibility)
-              $scope.assetMapCreation=true;
+            if ($scope.assetMapCreationPossibility)
+              $scope.assetMapCreation = true;
           }
 
           if (!product.auction)
             product.auction = {};
-
           //$scope.userType = product.seller.userType;
           $scope.product.country = $scope.product.country;
           // $scope.product.auctionListing = false;
@@ -1901,57 +1880,57 @@
       $scope.lot = {};
       console.log("called");
       filter = {};
-        //$scope.lotsaved.auctionId = result.items[0]._id;
-        filter.isDeleted = false;
-        filter._id = lotNumber;
-        //filter.auctionId = result.items[0]._id;
-        console.log("filter for lot", filter);
+      //$scope.lotsaved.auctionId = result.items[0]._id;
+      filter.isDeleted = false;
+      filter._id = lotNumber;
+      //filter.auctionId = result.items[0]._id;
+      console.log("filter for lot", filter);
 
-        LotSvc.getData(filter)
-          .then(function(res) {
-            console.log("product lot", res);
-            if (res.length > 0) {
-              $scope.lot.lot_id = lotNumber;
-              if (res[0] && res[0].startDate && res[0].endDate) {
-                //$scope.lotDate = true;
-                $scope.lot.startDate = moment(res[0].startDate).format('MM/DD/YYYY hh:mm A');
-                $scope.lot.endDate = moment(res[0].endDate).format('MM/DD/YYYY hh:mm A');
-              }
-
-              if (res[0]._id)
-                $scope.lot._id = res[0]._id;
-              if (res[0] && res[0].startingPrice)
-                $scope.lot.startingPrice = res[0].startingPrice;
-
-              if (res[0].static_increment) {
-                $scope.lot.static_increment = res[0].static_increment;
-                $scope.lot.staticIncrement = true;
-              }
-              if (res[0].bidIncrement) {
-                $scope.lot.rangeIncrement = true;
-                $scope.lot.bidInfo = [];
-                //console.log("bidincrement===",res[0].bidIncrement);
-                var range = Object.keys(res[0].bidIncrement);
-                Object.keys(res[0].bidIncrement).forEach(function(item, index) {
-                  var arr = item.split('-');
-                  $scope.lot.bidInfo[index] = {
-                    bidFrom: arr[0],
-                    bidTo: arr[1],
-                    bidIncrement: res[0].bidIncrement[item]
-                  };
-                });
-              } else {
-                $scope.lot.bidInfo = [{}];
-              }
-              console.log("checked lot", $scope.lot);
-            } else {
-              modal.alert("create lot Data from lot master table");
-              return;
+      LotSvc.getData(filter)
+        .then(function(res) {
+          console.log("product lot", res);
+          if (res.length > 0) {
+            $scope.lot.lot_id = lotNumber;
+            if (res[0] && res[0].startDate && res[0].endDate) {
+              //$scope.lotDate = true;
+              $scope.lot.startDate = moment(res[0].startDate).format('MM/DD/YYYY hh:mm A');
+              $scope.lot.endDate = moment(res[0].endDate).format('MM/DD/YYYY hh:mm A');
             }
-          })
-          .catch(function(err) {
-            throw err;
-          });
+
+            if (res[0]._id)
+              $scope.lot._id = res[0]._id;
+            if (res[0] && res[0].startingPrice)
+              $scope.lot.startingPrice = res[0].startingPrice;
+
+            if (res[0].static_increment) {
+              $scope.lot.static_increment = res[0].static_increment;
+              $scope.lot.staticIncrement = true;
+            }
+            if (res[0].bidIncrement) {
+              $scope.lot.rangeIncrement = true;
+              $scope.lot.bidInfo = [];
+              //console.log("bidincrement===",res[0].bidIncrement);
+              var range = Object.keys(res[0].bidIncrement);
+              Object.keys(res[0].bidIncrement).forEach(function(item, index) {
+                var arr = item.split('-');
+                $scope.lot.bidInfo[index] = {
+                  bidFrom: arr[0],
+                  bidTo: arr[1],
+                  bidIncrement: res[0].bidIncrement[item]
+                };
+              });
+            } else {
+              $scope.lot.bidInfo = [{}];
+            }
+            console.log("checked lot", $scope.lot);
+          } else {
+            modal.alert("create lot Data from lot master table");
+            return;
+          }
+        })
+        .catch(function(err) {
+          throw err;
+        });
     }
 
 

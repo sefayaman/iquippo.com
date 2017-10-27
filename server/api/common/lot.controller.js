@@ -137,15 +137,8 @@ var lotsData = [];
 function fetchLotData(callback) {
   var filter = {};
   filter.isDeleted = false;
-  console.log("fetchLots");
   Lot.find(filter, function(err, lots) {
     if (err) callback(err);
-    /*lotsData=lots;
-    var obj={};
-    lotsData.forEach(function(l){
-     obj=JSON.parse(JSON.stringify(l));
-     newLots.push(obj);
-    })*/
     lots = JSON.parse(JSON.stringify(lots));
     lots.forEach(function(item) {
       if (item.auction_id && validator.isMongoId(item.auction_id))
@@ -159,9 +152,6 @@ function fetchLotData(callback) {
       item.lot_extendedTo = item.extendedTo;
     })
     lotsData = lots;
-
-    console.log("lotsAuct", lotsData);
-    console.log("lotsAuct", lotsDataInAuctions);
     return callback(null);
   });
 }
@@ -169,7 +159,6 @@ var auctionsData = [];
 
 function fetchAuctions(callback) {
   var filter = {};
-  console.log("filter", filter);
   AuctionMaster.find({
     "_id": {
       $in: lotsDataInAuctions
@@ -180,7 +169,6 @@ function fetchAuctions(callback) {
     'isDeleted': false
   }, function(err, auctions) {
     if (err) return callback(err);
-    /*auctionsData = auctions;*/
     try {
       auctions = JSON.parse(JSON.stringify(auctions));
     } catch (e) {
@@ -193,14 +181,7 @@ function fetchAuctions(callback) {
 }
 
 
-
 function compileData(callback) {
-  /*auctionsData.forEach(function(item){
-        obj=JSON.parse(JSON.stringify(item));
-        console.log("The item",obj);
-        newAuction.push(obj);
-      });
-    console.log("array",newAuction);*/
   var mergedList = _.map(lotsData, function(item) {
     return _.extend(item, _.findWhere(auctionsData, {
       "_id": item.auction_id

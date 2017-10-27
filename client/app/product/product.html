@@ -1060,7 +1060,7 @@
           <div class="col-sm-7 form-group">
                 <select class="form-control" name="auctionDate" ng-model="lot.lot_id" ng-change="checkForLot(lot.lot_id)">
                   <option value="">Select Lot</option>
-                  <option  ng-repeat="lotdata in lots" value="{{lot._id}}">{{lotdata.lotNumber}}</option>
+                  <option  ng-repeat="lotdata in lots" value="{{lotdata._id}}">{{lotdata.lotNumber}}</option>
                 </select>
                 <i class="caret"></i>
               </div>
@@ -1234,7 +1234,6 @@
           </div>
         </div>
         <div class="form-group text-right">
-          
           <button class="btn btn-danger" ng-click="secondStep(auctForm,product)">Submit</button>
         </div>
       </div>
