@@ -183,13 +183,15 @@ exports.checkUserRegis = function(req, res) {
 
 exports.saveOfflineRequest = function(req, res) {
   var data = req.body.paymentMode;
+  var updateData = {
+    paymentMode : req.body && req.body.paymentMode,
+    status : 'pending' 
+  };
 
-  console.log("filterdata", filter);
-
-  Payment.update({
+  PaymentTransaction.update({
     _id: req.body.transactionId
   }, {
-    $set: req.body
+    $set: updateData
   }, function(err) {
     if (err) {
       return handleError(res, err);

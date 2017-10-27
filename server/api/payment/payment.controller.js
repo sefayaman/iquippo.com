@@ -6,6 +6,7 @@ var Payment = require('./payment.model');
 var Offline = require('./offline.model');
 var  xlsx = require('xlsx');
 var config = require('./../../config/environment');
+var async=require('async');
 
 var trasactionStatuses = ['failed','pending','completed'];
 
@@ -38,12 +39,41 @@ exports.create = function(req, res) {
 };
 
 exports.createoffline = function(req, res) {
+  var options={};
   req.body.createdAt = new Date();
   req.body.updatedAt = new Date();
-  Offline.create(req.body, function(err, payment) {
-        return res.status(201).json(payment);
+  console.log("The request",req.body);
+   options={
+    transactionId:req.body.transactionid,
+    status:'completed'
+   }
+  async.parallel([
+      function(next){
+        paymentUpdate(options,next);
+      },function(next){
+       offlineRequest(req.body,next);
+      }
+    ],function(err,result){
+     if(err) return handleError(res,err);
+     return res.status(200).json(result);
   });
 };
+
+function paymentUpdate(options,cb){
+   var filter={};
+   filter._id=options.transactionId;
+   Payment.update(filter,{$set:{'status':options.status}},function(err,update){
+         if (err) cb(err);
+         return cb(null);
+   });
+}
+
+function offlineRequest(offlineData,cb){
+Offline.create(offlineData, function(err, payment) {
+        if(err) cb(err);
+        return cb(null);
+});
+}
 
 //search based on filter
 exports.getOnFilter = function(req, res) {
