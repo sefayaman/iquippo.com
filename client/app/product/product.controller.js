@@ -1527,7 +1527,7 @@
         var pyMaster = {};
         pyMaster = PaymentMasterSvc.getPaymentMasterOnSvcCode("Auction");
         payObj.type = "auctionreq";
-        payObj.charge = pyMaster.fees || 0;
+        payObj.charge = (pyMaster && pyMaster.fees) || 0;
         paymentTransaction.totalAmount += payObj.charge;
         paymentTransaction.payments[paymentTransaction.payments.length] = payObj;
         createTraction = true;
