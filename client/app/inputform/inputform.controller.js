@@ -75,13 +75,13 @@ function InputFormCtrl($scope, $rootScope, Modal, Auth, categorySvc, LocationSvc
 		InputFormMasterSvc.get(filter)
         .then(function(result){
 			result.forEach(function(item){
-				if(item.additionalInfo)
+				if(item && item.additionalInfo)
 					vm.orignalInputFormMasterData = item.additionalInfo;
 					//vm.inputFormMasterData = item.additionalInfo;
 					//onStateChange();
 			});
 			vm.orignalInputFormMasterData.forEach(function(item){
-				if($scope.inputFormState.indexOf(item.state) === -1 && item.state) {
+				if(item && $scope.inputFormState.indexOf(item.state) === -1 && item.state) {
 					$scope.inputFormState[$scope.inputFormState.length] = item.state;
 				}
 	        });
