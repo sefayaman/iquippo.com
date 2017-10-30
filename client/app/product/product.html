@@ -993,8 +993,8 @@
         <h3 class="panel-title">Auction Details</h3>
       </div>
       <div class="panel-body">
-        <div ng-if="isAdmin()">
-          <div class="row" ng-if="isExpire">
+        <div>
+          <div class="row" ng-if="isExpire" ng-if="isAdmin()">
             <div class="form-group col-sm-5">Auction</div>
             <div class="form-group col-sm-7">
                 This Auction has expired<br/>
@@ -1015,7 +1015,7 @@
             <div class="row" ng-if="!isExpire">
               <div class="form-group col-sm-5">Auction</div>
               <div class="col-sm-7 form-group">
-                <select class="form-control" name="auctionDate" ng-model="auctionReq.dbAuctionId" ng-change="onAuctionSelection(auctionReq.dbAuctionId)">
+                <select class="form-control" name="auctionDate" ng-model="auctionReq.dbAuctionId" ng-change="onAuctionSelection(auctionReq.dbAuctionId)" ng-disabled="!isAdmin()">
                   <option value="">Select Auction</option>
                   <option  ng-repeat="act in auctions" value="{{act._id}}">{{act.name}}({{act.startDate|date:MM/dd/yyyy}}-{{act.endDate|date:MM/dd/yyyy}})</option>
                 </select>
@@ -1024,12 +1024,12 @@
               
             </div>
         </div>
-        <div class="row" ng-if="!isAdmin()">
+        <!-- <div class="row" ng-if="!isAdmin()">
           <div class="form-group col-sm-5">Auction </div>
           <div class="form-group col-sm-7">
             <input type="text" name="auctname" class="form-control" ng-model="lot.auctname" min="0" placeholder="auctname" required>
           </div>
-        </div>
+        </div> -->
 
        <!-- <div class="row" ng-if="isCustomer()">
           <div class="col-sm-5 form-group">
@@ -1044,21 +1044,21 @@
               </div>
           </div>
         </div>-->
-          <div class="row" ng-if="!isAdmin()">
+          <!-- <div class="row" ng-if="!isAdmin()">
             <div class="form-group col-sm-5">EMD Amount </div>
             <div class="form-group col-sm-7">
               <input type="number" name="emdAmount" class="form-control" ng-model="lot.emdAmount" min="0" placeholder="EMD Amount">
             </div>
-           </div>
+           </div> -->
         
-        <div class="row" ng-if="!isAdmin()">
+        <!-- <div class="row" ng-if="!isAdmin()">
           <input type="hidden" name="certification" class="form-control" ng-model="lot.cerification" placeholder="lot.cerification">
-        </div>
+        </div> -->
          
         <div class="row">
           <div class="form-group col-sm-5">Lot Number<span class="text-warning">*</span></div>
           <div class="col-sm-7 form-group">
-                <select class="form-control" name="auctionDate" ng-model="lot.lot_id" ng-change="checkForLot(lot.lot_id)">
+                <select class="form-control" name="auctionDate" ng-model="lot.lot_id" ng-change="checkForLot(lot.lot_id)" ng-disabled="!isAdmin()">
                   <option value="">Select Lot</option>
                   <option  ng-repeat="lotdata in lots" value="{{lotdata._id}}">{{lotdata.lotNumber}}</option>
                 </select>
@@ -1187,7 +1187,7 @@
         </div>
       
 
-         <div class="row" ng-if="!isAdmin()">
+         <!-- <div class="row" ng-if="!isAdmin()">
           <div class="col-sm-5 form-group">
             Start Date of Auction
           </div>
@@ -1197,10 +1197,10 @@
               <label for="startdate" class="input-group-addon"><i class="fa fa-calendar"></i></label>
             </div>
           </div>
-        </div>
+        </div> -->
   
 
-        <div class="row" ng-if="!isAdmin()">
+        <!-- <div class="row" ng-if="!isAdmin()">
           <div class="col-sm-5 form-group">
             End Date of Auction
           </div>
@@ -1210,7 +1210,7 @@
               <label for="enddate" class="input-group-addon"><i class="fa fa-calendar"></i></label>
             </div>
           </div>
-        </div>
+        </div> -->
 
          <div class="row">
           <div class="form-group col-sm-5">Last Minute Bid  <span class="text-warning">*</span></div>

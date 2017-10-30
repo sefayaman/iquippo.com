@@ -103,121 +103,79 @@
 
       <div>
         <div>
-         <div class="row auction-list auction-details lots-buttons form-group" ng-repeat="lot in auctionDetailsVm.lotListing track by $index" ng-if="auctionOrientation !== 'L'"> 
-              <div class="col-sm-6">
-                <div class="media form-group">
-                    <a  ng-if="auctionDateVm.getProductData(product._id, 'total_products') != 0" class="pull-left" href="/assetinauction?auctionType={{product.auctionValue}}&auctionId={{product.auctionId}}&id={{product._id}}">
-                      <img class="media-object" ng-if="lot.primaryImg" ng-src="{{lot.primaryImg}}" alt="Image">                
-                      <img class="media-object" ng-if="!lot.primaryImg" src="assets/uploads/auctionmaster/upcoming_12.jpg" alt="Image" height="100">                
-                    </a>
-                 
-                    <div class="media-body">
-                      <p>Lot Number - {{lot.lotNumber}}</p>
-                      <p>Asset Description : 
-                    <span ng-repeat="assetId in lot.assetDesc track by $index">
-                      <a href="javascript:void(0)" ng-click="fetchAsset(assetId,lot.lotNumber,false)"> {{assetId}} ,</a>
-                    </span>
-                    </p>
-                    <p>Lot Amount Value - {{lot.amount}}</p>
-                      
-                      <div class="row callLocation">
-                        <div class="col-sm-8 form-group">
-                          <p ng-if="product.auctionAddr"><strong><i class="fa fa-map-marker"></i> </strong> <a href="javascript:void(0);" ng-click="auctionDateVm.showAddress(product.auctionAddr,product.city,product.state)">{{product.auctionAddr}}</a> </p>
-                        </div>               
-                        <div class="col-xs-12 text-right">
-                          <a ng-disabled="lot.assetDesc.length > 1" ng-click="fetchAsset(assetId,lot.id,true)" href="javascript:void(0)"  class="btn btn-sm btn-danger">View Details</a>
-                        </div>                        
+         <div class="row"> 
+              <div class="col-sm-6" ng-repeat="lot in auctionDetailsVm.lotListing track by $index" ng-if="auctionOrientation !== 'L' && isLoggedIn()" ng-class="{'col-sm-12': lot.isVisible}">
+                <div class="row form-group auction-list auction-details lots-buttons">
+                  <div class="col-sm-6" ng-class="{'col-sm-12': !lot.isVisible}">
+                    <div class="media form-group">
+                        <a  ng-if="auctionDateVm.getProductData(product._id, 'total_products') != 0" class="pull-left" href="/assetinauction?auctionType={{product.auctionValue}}&auctionId={{product.auctionId}}&id={{product._id}}">
+                          <img class="media-object" ng-if="lot.primaryImg" ng-src="{{lot.primaryImg}}" alt="Image">                
+                          <img class="media-object" ng-if="!lot.primaryImg" src="assets/uploads/auctionmaster/upcoming_12.jpg" alt="Image" height="100">                
+                        </a>
+                     
+                        <div class="media-body">
+                          <p>Lot Number - {{lot.lotNumber}}</p>
+                          <p>Asset Description : 
+                          <span ng-repeat="assetId in lot.assetDesc track by $index">
+                            <a href="javascript:void(0)" ng-click="fetchAsset(assetId,lot.lotNumber,false)"> {{assetId}} ,</a>
+                          </span>
+                        </p>
+                        <p>Lot Amount Value - {{lot.amount}}</p>
+                          
+                          <div class="row callLocation">
+                            <div class="col-sm-8 form-group">
+                              <p ng-if="product.auctionAddr"><strong><i class="fa fa-map-marker"></i> </strong> <a href="javascript:void(0);" ng-click="auctionDateVm.showAddress(product.auctionAddr,product.city,product.state)">{{product.auctionAddr}}</a> </p>
+                            </div>               
+                            <div class="col-xs-12 text-right">
+                              <a ng-disabled="lot.assetDesc.length > 1" ng-click="fetchAsset(assetId,lot.id,true)" href="javascript:void(0)"  class="btn btn-sm btn-danger">View Details</a>
+                            </div>                        
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-6" ng-if="isLoggedIn()">
+                    <div ng-if="lot.isVisible">  
+                         
+                        <iframe ng-src="{{lot.url}}" style="width: 100%; height: 400px; border: 1px solid #eee;"></iframe>
+                          
+                    </div> 
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6 form-group" ng-repeat="lot in auctionDetailsVm.lotListing track by $index" ng-if="auctionOrientation !== 'L' && !isLoggedIn()">
+                <div class="col-sm-12 auction-list auction-details lots-buttons">
+                  <div class="media col-sm-12 form-group">
+                      <a  ng-if="auctionDateVm.getProductData(product._id, 'total_products') != 0" class="pull-left" href="/assetinauction?auctionType={{product.auctionValue}}&auctionId={{product.auctionId}}&id={{product._id}}">
+                        <img class="media-object" ng-if="lot.primaryImg" ng-src="{{lot.primaryImg}}" alt="Image">                
+                        <img class="media-object" ng-if="!lot.primaryImg" src="assets/uploads/auctionmaster/upcoming_12.jpg" alt="Image" height="100">                
+                      </a>
+                   
+                      <div class="media-body">
+                        <p>Lot Number - {{lot.lotNumber}}</p>
+                        <p>Asset Description : 
+                        <span ng-repeat="assetId in lot.assetDesc track by $index">
+                          <a href="javascript:void(0)" ng-click="fetchAsset(assetId,lot.lotNumber,false)"> {{assetId}} ,</a>
+                        </span>
+                      </p>
+                      <p>Lot Amount Value - {{lot.amount}}</p>
+                        
+                        <div class="row callLocation">
+                          <div class="col-sm-8 form-group">
+                            <p ng-if="product.auctionAddr"><strong><i class="fa fa-map-marker"></i> </strong> <a href="javascript:void(0);" ng-click="auctionDateVm.showAddress(product.auctionAddr,product.city,product.state)">{{product.auctionAddr}}</a> </p>
+                          </div>               
+                          <div class="col-xs-12 text-right">
+                            <a ng-disabled="lot.assetDesc.length > 1" ng-click="fetchAsset(assetId,lot.id,true)" href="javascript:void(0)"  class="btn btn-sm btn-danger">View Details</a>
+                          </div>                        
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
+                 
+          </div>
 
-                <div class="col-sm-6">
-
-                     <div ng-if="isLoggedIn()"> 
-
-                        <div ng-if="lot.isVisible">  
-                           
-                          <iframe ng-src="{{lot.url}}" style="width: 100%; height: 400px; border: 1px solid #eee;"></iframe>
-                            
-                       </div> 
-                    </div> 
-                </div> 
-                <!-- <div class="row panel-group widgit-panel">
-                    <div class="col-sm-3 padd-right">
-                      <div class="panel panel-default">
-                        <div class="panel-heading">Start price</div>
-                        <div class="panel-body">
-                          <i class="fa fa-inr"></i> 200.00
-                        </div>                
-                      </div>
-                      <div class="panel panel-default">
-                        <div class="panel-heading">Current Bid</div>
-                        <div class="panel-body">
-                          <i class="fa fa-inr"></i> 208.00
-                        </div>                
-                      </div>
-                    </div>
-                    <div class="col-sm-6">
-                      <div class="panel panel-default">
-                        <div class="panel-body">
-                          <h4 class="text-center">Time left</h4>
-                          <timer>
-                            <div class="countdown-time">
-                              <ul class="countdown-widgit">
-                                <li class="item"><i class="day">{{days}} <span>Day</span></i></li>
-                                <li class="item"><i class="hour">{{hours}}<span>Hrs</span></i></li>
-                                <li class="item"><i class="minute">{{minutes}}<span>Mins</span></i></li>
-                                <li class="item"><i class="second">{{seconds}}<span>Secs</span></i></li>
-                              </ul>
-                            </div>
-                          </timer>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-sm-3 padd-left">
-                      <div class="panel panel-default">
-                        <div class="panel-heading">
-                          Next Bid
-                        </div>
-                        <div class="panel-body">
-                          <p><i class="fa fa-inr"></i> 208 or More </p>   
-                          <button type="button" class="btn btn-primary btn-block">Bid History</button>              
-                        </div>                
-                      </div>
-                    </div>
-                  </div>
-                  <div class="panel-group">
-                    <div class="panel panel-default">
-                      <div class="panel-body">
-                        <form novalidate="" name="negotiations">
-                          <div class="row">
-                            <div class="col-sm-3 padd-right">
-                              <h5>
-                                Make an Offer
-                              </h5>
-                            </div>
-                            <div class="col-sm-6">
-                              <div ng-class="{'has-error': negotiations.amount.$invalid &amp;&amp; negotiationSubmitted}">
-                                <input type="number" min="0" name="amount" class="form-control" placeholder="Enter Offer" required="">
-                              </div>
-                            </div>
-                            <div class="col-sm-3 padd-left text-right">
-                              <div>
-                                <a href="javascript:void(0);" class="btn btn-warning btn-block" ng-click="submitBidAuction( -)">Submit Bid</a>
-                              </div>
-                            </div>
-                          </div>
-                        </form>
-                      </div>
-                    </div>
-                  </div>
-                    </div>
-                  </div>
-                </div> -->
-            </div>
-            <div class="row" ng-if="auctionOrientation == 'L'">
-                <div class="col-sm-6" ng-repeat="lot in auctionDetailsVm.lotListing"> 
+          <div class="row" ng-if="auctionOrientation == 'L'">
+              <div class="col-sm-6" ng-repeat="lot in auctionDetailsVm.lotListing"> 
                 <div class="auction-list auction-details live-display-asset">
                   <div class="media form-group">
                       <a  ng-if="auctionDateVm.getProductData(product._id, 'total_products') != 0" class="pull-left" href="/assetinauction?auctionType={{product.auctionValue}}&auctionId={{product.auctionId}}&id={{product._id}}">
@@ -229,8 +187,7 @@
   
                         <p>Lot Number - {{lot.lotNumber}}</p>
                         <p>Asset Description : Here
-                        {{lot.assetDesc}}
-                      <span ng-repeat="asset in lot.assetDesc">{{lot.assetDesc}}
+                      <span ng-repeat="asset in lot.assetDesc">
                         <a href="javascript:void(0)" ng-click="fetchAsset(asset,lot.lotNumber,false)"> {{asset}} ,</a>
                       
                       
@@ -249,10 +206,9 @@
                           </div> 
                     </div>
                   </div>
-                </div>
-                  
+                </div>                    
               </div>
-            </div>
+          </div>
    
     </div>
     
