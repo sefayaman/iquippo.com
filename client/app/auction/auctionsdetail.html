@@ -69,7 +69,7 @@
           </button>
         </div>         
         <div class="col-xs-12 col-sm-7 text-right padd-left">
-          <a ng-if="auctionOrientation === 'L'" ng-disabled="lot.assetDesc.length > 1" href="liveAuctionURLSCE}}"  class="btn btn-sm btn-danger">View Live Auction</a>
+          <a ng-if="auctionOrientation === 'L'" ng-disabled="lot.assetDesc.length > 1" href="{{liveAuctionURLSCE}}"  class="btn btn-sm btn-danger">View Live Auction</a>
           <a href="javascript:void(0);" ng-if="auctionType !='closedAuctions'" ng-click="auctionDetailsVm.openBidModal(product)" class="btn btn-default btn-sm active">Register Now</a>
           <a href="{{uploadImagePrefix}}{{auctionDir}}/{{docName}}" class="btn btn-sm btn-default active" ng-if="docType == 'bidProxy'" target="_blank"><i class="fa fa-file-text-o"></i> Proxy Form</a>
           <a href="{{uploadImagePrefix}}{{auctionDir}}/{{docName}}" class="btn btn-sm btn-default active" ng-if="docType == 'tc'" target="_blank"><i class="fa fa-file-pdf-o"></i> <span class="hidden-xs">Auction Catalogue</span></a>

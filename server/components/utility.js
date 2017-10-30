@@ -407,10 +407,11 @@ function sendData(options, callback) {
     form: data
   }, function(err, httpres, asData) {
     if (err) {
+      console.log("+++++++",err);
       callback(err);
     } else {
       try {
-        console.log(asData);
+        console.log("=======++__________",asData);
         callback(null, {
           message: "data updated successfully"
         });
