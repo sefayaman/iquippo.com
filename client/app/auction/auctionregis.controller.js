@@ -137,13 +137,13 @@
                   
                                     vm.dataModel.selectedLots = vm.dataToSend.selectedLots;
                                     closeDialog();
-                                     EmdSvc.getAmount(vm.dataModel).then(function(result){
+                                     EmdSvc.getAmount(vm.dataModel).then(function(results){
                                     
                                            if(Auth.getCurrentUser().email)
                                            dataObj.user.email = Auth.getCurrentUser().email;
 
-                                         console.log("result",result);
-                                           save(dataObj,result[0].emdAmount);
+                                         console.log("result",results);
+                                           save(dataObj,results[0].emdAmount);
                                        }).catch(function(err){
                                      });
                                }

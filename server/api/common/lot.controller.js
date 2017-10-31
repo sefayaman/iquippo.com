@@ -196,9 +196,10 @@ exports.getLotData = function(req, res) {
 
   var filter = {};
   var query = {};
+  filter.isDeleted = false;
   console.log("req.query", req.query);
-  if (req.query.hasOwnProperty('isDeleted'))
-    filter.isDeleted = req.query.isDeleted;
+  /*if (req.query.hasOwnProperty('isDeleted'))
+    filter.isDeleted = req.query.isDeleted;*/
   if (req.query.auctionId) {
     filter.auction_id = req.query.auctionId;
   }
@@ -235,7 +236,7 @@ exports.getLotsInAuction = function(req, res) {
       viewData(options, next);
     }
   ], function(err, results) {
-    console.log("error",err);
+    console.log("error", err);
     if (err) return handleError(res, err);
     if (results && results.length && results[2]) {
       console.log("The data", results[2]);
@@ -264,7 +265,7 @@ function fetchLots(filter, options, callback) {
     } else {
       console.log("Error");
       return callback(new APIError(404, 'No Assets present in the auction'));
-        
+
     }
   });
 }
@@ -281,12 +282,13 @@ function fetchAssetsInLot(options, callback) {
     isDeleted: false
   }, function(err, results) {
     if (err) callback(err);
-    if(results.length > 0){
-    options.assetData = results;
-  return callback(null, options);
-  }
-  else
-    return callback(new Error({message:"No assets in auction"}));
+    if (results.length > 0) {
+      options.assetData = results;
+      return callback(null, options);
+    } else
+      return callback(new Error({
+        message: "No assets in auction"
+      }));
     //console.log("assets",results);  
   });
 }
@@ -318,83 +320,60 @@ function viewData(options, callback) {
 };
 
 
-/*
-lot master:
-
-{
-_id :1
-lotNumber :1
-fausfduy:
-}
-
-asset 
-
-{
-  lot_id : 1,sdhciysdfcui
-
-}
-
-lotInfo[1] =   
-
-
-
-
-*/
-
 exports.destroy = function(req, res) {
   var options = {};
   console.log("id", req.params.id);
-  Lot.update({
-      '_id': req.params.id
-    }, {
-      "$set": {
-        "isDeleted": true
-      }
-
-    })
-    .exec(function(err, doc) {
-      if (err) {
-        return handleError(res, err);
-      }
-      options = {};
-      options.dataToSend = {
-        "_id": req.params.id,
-        "isDeleted": true
-      }
-      options.dataType = "lotData";
-      Util.sendCompiledData(options, function(err, result) {
-        if (err) return handleError(res, err);
-        console.log("result", result);
-      });
-      AssetsInAuction.update({
-        'lot_id': req.params.id
-      }, {
-        $set: {
-          'isDeleted': true
-        }
-      }, {
-        multi: true
-      }, function(aucErr, resultData) {
-        if (aucErr)
-          return handleError(res, err);
-        return res.status(200).send({
-          errorCode: 0,
-          message: "Lot master deleted sucessfully!!!"
-        });
-      });
-      /*Emd.update({
-        'lot_id':req.params.id
-      },{
-        $set:{
-          'isDeleted':true
-        }
-      },function(emdErr,emdData){
-        if(emdErr)
-          return handleError(res,err);
-        return res.status(200).send()
-      })*/
+  options.dataToSend={};
+  options.dataToSend._id=req.params.id;
+  async.series([
+    function(next) {
+      deleteLot(options,next);
+    },
+    function(next) {
+      deleteAssets(options,next);
+    },
+  ], function(err, result) {
+    if (err) return handleError(res, err);
+    Util.sendCompiledData(options, function(err, resultSend) {
+      if (err) return handleError(res, err);
+      console.log("result", result[0]);
     });
+    console.log(result);
+  });
 };
+
+function deleteLot(options,callback) {
+  Lot.update({
+    '_id': options.dataToSend._id
+  }, {
+    '$set': {
+      'isDeleted': true
+    }
+  }, function(err, lotresult) {
+    if (err) callback(err);
+    options.dataType = "lotData";
+    options.dataToSend.isDeleted = true;
+    return callback(null, options);
+  });
+}
+
+function deleteAssets(options,callback) {
+  console.log("here deleting assets");
+  AssetsInAuction.update({
+    'lot_id': options.dataToSend._id
+  }, {
+    '$set': {
+      'isDeleted': true
+    }
+  }, {
+    multi: true
+  }, function(aucErr, resultData) {
+    if (aucErr)
+      return callback(err);
+    return callback(null);
+  });
+}
+
 exports.removeLotData = function(req, res) {
   //req.body.updatedAt = new Date();
   var field = {};
@@ -422,6 +401,6 @@ exports.removeLotData = function(req, res) {
 };
 
 function handleError(res, err) {
-  console.log("err",err);
+  console.log("err", err);
   return res.status(404).json(err);
 }
