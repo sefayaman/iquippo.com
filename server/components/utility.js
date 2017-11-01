@@ -375,6 +375,7 @@ function compileData(options, callback) {
   }
 }
 
+var headers={};
 
 function sendData(options, callback) {
   var serviceData = [];
@@ -401,9 +402,16 @@ function sendData(options, callback) {
     "assetData": 'assetdata'
   };
 
+  headers = {
+    'User-Agent': 'Super Agent/0.0.1',
+    'Content-Type': 'application/x-www-form-urlencoded'
+  }
+
   var url = 'https://auctionsoftwaremarketplace.com:3007/api_call/' + obj[options.dataType];
   request.post({
     url: url,
+    headers:headers,
+    rejectUnauthorized:false,
     form: data
   }, function(err, httpres, asData) {
     if (err) {
