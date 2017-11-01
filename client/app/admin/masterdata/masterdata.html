@@ -74,7 +74,14 @@
 							     </div>
 				    		</h4>
 				    		<legend></legend>
-                          <div class="row">
+							<div class="row">
+								<div class="col-sm-3 form-group">
+									<input type="radio" id="existing"  name="categoryFor" ng-model="c.categoryFor" value="0" checked> <label for="existing">For Existing</label>
+								</div>
+								<div class="col-sm-3 form-group"><input type="radio" id="equipment" name="categoryFor" ng-model="c.categoryFor" value="1"> <label for="equipment"> New Equipment </label></div>
+								<div class="col-sm-3 form-group"><input type="radio" id="forboth"  name="categoryFor" ng-model="c.categoryFor" value="2"> <label for="forboth"> Both</label></div>
+							</div>
+						  <div class="row">
                          	<div class="form-group col-sm-3" ng-class="{'has-error': form.errorGroup && submitted}">
                                  <select class="form-control" ng-model="c.group" name="groupList" ng-options="group.name for group in allGroup track by group._id" required  ng-disabled="categoryEdit">
 	                                <option value="" disabled>Select Group</option>
@@ -153,7 +160,7 @@
 					                </select> 
 	                            </div> 
 	                            <div class="form-group col-sm-3" ng-class="{'has-error': form.errorCategory && submitted}">
-	                                <select class="form-control" ng-model="b.category" name="categoryList" ng-options="category.name for category in categoryList track by category._id" required ng-disabled="brandEdit">
+	                                <select class="form-control" ng-model="b.category" name="categoryList" ng-options="category.name for category in categoryList track by category._id" required ng-disabled="brandEdit" ng-change="checkCategoryFor(b.category)">
 		                            <option value="" disabled>Select Category</option>
 					                <!-- <option ng-repeat="category in categoryList" ng-selected="b.category._id == category._id" value="{{category._id}}">{{category.name}}</option> -->
 					                </select> 

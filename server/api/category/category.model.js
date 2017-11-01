@@ -17,7 +17,8 @@ var CategorySchema = new Schema({
     default: false
   },
   createdAt: {type:Date,default:Date.now},
-  updatedAt: {type:Date,default:Date.now}
+  updatedAt: {type:Date,default:Date.now},
+  categoryFor: String
 });
 
 module.exports = mongoose.model('Category', CategorySchema);

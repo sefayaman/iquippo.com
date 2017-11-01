@@ -57,6 +57,7 @@ function MasterDataCtrl($scope, $rootScope,MasterDataService, groupSvc, modelSvc
 	$scope.updateCategoryImg = updateCategoryImg;
 	$scope.importMasterData = importMasterData;
 	$scope.getStatus = getStatus;
+	$scope.checkCategoryFor = checkCategoryFor;
 
 	function loadAllGroup(fromCache){
 		if(!fromCache)
@@ -81,6 +82,7 @@ function MasterDataCtrl($scope, $rootScope,MasterDataService, groupSvc, modelSvc
 			vm.cSearch = "";
 			vm.cCurrentPage = 1;
 			vm.cTotalItems = result.length;
+			
 		})
 	}
 
@@ -572,7 +574,9 @@ function MasterDataCtrl($scope, $rootScope,MasterDataService, groupSvc, modelSvc
 		retObject.name = obj.name;
 		return retObject;
 	}
-
+	function checkCategoryFor(category){
+		console.log("category==",category);
+	}
 }
 
 })();
