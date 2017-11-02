@@ -58,6 +58,7 @@ function MasterDataCtrl($scope, $rootScope,MasterDataService, groupSvc, modelSvc
 	$scope.importMasterData = importMasterData;
 	$scope.getStatus = getStatus;
 	$scope.checkCategoryFor = checkCategoryFor;
+	$scope.checkBrandFor = checkBrandFor;
 
 	function loadAllGroup(fromCache){
 		if(!fromCache)
@@ -575,7 +576,12 @@ function MasterDataCtrl($scope, $rootScope,MasterDataService, groupSvc, modelSvc
 		return retObject;
 	}
 	function checkCategoryFor(category){
-		console.log("category==",category);
+		$scope.b.useFor = category.useFor;
+		console.log("$scope.b.useFor==",$scope.b.useFor);
+	}
+	function checkBrandFor(brand){console.log("brand==",brand);
+		$scope.m.useFor = brand.useFor;
+		console.log("muserfor",$scope.m.useFor);
 	}
 }
 

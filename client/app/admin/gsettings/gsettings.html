@@ -36,6 +36,7 @@
 						<!-- <option  value="asset-type" ui-sref= "yardassettype" >Asset Type</option>
 						<option value="yard-services">Yard Management - Services</option>
 						<option value="yard-amenities">Yard Management – Amenities </option> -->
+						<option value="dealermaster">Dealer Location Master</option>
 					</select>
 					<i class="caret"></i>
 				</div>
@@ -2721,6 +2722,43 @@
 			</table>
 		</div>
 		<uib-pagination total-items="gsettingVm.totalItems" ng-model="gsettingVm.currentPage" items-per-page="gsettingVm.itemsPerPage" max-size="gsettingVm.maxSize" ng-change="gsettingVm.fireCommand(false,null,'leadmaster')" class="pagination-sm" rotate="false">  </uib-pagination>
+	</div>
+	<!-- dealer tab value-->
+	<div ng-if="gsettingVm.tabValue == 'dealermaster'" ng-controller="DealerMasterCtrl as dealerVm">
+    	<h4>Listing Dealer Data</h4>
+		<div class="row">
+			<div class="col-sm-3 pull-right">
+				<div class="tablesearch text-right form-group">
+					Search: <input type="text" placeholder="Search..." ng-model="dealerVm.searchStr" ng-change="gsettingVm.fireCommand(true,null,'leadmaster')" ng-model-options="{debounce:500}">
+				</div>
+			</div>
+		</div>
+		<div class="table-responsive">
+			<table class="table table-bordered">
+				<thead>
+					<tr>
+						<th>Lead Id</th>
+						<th>Customer Name</th>
+						<th>Mobile</th>
+						<th>Asset Name</th>
+						<th>Offer Detail</th>
+						<th>Status</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr  ng-repeat="dealer in dealerVm.dealers">
+						<td>{{dealer.leadId}}</td>
+						<td>{{dealer.customerName}}</td>
+						<td>{{dealer.mobile}}</td>
+						<td>{{dealer.assetName}}</td>
+						<td>{{dealer.offerDetail}}</td>
+						<td>{{dealer.status}}</td>
+						
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<uib-pagination total-items="dealerVm.totalItems" ng-model="dealerVm.currentPage" items-per-page="dealerVm.itemsPerPage" max-size="dealerVm.maxSize" ng-change="dealerVm.fireCommand(false,null,'dealermaster')" class="pagination-sm" rotate="false">  </uib-pagination>
 	</div>
 </div>
 </div>

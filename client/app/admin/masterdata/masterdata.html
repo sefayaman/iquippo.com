@@ -76,10 +76,10 @@
 				    		<legend></legend>
 							<div class="row">
 								<div class="col-sm-3 form-group">
-									<input type="radio" id="existing"  name="categoryFor" ng-model="c.categoryFor" value="0" checked> <label for="existing">For Existing</label>
+									<input type="radio" id="existing"  name="useFor" ng-model="c.useFor" value="0" checked> <label for="existing">For Existing</label>
 								</div>
-								<div class="col-sm-3 form-group"><input type="radio" id="equipment" name="categoryFor" ng-model="c.categoryFor" value="1"> <label for="equipment"> New Equipment </label></div>
-								<div class="col-sm-3 form-group"><input type="radio" id="forboth"  name="categoryFor" ng-model="c.categoryFor" value="2"> <label for="forboth"> Both</label></div>
+								<div class="col-sm-3 form-group"><input type="radio" id="equipment" name="useFor" ng-model="c.useFor" value="1"> <label for="equipment"> New Equipment </label></div>
+								<div class="col-sm-3 form-group"><input type="radio" id="forboth"  name="useFor" ng-model="c.useFor" value="2"> <label for="forboth"> Both</label></div>
 							</div>
 						  <div class="row">
                          	<div class="form-group col-sm-3" ng-class="{'has-error': form.errorGroup && submitted}">
@@ -152,6 +152,11 @@
 					    	<form  name="brandForm" novalidate class="form">
 					    		<h4>Add New Brand</h4>
 					    		<legend></legend>
+								<div class="row">
+								<div class="col-sm-3 form-group"><input type="radio" id="existing"  name="useFor" ng-model="b.useFor" value="0" > <label for="existing">For Existing</label></div>
+								<div class="col-sm-3 form-group"><input type="radio" id="equipment" name="useFor" ng-model="b.useFor" value="1" > <label for="equipment"> New Equipment </label></div>
+								<div class="col-sm-3 form-group"><input type="radio" id="forboth"  name="useFor" ng-model="b.useFor" value="2"> <label for="forboth"> Both</label></div>
+							</div>
 	                          <div class="row">
 	                         	<div class="form-group col-sm-3" ng-class="{'has-error': form.errorGroup && submitted}">
 	                                <select class="form-control" ng-model="b.group" ng-change="masterDataVm.onGroupChange(b.group)" ng-options="group.name for group in allGroup track by group._id" name="groupList" required ng-disabled="brandEdit">
@@ -216,6 +221,11 @@
 								     </div>
 					    		</h4>
 					    		<legend></legend>
+								<div class="row">
+								<div class="col-sm-3 form-group"><input type="radio" id="existing"  name="useFor" ng-model="m.useFor" value="0" > <label for="existing">For Existing</label></div>
+								<div class="col-sm-3 form-group"><input type="radio" id="equipment" name="useFor" ng-model="m.useFor" value="1" > <label for="equipment"> New Equipment </label></div>
+								<div class="col-sm-3 form-group"><input type="radio" id="forboth"  name="useFor" ng-model="m.useFor" value="2"> <label for="forboth"> Both</label></div>
+							</div>
                               <div class="row">
                               	<div class="form-group col-sm-3" ng-class="{'has-error': form.errorGroup && submitted}">
 	                                <select class="form-control" ng-model="m.group" ng-change="masterDataVm.onGroupChange(m.group)" name="groupList" ng-options="group.name for group in allGroup track by group._id" required ng-disabled="modelEdit">
@@ -230,7 +240,7 @@
 					                </select>
 	                            </div>
                              	 <div class="form-group col-sm-2" ng-class="{'has-error': form.errorBrand && submitted}">
-                                    <select class="form-control" ng-model="m.brand" name="brandList" ng-options="brand.name for brand in brandList track by brand._id" required ng-disabled="modelEdit">
+                                    <select class="form-control" ng-model="m.brand" name="brandList" ng-options="brand.name for brand in brandList track by brand._id" required ng-disabled="modelEdit" ng-change="checkBrandFor(m.brand)">
                                         <option value= "" disabled>Select Brand</option>
                                         <!-- <option ng-repeat="brand in brandList"  ng-selected="m.brand._id == brand._id"value="{{brand._id}}">{{brand.name}}</option> -->           
                                     </select>

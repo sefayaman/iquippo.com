@@ -10,7 +10,8 @@ var ModelSchema = new Schema({
   category:{},
   brand:{},
   createdAt:Date,
-  updatedAt:Date
+  updatedAt:Date,
+  useFor:String
 });
 
 module.exports = mongoose.model('Model', ModelSchema);
