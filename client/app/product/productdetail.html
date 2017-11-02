@@ -552,7 +552,7 @@
                            </div>
                            <div class="col-sm-4">
                              <div ng-class="{'has-error': assetSale.bidAmount.$invalid && bidSubmitted}">
-                               <input type="number" class="form-control" name="bidAmount" ng-model="productDetailVm.bidAmount" placeholder="Enter Bid Amount" required>
+                               <input type="number" class="form-control" min="0" name="bidAmount" ng-model="productDetailVm.bidAmount" placeholder="Enter Bid Amount" required>
                              </div>
                            </div>
                            <div class="col-sm-5 text-right padd-left">
