@@ -124,7 +124,7 @@ exports.validate = function(req,res,next){
   });
 
 function validateRequiredField(callback){
-  var reqFields = ['enterprise.enterpriseId','amount','valuationStatus'];
+  var reqFields = ['enterprise.enterpriseId','valuationStatus'];
   var isValid = reqFields.every(function(key){
       var val = _.get(req.body,key,"");
       if(val)
