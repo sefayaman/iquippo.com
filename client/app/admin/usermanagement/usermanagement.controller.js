@@ -425,7 +425,7 @@ angular.module('sreizaoApp')
       //console.log("ListVendor",$scope.vendorList);
     }
     
-    function getServices(isNew){
+    function getServices(isNew,isChanged){
 
       $scope.availedServices = [];
       if($scope.newUser.role != 'enterprise')
@@ -443,7 +443,7 @@ angular.module('sreizaoApp')
         }
       }
       
-      if(!$scope.isEdit){
+      if(!$scope.isEdit || isChanged){
         //$scope.availedServices = angular.copy(enterpriseSvcList);
         enterpriseSvcList.forEach(function(item){
           var obj = {};

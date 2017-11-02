@@ -102,7 +102,7 @@ function getEnterpriseRequest(enterprisers){
     var _id = valReq._id;
     delete valReq._id;
     ValuationModel.update({_id : _id},{$set:valReq},function(err){
-      if(!err)
+      if(!err && valReq.status === EnterpriseValuationStatuses[2])
         ValuationCtrl.pushNotification(valReq);
       return callback();
     });

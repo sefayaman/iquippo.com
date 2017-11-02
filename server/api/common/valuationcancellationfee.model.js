@@ -5,7 +5,7 @@ var mongoose = require('mongoose'),
 
 var ValuationCancellationSchema = new Schema({
   enterprise:{},
-  amount:Number,
+  amount:{type:Number,default:0},
   valuationStatus:String,
   createdBy:{},
   status:{type:Boolean,default:true},
