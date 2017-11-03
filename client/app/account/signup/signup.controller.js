@@ -18,6 +18,7 @@
     vm.sendOTP = sendOTP;
     $scope.isDisabled = false;
     vm.validateAadhaar = validateAadhaar;
+    //console.log("#####auto open",$scope.autoOpen);
 
     //$scope.phoneErrorMessage = "";
     $scope.errors = {};

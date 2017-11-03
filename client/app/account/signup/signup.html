@@ -10,16 +10,14 @@
                   <div class="form-group col-sm-4" ng-class="{'has-error': form.fname.$invalid && submitted }">
                     <input type="text" class="form-control" name="fname" ng-model="signupVm.user.fname" value="" placeholder="*First Name" required/>
                   </div>
-                  <div class="form-group col-sm-4">
-                    <input type="text" class="form-control" name="mname" ng-model="signupVm.user.mname" value="" placeholder="Middle Name"/>
+                  <div class="form-group col-sm-4" ng-if="autoOpen!==true">
+                      <input type="text" class="form-control" name="mname" ng-model="signupVm.user.mname" ng-if="autoOpen!==true" value="" placeholder="Middle Name"/>
                   </div>
                   <div class="form-group col-sm-4" ng-class="{'has-error': form.lname.$invalid && submitted }">
                     <input type="text" class="form-control" name="lname" ng-model="signupVm.user.lname" value="" placeholder="*Last Name" required/>
                   </div>
-                </div>
-
-                <div class="row">
-                  <div class="form-group col-sm-4" ng-class="{'has-error': form.userType.$invalid && submitted }">
+                
+                  <div ng-if="autoOpen!==true" class="form-group col-sm-4" ng-class="{'has-error': form.userType.$invalid && submitted }">
                     <select class="form-control" name="userType" ng-model="signupVm.user.userType" required>
                       <option value="" disabled>*Customer Type</option>
                       <option value="individual">Individual</option>
@@ -28,7 +26,8 @@
                     </select>
                     <i class="caret"></i>
                   </div>
-                  <div  class="form-group col-sm-4" ng-class="{'has-error': form.company.$invalid && submitted }">
+                    <input ng-if="autoOpen===true" type="hidden" name="userType" value="individual" />
+                  <div  ng-if="autoOpen!==true" class="form-group col-sm-4" ng-class="{'has-error': form.company.$invalid && submitted }">
                     <input type="text" class="form-control" name="company" ng-model="signupVm.user.company" placeholder="*Legal Entity Name" ng-required= "signupVm.user.userType == 'legalentity'" ng-disabled="signupVm.user.userType != 'legalentity'">
                   </div>
                   <div class="form-group col-sm-4" ng-class="{'has-error': form.email.$invalid && submitted }">
@@ -120,7 +119,7 @@
                   </div>                
                 </div> 
                 <div class="row">
-                  <div class="form-group col-sm-6">
+                  <div ng-if="autoOpen!==true" class="form-group col-sm-6">
                     <input type="text" class="form-control" name="phone" ng-model="signupVm.user.phone" value="" placeholder="Phone No.">
                   </div>
                   <div class="form-group col-sm-6" ng-class="{'has-error': form.mobile.$invalid && submitted }">                   
@@ -130,7 +129,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="row">
+                <div ng-if="autoOpen!==true" class="row">
                   <div class="form-group col-sm-6" ng-class="{'has-error':form.panNumber.$invalid && submitted}">
                     <input type="text" class="form-control" name="panNumber"  placeholder="PAN Number" ng-model="signupVm.user.panNumber" uib-tooltip="XXXXX9999X" tooltip-trigger="focus" pattern="^[A-Z]{5}[0-9]{4}[A-Z]{1}$" tooltip-placement="top">
                   </div>   

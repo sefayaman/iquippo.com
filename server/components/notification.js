@@ -49,6 +49,7 @@ notificationSchema.index({
   to: 1,
   cc: 1,
   subject: 1,
+  content:1,
   isSent: 1
 }, {
   unique: true,
