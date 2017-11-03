@@ -8,13 +8,14 @@ var servicefeeCtrl = require('./servicefee.controller');
 var servicetaxCtrl = require('./servicetax.controller');
 var vattaxCtrl = require('./vattax.controller');
 var countCtrl = require('./count.controller');
+var offerCtrl = require('./offer.controller');
 var financeIntegrationCtrl = require('./financeintegration.controller');
 var kycCtrl = require('./kycmaster.controller');
 var saleProcessCtrl = require('./saleprocessmaster.controller');
 var markupPriceCtrl = require('./markupprice.controller');
 var assetSaleChargeCtrl = require('./assetsalecharge.controller');
 var emdChargeCtrl = require('./emdcharge.controller');
-var apiCtrl=require('./api.controller');	
+var apiCtrl = require('./api.controller');	
 var bulkUploadCtrl = require('./uploadrequest/uploadrequest.controller');
 var valuationCancellationCtrl = require('./valuationcancellationfee.controller');
 var inputFormCtrl = require('./inputformmaster.controller');
@@ -158,5 +159,9 @@ router.post('/inputform', auth.hasRole('admin'),inputFormCtrl.create);
 router.put('/inputform/:id', auth.hasRole('admin'),inputFormCtrl.update);
 router.delete('/inputform/:id',auth.hasRole('admin'), inputFormCtrl.destroy);
 router.post('/inputform/search',inputFormCtrl.search);
+
+router.post('/offer',offerCtrl.create);
+router.get('/offer/get',auth.hasRole('admin'), offerCtrl.get);
+router.put('/offer/:id', auth.hasRole('admin'),offerCtrl.update);
 
 module.exports = router;

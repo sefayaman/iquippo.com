@@ -31,6 +31,7 @@
 						<option value="markup">Markup Price Master</option>
 						<option value="emdmaster">EMD Master</option>
 						<option value="assetcount">Asset Count</option>
+						<option value="offer_status">Offer Master</option>
 						<!-- <option value="promotion">Promotions</option>
 						<option value="leaddata">Lead Data</option> -->
 						<!-- <option  value="asset-type" ui-sref= "yardassettype" >Asset Type</option>
@@ -2722,5 +2723,147 @@
 		</div>
 		<uib-pagination total-items="gsettingVm.totalItems" ng-model="gsettingVm.currentPage" items-per-page="gsettingVm.itemsPerPage" max-size="gsettingVm.maxSize" ng-change="gsettingVm.fireCommand(false,null,'leadmaster')" class="pagination-sm" rotate="false">  </uib-pagination>
 	</div>
+
+	<!--- Listing offer master  -->
+  <div ng-if="gsettingVm.tabValue =='offer_status'" ng-controller="OfferCtrl as offerVm">
+		<h4>Offer Master</h4>
+		<legend></legend>
+		<div class="form-group">
+			<form class="techInformationForm" name="offerform" novalidate>
+				 <div class="row form-group">
+
+					<div class="col-sm-3" ng-class="{'has-error':offerVm.category.$invalid && submitted}">
+			        	<label>Select Category</label>
+		 		       	<select class="form-control form-group" name="category" ng-model="container.selectedCategoryId" ng-change="onCategoryChange(container.selectedCategoryId)" required> 
+							 <option value=""> Select Category </option> 
+							 <option value="{{category}}" ng-repeat="category in allCategory">{{category.name}}</option>
+							 
+						</select>
+						<!--<div class="form-group" ng-class="{'has-error': offerVm.otherCategory.$invalid && submitted}">
+							<input type="text" class="form-control" name="otherCategory" ng-model="container.category.otherName" ng-value="{{container.category.otherName}}" ng-disabled ="container.category.name != 'Other'" placeholder="Other" ng-required= "container.category.name == 'Other'">
+						</div>-->
+					</div>
+
+					<div class="col-sm-3" ng-class="{'has-error':offerVm.brand.$invalid && submitted}">
+			        	<label>Select Brand</label>
+		 		       	<select class="form-control form-group" name="brand" ng-model="container.selectedBrandId" ng-change="onBrandChange(container.selectedBrandId)" required> 
+							 <option value=""> Select Brand </option> 
+							 <option value="{{brand}}" ng-repeat="brand in brandList| orderBy:'name'">{{brand.name}}</option>
+							 
+						</select>
+						<!--<div class="form-group" ng-class="{'has-error': offerVm.otherBrand.$invalid && submitted}">
+							<input type="text" class="form-control" name="otherBrand" ng-model="container.brand.otherName" ng-value="{{container.brand.otherName}}" ng-disabled ="container.brand.name != 'Other'" placeholder="Other" ng-required="container.brand.name =='Other'">
+						</div>-->
+					</div>
+
+					<div class="col-sm-3" ng-class="{'has-error':offerVm.model.$invalid && submitted}">
+			        	<label>Select Model</label>
+		 		       	<select class="form-control form-group" name="model" ng-model="container.selectedModelId" required > 
+							 <option value=""> Select Model </option> 
+							 <option value="{{model}}" ng-repeat="model in modelList| orderBy:'name'">{{model.name}}</option>
+						</select>
+
+						<!-- <div class="form-group" ng-class="{'has-error': offerVm.otherModel.$invalid && submitted}">
+							<input type="text" class="form-control" name="otherModel" ng-model="container.model.otherName" ng-value="{{container.model.otherName}}" ng-disabled ="container.model.name != 'Other'" placeholder="Other" ng-required="container.model.name == 'Other'">
+						  </div>-->
+					</div>
+
+                   <div class="col-sm-3" ng-class="{'has-error':offerVm.location.$invalid && submitted}">
+			        	<label>Select Location</label>
+		 		       	<select class="form-control" name="location"  ng-model="container.location"> 
+							 <option value=""> Select Location </option> 
+							 <option value="{{st.name}}" ng-repeat="st in stateList| orderBy:'name'">{{st.name}}</option>
+						</select>
+						
+					</div>
+
+				</div>
+				 
+				<div class="row form-group">
+					<div class="col-sm-3">
+			        	<label>Cash Purchase</label>
+		 		        <input type="checkbox" name="cash_purchase" ng-model="check.cash_purchase" value="checked" ng-change ="checkPurchase(check.cash_purchase)"><br/>
+						 
+						 <div class="form-group" ng-if="purchase">
+							<input type="text" class="form-control form-group" name="price" ng-model="container.price" ng-value="{{container.price}}"  placeholder="Price">
+							<input type="text" class="form-control form-group" name="freeofcost" ng-model="container.freeofcost" ng-value="{{container.freeofcost}}" placeholder="Free Of Cost">  
+						</div>
+					</div>
+					
+					<div class="col-sm-3">
+			        	<label>List In Finanace</label>
+		 		        <input type="checkbox" name="finance" ng-model="check.finance" value="checked" ng-change ="checkFinance(check.finance)"><br/>
+						 
+						 <div class="form-group" ng-if="finance">
+							<input type="text" class="form-control form-group" name="tenure" ng-model="container.tenure" ng-value="{{container.tenure}}"  placeholder="Tenure">
+							<input type="text" class="form-control form-group" name="rate" ng-model="container.rate" ng-value="{{container.rate}}" placeholder="Rate">  
+						 	<input type="text" class="form-control form-group" name="margin" ng-model="container.margin" ng-value="{{container.margin}}" placeholder="Margin">  
+							<input type="text" class="form-control form-group" name="processingfee" ng-model="container.processingfee" ng-value="{{container.processingfee}}" placeholder="Processingfee">  
+							<input type="text" class="form-control form-group" name="installment" ng-model="container.installment" ng-value="{{container.installment}}" placeholder="Installment">  
+							<input type="text" class="form-control form-group" name="freecost" ng-model="container.freecost" ng-value="{{container.freecost}}" placeholder="Freecost">  
+						
+						</div>
+					</div>
+
+					<div class="col-sm-3">
+			        	<label>List In Lease</label>
+		 		        <input type="checkbox" name="lease" ng-model="check.lease" value="checked" ng-change ="checkLease(check.lease)"><br/>
+						 
+						 <div class="form-group" ng-if="Inlease">
+							<input type="text" class="form-control form-group" name="leaseprice" ng-model="container.leaseprice" ng-value="{{container.leaseprice}}"  placeholder="Price">
+						</div>
+					</div>
+				
+				
+				   <div class="col-sm-2 pull-right">
+				       <button type="button" class="btn btn-block btn-primary"   ng-if="isEdit" ng-click="offerVm.update(offerform)">Update</button>
+				       <button type="button" class="btn btn-block btn-primary"   ng-if="!isEdit" ng-click="offerVm.save(offerform)">Save</button> 
+				    </div>
+				</div>
+			</form>
+
+			<div class="row">
+				<div class="col-sm-12">
+					<div class=" table-responsive ">
+						<table class="table table-bordered table-striped">
+							<thead>
+								<tr>
+									<th>Category Id</th>
+									<th>Sub Category Id</th>
+									<th>Model Id</th>
+									<th>Location</th>
+									<th>Cash On Purcahe</th>
+									<th>List in Finance</th>
+									<th>Lease</th>
+									<th>Actions</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="offer in offerVm.offer">
+									<td>{{offer.category.name}}
+                                   </td>
+									<td>{{offer.brand.name}}</td>
+									<td>{{offer.model.name}}</td>
+									<td>{{offer.location}}</td>
+									<td>{{offer.cash_purchase}}</td>
+									<td>{{offer.finance}}</td>
+									<td>{{offer.lease}}</td>
+									<td>
+								      <a href="javascript:void(0);" class="btn btn-primary btn-sm" uib-popover="Edit" popover-trigger="mouseenter" ng-click="offerVm.editClicked(offer)">
+											<i class="fa fa-pencil"></i>
+										</a>
+										<a href="javascript:void(0);" class="btn btn-danger btn-sm" uib-popover="Edit" popover-trigger="mouseenter" ng-click="offerVm.destroy(offer._id)"><i class="fa fa-trash" ></i></a>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<uib-pagination total-items="gsettingVm.totalProductTechInfoCount" ng-model="offerVm.currentPage" items-per-page="offerVm.itemsPerPage" max-size="offerVm.maxSize" ng-change="offerVm.fireCommand(false,null,'technical')" class="pagination-sm" rotate="false">  </uib-pagination>
+				</div>
+			</div>
+		</div>
+		<legend></legend>	
+     </div>
+
 </div>
 </div>

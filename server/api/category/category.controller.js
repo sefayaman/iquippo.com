@@ -68,6 +68,9 @@ exports.searchCategory = function(req, res) {
     filter["status"] = req.body.status;
   if(req.body.groupId)
     filter['group._id'] = req.body.groupId;
+  if(req.body._id){
+     filter['_id'] = req.body._id;
+  }
   if(req.body.searchStr){
     var term = new RegExp(req.body.searchStr, 'i');
     filter['name'] = { $regex: term };
