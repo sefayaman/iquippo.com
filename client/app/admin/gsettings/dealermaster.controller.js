@@ -3,7 +3,7 @@
 
 angular.module('admin').controller('DealerMasterCtrl', DealerMasterCtrl);
 
-function DealerMasterCtrl($scope,$rootScope,$state,categorySvc, modelSvc, brandSvc, Modal,LocationSvc, Auth,PagerSvc,$filter,InputFormMasterSvc){
+function DealerMasterCtrl($scope,$rootScope,$state,categorySvc,vendorSvc, modelSvc, brandSvc, Modal,LocationSvc,DealerMasterSvc, Auth,PagerSvc,$filter,InputFormMasterSvc){
 	var vm  = this;
     vm.dataModel = {};
     $scope.isEdit = false;
@@ -15,7 +15,10 @@ function DealerMasterCtrl($scope,$rootScope,$state,categorySvc, modelSvc, brandS
     vm.editClicked = editClicked;
     vm.fireCommand = fireCommand;
     vm.dataModel.brand = {};
+    vm.dataModel.allBrand = {};
+    vm.dataModel.stateList = {};
     vm.dataModel.model = {};
+    vm.dataModel.allDealer = {};
     vm.container = {};
     vm.dataModel.additionalInfo = [{}];
     var initFilter = {};
@@ -35,23 +38,37 @@ function DealerMasterCtrl($scope,$rootScope,$state,categorySvc, modelSvc, brandS
     function loadAllState(){
       LocationSvc.getAllState()
         .then(function(result) {
-          $scope.stateList = result;
+          vm.stateList = result;
       })
     }
-
-    function loadAllBrand() {
+    function loadAllDealer(){
+      var filter = {};
+      filter['service'] = 'Dealer';  
+      vendorSvc.getFilter(filter)
+        .then(function(result) {
+          vm.allDealer = result;
+          console.log("alldealer=",vm.allDealer);
+      })
+    }
+   /* function loadAllBrand() {
         categorySvc.getAllCategory()
         .then(function(result) {
             vm.allCategory = result;
+            console.log("brand===",vm.allCategory);
+        });
+    }*/
+    function loadAllBrand() {
+        brandSvc.getAllBrand()
+        .then(function(result) {
+            vm.allBrand = result;
         });
     }
-
     
 
 
     function loadViewData(filter){
         $scope.pager.copy(filter);
-        InputFormMasterSvc.get(filter)
+        DealerMasterSvc.get(filter)
         .then(function(result){
             vm.filteredList = result.items;
             vm.totalItems = result.totalItems;
@@ -69,17 +86,17 @@ function DealerMasterCtrl($scope,$rootScope,$state,categorySvc, modelSvc, brandS
         loadViewData(filter);
     }
 
-    function save(form){
+    function save(form){console.log("form==",form);
         if(form.$invalid){
             $scope.submitted = true;
             return;
         }
 
-        var createData = {};
+       /* var createData = {};
         Object.keys(vm.dataModel).forEach(function(x) {
             createData[x] = vm.dataModel[x];
         });
-        InputFormMasterSvc.save(createData)
+        DealerMasterSvc.save(createData)
         .then(function(){
             vm.dataModel = {};
             resetValue();
@@ -89,7 +106,7 @@ function DealerMasterCtrl($scope,$rootScope,$state,categorySvc, modelSvc, brandS
         .catch(function(err){
            if(err.data)
                 Modal.alert(err.data); 
-        });
+        });*/
     }
 
     function editClicked(rowData){
@@ -108,7 +125,7 @@ function DealerMasterCtrl($scope,$rootScope,$state,categorySvc, modelSvc, brandS
             $scope.submitted = true;
             return;
         }
-        InputFormMasterSvc.update(vm.dataModel)
+        DealerMasterSvc.update(vm.dataModel)
         .then(function(){
             vm.dataModel = {};
             resetValue();

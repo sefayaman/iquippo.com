@@ -2733,25 +2733,50 @@
 				</div>
 			</div>
 		</div>
+		<form class="" name="dealerForm" >			
+			<div class="row form-group">
+				<div class="col-sm-3" ng-class="{'has-error':assetSaleForm.userRole.$invalid && submitted}">
+					<select class="form-control" name="brand" ng-model="dealerVm.allBrand" required>
+						<option value="">Select Brand</option>
+						<option ng-repeat="brand in dealerVm.allBrand" value="{{brand}}">{{brand.name}}</option>
+					</select>
+				</div>
+				<div class="col-sm-3" ng-class="{'has-error':assetSaleForm.userRole.$invalid && submitted}">
+					<select class="form-control" name="dealer" ng-model="dealerVm.dealer"  required>
+						<option value="">*Select Dealer</option>
+						<option ng-repeat="dealer in dealerVm.allDealer" value="{{dealer}}">{{dealer.entityName}}</option>
+					</select>
+				</div>
+				<div class="col-sm-3" ng-class="{'has-error':assetSaleForm.userRole.$invalid && submitted}">
+					<select class="form-control" name="state" ng-model="dealerVm.stateList"  required>
+						<option value="">*Select State</option>
+						<option ng-repeat="state in dealerVm.stateList" value="{{state}}">{{state.name}}</option>
+					</select>
+				</div>
+				<div class="row form-group">
+					<div class="col-sm-2 pull-right">
+						<button type="button" class="btn btn-block btn-primary" ng-if="isEdit" ng-click="dealerVm.update(dealerForm)">Update</button>
+						<button type="button" class="btn btn-block btn-primary" ng-if="!isEdit" ng-click="dealerVm.save(dealerForm)">Save</button>
+					</div>
+				</div>
+			</div>
+		<form>
+		
 		<div class="table-responsive">
 			<table class="table table-bordered">
 				<thead>
 					<tr>
-						<th>Lead Id</th>
-						<th>Customer Name</th>
-						<th>Mobile</th>
-						<th>Asset Name</th>
-						<th>Offer Detail</th>
+						<th>Brand</th>
+						<th>Dealer Name</th>
+						<th>Location</th>
 						<th>Status</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr  ng-repeat="dealer in dealerVm.dealers">
-						<td>{{dealer.leadId}}</td>
-						<td>{{dealer.customerName}}</td>
-						<td>{{dealer.mobile}}</td>
-						<td>{{dealer.assetName}}</td>
-						<td>{{dealer.offerDetail}}</td>
+						<td>{{dealer.brand}}</td>
+						<td>{{dealer.dealerName}}</td>
+						<td>{{dealer.location}}</td>
 						<td>{{dealer.status}}</td>
 						
 					</tr>

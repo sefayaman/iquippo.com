@@ -4,7 +4,7 @@ angular.module('admin').factory("DealerMasterSvc",DealerMasterSvc);
  function DealerMasterSvc($http, $q, $httpParamSerializer){
     //var assetSaleHost = "http://localhost:7000";
     var svc = {};
-    var svcPath = 'api/common/inputform';
+    var svcPath = 'api/common/dealer';
 
     svc.get = get;
     svc.save = save;
