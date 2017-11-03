@@ -1022,8 +1022,6 @@
         serverObj.payment.entityName = ($scope.valAgencies && $scope.valAgencies.length && $scope.valAgencies[0].name) || '';
       }
 
-      
-
       productSvc.createOrUpdateAuction(serverObj)
         .then(function(res) {
           //goto payment if payment are necessary

@@ -25,7 +25,7 @@ exports.getOnId = function(req, res) {
 
 // Creates a new buyer in the DB.
 exports.create = function(req, res) {
-  console.log("buyer created");
+  //console.log("buyer created");
   req.body.createdAt = new Date();
   req.body.updatedAt = new Date();
   Buyer.create(req.body, function(err, buyer) {
@@ -77,7 +77,7 @@ exports.search = function(req, res) {
   sortObj['createdAt'] = -1;
 
   var query = Buyer.find(filter);
-  console.log("filetr ",filter);
+  //console.log("filetr ",filter);
   query.exec(
                function (err, Buyer) {
                       if(err) { return handleError(res, err); }

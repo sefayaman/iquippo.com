@@ -277,7 +277,7 @@ exports.bulkCreate = function(data, cb) {
     //insert data asynchronously in mongodb
     async.eachLimit(data, 5, iteration, finalize);
   }else{
-    console.log('No data for create');
+    //console.log('No data for create');
     return {
       errObj :errObj,
       sucessObj : sucessObj
@@ -952,6 +952,7 @@ exports.createAuctionMaster = function(req, res) {
         message: "Auction Id already exist."
       });
     } else {
+
       AuctionMaster.create(req.body, function(err, auctionData) {
         if (err) {
           return handleError(res, err);
@@ -1022,9 +1023,9 @@ function updateAuctionRequest(data, id) {
     multi: true
   }, function(err, product) {
     if (err) {
-      console.log("Error with updating auction request");
+      //console.log("Error with updating auction request");
     }
-    console.log("Auction Request Updated");
+    //console.log("Auction Request Updated");
   });
 }
 
@@ -1270,9 +1271,10 @@ exports.getAuctionMaster = function(req, res) {
   })
   query.exec(function(err, auctions) {
     if (err) {
-      console.log("err", err);
+      //console.log("err", err);
       return handleError(res, err);
     }
+
     return res.status(200).json(auctions);
   });
 }

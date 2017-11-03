@@ -18,7 +18,8 @@ NegotiationSchema.pre('save',function(next){
 	var self = this;
 	var type = self.type;
 	var prefix = '';
-
+	if(self.ticketId)
+		return next();
 	switch(type){
 		case 'BUY_NEGOTIATE' :
 			prefix = 'SB'
