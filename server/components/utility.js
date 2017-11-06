@@ -346,6 +346,10 @@ function compileData(options, callback) {
       if(options.dataToSend.primaryImg)
         options.dataToSend.primaryImg = config.awsUrl + config.awsBucket + "/assets/uploads/auctionmaster/" + options.dataToSend.primaryImg;
 
+      if (isEmpty(options.dataToSend.bidIncrement)) {
+        delete options.dataToSend.bidIncrement;
+      }
+      
       if (options.dataToSend.hasOwnProperty('staticIncrement'))
         delete options.dataToSend.staticIncrement;
       if (options.dataToSend.hasOwnProperty('rangeIncrement'))
