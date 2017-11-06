@@ -75,7 +75,7 @@ function LotSvc($http, $q, $httpParamSerializer) {
     }
 
     function sendReqToCreateLot(data){
-        return $http.post(path + "/sendreqtocreatelot",data)
+        return $http.post(svcPath + "/sendreqtocreatelot",data)
         .then(function(res){
           return res.data;
         })

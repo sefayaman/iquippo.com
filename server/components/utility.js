@@ -298,7 +298,7 @@ function sendCompiledData(options, cb) {
       if(item.results)
         aucResult.result = item.results;
     });
-    //console.log("Output result##", aucResult);
+    //console.log("Output result#aucResult.result#", aucResult);
     return cb(null, aucResult);
   });
 }
@@ -331,6 +331,8 @@ function compileData(options, callback) {
       callback(null, options);
       break;
     case "auctionData":
+      if(options.dataToSend.primaryImg)
+        options.dataToSend.primaryImg = config.awsUrl + config.awsBucket + "/assets/uploads/auctionmaster/" + options.dataToSend.primaryImg;
       if (isEmpty(options.dataToSend.bidIncrement)) {
         delete options.dataToSend.bidIncrement;
       }
@@ -403,10 +405,16 @@ function sendData(options, callback) {
         console.log("=======++__________",asData);
         var res = {};
         var asData = JSON.parse(asData);
-        if(asData.err)
+        if(asData.err.length > 0)
           res.err = asData.err;
-        if(asData.results)
+        else
+          asData.err = "";
+
+        if(asData.results.length > 0)
           res.results = asData.results;
+        else
+          res.results = "";
+
         return callback(null, res);
       } catch (err) {
         //return callback(err);

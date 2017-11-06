@@ -54,7 +54,7 @@
             }
 
             function sendReqToCreateEmd(data){
-                return $http.post(path + "/sendreqtocreateemd",data)
+                return $http.post(svcPath + "/sendreqtocreateemd",data)
                 .then(function(res){
                   return res.data;
                 })
