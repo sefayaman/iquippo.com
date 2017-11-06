@@ -267,15 +267,27 @@ function isEmpty(myObject) {
   return true;
 }
 
+function toIST(value) {
+  if (!value)
+    return '';
+  return moment(value).utcOffset('+0530');
+}
+
 exports.sendCompiledData = sendCompiledData;
-
-
 function sendCompiledData(options, cb) {
   if (options.dataToSend.hasOwnProperty('__v'))
     delete options.dataToSend._v;
-  if (options.dataToSend.hasOwnProperty('startDate') && options.dataToSend.hasOwnProperty('endDate')) {
-    options.dataToSend.startDate = options.dataToSend.startDate.toString();
-    options.dataToSend.endDate = options.dataToSend.endDate.toString();
+  if (options.dataToSend.startDate && options.dataToSend.endDate) {
+    options.dataToSend.startDate = new Date(options.dataToSend.startDate);
+    options.dataToSend.endDate = new Date(options.dataToSend.endDate);
+  }
+  
+  if (options.dataToSend.regEndDate)
+    options.dataToSend.regEndDate = new Date(options.dataToSend.regEndDate);
+
+  if (options.dataToSend.insStartDate && options.dataToSend.insEndDate) {
+    options.dataToSend.insStartDate = new Date(options.dataToSend.insStartDate);
+    options.dataToSend.insEndDate = new Date(options.dataToSend.insEndDate);
   }
   if (options.dataToSend.hasOwnProperty('updatedAt') && options.dataToSend.hasOwnProperty('createdAt')) {
     delete options.dataToSend.updatedAt;
@@ -333,9 +345,7 @@ function compileData(options, callback) {
     case "auctionData":
       if(options.dataToSend.primaryImg)
         options.dataToSend.primaryImg = config.awsUrl + config.awsBucket + "/assets/uploads/auctionmaster/" + options.dataToSend.primaryImg;
-      if (isEmpty(options.dataToSend.bidIncrement)) {
-        delete options.dataToSend.bidIncrement;
-      }
+
       if (options.dataToSend.hasOwnProperty('staticIncrement'))
         delete options.dataToSend.staticIncrement;
       if (options.dataToSend.hasOwnProperty('rangeIncrement'))
