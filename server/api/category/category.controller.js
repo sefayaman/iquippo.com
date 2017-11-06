@@ -23,7 +23,6 @@ exports.createCategory = function(req, res) {
   req.body.updatedAt = req.body.createdAt;
   //var Result=Group.findOne({name:req.body.name});
   var filter = {};
-  filter["group.name"] = {$regex:new RegExp("^"+ req.body.group.name + "$", 'i')};
   filter["name"] = {$regex:new RegExp("^"+ req.body.name + "$", 'i')};
   Category.find(filter,function (err, categories) {
     if(err) { return handleError(res, err); }

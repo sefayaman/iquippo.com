@@ -146,6 +146,15 @@ angular.module('sreizaoApp')
 	    				throw res;
 	    			})
 	    },
+	    this.updateMasterDataStatus = function(serData){	
+	    	return $http.post('/api/common/updateMasterDataStatus',serData)
+	    			.then(function(res){
+	    				return res.data;
+	    			})
+	    			.catch(function(res){
+	    				throw res;
+	    			})
+	    },
 	    this.exportMasterData = function(serData){	
 	    	return $http.post('/api/common/exportMasterData',serData)
 	    			.then(function(res){

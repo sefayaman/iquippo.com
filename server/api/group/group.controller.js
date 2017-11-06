@@ -25,7 +25,6 @@ exports.getOnId = function(req, res) {
 exports.create = function(req, res) {
   req.body.createdAt = new Date();
   req.body.updatedAt = req.body.createdAt;
-  //var Result=Group.findOne({name:req.body.name});
   var filter = {};
   filter["name"] ={$regex:new RegExp("^"+ req.body.name + "$", 'i')};
   Group.find(filter,function (err, groups) {
@@ -39,7 +38,6 @@ exports.create = function(req, res) {
         else{
         	Group.create(req.body, function(err, group) {
               if(err) { return handleError(res, err); }
-              console.log(group._id);
                return res.status(200).json({message:"Group save sucessfully"});
              });
         }  
@@ -49,10 +47,10 @@ exports.create = function(req, res) {
   });
   
 };
+
+
 // Updates an existing Group in the DB.
 exports.update = function(req, res) {
-  //if(req.body._id) { delete req.body._id; }
-  //if(req.body.userInfo) { delete req.body.userInfo; }
 
     var filter = {};
   filter["name"] =req.body.name;
@@ -60,7 +58,7 @@ exports.update = function(req, res) {
     if(err) { return handleError(res, err); }
     else
     {
-    	if(groups.length>0)
+    	if(groups.length > 0)
     	{
     		return res.status(201).json({message:"Group already exits!!!"});
     	}
