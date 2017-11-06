@@ -38,22 +38,20 @@
     var query = $location.search();
     var filter = {};
     vm.openAuctionLot = openAuctionLot;
-    vm.openAuctionModel =openAuctionModel;
+    //vm.openAuctionModel =openAuctionModel;
     $scope.currentAuction ={};
     vm.auctionId ="";
 
     function openAuctionLot(auction){
       Auth.isLoggedInAsync(function(loggedIn) {
         if (loggedIn) {
-           console.log("auction",auction);
            var auctionRegislogin = $rootScope.$new();
            auctionRegislogin.currentAuction = auction;
-           auctionRegislogin.params={
-              emdTax: auction.emdTax
-            }
+           // auctionRegislogin.params={
+           //    emdTax: auction.emdTax
+           //  }
             Modal.openDialog('auctionRegislogin',auctionRegislogin);
         }else{
-          console.log("auction",auction);
             var regUserAuctionScope = $rootScope.$new();
             regUserAuctionScope.currentAuction = auction;
             regUserAuctionScope.params={
@@ -64,8 +62,7 @@
       });
     }
 
-    function openAuctionModel(lotData){
-      // console.log('currentscope',$scope.currentAuction);
+    /*function openAuctionModel(lotData){
       Auth.isLoggedInAsync(function(loggedIn) {
           if (loggedIn) {
             var dataObj = {};
@@ -110,7 +107,7 @@
             Modal.openDialog('auctionRegistration', regUserAuctionScope);
           }
         });
-    }
+    }*/
     
     function save(dataObj,amount){
       userRegForAuctionSvc.save(dataObj)
@@ -143,7 +140,7 @@
        //console.log("auctio123n",$scope.currentAuction.auctionId);
       
 
-       LotSvc.getData({auctionId:$scope.currentAuction.auctionId}).then(function(res){
+       LotSvc.getData({auctionId:$scope.currentAuction._id}).then(function(res){
             vm.lotList = res;   
             
             //console.log(vm.lotList);

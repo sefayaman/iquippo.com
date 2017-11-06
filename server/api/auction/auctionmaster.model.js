@@ -41,6 +41,7 @@ var AuctionMasterSchema = new Schema({
 	docName: String,
 	docNameProxy: String,
 	groupId:String,
+	reqSubmitStatus:{type:String,default:"Request Submitted"},
 	createdAt: {type:Date,default:Date.now},
 	updatedAt: {type:Date,default:Date.now},
 });

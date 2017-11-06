@@ -7,6 +7,7 @@ var LotSchema = new Schema({
   user_id:String,
   lotNumber:String,
   auction_id:String,
+  auctionId:String,
   startingPrice:Number,
   reservePrice:Number,
   startDate:Date,
@@ -17,6 +18,7 @@ var LotSchema = new Schema({
   extendedTo:String,
   status:{type:Boolean,default:true},
   isDeleted:{type:Boolean,default:false},
+  reqSubmitStatus:{type:String,default:"Request Submitted"},
   createdBy:{},
   createdAt: {type:Date,default:Date.now},
   updatedAt: {type:Date,default:Date.now}

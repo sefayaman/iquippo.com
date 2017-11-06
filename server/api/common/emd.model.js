@@ -5,10 +5,12 @@ var mongoose = require('mongoose'),
 
 var EmdSchema = new Schema({
   auction_id:String,
+  auctionId:String,
   selectedLots:[],
   status:{type:Boolean,default:true},
   emdAmount:String,
   isDeleted:{type:Boolean,default:false},
+  reqSubmitStatus:{type:String,default:"Request Submitted"},
   createdBy:{},
   createdAt: {type:Date,default:Date.now},
   updatedAt: {type:Date,default:Date.now}

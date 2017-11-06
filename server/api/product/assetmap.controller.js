@@ -8,29 +8,56 @@ var async = require('async');
 var Util = require('../../components/utility');
 var AssetsInAuction = require('./productlotmap.model');
 var Lot = require('../common/lot.model');
+var ReqSubmitStatuses = ['Request Submitted', 'Request Failed'];
+var Product = require('../product/product.model');
 
 exports.create = function(req, res) {
-  console.log("body Data inactive", req.body);
-  if (req.body.hasOwnProperty('auctionId'))
-    delete req.body.auctionId;
-  if (req.body.hasOwnProperty('lotNumber')) {
-    req.body.lot_id = req.body.lotNumber;
-    delete req.body.lotNumber;
-  }
   var options = {};
   AssetsInAuction.create(req.body, function(err, result) {
     if (err) return handleError(res, err);
-    options.dataToSend = result;
-    options.dataType = "assetData";
-    Util.sendCompiledData(options, function(err, results) {
-      if (err) return handleError(res, err);
-      console.log("result", results);
-    });
-    return res.status(200).json({
-      message: "save successfully"
-    });
+    postRequest(req, res)
   })
 };
+
+function postRequest(req, res){
+  var options = {};
+  AssetsInAuction.find({
+      "assetId": req.body.assetId
+    }, function(err, result) {
+      options.dataToSend = result[0].toObject();
+      options.dataType = "assetData";
+      if (options.dataToSend.createdBy)
+        delete options.dataToSend.createdBy;
+      Util.sendCompiledData(options, function(err, result) {
+        if (err || (result && result.err)) {
+          options.dataToSend.reqSubmitStatus = ReqSubmitStatuses[1];
+          update(options.dataToSend);
+          // if(result && result.err)
+          //     return res.status(412).send(result.err);
+          // return res.status(412).send("Unable to post asset request. Please contact support team.");
+        }
+        if(result){
+          options.dataToSend.reqSubmitStatus = ReqSubmitStatuses[0];
+          update(options.dataToSend);
+          //return res.status(201).json({errorCode: 0,message: "Product request submitted successfully !!!"});
+        }
+      });
+    });
+}
+
+  function update(assetReq){
+    var _id = assetReq._id;
+    delete assetReq._id;
+    AssetsInAuction.update({_id:_id},{$set:assetReq},function(err,retVal){
+      if (err) { console.log("Error with updating auction request");}
+    console.log("Product Updated");
+    });
+    Product.update({"assetId":assetReq.assetID, deleted:false },{$set:{"reqSubmitStatus":assetReq.reqSubmitStatus}}).exec();
+  }
+
+  exports.sendReqToCreateAsset=function(req,res){
+    postRequest(req, res);
+  };
 
 exports.update = function(req, res) {
   if(!req.params.id)
@@ -47,14 +74,7 @@ exports.update = function(req, res) {
     if (err) {
       res.status(err.status || 500).send(err);
     }
-    options.dataToSend = req.body;
-    options.dataType = "assetData";
-    console.log("daya", options);
-    Util.sendCompiledData(options, function(err, result) {
-      if (err) return handleError(res, err);
-      console.log(result);
-    });
-    return res.status(200).json(req.body);
+    postRequest(req, res);
   });
 };
 
@@ -62,33 +82,26 @@ exports.getData = function(req, res) {
   var compiledObj = {};
   var filter = {};
   var query = {};
-  //console.log("req.query", req.query);
-    filter.isDeleted = false;
+  filter.isDeleted = false;
   if (req.query.assetId) {
     filter.assetId = req.query.assetId;
   }
   
-console.log("the asset filter", filter);
   query = AssetsInAuction.find(filter);
   query.exec(function(err, result) {
     if (err) {
       return handleError(res, err);
     }
     if (result.length > 0 && result.length < 2) {
-      console.log("assetData",result[0]);
       if (result[0].lot_id) {
         Lot.find({
           "_id": result[0].lot_id,
           'isDeleted':false
         }, function(err, data) {
           if (err) return handleError(res, err);
-          console.log("the data", typeof data[0]);
           compiledObj['lot'] = data[0];
-          console.log("AssetMap", compiledObj);
-
           delete result[0]['lot_id'];
           compiledObj["asset"] = result[0];
-          console.log("Assets", compiledObj);
           return res.status(200).json(compiledObj);
         });
       } else {
@@ -103,11 +116,14 @@ console.log("the asset filter", filter);
         $set:{'isDeleted':true}
       },{multi:true},function(asseterr,assresp){
        if (err) return handleError(res,err)
-       console.log("response asset",assresp);
       })
       return res.status(200).json({
         message: "No map found"
       });
     }
   });
+};
+
+function handleError(res, err) {
+  return res.status(500).send(err);
 };

@@ -19,6 +19,7 @@ function PaymentListingCtrl($scope,Modal,Auth,PaymentSvc) {
 	 			if(!Auth.isAdmin()){
 	 				filter['userId'] = Auth.getCurrentUser()._id;
 	 			}
+	 			filter.auction = "Auction Request";
 	 			getTrasactions(filter);	
 	 		}
 	 	})

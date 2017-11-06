@@ -95,6 +95,7 @@ var ProductSchema = new Schema({
   cooling:{type:Boolean,default:false},
   coolingStartDate:Date,
   coolingEndDate : Date,
+  reqSubmitStatus:{type:String,default:"Request Submitted"},
   createdAt: {type:Date,default:Date.now},
   updatedAt: {type:Date,default:Date.now}
 });

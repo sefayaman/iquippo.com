@@ -83,14 +83,13 @@
         }
         
         function updateAssetMap(data) {
-            
-                        return $http.put(path + "/assetmap/update/" + data._id, data)
-                            .then(function(res) {
-                                return res.data;
-                            })
-                            .catch(function(err) {
-                                throw err;
-                            });
+          return $http.put(path + "/assetmap/update/" + data._id, data)
+            .then(function(res) {
+              return res.data;
+            })
+            .catch(function(err) {
+              throw err;
+            });
          }
 
          function getAssetMapData(filter){

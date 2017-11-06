@@ -42,6 +42,7 @@ router.post('/v1/import',auth.isAuthenticated(),controller.parseImportExcel,cont
 router.post('/assetmap',assetCtrl.create);
 router.put('/assetmap/update/:id',assetCtrl.update);
 router.get('/assetmap/getdata',assetCtrl.getData);
+router.post('/sendreqtocreateasset', assetCtrl.sendReqToCreateAsset);
 router.get('/script/modifyproducttype',scriptController.modifyProductTypeId);
 
 

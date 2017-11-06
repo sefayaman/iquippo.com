@@ -12,7 +12,8 @@
         svc.getAmount = getAmount;
         svc.destroy = destroy;
         svc.update = update;
-  
+        svc.sendReqToCreateEmd = sendReqToCreateEmd;
+        
             function saveEmd(data){
                 return $http.post(svcPath+ "/emd",data)
                 .then(function(res){
@@ -52,6 +53,15 @@
                 });
             }
 
+            function sendReqToCreateEmd(data){
+                return $http.post(path + "/sendreqtocreateemd",data)
+                .then(function(res){
+                  return res.data;
+                })
+                .catch(function(err){
+                  throw err
+                })
+            }
             function update(data){
 
                 return $http.put(svcPath + "/emd/" + data._id,data)

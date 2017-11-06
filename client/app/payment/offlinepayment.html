@@ -1,7 +1,6 @@
-<div ng-controller="offlinePaymentCtrl as offlinePaymentVm">
-	
+<div>
 </div><div class="modal-header">
-  <button type="button" class="close" ng-click="close()" aria-hidden="true">&times;</button>
+  <button type="button" class="close" ng-click="offlinePaymentVm.closeDialog()" aria-hidden="true">&times;</button>
   <h4 class="modal-title">Offline Payment Information</h4>
 </div>
 <div class="modal-body">
@@ -12,7 +11,7 @@
 			</div>
 
 			<div class="col-sm-6 form-group">
-				<input type="text" class="form-control" name="transactionid" value="" placeholder="offlinePaymentVm.dataModel.transactionid" ng-model="offlinePaymentVm.dataModel.transactionid" disabled>
+				<input type="text" class="form-control" name="transactionId" value="" placeholder="offlinePaymentVm.dataModel.transactionId" ng-model="offlinePaymentVm.dataModel.transactionId" disabled>
 			</div>
 			<!--<div class="col-sm-6 form-group">
 				<select class="form-control">
@@ -25,16 +24,16 @@
 			</div>-->
 		</div>
 		<div class="row">
-			<div class="col-sm-6 form-group">
-				<input type="text" class="form-control" name="dop" value="" placeholder="Date of Payment" ng-model="offlinePaymentVm.dataModel.dop">
+			<div class="col-sm-6 form-group" ng-class="{'has-error': offlineform.paymentDate.$invalid && submitted}">
+				<input class="form-control" name="paymentDate" ng-model="offlinePaymentVm.dataModel.paymentDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="*Date of Payment" required />
 			</div>
-			<div class="col-sm-6 form-group">
-				<input type="text" class="form-control" name="bank" value="" placeholder="Bank Name" ng-model="offlinePaymentVm.dataModel.bank">
+			<div class="col-sm-6 form-group" ng-class="{'has-error': offlineform.bankname.$invalid && submitted}">
+				<input type="text" class="form-control" name="bankname" value="" placeholder="*Bank Name" ng-model="offlinePaymentVm.dataModel.bankname" required>
 			</div>
 		</div>
 		<div class="row">			
-			<div class="col-sm-6 form-group">
-				<input type="text" class="form-control" name="branch" value="" placeholder="Branch Name" ng-model="offlinePaymentVm.dataModel.branch">
+			<div class="col-sm-6 form-group" ng-class="{'has-error': offlineform.branch.$invalid && submitted}">
+				<input type="text" class="form-control" name="branch" value="" placeholder="*Branch Name" ng-model="offlinePaymentVm.dataModel.branch" required>
 			</div>
 		</div>
 	</form>

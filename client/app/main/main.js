@@ -428,13 +428,13 @@ angular.module('sreizaoApp')
         authenticate:true,
         layout:'admin'
       })
-      .state('offlinepayment', {
-        url: '/offlinepayment/:tid',
-        templateUrl: 'app/payment/offlinepayment.html',
-        controller: 'offlinePaymentCtrl as offlinePaymentVm',
-        authenticate:true,
-        layout:' '
-      })
+      // .state('offlinepayment', {
+      //   url: '/offlinepayment/:tid',
+      //   templateUrl: 'app/payment/offlinepayment.html',
+      //   controller: 'offlinePaymentCtrl as offlinePaymentVm',
+      //   authenticate:true,
+      //   layout:' '
+      // })
        .state('paymentresponse', {
         url: '/paymentresponse/:tid',
         templateUrl: 'app/payment/paymentresponse.html',

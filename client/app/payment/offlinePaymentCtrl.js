@@ -1,67 +1,60 @@
 (function(){
 
 'use strict';
-angular.module('sreizaoApp').controller('offlinePaymentCtrl',offlinePaymentCtrl);
+angular.module('sreizaoApp').controller('OfflinePaymentCtrl',OfflinePaymentCtrl);
 
-function offlinePaymentCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,$location,LocationSvc,$sce,$window,$cookieStore) {
+function OfflinePaymentCtrl($scope,$rootScope,Modal,$stateParams,$state,$uibModalInstance, PaymentSvc,Auth) {
    
   var vm = this;
   vm.dataModel = {};
   vm.save = save;
-   
-  
+  vm.closeDialog = closeDialog;
 
  	function init(){
-
- 		if(!$stateParams.tid)
- 			$state.go("main");
- 		var tid = $stateParams.tid;
- 		PaymentSvc.getOnFilter({_id:tid})
- 		.then(function(result){
- 			if(result.length == 0){
- 				$state.go("main");
- 				Modal.alert("Invalid payment access");
-            return;
- 			}
-
- 			vm.payTransaction = result[0];
-       vm.dataModel.amount =  vm.payTransaction.totalAmount;
-       vm.dataModel.transactionid =  tid;
-          
- 		})
- 		.catch(function(err){
- 			$state.go("main");
- 			Modal.alert("Unknown error occured in payment system");
- 		})
-
-
+    angular.copy($scope.offlinePayment, vm.dataModel);
+		vm.dataModel.amount =  $scope.offlinePayment.totalAmount;
+    vm.dataModel.transactionId =  $scope.offlinePayment.transactionId;
    }
    
   function save(form){
-
     if(form.$invalid){
-            $scope.submitted = true;
-            return;
-        }
-     vm.dataModel.user = {};
-     vm.dataModel.user._id = Auth.getCurrentUser()._id;
-     vm.dataModel.user.name = Auth.getCurrentUser().fname + " " + Auth.getCurrentUser().lname;
-
-        
-        PaymentSvc.saveoffline(vm.dataModel)
-        .then(function(){
-            vm.dataModel = {};
-            Modal.alert('Your Request save successfully!');
-        })
-        .catch(function(err){
-        if(err.data)
-                Modal.alert(err.data); 
-        });
-    
+      $scope.submitted = true;
+      return;
     }
+    // vm.dataModel.user = {};
+    // vm.dataModel.user._id = Auth.getCurrentUser()._id;
+    // vm.dataModel.user.customerId = Auth.getCurrentUser().customerId;
+    // vm.dataModel.user.customerId = Auth.getCurrentUser().customerId;
+    // vm.dataModel.user.name = Auth.getCurrentUser().fname + " " + Auth.getCurrentUser().lname;
+    vm.dataModel.payments = [];
+    var stsObj = {};
+    stsObj.paymentDate = vm.dataModel.paymentDate;
+    stsObj.amount = vm.dataModel.amount;
+    stsObj.bankname = vm.dataModel.bankname;
+    stsObj.branch = vm.dataModel.branch;
+    vm.dataModel.payments[vm.dataModel.payments.length] = stsObj;
+    vm.dataModel.userDataSendToAuction = true;
+    $rootScope.loading = true;
+    PaymentSvc.updateStatus(vm.dataModel, transactionStatuses[5].code)
+    .then(function(res){
+        vm.dataModel = {};
+        $scope.submitted = false;
+        $rootScope.loading = false;
+        $rootScope.$broadcast('refreshPaymentHistroyList');
+        Modal.alert(res.message);
+        //Modal.alert('Payment Request save successfully!');
+        closeDialog();
+    })
+    .catch(function(err){
+    if(err.data)
+      Modal.alert(err.data); 
+    $rootScope.loading = false;
+    });
+  }
 
-
- 	
+  function closeDialog() {
+    $uibModalInstance.dismiss('cancel');
+  }
 
  	init();
 }

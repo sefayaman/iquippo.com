@@ -7,8 +7,10 @@ var Offline = require('./offline.model');
 var  xlsx = require('xlsx');
 var config = require('./../../config/environment');
 var async=require('async');
+var Util = require('./../../components/utility.js');
 
 var trasactionStatuses = ['failed','pending','completed'];
+var ReqSubmitStatuses = ['Request Submitted', 'Request Failed'];
 
 // Get list of payment transaction
 exports.getAll = function(req,res){
@@ -42,7 +44,6 @@ exports.createoffline = function(req, res) {
   var options={};
   req.body.createdAt = new Date();
   req.body.updatedAt = new Date();
-  console.log("The request",req.body);
    options={
     transactionId:req.body.transactionid,
     status:'completed'
@@ -85,14 +86,14 @@ exports.getOnFilter = function(req, res) {
   if(req.body.userId)
     filter["user._id"] = req.body.userId;
 
-    if(req.body.auction){
-     filter["requestType"] = "Auction Listing";
+  if(req.body.auctionPaymentReq)
+    filter.requestType = req.body.auctionPaymentReq;
 
-     console.log("filterscsvdv",filter);
-    }
-
-    console.log("filters",filter);
-
+  if(req.body.auction){
+    var typeFilter = {};
+    typeFilter.$ne = req.body.auction;
+    filter.requestType= typeFilter;
+  }
 
   var query = Payment.find(filter);
   query.exec(
@@ -111,11 +112,64 @@ exports.update = function(req, res) {
     if(!payment) { return res.status(404).send('Not Found'); }
      Payment.update({_id:req.params.id},{$set:req.body},function(err){
         if (err) { return handleError(res, err); }
+        if(res.body && res.body.userDataSendToAuction) {
+          req.body._id = req.params.id;
+          postRequest(req, res);
+        } else
         return res.status(200).json(req.body);
     });
   });
 };
 
+  exports.sendReqToCreateUser=function(req,res){
+    postRequest(req, res);
+  };
+
+  function postRequest(req, res){
+    var options = {};
+    Payment.find({
+        "transactionId": req.body.transactionId,
+      }, function(err, paymentResult) {
+        options.dataToSend = {};
+        options.dataToSend.user = {};
+        options.dataToSend.user.user_id = paymentResult[0].user._id;
+        options.dataToSend.user.iq_id = paymentResult[0].user.customerId;
+        options.dataToSend.user.fname = paymentResult[0].user.fname;
+        options.dataToSend.user.lname = paymentResult[0].user.lname;
+        options.dataToSend.user.email = paymentResult[0].user.email;
+        options.dataToSend.user.mobile = paymentResult[0].user.mobile;
+        options.dataToSend.amountPaid = paymentResult[0].totalAmount;
+        options.dataToSend.auction_id = paymentResult[0].auction_id + "";
+        options.dataToSend.selectedLots = paymentResult[0].selectedLots;
+        options.dataType = "userInfo";
+        Util.sendCompiledData(options, function(err, result) {
+          if (err || (result && result.err)) {
+            options.dataToSend.reqSubmitStatus = ReqSubmitStatuses[1];
+            update(options.dataToSend);
+            if(result && result.err)
+              return res.status(412).send(result.err);
+            return res.status(412).send("Unable to post payment request. Please contact support team.");
+          }
+          if(result){
+            options.dataToSend.reqSubmitStatus =  ReqSubmitStatuses[0];
+            update(options.dataToSend);
+            return res.status(201).json({errorCode: 0,message: "Payment request submitted successfully !!!"});
+          }
+        });
+      });
+  }
+
+  function update(userReq){
+    var _id = userReq._id;
+    delete userReq._id;
+    Payment.update({_id:_id},{$set:userReq},function(err,retVal){
+      if (err) {
+      console.log("Error with updating lot request");
+    }
+    console.log("Payment Updated");
+    }); 
+    //Payment.update({_id:_id},{$set:userReq}).exec();
+  }
 // Deletes a payment from the DB.
 exports.destroy = function(req, res) {
 
@@ -305,8 +359,6 @@ exports.paymentResponse = function(req,res){
         json = request.query;
     }
 
-    //console.log("#########",json);
-
     var m = crypto.createHash('md5');
     m.update(config.ccAvenueWorkingKey)
     var key = m.digest('binary');
@@ -346,7 +398,6 @@ exports.paymentResponse = function(req,res){
       payment.save(function(err,pys){
         if(err) { return handleError(res, err); }
         else{
-          console.log("payment",payment);
           sendPaymentRes(req,res,resPayment);
         }
 
@@ -357,11 +408,8 @@ exports.paymentResponse = function(req,res){
 
 function sendPaymentRes(req,res,resPayment){
   var status = resPayment.order_status.toString().toLowerCase().trim();
-  console.log("########param1", resPayment.merchant_param1);
   if(req.query)
-  console.log("******",req.query);
-if(req.body)
-  console.log("------",req.body);
+  if(req.body)
   if(resPayment.merchant_param3 == "mobapp"){
     if (status != 'success')
       res.redirect('http://mobile?payment=failed');

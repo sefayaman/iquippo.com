@@ -148,7 +148,6 @@ function uploadMultipartFileOnS3(localFilePath, dirName, files, cb) {
       console.error('Error!', mpErr);
       return cb(err);
     }
-    //console.log('Got upload ID', multipart.UploadId);
     for (var start = 0; start < buffer.length; start += partSize) {
       partNum++;
       var end = Math.min(start + partSize, buffer.length);
@@ -180,7 +179,6 @@ function uploadMultipartFileOnS3(localFilePath, dirName, files, cb) {
   function uploadPart(awsS3Client, multipart, partParams, tryNum) {
     var tryNum = tryNum || 1;
     awsS3Client.uploadPart(partParams, function(multiErr, mData) {
-      console.log('started');
       if (multiErr) {
         console.log('Upload part error:', multiErr);
 
@@ -273,15 +271,8 @@ exports.sendCompiledData = sendCompiledData;
 
 
 function sendCompiledData(options, cb) {
-  //var dataFormat = "";
-  console.log("totalData", options);
-  //filter._id = emdDataAs.auctionId
-  //console.log(options.dataToSend, options.dataType)
   if (options.dataToSend.hasOwnProperty('__v'))
-    delete options.dataToSend.__v;
-  /* if (options.dataToSend.auctionId && options.dataType!=="auctionData"){
-     filter._id = options.dataToSend.auctionId;
-   }*/
+    delete options.dataToSend._v;
   if (options.dataToSend.hasOwnProperty('startDate') && options.dataToSend.hasOwnProperty('endDate')) {
     options.dataToSend.startDate = options.dataToSend.startDate.toString();
     options.dataToSend.endDate = options.dataToSend.endDate.toString();
@@ -290,33 +281,35 @@ function sendCompiledData(options, cb) {
     delete options.dataToSend.updatedAt;
     delete options.dataToSend.createdAt;
   }
-  console.log("I am here");
   async.series([function(next) {
     fetchAuctionId(options, next);
   }, function(next) {
-    console.log("compiling ----");
     compileData(options, next);
   }, function(next) {
     sendData(options, next);
   }], function(err, results) {
     if (err) {
-      console.log(err);
-      console.log("Output", results);
-      return cb(null, results);
+      return cb(err)
     }
+    var aucResult = {};
+    results.forEach(function(item){
+      if(item.err)
+        aucResult.err = item.err;
+      if(item.results)
+        aucResult.result = item.results;
+    });
+    //console.log("Output result##", aucResult);
+    return cb(null, aucResult);
   });
 }
 
 function fetchAuctionId(options, callback) {
-  console.log("I am in first");
   if (options.dataToSend && options.dataToSend.auction_id && options.dataType !== 'auctionData') {
     AuctionMaster.find({
       "_id": options.dataToSend.auction_id
     }, function(err, auctionData) {
       if (err) return callback(err);
-      console.log("the auctiondata",auctionData[0]);
       options.dataToSend.auctionId = auctionData[0].auctionId;
-       console.log("emdoptions",options);
       return callback(null, options);
     });
   } else {
@@ -325,35 +318,19 @@ function fetchAuctionId(options, callback) {
 }
 
 function compileData(options, callback) {
-  console.log("I am in first");
-  console.log("options compile", options);
   switch (options.dataType) {
     case "userInfo":
-      //dataFormat = "users";
-      console.log("users are here");
       callback(null, options);
       break;
     case "lotData":
-      // dataFormat = "lots";
-      if(options.dataToSend.lot_mongo_id){
-        options.dataToSend._id=options.dataToSend.lot_mongo_id;
-        delete options.dataToSend.lot_mongo_id;
-      }
-
       if (options.dataToSend.hasOwnProperty('assetDir'))
         delete options.dataToSend.assetDir;
       callback(null, options);
       break;
     case "emdData":
-      if (options.dataToSend.auctionId) {
-        //options.dataToSend.auctionId = options.dataToSend.auctionId;
-        delete options.dataToSend.auction_id;
-      }
-      //dataFormat = "emd";
       callback(null, options);
       break;
     case "auctionData":
-      // dataFormat = "auctions";
       if (isEmpty(options.dataToSend.bidIncrement)) {
         delete options.dataToSend.bidIncrement;
       }
@@ -375,12 +352,15 @@ function compileData(options, callback) {
   }
 }
 
-var headers={};
 
 function sendData(options, callback) {
-  var serviceData = [];
-  serviceData.push(options.dataToSend);
-  serviceData = JSON.stringify(serviceData);
+  if(options.dataType === 'auctionData' || options.dataType === 'lotData') {
+    var serviceData = [];
+    serviceData.push(options.dataToSend);
+    serviceData = JSON.stringify(serviceData);
+  } else {
+    var serviceData = JSON.stringify(options.dataToSend);
+  }
   var dataFormat = {
     "userInfo": "users",
     "lotData": "lots",
@@ -390,6 +370,7 @@ function sendData(options, callback) {
   };
   var format = "";
   format = dataFormat[options.dataType];
+
   var data = {};
   data[format] = serviceData;
   console.log("serviceDatas", data);
@@ -398,16 +379,16 @@ function sendData(options, callback) {
     "userInfo": 'registered-user-update',
     "lotData": 'new-lots',
     "auctionData": 'new-auction',
-    "emdData": 'emd',
+    "emdData": 'emddata',
     "assetData": 'assetdata'
   };
 
-  headers = {
+  var headers = {
     'User-Agent': 'Super Agent/0.0.1',
     'Content-Type': 'application/x-www-form-urlencoded'
   }
-
-  var url = 'https://auctionsoftwaremarketplace.com:3007/api_call/' + obj[options.dataType];
+  var url = config.auctionURL + obj[options.dataType];
+  console.log("URL###", url);
   request.post({
     url: url,
     headers:headers,
@@ -416,15 +397,19 @@ function sendData(options, callback) {
   }, function(err, httpres, asData) {
     if (err) {
       console.log("+++++++",err);
-      callback(err);
+      return callback(err);
     } else {
       try {
         console.log("=======++__________",asData);
-        callback(null, {
-          message: "data updated successfully"
-        });
+        var res = {};
+        var asData = JSON.parse(asData);
+        if(asData.err)
+          res.err = asData.err;
+        if(asData.results)
+          res.results = asData.results;
+        return callback(null, res);
       } catch (err) {
-        callback(err);
+        //return callback(err);
       }
     }
   });

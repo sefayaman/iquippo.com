@@ -135,39 +135,39 @@ exports.checkUserRegis = function(req, res) {
     filter['user.mobile'] = req.body.paymentMode;
   }
 
-  if (req.body.lotNumber) {
-    if(!Array.isArray(req.body.lotNumber))
-      arr = req.body.lotNumber.split(',');
+  if (req.body.selectedLots) {
+    if(!Array.isArray(req.body.selectedLots))
+      arr = req.body.selectedLots.split(',');
     else
-      arr = req.body.lotNumber;
+      arr = req.body.selectedLots;
 
-    filter['lotNumber'] = {
+    filter['selectedLots'] = {
       $in: arr
     }
 
   }
-  console.log("filterdata", filter);
-
+  
   var query = Model.find(filter);
 
   query.exec(
     function(err, data) {
-      console.log("data formed", data);
       if (data && data.length > 0) {
         var filter = {};
-        filter['_id'] = data[0].transactionId;
-
+        if(data[0].transactionId)
+          filter._id = data[0].transactionId;
         PaymentTransaction.find(filter, function(err, payment) {
           if (err) {
             return handleError(err, res);
           }
           var message = {};
-          if (payment[0].status == "completed") {
+          if(!payment.length)
+            return res.status(200).json({message: "No Data"});
+          if (payment[0].status === "completed") {
             message.data = "done";
           } else {
             message.data = "undone";
           }
-          message.lotNumber = data[0].lotNumber;
+          message.selectedLots = data[0].selectedLots;
           message.transactionId = data[0].transactionId;
           message.errorCode = 0;
           return res.status(200).json(message);
@@ -182,31 +182,20 @@ exports.checkUserRegis = function(req, res) {
 
 
 exports.saveOfflineRequest = function(req, res) {
-  var data = req.body.paymentMode;
-  var updateData = {
-    paymentMode : req.body && req.body.paymentMode,
-    status : 'pending' 
-  };
+  var trnId = req.body.transactionId;
 
-  PaymentTransaction.update({
-    _id: req.body.transactionId
-  }, {
-    $set: updateData
-  }, function(err) {
-    if (err) {
-      return handleError(res, err);
-    }
-    return res.status(200).json({
-      message: "Request Saved Sucessfully"
-    });
-  });
+  if(req.body.transactionId)
+    delete req.body.transactionId;
 
-
+  PaymentTransaction.findOneAndUpdate({_id:trnId},{$set:req.body},function(err,dt){
+    if(err) { return handleError(res, err); }
+    if(!dt){return res.status(404).json({errorCode:1});}
+    return res.status(200).json(dt);
+  })
 };
 
 exports.sendUserToAs = function(req, res) {
   var options = {};
-  console.log("req.body", req.body);
   options.dataToSend = req.body;
   options.dataType = "userInfo";
   Utility.sendCompiledData(options, function(err, result) {
@@ -221,7 +210,6 @@ exports.sendUserToAs = function(req, res) {
 
 
 exports.get = function(req, res) {
-  console.log("req.query", req.query);
   var filter = {};
   if (req.query.transactionId)
     filter.transactionId = req.query.transactionId;
@@ -239,7 +227,6 @@ exports.get = function(req, res) {
 
 
 exports.create = function(req, res, next) {
-
   _getRecord(req.body, function(err, result) {
     if (err) {
       return handleError(res, err);
@@ -262,7 +249,6 @@ exports.create = function(req, res, next) {
         // req.body.payment.createdAt = new Date();
         //req.body.payment.updatedAt = new Date();
         //req.body.payment.totalAmount = req.body.totalAmount;
-        console.log("req.body", req.body);
         PaymentTransaction.create(req.body, function(err, payment) {
           if (err) {
             return handleError(err, res)
@@ -277,7 +263,6 @@ exports.create = function(req, res, next) {
         req.body.auction.createdAt = new Date();
         req.body.auction.updatedAt = new Date();
         req.body.transactionId = req.transactionId;
-
         var model = new Model(req.body);
         model.save(function(err, st) {
           if (err) {
@@ -311,15 +296,13 @@ function _getRecord(data, cb) {
     filter['user._id'] = data.user._id;
   if (data.user.mobile)
     filter['user.mobile'] = data.user.mobile;
-  if (data.lotNumber) {
-
-    filter['lotNumber'] = {
-      $in: data.lotNumber
+  if (data.selectedLots) {
+    filter['selectedLots'] = {
+      $in: data.selectedLots
     }
   }
   Model.find(filter, function(err, result) {
     if (err) cb(err);
-    console.log("result data", result);
     return cb(null, result);
   });
 }

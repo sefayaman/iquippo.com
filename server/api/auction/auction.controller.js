@@ -26,6 +26,7 @@ var uploadReqCtrl = require('../common/uploadrequest/uploadrequest.controller');
 var moment = require('moment');
 var validDateFormat = ['DD/MM/YYYY', 'MM/DD/YYYY', 'YYYY/MM/DD'];
 var validTimeFormat = ['DD/MM/YYYY h:mmA', 'DD/MM/YYYY h:mm A', 'MM/DD/YYYY h:mm A'];
+var ReqSubmitStatuses = ['Request Submitted', 'Request Failed'];
 
 var dateUtil = {
   validateAndFormatDate: function(dateString, format) {
@@ -107,7 +108,6 @@ exports.getAuctionInfoForProduct = function(req, res) {
         })
         result = tempArr;
       }*/
-      console.log("auctionData", auctionData);
       return res.status(200).json(auctionData);
     });
   });
@@ -556,8 +556,7 @@ exports.getOnFilter = function(req, res) {
       $regex: cityRegex
     };
   }
-  console.log("data ayuct", req.body);
-
+  
   if (req.body._id)
     filter["_id"] = req.body._id;
   if (req.body.userId)
@@ -959,7 +958,7 @@ exports.exportAuction = function(req, res) {
 
 // Creates a new AuctionMaster in the DB.
 exports.createAuctionMaster = function(req, res) {
-  var options = {};
+  //var options = {};
   var filter = {}
   if (!req.body.auctionId)
     return res.status(401).send('Insufficient data');
@@ -979,27 +978,47 @@ exports.createAuctionMaster = function(req, res) {
         if (err) {
           return handleError(res, err);
         }
-        console.log("auctionData",auctionData);
-        AuctionMaster.find({
-          "auctionId": req.body.auctionId
-        }, function(err, result) {
-          options.dataToSend = auctionData;
-          options.dataType = "auctionData";
-          console.log("options",options);
-          Utility.sendCompiledData(options, function(err, result) {
-            if (err) return handleError(res, err);
-            console.log("auctions data sent", result);
-          });
-        });
-        return res.status(201).json({
-          errorCode: 0,
-          message: ""
-        });
+        postRequest(req, res);
       });
     }
-  })
+  });
 
 };
+
+function postRequest(req, res){
+  var options = {};
+  AuctionMaster.find({
+      "auctionId": req.body.auctionId
+    }, function(err, result) {
+      options.dataToSend = result[0].toObject();
+      options.dataType = "auctionData";
+      Utility.sendCompiledData(options, function(err, result) {
+        if (err || (result && result.err)) {
+          options.dataToSend.reqSubmitStatus = ReqSubmitStatuses[1];
+          update(options.dataToSend);
+          if(result && result.err)
+              return res.status(412).send(result.err);
+          return res.status(412).send("Unable to post auction request. Please contact support team.");
+        }
+        if(result){
+          options.dataToSend.reqSubmitStatus =  ReqSubmitStatuses[0];
+          update(options.dataToSend);
+          return res.status(201).json({errorCode: 0,message: "Auction request submitted successfully !!!"});
+        }
+      });
+    });
+}
+
+  function update(auctionReq){
+    var _id = auctionReq._id;
+    delete auctionReq._id;
+    AuctionMaster.update({_id:_id},{$set:auctionReq},function(err,retVal){
+      if (err) {
+      console.log("Error with updating auction request");
+    }
+    console.log("Auction Request Updated");
+    }); 
+  }
 
 exports.getAssetInfo = function(req, res) {
   var filter = {};
@@ -1035,7 +1054,7 @@ exports.getAssetInfo = function(req, res) {
   });
 };
 
-/*exports.sendUserToAs=function(req,res){
+exports.sendUserToAs=function(req,res){
 var userData={};
 var filter={};
 filter._id=req.body._id;
@@ -1056,7 +1075,7 @@ UserModel.find(filter,function(err,res){
     return res.status(500).json({"message":"no user Data"});
   }
 })
-};*/
+};
 
 
 
@@ -1107,11 +1126,20 @@ exports.removeAuctionMasterproduct = function(req, res) {
 
     });
   }
+
+  exports.sendReqToCreateAuction=function(req,res){
+    postRequest(req, res);
+  };
+
   // Creates a AuctionMaster in the DB.
 exports.updateAuctionMaster = function(req, res) {
   var options = {};
   var _id = req.body._id;
-  console.log("details",req.body);
+  // if(req.body.reqSubmitStatus === ReqSubmitStatuses[1]) {
+  //   postRequest(req, res);
+  //   return;
+  // }
+
   if (req.body._id) {
     delete req.body._id;
   }
@@ -1142,24 +1170,13 @@ exports.updateAuctionMaster = function(req, res) {
         if (err) {
           return handleError(res, err);
         }
-        options.dataToSend = req.body;
-        options.dataToSend._id=_id;
-        options.dataType = "auctionData";
-        Utility.sendCompiledData(options, function(err, result) {
-          if (err) return handleError(res, err);
-          console.log("auctions data sent", result);
-        });
-        updateAuctionRequest(req.body, _id);
-        return res.status(200).json({
-          errorCode: 0,
-          message: "Success"
-        });
+        postRequest(req, res);
       });
     }
   });
 }
 
-function updateAuctionRequest(data, id) {
+/*function updateAuctionRequest(data, id) {
   var dataToSet = {};
   dataToSet.auctionId = data.auctionId;
   dataToSet.startDate = data.startDate;
@@ -1176,21 +1193,20 @@ function updateAuctionRequest(data, id) {
     }
     //console.log("Auction Request Updated");
   });
-}
+}*/
 
 
 
 //search AucyionMaster based on filter 
 exports.getFilterOnAuctionMaster = function(req, res) {
-  //console.log("I am here",req.body);
   var searchStrReg = new RegExp(req.body.searchStr, 'i');
   var filter = {};
   if (req.body._id)
-    filter["_id"] = req.body._id;
+    filter._id = req.body._id;
   if (req.body.userId)
     filter["user._id"] = req.body.userId;
   if (req.body.statusType)
-    filter["auctionType"] = req.body.statusType;
+    filter.auctionType = req.body.statusType;
   if (req.body.mobile)
     filter["user.mobile"] = req.body.mobile;
   if (req.body.auctionId)
@@ -1198,6 +1214,8 @@ exports.getFilterOnAuctionMaster = function(req, res) {
   if(req.body.hasOwnProperty('isDeleted')){
     filter.isDeleted=req.body.isDeleted;
   }
+  if (req.body.emdTax)
+    filter.emdTax = req.body.emdTax;
   /*if(req.body.statusType){
     filter["auctionType"]=req.body.statusType;
   }*/
@@ -1303,8 +1321,6 @@ exports.getFilterOnAuctionMaster = function(req, res) {
       }
     });
   }
-   console.log("get auction data",filter);
-   console.log("req.body",req.body);
   var query = AuctionMaster.find(filter);
   query.exec(
     function(err, items) {
@@ -1451,7 +1467,6 @@ exports.auctiondetail = function(req, res) {
   var query = AuctionMaster.find(filter);
   query.exec(function(err, auctions) {
     if (err) {
-      console.log("err", err);
       return handleError(res, err);
     }
     return res.status(200).json(auctions);
@@ -1461,7 +1476,6 @@ exports.auctiondetail = function(req, res) {
 exports.getAuctionMaster = function(req, res) {
   var filter = {};
   var queryObj = req.query;
-  //console.log("fhghg",queryObj);
   if (req.body._id) {
     filter._id = req.body._id;
   }
@@ -1497,17 +1511,14 @@ exports.getAuctionMaster = function(req, res) {
   })
   query.exec(function(err, auctions) {
     if (err) {
-      console.log("err", err);
       return handleError(res, err);
     }
-
 
     return res.status(200).json(auctions);
   });
 }
 
 exports.deleteAuctionMaster = function(req, res) {
-  console.log("id",req.params.id);
   AuctionMaster.update({
       _id: req.params.id
     },{
@@ -1518,19 +1529,23 @@ exports.deleteAuctionMaster = function(req, res) {
       if (err) {
         return handleError(res, err);
       }
-      options={};
+      var options={};
       options.dataToSend={
        "_id":req.params.id,
        "isDeleted":true
       }
       options.dataType="auctionData";
       utility.sendCompiledData(options,function(err,result){
-        if(err) return handleError(res,err);
-        console.log("result",result);
-      });
-      return res.status(200).send({
-        errorCode: 0,
-        message: "Auction master deleted sucessfully!!!"
+        if (err || (result && result.err)) {
+          options.dataToSend.isDeleted = false;
+          update(options.dataToSend);
+          return res.status(412).send({errorCode: 1,message: "Unable to delete auction request. Please contact support team."});
+        }
+        if(result){
+          options.dataToSend.isDeleted = true;
+          update(options.dataToSend);
+          return res.status(201).json({errorCode: 0,message: "Auction request deleted successfully !!!"});
+        }
       });
     });
 };

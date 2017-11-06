@@ -7,6 +7,7 @@ var AssetsInAuctionSchema = new Schema({
   asset_Id:String,
   assetId:String,
   auction_id:String,
+  auctionId:String,
   assetDesc:String,
   primaryImg:String,
   images:[],
@@ -15,6 +16,7 @@ var AssetsInAuctionSchema = new Schema({
   status:{type:Boolean,default:true},
   isDeleted:{type:Boolean,default:false},
   createdBy:{},
+  reqSubmitStatus:{type:String,default:"Request Submitted"},
   createdAt: {type:Date,default:Date.now},
   updatedAt: {type:Date,default:Date.now}
 });

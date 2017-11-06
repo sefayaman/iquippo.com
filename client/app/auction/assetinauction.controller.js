@@ -50,19 +50,19 @@
     vm.onBrandChange = onBrandChange;
     vm.openBidModal = openBidModal;
     vm.getAuctionById = getAuctionById;
-
+    $scope.aucionData ={};
     // bid summary
     function openBidModal(auction) {
 
       Auth.isLoggedInAsync(function(loggedIn) {
         if (loggedIn) {
           var auctionRegislogin = $rootScope.$new();
-          auctionRegislogin.currentAuction = auction;
+          auctionRegislogin.currentAuction = $scope.aucionData;
           Modal.openDialog('auctionRegislogin', auctionRegislogin);
         } else {
 
           var regUserAuctionScope = $rootScope.$new();
-          regUserAuctionScope.currentAuction = auction;
+          regUserAuctionScope.currentAuction = $scope.aucionData;
           Modal.openDialog('auctionRegistration', regUserAuctionScope);
         }
       });
@@ -150,7 +150,7 @@
       filter._id = query.id;
       AuctionSvc.getAuctionDateData(filter)
         .then(function(res) {
-
+          angular.copy(res.items[0], $scope.aucionData);
           console.log("getacu", res);
           $scope.auctionId = res.items[0].auctionId;
           $scope.auctionName = res.items[0].name;
@@ -294,39 +294,39 @@
           console.log("gets",res);
           if (res && Object.keys(res).length) {
             Object.keys(res).forEach(function(key) {
-               var obj={};
-               console.log("key",key);
-             obj.lotNumber=key;
-             obj.assetDesc=res[key].assetDescription;
-             obj.amount=res[key].amount;
-             obj.id=res[key].id;
-             obj.primaryImg=res[key].primaryImg;
-             obj.url="http://auctionsoftwaremarketplace.com:3007/bidwidget/" + query.auctionId + "/" + obj.id + "/" + $scope.userId;
-             console.log("object",obj);
-             var dataObj={};
-                  dataObj.auction = {};
-                  dataObj.user = {};
-                  dataObj.auction.dbAuctionId = query.id;
-                  dataObj.user._id = Auth.getCurrentUser()._id;
-                  dataObj.lotNumber = obj.lotNumber;
-                  userRegForAuctionSvc.checkUserRegis(dataObj)
-                    .then(function(result) {
-                      console.log("User regis",result);
-                      if (result.data) {
-                        if (result.data == "done") {
+              var obj={};
+              console.log("key",key);
+              obj.lotNumber=key;
+              obj.assetDesc=res[key].assetDescription;
+              obj.amount=res[key].amount;
+              obj.id=res[key].id;
+              obj.primaryImg=res[key].primaryImg;
+              obj.url="http://auctionsoftwaremarketplace.com:3007/bidwidget/" + query.auctionId + "/" + obj.id + "/" + $scope.userId;
+              console.log("object",obj);
+              var dataObj={};
+              dataObj.auction = {};
+              dataObj.user = {};
+              dataObj.auction.dbAuctionId = query.id;
+              dataObj.user._id = Auth.getCurrentUser()._id;
+              dataObj.lotNumber = obj.lotNumber;
+              userRegForAuctionSvc.checkUserRegis(dataObj)
+                .then(function(result) {
+                  console.log("User regis",result);
+                  if (result.data) {
+                    if (result.data == "done") {
 
-                          obj.isVisible = true;
+                      obj.isVisible = true;
 
 
-                        }
-                        if (result.message == "No Data") {
-                          obj.isVisible = false;
+                    }
+                    if (result.message == "No Data") {
+                      obj.isVisible = false;
 
-                        }
-                      } else {
-                        obj.isVisible = false;
-                      }
-                    })
+                    }
+                  } else {
+                    obj.isVisible = false;
+                  }
+                })
              vm.lotListing.push(obj);
             console.log("$scope.lotlist",vm.lotListing);     
             });

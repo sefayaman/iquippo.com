@@ -493,6 +493,7 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
     svc.getFilterOnAuctionMaster = getFilterOnAuctionMaster;
     svc.updateAuctionMasterProduct =updateAuctionMasterProduct;
     svc.removeAuctionMasterProduct = removeAuctionMasterProduct;
+    svc.sendReqToCreateAuction = sendReqToCreateAuction;
     var auctionMasterCache = [];
     
     function get(filter){
@@ -538,6 +539,16 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
         .catch(function(err){
           throw err;
         });
+    }
+
+    function sendReqToCreateAuction(data){
+        return $http.post(path + "/sendreqtocreateauction",data)
+        .then(function(res){
+          return res.data;
+        })
+        .catch(function(err){
+          throw err
+        })
     }
 
     function updateAuctionMasterProduct(data){

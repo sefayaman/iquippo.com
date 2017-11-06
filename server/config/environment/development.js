@@ -5,7 +5,7 @@
 module.exports = {
   // MongoDB connection options
   mongo: {
-    uri: 'mongodb://appUser:iQuippoAppUser^*$!2K17@127.0.0.1/sreiglobaldb'
+    uri: 'mongodb://127.0.0.1/sreiglobaldb'
   },
   uploadPath: 'client/assets/uploads/',
   templatePath:'client/assets',
@@ -23,6 +23,7 @@ module.exports = {
   awsAccessKeyId: 'AKIAIEW6UDFVW7GEQAGQ',
   awsSecretAccessKey: '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',
   awsBucket: 'iquippo-image-upload-dev',
-  awsUrl: 'https://s3.ap-south-1.amazonaws.com/'
-  
+  awsUrl: 'https://s3.ap-south-1.amazonaws.com/',
+
+  auctionURL:"https://auctionsoftwaremarketplace.com:3007/api_call/"
 };

@@ -660,9 +660,9 @@ exports.create = function(req, res) {
 
   req.isEdit = false;
 
-  console.log("reuest oroduct",req.body);
+  //console.log("reuest oroduct",req.body);
      //// Saving Lot master data for additional Fields////
-     var lotdata = {};
+     /*var lotdata = {};
      lotdata.auctId = req.body.auctId;
      lotdata.assetId = req.body.assetId;
      lotdata.lotId = req.body.lotId;
@@ -675,7 +675,7 @@ exports.create = function(req, res) {
      lotdata.createdAt =  new Date();
 
 
-      saveLotMasterData(lotdata,req,res);
+      saveLotMasterData(lotdata,req,res);*/
 
   //////////////////////////////////////////////////////
   Product.find({assetId:req.body.assetId},function(err,pds){
@@ -695,19 +695,16 @@ exports.create = function(req, res) {
   });
 };
 
-function saveLotMasterData(lotdata,req,res){
-       var model = new Lot(lotdata);
-          model.save(function(err, st) {
-          if(err) {
-             console.log("error in lot master saved");
-           }else{
-             console.log("lotmaster saved");
-           }
-         
-      });
-
-
-}
+/*function saveLotMasterData(lotdata,req,res){
+  var model = new Lot(lotdata);
+    model.save(function(err, st) {
+    if(err) {
+       console.log("error in lot master saved");
+     }else{
+       console.log("lotmaster saved");
+     }
+  });
+}*/
 
 
 function checkAndCopyImage(req,res,cb){

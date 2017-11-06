@@ -25,16 +25,13 @@
         <form class="aucform" name="aucform" novalidate>
           <div class="row">
             <div class="col-sm-offset-2 col-sm-8 form-group" ng-class="{'has-error': aucform.userId.$invalid && form.submitted }">
-              <input type="text" class="form-control form-group" name="userId" placeholder="Enter Mobile/Email Id" ng-model="auctionRegVm.userId" required>
+              <input type="text" class="form-control form-group" name="userId" placeholder="Mobile Number or Email Address" ng-model="auctionRegVm.userId" required>
               <input class="form-control form-group" placeholder="Password" type="password" name="passwordlogin" ng-model="auctionRegVm.passwordlogin" required>
-              <select class="form-control form-group" name="selectedLots" id="selectedLots" style="height: 80px;" ng-options="lots.lotNumber as lots.lotNumber for lots in auctionRegVm.lotList" ng-model="auctionRegVm.selectedLots.lotNumber" multiple>
-              </select> 
-              
+              <!-- <select ng-if="currentAuction.emdTax === 'lotWise'" class="form-control form-group" name="selectedLots" id="selectedLots" style="height: 80px;" ng-options="lots.lotNumber as lots.lotNumber for lots in auctionRegVm.lotList" ng-model="auctionRegVm.selectedLots.lotNumber" multiple>
+              </select> --> 
               <div class="text-right">
-                <button type="button" class="btn btn-danger" ng-click="auctionRegVm.submit(form)">Submit</button>
+                <button type="button" class="btn btn-danger" ng-click="auctionRegVm.submit(aucform)">Submit</button>
               </div>
-
-              
             </div>
           </div>
         </form>
@@ -114,14 +111,13 @@
            <input type="text" class="form-control" name="panNumber"  placeholder="PAN Number" ng-model="auctionRegVm.user.panNumber" uib-tooltip="XXXXX9999X" tooltip-trigger="focus" pattern="^[A-Z]{5}[0-9]{4}[A-Z]{1}$" tooltip-placement="top">
           </div>
            
-          <div class="col-sm-6 form-group"> <!-- ng-if="emdTax == 'lotWise'" -->>
-            
+          <!-- <div class="col-sm-6 form-group" ng-if="currentAuction.emdTax === 'lotWise'">
             <select class="form-control" 
             name="selectedLots" id="selectedLots" 
             style="height: 80px;"
              ng-options="lots.lotNumber as lots.lotNumber for lots in auctionRegVm.lotList" ng-model="auctionRegVm.selectedLots.lotNumber" multiple>
               </select> 
-          </div>
+          </div> -->
         </div>
          
         <div class="text-right">

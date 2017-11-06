@@ -3,24 +3,36 @@
 'use strict';
 angular.module('sreizaoApp').controller('AuctionPaymentListingCtrl',AuctionPaymentListingCtrl);
 
-function AuctionPaymentListingCtrl($scope,Modal,Auth,PaymentSvc) {
-	 var vm = this;
-	 vm.trasactions = [];
-	 var filter = {};
-	 $scope.transactionStatuses = transactionStatuses;
+function AuctionPaymentListingCtrl($scope,$rootScope,Modal,Auth,PaymentSvc) {
+	var vm = this;
+	vm.trasactions = [];
+	var filter = {};
+	$scope.transactionStatuses = transactionStatuses;
 
-	 vm.updateSelection = updateSelection;
-	 vm.exportExcel = exportExcel;
-	 var selectedIds = [];
+	vm.updateSelection = updateSelection;
+	vm.exportExcel = exportExcel;
+	vm.openPaymentModel = openPaymentModel;
+	var selectedIds = [];
+	$scope.ReqSubmitStatuses = ReqSubmitStatuses;
+	vm.resendUserData = resendUserData;
+
+	$scope.$on('refreshPaymentHistroyList',function(){
+        getTrasactions(filter);
+    });
+
+	function openPaymentModel(paymentData){
+		Auth.isLoggedInAsync(function(loggedIn) {
+		    if (loggedIn) {
+		       var OfflinePaymentScope = $rootScope.$new();
+		       OfflinePaymentScope.offlinePayment = paymentData;
+		        Modal.openDialog('OfflinePaymentPopup',OfflinePaymentScope);
+		    }
+		});
+	}
 
 	 function init(){
 	 	Auth.isLoggedInAsync(function(loggedIn){
 	 		if(loggedIn){
-	 			if(!Auth.isAdmin()){
-	 				filter['userId'] = Auth.getCurrentUser()._id;
-				 }
-				 
-				 filter['auction'] = "auctionlisting";
 	 			getTrasactions(filter);	
 	 		}
 	 	})
@@ -30,6 +42,7 @@ function AuctionPaymentListingCtrl($scope,Modal,Auth,PaymentSvc) {
 
 	 function getTrasactions(filterObj){
 		 //console.log("filter",filterObj);
+		filterObj.auctionPaymentReq = "Auction Request";
 	 	PaymentSvc.getOnFilter(filterObj)
 	 	.then(function(result){
 	 		vm.transactions = result;
@@ -67,6 +80,23 @@ function AuctionPaymentListingCtrl($scope,Modal,Auth,PaymentSvc) {
         if(action == 'remove' && selectedIds.indexOf(id) != -1)
           selectedIds.splice(selectedIds.indexOf(id),1);
     }
+
+    function resendUserData(data) {
+    $rootScope.loading = true;
+    PaymentSvc.sendReqToCreateUser(data)
+      .then(function(res) {
+          if (res.errorCode == 0) {
+            getTrasactions();
+          }
+          Modal.alert(res.message);
+          $rootScope.loading = false;
+      })
+      .catch(function(err){
+        if(err)
+          Modal.alert(err.data);
+        $rootScope.loading = false;
+      });
+  }
 }
 
 })();

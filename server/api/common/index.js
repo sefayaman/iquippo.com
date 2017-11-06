@@ -153,6 +153,7 @@ router.post('/emd/getData',emdCtrl.getEmdData);
 router.get('/emd/amount',emdCtrl.getEmdAmountData);
 router.put('/emd/:id', auth.hasRole('admin'),emdCtrl.updateEmdData);
 router.delete('/emd/:id',auth.hasRole('admin'), emdCtrl.destroy);
+router.post('/sendreqtocreateemd', emdCtrl.sendReqToCreateEmd);
 router.get('/lot',lotCtrl.getLotData);
 router.get('/lotdata',lotCtrl.getLots);
 router.delete('/lot/:id',auth.hasRole('admin'), lotCtrl.destroy);
@@ -160,6 +161,7 @@ router.post('/lot',lotCtrl.create);
 router.put('/lot/:id', auth.hasRole('admin'),lotCtrl.updateLotData);
 router.put('/lot/updateproductlot/:id', auth.hasRole('admin'),lotCtrl.updateProductLotData);
 router.get('/lot/lotsinauction',lotCtrl.getLotsInAuction);
+router.post('/sendreqtocreatelot', lotCtrl.sendReqToCreateLot);
 //Valuation Cancellation Fee master
 router.get('/valuationcancellationfee',auth.hasRole('admin'),valuationCancellationCtrl.get);
 router.get('/findcancellationfee',valuationCancellationCtrl.getValuationRequest,valuationCancellationCtrl.getCancellationFee);

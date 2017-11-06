@@ -16,5 +16,6 @@ router.post('/onfilter', controller.getOnFilter);
 router.post('/export', controller.exportPayment);
 router.post('/encrypt', controller.encrypt);
 router.post('/paymentresponse', controller.paymentResponse);
+router.post('/sendreqtocreateuser', controller.sendReqToCreateUser);
 
 module.exports = router;

@@ -27,6 +27,7 @@ router.post('/auctionmaster', controller.importAuctionMaster);
 router.delete('/auctionmaster/:id', controller.deleteAuctionMaster);
 router.post('/auctionmaster/onauctionmasterfilter', controller.getFilterOnAuctionMaster);
 router.get('/checkforasset/asset',controller.getAssetInfo);
+router.post('/sendreqtocreateauction', controller.sendReqToCreateAuction);
 //router.post('/sendusertoas/asset',controller.sendUserToAs);
 //router.get('/auctionmaster/getAuctionCount', auctionDateController.count);
 //router.get('/auctionmaster/fetchAuctionData',auctionDateController.fetch,auctionDateController.renderJson);
