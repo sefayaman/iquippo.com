@@ -104,12 +104,12 @@ angular.module('sreizaoApp',[
     $rootScope.allMadeInCountries = allMadeInCountries;
     $rootScope.KYCType = KYCType;
     
-    $rootScope.loadingCount = $rootScope.loadingCount + 2;
+    $rootScope.loadingCount = $rootScope.loadingCount + 1;
     
-    groupSvc.getAllGroup().then(function(response){
+    /*groupSvc.getAllGroup().then(function(response){
       $rootScope.loadingCount --;
       $rootScope.loading = $rootScope.loadingCount !=0;
-    });
+    });*/
 
    categorySvc.getAllCategory().then(function(response){
       $rootScope.loadingCount --;

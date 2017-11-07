@@ -3,7 +3,7 @@
 'use strict';
 angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
 
-  function MainCtrl($scope, $rootScope, $http,$window, $interval, $timeout, $uibModal, Auth, productSvc, categorySvc,classifiedSvc,LocationSvc,$state, Modal, UtilSvc,spareSvc,ManpowerSvc,BannerSvc,BiddingSvc,CountSvc) {
+  function MainCtrl($scope, $rootScope, $http,$window, $interval, $timeout, $uibModal, Auth, productSvc, categorySvc,groupSvc,classifiedSvc,LocationSvc,$state, Modal, UtilSvc,spareSvc,ManpowerSvc,BannerSvc,BiddingSvc,CountSvc) {
     var vm = this;
     vm.allCategoryList = [];
     vm.activeCategoryList = [];
@@ -15,6 +15,8 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
     $scope.toggle1=true;
     $scope.toggle2=true;
     $scope.toggle3=true;
+
+    vm.singleBox = true;
 
     $scope.toggling=function(val){
       if(val=="vid1")
@@ -29,33 +31,34 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
     vm.imgLeftBottom = "";
     vm.imgBottomLeft = "";
     vm.imgBottomRight = "";*/
-    vm.classifiedAd = {};
+    //vm.classifiedAd = {};
 
-    vm.radioModel = 'SELL';
-    vm.isCollapsed = true;
-    vm.sortedFeaturedProduct = [];
-    vm.productCountObj = {};
-    vm.spareCountObj = {};
-    vm.manPowerCountObj = {};
+    //vm.radioModel = 'SELL';
+    //vm.isCollapsed = true;
+   //vm.sortedFeaturedProduct = [];
+    //vm.productCountObj = {};
+    //vm.spareCountObj = {};
+    //vm.manPowerCountObj = {};
 
     vm.doSearch = doSearch;
     vm.myFunct = myFunct;
     vm.openBidModal = openBidModal;
     vm.openPrintMedia = openPrintMedia;
+    vm.toggleSearchBox = toggleSearchBox;
     // vm.toggleCategory = toggleCategory;
 
-    $scope.ConfigureList = function() {};
-    $scope.beginVertScroll = beginVertScroll;
-    $scope.categoryList = [{},{},{}];
+    //$scope.ConfigureList = function() {};
+    //$scope.beginVertScroll = beginVertScroll;
+    //$scope.categoryList = [{},{},{}];
 
     $scope.$on('resetBannerTimer',function(){
       vm.myInterval = 7000;
       getHighestBids();
     })
 
-
-
-
+    function toggleSearchBox(showSingleBox){
+      vm.singleBox = showSingleBox;
+    }
 
     function openPrintMedia(imageName) {
       var prMediaScope = $rootScope.$new();
@@ -104,26 +107,21 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
         Modal.alert("Please Login/Register for submitting your request!", true);
         return;
       }
-      /*var biddingScope = $rootScope.$new();
-      biddingScope.slideInfo = currentSlide;
-      biddingScope.isPayNow = false;
-      vm.myInterval = 1*2*60*60*1000;
-      Modal.openDialog('biddingReq', biddingScope);*/
       var inputFormScope = $rootScope.$new();
       inputFormScope.slideInfo = currentSlide;
       vm.myInterval = 1*2*60*60*1000;
       Modal.openDialog('inputFormReq', inputFormScope);
     }
 
-    vm.toggleCategory = function(){
+   /* vm.toggleCategory = function(){
       vm.isCollapsed = !vm.isCollapsed;
       if(vm.isCollapsed)
          $scope.categoryList = vm.activeCategoryList.slice(0,12);
        else
         $scope.categoryList = vm.activeCategoryList;
-    }
+    }*/
 
-    function getFeaturedProduct(){
+    /*function getFeaturedProduct(){
 
       productSvc.getFeaturedProduct().
       then(function(result){
@@ -134,9 +132,9 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
         //error handling
       })
 
-    }
+    }*/
 
-     function getStatusWiseSpareCount(){
+     /*function getStatusWiseSpareCount(){
        spareSvc.getStatusWiseSpareCount()
       .then(function(result){
           vm.spareCountObj = result;
@@ -156,7 +154,7 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
         //error handling
       });
 
-    }
+    }*/
 
 
     function getCategories(){
@@ -171,7 +169,17 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
 
     }
 
-     function getAllCategories(){
+    function getGroup(){
+      groupSvc.getAllGroup({isForUsed:true,visibleOnUsed:true})
+      .then(function(groups){
+        vm.groups = groups;
+      })
+      .catch(function(err){
+        Modal.alert("Error in fetching group");
+      });
+    }
+
+     /*function getAllCategories(){
 
       categorySvc.getAllCategory()
       .then(function(result){
@@ -181,9 +189,9 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
         //error handling
       });
 
-    }
+    }*/
 
-    function getStatusWiseProductCount(){
+   /* function getStatusWiseProductCount(){
        productSvc.statusWiseCount()
       .then(function(result){
           vm.productCountObj = result;
@@ -192,24 +200,25 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
         //error handling
       });
 
-    }
+    }*/
 
-    function getActiveClassifiedAd(){
+   /* function getActiveClassifiedAd(){
       classifiedSvc.getActiveClassifiedAd()
       .then(function(srchres){
         vm.classifiedAd = classifiedSvc.sortClassifiedAd(srchres);
       });
-    }
+    }*/
 
     getHomeBanner();
-    getFeaturedProduct();
+    getGroup();
+    //getFeaturedProduct();
     getCategories();
-    getActiveClassifiedAd();
-    getAllCategories();
-    getStatusWiseProductCount();
-    getStatusWiseSpareCount();
-    getStatusWiseManPowerCount();
-    getAssetCount();
+    //getActiveClassifiedAd();
+    //getAllCategories();
+   // getStatusWiseProductCount();
+    //getStatusWiseSpareCount();
+    //getStatusWiseManPowerCount();
+    //getAssetCount();
 
 
 
@@ -221,7 +230,7 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
       }
     }
     
-    function getAssetCount(){
+    /*function getAssetCount(){
 
            CountSvc.getData(vm.dataModel)
              .then(function(result){
@@ -256,7 +265,7 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
 
 
      }
-
+*/
       
    
       
@@ -287,7 +296,7 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
       $state.go('viewproduct',filter);
     }
 
-    function beginVertScroll() {
+   /* function beginVertScroll() {
       $timeout(
         function() {
           var firstElement = $('ul.verContainer li:first');
@@ -313,14 +322,14 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
         },
         1000*5
       );
-    };
+    };*/
 
-     $scope.setPopover = function(evt){
+    /* $scope.setPopover = function(evt){
         var index = $(evt.currentTarget).data('index');
         $scope.popoverData = $scope.featuredslides[index];
-    }
+    }*/
 
-    function sortProduct(products){
+    /*function sortProduct(products){
         if(products.length == 0){
           return;
         }
@@ -337,7 +346,7 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
                 rowCounter++;
             }
         })
-    }
+    }*/
     
     //Clearing Finance integration cookie
     Auth.removeCookies();

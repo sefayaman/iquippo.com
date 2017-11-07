@@ -63,6 +63,18 @@ angular.module('sreizaoApp')
         controller: 'ClassifiedAdCtrl',
         layout:'client'
       })
+      .state('allcategory', {
+        url: '/allcategory',
+        templateUrl: 'app/category/allcategory.html',
+        controller: 'AllCategoryCtrl as allCategoryVm',
+        layout:'client'
+      })
+      /*.state('allbrand', {
+        url: '/allbrand',
+        templateUrl: 'app/brand/allbrand.html',
+        controller: 'AllBrandCtrl',
+        layout:'client'
+      })*/
       .state('categoryproduct', {
         url: '/viewproducts/:id?currentPage',
         templateUrl: 'app/product/viewproducts.html',
