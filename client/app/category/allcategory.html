@@ -18,7 +18,8 @@
       <div class="col-sm-6 col-md-4 form-group" ng-repeat="category in allCategoryVm.allCategoryList" ng-if="$index < allCategoryVm.showedItems">
         <div class="media text-center">
           <a href="javascript:void(0);">
-             <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{category.imgSrc}}" height="250" class="img-responsive">              
+             <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{category.imgSrc}}" ng-if="category.imgSrc">
+             <img src="/assets/images/watermark.png" ng-if="!category.imgSrc">              
           </a>          
           <div class="media-body text-left"> 
             <h4>{{category.name}}</h4>                      
@@ -27,7 +28,7 @@
             </p>                     
           </div> 
           <div class="category-block text-center">
-            <button type="button" class="btn btn-primary btn-lg">Explore</button>
+            <button type="button" class="btn btn-primary">Explore</button>
           </div>         
         </div>
       </div>
