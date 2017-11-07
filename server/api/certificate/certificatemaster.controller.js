@@ -2,7 +2,7 @@
 
 var _ = require('lodash');
 var Seq = require('seq');
-var DealerMaster = require('./dealermaster.model.js');
+var CertificateMaster = require('./certificatemaster.model.js');
 var Utility = require('./../../components/utility.js');
 
 // Get list of all 
@@ -30,7 +30,7 @@ exports.get = function(req, res) {
     return;
   }*/
 
-  var query = DealerMaster.find(filter);
+  var query = CertificateMaster.find(filter);
 
   query.exec(function(err, result) {
     if (err) {
@@ -41,7 +41,7 @@ exports.get = function(req, res) {
 };
 
 exports.create = function(req, res) {console.log("req.body=",req.body);
-  DealerMaster.create(req.body, function(err, respo) {
+  CertificateMaster.create(req.body, function(err, respo) {
     if(err) { return handleError(res, err); }console.log("res=",res);
      return res.status(200).json({errorCode:0, message:"Data saved sucessfully", data:respo});
   });
@@ -64,7 +64,7 @@ exports.getOnFilter = function(req, res) {
 
   var result = {};
   if(req.body.pagination){
-    Utility.paginatedResult(req,res,DealerMaster,filter,{});
+    Utility.paginatedResult(req,res,CertificateMaster,filter,{});
     return;    
   }
   var sortObj = {}; 
@@ -72,11 +72,11 @@ exports.getOnFilter = function(req, res) {
     sortObj = req.body.sort;
   sortObj['createdAt'] = -1;
 
-  var query = DealerMaster.find(filter).sort(sortObj);
+  var query = CertificateMaster.find(filter).sort(sortObj);
   Seq()
   .par(function(){
     var self = this;
-    DealerMaster.count(filter,function(err, counts){
+    CertificateMaster.count(filter,function(err, counts){
       result.totalItems = counts;
       self(err);
     })
@@ -100,10 +100,10 @@ exports.getOnFilter = function(req, res) {
 exports.update = function(req, res) {
   if(req.body._id) { delete req.body._id; }
   req.body.updatedAt = new Date();
-  DealerMaster.findById(req.params.id, function (err, inputReq) {
+  CertificateMaster.findById(req.params.id, function (err, inputReq) {
     if (err) { return handleError(res, err); }
     if(!inputReq) { return res.status(404).send('Not Found'); }
-    DealerMaster.update({_id:req.params.id},{$set:req.body},function(err){
+    CertificateMaster.update({_id:req.params.id},{$set:req.body},function(err){
         if (err) { return handleError(res, err); }
         return res.status(200).json({errorCode:0, message:"Request updated sucessfully"});
     });
@@ -112,7 +112,7 @@ exports.update = function(req, res) {
 
 // Deletes a input req from the DB.
 exports.delete = function(req, res) {
-  DealerMaster.findById(req.params.id, function (err, inputReq) {
+  CertificateMaster.findById(req.params.id, function (err, inputReq) {
     if(err) { return handleError(res, err); }
     if(!inputReq) { return res.status(404).send('Not Found'); }
     inputReq.remove(function(err) {

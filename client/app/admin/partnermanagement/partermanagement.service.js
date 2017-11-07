@@ -28,7 +28,7 @@ angular.module('sreizaoApp').factory("vendorSvc",vendorSvc)
       vendorService.getFilter = getFilter;
       //vendorService.validateVendor = validateVendor;
 
-      function getFilter(filter){console.log("filter==",filter);
+      function getFilter(filter){
         return $http.post(path + "/getfilteruser", filter)
           .then(function(res){
             return res.data;

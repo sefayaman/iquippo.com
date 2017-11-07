@@ -37,6 +37,8 @@
 						<option value="yard-services">Yard Management - Services</option>
 						<option value="yard-amenities">Yard Management – Amenities </option> -->
 						<option value="dealermaster">Dealer Location Master</option>
+						<option value="certificate">Certificate Master</option>
+						<option value="newequipment">New Equipment Master</option>
 					</select>
 					<i class="caret"></i>
 				</div>
@@ -2726,42 +2728,39 @@
 	<!-- dealer tab value-->
 	<div ng-if="gsettingVm.tabValue == 'dealermaster'" ng-controller="DealerMasterCtrl as dealerVm">
     	<h4>Listing Dealer Data</h4>
+		<form class="" name="dealerForm" >			
+			<div class="row form-group">
+				<div class="col-sm-3" ng-class="{'has-error':dealerForm.brand.$invalid && submitted}">
+					<select class="form-control" name="brand" ng-model="dealerVm.dataModel.brand.data" required>
+						<option value="">Select Brand</option>
+						<option ng-repeat="brand in dealerVm.brandList" value="{{brand._id}}">{{brand.name}}</option>
+					</select>
+				</div>
+				<div class="col-sm-3" ng-class="{'has-error':dealerForm.dealer.$invalid && submitted}">
+					<select class="form-control" name="dealer" ng-model="dealerVm.dataModel.dealer.data"  required>
+						<option value="">*Select Dealer</option>
+						<option ng-repeat="dealer in dealerVm.dealerList" value="{{dealer._id}}">{{dealer.entityName}}</option>
+					</select>
+				</div>
+				<div class="col-sm-3" ng-class="{'has-error':dealerForm.state.$invalid && submitted}">
+					<select multiple="true" class="form-control" name="state" ng-model="dealerVm.stateIdArr"  required>
+						<option value="">*Select State</option>
+						<option ng-repeat="state in dealerVm.stateList" value="{{state._id}}">{{state.name}}</option>
+					</select>
+				</div>
+				<div class="col-sm-2 pull-right">
+					<button type="button" class="btn btn-block btn-primary" ng-if="isEdit" ng-click="dealerVm.update(dealerForm)">Update</button>
+					<button type="button" class="btn btn-block btn-primary" ng-if="!isEdit" ng-click="dealerVm.save(dealerForm)">Save</button>
+				</div>
+			</div>
+		<form>
 		<div class="row">
 			<div class="col-sm-3 pull-right">
 				<div class="tablesearch text-right form-group">
 					Search: <input type="text" placeholder="Search..." ng-model="dealerVm.searchStr" ng-change="gsettingVm.fireCommand(true,null,'leadmaster')" ng-model-options="{debounce:500}">
 				</div>
 			</div>
-		</div>
-		<form class="" name="dealerForm" >			
-			<div class="row form-group">
-				<div class="col-sm-3" ng-class="{'has-error':assetSaleForm.userRole.$invalid && submitted}">
-					<select class="form-control" name="brand" ng-model="dealerVm.allBrand" required>
-						<option value="">Select Brand</option>
-						<option ng-repeat="brand in dealerVm.allBrand" value="{{brand}}">{{brand.name}}</option>
-					</select>
-				</div>
-				<div class="col-sm-3" ng-class="{'has-error':assetSaleForm.userRole.$invalid && submitted}">
-					<select class="form-control" name="dealer" ng-model="dealerVm.dealer"  required>
-						<option value="">*Select Dealer</option>
-						<option ng-repeat="dealer in dealerVm.allDealer" value="{{dealer}}">{{dealer.entityName}}</option>
-					</select>
-				</div>
-				<div class="col-sm-3" ng-class="{'has-error':assetSaleForm.userRole.$invalid && submitted}">
-					<select class="form-control" name="state" ng-model="dealerVm.stateList"  required>
-						<option value="">*Select State</option>
-						<option ng-repeat="state in dealerVm.stateList" value="{{state}}">{{state.name}}</option>
-					</select>
-				</div>
-				<div class="row form-group">
-					<div class="col-sm-2 pull-right">
-						<button type="button" class="btn btn-block btn-primary" ng-if="isEdit" ng-click="dealerVm.update(dealerForm)">Update</button>
-						<button type="button" class="btn btn-block btn-primary" ng-if="!isEdit" ng-click="dealerVm.save(dealerForm)">Save</button>
-					</div>
-				</div>
-			</div>
-		<form>
-		
+		</div>		
 		<div class="table-responsive">
 			<table class="table table-bordered">
 				<thead>
@@ -2770,20 +2769,128 @@
 						<th>Dealer Name</th>
 						<th>Location</th>
 						<th>Status</th>
+						<th>Action</th>
 					</tr>
 				</thead>
 				<tbody>
-					<tr  ng-repeat="dealer in dealerVm.dealers">
-						<td>{{dealer.brand}}</td>
-						<td>{{dealer.dealerName}}</td>
-						<td>{{dealer.location}}</td>
+					<tr  ng-repeat="dealer in dealerVm.filteredList">
+						<td>{{dealer.brand.name}}</td>
+						<td>{{dealer.dealer.name}}</td>
+						<td><span ng-repeat="state in dealer.state">{{state.name}},</span></td>
 						<td>{{dealer.status}}</td>
+						<td>
+							<button type="button" class="btn btn-sm btn-primary" ng-click="dealerVm.editClicked(dealer)"><i class="fa fa-pencil"></i></button>
+							<button type="button" class="btn btn-sm btn-danger" ng-click="dealerVm.destroy(dealer._id)"><i class="fa fa-trash"></i></button>
+							</td>
 						
 					</tr>
 				</tbody>
 			</table>
 		</div>
-		<uib-pagination total-items="dealerVm.totalItems" ng-model="dealerVm.currentPage" items-per-page="dealerVm.itemsPerPage" max-size="dealerVm.maxSize" ng-change="dealerVm.fireCommand(false,null,'dealermaster')" class="pagination-sm" rotate="false">  </uib-pagination>
+		<!--<uib-pagination total-items="dealerVm.totalItems" ng-model="dealerVm.currentPage" items-per-page="dealerVm.itemsPerPage" max-size="dealerVm.maxSize" ng-change="dealerVm.fireCommand(false,null,'dealermaster')" class="pagination-sm" rotate="false">  </uib-pagination>-->
+	</div>
+	<!-- Certificate tab value-->
+	<div ng-if="gsettingVm.tabValue == 'certificate'" ng-controller="CertificateMasterCtrl as certificateVm">
+    	<h4>Add Certificate </h4>
+		<div class="row">
+		<form class="" name="certificateForm" >			
+				<div class="col-sm-3" ng-class="{'has-error':certificateForm.state.$invalid && submitted}">
+					<input type="text" placeholder="Add Certificate value..."class="form-control" name="certificate" ng-model="certificateVm.dataModel.certificate"  required>
+				</div>
+				<div class="col-sm-2 pull-right">
+					<button type="button" class="btn btn-block btn-primary" ng-if="isEdit" ng-click="certificateVm.update(certificateForm)">Update</button>
+					<button type="button" class="btn btn-block btn-primary" ng-if="!isEdit" ng-click="certificateVm.save(certificateForm)">Save</button>
+				</div>
+			
+		<form>
+		</div>
+		<div class="row">
+			<div class="col-sm-3 pull-right">
+				<div class="tablesearch text-right form-group">
+					Search: <input type="text" placeholder="Search..." ng-model="certificateVm.searchStr" ng-change="certificateVm.fireCommand(true,null,'certificate')" ng-model-options="{debounce:500}">
+			
+				</div>
+			</div>
+		</div>		
+		<div class="table-responsive">
+			<table class="table table-bordered">
+				<thead>
+					<tr>
+						<th>S.N.</th>
+						<th>Certificate</th>
+						<th>Action</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr  ng-repeat="certificate in certificateVm.filteredList">
+						<td>1</td>
+						<td>{{certificate.certificate}}</td>
+						<td>
+							<button type="button" class="btn btn-sm btn-primary" ng-click="certificateVm.editClicked(certificate)"><i class="fa fa-pencil"></i></button>
+							<button type="button" class="btn btn-sm btn-danger" ng-click="certificateVm.destroy(certificate._id)"><i class="fa fa-trash"></i></button>
+							</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<!--<uib-pagination total-items="dealerVm.totalItems" ng-model="dealerVm.currentPage" items-per-page="dealerVm.itemsPerPage" max-size="dealerVm.maxSize" ng-change="dealerVm.fireCommand(false,null,'dealermaster')" class="pagination-sm" rotate="false">  </uib-pagination>-->
+	</div>
+	<!-- New Equipment tab value-->
+	<div ng-if="gsettingVm.tabValue == 'newequipment'" ng-controller="NewEquipmentCtrl as newequipmentVm">
+    	<h4>Add Certificate </h4>
+		<div class="row">
+		<form class="" name="newewuipmentForm" >			
+			<div class="row form-group">
+				<div class="col-sm-3" ng-class="{'has-error':newewuipmentForm.brand.$invalid && submitted}">
+					<select class="form-control" name="category" ng-model="dealerVm.dataModel.category" required>
+						<option value="">Select Category</option>
+						<option ng-repeat="category in newequipmentVm.categoryList" value="{{category._id}}">{{category.name}}</option>
+					</select>
+				</div>
+				<div class="col-sm-3" ng-class="{'has-error':newewuipmentForm.brand.$invalid && submitted}">
+					<select class="form-control" name="brand" ng-model="dealerVm.dataModel.brand.data" required>
+						<option value="">Select Brand</option>
+						<option ng-repeat="brand in dealerVm.brandList" value="{{brand._id}}">{{brand.name}}</option>
+					</select>
+				</div>
+				
+				<div class="col-sm-2 pull-right">
+					<button type="button" class="btn btn-block btn-primary" ng-if="isEdit" ng-click="newequipmentVm.update(newequipmentForm)">Update</button>
+					<button type="button" class="btn btn-block btn-primary" ng-if="!isEdit" ng-click="newequipmentVm.save(newequipmentForm)">Save</button>
+				</div>
+			</div>
+		<form>
+		</div>
+		<div class="row">
+			<div class="col-sm-3 pull-right">
+				<div class="tablesearch text-right form-group">
+					Search: <input type="text" placeholder="Search..." ng-model="newequipmentVm.searchStr" ng-change="newequipmentVm.fireCommand(true,null,'certificate')" ng-model-options="{debounce:500}">
+			
+				</div>
+			</div>
+		</div>		
+		<div class="table-responsive">
+			<table class="table table-bordered">
+				<thead>
+					<tr>
+						<th>S.N.</th>
+						<th>Certificate</th>
+						<th>Action</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr  ng-repeat="newequipment in newequipmentVm.filteredList">
+						<td>1</td>
+						<td>{{certificate.certificate}}</td>
+						<td>
+							<button type="button" class="btn btn-sm btn-primary" ng-click="newequipmentVm.editClicked(certificate)"><i class="fa fa-pencil"></i></button>
+							<button type="button" class="btn btn-sm btn-danger" ng-click="newequipmentVm.destroy(certificate._id)"><i class="fa fa-trash"></i></button>
+							</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<!--<uib-pagination total-items="dealerVm.totalItems" ng-model="dealerVm.currentPage" items-per-page="dealerVm.itemsPerPage" max-size="dealerVm.maxSize" ng-change="dealerVm.fireCommand(false,null,'dealermaster')" class="pagination-sm" rotate="false">  </uib-pagination>-->
 	</div>
 </div>
 </div>

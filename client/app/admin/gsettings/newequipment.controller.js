@@ -1,11 +1,11 @@
 (function() {
     'use strict';
 
-angular.module('admin').controller('DealerMasterCtrl', DealerMasterCtrl);
+angular.module('admin').controller('NewEquipmentCtrl', NewEquipmentCtrl);
 
-function DealerMasterCtrl($scope,$rootScope,$state,categorySvc,vendorSvc, modelSvc, brandSvc, Modal,LocationSvc,DealerMasterSvc, Auth,PagerSvc,$filter){
+function NewEquipmentCtrl($scope,$rootScope,$state,NewEquipmentSvc,Modal, Auth,PagerSvc,$filter){
 	var vm  = this;
-    vm.dataModel = {brand:{}};
+    vm.dataModel = {};
     $scope.isEdit = false;
     $scope.pager = PagerSvc.getPager();
 
@@ -14,8 +14,6 @@ function DealerMasterCtrl($scope,$rootScope,$state,categorySvc,vendorSvc, modelS
     vm.destroy = destroy;
     vm.editClicked = editClicked;
     vm.fireCommand = fireCommand;
-    vm.stateIdArr = [{}];
-    
     var initFilter = {};
     var filter = {};
     vm.searchStr = "";
@@ -23,46 +21,19 @@ function DealerMasterCtrl($scope,$rootScope,$state,categorySvc,vendorSvc, modelS
         filter = {};
         initFilter.pagination = true;
         angular.copy(initFilter, filter);
-        loadAllBrand();
-        loadAllState();
-        loadAllDealer();
         loadViewData(filter);
     } 
 
-    function loadAllState(){
-      LocationSvc.getAllState()
-        .then(function(result) {
-          vm.stateList = result;
-      })
-    }
-    function loadAllDealer(){
-      var filter = {};
-      filter['service'] = 'Dealer';  
-      vendorSvc.getFilter(filter)
-        .then(function(result) {
-          vm.dealerList = result;
-      })
-    }
-  
-    function loadAllBrand() {
-        brandSvc.getAllBrand()
-        .then(function(result) {
-            vm.brandList = result;
-        });
-    }
-    
-
-
     function loadViewData(filter){
         $scope.pager.copy(filter);
-        DealerMasterSvc.get(filter)
+        NewEquipmentSvc.get(filter)
         .then(function(result){
-            vm.filteredList = result;
+            vm.filteredList = result.items;
             vm.totalItems = result.totalItems;
             $scope.pager.update(result.items, result.totalItems);
         });
     }
-    
+
     function fireCommand(reset){
         if (reset)
             $scope.pager.reset();
@@ -73,29 +44,18 @@ function DealerMasterCtrl($scope,$rootScope,$state,categorySvc,vendorSvc, modelS
         loadViewData(filter);
     }
 
-    function save(form){
+    function save(form){console.log("form==",form);
         if(form.$invalid){
             $scope.submitted = true;
             return;
         }
-        let objBrand = vm.brandList.find(o => o._id === vm.dataModel.brand.data);
-        vm.dataModel.brand.name = objBrand.name; 
-        let objDealer = vm.dealerList.find(o => o._id === vm.dataModel.dealer.data);
-         vm.dataModel.dealer.name = objDealer.entityName;
-         vm.dataModel.state = [];
-         var i=0;
-         
-         if(vm.stateIdArr[0]){
-            for(var id of vm.stateIdArr) {
-                    let objState = vm.stateList.find(o => o._id === id);
-                    vm.dataModel.state[i] = {};
-                    vm.dataModel.state[i]['data'] = id;
-                    vm.dataModel.state[i]['name'] = objState.name;
-                    i++;
-            }
-         }
-         vm.dataModel.status = true;
-        DealerMasterSvc.save(vm.dataModel)
+       
+        /* createData.dealer.data = vm.dataModel.dealer._id;
+        createData.dealer.name = vm.dataModel.dealer.entityName;
+        createData.location.data = vm.dataModel.state._id;
+        createData.location.name = vm.dataModel.state.name;*/
+        console.log("createData=",createData);
+        NewEquipmentSvc.save(createData)
         .then(function(){
             vm.dataModel = {};
             resetValue();
@@ -111,12 +71,7 @@ function DealerMasterCtrl($scope,$rootScope,$state,categorySvc,vendorSvc, modelS
     function editClicked(rowData){
         vm.dataModel = {};
         vm.dataModel = angular.copy(rowData);
-        var i=0;
-        vm.stateIdArr = [];
-         for(var val of  vm.dataModel.state) {
-                vm.stateIdArr[i] = val.data;
-                i++;
-         }
+       
         $scope.isEdit = true;
     }
 
@@ -125,7 +80,7 @@ function DealerMasterCtrl($scope,$rootScope,$state,categorySvc,vendorSvc, modelS
             $scope.submitted = true;
             return;
         }
-        DealerMasterSvc.update(vm.dataModel)
+        NewEquipmentSvc.update(vm.dataModel)
         .then(function(){
             vm.dataModel = {};
             resetValue();
@@ -148,13 +103,10 @@ function DealerMasterCtrl($scope,$rootScope,$state,categorySvc,vendorSvc, modelS
 
     function resetValue() {
       vm.container = {};
-      //vm.dataModel.brand = {};
-      vm.container.modelId = "";
-      //vm.brandList = [];
     }
 
     function confirmDestory(id){
-        DealerMasterSvc.destroy(id)
+        NewEquipmentSvc.destroy(id)
         .then(function(){
             fireCommand(true);
         })
