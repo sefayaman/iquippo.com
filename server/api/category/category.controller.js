@@ -196,6 +196,7 @@ exports.createSubCategory = function(req, res) {
     }
     
   });
+};
 /*exports.searchCategory = function(req, res) {
   
 
