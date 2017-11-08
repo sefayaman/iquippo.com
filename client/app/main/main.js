@@ -4,13 +4,24 @@ angular.module('sreizaoApp')
   .config(function ($stateProvider,$httpProvider) {
     $stateProvider
       .state('main', {
-        url: '/',
+        url: '/?promo',
         templateUrl: 'app/main/main.html',
         controller: 'MainCtrl as mainVm',
         layout:'client',
-        onEnter:function($rootScope){
+        onEnter:function($rootScope,$stateParams,Modal,Auth,$state){
           $rootScope.choosenTitle=pagesTitles.index.title;
           $rootScope.metaDescription=pagesTitles.index.meta;
+          Auth.isLoggedInAsync(function(isLoggedin){
+            if(isLoggedin){
+                $state.go('main',{promo:''},{location:'replace',notify:false});
+                return;
+            }
+            if($stateParams.promo === 'register'){
+              var scope = $rootScope.$new();
+              scope.autoOpen = true;
+              Modal.openDialog('signup',scope);
+            }
+          })
         }
       }) 
       .state('contactus', {
@@ -52,6 +63,18 @@ angular.module('sreizaoApp')
         controller: 'ClassifiedAdCtrl',
         layout:'client'
       })
+      .state('allcategory', {
+        url: '/allcategory',
+        templateUrl: 'app/category/allcategory.html',
+        controller: 'AllCategoryCtrl as allCategoryVm',
+        layout:'client'
+      })
+      /*.state('allbrand', {
+        url: '/allbrand',
+        templateUrl: 'app/brand/allbrand.html',
+        controller: 'AllBrandCtrl',
+        layout:'client'
+      })*/
       .state('categoryproduct', {
         url: '/viewproducts/:id?currentPage',
         templateUrl: 'app/product/viewproducts.html',

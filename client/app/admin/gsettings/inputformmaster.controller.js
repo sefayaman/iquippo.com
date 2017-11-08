@@ -164,11 +164,14 @@ function InputFormMasterCtrl($scope,$rootScope,$state,categorySvc, modelSvc, bra
             return;
         }
 
-        var createData = {};
-        Object.keys(vm.dataModel).forEach(function(x) {
-            createData[x] = vm.dataModel[x];
+        vm.dataModel.additionalInfo = vm.dataModel.additionalInfo.filter(function(item, idx) {
+          if (item && (item.tenure || item.installment || item.marginPerUnit || item.processingFee || item.state))
+            return true;
+          else
+            return false;
         });
-        InputFormMasterSvc.save(createData)
+
+        InputFormMasterSvc.save(vm.dataModel)
         .then(function(){
             vm.dataModel = {};
             resetValue();
@@ -184,6 +187,8 @@ function InputFormMasterCtrl($scope,$rootScope,$state,categorySvc, modelSvc, bra
     function editClicked(rowData){
         vm.dataModel = {};
         vm.dataModel = angular.copy(rowData);
+        if(rowData.additionalInfo.length === 0)
+          vm.dataModel.additionalInfo = [{}];
         vm.container.categoryId = rowData.category.categoryId;
         onCategoryChange(rowData.category.categoryId, true);
         onBrandChange(rowData.brand.brandId, true);
@@ -197,6 +202,13 @@ function InputFormMasterCtrl($scope,$rootScope,$state,categorySvc, modelSvc, bra
             $scope.submitted = true;
             return;
         }
+
+        vm.dataModel.additionalInfo = vm.dataModel.additionalInfo.filter(function(item, idx) {
+          if (item && (item.tenure || item.installment || item.marginPerUnit || item.processingFee || item.state))
+            return true;
+          else
+            return false;
+        });
         InputFormMasterSvc.update(vm.dataModel)
         .then(function(){
             vm.dataModel = {};

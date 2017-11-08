@@ -164,7 +164,7 @@ angular.module('sreizaoApp')
           dataToSend.itemsPerPage = vm.itemsPerPage;
           getUser(dataToSend);
         }
-         getUserExportFileName();
+         //getUserExportFileName();
       });
 
     }
@@ -190,13 +190,15 @@ angular.module('sreizaoApp')
         Modal.alert("Error in geting user");
       })
     }
+
     function getUserExportFileName(){
 
       userSvc.getUserExportFileName().then(function(result){
-        vm.userExportLink =result;
+        if(result)
+          vm.userExportLink = result;
        })
       .catch(function(err){
-        Modal.alert("Error in geting user");
+        Modal.alert("Error in geting export url");
       })
     }
     function getProductData(id, type){
@@ -423,7 +425,7 @@ angular.module('sreizaoApp')
       //console.log("ListVendor",$scope.vendorList);
     }
     
-    function getServices(isNew){
+    function getServices(isNew,isChanged){
 
       $scope.availedServices = [];
       if($scope.newUser.role != 'enterprise')
@@ -441,7 +443,7 @@ angular.module('sreizaoApp')
         }
       }
       
-      if(!$scope.isEdit){
+      if(!$scope.isEdit || isChanged){
         //$scope.availedServices = angular.copy(enterpriseSvcList);
         enterpriseSvcList.forEach(function(item){
           var obj = {};

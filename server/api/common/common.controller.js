@@ -245,6 +245,33 @@ exports.getSettingByKey = function(req, res) {
 	});
 }
 
+exports.updateMasterDataStatus = function(req,res){
+
+	var UpdatableField = ['visibleOnUsed','imgSrc'];
+	var type = req.body.type;
+	var modelRef = null;
+	if(type === 'Group')
+		modelRef = Group;
+	else if(type === 'Category')
+		modelRef = Category;
+	else if(type === 'Brand')
+		modelRef = Brand;
+	else if(type === 'Model')
+		modelRef = Model;
+	else
+		return res.status(400).send("Invalid update");
+	var updateObj = {};
+	UpdatableField.forEach(function(key){
+			updateObj[key] = req.body[key];
+	});
+	modelRef.update({_id:req.body._id},{$set:updateObj},function(err,result){
+		if(err) return handleError(res, err);
+		return res.status(200).send(type + " updated successfully.");
+
+	})
+
+}
+
 exports.updateMasterData = function(req, res) {
 	var reqData = req.body;
 	var type = reqData.type;
@@ -377,9 +404,9 @@ exports.updateMasterData = function(req, res) {
 					filter["name"] = {
 						$regex: new RegExp("^" + reqData.name + "$", 'i')
 					};
-					filter["group.name"] = {
+					/*filter["group.name"] = {
 						$regex: new RegExp("^" + reqData.group.name + "$", 'i')
-					};
+					};*/
 					var query = Category.find(filter);
 					query.exec(function(err, gps) {
 						if (err) {
@@ -1053,10 +1080,9 @@ function upsertCategory(req, res, data) {
 	seq(function() {
 			var self = this;
 			var term = new RegExp("^" + categoryName + "$", 'i');
-			var gpTerm = new RegExp("^" + req.data.group.name + "$", 'i');
+			//var gpTerm = new RegExp("^" + req.data.group.name + "$", 'i');
 			Category.find({
-				name: term,
-				"group.name": gpTerm
+				name: term
 			}, function(err, categories) {
 				if (err) return handleError(res, err);
 				if (categories.length > 0) {

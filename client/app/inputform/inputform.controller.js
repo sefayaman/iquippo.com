@@ -11,6 +11,7 @@ function InputFormCtrl($scope, $rootScope, Modal, Auth, categorySvc, LocationSvc
 	vm.inputFormReqInfo.bannerInfo = {};
 	vm.inputFormReqInfo.paymentInfo = {};
 	vm.inputFormMasterData = [];
+	vm.container = {};
 	vm.closeDialog = closeDialog;
 	vm.submit = submit;
 	vm.onCategoryChange = onCategoryChange;
@@ -31,8 +32,7 @@ function InputFormCtrl($scope, $rootScope, Modal, Auth, categorySvc, LocationSvc
 				vm.inputFormReqInfo.user.email = Auth.getCurrentUser().email;
 			}
 		});
-
-		vm.inputFormReqInfo.bannerInfo._id = $scope.slideInfo._id;
+		vm.inputFormReqInfo.bannerInfo.bannerData = $scope.slideInfo._id;
 		vm.inputFormReqInfo.bannerInfo.name = $scope.slideInfo.name;
 		vm.inputFormReqInfo.bannerInfo.code = $scope.slideInfo.code;
 		loadAllCategory();
@@ -46,29 +46,42 @@ function InputFormCtrl($scope, $rootScope, Modal, Auth, categorySvc, LocationSvc
         });
     }
 
-    function onModelChange() {
-    	var filter = {};
+    function onModelChange(modelId) {
 		resetValue();
 		vm.inputFormMasterData = [];
+		$scope.inputFormState = [];
 		vm.inputFormReqInfo.state = "";
 		vm.inputFormReqInfo.tenure = "";
+
+		if (!modelId) {
+	        vm.container.modelId = "";
+	        return;
+	    }
+		var filter = {};
+		var mod = [];
+		mod = vm.modelList.filter(function(item) {
+			return item.model.modelId == modelId;
+		});
+		if (mod.length == 0)
+			return;
+		vm.inputFormReqInfo.model = mod[0].model.name;
+
 		if(!vm.inputFormReqInfo.category || !vm.inputFormReqInfo.brand || !vm.inputFormReqInfo.model)
     		return;
 
     	filter.category = vm.inputFormReqInfo.category;
     	filter.brand = vm.inputFormReqInfo.brand;
     	filter.model = vm.inputFormReqInfo.model;
-		$scope.inputFormState = [];
-    	InputFormMasterSvc.get(filter)
+		InputFormMasterSvc.get(filter)
         .then(function(result){
 			result.forEach(function(item){
-				if(item.additionalInfo)
+				if(item && item.additionalInfo)
 					vm.orignalInputFormMasterData = item.additionalInfo;
 					//vm.inputFormMasterData = item.additionalInfo;
-					onStateChange();
+					//onStateChange();
 			});
 			vm.orignalInputFormMasterData.forEach(function(item){
-				if($scope.inputFormState.indexOf(item.state) === -1 && item.state) {
+				if(item && $scope.inputFormState.indexOf(item.state) === -1 && item.state) {
 					$scope.inputFormState[$scope.inputFormState.length] = item.state;
 				}
 	        });
@@ -117,35 +130,57 @@ function InputFormCtrl($scope, $rootScope, Modal, Auth, categorySvc, LocationSvc
 		}
 	}
 
-    function onCategoryChange(catName, reset) {
+    function onCategoryChange(categoryId, reset) {
         vm.brandList = [];
         vm.modelList = [];
+        vm.inputFormMasterData = [];
+        $scope.inputFormState = [];
         resetValue();
         if (reset) {
-            vm.inputFormReqInfo.brand = "";
-            vm.inputFormReqInfo.model = "";
+			if (categoryId) {
+	          var ct = categorySvc.getCategoryOnId(categoryId);
+	          vm.inputFormReqInfo.category = ct.name;
+	        }
+            vm.container.brandId = "";
+            vm.container.modelId = "";
+            vm.inputFormReqInfo.state = "";
+			vm.inputFormReqInfo.tenure = "";
         }
 
-        if (!catName)
+        if (!categoryId)
             return;
         InputFormMasterSvc.search({
-            category: catName
+            category: categoryId
         })
         .then(function(result) {
             vm.brandList = result;
         });
     }
 
-    function onBrandChange(brandName, reset) {
+    function onBrandChange(brandId, reset) {
         vm.modelList = [];
+        vm.inputFormMasterData = [];
+        $scope.inputFormState = [];
         resetValue();
         if (reset) {
-            vm.inputFormReqInfo.model = "";
+            vm.container.modelId = "";
+            vm.inputFormReqInfo.state = "";
+			vm.inputFormReqInfo.tenure = "";
         }
-        if (!brandName)
+        if (!brandId)
             return;
+        else {
+			var brd = [];
+			brd = vm.brandList.filter(function(item) {
+			return item.brand.brandId == brandId;
+			});
+			if (brd.length == 0)
+				return;
+			vm.inputFormReqInfo.brand = brd[0].brand.name;
+        }
+
         InputFormMasterSvc.search({
-            brand: brandName
+            brand: brandId
         })
         .then(function(result) {
             vm.modelList = result;
@@ -170,7 +205,7 @@ function InputFormCtrl($scope, $rootScope, Modal, Auth, categorySvc, LocationSvc
 					dataToSend.referenceNo = res.data.referenceNo;
 					if (dataToSend.user.email)
 						data.to = dataToSend.user.email;
-					data.subject = 'No Reply: Input Form Request';
+					data.subject = 'No Reply: Input Form Request with Reference No ' + res.data.referenceNo;
 					dataToSend.serverPath = serverPath;
 					notificationSvc.sendNotification('inputformReqEmailToCustomer', data, dataToSend, 'email');
 					if (dataToSend.user.mobile)

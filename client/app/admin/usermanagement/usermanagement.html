@@ -14,7 +14,7 @@
             </div>
             <div class="col-xs-6 col-sm-2">
              <!-- <h3><button class="btn btn-success btn-md btn-block" ng-click="userManagementVm.exportExcel()"><i class="fa fa-file-excel-o"></i> Export</button></h3>-->
-               <h3 ng-if="isAdmin()"><a class="btn btn-success btn-md btn-block" href="{{userManagementVm.userExportLink}}" target="_blank">Export</a></h3>
+               <h3 ng-if="isAdmin()"><a class="btn btn-success btn-md btn-block" target="_blank">Export</a></h3>
               <h3 ng-if="!isAdmin()"><button class="btn btn-success btn-md btn-block" ng-click="userManagementVm.exportExcel()"><i class="fa fa-file-excel-o"></i> Export</button></h3>
             </div>
           </div>

@@ -27,7 +27,7 @@
             
           </div>
           <div class="col-sm-3 form-group" ng-class="{'has-error': enterpriseValForm.purpose.$invalid && enterpriseValForm.submitted}">
-            <label>Financing</label>
+            <label>Select Purpose</label>
             <select class="form-control" name="purpose" ng-model="addTransactionVm.enterpriseValuation.purpose" ng-disabled="!editEnterpriseField('purpose')" required>
               <option value="Financing">Financing</option>
               <option ng-repeat="valuation in valuationList" value="{{valuation.name}}">{{valuation.name}}</option>
