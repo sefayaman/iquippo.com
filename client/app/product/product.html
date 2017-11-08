@@ -885,6 +885,9 @@
                 <option value="Policy">Insurance Policy</option>
                 <option value="Certification">Inspection Certificate</option>
                 <option value="Valuation">Valuation Report</option>
+                <option value="rcupload">RC Upload</option>
+                <option value="invoice">Invoice</option>
+                <option value="taxchallan">Tax Challan</option>
                 <option value="Other">Other</option>
               </select>
               <i class="caret"></i>
@@ -901,6 +904,21 @@
             <div class="col-xs-12 col-sm-3 col-md-2 pull-right">
               <button class="active btn btn-default btn-block" ng-click="product.miscDocuments.push({})" ng-if="$last">Add More</button>
               <button class="active btn btn-default btn-block" ng-click="product.miscDocuments.splice($index,1)" ng-if="!$last">Delete</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Certificate</h3>
+        </div>
+        <div class="panel-body">
+          <div class="form-group row" ng-repeat="miscDoc in product.miscDocuments">
+            <div class="col-sm-3 form-group">Certificate</div>
+            <div class="col-sm-5 form-group">
+              <select class="form-control">
+                <option value="">Certificate Type</option>
+              </select>
             </div>
           </div>
         </div>
