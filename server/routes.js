@@ -20,7 +20,7 @@ module.exports = function(app) {
   app.use('/api/group', require('./api/group'));
   app.use('/api/vendor', require('./api/vendor'));
   app.use('/api/quote', require('./api/quote'));
-  app.use('/api/buyer', require('./api/buyer'));
+  //app.use('/api/buyer', require('./api/buyer'));
   app.use('/auth', require('./auth'));
   app.use('/api/common', require('./api/common'));
   app.use('/api/classifiedad', require('./api/classifiedad'));

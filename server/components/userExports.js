@@ -436,8 +436,8 @@ function addNoCacheHeader(res) {
 }
 exports.start = function(){
   //console.log("Save Search service started");
-  createExportsFile();
-  deleteExportsFile();
+  //createExportsFile();
+ // deleteExportsFile();
 }
 
 

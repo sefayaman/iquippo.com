@@ -62,6 +62,9 @@ function CertificateMasterCtrl($scope,$rootScope,$state,CertificateMasterSvc, Mo
 		    });
         }
         CertificateMasterSvc.save(vm.dataModel)
+        
+        createData.certificate = vm.dataModel.certificate;
+        CertificateMasterSvc.save(createData)
         .then(function(){
             vm.dataModel = {};
             resetValue();

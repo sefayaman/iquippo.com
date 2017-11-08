@@ -53,6 +53,12 @@ exports.getBrandOnFilter = function(req,res){
   var data = req.body;
   var tempFilter = {};
   var filter = {};
+  if(data.isForUsed)
+      filter['isForUsed'] = true;
+  if(data.isForNew)
+      filter['isForNew'] = true;
+  if(data.visibleOnUsed)
+      filter['visibleOnUsed'] = true;
   filter['$or'] = [{name:'Other'}];
    if(data.brandId)
     tempFilter['_id'] = data.brandId;
@@ -63,11 +69,33 @@ exports.getBrandOnFilter = function(req,res){
     tempFilter['category.name'] = data.categoryName;
   filter['$or'].push(tempFilter);
   
+  if(data.searchStr){
+     var term = new RegExp(data.searchStr, 'i');
+      filter['name'] = { $regex: term };
+  }
+  
   Brand.find(filter).sort({name:1}).exec(function(err,result){
    if(err) { return handleError(res, err); }
     return res.status(200).json(result);
 
   })
+}
+
+exports.count = function(req,res){
+  var data = req.query;
+  var filter = {};
+  if(data.isForUsed)
+      filter['isForUsed'] = true;
+  if(data.isForNew)
+      filter['isForNew'] = true;
+  var query = Brand.find(filter).count();
+  query.exec(
+       function (err, brandCount) {
+          if(err) { return handleError(res, err); }
+          res.setHeader('Cache-Control', 'private, max-age=2592000');
+          return res.status(200).json(brandCount);
+       }
+  );
 }
 
 function handleError(res, err) {

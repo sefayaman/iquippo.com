@@ -27,7 +27,24 @@
                           <div class="row">
                          	 <div class="form-group col-sm-4" ng-class="{'has-error': form.errorGroup && submitted}">
                                 <input id="groupName" name="groupName" ng-model="g.name" type="text" class="form-control" placeholder="Enter Group Name" required>
-                            </div>                           	
+                            </div>
+                             <div class="col-sm-2 form-group text-center">
+				    	  		<div class="checkbox"><input type="checkbox" name="equipment"  id="usedequip" placeholder="" ng-model="g.isForUsed"> <label for="usedequip"> Used Equipment </label>
+				    	  		</div>
+				    	  		
+				    	  	</div>
+				    	  	<div class="col-sm-2 form-group text-center">
+				    	  		<div class="checkbox"><input type="checkbox" name="equipment"  id="newequip" placeholder="" ng-model="g.isForNew"> <label for="newequip"> New Equipment </label>
+				    	  		</div>
+				    	  	</div>
+                            <div class="form-group col-sm-2">
+                            	<span class="btn btn-warning fileinput-button">
+	                                <span>Browse image...</span>
+	                                <input type="file" accept="image/*" params="['files',g,'Group',0]" on-file-select="uploadImage">
+			                    </span>
+			                     <span>{{g.imgSrc}}</span>		                    
+                            </div>     
+                            <div class="col-sm-3"><span>{{}}</span></div>                  	
                            	<div class="form-group col-sm-2 pull-right">
                            		<button type="button" class="btn btn-primary btn-md btn-block" ng-click="masterDataVm.Save('Group')" ng-if="!groupEdit">Save</button>
                            		<button type="button" class="btn btn-primary btn-md btn-block" ng-click="masterDataVm.update('Group')" ng-if="groupEdit">Update</button>
@@ -46,15 +63,27 @@
                      		<div class=" table-responsive">		    		
 								<table class="table table-bordred table-striped" >
 									<thead>
+										<th>Images</th>
 										<th>Product Group</th>
 										<th>Actions</th>
 									</thead>
 									<tbody>												
 										<tr ng-repeat="group in filteredGroup |startFrom:(masterDataVm.gCurrentPage -1 )*masterDataVm.itemsPerPage | limitTo:masterDataVm.itemsPerPage">
+											<td>
+												<span class="master-browse" tooltip-trigger="mouseenter" tooltip-placement="top" uib-tooltip="Change Image">
+													<img class="sheduleImg img-circle" ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{group.imgSrc}}" alt="Image">
+												<input type="file"  params="['files',group,'Group',1]" on-file-select="uploadImage">
+												</span>
+											</td>
 											<td>{{group.name}}</td>
 											<td>
 											    <a class="btn btn-primary btn-sm" href="javascript:void(0);" ng-click="masterDataVm.editClick('Group',group)" ><i class="fa fa-pencil"></i> </a>
 		  										<a class="btn btn-danger btn-sm" href="javascript:void(0);" ng-click="masterDataVm.deleteClick('Group',group)"><i class="fa fa-trash"></i> </a>
+		  										<button class="btn btn-success" ng-model="group.visibleOnUsed" uib-btn-checkbox ng-click="masterDataVm.makeVisibleOnUsedHome(group,'Group')"><span ng-if="group.visibleOnUsed" uib-popover="Activate" popover-trigger="mouseenter">
+												<i class="fa fa-toggle-off"></i>								
+												</span> <span ng-if="!group.visibleOnUsed" uib-popover="Deactivate" popover-trigger="mouseenter">
+												<i class="fa fa-toggle-on"></i>							
+												</span></button>
 		  									</td>
 										</tr>
 									</tbody>
@@ -74,26 +103,36 @@
 							     </div>
 				    		</h4>
 				    		<legend></legend>
-                          <div class="row">
-                         	<div class="form-group col-sm-3" ng-class="{'has-error': form.errorGroup && submitted}">
+
+				    	  <div class="row">
+				    	  	<div class="form-group col-sm-3" ng-class="{'has-error': form.errorGroup && submitted}">
                                  <select class="form-control" ng-model="c.group" name="groupList" ng-options="group.name for group in allGroup track by group._id" required  ng-disabled="categoryEdit">
 	                                <option value="" disabled>Select Group</option>
-					                <!-- <option ng-repeat="group in allGroup" ng-selected="c.group._id == group._id" value="{{group._id}}">{{group.name}}</option> -->
 					             </select> 
-                            </div> 
+                            </div>
+				    	  				    	  	 
                             <div class="form-group col-sm-3" ng-class="{'has-error': form.errorCategory && submitted}">
                                 <input id="categoryName" ng-model="c.name" type="text"  name ="categoryName" class="form-control" placeholder="Enter Category Name" required>
                             </div> 
+                            <div class="col-sm-2 form-group text-center">
+				    	  		<div class="checkbox"><input type="checkbox" name="equipment" value="" id="categoryusedequip" placeholder="" ng-model="c.isForUsed"> <label for="categoryusedequip"> Used Equipment </label>
+				    	  		</div>
+				    	  		
+				    	  	</div>
+				    	  	<div class="col-sm-2 form-group text-center">
+				    	  		<div class="checkbox"><input type="checkbox" name="equipment" value="" id="categorynewequip" placeholder="" ng-model="c.isForNew"> <label for="categorynewequip"> New Equipment </label>
+				    	  		</div>
+				    	  	</div>	
                             <div class="form-group col-sm-2">
                             	<span class="btn btn-warning fileinput-button">
 	                                <span>Browse image...</span>
-	                                <input type="file" name="files_{{$index}}"  data-index="{{$index}}" data-filetype="image" image-upload>
+	                                <input type="file"   accept="image/*" params="['files',c,'Category',0]" on-file-select="uploadImage">
 			                    </span>
-                            </div>
-                            <div class="col-sm-2">
-		                      {{c.imgSrc}}
-		                    </div>                           	
-                           	<div class="form-group col-sm-2">
+			                    <span>{{c.imgSrc}}</span>
+                            </div>                            
+				    	  </div>
+                          <div class="row">                         	                          	
+                           	<div class="form-group col-sm-2 pull-right">
                            		<button type="button" class="btn btn-primary btn-md btn-block" ng-click="masterDataVm.Save('Category')" ng-if="!categoryEdit">Save</button>
                            		<button type="button" class="btn btn-primary btn-md btn-block" ng-click="masterDataVm.update('Category')" ng-if="categoryEdit">Update</button>
                            	</div>
@@ -112,11 +151,12 @@
 							<table class="table table-bordred table-striped">
 							<thead>	
 								<tr>
-									<th>Image</th>
+									<th>Image</th>									
 									<th>Product Category</th>
+									<th>Equipment Type</th>
 									<th>Product Group</th>
 									<th>Status</th>
-									<th width="300">Actions</th>
+									<th>Actions</th>
 								</tr>							
 							</thead>
 							<tbody>							
@@ -124,16 +164,21 @@
 									<td>
 										<span class="master-browse" tooltip-trigger="mouseenter" tooltip-placement="top" uib-tooltip="Change Image">
 											<img class="sheduleImg img-circle" ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{category.imgSrc}}" alt="Image">
-										<input type="file" data-index="{{$index}}" onchange="angular.element(this).scope().updateCategoryImg(this.files,this)">
+										<input type="file" accept="image/*" params="['files',category,'Category',1]" on-file-select="uploadImage">
 										</span>
-									</td>
+									</td>									
 									<td>{{category.name}}</td>
+									<td></td>
 									<td>{{category.group.name}}</td>
-									<td>{{getStatus(category.status)}}</td>
+									<td>{{getStatus(category.visibleOnUsed)}}</td>
 									<td>
-									<a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="masterDataVm.editClick('Category',category)" ><i class="fa fa-pencil"></i> </a>
-										<a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="masterDataVm.deleteClick('Category',category)"><i class="fa fa-trash"></i> </a>
-									<label class="btn btn-warning" ng-model="category.status" uib-btn-checkbox ng-click="masterDataVm.updateCategoryStatus(category)"><span ng-if="!category.status">Activate</span> <span ng-if="category.status">Deactivate</span></label>
+										<a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="masterDataVm.editClick('Category',category)" ><i class="fa fa-pencil"></i> </a>
+											<a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="masterDataVm.deleteClick('Category',category)"><i class="fa fa-trash"></i> </a>
+										<button class="btn btn-success" ng-model="category.visibleOnUsed" uib-btn-checkbox ng-click="masterDataVm.makeVisibleOnUsedHome(category,'Category')"><span ng-if="category.visibleOnUsed" uib-popover="Activate" popover-trigger="mouseenter">
+										<i class="fa fa-toggle-off"></i>							
+										</span> <span ng-if="!category.visibleOnUsed" uib-popover="Deactivate" popover-trigger="mouseenter">
+										<i class="fa fa-toggle-on"></i>							
+										</span></button>
 									</td>
 								</tr>
 								</tbody>						
@@ -149,7 +194,6 @@
 	                         	<div class="form-group col-sm-3" ng-class="{'has-error': form.errorGroup && submitted}">
 	                                <select class="form-control" ng-model="b.group" ng-change="masterDataVm.onGroupChange(b.group)" ng-options="group.name for group in allGroup track by group._id" name="groupList" required ng-disabled="brandEdit">
 		                            <option value="" disabled>Select Group</option>
-					                <!-- <option ng-repeat="group in allGroup" ng-selected="b.group._id == group._id" value="{{group._id}}">{{group.name}}</option> -->
 					                </select> 
 	                            </div> 
 	                            <div class="form-group col-sm-3" ng-class="{'has-error': form.errorCategory && submitted}">
@@ -157,10 +201,27 @@
 		                            <option value="" disabled>Select Category</option>
 					                <!-- <option ng-repeat="category in categoryList" ng-selected="b.category._id == category._id" value="{{category._id}}">{{category.name}}</option> -->
 					                </select> 
-	                            </div> 
-	                            <div class="form-group col-sm-3" ng-class="{'has-error': form.errorBrand && submitted}">
+	                            </div>	                            
+	                            <div class="col-sm-3 form-group text-center">
+					    	  		<div class="checkbox"><input type="checkbox" name="brandEquipment" value="" id="Brandusedequip" placeholder="" ng-model="b.isForUsed"> <label for="Brandusedequip"> Used Equipment </label>
+					    	  		</div>
+					    	  		
+					    	  	</div>
+					    	  	<div class="col-sm-3 form-group text-center">
+					    	  		<div class="checkbox"><input type="checkbox" name="brandEquipment" value="" id="Brandnewequip" placeholder="" ng-model="b.isForNew"> <label for="Brandnewequip"> New Equipment </label>
+					    	  		</div>
+					    	  	</div>
+					    	  	<div class="form-group col-sm-3" ng-class="{'has-error': form.errorBrand && submitted}">
 	                                <input id="brandName" name="brandName" ng-model="b.name" type="text"  class="form-control" placeholder="Enter Brand Name" required>
-	                            </div>                           	
+	                            </div> 
+	                            <div class="form-group col-sm-2">
+	                            	<span class="btn btn-warning fileinput-button">
+		                                <span>Browse image...</span>
+		                                <input type="file"   accept="image/*" params="['files',b,'Brand',0]" on-file-select="uploadImage">
+				                    </span>
+				                    <span>{{c.imgSrc}}</span>
+	                            </div>
+				    	  	                    	
 	                           	<div class="form-group col-sm-2 pull-right">
 	                           		<button type="button" class="btn btn-primary btn-md btn-block" ng-click="masterDataVm.Save('Brand')" ng-if="!brandEdit">Save</button>
 	                           		<button type="button" class="btn btn-primary btn-md btn-block" ng-click="masterDataVm.update('Brand')" ng-if="brandEdit">Update</button>
@@ -179,20 +240,36 @@
 			               	<table class="table table-bordred table-striped">				
 	                            <thead>
                                     <tr>
+                                    	<th>Image</th>                                    	
                                     	<th>Brand</th>
 	                                    <th>Product Category</th>
+	                                    <th>Equipment Type</th>
 	                                    <th>Product Group</th>                                    
+	                                    <th>Status</th>                                    
 	                                    <th>Actions</th>
                                     </tr>		
                                 </thead>
                          		<tbody>
                          		  <tr ng-repeat="brand in filteredBrand| startFrom:(masterDataVm.bCurrentPage -1 )*masterDataVm.itemsPerPage|limitTo:masterDataVm.itemsPerPage">
+                         		  	<td>
+                         		  		<span class="master-browse" tooltip-trigger="mouseenter" tooltip-placement="top" uib-tooltip="Change Image">
+											<img class="sheduleImg img-circle" ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{brand.imgSrc}}" alt="Image">
+										<input type="file" accept="image/*" params="['files',brand,'Brand',1]" on-file-select="uploadImage">
+										</span>
+                         		  	</td>                         		  	
 									<td>{{brand.name}}</td>
 									<td>{{brand.category.name}}</td>
+									<td></td>
 									<td>{{brand.group.name}}</td>
+									<td></td>
 									 <td>
 									 	<a class="btn btn-primary btn-sm" href="javascript:void(0);" ng-click="masterDataVm.editClick('Brand',brand)" ><i class="fa fa-pencil"></i> </a>
 										<a class="btn btn-danger btn-sm" href="javascript:void(0);" ng-click="masterDataVm.deleteClick('Brand',brand)"><i class="fa fa-trash"></i> </a>
+										<button class="btn btn-success" ng-model="brand.visibleOnUsed" uib-btn-checkbox ng-click="masterDataVm.makeVisibleOnUsedHome(brand,'Brand')"><span ng-if="brand.visibleOnUsed" uib-popover="Activate" popover-trigger="mouseenter">
+											<i class="fa fa-toggle-off"></i>								
+											</span> <span ng-if="!brand.visibleOnUsed" uib-popover="Deactivate" popover-trigger="mouseenter">
+											<i class="fa fa-toggle-on"></i>							
+											</span></button>
 									</td> 
 								  </tr>
                                 </tbody>
@@ -213,25 +290,31 @@
                               	<div class="form-group col-sm-3" ng-class="{'has-error': form.errorGroup && submitted}">
 	                                <select class="form-control" ng-model="m.group" ng-change="masterDataVm.onGroupChange(m.group)" name="groupList" ng-options="group.name for group in allGroup track by group._id" required ng-disabled="modelEdit">
 		                            	<option value="" disabled>Select Group</option>
-					                	<!-- <option ng-repeat="group in allGroup" ng-selected="m.group._id == group._id" value="{{group._id}}">{{group.name}}</option> -->
 					                </select> 
 	                            </div>
                               	<div class="form-group col-sm-3" ng-class="{'has-error': form.errorCategory && submitted}">
 	                                <select class="form-control" ng-model="m.category" ng-change="masterDataVm.onCategoryChange(m.category)" name="categoryList" ng-options="category.name for category in categoryList track by category._id" required ng-disabled="modelEdit">
 		                                <option value="" disabled>Select Category</option>
-					                	<!-- <option ng-repeat="category in categoryList" ng-selected="m.category._id == category._id" value="{{category._id}}">{{category.name}}</option> -->
 					                </select>
-	                            </div>
-                             	 <div class="form-group col-sm-2" ng-class="{'has-error': form.errorBrand && submitted}">
+	                            </div>                             	
+                                <div class="col-sm-3 form-group text-center">
+					    	  		<div class="checkbox"><input type="checkbox" name="brandEquipment" value="" id="modelusedequip" placeholder="" ng-model="m.isForUsed"> <label for="modelusedequip"> Used Equipment </label>
+					    	  		</div>
+					    	  		
+					    	  	</div>
+					    	  	<div class="col-sm-3 form-group text-center">
+					    	  		<div class="checkbox"><input type="checkbox" name="brandEquipment" value="" id="modelnewequip" placeholder="" ng-model="m.isForNew"> <label for="modelnewequip"> New Equipment </label>
+					    	  		</div>
+					    	  	</div>
+					    	  	<div class="form-group col-sm-3" ng-class="{'has-error': form.errorBrand && submitted}">
                                     <select class="form-control" ng-model="m.brand" name="brandList" ng-options="brand.name for brand in brandList track by brand._id" required ng-disabled="modelEdit">
-                                        <option value= "" disabled>Select Brand</option>
-                                        <!-- <option ng-repeat="brand in brandList"  ng-selected="m.brand._id == brand._id"value="{{brand._id}}">{{brand.name}}</option> -->           
+                                        <option value= "" disabled>Select Brand</option>           
                                     </select>
                                 </div>
-                               	<div class="form-group col-sm-2" ng-class="{'has-error': form.errorModel && submitted}">
+                               	<div class="form-group col-sm-3" ng-class="{'has-error': form.errorModel && submitted}">
                                    <input id="modelName" ng-model="m.name" name="modelName" type="text" class="form-control" placeholder="Enter Model Name" required>
                                	</div>
-                               	<div class="form-group col-sm-2">
+                               	<div class="form-group col-sm-2 pull-right">
                                		<button type="button" class="btn btn-primary btn-md btn-block" ng-click="masterDataVm.Save('Model')" ng-if="!modelEdit">Save</button>
                                		<button type="button" class="btn btn-primary btn-md btn-block" ng-click="masterDataVm.update('Model')" ng-if="modelEdit">Update</button>
                                	</div>
@@ -252,6 +335,7 @@
                                 		<th>Model</th>
 	                                    <th>Brand</th>
 	                                    <th>Product Category</th>
+	                                    <th>Equipment Type</th>
 	                                    <th>Product Group</th>
 	                                    <th>Actions</th>
                                 	</tr>
@@ -261,6 +345,7 @@
                                   	<td>{{model.name}}</td>
 									<td>{{model.brand.name}}</td>
 									<td>{{model.category.name}}</td>
+									<td></td>
 									<td>{{model.group.name}}</td>
 									<td>
 										 <a class="btn btn-primary btn-sm" href="javascript:void(0);" ng-click="masterDataVm.editClick('Model',model)" ><i class="fa fa-pencil"></i> </a>
