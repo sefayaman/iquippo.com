@@ -17,23 +17,23 @@
           <uib-accordion-heading>
             Industry (1)<i class="pull-right fa" ng-class="{'fa-minus': status.specialOffers, 'fa-plus': !status.specialOffers}"></i>
           </uib-accordion-heading>
-            <div class="checkbox">
-              <input type="checkbox" name="" value="" id="mining"> <label for="mining">Construction &amp; Mining</label>
+            <div class="radio">
+              <input type="radio" name="industy" value="" id="mining"> <label for="mining">Construction &amp; Mining</label>
             </div>
-            <div class="checkbox">
-              <input type="checkbox" name="" value="" id="commercial"> <label for="commercial">Commercial &amp; Transportation</label>
+            <div class="radio">
+              <input type="radio" name="industy" value="" id="commercial"> <label for="commercial">Commercial &amp; Transportation</label>
             </div>
-            <div class="checkbox">
-              <input type="checkbox" name="" value="" id="concrete"> <label for="concrete">Asphalt &amp; Concrete</label>
+            <div class="radio">
+              <input type="radio" name="industy" value="" id="concrete"> <label for="concrete">Asphalt &amp; Concrete</label>
             </div>
-            <div class="checkbox">
-              <input type="checkbox" name="" value="" id="farmequipments"> <label for="farmequipments">Farm Equipments</label>
+            <div class="radio">
+              <input type="radio" name="industy" value="" id="farmequipments"> <label for="farmequipments">Farm Equipments</label>
             </div>
-            <div class="checkbox">
-              <input type="checkbox" name="" value="" id="industrial"> <label for="industrial">Industrial &amp; Infrastructure</label>
+            <div class="radio">
+              <input type="radio" name="industy" value="" id="industrial"> <label for="industrial">Industrial &amp; Infrastructure</label>
             </div>
-            <div class="checkbox">
-              <input type="checkbox" name="" value="" id="materialhandling"> <label for="materialhandling">Material Handling &amp; Cranes</label>
+            <div class="radio">
+              <input type="radio" name="industy" value="" id="materialhandling"> <label for="materialhandling">Material Handling &amp; Cranes</label>
             </div>
         </uib-accordion-group>
 
@@ -41,14 +41,11 @@
           <uib-accordion-heading>
             Available For (2)<i class="pull-right fa" ng-class="{'fa-minus': status.pricetrend, 'fa-plus': !status.pricetrend}"></i>
           </uib-accordion-heading>
-            <div class="checkbox">
-              <input type="checkbox" name="" value="" id="buying"> <label for="buying">Buying</label>
+            <div class="radio">
+              <input type="radio" name="tradetype" value="" id="buying"> <label for="buying">Buying</label>
             </div>
-            <div class="checkbox">
-              <input type="checkbox" name="" value="" id="renting"> <label for="renting">Renting</label>
-            </div>
-            <div class="checkbox">
-              <input type="checkbox" name="" value="" id="inauction"> <label for="inauction">In Auction</label>
+            <div class="radio">
+              <input type="radio" name="tradetype" value="" id="renting"> <label for="renting">Renting</label>
             </div>
         </uib-accordion-group>
 
@@ -57,8 +54,8 @@
             Category  <i class="pull-right fa" ng-class="{'fa-minus': rentstatus.open, 'fa-plus': !rentstatus.open}"></i>
           </uib-accordion-heading>
             <div ng-model="equipmentSearchFilter.category">
-              <div class="checkbox" ng-repeat="cat in allCategory">
-                <input type="checkbox" name="category" value="{{cat.name}}" id="{{cat.name}}"> <label for="{{cat.name}}">{{cat.name}}</label>
+              <div class="radio" ng-repeat="cat in allCategory">
+                <input type="radio" name="category" value="{{cat.name}}" id="{{cat.name}}"> <label for="{{cat.name}}">{{cat.name}}</label>
               </div>
               
             </div>
@@ -69,8 +66,8 @@
             Product Brand <i class="pull-right fa" ng-class="{'fa-minus': Techstatus.open, 'fa-plus': !Techstatus.open}"></i>
           </uib-accordion-heading>
             <div ng-model="equipmentSearchFilter.brand">
-              <div class="checkbox" ng-repeat="br in brandList">
-                <input type="checkbox" name="brand" value="{{br.name}}" id="{{br.name}}"> <label for="{{br.name}}">{{br.name}}</label>
+              <div class="radio" ng-repeat="br in brandList">
+                <input type="radio" name="brand" value="{{br.name}}" id="{{br.name}}"> <label for="{{br.name}}">{{br.name}}</label>
               </div>
               
             </div>
@@ -104,7 +101,7 @@
           </select>
         </div>
       </div>
-      <div id="search-result_wrapper">
+      <div id="search-result_wrapper" ng-if="!searching && !noResult">
         <div class="row">
           <div class="col-sm-8 col-md-6 form-group padd-right">
             <div class="btn-group btn-equipment">
@@ -123,7 +120,7 @@
           <div class="col-sm-6 col-md-4 form-group">
             <div class="media text-center form-group">
               <a href="javascript:void(0);">
-                 <img src="/assets/images/certificationJCB.png" class="img-responsive">              
+                 <img src="http://placehold.in/350x200" class="img-responsive">              
               </a>          
               <div class="media-body text-left"> 
                 <div class="row">
@@ -173,7 +170,7 @@
           <div class="col-sm-6 col-md-4 form-group">
             <div class="media text-center form-group">
               <a href="javascript:void(0);">
-                 <img src="/assets/images/certificationJCB.png" class="img-responsive">              
+                 <img src="http://placehold.in/350x200" class="img-responsive">              
               </a>          
               <div class="media-body text-left"> 
                 <div class="row">
@@ -223,7 +220,7 @@
           <div class="col-sm-6 col-md-4 form-group">
             <div class="media text-center form-group">
               <a href="javascript:void(0);">
-                 <img src="/assets/images/certificationJCB.png" class="img-responsive">              
+                 <img src="http://placehold.in/350x200" class="img-responsive">              
               </a>          
               <div class="media-body text-left"> 
                 <div class="row">
@@ -272,8 +269,16 @@
           </div>
         </div>
 
-        <uib-pagination total-items="viewproductVm.totalItems" ng-click="viewproductVm.onPageChange()" ng-model="viewproductVm.currentPage" items-per-page="viewproductVm.itemsPerPage" max-size="viewproductVm.maxSize" boundary-links="true" rotate="false"></uib-pagination>
+        <div class="text-center form-group">
+          <uib-pagination total-items="viewproductVm.totalItems" ng-click="viewproductVm.onPageChange()" ng-model="viewproductVm.currentPage" items-per-page="viewproductVm.itemsPerPage" max-size="viewproductVm.maxSize" boundary-links="true" rotate="false"></uib-pagination>
+        </div>
       </div>
+
+      <div class="no-result" ng-if="searching && !noResult">
+        <img src="assets/images/assets-loading.gif" class="form-group">
+        <p>Loading...</p>
+      </div>
+      <div class="no-result" ng-if="noResult && !searching">No results found</div>
     </div>
   </div>
 </section>
