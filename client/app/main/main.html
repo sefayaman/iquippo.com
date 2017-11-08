@@ -21,7 +21,7 @@
       <div class="row" ng-if="mainVm.singleBox">
         <div class="col-sm-offset-3 col-sm-6">          
           <div class="input-group">
-            <input type="text" placeholder="Search for Assets and More" ng-model="nt" uib-typeahead="address for address in getCategoryHelp($viewValue)"  class="form-control"  ng-keypress="mainVm.myFunct($event)" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
+            <input type="text" placeholder="Search for Assets and More" ng-model="mainVm.searchstr" class="form-control"  ng-keypress="mainVm.myFunct($event)" />
             <a href="javascript:void(0);" class="input-group-addon" ng-click="mainVm.toggleSearchBox(false)">Choose</a>
           </div>
         </div>
@@ -38,7 +38,7 @@
                 </div>
               </div>
               <div class="col-sm-3 padd-left padd-right select-text">
-                <input type="text" placeholder="Industry Name" class="form-control" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
+                <input type="text" placeholder="Industry Name" ng-model="mainVm.groupSearchText" class="form-control" uib-typeahead="address for address in getGroupHelp($viewValue)" typeahead-focus-first = "false" typeahead-wait-ms="200" ng-keypress="mainVm.myFunct($event)"/>
               </div>
               <div class="col-sm-3 padd-left padd-right select-text">
                 <input type="text" ng-model="mainVm.categorySearchText" placeholder="Category" uib-typeahead="address for address in getCategoryHelp($viewValue)"  class="form-control"  ng-keypress="mainVm.myFunct($event)" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
@@ -47,7 +47,7 @@
                 <input type="text" class="form-control" ng-model="mainVm.locationSearchText" placeholder="Seller Location" uib-typeahead="address for address in getLocationHelp($viewValue)"  class="form-control" ng-keypress="mainVm.myFunct($event)" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
               </div> 
               <div class="col-sm-2 padd-left padd-right select-text">
-                <input type="text" class="form-control" placeholder="Brand" class="form-control" />
+                <input type="text" class="form-control" placeholder="Brand" ng-model="mainVm.brandSearchText" class="form-control" uib-typeahead="address for address in getBrandHelp($viewValue)" typeahead-wait-ms="200" ng-keypress="mainVm.myFunct($event)"/>
               </div>
             </div>
           </div>
@@ -65,47 +65,21 @@
 <section class="category-block upcoming-auction">
   <div class="heading-titles text-center">
     <h4>[ Upcoming Auction ]</h4>
-    <a href="javascript:void(0);">View All Auctions (20)</a>
+    <a href="/viewauctions?type=upcoming">View All Auctions (20)</a>
   </div>
 
   <div class="container">
     <div class="row">
-      <div class="col-sm-4 form-group">
+      <div class="col-sm-4 form-group" ng-repeat="auction in mainVm.auctionListing">
         <a href="javascript:void(0);" class="media">
           <div class="calendar-date pull-left" href="#">
-            <h4>28</h4>
-            <small>SEP</small>
+            <h4>{{auction.startDate | date :'dd'}}</h4>
+            <small>{{auction.startDate | date :'MMM'}}</small>
           </div>
           <div class="media-body">
-            <h4 class="media-heading">Sale of used caterplillar dozers</h4>
-            <p>(2 Assets  |  Faridabad)</p>
-            <span>10:00 AM to 5:00 PM</span>
-          </div>
-        </a>
-      </div>
-      <div class="col-sm-4 form-group">
-        <a href="javascript:void(0);" class="media">
-          <div class="calendar-date pull-left" href="#">
-            <h4>28</h4>
-            <small>SEP</small>
-          </div>
-          <div class="media-body">
-            <h4 class="media-heading">Sale of used caterplillar dozers</h4>
-            <p>(2 Assets  |  Faridabad)</p>
-            <span>10:00 AM to 5:00 PM</span>
-          </div>
-        </a>
-      </div>
-      <div class="col-sm-4 form-group">
-        <a href="javascript:void(0);" class="media">
-          <div class="calendar-date pull-left" href="#">
-            <h4>28</h4>
-            <small>SEP</small>
-          </div>
-          <div class="media-body">
-            <h4 class="media-heading">Sale of used caterplillar dozers</h4>
-            <p>(2 Assets  |  Faridabad)</p>
-            <span>10:00 AM to 5:00 PM</span>
+            <h4 class="media-heading">{{auction.name}}</h4>
+            <p>({{auction.total_products}} Assets  |  {{auction.state}})</p>
+            <span>{{auction.startTimer | date :'hh:mma'}} to {{auction.endTimer | date :'hh:mma'}}</span>
           </div>
         </a>
       </div>
@@ -117,7 +91,7 @@
   <div class="container-fluid text-center">
     <div class="heading-titles">
       <h4>[ Browse Used Equipment By Category ]</h4>
-      <a href="/allcategory">View All ({{categoryList.length}})</a>
+      <a href="/allcategory">View All ({{mainVm.categoryCount}})</a>
     </div>
     <div class="row">
       <div class="col-sm-4 form-group text-center" ng-repeat="category in categoryList" ng-if="$index < 6">   
@@ -134,37 +108,12 @@
   <div class="container-fluid text-center">
     <div class="heading-titles">
       <h4>[ Browse Used Equipment By Brands ]</h4>
-      <a href="javascript:void(0);">View All (15)</a>
+      <a href="javascript:void(0);">View All ({{mainVm.brandCount}})</a>
     </div>
     <div class="row">
-      <div class="col-sm-4 form-group text-center">   
+      <div class="col-sm-4 form-group text-center" ng-repeat="brand in mainVm.brands" ng-if="$index < 6">   
         <div class="brand-logo">
-          <img src="/assets/images/JCBlogo.png">
-        </div>
-      </div>
-      <div class="col-sm-4 form-group text-center">   
-        <div class="brand-logo">
-          <img src="/assets/images/HitachiLogo.png">
-        </div>
-      </div>
-      <div class="col-sm-4 form-group text-center">   
-        <div class="brand-logo">
-          <img src="/assets/images/TataLogo.png">
-        </div>
-      </div>
-      <div class="col-sm-4 form-group text-center">   
-        <div class="brand-logo">
-          <img src="/assets/images/L&TLogo.png">
-        </div>
-      </div>
-      <div class="col-sm-4 form-group text-center">   
-        <div class="brand-logo">
-          <img src="/assets/images/AshokLeylandLogo.png">
-        </div>
-      </div>
-      <div class="col-sm-4 form-group text-center">   
-        <div class="brand-logo">
-          <img src="/assets/images/HyundaiLogo.png">
+          <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{brand.imgSrc}}" height="100" width="250">
         </div>
       </div>
     </div>

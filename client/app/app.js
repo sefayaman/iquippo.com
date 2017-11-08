@@ -203,6 +203,10 @@ angular.module('sreizaoApp',[
     $rootScope.validateCategory = UtilSvc.validateCategory;
     $rootScope.getCategoryHelp = UtilSvc.getCategoryHelp;
     $rootScope.getLocationHelp = UtilSvc.getLocationHelp;
+    $rootScope.getMonth = UtilSvc.getMonth;
+    $rootScope.getDate = UtilSvc.getDate;
+    $rootScope.getGroupHelp = groupSvc.getHelp;
+    $rootScope.getBrandHelp = brandSvc.getHelp;
     $rootScope.getLocations = UtilSvc.getLocations;
     $rootScope.isServiceAvailed = Auth.isServiceAvailed;
     $rootScope.isApprovalRequired = Auth.isApprovalRequired;

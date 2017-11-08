@@ -8,6 +8,7 @@
     var path = '/api/group';
     //var groupCache = [];
     gpService.getAllGroup =  getAllGroup;
+    gpService.getHelp =  getHelp;
     //gpService.getGroupOnId = getGroupOnId;
     //gpService.getGroupOnName = getGroupOnName;
     //gpService.clearCache = clearCache;
@@ -29,6 +30,17 @@
       .catch(function(err){
         throw err;
       }); 
+    };
+
+    function getHelp(searchText) {
+      var serData = {};
+      serData['searchStr'] = searchText;
+      return getAllGroup(serData)
+      .then(function(result){
+         return result.map(function(item){
+              return item.name;
+        });
+      })
     };
 
     /*function getGroupOnId(id){

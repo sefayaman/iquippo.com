@@ -6,13 +6,13 @@
   function ViewAuctionCtrl($scope, $rootScope, $location, Modal, Auth,PagerSvc, AuctionSvc, UtilSvc, LocationSvc, $stateParams, $state, $uibModal, uiGmapGoogleMapApi, uiGmapIsReady, userRegForAuctionSvc) {
     var vm = this;
     //pagination variables
-    var prevPage = 0;
+   /* var prevPage = 0;
     vm.itemsPerPage = 50;
     vm.currentPage = 1;
     vm.totalItems = 0;
     vm.maxSize = 6;
     var first_id = null;
-    var last_id = null;
+    var last_id = null;*/
     $scope.pager=PagerSvc.getPager();
 
     var listingCount = {};
@@ -21,7 +21,6 @@
     vm.auctionListing = [];
     $scope.closeAuctionItems = 0;
     $scope.openAuctionItems = 0;
-    //vm.openMap = openMap;
     vm.showAddress = showAddress;
     vm.closeMap = closeMap;
 
@@ -88,14 +87,11 @@
     };
 
     function init() {
-      //dataToSend.pagination = true;
-      //dataToSend.itemsPerPage = vm.itemsPerPage;
       filter = {};
       if ($stateParams.type) {
         $scope.auctionType = $stateParams.type;
         filter.auctionType = $stateParams.type;
       }
-      //angular.copy(dataToSend, filter);
       filter.pagination=true;
       getAuctions(filter);
 
@@ -104,10 +100,6 @@
     init();
 
     function getAuctions(filter) {
-      // filter.prevPage = prevPage;
-      // filter.currentPage = vm.currentPage;
-      // filter.first_id = first_id;
-      // filter.last_id = last_id;
       $scope.pager.copy(filter);
       vm.auctionListing =[];
       if(!filter.auctionType)
@@ -116,21 +108,10 @@
 
       AuctionSvc.getAuctionDateData(filter).then(function(result) {
         getAuctionWiseProductData(result); 
-       /*vm.auctionListing = result.items;
-        if(vm.auctionListing.length < 1){
-          vm.show=true;
-        }
-        else{
-          vm.show=false;
-        }*/
       }).catch(function(err) {
         //Modal.alert("Error in geting auction master data");
       });
     }
-    /*   function timediff(start, end){
-  return moment.utc(moment(end).diff(moment(start))).format("mm")
-}
-*/
 
     function fireCommand(reset, filterObj) {
      if(reset)
@@ -166,15 +147,6 @@
       $state.go("viewauctions", {type: auctionType}, {notify: false});
       filter.pagination=true;
       getAuctions(filter);
-    }
-
-    function resetPagination() {
-      prevPage = 0;
-      vm.currentPage = 1;
-      vm.totalItems = 0;
-      first_id = null;
-      last_id = null;
-      vm.auctionListing=[];
     }
 
     $scope.marker = {};

@@ -14,6 +14,7 @@
       catService.getCategoryByName = getCategoryByName;
       catService.clearCache = clearCache;
       catService.updateCategory = updateCategory;
+      catService.getCount = getCount;
       
       function getAllCategory(){
         var deferred = $q.defer();
@@ -40,6 +41,7 @@
         filter.isForUsed = true;
         filter.visibleOnUsed = true;
         filter.productCount = true;
+        filter.categoryCount = true;
         var deferred = $q.defer();
         if(homeCategoryCache && homeCategoryCache.length > 0){
           deferred.resolve(homeCategoryCache);
@@ -73,6 +75,21 @@
                      throw res;
                   });
           }
+
+         function getCount(filter){
+           var serPath = path + "/count";
+              var queryParam = "";
+             if(filter)
+              queryParam = $httpParamSerializer(filter);
+            if(queryParam)
+              serPath += "?" + queryParam;
+           return $http.get(serPath).then(function(res){
+              return res.data;
+            })
+           .catch(function(err){
+              throw err;
+           });
+        };
 
       function getCategoryOnId(id){
         var cat;

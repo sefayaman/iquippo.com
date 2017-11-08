@@ -15,15 +15,18 @@ exports.get = function(req, res,next) {
       filter['isForNew'] = true;
   if(queryData.visibleOnUsed)
       filter['visibleOnUsed'] = true;
+  if(queryData.searchStr){
+     var term = new RegExp(queryData.searchStr, 'i');
+      filter['name'] = { $regex: term };
+  }
   Group.find(filter).sort({name:1}).exec(function (err, group) {
     if(err) { return handleError(res, err); }
     res.setHeader('Cache-Control', 'private, max-age=2592000');
-    queryData.categoryCount = true;
     if(queryData.categoryCount){
       req.groups = group;
       return next();
     }else
-      return res.status(200).json(resultArr);
+      return res.status(200).json(group);
   });
 
 };

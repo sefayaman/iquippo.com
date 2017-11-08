@@ -72,6 +72,28 @@ exports.productCount = function(req,res){
   );
 }
 
+exports.count = function(req,res){
+  var queryData = req.query;
+  var filter = {};
+  filter["deleted"] = false;
+  if(queryData.status)
+    filter["status"] = queryData.status;
+  if(queryData.groupId)
+    filter['group._id'] = queryData.groupId;
+  if(queryData.isForNew)
+    filter['isForNew'] = true;
+  if(queryData.isForUsed)
+    filter['isForUsed'] = true;
+   var query = Category.find(filter).count();
+  query.exec(
+       function (err, categoryCount) {
+          if(err) { return handleError(res, err); }
+          res.setHeader('Cache-Control', 'private, max-age=2592000');
+          return res.status(200).json(categoryCount);
+       }
+  );
+}
+
 // Creates a new category in the DB.
 exports.createCategory = function(req, res) {
   req.body.createdAt = new Date();
