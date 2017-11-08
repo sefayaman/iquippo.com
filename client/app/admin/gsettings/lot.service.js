@@ -85,7 +85,7 @@ function LotSvc($http, $q, $httpParamSerializer) {
     }
 
     function update(data) {
-        return $http.put(svcPath + "/lot/" + data.lot_mongo_id, data)
+        return $http.put(svcPath + "/lot/" + data._id, data)
             .then(function(res) {
                 return res.data;
             })

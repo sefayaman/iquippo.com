@@ -9,6 +9,7 @@ var AuctionRequestSchema = new Schema({
   seller:{},
   auctionId:String,
   dbAuctionId:String,
+  lot_id:String,
   emdAmount : Number,
   external:{type:Boolean,default:false},
   status:{type:String,default:"Request Submitted"},
@@ -16,6 +17,8 @@ var AuctionRequestSchema = new Schema({
   primaryImg: String,
   valuation:{},
   statuses:[{}],
+  reqSubmitStatus:{type:String,default:"Request Failed"},
+  isDeleted:{type:Boolean,default:false},
   valuationReport:String,
   createdAt: {type:Date,default:Date.now},
   updatedAt: {type:Date,default:Date.now}

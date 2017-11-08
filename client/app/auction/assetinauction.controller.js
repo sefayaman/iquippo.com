@@ -9,12 +9,11 @@
     var query = $location.search();
     //$scope.auctionName=$location.search().auctionName;
     //console.log("query", query);
-    console.log("userId", Auth.getCurrentUser()._id);
-    var aswidgetUrl = "https://auctionsoftwaremarketplace.com:3007/bidwidget/{{lot.auctionId}}/{{lot.id}}/{{userId}}";
+    //console.log("userId", Auth.getCurrentUser()._id);
+    var aswidgetUrl = auctionURL + "/bidwidget/{{lot.auctionId}}/{{lot.id}}/{{userId}}";
     $scope.asWidgetURLSCE = $sce.trustAsResourceUrl(aswidgetUrl);
-     var liveAuctionUrl="https://auctionsoftwaremarketplace.com:3007/liveAuction/"+query.auctionId+"/"+Auth.getCurrentUser()._id;
+    var liveAuctionUrl = auctionURL + "/liveAuction/"+query.id+"/"+Auth.getCurrentUser()._id;
     $scope.liveAuctionURLSCE=$sce.trustAsResourceUrl(liveAuctionUrl);
-    console.log("url", $scope.liveAuctionURLSCE);
 
     $scope.auctionType = $location.search().auctionType;
     //$scope.auctionTypeValue = $location.search().auctionTypeValue;
@@ -41,6 +40,7 @@
     $scope.userId = Auth.getCurrentUser()._id;
     $scope.currentAuction = {};
     $scope.fetchAsset = fetchAsset;
+    vm.openLiveAuctionURL = openLiveAuctionURL;
     $scope.isVisible = false;
     $scope.msg="";
     //$scope.liveAuctionView=liveAuctionView;
@@ -100,6 +100,13 @@
           });*/
     }
 
+    function openLiveAuctionURL() {
+      if(!Auth.getCurrentUser()._id) {
+        Modal.alert("Please Login/Register for uploading the products!", true);
+        return;
+      }
+      window.open($scope.liveAuctionURLSCE,'_blank');
+    }
 
     function save(dataObj) {
       userRegForAuctionSvc.save(dataObj)

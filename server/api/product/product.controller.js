@@ -43,7 +43,7 @@ var moment = require('moment');
 var AssetSaleUtil = require('../assetsale/assetsaleutil');
 var validDateFormat = ['DD/MM/YYYY','MM/DD/YYYY','MM/DD/YY','YYYY/MM/DD',moment.ISO_8601];
 var offerStatuses=['Bid Received','Bid Changed','Bid Withdraw'];
-
+var ReqSubmitStatuses = ['Request Submitted', 'Request Failed'];
 // Get list of products
 exports.getAll = function(req, res) {
   var filter = {};
@@ -655,33 +655,18 @@ exports.update = function(req, res) {
   }
 };
 
+exports.sendReqToCreateAsset=function(req,res){
+  postRequest(req, res);
+};
+
 // Creates a new product in the DB.
 exports.create = function(req, res) {
-
   req.isEdit = false;
-
-  //console.log("reuest oroduct",req.body);
-     //// Saving Lot master data for additional Fields////
-     /*var lotdata = {};
-     lotdata.auctId = req.body.auctId;
-     lotdata.assetId = req.body.assetId;
-     lotdata.lotId = req.body.lotId;
-     lotdata.startPrice = req.body.startPrice;
-     lotdata.ReservePrice = "gff";
-     lotdata.assetDesc = req.body.name;
-     lotdata.lastMintBid= req.body.lastMintBid;
-     lotdata.extendedTo = req.body.extendedTo;
-     lotdata.createdBy = req.body.user.email;
-     lotdata.createdAt =  new Date();
-
-
-      saveLotMasterData(lotdata,req,res);*/
-
-  //////////////////////////////////////////////////////
   Product.find({assetId:req.body.assetId},function(err,pds){
     if (err) { return handleError(res, err); }
-    else if(pds.length > 0){return res.status(404).json({errorCode:1});}
-    else{
+    else if(pds.length > 0){
+      return res.status(404).json({errorCode:1,message: "Data already exist with this asset Id!"});
+    } else {
       if(req.body.applyWaterMark){
         req.imgCounter = 0;
         req.totalImages = req.body.images.length;
@@ -694,18 +679,6 @@ exports.create = function(req, res) {
     } 
   });
 };
-
-/*function saveLotMasterData(lotdata,req,res){
-  var model = new Lot(lotdata);
-    model.save(function(err, st) {
-    if(err) {
-       console.log("error in lot master saved");
-     }else{
-       console.log("lotmaster saved");
-     }
-  });
-}*/
-
 
 function checkAndCopyImage(req,res,cb){
   
@@ -852,7 +825,7 @@ function updateProduct(req,res){
                 }
               }
             })
-          })   
+          })
         })
       } else {
         updateProductData();      
@@ -861,14 +834,17 @@ function updateProduct(req,res){
     function updateProductData(){
       Product.update({_id:req.params.id},{$set:req.body},function(err){
         if (err) { return handleError(res, err); }
+        if((req.body.tradeType === 'SELL' || req.body.tradeType === 'BOTH') && req.body.auctionListing) {
+          req.body._id = req.params.id;
+          postRequest(req, res);
+        } else
           return res.status(200).json(req.body);
       });
     }
   });
 }
 
-function addProduct(req,res){
-
+function addProduct(req, res){
   req.body.createdAt = new Date();
   req.body.relistingDate = new Date();
   req.body.updatedAt = new Date();
@@ -923,17 +899,62 @@ function addProduct(req,res){
               }
             }
           })
-    
       })
-           
   })
 }
 
   Product.create(req.body, function(err, product) {
     if(err) { return handleError(res, err); }
-    return res.status(201).json(product);
+    console.log("product created ####", product.assetId);
+    if((product.tradeType === 'SELL' || product.tradeType === 'BOTH') && product.auctionListing) {
+      console.log("product.tradeType22@@@@", product.tradeType);
+      req.body._id = product._id;
+      postRequest(req, res);
+    }
+    else
+      return res.status(201).json(product);
   });
 
+}
+
+function postRequest(req, res){
+  var options = {};
+  Product.find({
+      _id: req.body._id
+    }, function(err, proResult) {
+      options.dataToSend = req.body.assetMapData;
+      options.dataToSend._id = req.body._id;
+      options.dataType = "assetData";
+      if (options.dataToSend.createdBy)
+        delete options.dataToSend.createdBy;
+      console.log("result.err@@@@!optionsoptions!!!!", options);
+      Utillity.sendCompiledData(options, function(err, result) {
+        console.log("result.err@@@@result!!!!!", result);
+        if (err || (result && result.err)) {
+          options.dataToSend.reqSubmitStatus = ReqSubmitStatuses[1];
+          //options.dataToSend.status = false;
+          update(options.dataToSend);
+          if(result && result.err)
+              return res.status(412).send(result.err);
+          return res.status(412).send("Unable to post asset request. Please contact support team.");
+        }
+        if(result){
+          options.dataToSend.reqSubmitStatus = ReqSubmitStatuses[0];
+          //options.dataToSend.status = true;
+          update(options.dataToSend);
+          return res.status(201).json({errorCode: 0,message: "Product request submitted successfully !!!", product:proResult});
+        }
+      });
+    });
+}
+
+function update(assetReq){
+  var id = assetReq._id;
+  delete assetReq._id;
+  Product.update({_id:id, deleted:false },{$set:{"reqSubmitStatus":assetReq.reqSubmitStatus}},function(err,retVal){
+    if (err) { console.log("Error with updating auction request");}
+  console.log("Product Updated");
+  });
 }
 
 // Updates an existing expiry product in the DB.
@@ -3728,8 +3749,6 @@ function fileExists(filePath)
 }
 
 exports.createOrUpdateAuction = function(req,res){
-
-  
   Seq()
     .seq(function(){
       var self = this;
@@ -3807,6 +3826,7 @@ exports.createOrUpdateAuction = function(req,res){
               resObj.transactionId = req.payTransId;
             if(req.valuationId)
               resObj.valuationId = req.valuationId;
+            console.log("resObj####", resObj);
             res.status(200).json(resObj);
           }
       })

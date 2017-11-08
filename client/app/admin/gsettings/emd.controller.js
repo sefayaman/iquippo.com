@@ -54,11 +54,12 @@ function EmdCtrl($scope,$rootScope,$state,Modal,Auth,PagerSvc,$filter,LotSvc,Auc
   function editClicked(rowData){
     getAuctions();
     vm.dataModel = {};
-    vm.dataModel = angular.copy(rowData);
+    angular.copy(rowData, vm.dataModel);
     vm.dataModel.auction_id = rowData.auction_id;
     getLotData({auctionId:rowData.auction_id,isDeleted:false});
     vm.dataModel.selectedLots={};
     vm.dataModel.selectedLots.lotNumber=rowData.selectedLots[0].lotNumber;
+    vm.dataModel.static_increment = parseInt(rowData.static_increment);
     $scope.isEdit = true;
   }
 
@@ -73,8 +74,6 @@ function EmdCtrl($scope,$rootScope,$state,Modal,Auth,PagerSvc,$filter,LotSvc,Auc
     vm.dataModel.createdBy.name = Auth.getCurrentUser().fname + " " + Auth.getCurrentUser().lname;
     vm.dataModel.createdBy.mobile = Auth.getCurrentUser().mobile;
     vm.dataModel.customerId = Auth.getCurrentUser().customerId;
-    // vm.duplicate._id = vm.dataModel.auction_id
-    // vm.duplicate.selectedLots = vm.dataModel.selectedLots;
     
     $rootScope.loading = true;
     EmdSvc.saveEmd(vm.dataModel).then(function(res){
@@ -88,29 +87,6 @@ function EmdCtrl($scope,$rootScope,$state,Modal,Auth,PagerSvc,$filter,LotSvc,Auc
         Modal.alert(err.data);
       $rootScope.loading = false;
     });
-    /*EmdSvc.getData(vm.duplicate).then(function(result){
-      vm.filteredduplicate = "exist";
-      if(result.length > 0){
-         Modal.alert('Data already exist with same auction id and lot number!');
-         vm.dataModel={};
-         return;
-      }else{
-        vm.dataModel.isDeleted=false;
-        EmdSvc.saveEmd(vm.dataModel).then(function(){
-        vm.dataModel = {};
-        getEmdData();
-        Modal.alert('Data saved successfully!');
-        vm.dataModel={};
-        $scope.lotList=[];  
-        })
-      .catch(function(err){
-         if(err.data)
-          Modal.alert(err.data); 
-        });
-      }
-    })
-    .catch(function(res){
-    });*/
   }
 
   function resetEMDData() {
@@ -151,7 +127,7 @@ function EmdCtrl($scope,$rootScope,$state,Modal,Auth,PagerSvc,$filter,LotSvc,Auc
     }
     $rootScope.loading = true;
     EmdSvc.update(vm.dataModel)
-    .then(function(){
+    .then(function(res){
     if (res.errorCode == 0) {
         $scope.isEdit = false;
         resetEMDData();

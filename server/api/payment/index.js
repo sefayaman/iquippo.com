@@ -8,7 +8,6 @@ var router = express.Router();
 router.get('/', controller.getAll);
 router.get('/:id', controller.getOnId);
 router.post('/', controller.create);
-router.post('/offline', controller.createoffline);
 router.put('/:id', controller.update);
 //router.patch('/:id', controller.update);
 router.delete('/:id', controller.destroy);

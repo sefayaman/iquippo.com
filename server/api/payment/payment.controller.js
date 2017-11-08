@@ -3,7 +3,6 @@
 var _ = require('lodash');
 var crypto = require('crypto');
 var Payment = require('./payment.model');
-var Offline = require('./offline.model');
 var  xlsx = require('xlsx');
 var config = require('./../../config/environment');
 var async=require('async');
@@ -40,26 +39,6 @@ exports.create = function(req, res) {
   });
 };
 
-exports.createoffline = function(req, res) {
-  var options={};
-  req.body.createdAt = new Date();
-  req.body.updatedAt = new Date();
-   options={
-    transactionId:req.body.transactionid,
-    status:'completed'
-   }
-  async.parallel([
-      function(next){
-        paymentUpdate(options,next);
-      },function(next){
-       offlineRequest(req.body,next);
-      }
-    ],function(err,result){
-     if(err) return handleError(res,err);
-     return res.status(200).json(result);
-  });
-};
-
 function paymentUpdate(options,cb){
    var filter={};
    filter._id=options.transactionId;
@@ -67,13 +46,6 @@ function paymentUpdate(options,cb){
          if (err) cb(err);
          return cb(null);
    });
-}
-
-function offlineRequest(offlineData,cb){
-Offline.create(offlineData, function(err, payment) {
-        if(err) cb(err);
-        return cb(null);
-});
 }
 
 //search based on filter
@@ -112,11 +84,11 @@ exports.update = function(req, res) {
     if(!payment) { return res.status(404).send('Not Found'); }
      Payment.update({_id:req.params.id},{$set:req.body},function(err){
         if (err) { return handleError(res, err); }
-        if(res.body && res.body.userDataSendToAuction) {
+        if(req.body && req.body.userDataSendToAuction) {
           req.body._id = req.params.id;
           postRequest(req, res);
         } else
-        return res.status(200).json(req.body);
+        return res.status(201).json({errorCode: 0,message: "Payment request submitted successfully !!!"});
     });
   });
 };
@@ -143,6 +115,7 @@ exports.update = function(req, res) {
         options.dataToSend.selectedLots = paymentResult[0].selectedLots;
         options.dataType = "userInfo";
         Util.sendCompiledData(options, function(err, result) {
+          options.dataToSend._id = paymentResult[0]._id;
           if (err || (result && result.err)) {
             options.dataToSend.reqSubmitStatus = ReqSubmitStatuses[1];
             update(options.dataToSend);
@@ -160,15 +133,14 @@ exports.update = function(req, res) {
   }
 
   function update(userReq){
-    var _id = userReq._id;
+    var id = userReq._id;
     delete userReq._id;
-    Payment.update({_id:_id},{$set:userReq},function(err,retVal){
+    Payment.update({_id:id},{$set:{"reqSubmitStatus":userReq.reqSubmitStatus}},function(err,retVal){
       if (err) {
-      console.log("Error with updating lot request");
+      console.log("Error with updating Payment request");
     }
     console.log("Payment Updated");
     }); 
-    //Payment.update({_id:_id},{$set:userReq}).exec();
   }
 // Deletes a payment from the DB.
 exports.destroy = function(req, res) {

@@ -12,11 +12,11 @@ var ReqSubmitStatuses = ['Request Submitted', 'Request Failed'];
 var Product = require('../product/product.model');
 
 exports.create = function(req, res) {
-  var options = {};
+  //var options = {};
   AssetsInAuction.create(req.body, function(err, result) {
     if (err) return handleError(res, err);
     postRequest(req, res)
-  })
+  });
 };
 
 function postRequest(req, res){
@@ -52,12 +52,8 @@ function postRequest(req, res){
       if (err) { console.log("Error with updating auction request");}
     console.log("Product Updated");
     });
-    Product.update({"assetId":assetReq.assetID, deleted:false },{$set:{"reqSubmitStatus":assetReq.reqSubmitStatus}}).exec();
+    Product.update({"assetId":assetReq.assetId, deleted:false },{$set:{"reqSubmitStatus":assetReq.reqSubmitStatus}}).exec();
   }
-
-  exports.sendReqToCreateAsset=function(req,res){
-    postRequest(req, res);
-  };
 
 exports.update = function(req, res) {
   if(!req.params.id)

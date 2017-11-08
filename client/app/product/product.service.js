@@ -48,6 +48,7 @@
       prdService.getProductOnSellerId = getProductOnSellerId;
       prdService.updateAssetMap=updateAssetMap;
       prdService.getAssetMapData=getAssetMapData
+      prdService.sendReqToCreateAsset = sendReqToCreateAsset;
 
        function getFeaturedProduct(id){
           var deferred = $q.defer();
@@ -82,6 +83,16 @@
                 });
         }
         
+        function sendReqToCreateAsset(data){
+          return $http.post(path + "/sendreqtocreateasset",data)
+          .then(function(res){
+            return res.data;
+          })
+          .catch(function(err){
+            throw err
+          });
+        }
+
         function updateAssetMap(data) {
           return $http.put(path + "/assetmap/update/" + data._id, data)
             .then(function(res) {

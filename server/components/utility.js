@@ -267,27 +267,29 @@ function isEmpty(myObject) {
   return true;
 }
 
-function toIST(value) {
-  if (!value)
-    return '';
-  return moment(value).utcOffset('+0530');
-}
-
 exports.sendCompiledData = sendCompiledData;
 function sendCompiledData(options, cb) {
   if (options.dataToSend.hasOwnProperty('__v'))
     delete options.dataToSend._v;
   if (options.dataToSend.startDate && options.dataToSend.endDate) {
-    options.dataToSend.startDate = new Date(options.dataToSend.startDate);
-    options.dataToSend.endDate = new Date(options.dataToSend.endDate);
+    var startDate = new Date(options.dataToSend.startDate);
+    options.dataToSend.startDate = new Date(startDate.getTime() - startDate.getTimezoneOffset() * 60000).toISOString();
+
+    var endDate = new Date(options.dataToSend.endDate);
+    options.dataToSend.endDate = new Date(endDate.getTime() - endDate.getTimezoneOffset() * 60000).toISOString();
   }
   
-  if (options.dataToSend.regEndDate)
-    options.dataToSend.regEndDate = new Date(options.dataToSend.regEndDate);
+  if (options.dataToSend.regEndDate) {
+    var regEndDate = new Date(options.dataToSend.regEndDate);
+    options.dataToSend.regEndDate = new Date(regEndDate.getTime() - regEndDate.getTimezoneOffset() * 60000).toISOString();
+  }
 
   if (options.dataToSend.insStartDate && options.dataToSend.insEndDate) {
-    options.dataToSend.insStartDate = new Date(options.dataToSend.insStartDate);
-    options.dataToSend.insEndDate = new Date(options.dataToSend.insEndDate);
+    var insStartDate = new Date(options.dataToSend.insStartDate);
+    options.dataToSend.insStartDate = new Date(insStartDate.getTime() - insStartDate.getTimezoneOffset() * 60000).toISOString();
+
+    var insEndDate = new Date(options.dataToSend.insEndDate);
+    options.dataToSend.insEndDate = new Date(insEndDate.getTime() - insEndDate.getTimezoneOffset() * 60000).toISOString();
   }
   if (options.dataToSend.hasOwnProperty('updatedAt') && options.dataToSend.hasOwnProperty('createdAt')) {
     delete options.dataToSend.updatedAt;
@@ -422,13 +424,13 @@ function sendData(options, callback) {
         if(asData.err.length > 0)
           res.err = asData.err;
         else
-          asData.err = "";
+          res.err = "";
 
         if(asData.results.length > 0)
           res.results = asData.results;
         else
           res.results = "";
-
+        //console.log("=======++res",res);
         return callback(null, res);
       } catch (err) {
         //return callback(err);

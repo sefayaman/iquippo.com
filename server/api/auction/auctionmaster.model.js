@@ -27,7 +27,7 @@ var AuctionMasterSchema = new Schema({
 	emdTax:String,
 	factorCreditlimit:Number,
 	taxApplicability:String,
-	static_increment:String,
+	static_increment:Number,
 	bidIncrement:Object,
 	lastMinuteBid:Number,
 	extendedTo:Number,
@@ -41,7 +41,7 @@ var AuctionMasterSchema = new Schema({
 	docName: String,
 	docNameProxy: String,
 	groupId:String,
-	reqSubmitStatus:{type:String,default:"Request Submitted"},
+	reqSubmitStatus:{type:String,default:"Request Failed"},
 	createdAt: {type:Date,default:Date.now},
 	updatedAt: {type:Date,default:Date.now},
 });

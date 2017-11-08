@@ -3,7 +3,7 @@
 var _ = require('underscore');
 var Lot = require('./lot.model');
 var AuctionMaster = require('../auction/auctionmaster.model');
-var AssetsInAuction = require('../product/productlotmap.model');
+var AuctionRequest = require('../auction/auction.model');
 var async = require('async');
 var APIError = require('../../components/_error');
 var Util = require('../../components/utility');
@@ -79,12 +79,10 @@ var ReqSubmitStatuses = ['Request Submitted', 'Request Failed'];
   }
 
   function update(lotReq){
-    var _id = lotReq._id;
+    var id = lotReq._id;
     delete lotReq._id;
-    Lot.update({_id:_id},{$set:lotReq},function(err,retVal){
-      if (err) {
-      console.log("Error with updating lot request");
-    }
+    Lot.update({_id:id},{$set:{"reqSubmitStatus":lotReq.reqSubmitStatus}},function(err,retVal){
+      if (err) { console.log("Error with updating lot request"); }
     console.log("Auction Lot Updated");
     }); 
   }
@@ -96,32 +94,32 @@ var ReqSubmitStatuses = ['Request Submitted', 'Request Failed'];
 exports.updateLotData = function(req, res) {
   var options = {};
   req.body.updatedAt = new Date();
-  /*if(req.body.reqSubmitStatus === ReqSubmitStatuses[1]) {
-    postRequest(req, res);
-    return;
-  }*/
+
   if (req.body.auction_id)
     req.body.auction_id = req.body.auction_id;
-  
-  delete req.body._id;
   Lot.find({_id: req.params.id}, function(err, lotResult) {
     if (err) return handleError(res, err);
-    console.lot("lotResult####", lotResult);
-    //var preData = lotResult;
+    delete req.body._id;
     Lot.update({_id: req.params.id}, {$set: req.body}, function(err) {
       if (err)
         return res.status(412).send("Unable to update lot request. Please contact support team.");
       
       options.dataToSend = req.body;
+      options.dataToSend._id = req.params.id;
       options.dataType = "lotData";
       Util.sendCompiledData(options, function(err, result) {
         if (err || (result && result.err)) {
-          update(lotResult[0].toObject());
+          //options.dataToSend = lotResult[0].toObject();
+          options.dataToSend.reqSubmitStatus =  ReqSubmitStatuses[1];
+
+          update(options.dataToSend);
           if(result && result.err)
             return res.status(412).send(result.err);
           return res.status(412).send("Unable to update lot request. Please contact support team.");
         }
         if(result){
+          options.dataToSend.reqSubmitStatus =  ReqSubmitStatuses[0];
+          update(options.dataToSend);
           return res.status(201).json({errorCode: 0,message: "Lot request updated successfully !!!"});
         }
       });
@@ -246,8 +244,6 @@ function compileData(callback) {
 
 exports.getLotData = function(req, res) {
   var filter = {};
-  // if (req.query.hasOwnProperty('isDeleted'))
-  //   filter.isDeleted = req.query.isDeleted;
   filter.isDeleted = false;
   if (req.query.auction_id) {
     filter.auction_id = req.query.auction_id;
@@ -260,7 +256,7 @@ exports.getLotData = function(req, res) {
   if (req.query.lot)
     filter.lotNumber = req.query.lot;
 
-  var query = Lot.find(filter);
+  var query = Lot.find(filter).sort({createdAt: -1});
   query.exec(function(err, result) {
     if (err) {
       res.status(err.status || 500).send(err);
@@ -318,7 +314,7 @@ function fetchAssetsInLot(options, callback) {
   options.lotData.forEach(function(lot) {
     lotsIdArray.push(lot._id);
   });
-  AssetsInAuction.find({
+  AuctionRequest.find({
     lot_id: {
       '$in': lotsIdArray
     },
@@ -411,18 +407,16 @@ exports.destroy = function(req, res) {
               if(result && result.err) {
                 return res.status(412).send(result.err); 
               }
-              AssetsInAuction.update({'lot_id': req.params.id, 'auction_id':lotResult[0].auction_id}, {$set: {'isDeleted': false}}, {multi: true}, function(aucErr, resultData) {
+              AuctionRequest.update({'lot_id': req.params.id, 'auction_id':lotResult[0].auction_id}, {$set: {'isDeleted': false}}, {multi: true}, function(aucErr, resultData) {
                 if (aucErr)
                   return handleError(res, err);
                 return res.status(200).send("Unable to delete lot request. Please contact support team.");
               });
-              //return res.status(412).send("Unable to delete lot request. Please contact support team.");
             }
             if(result){
               options.dataToSend.isDeleted = true;
               update(options.dataToSend);
-              //return res.status(201).json({errorCode: 0,message: "Lot request deleted successfully !!!"});
-              AssetsInAuction.update({'lot_id': req.params.id, 'auction_id':lotResult[0].auction_id}, {$set: {'isDeleted': true}}, {multi: true}, function(aucErr, resultData) {
+              AuctionRequest.update({'lot_id': req.params.id, 'auction_id':lotResult[0].auction_id}, {$set: {'isDeleted': true}}, {multi: true}, function(aucErr, resultData) {
                 if (aucErr)
                   return handleError(res, err);
                 return res.status(200).send({errorCode: 0,message: "Lot master deleted sucessfully!!!"});

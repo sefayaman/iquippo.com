@@ -26,7 +26,9 @@ function ProductListingCtrl($scope, $location, $rootScope, $http, productSvc, cl
   vm.updateSelection = updateSelection;
   vm.bulkUpdate = bulkUpdate;
   vm.showFilter = showFilter;
-
+  vm.sendReqToCreateAsset = sendReqToCreateAsset;
+  
+  $scope.ReqSubmitStatuses = ReqSubmitStatuses;
   vm.searchType = "";
   var selectedIds = [];
   vm.searchstr = "";
@@ -65,6 +67,23 @@ function ProductListingCtrl($scope, $location, $rootScope, $http, productSvc, cl
 
   }
 
+  function sendReqToCreateAsset(data) {
+    $rootScope.loading = true;
+    PaymentSvc.sendReqToCreateUser(data)
+      .then(function(res) {
+          if (res.errorCode == 0) {
+            fireCommand(true);
+          }
+          Modal.alert(res.message);
+          $rootScope.loading = false;
+      })
+      .catch(function(err){
+        if(err)
+          Modal.alert(err.data);
+        $rootScope.loading = false;
+      });
+  }
+  
   function loadProducts(filter){
     if(vm.currentPage == prevPage)
       return;

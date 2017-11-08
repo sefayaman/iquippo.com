@@ -12,9 +12,9 @@
     $scope.assetListedInAuction=query.assetListedInAuction;
 console.log("assetListedInAuction",$scope.assetListedInAuction);
 }
-    var aswidgetUrl="http://auctionsoftwaremarketplace.com:3007/bidwidget/"+query.auctionId+"/"+query.lotId+"/"+query.userId;
+    var aswidgetUrl = auctionURL + "/bidwidget/"+query.auctionId+"/"+query.lotId+"/"+query.userId;
     $scope.asWidgetURLSCE = $sce.trustAsResourceUrl(aswidgetUrl);
-   console.log("url",$scope.asWidgetURLSCE);
+   //console.log("url",$scope.asWidgetURLSCE);
 
    $scope.displayBid=query.displayBid;
    $scope.asAuctionId=query.auctionId;

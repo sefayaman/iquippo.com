@@ -81,12 +81,12 @@ function AuctionPaymentListingCtrl($scope,$rootScope,Modal,Auth,PaymentSvc) {
           selectedIds.splice(selectedIds.indexOf(id),1);
     }
 
-    function resendUserData(data) {
+  function resendUserData(data) {
     $rootScope.loading = true;
     PaymentSvc.sendReqToCreateUser(data)
       .then(function(res) {
           if (res.errorCode == 0) {
-            getTrasactions();
+            getTrasactions(filter);
           }
           Modal.alert(res.message);
           $rootScope.loading = false;

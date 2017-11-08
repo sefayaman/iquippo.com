@@ -501,8 +501,8 @@
 								<legend></legend>
 								<h5>Bid Static Increment</h5>
 								<div class="row">
-									<div class="col-sm-3 form-group" ng-class="{'has-error': auctionDateForm.bidStatic.$invalid && submitted }">										
-										<input type="number" class="form-control" ng-model="gsettingVm.auctionData.static_increment" min="0" name="bidStatic" value="" placeholder="Static Increment" ng-required="gsettingVm.auctionData.staticIncrement && !gsettingVm.auctionData.rangeIncrement">
+									<div class="col-sm-3 form-group" ng-class="{'has-error': auctionDateForm.bidStatic.$invalid && submitted }">
+										<input type="number" class="form-control" ng-model="gsettingVm.auctionData.static_increment" min="0" name="bidStatic" placeholder="Static Increment" ng-required="gsettingVm.auctionData.staticIncrement && !gsettingVm.auctionData.rangeIncrement">
 									</div>
 								</div>
 							</div>
@@ -2976,14 +2976,14 @@
 			   		</select>				
 				</div>
 				 <div class="col-sm-3" ng-class="{'has-error':lotform.lotNumber.$invalid && submitted}">
-					<input type="text" class="form-control" name="lotNumber" ng-model="lotVm.dataModel.lotNumber" ng-blur="lotVm.checkForLot(lotVm.dataModel.lotNumber,lotVm.dataModel.auction_id)" ng-disabled="!lotVm.dataModel.auction_id" value="{{lotVm.lotNumber}}" placeholder="Enter Lot Number">
+					<input type="text" class="form-control" name="lotNumber" ng-model="lotVm.dataModel.lotNumber" ng-blur="lotVm.checkForLot(lotVm.dataModel.lotNumber,lotVm.dataModel.auction_id)" ng-disabled="!lotVm.dataModel.auction_id" placeholder="Enter Lot Number">
 					
 				</div>
 				<div class="col-sm-3 form-group" ng-class="{'has-error':lotform.startPrice.$invalid && submitted}">
-					<input type="text" class="form-control" name="startPrice" ng-model="lotVm.dataModel.startingPrice" value="{{lotVm.startPrice}}" placeholder="Enter StartPrice">
+					<input type="text" class="form-control" name="startPrice" ng-model="lotVm.dataModel.startingPrice" placeholder="Enter StartPrice">
 				</div>
 				 <div class="col-sm-3 form-group" ng-class="{'has-error':lotform.reservePrice.$invalid && submitted}">
-					<input type="text" class="form-control" name="reservePrice" ng-model="lotVm.dataModel.reservePrice" value="{{lotVm.reservePrice}}" placeholder="Enter Reserve Price">
+					<input type="text" class="form-control" name="reservePrice" ng-model="lotVm.dataModel.reservePrice" placeholder="Enter Reserve Price">
 				</div>					 
 			</div>
 			<div class="row"> 
@@ -2997,10 +2997,10 @@
 					<input class="form-control ng-pristine ng-invalid ng-invalid-required ng-touched" datetime-picker="" readonly="" name="endDate" ng-model="lotVm.dataModel.endDate" placeholder="Lot End Date &amp; Time*" date-format="MM/dd/yyyy hh:mm a" ng-disabled="lotDate" required="">
 				</div>
 				<div class="col-sm-3" ng-class="{'has-error':lotform.lastMintBid.$invalid && submitted}">
-					<input type="text" class="form-control" name="lastMintBid" ng-model="lotVm.dataModel.lastMintBid" value="{{lotVm.lastMintBid}}" placeholder="Enter Last Minute Bid">
+					<input type="text" class="form-control" name="lastMintBid" ng-model="lotVm.dataModel.lastMintBid" placeholder="Enter Last Minute Bid">
 				</div>
 				<div class="col-sm-3" ng-class="{'has-error':lotform.extendedTo.$invalid && submitted}">
-					<input type="text" class="form-control" name="extendedTo" ng-model="lotVm.dataModel.extendedTo" value="{{lotVm.extendedTo}}" placeholder="Enter Extended To">
+					<input type="text" class="form-control" name="extendedTo" ng-model="lotVm.dataModel.extendedTo" placeholder="Enter Extended To">
 				</div>
 			</div>
 			<div class="row">
@@ -3027,7 +3027,7 @@
 						<h5>Bid Static Increment</h5>
 						<div class="row">
 							<div class="col-sm-3 form-group" ng-class="{'has-error':lotform.bidStatic.$invalid && submitted}">										
-								<input type="number" class="form-control" ng-model="lotVm.dataModel.static_increment" name="bidStatic" value="" placeholder="Bid Increment" min="0"ng-required="lotVm.dataModel.staticIncrement && !lotVm.dataModel.rangeIncrement">
+								<input type="number" class="form-control" ng-model="lotVm.dataModel.static_increment" name="bidStatic" placeholder="Bid Increment" min="0" ng-required="lotVm.dataModel.staticIncrement && !lotVm.dataModel.rangeIncrement">
 							</div>
 						</div>
 					</div>

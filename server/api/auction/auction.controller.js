@@ -1012,11 +1012,9 @@ function postRequest(req, res){
   function update(auctionReq){
     var _id = auctionReq._id;
     delete auctionReq._id;
-    AuctionMaster.update({_id:_id},{$set:auctionReq},function(err,retVal){
-      if (err) {
-      console.log("Error with updating auction request");
-    }
-    console.log("Auction Request Updated");
+    AuctionMaster.update({_id:_id},{$set:{"reqSubmitStatus":auctionReq.reqSubmitStatus}},function(err,retVal){
+      if (err) { console.log("Error with updating auction request");}
+      console.log("Auction Request Updated");
     }); 
   }
 
@@ -1135,10 +1133,6 @@ exports.removeAuctionMasterproduct = function(req, res) {
 exports.updateAuctionMaster = function(req, res) {
   var options = {};
   var _id = req.body._id;
-  // if(req.body.reqSubmitStatus === ReqSubmitStatuses[1]) {
-  //   postRequest(req, res);
-  //   return;
-  // }
 
   if (req.body._id) {
     delete req.body._id;

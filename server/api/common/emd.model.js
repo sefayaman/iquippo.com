@@ -8,9 +8,9 @@ var EmdSchema = new Schema({
   auctionId:String,
   selectedLots:[],
   status:{type:Boolean,default:true},
-  emdAmount:String,
+  emdAmount:Number,
   isDeleted:{type:Boolean,default:false},
-  reqSubmitStatus:{type:String,default:"Request Submitted"},
+  reqSubmitStatus:{type:String,default:"Request Failed"},
   createdBy:{},
   createdAt: {type:Date,default:Date.now},
   updatedAt: {type:Date,default:Date.now}

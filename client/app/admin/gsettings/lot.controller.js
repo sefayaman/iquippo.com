@@ -54,21 +54,21 @@ function LotCtrl($scope, $rootScope, $state,Modal,Auth,PagerSvc,$filter,AuctionS
      vm.filteredList = $filter('filter')(vm.LotData,vm.searchStr);
   }
 
-  function editClicked(rowData){
+  function editClicked(rowData, ){
     getAuctions();
     vm.dataModel = {};
+    angular.copy(rowData, vm.dataModel);
     vm.dataModel._id  = rowData._id;
     vm.dataModel.auction_id = rowData.auction_id;
-    vm.dataModel.assetId = rowData.assetId;
-    vm.dataModel.lotNumber = rowData.lotNumber;
-    vm.dataModel.lot_mongo_id=rowData.lot_mongo_id;
-    vm.dataModel.assetDesc = rowData.assetDesc;
+    //vm.dataModel.assetId = rowData.assetId;
+    //vm.dataModel.lotNumber = rowData.lotNumber;
+    //vm.dataModel.assetDesc = rowData.assetDesc;
     vm.dataModel.startingPrice = rowData.startingPrice;
     vm.dataModel.reservePrice = rowData.reservePrice;
     vm.dataModel.startDate = moment(rowData.startDate).format('MM/DD/YYYY hh:mm A');
     vm.dataModel.endDate =  moment(rowData.endDate).format('MM/DD/YYYY hh:mm A');
     vm.dataModel.bidIncrement = rowData.bidIncrement;
-    vm.dataModel.static_increment = rowData.static_increment;
+    vm.dataModel.static_increment = parseInt(rowData.static_increment);
     if(vm.dataModel.static_increment){
         vm.dataModel.staticIncrement = true;
     }else{
@@ -102,56 +102,35 @@ function LotCtrl($scope, $rootScope, $state,Modal,Auth,PagerSvc,$filter,AuctionS
     vm.dataModel.createdBy.customerId = Auth.getCurrentUser().customerId;
     vm.dataModel.user_Id = Auth.getCurrentUser()._id;
 
-     //vm.duplicate.auctionId = vm.dataModel.auctionId;
-     //vm.duplicate.assetId = vm.dataModel.assetId;
-     //vm.duplicate.lot = vm.dataModel.lotNumber;
-     for (var i = 0; i < vm.auctionListing.length; i++) {
-        if (vm.auctionListing[i]._id === vm.dataModel.auction_id) {
-          vm.dataModel.auctionId = vm.auctionListing[i].auctionId;
-          vm.dataModel.auction_id = vm.auctionListing[i]._id;
-          break;
-        }
+    for (var i = 0; i < vm.auctionListing.length; i++) {
+      if (vm.auctionListing[i]._id === vm.dataModel.auction_id) {
+        vm.dataModel.auctionId = vm.auctionListing[i].auctionId;
+        vm.dataModel.auction_id = vm.auctionListing[i]._id;
+        break;
       }
-    if(vm.dataModel.rangeIncrement){
-        vm.dataModel.bidInfo.forEach(function(item) {
-            var range = item.bidFrom+"-"+item.bidTo;
-            vm.bidIncrementObj[range] = item.bidIncrement;
-            });
-        vm.dataModel.bidIncrement = '';
-        vm.dataModel.bidIncrement = vm.bidIncrementObj;
-    }else{
-       delete vm.dataModel.bidIncrement;
     }
-    if(!vm.dataModel.staticIncrement)
-        delete vm.dataModel.static_increment;
-    // LotSvc.getData(vm.duplicate).then(function(result){
-    //    vm.filteredduplicate = "exist";
-
-    //    if(result!=""){
-    //        Modal.alert('Data already exist with same auction id , asset id and lot number!');
-    //        return;
-    //    }else{
-        $rootScope.loading = true;
-          LotSvc.saveLot(vm.dataModel).then(function(res){
-            // vm.dataModel = {};
-            // getLotData();
-            // Modal.alert('Data saved successfully!');
-            if (res.errorCode == 0)
-              resetLotData();
-
-            Modal.alert(res.message);
-            $rootScope.loading = false;
-          })
-          .catch(function(err){
-            if(err)
-              Modal.alert(err.data);
-            $rootScope.loading = false;
-            resetLotData(); 
+    if(vm.dataModel.rangeIncrement){
+      vm.dataModel.bidInfo.forEach(function(item) {
+          var range = item.bidFrom+"-"+item.bidTo;
+          vm.bidIncrementObj[range] = item.bidIncrement;
           });
-    //     }
-    // })
-    // .catch(function(res){
-    // });
+      vm.dataModel.bidIncrement = '';
+      vm.dataModel.bidIncrement = vm.bidIncrementObj;
+    }
+    $rootScope.loading = true;
+      LotSvc.saveLot(vm.dataModel).then(function(res){
+        if (res.errorCode == 0)
+          resetLotData();
+
+        Modal.alert(res.message);
+        $rootScope.loading = false;
+      })
+      .catch(function(err){
+        if(err)
+          Modal.alert(err.data);
+        $rootScope.loading = false;
+        resetLotData(); 
+      });
   }
 
   function resetLotData() {
@@ -189,7 +168,7 @@ function LotCtrl($scope, $rootScope, $state,Modal,Auth,PagerSvc,$filter,AuctionS
     }
     $rootScope.loading = true;
     LotSvc.update(vm.dataModel)
-    .then(function(){
+    .then(function(res){
       if (res.errorCode == 0) {
         $scope.isEdit = false;
         resetLotData();
@@ -309,7 +288,6 @@ function LotCtrl($scope, $rootScope, $state,Modal,Auth,PagerSvc,$filter,AuctionS
     var filter = {};
     filter.auctionType = "upcoming";
     AuctionSvc.getAuctionDateData(filter).then(function(result) {
-    //getAuctionWiseProductData(result); 
       vm.auctionListing = result.items;
     }).catch(function(err) {
 
@@ -318,17 +296,17 @@ function LotCtrl($scope, $rootScope, $state,Modal,Auth,PagerSvc,$filter,AuctionS
 
   function checkForLot(lotNumber,auction_id){
     var filter={};
-    filter.isDeleted=false;
-    filter.lot=lotNumber;
-    filter.auction_id=auction_id;
+    filter.lot = lotNumber;
+    filter.auction_id = auction_id;
     if(auction_id && lotNumber){
       LotSvc.getData(filter)
       .then(function(res){
-      if(res.length >0){
+      if(res.length > 0){
       // $scope.lotCreation=false;
-          $scope.lotDate=true;
-          vm.dataModel.startDate = res[0].startDate;
-          vm.dataModel.endDate = res[0].endDate;
+          $scope.lotDate = true;
+          angular.copy(res[0], vm.dataModel);
+          vm.dataModel.startDate = moment(res[0].startDate).format('MM/DD/YYYY hh:mm A');
+          vm.dataModel.endDate = moment(res[0].endDate).format('MM/DD/YYYY hh:mm A');
           //$scope.lot.startingPrice=res[0].startingPrice;
       }
       else{
