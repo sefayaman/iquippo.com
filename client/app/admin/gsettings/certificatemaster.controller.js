@@ -36,11 +36,11 @@ function CertificateMasterCtrl($scope,$rootScope,$state,CertificateMasterSvc, Mo
         });
     }
 
-    function fireCommand(reset){console.log("hi");
+    function fireCommand(reset){
         if (reset)
             $scope.pager.reset();
         filter = {};
-        angular.copy(initFilter, filter);console.log("vm.searchStr",vm.searchStr);
+        angular.copy(initFilter, filter);
         if (vm.searchStr)
             filter.searchStr = vm.searchStr;
         loadViewData(filter);
@@ -52,16 +52,16 @@ function CertificateMasterCtrl($scope,$rootScope,$state,CertificateMasterSvc, Mo
             return;
         }*/
        var createData = {};
-        console.log("image==",vm.image);
+        //console.log("image==",vm.image);
         createData.certificate = vm.dataModel.certificate;
-        console.log("$scope.fileObj.file==",$scope.fileObj.file);
+       /* console.log("$scope.fileObj.file==",$scope.fileObj.file);
         if($scope.fileObj.file){
             uploadSvc.upload($scope.fileObj.file,categoryDir).then(function(result){
             $scope.fileObj = {};
             $scope.c.imgSrc = result.data.filename;
 		    });
-        }
-        CertificateMasterSvc.save(vm.dataModel)
+        }*/
+        //CertificateMasterSvc.save(vm.dataModel)
         
         createData.certificate = vm.dataModel.certificate;
         CertificateMasterSvc.save(createData)
