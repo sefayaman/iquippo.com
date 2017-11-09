@@ -24,7 +24,7 @@
               return res.data;
             })
             .catch(function(err){
-              throw err;
+              throw err; 
             })
        }
   

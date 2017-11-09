@@ -16,7 +16,7 @@ var ApiError = require('../../components/_error');
  
     exports.get = function(req,res){
         var queryParam = req.query;
-        var filter = {};
+        var filter = {}; 
          var query = Offer.find(filter);
       
         query.exec(function(err, result){
@@ -26,7 +26,7 @@ var ApiError = require('../../components/_error');
           return res.status(200).json(result);
         });
     };
-
+             
     exports.update = function(req, res) {
       
                 req.body.updatedAt = new Date();

@@ -2780,39 +2780,57 @@
 				</div>
 				 
 				<div class="row form-group">
-					<div class="col-sm-3">
-			        	<label>Cash Purchase</label>
-		 		        <input type="checkbox" name="cash_purchase" ng-model="check.cash_purchase" value="checked" ng-change ="checkPurchase(check.cash_purchase)"><br/>
-						 
-						 <div class="form-group" ng-if="purchase">
+					<div class="col-sm-2">
+							<input type="checkbox" name="cash_purchase" ng-model="check.cash_purchase" value="checked" ng-change ="checkPurchase(check.cash_purchase)">
+							<label>Cash Purchase</label>
+							
+					</div>
+					<div class="col-sm-3 form-group" ng-if="purchase">			        							 
 							<input type="text" class="form-control form-group" name="price" ng-model="container.price" ng-value="{{container.price}}"  placeholder="Price">
+					</div>
+					<div class="col-sm-3 form-group" ng-if="purchase">
 							<input type="text" class="form-control form-group" name="freeofcost" ng-model="container.freeofcost" ng-value="{{container.freeofcost}}" placeholder="Free Of Cost">  
-						</div>
 					</div>
-					
-					<div class="col-sm-3">
-			        	<label>List In Finanace</label>
-		 		        <input type="checkbox" name="finance" ng-model="check.finance" value="checked" ng-change ="checkFinance(check.finance)"><br/>
-						 
-						 <div class="form-group" ng-if="finance">
-							<input type="text" class="form-control form-group" name="tenure" ng-model="container.tenure" ng-value="{{container.tenure}}"  placeholder="Tenure">
-							<input type="text" class="form-control form-group" name="rate" ng-model="container.rate" ng-value="{{container.rate}}" placeholder="Rate">  
-						 	<input type="text" class="form-control form-group" name="margin" ng-model="container.margin" ng-value="{{container.margin}}" placeholder="Margin">  
-							<input type="text" class="form-control form-group" name="processingfee" ng-model="container.processingfee" ng-value="{{container.processingfee}}" placeholder="Processingfee">  
-							<input type="text" class="form-control form-group" name="installment" ng-model="container.installment" ng-value="{{container.installment}}" placeholder="Installment">  
-							<input type="text" class="form-control form-group" name="freecost" ng-model="container.freecost" ng-value="{{container.freecost}}" placeholder="Freecost">  
-						
+				</div>
+				<div class="row form-group">
+                        <div class="col-sm-2">
+							 <input type="checkbox" name="finance" ng-model="check.finance" value="checked" ng-change ="checkFinance(check.finance)"><br/>
+							 <label>List In Finanace</label>
 						</div>
-					</div>
 
-					<div class="col-sm-3">
-			        	<label>List In Lease</label>
-		 		        <input type="checkbox" name="lease" ng-model="check.lease" value="checked" ng-change ="checkLease(check.lease)"><br/>
-						 
-						 <div class="form-group" ng-if="Inlease">
-							<input type="text" class="form-control form-group" name="leaseprice" ng-model="container.leaseprice" ng-value="{{container.leaseprice}}"  placeholder="Price">
+						 <div class="col-sm-3 form-group" ng-if="finance">
+                               <select class="form-control form-group" name="financer" ng-model="container.financer" ng-change ="openForm(container.financer)"> 
+							          <option value="">Select Financer</option> 
+							          <option value="{{al}}" ng-repeat="al in agency| orderBy:'name'">{{al.name}}</option>
+							    </select>
+					    <div ng-if="openform">
+						    <div ng-repeat="rowContent in financerinfo track by $index">
+
+								<div class="form-group">
+									<button type="button" class="btn btn-block btn-primary" ng-click="Addfinance($index)">Add More</button> 
+									<button type="button" class="btn btn-block btn-primary" ng-click="deleteRow($event,rowContent)">Delete</button> 
+									<input type="text" class="form-control form-group" name="rate" ng-model="financerinfo[$index].rate" ng-value="" placeholder="Rate">  
+									<input type="text" class="form-control form-group" name="margin" ng-model="financerinfo[$index].margin" ng-value="" placeholder="Margin">  
+									<input type="text" class="form-control form-group" name="processingfee" ng-model="financerinfo[$index].processingfee" ng-value="" placeholder="Processingfee">  
+									<input type="text" class="form-control form-group" name="installment" ng-model="financerinfo[$index].installment" ng-value="" placeholder="Installment">  
+									<input type="text" class="form-control form-group" name="freecost" ng-model="financerinfo[$index].freecost" ng-value="" placeholder="Freecost">  
+								
+								</div> 
+							</div>
+
+							</div>
 						</div>
-					</div>
+					
+				</div>
+				<div class="row form-group">
+						<div class="col-sm-2">
+							<input type="checkbox" name="lease" ng-model="check.lease" value="checked" ng-change ="checkLease(check.lease)"><br/>
+							<label>List In Lease</label>
+						</div>	
+						<div class="form-group col-sm-3" ng-if="Inlease">
+							 <input type="text" class="form-control form-group" name="leaseprice" ng-model="container.leaseprice" ng-value="{{container.leaseprice}}"  placeholder="Price">
+						</div>
+				</div>
 				
 				
 				   <div class="col-sm-2 pull-right">
@@ -2846,7 +2864,7 @@
 									<td>{{offer.model.name}}</td>
 									<td>{{offer.location}}</td>
 									<td>{{offer.cash_purchase}}</td>
-									<td>{{offer.finance}}</td>
+				 					<td>{{offer.finance}}</td>
 									<td>{{offer.lease}}</td>
 									<td>
 								      <a href="javascript:void(0);" class="btn btn-primary btn-sm" uib-popover="Edit" popover-trigger="mouseenter" ng-click="offerVm.editClicked(offer)">
