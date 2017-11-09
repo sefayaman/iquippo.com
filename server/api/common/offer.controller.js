@@ -43,7 +43,24 @@ var ApiError = require('../../components/_error');
                 });
      };
       
-
+     exports.destroy = function(req, res, next) {
+      Offer.findById(req.params.id, function(err, oneRow) {
+        if (err) {
+          return handleError(res, err);
+        }
+        if (!oneRow) {
+          return next(new ApiError(404, "Not found"));
+        }
+        oneRow.remove(function(err) {
+          if (err) {
+            return handleError(res, err);
+          }
+          return res.status(204).send({
+            message: "Data deleted sucessfully!!!"
+          });
+        });
+      });
+    };
 
 
 
