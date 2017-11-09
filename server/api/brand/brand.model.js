@@ -9,6 +9,7 @@ var BrandSchema = new Schema({
   group:{},
   category:{},
   imgSrc:String,
+  imgNewEquipmentSrc:String,
   visibleOnUsed:{type:Boolean,default:false},
   isForNew:{type:Boolean,default:false},
   isForUsed:{type:Boolean,default:false},

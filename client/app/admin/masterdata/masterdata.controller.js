@@ -442,11 +442,14 @@ function MasterDataCtrl($scope, $rootScope,MasterDataService, groupSvc, modelSvc
 	     })
 	 }
 
-	 function uploadImage(files,modelRef,type,autoUpdate){
+	 function uploadImage(files,modelRef,type,autoUpdate,key){
 	 	if(!files.length)
 	 		return;
 	 	uploadSvc.upload(files[0],categoryDir).then(function(result){
-	 		modelRef.imgSrc = result.data.filename;
+	 		if(key)
+			 modelRef[key] = result.data.filename;
+			else
+			 modelRef.imgSrc = result.data.filename;
 	 		if(autoUpdate && type){
 	 			modelRef.type = type;
 	 			updateMasterdataStatus(modelRef);
