@@ -117,16 +117,6 @@
           var auctionRegislogin = $rootScope.$new();
           auctionRegislogin.currentAuction = auctionData;
           auctionRegislogin.registrationPage = true;
-          //auctionRegislogin.selectedLots = vm.selectedLots.lotNumber;
-          /*if($scope.currentAuction.emdTax === 'lotWise') {
-            auctionRegislogin.selectedLots = vm.selectedLots.lotNumber;
-          }
-          else {
-            auctionRegislogin.selectedLots = [];
-            vm.lotList.forEach(function(item){
-              auctionRegislogin.selectedLots[auctionRegislogin.selectedLots.length] = item.lotNumber;
-            });
-          }*/
           Modal.openDialog('auctionRegislogin',auctionRegislogin);
           //createReqData($scope.currentAuction, userData, vm.selectedLots.lotNumber);
         })
@@ -173,19 +163,7 @@
           closeDialog();
           var auctionRegislogin = $rootScope.$new();
           auctionRegislogin.currentAuction = auctionData;
-          //auctionRegislogin.selectedLots = vm.selectedLots.lotNumber;
-          /*if($scope.currentAuction.emdTax === 'lotWise') {
-            auctionRegislogin.selectedLots = vm.selectedLots.lotNumber;
-          }
-          else {
-            auctionRegislogin.selectedLots = [];
-            vm.lotList.forEach(function(item){
-              auctionRegislogin.selectedLots[auctionRegislogin.selectedLots.length] = item.lotNumber;
-            });
-          }*/
           Modal.openDialog('auctionRegislogin',auctionRegislogin);
-          //createReqData($scope.currentAuction, vm.user, vm.selectedLots.lotNumber);
-          // vm.user = {};
         })
         .catch(function(err) {
           err = err.data;
@@ -200,136 +178,6 @@
         });
 
     }
-
-    function createReqData(auctionData,userData,lotData) {
-      var dataObj = {};
-      dataObj.auction = {};
-      dataObj.user = {};
-      dataObj.auction.dbAuctionId = auctionData._id;
-      dataObj.auction.name = auctionData.name;
-      dataObj.auction.auctionId = auctionData.auctionId;
-      dataObj.auction.emdAmount = auctionData.emdAmount;
-      dataObj.auction.emdTax = $scope.currentAuction.emdTax;
-      dataObj.auction.auctionOwnerMobile = auctionData.auctionOwnerMobile;
-      if (userData._id)
-        dataObj.user._id = userData._id;
-      dataObj.user.fname = userData.fname;
-      dataObj.user.lname = userData.lname;
-      dataObj.user.countryCode = userData.countryCode ? userData.countryCode : LocationSvc.getCountryCode(userData.country);
-      dataObj.user.mobile = userData.mobile;
-      if (Auth.getCurrentUser().email)
-        dataObj.user.email = Auth.getCurrentUser().email;
-      //dataObj.lotNumber = lotData;
-      /*if(auctionData.emdTax === 'lotWise')
-          dataObj.selectedLots =  lotData;
-        else {
-          dataObj.selectedLots = [];
-          vm.lotList.forEach(function(item){
-            dataObj.selectedLots[dataObj.selectedLots.length] = item.lotNumber;
-          });
-        }*/
-      userRegForAuctionSvc.checkUserRegis(dataObj)
-      .then(function(result){
-       if(result.data){
-        closeDialog();
-          if(result.data =="done"){
-             Modal.alert("You have already registered for this auction with lotnumbers" +" "+ result.lotNumber); 
-           }
-           if(result.data =="undone"){
-            Modal.confirm("You have done partial registration, payment part is pending with lotnumbers "+" "+ result.lotNumber,function(isGo){
-              if(isGo == 'no'){
-                  return;
-               }else{
-                 Modal.confirm('Do you want to pay online', function(isGo) {
-                   if (isGo == 'no'){
-                    /*dataObj = {};
-                    dataObj.paymentMode = "offline";
-                    dataObj.transactionId = result.transactionId;
-                    userRegForAuctionSvc.saveOfflineRequest(dataObj).then(function(rd){
-                     Modal.alert("data saved Successfully"); 
-                     });*/
-                     updatePayment(dataObj, result);
-                   } else {
-                      $rootScope.loading = true;
-                      if(result && result.errorCode != 0){
-                        $state.go('main');
-                        return;
-                      }
-                      if (result.transactionId) {
-                        $rootScope.loading = false;
-                        $state.go('payment', {
-                        tid: result.transactionId
-                        });
-                      }
-                   }
-                 });
-               }
-               });
-            }
-        } else {
-            if(auctionData.emdTax == "overall") {
-              vm.emdAmount = auctionData.emdAmount;
-              save(dataObj, vm.emdAmount);
-            } else {
-              vm.dataModel.auctionId = auctionData._id;
-              vm.dataModel.selectedLots = lotData;
-              EmdSvc.getAmount(vm.dataModel)
-                .then(function(result) {
-                  /*console.log("The total Amount", result);
-                  dataObj.user.customerId=Auth.getCurrentUser().customerId;
-                  dataObj.selectedLots=vm.dataModel.selectedLots;
-                  save(dataObj, result[0].emdAmount);*/
-                  if(!result)
-                      return;
-                    $scope.showAlertMsg = true;
-                    $scope.emdAmount = result[0].emdAmount;
-                    var tempDataObj = {};
-                    angular.copy(dataObj, tempDataObj);
-                    if(paymentProcess)
-                      save(tempDataObj,result[0].emdAmount);
-                })
-                .catch(function(err) {});
-            }
-        }
-      });
-    }
-
-  function updatePayment(dataObj, result) {
-    var paymentObj = {};
-    if($scope.option.select)
-      paymentObj.paymentMode = $scope.option.select;
-    paymentObj.transactionId = result.transactionId;
-    paymentObj.auctionId = dataObj.auction.auctionId;
-    paymentObj.emdTax = dataObj.auction.emdTax;
-    paymentObj.requestType = "Auction Request";
-    paymentObj.status = transactionStatuses[1].code;
-    paymentObj.statuses = [];
-    var stObj = {};
-    stObj.userId = Auth.getCurrentUser()._id;
-    stObj.status = transactionStatuses[1].code;
-    stObj.createdAt = new Date();
-    paymentObj.statuses[paymentObj.statuses.length] = stObj;
-    userRegForAuctionSvc.saveOfflineRequest(paymentObj).then(function(rd){
-      Modal.alert("Your payment request submitted Successfully"); 
-    });
-  }
-
-  function save(dataObj, amount) {
-    dataObj.totalAmount = amount;
-    //dataObj.requestType = "UserRegAuc";
-    userRegForAuctionSvc.save(dataObj)
-      .then(function(result) {
-        $rootScope.loading = false;
-        if($scope.option.select === 'offline') {
-          updatePayment(dataObj, result);
-        }
-        closeDialog();
-      })
-      .catch(function(err) {
-        if (err.data)
-          Modal.alert(err.data);
-      });
-  }
 
     function closeDialog() {
       $uibModalInstance.dismiss('cancel');

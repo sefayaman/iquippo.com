@@ -15,22 +15,23 @@ function AuctionPaymentListingCtrl($scope,$rootScope,Modal,Auth,PaymentSvc) {
 	var selectedIds = [];
 	$scope.ReqSubmitStatuses = ReqSubmitStatuses;
 	vm.resendUserData = resendUserData;
-
+  
 	$scope.$on('refreshPaymentHistroyList',function(){
         getTrasactions(filter);
     });
 
-	function openPaymentModel(paymentData){
+	function openPaymentModel(paymentData, openDialog){
 		Auth.isLoggedInAsync(function(loggedIn) {
 		    if (loggedIn) {
-		       var OfflinePaymentScope = $rootScope.$new();
-		       OfflinePaymentScope.offlinePayment = paymentData;
-		        Modal.openDialog('OfflinePaymentPopup',OfflinePaymentScope);
+          var OfflinePaymentScope = $rootScope.$new();
+          OfflinePaymentScope.offlinePayment = paymentData;
+          OfflinePaymentScope.viewMode = openDialog;
+          Modal.openDialog('OfflinePaymentPopup',OfflinePaymentScope);
 		    }
 		});
 	}
 
-	 function init(){
+	function init(){
 	 	Auth.isLoggedInAsync(function(loggedIn){
 	 		if(loggedIn){
 	 			getTrasactions(filter);	

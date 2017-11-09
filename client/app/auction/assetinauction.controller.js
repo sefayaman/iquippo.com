@@ -7,16 +7,11 @@
     var vm = this;
 
     var query = $location.search();
-    //$scope.auctionName=$location.search().auctionName;
-    //console.log("query", query);
-    //console.log("userId", Auth.getCurrentUser()._id);
     var aswidgetUrl = auctionURL + "/bidwidget/{{lot.auctionId}}/{{lot.id}}/{{userId}}";
     $scope.asWidgetURLSCE = $sce.trustAsResourceUrl(aswidgetUrl);
     var liveAuctionUrl = auctionURL + "/liveAuction/"+query.id+"/"+Auth.getCurrentUser()._id;
     $scope.liveAuctionURLSCE=$sce.trustAsResourceUrl(liveAuctionUrl);
 
-    $scope.auctionType = $location.search().auctionType;
-    //$scope.auctionTypeValue = $location.search().auctionTypeValue;
     $scope.auctionOrientation = query.auctionOrientation;
     var filter = {};
     $scope.equipmentSearchFilter = {};
@@ -24,25 +19,24 @@
     vm.fireCommand = fireCommand;
     vm.productSearchOnMfg = productSearchOnMfg;
     vm.auctionDetailListing = [];
-    vm.lotListing = [];
     vm.backButton = backButton;
-    vm.auctionName = $location.search().auctionName;
-    vm.auctionOwner = $location.search().auctionOwner;
-    vm.auctionOwnerMobile = $location.search().auctionOwnerMobile;
-    vm.auctionCity = $location.search().auctionCity;
+
+    $scope.auctionType = $location.search().auctionType;
+    // vm.auctionName = $location.search().auctionName;
+    // vm.auctionOwner = $location.search().auctionOwner;
+    // vm.auctionOwnerMobile = $location.search().auctionOwnerMobile;
+    // vm.auctionCity = $location.search().auctionCity;
     $scope.auctionValue = $location.search().auctionType;
-    vm.auctionOwner = $location.search().auctionOwner;
-    vm.auctionOwnerMobile = $location.search().auctionOwnerMobile;
-    vm.auctionCity = $location.search().auctionCity;
-    vm.auctionTypeValue = $location.search().auctionTypeValue;
-    vm.termAuction = $location.search().termAuction;
+    // vm.auctionTypeValue = $location.search().auctionTypeValue;
+    // vm.termAuction = $location.search().termAuction;
     $scope.openUrl = openUrl;
-    $scope.userId = Auth.getCurrentUser()._id;
-    $scope.currentAuction = {};
+    //$scope.userId = Auth.getCurrentUser()._id;
+    //$scope.currentAuction = {};
     $scope.fetchAsset = fetchAsset;
     vm.openLiveAuctionURL = openLiveAuctionURL;
     $scope.isVisible = false;
     $scope.msg="";
+    vm.lotListing = [];
     //$scope.liveAuctionView=liveAuctionView;
     var temp = [];
     //registering category brand functions
@@ -51,6 +45,9 @@
     vm.openBidModal = openBidModal;
     vm.getAuctionById = getAuctionById;
     $scope.aucionData ={};
+
+    var dataObj={};
+    
     // bid summary
     function openBidModal(auction) {
 
@@ -105,10 +102,30 @@
         Modal.alert("Please Login/Register for uploading the products!", true);
         return;
       }
-      window.open($scope.liveAuctionURLSCE,'_blank');
+      dataObj = {};
+      dataObj.auction = {};
+      dataObj.user = {};
+      dataObj.auction.dbAuctionId = query.id;
+      dataObj.user._id = Auth.getCurrentUser()._id;
+      dataObj.reqSubmitted = true;
+      dataObj.emdTax = $scope.aucionData.emdTax;
+      userRegForAuctionSvc.checkUserRegis(dataObj)
+        .then(function(result) {
+          console.log("User regis",result);
+            if(result.errorCode === 0)
+              window.open($scope.liveAuctionURLSCE,'_blank');
+            else if(result.errorCode === 1)
+              Modal.alert("You have done partial registration, payment part is pending with lotnumbers" + result.selectedLots +". If you have already paid please contact support team!");              
+            else
+              Modal.alert("You are not register for this auction.Please register to access this auction!");
+        })
+        .catch(function(err) {
+          if (err && err.data)
+            Modal.alert(err.data);
+        });
     }
 
-    function save(dataObj) {
+    /*function save(dataObj) {
       userRegForAuctionSvc.save(dataObj)
         .then(function() {
           Modal.alert('Your request has been successfully submitted!');
@@ -117,7 +134,7 @@
           if (err.data)
             Modal.alert(err.data);
         });
-    }
+    }*/
 
     /* function fetchASURL(lotNumber,auctionOrientation){
        var displayBid='true';
@@ -142,10 +159,7 @@
         });
       $scope.auctionId = query.auctionId;
       filter._id = query.id;
-      //filter.status = "request_approved";
       getAuctionById(filter);
-      vm.lotListing = [];
-
       getLotsInAuction(filter);
     }
 
@@ -174,8 +188,8 @@
           if (res.items[0].auctionType === 'S') {
             filter.status = "request_approved";
           }
-          filter = {};
-          filter.auctionId = res.items[0]._id;
+          // filter = {};
+          // filter.auctionId = res.items[0]._id;
           ///getAssetsInAuction(filter);
         })
         .catch(function(err) {
@@ -308,7 +322,7 @@
               obj.amount=res[key].amount;
               obj.id=res[key].id;
               obj.primaryImg=res[key].primaryImg;
-              obj.url="http://auctionsoftwaremarketplace.com:3007/bidwidget/" + query.auctionId + "/" + obj.id + "/" + $scope.userId;
+              obj.url = auctionURL+ "/bidwidget/" + query.id + "/" + obj.id + "/" + Auth.getCurrentUser()._id;
               console.log("object",obj);
               var dataObj={};
               dataObj.auction = {};
@@ -321,20 +335,17 @@
                   console.log("User regis",result);
                   if (result.data) {
                     if (result.data == "done") {
-
                       obj.isVisible = true;
-
-
                     }
                     if (result.message == "No Data") {
                       obj.isVisible = false;
-
                     }
                   } else {
                     obj.isVisible = false;
                   }
+                  vm.lotListing.push(obj);
                 })
-             vm.lotListing.push(obj);
+             //vm.lotListing.push(obj);
             console.log("$scope.lotlist",vm.lotListing);     
             });
           }
@@ -440,9 +451,9 @@
       productSvc.getProductOnFilter(filter)
         .then(function(res) {
           if (displayBid) {
-            window.open('/productdetail/' + res[0]._id + '?assetListedInAuction=true&auctionId=' + $scope.auctionId + '&lotId=' + lotNumber + '&userId=' + Auth.getCurrentUser()._id + '&displayBid=' + displayBid);
+            window.open('/productdetail/' + res[0]._id + '?assetListedInAuction=true&id=' + $scope.aucionData._id + '&lotId=' + lotNumber + '&displayBid=' + displayBid);
           } else {
-            window.open('/productdetail/' + res[0]._id + '?assetListedInAuction=true&auctionId=' + $scope.auctionId + '&lotId=' + lotNumber + '&userId=' + Auth.getCurrentUser()._id + '&displayBid=' + displayBid);
+            window.open('/productdetail/' + res[0]._id + '?assetListedInAuction=true&id=' + $scope.aucionData._id + '&lotId=' + lotNumber + '&displayBid=' + displayBid);
           }
         })
         .catch(function(err) {

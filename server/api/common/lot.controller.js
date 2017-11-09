@@ -179,6 +179,8 @@ exports.getLots = function(req, res) {
     }
   ], function(err, results) {
     if (err) handleError(res, err);
+
+    console.log("resultsresultsresults get lot###", results);
     return res.json(results[2]);
   })
 };
@@ -345,7 +347,7 @@ function viewData(options, callback) {
       //lotObj['lotNumber'] = lotInfo[x.lot_id].lotNumber;
       lotObj[x.lotNumber]['assetDescription'] = [];
     }
-    lotObj[x.lotNumber].assetDescription.push(x.assetId);
+    lotObj[x.lotNumber].assetDescription.push(x.product.assetId);
     lotObj[x.lotNumber].amount = lotInfo[x.lot_id].amount;
     lotObj[x.lotNumber].id = x.lot_id;
     if (x.primaryImg !== "")

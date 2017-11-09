@@ -16,7 +16,7 @@ function AuctionRegisCtrl($scope, $rootScope, $location, Modal, Auth,PagerSvc,$u
   vm.auctionId ="";
   vm.log =[];
   vm.closeDialog=closeDialog;
-  var query=$scope.params;
+  //var query=$scope.params;
   $scope.transactionStatuses = transactionStatuses;
   function init() {
     LotSvc.getData({auction_id:$scope.currentAuction._id}).then(function(res){
@@ -63,7 +63,7 @@ function AuctionRegisCtrl($scope, $rootScope, $location, Modal, Auth,PagerSvc,$u
                Modal.alert("You have already registered for this auction with lotnumbers" +" "+ result.selectedLots); 
              }
              if(result.data =="undone"){
-                Modal.confirm("You have done partial registration, payment part is pending with lotnumbers "+" "+ result.selectedLots,function(isGo){
+                Modal.confirm("Your EMD payment is still pending. Please pay the EMD amount and inform our customer care team.",function(isGo){
                   if(isGo == 'no'){
                     return;
                 } else {

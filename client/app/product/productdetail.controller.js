@@ -8,11 +8,11 @@
     var vm = this;
    var query=$location.search();
 
-   if(query.assetListedInAuction){
-    $scope.assetListedInAuction=query.assetListedInAuction;
-console.log("assetListedInAuction",$scope.assetListedInAuction);
-}
-    var aswidgetUrl = auctionURL + "/bidwidget/"+query.auctionId+"/"+query.lotId+"/"+query.userId;
+    if(query.assetListedInAuction){
+      $scope.assetListedInAuction=query.assetListedInAuction;
+      console.log("assetListedInAuction",$scope.assetListedInAuction);
+    }
+    var aswidgetUrl = auctionURL + "/bidwidget/"+query.id+"/"+query.lotId+"/"+ Auth.getCurrentUser()._id;
     $scope.asWidgetURLSCE = $sce.trustAsResourceUrl(aswidgetUrl);
    //console.log("url",$scope.asWidgetURLSCE);
 

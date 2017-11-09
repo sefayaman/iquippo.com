@@ -269,6 +269,9 @@ function isEmpty(myObject) {
 
 exports.sendCompiledData = sendCompiledData;
 function sendCompiledData(options, cb) {
+  if (options.dataToSend.reqSubmitStatus)
+    delete options.dataToSend.reqSubmitStatus;
+
   if (options.dataToSend.hasOwnProperty('__v'))
     delete options.dataToSend._v;
   if (options.dataToSend.startDate && options.dataToSend.endDate) {

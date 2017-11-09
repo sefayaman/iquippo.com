@@ -1804,6 +1804,7 @@
         .then(function(res) {
           console.log("product lot", res);
           if (res.length > 0) {
+            angular.copy(res[0], $scope.lot);
             $scope.lot.lot_id = lotNumber;
             if (res[0] && res[0].startDate && res[0].endDate) {
               //$scope.lotDate = true;
@@ -1813,15 +1814,15 @@
 
             if (res[0]._id)
               $scope.lot._id = res[0]._id;
-            if (res[0] && res[0].startingPrice)
-              $scope.lot.startingPrice = res[0].startingPrice;
-            if (res[0] && res[0].lastMintBid)
-              $scope.lot.lastMintBid = res[0].lastMintBid;
-            if (res[0] && res[0].extendedTo)
-              $scope.lot.extendedTo = res[0].extendedTo;
+            // if (res[0] && res[0].startingPrice)
+            //   $scope.lot.startingPrice = res[0].startingPrice;
+            // if (res[0] && res[0].lastMintBid)
+            //   $scope.lot.lastMintBid = res[0].lastMintBid;
+            // if (res[0] && res[0].extendedTo)
+            //   $scope.lot.extendedTo = res[0].extendedTo;
             
             if (res[0].static_increment) {
-              $scope.lot.static_increment = res[0].static_increment;
+              $scope.lot.static_increment = Number(res[0].static_increment);
               $scope.lot.staticIncrement = true;
             }
             if (res[0].bidIncrement) {

@@ -52,8 +52,13 @@ function paymentUpdate(options,cb){
 exports.getOnFilter = function(req, res) {
   var filter = {};
   if(req.body._id)
-    filter["_id"] = req.body._id;
+    filter._id = req.body._id;
 
+  if(req.body.auction_id)
+    filter.auction_id = req.body.auction_id;
+
+  if(req.body.auctionId)
+    filter.auctionId = req.body.auctionId;
 
   if(req.body.userId)
     filter["user._id"] = req.body.userId;
@@ -88,7 +93,7 @@ exports.update = function(req, res) {
           req.body._id = req.params.id;
           postRequest(req, res);
         } else
-        return res.status(201).json({errorCode: 0,message: "Payment request submitted successfully !!!"});
+        return res.status(201).json({errorCode: 0,message: "You have sucessfully registered for the auction. Please pay the EMD amount and inform our customer care team."});
     });
   });
 };

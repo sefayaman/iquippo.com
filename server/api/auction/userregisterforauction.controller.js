@@ -8,7 +8,7 @@ var Utility = require('./../../components/utility.js');
 var PaymentTransaction = require('./../payment/payment.model');
 var Seq = require('seq');
 var xlsx = require('xlsx');
-
+var ReqSubmitStatuses = ['Request Submitted', 'Request Failed'];
 exports.getFilterOnRegisterUser = function(req, res) {
   var filter = {};
   var orFilter = [];
@@ -135,6 +135,12 @@ exports.checkUserRegis = function(req, res) {
     filter['user.mobile'] = req.body.paymentMode;
   }
 
+  // if(req.body.reqSubmitted)
+  //   filter.reqSubmitStatus = ReqSubmitStatuses[0];
+  
+  if(req.body.emdTax)
+    filter['auction.emdTax'] = req.body.emdTax;
+
   if (req.body.selectedLots) {
     if(!Array.isArray(req.body.selectedLots))
       arr = req.body.selectedLots.split(',');
@@ -146,7 +152,7 @@ exports.checkUserRegis = function(req, res) {
     }
 
   }
-  
+  console.log("filter checkUserRegis###", filter);
   var query = Model.find(filter);
 
   query.exec(
@@ -155,27 +161,28 @@ exports.checkUserRegis = function(req, res) {
         var filter = {};
         if(data[0].transactionId)
           filter._id = data[0].transactionId;
+        // filter.status = "completed";
+        // filter.reqSubmitStatus = ReqSubmitStatuses[0];
         PaymentTransaction.find(filter, function(err, payment) {
           if (err) {
             return handleError(err, res);
           }
           var message = {};
           if(!payment.length)
-            return res.status(200).json({message: "No Data"});
-          if (payment[0].status === "completed") {
+            return res.status(200).json({errorCode: 2, message: "No Data Found"});
+          if (payment[0].status === "completed" && payment[0].reqSubmitStatus === ReqSubmitStatuses[0]) {
             message.data = "done";
+            message.errorCode = 0;
           } else {
             message.data = "undone";
+            message.errorCode = 1;
           }
           message.selectedLots = data[0].selectedLots;
           message.transactionId = data[0].transactionId;
-          message.errorCode = 0;
           return res.status(200).json(message);
         });
       } else {
-        return res.status(200).json({
-          message: "No Data"
-        });
+        return res.status(200).json({errorCode: 2, message: "No Data Found"});
       }
     });
 };

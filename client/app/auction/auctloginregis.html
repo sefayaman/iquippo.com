@@ -19,21 +19,21 @@
       </div>
     </div>
     <div ng-if="currentAuction.emdTax === 'overall' || showAlertMsg">
-      <p ng-if="currentAuction.emdTax === 'overall'">Your EMD amount is {{currentAuction.emdAmount}} Rs. Do you want to pay</p>
-      <p ng-if="currentAuction.emdTax === 'lotWise'">Your EMD amount is {{emdAmount}} Rs. Do you want to pay</p>
+      <p ng-if="currentAuction.emdTax === 'overall'">You need to pay an EMD of Rs {{currentAuction.emdAmount}}. Please select your preferred payment method</p>
+      <p ng-if="currentAuction.emdTax === 'lotWise'">You need to pay an EMD of Rs {{emdAmount}}. Please select your preferred payment method</p>
       <div class="modal-body">
         <form novalidate class="" name="paymentForm">
           <div class="row">
             <div class="col-xs-6 col-sm-6 form-group">
               <div class="radio radio-info">
                       <input type="radio" id="offline" name="payment" ng-model="option.select" value="offline">
-                      <label for="offline"> Offline </label>
+                      <label for="offline"> Offline Payment </label>
                   </div>
             </div>
             <div class="col-xs-6 col-sm-6 form-group">
               <div class="radio radio-info">
                       <input type="radio" id="online" name="payment" ng-model="option.select" value="online" ng-disabled="true">
-                      <label for="online"> Online </label>
+                      <label for="online"> Online Payment</label>
                   </div>
             </div>
           </div>
