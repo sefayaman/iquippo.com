@@ -75,7 +75,7 @@ angular.module('sreizaoApp')
         controller: 'AllBrandCtrl',
         layout:'client'
       })*/
-      .state('categoryproduct', {
+      /*.state('categoryproduct', {
         url: '/viewproducts/:id?currentPage',
         templateUrl: 'app/product/viewproducts.html',
         controller: 'ViewProductsCtrl as viewproductVm',
@@ -92,7 +92,7 @@ angular.module('sreizaoApp')
            
           })
         }
-      })
+      })*/
       .state('productdetail', {
         url: '/productdetail/:id',
         templateUrl: 'app/product/productdetail.html',
@@ -161,6 +161,24 @@ angular.module('sreizaoApp')
         templateUrl: 'app/product/viewproducts.html',
         controller: 'ViewProductsCtrl as viewproductVm',
          layout:'client'
+      })
+      .state('productbycategory', {
+        url: '/category/:category?currentPage',
+        templateUrl: 'app/product/viewproducts.html',
+        controller: 'ViewProductsCtrl as viewproductVm',
+        layout:'client'
+      })
+      .state('productbygroup', {
+        url: '/industry/:group?currentPage',
+        templateUrl: 'app/product/viewproducts.html',
+        controller: 'ViewProductsCtrl as viewproductVm',
+        layout:'client'
+      })
+      .state('productbybrand',{
+        url: '/brand/:brand?currentPage',
+        templateUrl: 'app/product/viewproducts.html',
+        controller: 'ViewProductsCtrl as viewproductVm',
+        layout:'client'
       })
       .state('aboutus', {
         url:"/aboutus",

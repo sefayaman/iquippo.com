@@ -95,7 +95,7 @@
     </div>
     <div class="row">
       <div class="col-sm-4 form-group text-center" ng-repeat="category in categoryList" ng-if="$index < 6">   
-        <a href="javascript:void(0);" class="cat-rectangle">
+        <a href="/category/{{category.name}}?currentPage=1" class="cat-rectangle">
           <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{category.imgSrc}}" class="category-item">
         </a>
         <h5 class="category-name">{{category.name}} ({{category.count}})</h5>
@@ -113,7 +113,7 @@
     <div class="row">
       <div class="col-sm-4 form-group text-center" ng-repeat="brand in mainVm.brands" ng-if="$index < 6">   
         <div class="brand-logo">
-          <a href="javascript:void(0);">
+          <a href="/brand/{{brand.name}}?currentPage=1">
             <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{brand.imgSrc}}" height="100" width="250">
           </a>
         </div>
@@ -170,7 +170,7 @@
     </div>
     <div class="row">
       <div class="col-sm-4 form-group text-center" ng-repeat="group in mainVm.groups" ng-if="$index < 9">   
-        <a href="javascript:void(0);" class="industy-rectangle">
+        <a href="/industry/{{group.name}}?currentPage=1" class="industy-rectangle">
           <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{group.imgSrc}}" class="category-item">
         </a>
         <div class="category-name">

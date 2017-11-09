@@ -48,7 +48,7 @@ exports.productCount = function(req,res){
     Product.aggregate(
     { $match:filter},
     { $group: 
-      { _id: '$category._id', count: { $sum: 1 } } 
+      { _id: '$category.name', count: { $sum: 1 } } 
     },
     {$sort:{count:-1}},
     function (err, result) {
@@ -58,7 +58,7 @@ exports.productCount = function(req,res){
         cat = cat.toObject();
         resultArr.push(cat);
         result.forEach(function(item){
-          if(cat._id + "" === item._id)
+          if(cat.name + "" === item._id)
               cat.count = item.count;
         });
         if(!cat.count)
