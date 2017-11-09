@@ -111,7 +111,7 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
     }
 
     function getGroup(){
-      groupSvc.getAllGroup({isForUsed:true,visibleOnUsed:true})
+      groupSvc.getAllGroup({isForUsed:true,visibleOnUsed:true,categoryCount:true})
       .then(function(groups){
         vm.groups = groups;
       })

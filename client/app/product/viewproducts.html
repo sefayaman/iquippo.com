@@ -4,7 +4,7 @@
       <a href="/main"> Home </a>
     </li>
     <li><a href="/main"> Used Equipments </a></li>
-    <li class="active"> Construction &amp; Mining </li>
+    <li class="active"> {{displayText || equipmentSearchFilter.group || equipmentSearchFilter.category || equipmentSearchFilter.brand || equipmentSearchFilter.tradeType || equipmentSearchFilter.location || equipmentSearchFilter.tradeType || equipmentSearchFilter.assetId || "XXXXX"}} </li>
   </ol>
 </div>
 
@@ -22,9 +22,9 @@
             </div>
         </uib-accordion-group>
 
-        <uib-accordion-group is-open="status.trade">
+        <uib-accordion-group is-open="status.tradeType">
           <uib-accordion-heading>
-            Available For (2)<i class="pull-right fa" ng-class="{'fa-minus': status.trade, 'fa-plus': !status.trade}"></i>
+            Available For (2)<i class="pull-right fa" ng-class="{'fa-minus': status.tradeType, 'fa-plus': !status.tradeType}"></i>
           </uib-accordion-heading>
             <div class="radio">
               <input type="radio" ng-model="equipmentSearchFilter.tradeType" name="tradetype" value="SELL" id="buying"> <label for="buying">Buying</label>
@@ -61,7 +61,7 @@
           <uib-accordion-heading>
             Location <i class="pull-right fa" ng-class="{'fa-minus': status.location, 'fa-plus': !status.location}"></i>
           </uib-accordion-heading>
-          <input type="text" class="form-control form-group" ng-model="equipmentSearchFilter.locationName" placeholder="Enter Country/State/Location" uib-typeahead="address for address in getLocationHelp($viewValue)"  class="form-control" typeahead-focus-first = "false" typeahead-wait-ms="200" ng-change="viewproductVm.fireCommand()" typeahead-on-select="viewproductVm.fireCommand()"  ng-model-options="{debounce:1000}" autocomplete="off"/>
+          <input type="text" class="form-control form-group" ng-model="equipmentSearchFilter.location" placeholder="Enter Country/State/Location" uib-typeahead="address for address in getLocationHelp($viewValue)"  class="form-control" typeahead-focus-first = "false" typeahead-wait-ms="200" ng-change="viewproductVm.fireCommand()" typeahead-on-select="viewproductVm.fireCommand()"  ng-model-options="{debounce:1000}" autocomplete="off"/>
         </uib-accordion-group>
         <uib-accordion-group is-open="Infostatus.open">
           <uib-accordion-heading>
@@ -74,7 +74,7 @@
     <div class="col-sm-9">
       <div class="row">
         <div class="col-sm-10 form-group">
-          <h4>CONSTRUCTION &amp; MINING EQUIPMENTS (765 Results Found)</h4>
+          <h4>{{ displayText || equipmentSearchFilter.group || equipmentSearchFilter.category || equipmentSearchFilter.brand || equipmentSearchFilter.tradeType || equipmentSearchFilter.location || equipmentSearchFilter.tradeType || equipmentSearchFilter.assetId ||"XXXXX"}} (765 Results Found)</h4>
         </div>
         <div class="col-sm-2 form-group">
           <select class="form-control" ng-change="viewproductVm.sortBy()" ng-model="viewproductVm.sortByFlag">
@@ -94,17 +94,14 @@
               <button type="button" class="btn btn-default">Auctioned Equipments(70)</button>
             </div> -->
           </div>
-          <div class="col-sm-4 col-md-offset-3 col-md-3 form-group">
-            <div class="btn-group pull-right">
-              <button type="button" class="btn btn-default"><< Previous</button>
-              <button type="button" class="btn btn-default">Next >></button>
-            </div>
+          <div class="col-sm-4 col-md-offset-3 col-md-3 form-group text-right">
+            <uib-pagination total-items="viewproductVm.totalItems" ng-click="viewproductVm.onPageChange()" ng-model="viewproductVm.currentPage" items-per-page="viewproductVm.itemsPerPage" max-size="0" boundary-links="false" rotate="false" next-text="Next >>" previous-text="<< Previous"></uib-pagination>
           </div>
         </div>
         <div class="row">      
           <div class="col-sm-6 col-md-4 form-group" ng-repeat="product in productList | startFrom:(viewproductVm.currentPage -1 )*viewproductVm.itemsPerPage | limitTo:viewproductVm.itemsPerPage">
             <div class="media text-center form-group">
-              <a href="javascript:void(0);">
+              <a ng-href="/productdetail/{{product._id}}">
                  <img ng-src="{{uploadImagePrefix}}{{product.assetDir}}/{{product.primaryImg}}" class="img-responsive">              
               </a>          
               <div class="media-body text-left"> 
@@ -156,7 +153,7 @@
         </div>
 
         <div class="text-center form-group">
-          <uib-pagination total-items="viewproductVm.totalItems" ng-click="viewproductVm.onPageChange()" ng-model="viewproductVm.currentPage" items-per-page="viewproductVm.itemsPerPage" max-size="viewproductVm.maxSize" boundary-links="true" rotate="false"></uib-pagination>
+          <uib-pagination total-items="viewproductVm.totalItems" ng-click="viewproductVm.onPageChange()" ng-model="viewproductVm.currentPage" items-per-page="viewproductVm.itemsPerPage" max-size="viewproductVm.maxSize" boundary-links="false" rotate="false" next-text=">" previous-text="<"></uib-pagination>
         </div>
       </div>
 

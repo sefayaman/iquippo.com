@@ -8,12 +8,12 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
   $scope.productList = [];
   $scope.equipmentSearchFilter = {};
   $scope.filterType = $state.current.name;
-
   var productList = [];
-  //$scope.currentCategroy = 'All Product';
   
   $scope.searching = true;
   $scope.noResult = false;
+  $scope.status = {};
+  $scope.displayText = $stateParams.group || $stateParams.category || "";
 
   /* pagination flag */
   vm.itemsPerPage = 12;
@@ -26,32 +26,24 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
 
   vm.onGroupChange = onGroupChange;
   vm.onCategoryChange = onCategoryChange;
-  //vm.onBrandChange = onBrandChange;
-  //vm.onStateChange = onStateChange;
   vm.fireCommand = fireCommand;
-  //vm.getStateHelp = getStateHelp;
-  //vm.getCityHelp = getCityHelp;
   vm.getAssetIdHelp = getAssetIdHelp;
 
   vm.sortBy = sortBy;
-  //vm.updateSelection = updateSelection;
   vm.addProductToCart = addProductToCart;
   vm.addToCompare = addToCompare;
   vm.compare = compare;
   vm.removeProductFromCompList = removeProductFromCompList;
-  //vm.onTypeChange = onTypeChange;
   vm.onPageChange = onPageChange;
-  /*$scope.filterbutton = {
-    value1: false
-  }*/
 
-   /*$scope.dynamicPopover = {
-    templateUrl: 'myPopoverTemplate.html'
-  };*/
-  //var filter = {};
   var allCategory = [];
   var allBrand = [];
   function init(){
+    
+      for(var key in $stateParams){
+        if($stateParams[key])
+          $scope.status[key] = true;
+      }
 
       groupSvc.getAllGroup({isForUsed:true})
       .then(function(result){
@@ -62,14 +54,23 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
       .then(function(result){
         $scope.categoryList = result;
         allCategory = result;
+        if($stateParams.category){
+           allCategory.forEach(function(catObj){
+            if(catObj.name === $stateParams.category)
+              $scope.equipmentSearchFilter.group = catObj.group.name;
+          });
+        }
+        if($stateParams.group)
+            onGroupChange($stateParams.group,true);
       });
 
       brandSvc.getBrandOnFilter({isForUsed:true})
       .then(function(result){
         allBrand = result;
-        $scope.brandList = result; 
+        $scope.brandList = result;
+        if($stateParams.category)
+            onCategoryChange($stateParams.category,true); 
       });
-
       restoreState();
       fireCommand(true,true);
       
@@ -99,70 +100,28 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
           break;
       }*/
 
-      /*if($state.current.name == "viewproduct"){
-       $scope.equipmentSearchFilter = {};
-       restoreState();
-       if($scope.equipmentSearchFilter.category){
-          onCategoryChange($scope.equipmentSearchFilter.category,true);
-          var catg = categorySvc.getCategoryByName($scope.equipmentSearchFilter.category);
-          if(catg)
-              $scope.equipmentSearchFilter.group = catg.group.name;
-       }
-       if($scope.equipmentSearchFilter.brand)
-          onBrandChange($scope.equipmentSearchFilter.brand,true);
-          fireCommand(true,true);
-
-    }else if($state.current.name == "categoryproduct"){
-        $scope.equipmentSearchFilter = {};
-        var cat = categorySvc.getCategoryOnId($stateParams.id);
-        if(cat){
-          $scope.equipmentSearchFilter.category = cat.name;
-          //$scope.selectedCategory = cat;
-          $scope.equipmentSearchFilter.group = "";
-          onCategoryChange(cat.name,true);
-        }
-        $scope.searching = true;
-        productSvc.getProductOnCategoryId($stateParams.id)
-        .then(function(result){
-          $scope.searching = false;
-          //vm.productListToCompare = [];
-
-          if(result.length > 0){
-            vm.currentPage = parseInt($stateParams.currentPage) || 1;
-            vm.totalItems = result.length;
-            $scope.noResult = false;
-          }else{
-            $scope.noResult = true;
-          }
-          $scope.productList = result;
-          productList = result;
-        })
-        .catch(function(){
-          //error handling
-        });
-    }else{
-      $state.go('main');
-    }*/
     //updateCompareCount();
   }
 
   function onGroupChange(group,noAction){
+    if(!noAction){
+      $scope.equipmentSearchFilter.category = "";
+      $scope.equipmentSearchFilter.brand = "";
+      $scope.brandList = [];
+    }
 
-    $scope.equipmentSearchFilter.category = "";
-    $scope.equipmentSearchFilter.brand = "";
     $scope.categoryList = allCategory.filter(function(item){
       return item.group.name === group;
     });
-    $scope.brandList = allBrand.filter(function(item){
-      return item.group.name === group;
-    });
+
     if(!noAction)
       fireCommand();
   }
 
   function onCategoryChange(category,noAction){
-
-    $scope.equipmentSearchFilter.brand = "";
+    if(!noAction){
+      $scope.equipmentSearchFilter.brand = "";
+    }
     $scope.brandList = allBrand.filter(function(item){
       return item.category.name === category;
     });
@@ -182,13 +141,15 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
       fireCommand();
   }
 
-  function fireCommand(noReset,doNotSaveState){
+  function fireCommand(noReset,initLoad){
 
       if(!noReset)
         vm.currentPage = 1;
-      if(!doNotSaveState){
+      if(!initLoad){
+        $scope.displayText = "";
         saveState(false);
       }
+
       var filter = {};
       angular.copy($scope.equipmentSearchFilter,filter);
       filter['status'] = true;

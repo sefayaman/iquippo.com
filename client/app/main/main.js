@@ -99,12 +99,6 @@ angular.module('sreizaoApp')
         controller: 'ProductDetailCtrl as productDetailVm',
         layout:'client'
       })
-      .state('getquote', {
-        url: '/getquote',
-        templateUrl: 'app/product/getquote.html',
-        controller: 'ProductQuoteCtrl',
-        layout:'client'
-      })
       .state('productlisting', {
         url: '/productlisting?first_id&last_id&currentPage&prevPage&searchstr&statusText' +
               '&featured&tradeValue&assetStatus&searchType&coulmnSearchStr&reset',

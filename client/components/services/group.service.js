@@ -6,12 +6,10 @@
   function GroupSvc($http,$httpParamSerializer,$rootScope,$q){
     var gpService = {};
     var path = '/api/group';
-    //var groupCache = [];
+    var groupCache = [];
     gpService.getAllGroup =  getAllGroup;
     gpService.getHelp =  getHelp;
-    //gpService.getGroupOnId = getGroupOnId;
-    //gpService.getGroupOnName = getGroupOnName;
-    //gpService.clearCache = clearCache;
+    gpService.clearCache = clearCache;
 
     function getAllGroup(filter){
       var serPath = path;
@@ -32,9 +30,11 @@
       }); 
     };
 
-    function getHelp(searchText) {
+    function getHelp(searchText,isForKey) {
       var serData = {};
       serData['searchStr'] = searchText;
+      if(isForKey)
+          serData[isForKey] = true;
       return getAllGroup(serData)
       .then(function(result){
          return result.map(function(item){
@@ -43,31 +43,10 @@
       })
     };
 
-    /*function getGroupOnId(id){
-      var gp;
-      for(var i = 0; i < groupCache.length ; i++){
-        if(groupCache[i]._id == id){
-          gp = groupCache[i];
-          break;
-        }
-      }
-      return gp;
-    };
 
-    function getGroupOnName(name){
-      var gp;
-      for(var i = 0; i < groupCache.length ; i++){
-        if(groupCache[i].name == name){
-          gp = groupCache[i];
-          break;
-        }
-      }
-      return gp;
-    };*/
-
-  /*  function clearCache(){
+    function clearCache(){
       groupCache = [];
-    }*/
+    }
     return gpService;
   }
 

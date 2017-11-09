@@ -19,10 +19,6 @@ var Modals = {
     tplUrl:"app/quote/quote.html",
     Ctrl:'QuoteRequestCtrl'
   },
-  getquote:{
-    tplUrl:"app/product/getquote.html",
-    Ctrl:'ProductQuoteCtrl'
-  },
   forgotpassword:{
     tplUrl:"app/account/forgotpassword/forgotpassword.html",
     Ctrl:'ForgotPasswordCtrl as forgetPassVm'

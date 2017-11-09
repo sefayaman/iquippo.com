@@ -36,49 +36,70 @@
         <div class="col-sm-5 form-group">
           <div class="currentproduct-info">
             <h2>
-            {{currentProduct.name}} VOLVO EXCAVATOR 240B PRIME
+            {{currentProduct.name}}
             </h2>
             <div class="row locale-operation">
               <div class="col-xs-4 form-group">
-                <span><i class="fa fa-map-marker"></i> {{currentProduct.country}} Hyderabad</span>
+                <span><i class="fa fa-map-marker"></i> {{currentProduct.country}}</span>
               </div>
               <div class="col-xs-4 form-group">
-                <span><i class="fa fa-clock-o"></i> {{currentProduct.operatingHour}} 230 Hours</span>
+                <span><i class="fa fa-clock-o"></i> {{currentProduct.operatingHour}}Hours</span>
               </div>
               <div class="col-xs-4 form-group">
-                <span><i class="fa fa-calendar-o"></i> {{currentProduct.mfgYear}} 2015 </span>
+                <span><i class="fa fa-calendar-o"></i> {{currentProduct.mfgYear}}</span>
               </div>
             </div>
           </div>
-          <div class="asset-sale">
+          <div class="asset-sale" ng-if="currentProduct.tradeType == 'SELL' || currentProduct.tradeType == 'BOTH' || currentProduct.tradeType == 'NOT_AVAILABLE'">
             <form novalidate name="assetSale">
-              <div class="asset-short-info"> Asset ID: <strong>{{currentProduct.assetId}} 12687544684165</strong> </div>
-              <div class="row price-offer">
+              <div class="row">
+                <div class="col-sm-8">
+                  <div> Asset ID: <strong>{{currentProduct.assetId}}</strong> </div>
+                </div>
+                <div class="col-sm-4 text-right" ng-if="productDetailVm.bidCount !== 0">
+                  <p>[{{productDetailVm.bidCount}} Bids]</p>
+                </div>
+              </div>
+              <div class="listed-item" ng-if="auctionsData.name"><i class="fa fa-gavel"></i> <strong>Listed in Auction:</strong> <span class="text-info">{{auctionsData.name}} ({{auctionsData.auctionId}}) </span>  <span class="pull-right"><i class="fa fa-calendar"></i> {{auctionsData.startDate | date:'MMM d'}} - {{auctionsData.endDate | date:'MMM d'}}</span>
+              </div>
+               
+              <div class="row price-offer" ng-if="!currentProduct.priceOnRequest">
                 <div class="col-sm-8 form-group">
                   <label>To Buy</label>
-                  <h1>
-                  <i class="fa fa-inr"></i> 4,050,000/-
+                  <h1 ng-if="currentProduct.grossPrice">
+                  <i class="fa fa-inr"></i> {{currentProduct.grossPrice | number:0}}/-
                   </h1>
-                  (Inclusive of Taxes)
+                  <span ng-if="currentProduct.grossPrice">(Inclusive of Taxes)</span>
+                  <h1 ng-if="!currentProduct.grossPrice">
+                  <i class="fa fa-inr"></i> Price On Request/-
+                  </h1>
                 </div>
                 <div class="col-sm-4 form-group">
                   <label class="invisible">To Buy</label>
-                  <button type="button" class="btn btn-primary btn-block">Make an Offer</button>
+                    <a href="javascript:void(0);" ng-click="productDetailVm.openBidModal(currentProduct.grossPrice || 0,'buynow')" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE' || auctionsData.visibleBuyNow == false  || productDetailVm.userCurrentBid.offerType == 'Buynow'" class="btn btn-primary btn-block">Buy Now</a>
                 </div>
-              </div>
-              <div class="option-border text-center">
-                <span class="option">or</span>
-                <hr>
+                <div class="option-border text-center">
+                  <span class="option">or</span>
+                  <hr>
+                </div>
               </div>
               
+              
               <div class="row price-offer">
-                <div class="col-sm-8 form-group">
+                <div class="col-sm-6 form-group">
                   <label>To Negotiate</label>
-                  <input type="text" class="form-control" name="" value="" placeholder="Enter Alternative Offer">
+                  <div ng-class="{'has-error': assetSale.bidAmount.$invalid && bidSubmitted}">
+                        <input type="number" class="form-control" name="bidAmount" ng-model="productDetailVm.bidAmount" placeholder="Enter Bid Amount" required>
+                  </div>
                 </div>
-                <div class="col-sm-4 form-group">
-                  <label class="invisible">To Negotiate</label>
-                  <button type="button" class="btn btn-primary btn-block">Submit Offer</button>
+                <div class="col-sm-6 form-group">
+                  <label class="invisible">To Negotiate</label> <br>
+                  <button type="button" ng-if="(!isLoggedIn() || userBids == 0) && allowBid != 'No'" class="btn btn-primary" ng-click="productDetailVm.openBidModal(productDetailVm.bidAmount,'placebid',assetSale)" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE'">
+                  Place Bid
+                  </button>
+                  <button type="button" ng-if="isLoggedIn() && userBids >= 1 && (allowBid != 'No')" class="btn btn-primary" ng-click="productDetailVm.openBidModal(productDetailVm.bidAmount,'placebid',assetSale)" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE'">Change Bid</button>
+                  <button type="button" ng-if="isLoggedIn() && userBids >= 1 && (allowBid != 'No')" class="btn btn-primary" ng-click="productDetailVm.withdrawBid()" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE'">Withdraw</button>
+                  <button type="button" ng-if="allowBid == 'No'" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE' || auctionsData.visibleBuyNow == false" class="btn btn-primary" ng-click="productDetailVm.openBidModal(productDetailVm.bidAmount,'proxybid',assetSale)">Proxy Bid</button>
                 </div>
               </div>
             </form>
@@ -204,7 +225,7 @@
           <div class="row">
             <div class="col-xs-6 col-sm-4 col-md-2 form-group">
               <label>Asset ID</label>
-              <h4>{{currentProduct.assetId}} 215165115615661</h4>
+              <h4>{{currentProduct.assetId}}</h4>
             </div>
             <div class="col-xs-6 col-sm-4 col-md-2 form-group">
               <label>Brand / Model</label>
