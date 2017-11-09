@@ -16,8 +16,12 @@ var CategorySchema = new Schema({
     type: Boolean,
     default: false
   },
+  visibleOnUsed:{type:Boolean,default:false},
+  isForNew:{type:Boolean,default:false},
+  isForUsed:{type:Boolean,default:false},
   createdAt: {type:Date,default:Date.now},
-  updatedAt: {type:Date,default:Date.now}
+  updatedAt: {type:Date,default:Date.now},
+  useFor: String
 });
 
 module.exports = mongoose.model('Category', CategorySchema);

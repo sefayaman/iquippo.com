@@ -63,6 +63,18 @@ angular.module('sreizaoApp')
         controller: 'ClassifiedAdCtrl',
         layout:'client'
       })
+      .state('allcategory', {
+        url: '/allcategory',
+        templateUrl: 'app/category/allcategory.html',
+        controller: 'AllCategoryCtrl as allCategoryVm',
+        layout:'client'
+      })
+      /*.state('allbrand', {
+        url: '/allbrand',
+        templateUrl: 'app/brand/allbrand.html',
+        controller: 'AllBrandCtrl',
+        layout:'client'
+      })*/
       .state('categoryproduct', {
         url: '/viewproducts/:id?currentPage',
         templateUrl: 'app/product/viewproducts.html',
@@ -621,6 +633,16 @@ angular.module('sreizaoApp')
         templateUrl: 'app/assetsale/bidhistory.html',
         layout:'client',
         authenticate:true
+      })
+       .state('newequipment', {
+        url:"/newequipment",
+        templateUrl: 'app/newequipment/newequipment.html',
+        controller:"NewEquipmentCtrl",
+        layout:'client',
+        onEnter:function($rootScope){
+          //$rootScope.choosenTitle=pagesTitles.valuation.title;
+          //$rootScope.metaDescription=pagesTitles.valuation.meta;
+        }
       })
 
       $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';

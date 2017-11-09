@@ -1,9 +1,7 @@
 <section class="banner">
-  <!-- <div class="overlay"></div> -->
   <div id="slides_control">
     <uib-carousel interval="mainVm.myInterval" no-wrap="noWrapSlides">
-      <uib-slide data-ng-repeat="slide in mainVm.slides">
-      <!-- <div class="overlay" data-ng-if="slide.isClickable != 'Yes'"></div> -->
+      <uib-slide data-ng-repeat="slide in mainVm.slides">      
       <a ng-href="{{slide.linkUrl}}" target="_blank" data-ng-if="slide.isClickable == 'Yes'">
         <img  data-ng-src="{{uploadImagePrefix}}banner/{{slide.webImg}}" data-ng-if="!slide.default">
       </a>
@@ -11,464 +9,277 @@
         <img  data-ng-src="{{uploadImagePrefix}}banner/{{slide.webImg}}" data-ng-if="!slide.default">
       </a>
       <img  data-ng-src="{{uploadImagePrefix}}banner/{{slide.webImg}}" data-ng-if="!slide.default && slide.hyperlink != 'Yes' && slide.isClickable != 'Yes'">
-      <img  data-ng-src="assets/images/{{slide.webImg}}" data-ng-if="slide.default">
-        <!-- <div class="carousel-caption" data-ng-if="!slide.default">
-          <h1>{{slide.name}}</h1>          
-          <h2>Promocode: {{slide.code}}</h2>
-          <button type="button" class="btn btn-md btn-primary">Bid Now</button>          
-        </div> -->
-        <!-- <a href="javascript:void(0);" data-ng-if="slide.hyperlink == 'Yes'" data-ng-click="mainVm.openBidModal(slide)" class="bid-gif"><img src="assets/images/bid-now.gif"></a> -->
+      <img  data-ng-src="assets/images/{{slide.webImg}}" data-ng-if="slide.default">        
       </uib-slide>
-      <div class="tricker" data-ng-if="mainVm.getBids != 0">
-        <marquee><span data-ng-repeat="bids in mainVm.getBids">{{bids.name}}: {{bids.bidValuesStr}}  </span></marquee>
-      </div>
     </uib-carousel>
   </div>
-  <!-- <a href="javascript:void(0);" data-ng-click="openDialog('classifiedad')" class="btn btn-primary ad-btn">
-    Place Classified Ad
-  </a> -->
-  <div class="col-xs-12 col-sm-offset-1 col-sm-10 search-banner">    
+  <div class="col-xs-12 col-sm-offset-1 col-sm-10 search-banner">        
     <div class="search-tabs">
 
-      <!-- Nav tabs -->
-      <div class="btn-group">
-        <label class="btn btn-default btn-lg" ng-model="mainVm.radioModel" btn-radio="'SELL'" selected="">Buy</label>
-        <label class="btn btn-default btn-lg" ng-model="mainVm.radioModel" btn-radio="'RENT'">Rent</label>
+      <p class="text-center">I'M LOOKING FOR:</p>
+
+      <div class="row" ng-if="mainVm.singleBox">
+        <div class="col-sm-offset-3 col-sm-6">          
+          <div class="input-group">
+            <input type="text" placeholder="Search for Assets and More" ng-model="mainVm.searchstr" class="form-control"  ng-keypress="mainVm.myFunct($event)" />
+            <a href="javascript:void(0);" class="input-group-addon" ng-click="mainVm.toggleSearchBox(false)">Choose</a>
+          </div>
+        </div>
       </div>
 
       <!-- Tab panes -->
-      <div class="tab-content">
-        <form>
+      <div class="row" ng-if="!mainVm.singleBox">
+        <div class="col-sm-offset-2 col-sm-8">
+          <div class="filter">
             <div class="row">
-              <div class="col-sm-3">
-                <div class="select-text">
-                  <input type="text" ng-model="mainVm.categorySearchText" placeholder="Enter Category Name" uib-typeahead="address for address in getCategoryHelp($viewValue)"  class="form-control"  ng-keypress="mainVm.myFunct($event)" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
+              <div class="col-sm-1 padd-left padd-right select-text">
+                <div class="form-control text-center back-tohome">
+                  <a href="javascript:void(0);" ng-click="mainVm.toggleSearchBox(true)"><i class="fa fa-angle-left fa-2x"></i></a>
                 </div>
               </div>
-              <div class="col-sm-3">
-                <div class="select-text">
-                  <input type="text" class="form-control" ng-model="mainVm.locationSearchText" placeholder="Enter Country/State/Location" uib-typeahead="address for address in getLocationHelp($viewValue)"  class="form-control" ng-keypress="mainVm.myFunct($event)" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
-                </div>
+              <div class="col-sm-3 padd-left padd-right select-text">
+                <input type="text" placeholder="Industry Name" ng-model="mainVm.groupSearchText" class="form-control" uib-typeahead="address for address in getGroupHelp($viewValue)" typeahead-focus-first = "false" typeahead-wait-ms="200" ng-keypress="mainVm.myFunct($event)"/>
+              </div>
+              <div class="col-sm-3 padd-left padd-right select-text">
+                <input type="text" ng-model="mainVm.categorySearchText" placeholder="Category" uib-typeahead="address for address in getCategoryHelp($viewValue)"  class="form-control"  ng-keypress="mainVm.myFunct($event)" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
+              </div>
+              <div class="col-sm-3 padd-left padd-right select-text">
+                <input type="text" class="form-control" ng-model="mainVm.locationSearchText" placeholder="Seller Location" uib-typeahead="address for address in getLocationHelp($viewValue)"  class="form-control" ng-keypress="mainVm.myFunct($event)" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
               </div> 
-              <div class="col-sm-3">
-                <div class="select-text">
-                  <input type="text" class="form-control" ng-model="mainVm.searchstr" placeholder="Enter Product Name/Asset Id" class="form-control" ng-keypress="mainVm.myFunct($event)"/>
-                </div>
-              </div>             
-              <div class="col-sm-3 text-center">
-                <a href="javascript:;"  class="btn btn-lg btn-warning btn-block" data-ng-click="mainVm.doSearch()"><i class="fa fa-search"></i> Search Assets</a>
+              <div class="col-sm-2 padd-left padd-right select-text">
+                <input type="text" class="form-control" placeholder="Brand" ng-model="mainVm.brandSearchText" class="form-control" uib-typeahead="address for address in getBrandHelp($viewValue)" typeahead-wait-ms="200" ng-keypress="mainVm.myFunct($event)"/>
               </div>
             </div>
-        </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-offset-3 col-sm-6 text-center">
+      <button type="button" class="btn btn-default" data-ng-click="mainVm.doSearch()">Search Used Equipments</button>
+    </div>
+
+  </div>
+</section>
+
+<!-- Upcoming Auction -->
+<section class="category-block upcoming-auction">
+  <div class="heading-titles text-center">
+    <h4>[ Upcoming Auction ]</h4>
+    <a href="/viewauctions?type=upcoming">View All Auctions (20)</a>
+  </div>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-4 form-group" ng-repeat="auction in mainVm.auctionListing">
+        <a href="javascript:void(0);" class="media">
+          <div class="calendar-date pull-left" href="#">
+            <h4>{{auction.startDate | date :'dd'}}</h4>
+            <small>{{auction.startDate | date :'MMM'}}</small>
+          </div>
+          <div class="media-body">
+            <h4 class="media-heading">{{auction.name}}</h4>
+            <p>({{auction.total_products}} Assets  |  {{auction.state}})</p>
+            <span>{{auction.startTimer | date :'hh:mma'}} to {{auction.endTimer | date :'hh:mma'}}</span>
+          </div>
+        </a>
       </div>
     </div>
   </div>
 </section>
-
-
-<section class="wrapper">
-  <div class="container">
-
-    <div class="row main-container">
-    <div class="col-sm-2 col-md-2 hidden-xs">
-            
-       <a href="javascript:void(0);" ng-click="submitToRapid()" data-ng-if="mainVm.classifiedAd.imgLeftTop.src">
-      <!--  <a href="/financing" target="_blank"> -->
-          <img data-ng-src="{{uploadImagePrefix}}{{classifiedAdDir}}/{{mainVm.classifiedAd.imgLeftTop.src}}" class="img-responsive add1">
-       </a>
-        <!-- <img src="assets/images/Ad_Banner_1.jpg" class="img-responsive add1"> -->
-        <div class="form-group"></div>
-        <!-- <img src="assets/images/Ad_Banner_2.jpg" class="img-responsive add1"> -->
-        <a ng-href="{{mainVm.classifiedAd.imgLeftCenter.websiteUrl}}" target="_blank" data-ng-if="mainVm.classifiedAd.imgLeftCenter.src">
-       <!--  <a href="/insurance" target="_blank"> -->
-          <img  data-ng-src="{{uploadImagePrefix}}{{classifiedAdDir}}/{{mainVm.classifiedAd.imgLeftCenter.src}}" class="img-responsive add1">
-        </a>
-        <div class="form-group"></div>
-        <a ng-href="{{mainVm.classifiedAd.imgLeftBottom.websiteUrl}}" target="_blank" data-ng-if="mainVm.classifiedAd.imgLeftBottom.src">
-          <img  data-ng-src="{{uploadImagePrefix}}{{classifiedAdDir}}/{{mainVm.classifiedAd.imgLeftBottom.src}}" class="img-responsive add1">
-        </a>
-      </div>
-      <div class="col-sm-10 col-md-7 padd-left">
-        <!-- <div class="head">
-
-          <legend class="dull"></legend>
-          <legend class="dark"></legend>
-        </div> -->
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <h4 class="panel-title"><i class="fa fa-th"></i> Categories</h4>
-          </div>
-        </div>
-        <div class="cat cat-product text-center">
-          <ul class="cat-list">
-            <li data-ng-repeat="category in categoryList">
-              <a href="/viewproducts/{{category._id}}">
-                 <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{category.imgSrc}}" class="img-responsive">
-                  <span class="overlayer"></span><span>{{category.name}} <b>({{category.count}})</b></span>
-              </a>
-
-            </li>
-          </ul>
-          <div class="show-more">
-            <button type="button" class="btn btn-default" data-ng-click="mainVm.toggleCategory()"><i class="fa " ng-class="{'fa-chevron-down' : mainVm.isCollapsed,'fa-chevron-up' : !mainVm.isCollapsed}"></i> </button>
-          </div>
-        </div>
-
-      </div>
-
-      <div class="col-sm-2 col-md-3 hidden-xs padd-left">
-        <div class="panel-group">
-          <div class="panel panel-default">
-            <div class="panel-heading">
-              <h3 class="panel-title"><i class="fa fa-hourglass-2"></i> Snapshots</h3>
-            </div>
-            <div class="panel-body">
-             <!--  <img src="assets/images/update-product.jpg" class="img-responsive"> -->
-             <div class="row form-group">
-              <!--  <div class="col-sm-6 text-center">
-                  <div class="uploded-asset">
-                    <a href="javascript:void(0);" class="text-primary">
-                      <strong>{{mainVm.productCountObj.total || 0}}</strong>
-                      <p> Assets Uploaded</p>
-                    </a>
-                  </div>
-               </div> -->
-               <div class="col-sm-6 text-center">
-                 <div class="uploded-asset">
-                  <a href="javascript:void(0);" class="text-priamry">
-                    <strong>{{(mainVm.assetlisted)||(mainVm.productCountObj.listed + mainVm.productCountObj.sold + mainVm.productCountObj.rented)||0}}</strong>
-                    <p> Assets Listed</p>
-                  </a>
-                </div>
-               </div>
-               <div class="col-sm-6 text-center">
-                 <div class="uploded-asset">
-                  <a href="javascript:void(0);" class="text-warning">
-                    <strong>{{(mainVm.assetsold)||(mainVm.productCountObj.sold + mainVm.productCountObj.rented )||0}}</strong>
-                    <p> Assets Sold/Rented</p>
-                  </a>
-                 </div>
-               </div>
-             </div>
-             <div class="row"> 
-              <div class="col-sm-6 text-center">
-                <div class="uploded-asset">
-                  <a href="javascript:void(0);" class="text-danger">
-                    <strong>{{(mainVm.sparelist)||(mainVm.spareCountObj.active)||0}}</strong>
-                    <p>Spares Listed</p>
-                  </a>
-                </div>
-              </div>
-               <div class="col-sm-6 text-center">
-                 <div class="uploded-asset">
-                  <a href="javascript:void(0);" class="text-info">
-                    <strong>{{(mainVm.manpowerlisted)||(mainVm.manPowerCountObj.true)||0}}</strong>
-                    <p> Manpower Listed</p>
-                  </a>
-                 </div>
-               </div>
-              </div>
-            </div>
-          </div>
-          <div class="panel panel-default">
-              <div class="panel-heading">
-                <h3 class="panel-title"><i class="fa fa-link"></i> Partners</h3>
-              </div>
-              <div class="panel-body text-center">
-               <!--  <div class="form-group">
-                  <a href="http://quippoauctions.com/" target="_blank">
-                    <img src="assets/images/partner-logo-img.jpg">
-                  </a>
-                </div>
-                <hr> -->
-                <div class="form-group">
-                  <a href="https://www.srei.com/" target="_blank">
-                    <img src="assets/images/srei-logo.png" width="120">
-                  </a>
-
-                </div>
-              </div>
-          </div>
-        </div>
-      </div>
-
+<!-- Browse Category -->
+<section class="category-block">
+  <div class="container-fluid text-center">
+    <div class="heading-titles">
+      <h4>[ Browse Used Equipment By Category ]</h4>
+      <a href="/allcategory">View All ({{mainVm.categoryCount}})</a>
     </div>
-        <div class="form-group"></div>
-        <div class="form-group clearfix"></div>
+    <div class="row">
+      <div class="col-sm-4 form-group text-center" ng-repeat="category in categoryList" ng-if="$index < 6">   
+        <div class="cat-rectangle">
+          <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{category.imgSrc}}" class="category-item">
+        </div>
+        <h5 class="category-name">{{category.name}} ({{category.count}})</h5>
+      </div>
+  </div>
+      
+</section>
+<!-- Browse Brand -->
+<section class="category-block">
+  <div class="container-fluid text-center">
+    <div class="heading-titles">
+      <h4>[ Browse Used Equipment By Brands ]</h4>
+      <a href="javascript:void(0);">View All ({{mainVm.brandCount}})</a>
+    </div>
+    <div class="row">
+      <div class="col-sm-4 form-group text-center" ng-repeat="brand in mainVm.brands" ng-if="$index < 6">   
+        <div class="brand-logo">
+          <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{brand.imgSrc}}" height="100" width="250">
+        </div>
+      </div>
+    </div>
+  </div>
+      
+</section>
+<!-- Spacial Products -->
+<section class="category-block">
+  <div class="container-fluid text-center">
+    <div class="heading-titles">
+      <h4>[ Spacial Products ]</h4>
+    </div>
+    <div class="row">
+      <div class="col-sm-6 form-group text-center">   
+        <div class="spacial-products">
+          <img src="/assets/images/certification-iquippo.png" width="100%" height="100%">
+          <div class="gradiant-overlay1"></div>
+          <div class="certify-content">
+            <img src="/assets/images/guarantee-icon.png">
+            <h4>100% iQuippo Certification</h4>
+            <p>
+              Shop through a specially curated range of high grade construction equipments inspected, refurbished and guranateed by iQuippo’s trusted services.
+            </p>
+            <button type="button" class="btn btn-default">Shop Now</button>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6 form-group text-center">   
+        <div class="spacial-products">
+          <img src="/assets/images/certificationJCB.png" width="100%" height="100%">
+          <div class="gradiant-overlay2"></div>
+          <div class="certify-content">
+            <img src="/assets/images/guarantee-icon.png">
+            <h4>100% JCB Certification</h4>
+            <p>
+              Shop through a specially curated range of high grade construction equipments inspected, refurbished and guranateed by JCB trusted services.
+            </p>
+            <button type="button" class="btn btn-default">Shop Now</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+      
+</section>
 
-        <div class="horizontal-crsl">
-          <!-- <div class="head clear-fix">
-            <h4>Featured Products</h4>
-            <legend class="dull"></legend>
-            <legend class="dark"></legend>
-          </div> -->
-          <div class="panel panel-default">
-            <div class="panel-heading">
-              <h4 class="panel-title"><i class="fa fa-star"></i> Featured Products</h4>
-            </div>
-          </div>
-          <div id="slides_control_feature">
-            <uib-carousel no-wrap="noWrapSlides">
-              <uib-slide data-ng-repeat="gpSlide in mainVm.sortedFeaturedProduct">
-                <div class="row">
-                  <div class="col-sm-2" data-ng-repeat="slide in gpSlide">
-                    <div class="panel panel-default">
-                      <a ng-href="/productdetail/{{slide._id}}?FeatureProduct">
-                        <img data-ng-src="{{uploadImagePrefix}}featured/{{slide.primaryImg}}" class="img-responsive">
-                      </a>
-                      <div class="panel-heading" uib-popover="{{slide.name}}" popover-trigger="mouseenter">
-                        <h3 class="panel-title">{{slide.name}}</h3>
-                      </div>
-                      <div class="panel-body">
-                        <!-- <div class="row">
-                          <div class="col-xs-6 form-group text-ellips"><i class="fa fa-tags"></i> {{slide.brand.name}}</div>
-                          <div class="col-xs-6 form-group text-ellips"><i class="fa fa-bookmark"></i> {{slide.model.name}}</div>
-                        </div> -->
-                        <div class="row">
-                          <div class="col-xs-7 text-ellips"> <i class="fa fa-map-marker"></i> {{slide.city}}</div>
-                          <div class="col-xs-5 padd-left text-ellips">
-                            <i class="fa fa-ticket"></i>
-                            <span data-ng-if="slide.tradeType=='SELL' || slide.tradeType=='BOTH'">SELL</span>
-                            <span data-ng-if="slide.tradeType=='RENT' || slide.tradeType=='BOTH'">RENT</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </uib-slide>
-            </uib-carousel>
-          </div>
-          <!-- <ul class="verContainer" drctv>
-            <li data-ng-repeat="slide in mainVm.featuredslides">
-              <div class="panel panel-default">
-                    <a ng-href="/productdetail/{{slide._id}}">
-                      <img data-ng-src="{{uploadImagePrefix}}{{slide.assetDir}}/{{slide.primaryImg}}" class="img-responsive">
-                    </a>
-                    <div class="panel-heading">
-                      <h3 class="panel-title">{{slide.name}}</h3>
-                    </div>
-                    <div class="panel-body">
-                      <div class="row">
-                        <div class="col-xs-6 form-group text-ellips"><i class="fa fa-tags"></i> {{slide.brand.name}}</div>
-                        <div class="col-xs-6 form-group"><i class="fa fa-bookmark"></i> {{slide.model.name}}</div>
-                      </div>
-                      <div class="row">
-                        <div class="col-xs-6 form-group"> <i class="fa fa-map-marker"></i> {{slide.city}}</div>
-                        <div class="col-xs-6 form-group">
-                          <i class="fa fa-ticket"></i>
-                          <span data-ng-if="slide.tradeType=='SELL' || slide.tradeType=='BOTH'">SELL</span>
-                          <span data-ng-if="slide.tradeType=='RENT' || slide.tradeType=='BOTH'">RENT</span>
-                        </div>
-                      </div>
-                    </div>
-                </div>
-            </li>
-          </ul> -->
+<!-- Browse Industry -->
+<section class="category-block">
+  <div class="container text-center">
+    <div class="heading-titles">
+      <h4>[ Browse Used Equipment By Industry ]</h4>
+    </div>
+    <div class="row">
+      <div class="col-sm-4 form-group text-center" ng-repeat="group in mainVm.groups" ng-if="$index < 9">   
+        <div class="industy-rectangle">
+          <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{group.imgSrc}}" class="category-item">
         </div>
-        <div class="panel panel-default">
-        <div class="panel-heading">
-          <h4 class="panel-title"><i class="fa fa-newspaper-o"></i> Latest News</h4>
+        <div class="category-name">
+          <h5>{{group.name}}</h5>
+          <span>({{group.count}} Categories)</span>
         </div>
-        <div class="panel-body">
-        <div class="row">
-        <div class="col-sm-3">
-          <div class="media">
-            <h4 class="media-heading">How iQuippo Works?</h4>
-            <div class="media-body media-coverage">
-             <!--  <iframe width="250" height="180" src="http://img.youtube.com/vi/6fWE5bmpu9g/0.jpg" frameborder="0" allowfullscreen></iframe>
-            --> <iframe data-ng-if="!toggle1" style="width:100%;height:100%;height: 180px; float: none; clear: both; margin: 2px auto;" src="https://www.youtube.com/embed/6fWE5bmpu9g?autoplay=1" frameborder="0" allowfullscreen>
+      </div>
+    </div>
+  </div>
+      
+</section>
+
+<!-- How iQuippo Works -->
+<section class="category-block how-works">
+  <div class="container-fluid text-center">
+    <div class="heading-titles">
+      <h4>[ HOW iQUIPPO WORKS? ]</h4>     
+      <div class="row">
+        <div class="col-sm-offset-3 col-sm-6 form-group">
+         iQuippo is India’s first and a one-of- its-kind digital marketplace for construction equipment, machinery and services. Our platform allows buyers and sellers to interact, negotiate and close transactions in a timely, transparent and cost-effective manner.
+        </div>
+      </div> 
+    </div>
+    <div class="row">
+      <div class="col-sm-offset-3 col-sm-6">
+        <div class="framwork-background">
+          <iframe data-ng-if="!toggle1" style="width:100%;height:100%;" src="https://www.youtube.com/embed/6fWE5bmpu9g?autoplay=1" frameborder="0" allowfullscreen>
                </iframe>
-               <object data-ng-if="toggle1" style="width:100%;height:100%;height: 180px; float: none; clear: both; margin: 2px auto;" data="https://img.youtube.com/vi/6fWE5bmpu9g/0.jpg" frameborder="0" >
+               <object data-ng-if="toggle1" style="width:100%;height:100%;" data="https://img.youtube.com/vi/6fWE5bmpu9g/0.jpg" frameborder="0" >
                </object>
               <a href="#" class="utube-icon" data-ng-if="toggle1" data-ng-click="toggling('vid1')"><img src="assets/images/utube.png"></a>
-               <p><strong>iQuippo</strong> offers the best of services and expertise to take our customers to the next level ,improving their efficiency and productivity by offering cost effective solution on a Single platform.</p>
-              <p class="text-primary">25 Aug, 2016</p>
-            </div>             
-              
-            
-          </div>
-        </div>
-       <div class="col-sm-3">
-         <div class="media">
-           <h4 class="media-heading">Media Coverage Videos Links:</h4>
-           <div class="media-body">
-             <!-- <iframe width="100%" height="180" src="https://www.youtube.com/embed/_KgtJzQAQfw" frameborder="0" allowfullscreen></iframe>-->
-             <iframe data-ng-if="!toggle2" style="width:100%;height:100%;height: 180px; float: none; clear: both; margin: 2px auto;" src="https://www.youtube.com/embed/g38KycGZbzU?autoplay=1" frameborder="0" allowfullscreen>
-               </iframe>
-               <object data-ng-if="toggle2" style="width:100%;height:100%;height: 180px; float: none; clear: both; margin: 2px auto;" data="https://img.youtube.com/vi/g38KycGZbzU/0.jpg"  frameborder="0" allowfullscreen>
-               </object>
-               <a href="#" class="utube-icon" data-ng-if="toggle2" data-ng-click="toggling('vid2')" ><img src="assets/images/utube.png"></a>
-           </div>
-         </div>
-        </div>
-        <div class="col-sm-3 form-group">
-         <div class="media">
-           <h4 class="media-heading">Digital Media :</h4>
-           <div class="media-body media-coverage">
-             <div class="row">
-                <div class="col-sm-12">
-                  <h5><a href="/assets/uploads/templates/InfrastructureToday.pdf" target="_blank">Click Clique - Infrastructure Today, Dec 2016</a></h5>
-                  <hr>
-                </div>
-                <div class="col-sm-12">
-                  <h5><a href="https://economictimes.indiatimes.com/small-biz/startups/srei-launches-digital-marketplace-iquippo-for-infra-sector/articleshow/55094769.cms" target="_blank">Srei launches digital marketplace iQuippo for infra sector</a></h5>
-                  <h6>
-                  <span><i>The Economic Times​</i></span>
-                  <span class="pull-right">27-10-16</span>
-                  </h6>
-                  <hr>
-                </div>
-                <div class="col-sm-12">
-                  <h5><a href="https://www.business-standard.com/article/pti-stories/srei-launches-digital-marketplace-iquippo-for-infra-sector-116102700853_1.html" target="_blank">Srei launches digital marketplace iQuippo for infra sector.</a></h5>
-                  <h6>
-                  <span><i>Business Standard</i></span>
-                  <span class="pull-right">27-10-16</span>
-                  </h6>
-                  <hr>
-                </div>
-                <div class="col-sm-12">
-                  <h5><a href="https://www.business-standard.com/article/companies/srei-ventures-into-digital-marketplace-for-equipment-biz-116102700821_1.html" target="_blank">Srei ventures into digital marketplace for equipment biz.</a></h5>
-                  <h6>
-                  <span><i>Business Standard</i></span>
-                  <span class="pull-right">27-10-16</span>
-                  </h6>
-                  <hr>
-                </div>
-                <div class="col-sm-12">
-                  <h5><a href="http://www.livemint.com/Industry/8Zhrj5JkavLCmTCaqi48vK/Srei-launches-online-marketplace-iQuippo-for-construction-eq.html" target="_blank">Srei launches online marketplace iQuippo for construction equipment.</a></h5>
-                  <h6>
-                  <span><i>Mint</i></span>
-                  <span class="pull-right">27-10-16</span>
-                  </h6>
-                  <hr>
-                </div>
-                <div class="col-sm-12">
-                  <h5><a href="http://www.thehindubusinessline.com/info-tech/srei-launches-digital-platform-iquippo/article9276237.ece" target="_blank">Srei launches online platform iQuippo.</a></h5>
-                 <h6>
-                  <span><i>The Hindu Business Line</i></span>
-                  <span class="pull-right">27-10-16</span>
-                  </h6>
-                  <hr>
-                </div>
-                <div class="col-sm-12">
-                  <h5><a href="http://www.financialexpress.com/industry/companies/srei-group-launches-digital-marketplace-startup-to-tap-infra-sector-growth-globally/432229/" target="_blank">Srei Group launches digital marketplace startup to tap infra sector growth globally.</a></h5>
-                 <h6>
-                  <span><i>The Financial Express</i></span>
-                  <span class="pull-right">27-10-16</span>
-                  </h6>
-                  <hr>
-                </div>
-                <div class="col-sm-12">
-                  <h5><a href="http://www.mydigitalfc.com/news/srei-launches-platform-renting-selling-equipments-012" target="_blank">Srei launches platform for renting, selling equipments.</a></h5>
-                 <h6>
-                  <span><i>Financial Chronicle</i></span>
-                  <span class="pull-right">27-10-16</span>
-                  </h6>
-                  <hr>
-                </div>
-                <div class="col-sm-12">
-                  <h5><a href="http://www.moneycontrol.com/news/business/srei-launches-digital-marketplace-iquippo-for-infra-sector_7847501.html" target="_blank">Srei launches digital marketplace iQuippo for infra sector.</a></h5>
-                  <h6>
-                    <span><i>Money Control</i></span>
-                    <span class="pull-right">27-10-16</span>
-                  </h6>
-                  <hr>
-                </div>
-                <div class="col-sm-12">
-                  <h5><a href="http://indiatoday.intoday.in/story/srei-launches-digital-marketplace-iquippo-for-infra-sector/1/796985.html" target="_blank">Srei launches digital marketplace iQuippo for infra sector.</a></h5>
-                  <h6>
-                    <span><i>India Today</i></span>
-                    <span class="pull-right">27-10-16</span>
-                  </h6>
-                  <hr>
-                </div>
-                <div class="col-sm-12">
-                  <h5><a href="http://www.telegraphindia.com/1161028/jsp/business/story_116032.jsp" target="_blank">Srei prop for core sector.</a></h5>
-                  <h6>
-                    <span><i>The Telegraph</i></span>
-                    <span class="pull-right">27-10-16</span>
-                  </h6>
-                  <hr>
-                </div>
-                <div class="col-sm-12">
-                  <h5><a href="http://www.dnaindia.com/money/report-srei-infra-goes-amazon-way-takes-iquippo-global-2269415" target="_blank">Srei Infra goes Amazon way, takes iQuippo global.</a></h5>
-                  <h6>
-                  <span><i>DNA</i></span>
-                  <span class="pull-right">01-11-16</span>
-                  </h6>
-                  <hr>
-                </div>
-                <div class="col-sm-12">
-                  <h5><a href="http://echoofindia.com/kolkata-srei-launches-iquippo-117773" target="_blank">Srei launches iQuippo.</a></h5>
-                  <h6>
-                  <span><i>The Echo of India</i></span>
-                  <span class="pull-right">27-10-16</span>
-                  </h6>
-                  <hr>
-                </div>
-                <div class="col-sm-12">
-                  <h5><a href="https://www.dealstreetasia.com/stories/srei-launches-online-marketplace-iquippo-for-construction-equipment-56668/​" target="_blank">India: Srei launches online marketplace iQuippo for construction equipment.</a></h5>
-                  <h6>
-                  <span><i>Deal Street Asia</i></span>
-                  <span class="pull-right">27-10-16</span>
-                  </h6>
-                  <hr>
-                </div>
-                <div class="col-sm-12">
-                  <h5><a href="http://www.indiatechonline.com/it-happened-in-india.php?id=2450" target="_blank">Portal for construction industry equipment has come.</a></h5>
-                  <h6>
-                  <span><i>India Tech Online</i></span>
-                  <span class="pull-right">02-11-16</span>
-                  </h6>
-                </div>
-           </div>
-         </div>
-        </div>
-        </div>
-        
-        <div class="col-sm-3">
-          <h4 class="media-heading">iQuippo Launch:</h4>
-          <!-- <iframe width="100%" height="180" src="https://www.youtube.com/embed/0cabxI1gy4s" frameborder="0" allowfullscreen></iframe>
-          --> <iframe data-ng-if="!toggle3" style="width:100%;height:100%;height: 180px; float: none; clear: both; margin: 2px auto;" src="https://www.youtube.com/embed/0cabxI1gy4s?autoplay=1" frameborder="0" allowfullscreen>
-               </iframe>
-               <object data-ng-if="toggle3" style="width:100%;height:100%;height: 180px; float: none; clear: both; margin: 2px auto;" data="https://img.youtube.com/vi/0cabxI1gy4s/0.jpg" data-ng-click="toggling('vid3')" frameborder="0" allowfullscreen>
-               </object>
-               <a href="#" class="utube-icon" data-ng-click="toggling('vid3')" data-ng-if="toggle3"><img src="assets/images/utube.png"></a>
-
-        <!-- <iframe width="330" height="140" src="https://www.youtube.com/embed/cT3hcuOkdQc" frameborder="0" allowfullscreen></iframe> -->
         </div>
       </div>
-      <div class="row">
-        <div class="col-sm-12">
-          <h4 class="media-heading">Print Media:</h4>
-           <div class="media-body medianame well">
-           <ul>
-              <li data-ng-repeat="nwEvt in mainVm.newsEvents"><a href="javascript:void(0);" class="" data-ng-click="mainVm.openPrintMedia(nwEvt.image)"> {{nwEvt.name}}</a></li>
-            </ul>
-           </div>
-        </div>
-      </div>
-      </div>
-      </div>
+    </div>
+  </div>
       
-  </div>
 </section>
-<div class="container text-center form-group">
-  <div class="row">
-    <div class="col-sm-6">
-      <a ng-href="{{mainVm.classifiedAd.imgBottomLeft.websiteUrl}}" target="_blank" data-ng-if="mainVm.classifiedAd.imgBottomLeft.src">
-        <img data-ng-src="{{uploadImagePrefix}}{{classifiedAdDir}}/{{mainVm.classifiedAd.imgBottomLeft.src}}" class="add2 img-responsive">
-      </a>
+<div class="clearfix"></div>
+<!-- PRESS / MEDIA -->
+<section class="category-block">
+  <div class="container text-center">
+    <div class="heading-titles">
+      <h4>[ IN THE PRESS / MEDIA ]</h4>
     </div>
-    <div class="col-sm-6">
-      <a ng-href="{{mainVm.classifiedAd.imgBottomRight.websiteUrl}}" target="_blank" data-ng-if="mainVm.classifiedAd.imgBottomRight.src">
-        <img  data-ng-src="{{uploadImagePrefix}}{{classifiedAdDir}}/{{mainVm.classifiedAd.imgBottomRight.src}}" class="add2 img-responsive">
-      </a>
+    <div class="row form-group press-media">
+      <div class="col-sm-2 form-group">   
+        <img src="/assets/images/business-standard-logo.png" class="img-responsive">
+      </div>
+      <div class="col-sm-2 form-group">   
+        <img src="/assets/images/financial-express logo.png" class="img-responsive">
+      </div>
+      <div class="col-sm-2 form-group">   
+        <img src="/assets/images/india-techonline-logo.png" class="img-responsive">
+      </div>
+      <div class="col-sm-2 form-group">   
+        <img src="/assets/images/india-today-logo.png" class="img-responsive">
+      </div>
+      <div class="col-sm-2 form-group">   
+        <img src="/assets/images/money-control.png" class="img-responsive">
+      </div>
+      <div class="col-sm-2 form-group">   
+        <img src="/assets/images/telegraph-logo.png" class="img-responsive">
+      </div>      
+    </div>
+
+    <div class="row">
+      <div class="col-sm-6 form-group">
+        <ul class="media-news">
+          <li>
+            <a href="javascript:void(0);">Click Clique- Infrastructure Today</a>
+            <em>The Financial Express</em>
+            <em class="news-date">23 August, 2017.</em>
+          </li>
+          <li>
+            <a href="javascript:void(0);">Srei launches digital marketplace iQuippo for Infra Sector.</a>
+            <em>The Economic Times</em>
+            <em class="news-date">09 July, 2017.</em>
+          </li>
+          <li>
+            <a href="javascript:void(0);">Srei launches digital marketplace iQuippo for Infra Sector.</a>
+            <em>The Economic Times</em>
+            <em class="news-date">01 June, 2017.</em>
+          </li>
+          <li>
+            <a href="javascript:void(0);">Srei Infra goes Amazon way, takes iQuippo global.</a>
+            <em>DNA</em>
+            <em class="news-date">23 March, 2017.</em>
+          </li>
+          <li>
+            <a href="javascript:void(0);">Srei Infra goes Amazon way, takes iQuippo global.</a>
+            <em>DNA</em>
+            <em class="news-date">13 Feburary, 2017.</em>
+          </li>
+        </ul>
+      </div>
+      <div class="col-sm-6 form-group">
+        <div class="framwork-background">
+          <iframe data-ng-if="!toggle2" style="width:100%;height:100%;" src="https://www.youtube.com/embed/g38KycGZbzU?autoplay=1" frameborder="0" allowfullscreen>
+             </iframe>
+             <object data-ng-if="toggle2" style="width:100%;height:100%;" data="https://img.youtube.com/vi/g38KycGZbzU/0.jpg"  frameborder="0" allowfullscreen>
+             </object>
+             <a href="#" class="utube-icon" data-ng-if="toggle2" data-ng-click="toggling('vid2')" ><img src="assets/images/utube.png"></a>
+        </div>
+      </div>
     </div>
   </div>
-</div>
-</div>
+      
+</section>
+
+
+
 <script type="text/ng-template" id="primtmedia.html">
   <div>
     <div class="modal-header">

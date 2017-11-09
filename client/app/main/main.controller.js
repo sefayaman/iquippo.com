@@ -3,18 +3,19 @@
 'use strict';
 angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
 
-  function MainCtrl($scope, $rootScope, $http,$window, $interval, $timeout, $uibModal, Auth, productSvc, categorySvc,classifiedSvc,LocationSvc,$state, Modal, UtilSvc,spareSvc,ManpowerSvc,BannerSvc,BiddingSvc,CountSvc) {
+  function MainCtrl($scope, $rootScope, $uibModal, Auth, productSvc, categorySvc,groupSvc,brandSvc,LocationSvc,$state, Modal, UtilSvc,spareSvc,ManpowerSvc,BannerSvc,BiddingSvc,CountSvc,AuctionSvc) {
     var vm = this;
     vm.allCategoryList = [];
     vm.activeCategoryList = [];
     vm.newsEvents = newsEvents;
     vm.myInterval = 7000;
     vm.noWrapSlides = false;
-    vm.slides = [];//HOME_BANNER;
-    vm.featuredslides = [];
+    vm.slides = [];
     $scope.toggle1=true;
     $scope.toggle2=true;
     $scope.toggle3=true;
+
+    vm.singleBox = true;
 
     $scope.toggling=function(val){
       if(val=="vid1")
@@ -25,37 +26,22 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
       $scope.toggle3=false;
     }
     
-    /*vm.imgLeftTop = "";
-    vm.imgLeftBottom = "";
-    vm.imgBottomLeft = "";
-    vm.imgBottomRight = "";*/
-    vm.classifiedAd = {};
-
-    vm.radioModel = 'SELL';
-    vm.isCollapsed = true;
-    vm.sortedFeaturedProduct = [];
-    vm.productCountObj = {};
-    vm.spareCountObj = {};
-    vm.manPowerCountObj = {};
-
     vm.doSearch = doSearch;
     vm.myFunct = myFunct;
     vm.openBidModal = openBidModal;
     vm.openPrintMedia = openPrintMedia;
-    // vm.toggleCategory = toggleCategory;
-
-    $scope.ConfigureList = function() {};
-    $scope.beginVertScroll = beginVertScroll;
-    $scope.categoryList = [{},{},{}];
-
+    vm.toggleSearchBox = toggleSearchBox;
+    vm.getBrandCount = getBrandCount;
+    vm.getCategoryCount = getCategoryCount;
+  
     $scope.$on('resetBannerTimer',function(){
       vm.myInterval = 7000;
       getHighestBids();
     })
 
-
-
-
+    function toggleSearchBox(showSingleBox){
+      vm.singleBox = showSingleBox;
+    }
 
     function openPrintMedia(imageName) {
       var prMediaScope = $rootScope.$new();
@@ -104,59 +90,12 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
         Modal.alert("Please Login/Register for submitting your request!", true);
         return;
       }
-      /*var biddingScope = $rootScope.$new();
-      biddingScope.slideInfo = currentSlide;
-      biddingScope.isPayNow = false;
-      vm.myInterval = 1*2*60*60*1000;
-      Modal.openDialog('biddingReq', biddingScope);*/
       var inputFormScope = $rootScope.$new();
       inputFormScope.slideInfo = currentSlide;
       vm.myInterval = 1*2*60*60*1000;
       Modal.openDialog('inputFormReq', inputFormScope);
     }
 
-    vm.toggleCategory = function(){
-      vm.isCollapsed = !vm.isCollapsed;
-      if(vm.isCollapsed)
-         $scope.categoryList = vm.activeCategoryList.slice(0,12);
-       else
-        $scope.categoryList = vm.activeCategoryList;
-    }
-
-    function getFeaturedProduct(){
-
-      productSvc.getFeaturedProduct().
-      then(function(result){
-         vm.featuredslides = result;
-         sortProduct(result);
-      })
-      .catch(function(res){
-        //error handling
-      })
-
-    }
-
-     function getStatusWiseSpareCount(){
-       spareSvc.getStatusWiseSpareCount()
-      .then(function(result){
-          vm.spareCountObj = result;
-      })
-      .catch(function(res){
-        //error handling
-      });
-
-    }
-
-    function getStatusWiseManPowerCount(){
-       ManpowerSvc.getStatusWiseCount()
-      .then(function(result){
-          vm.manPowerCountObj = result;
-      })
-      .catch(function(res){
-        //error handling
-      });
-
-    }
 
 
     function getCategories(){
@@ -171,47 +110,78 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
 
     }
 
-     function getAllCategories(){
-
-      categorySvc.getAllCategory()
-      .then(function(result){
-          vm.allCategoryList = result;
+    function getGroup(){
+      groupSvc.getAllGroup({isForUsed:true,visibleOnUsed:true})
+      .then(function(groups){
+        vm.groups = groups;
       })
-      .catch(function(res){
-        //error handling
+      .catch(function(err){
+        Modal.alert("Error in fetching group");
       });
-
     }
 
-    function getStatusWiseProductCount(){
-       productSvc.statusWiseCount()
-      .then(function(result){
-          vm.productCountObj = result;
+    function getBrands(){
+      brandSvc.getBrandOnFilter({isForUsed:true,visibleOnUsed:true})
+      .then(function(brands){
+        vm.brands = brands;
       })
-      .catch(function(res){
-        //error handling
-      });
-
-    }
-
-    function getActiveClassifiedAd(){
-      classifiedSvc.getActiveClassifiedAd()
-      .then(function(srchres){
-        vm.classifiedAd = classifiedSvc.sortClassifiedAd(srchres);
+      .catch(function(err){
+        Modal.alert("Error in fetching brands");
       });
     }
 
-    getHomeBanner();
-    getFeaturedProduct();
-    getCategories();
-    getActiveClassifiedAd();
-    getAllCategories();
-    getStatusWiseProductCount();
-    getStatusWiseSpareCount();
-    getStatusWiseManPowerCount();
-    getAssetCount();
+    function getBrandCount(){
+      brandSvc.getCount({isForUsed:true})
+      .then(function(brandCount){
+        vm.brandCount = brandCount;
+      });
+    }
 
+     function getAuctions() {
+        
+        var filter = {};
+        vm.auctionListing =[];
+        filter.auctionType = "upcoming";
+        filter.addAuctionType = true;
+        filter.pagination = true;
+        filter.itemsPerPage = 3;
+        AuctionSvc.getAuctionDateData(filter)
+        .then(function(result) {
+          filter = {};      
+          var auctionIds = []; 
+          if(result && result.items) {     
+            result.items.forEach(function(item) { 
+            auctionIds[auctionIds.length] = item._id;
+          });
+          if(!auctionIds.length)
+            return;
+          filter.auctionIds = auctionIds; 
+          filter.status = "request_approved";  
+          filter.isClosed = $scope.auctionType == 'closed' ? 'y' : 'n';
+          AuctionSvc.getAuctionWiseProductData(filter) 
+            .then(function(data) { 
+            if(!data.length)
+              return;
+            result.items.forEach(function(item){
+                data.forEach(function(countObj){
+                  if(countObj._id === item._id)
+                      item.total_products = countObj.total_products;
+                });
+                if(!item.total_products)
+                  item.total_products = 0;
+            }) 
+            vm.auctionListing = result.items; 
+        });
+      };
+      });
+    }
 
+    function getCategoryCount(){
+      categorySvc.getCount({isForUsed:true})
+      .then(function(categoryCount){
+        vm.categoryCount = categoryCount;
+      });
+    }
 
      function myFunct(keyEvent) {
       if(keyEvent)
@@ -220,126 +190,51 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
         doSearch();
       }
     }
-    
-    function getAssetCount(){
-
-           CountSvc.getData(vm.dataModel)
-             .then(function(result){
-            $scope.data = result;
-
-         angular.forEach($scope.data, function(value, key){
-
-            if(value.key == "assetlisted"){
-              vm.assetlisted = value.value;
-             }
-            if(value.key == "assetsold"){
-               vm.assetsold = value.value;
-
-             }
-            if(value.key == "sparelist"){
-              vm.sparelist = value.value;
-
-             }
-              if(value.key == "manpower"){
-                vm.manpowerlisted = value.value;
-
-              }
-         
-          });
-
-           })
-           .catch(
-             function(res){
-           //error handling
-          });
-
-
-
-     }
-
-      
-   
-      
+ 
 
     function doSearch(){
 
-      if(!vm.searchstr && !vm.categorySearchText && !vm.locationSearchText){
-        Modal.alert("Please enter category name or location or product name");
+      if(!vm.searchstr && !vm.categorySearchText && !vm.locationSearchText && !vm.groupSearchText && !vm.brandSearchText){
+        //Modal.alert("Please enter category name or location or product name");
         return;
       }
 
-      if(vm.categorySearchText && !UtilSvc.validateCategory(vm.allCategoryList, vm.categorySearchText)){
+      /*if(vm.categorySearchText && !UtilSvc.validateCategory(vm.allCategoryList, vm.categorySearchText)){
         Modal.alert("Please enter valid category");
         return;
       }
+
+      if(vm.groupSearchText && !groupSvc.validateCategory(vm.allCategoryList, vm.categorySearchText)){
+        Modal.alert("Please enter valid category");
+        return;
+      }*/
       
       var filter = {};
       if(vm.categorySearchText)
         filter['category'] = vm.categorySearchText.trim();
-      if(vm.radioModel)
+      if(vm.groupSearchText)
+        filter['group'] = vm.groupSearchText.trim();
+      if(vm.brandSearchText)
+        filter['brand'] = vm.brandSearchText.trim();
+      /*if(vm.radioModel)
         filter['type'] = vm.radioModel;
-      if(vm.locationSearchText)
+      */if(vm.locationSearchText)
         filter['location'] = vm.locationSearchText.trim();
       if(vm.searchstr)
-        filter['productName'] = vm.searchstr.trim();
+        filter['searchstr'] = vm.searchstr.trim();
 
       //productSvc.setFilter(filter);
       $state.go('viewproduct',filter);
     }
-
-    function beginVertScroll() {
-      $timeout(
-        function() {
-          var firstElement = $('ul.verContainer li:first');
-          var wdth = firstElement.width();
-          var cntnt = firstElement.html();
-          if(!cntnt)
-            return;
-          var HtmlStr = "<li>" + cntnt + "</li>";
-          $("ul.verContainer").append(HtmlStr);
-          cntnt = "";
-          firstElement.animate({
-            "marginLeft": -wdth
-          }, 600, function() {
-            $scope.itemToremove = $(this);
-            $('ul.verContainer li').last().css({
-              "background": $(this).css("background"),
-              "color": $(this).css("color")
-            });
-            $(this).remove();
-            beginVertScroll();
-          });
-          // alert(wdth);
-        },
-        1000*5
-      );
-    };
-
-     $scope.setPopover = function(evt){
-        var index = $(evt.currentTarget).data('index');
-        $scope.popoverData = $scope.featuredslides[index];
-    }
-
-    function sortProduct(products){
-        if(products.length == 0){
-          return;
-        }
-        vm.sortedFeaturedProduct[vm.sortedFeaturedProduct.length] = [];
-        var colCounter = 0;
-        var rowCounter = 0;
-        products.forEach(function(item){
-            vm.sortedFeaturedProduct[rowCounter][colCounter] = item;
-            colCounter ++;
-            var totalCounter = (rowCounter +1)*6;
-            if(colCounter == 6 && totalCounter < products.length){
-                colCounter = 0;
-                vm.sortedFeaturedProduct[vm.sortedFeaturedProduct.length] = [];
-                rowCounter++;
-            }
-        })
-    }
     
     //Clearing Finance integration cookie
     Auth.removeCookies();
+    getHomeBanner();
+    getGroup();
+    getCategories();
+    getBrands();
+    getBrandCount();
+    getCategoryCount();
+    getAuctions();
   }
 })();
