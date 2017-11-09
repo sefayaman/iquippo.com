@@ -1,5 +1,6 @@
+<div ng-controller="FooterCtrl">
  <section class="category-block">
-  <div class="foot" ng-controller="FooterCtrl">
+  <div class="foot">
     <div class="container">
       <div class="row">
         <div class="col-sm-3">
@@ -72,31 +73,27 @@
     </div>
     <div class="medianame">
      <ul>
-        <li><a href="javascript:void(0);" class=""> The Economic Times </a></li>
-        <li><a href="javascript:void(0);" class=""> The Hindu Business Line </a></li>
-        <li><a href="javascript:void(0);" class=""> The Hindustan Business Lines </a></li>
-        <li><a href="javascript:void(0);" class=""> Orissa today</a></li>
-        <li><a href="javascript:void(0);" class=""> Arthic Lipi</a></li>
-        <li><a href="javascript:void(0);" class=""> Financial Chronicle</a></li>
-        <li><a href="javascript:void(0);" class=""> The Times of India</a></li>
-        <li><a href="javascript:void(0);" class=""> The Economic Times </a></li>
-        <li><a href="javascript:void(0);" class=""> The Hindu Business Line </a></li>
-        <li><a href="javascript:void(0);" class=""> The Hindustan Business Lines </a></li>
-        <li><a href="javascript:void(0);" class=""> Orissa today</a></li>
-        <li><a href="javascript:void(0);" class=""> Arthic Lipi</a></li>
-        <li><a href="javascript:void(0);" class=""> Financial Chronicle</a></li>
-        <li><a href="javascript:void(0);" class=""> The Times of India</a></li>
-        <li><a href="javascript:void(0);" class=""> The Economic Times </a></li>
-        <li><a href="javascript:void(0);" class=""> The Hindu Business Line </a></li>
-        <li><a href="javascript:void(0);" class=""> The Hindustan Business Lines </a></li>
-        <li><a href="javascript:void(0);" class=""> Orissa today</a></li>
-        <li><a href="javascript:void(0);" class=""> Arthic Lipi</a></li>
-        <li><a href="javascript:void(0);" class=""> Financial Chronicle</a></li>
-        <li><a href="javascript:void(0);" class=""> The Times of India</a></li>
+        <li data-ng-repeat="nwEvt in newsEvents"><a href="javascript:void(0);" data-ng-click="openPrintMedia(nwEvt.image)"> {{nwEvt.name}} </a></li>
+      
       </ul>
      </div>
   </div>
 </section>
+</div>
+
+<script type="text/ng-template" id="printmedia.html">
+  <div>
+    <div class="modal-header">
+    <button type="button" class="close"  data-ng-click="close()" aria-hidden="true"><i class="fa fa-times"></i></button>
+    </div>
+    <div class="modal-body text-center">
+       <img data-ng-src="{{url}}" width="100%">
+    </div>
+     <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-ng-click="close()">Close</button>
+      </div>
+  </div>
+</script>
 <!-- <div id="back-top" style="display: block;">
   <a href="#top" class="btn btn-info page-scroll"><i class=" fa fa-chevron-up"></i></a>
 </div> -->
