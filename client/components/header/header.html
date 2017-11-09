@@ -22,7 +22,14 @@
             
              <li ng-class="{active: isActive(['financing'])}"><a href="javascript:void(0);" ng-click="submitToRapid(createnewloan)">Financing</a></li>
              <li ng-class="{active: isActive(['valuation'])}"><a href="/valuation">Valuation</a></li>
-             <li><a href="javascript:void(0);">Other Services</a></li>
+             <li class="submenu dropdown">
+                <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" id="single-button"  uib-dropdown-toggle >Other Services</a>
+                <ul class="uib-dropdown-menu" role="menu" aria-labelledby="single-button">
+                  <li role="menuitem"><a href="/shipping"> Shipping</a></li>
+                  <li role="menuitem"><a href="/insurance">Insurance</a></li>
+                  <li role="menuitem"><a href="/manpower"> Manpower</a></li>
+                </ul>
+             </li>
              <li ng-hide="isLoggedIn()"><a href="javascript:void(0);" ng-click="openLogin()">Login</a></li>
              <li ng-hide="isLoggedIn()"><a href="javascript:void(0);" ng-click="loginVm.openRegister()">Signup</a></li>
              <li ng-if="isLoggedIn()" class="dropdown" >
