@@ -78,43 +78,6 @@ exports.getFilterOnRegisterUser = function(req, res) {
   );
 };
 
-exports.validateUser = function(req, res) {
-  var filter = {};
-  filter.deleted = false;
-  if (req.body.userId) {
-    if (/^\d+$/.test(req.body.userId)) {
-      filter.mobile = req.body.userId;
-    } else {
-      filter.email = req.body.userId.toLowerCase();
-    }
-  }
-
-  if (req.body.email)
-    filter.email = req.body.email;
-  if (req.body.mobile)
-    filter.mobile = req.body.mobile;
-  User.find(filter, function(err, users) {
-    if (err) {
-      return handleError(res, err);
-    }
-    if (users.length === 0) return res.status(200).json({
-      errorCode: 1,
-      message: "User not found"
-    });
-    else if (users.length == 1)
-      return res.status(200).json({
-        errorCode: 0,
-        user: users[0]
-      });
-    else
-      return res.status(200).json({
-        errorCode: 2,
-        message: "More than one user found"
-      });
-  });
-};
-
-
 exports.checkUserRegis = function(req, res) {
   var arr = [];
   var filter = {};
@@ -170,7 +133,7 @@ exports.checkUserRegis = function(req, res) {
           var message = {};
           if(!payment.length)
             return res.status(200).json({errorCode: 2, message: "No Data Found"});
-          if (payment[0].status === "completed" && payment[0].reqSubmitStatus === ReqSubmitStatuses[0]) {
+          if (payment[0].status === "completed") {
             message.data = "done";
             message.errorCode = 0;
           } else {

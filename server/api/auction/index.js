@@ -42,7 +42,7 @@ router.post('/userregforauction/filterregisteruser', userRegForAuction.getFilter
 router.post('/userregforauction/senddata',userRegForAuction.sendUserToAs);
 //router.put('/userregforauction/:id', userRegForAuction.update);
 //router.delete('/userregforauction/:id', userRegForAuction.destroy);
-router.post('/userregforauction/validateuser', userRegForAuction.validateUser);
+////router.post('/userregforauction/validateuser', userRegForAuction.validateUser);
 router.post('/userregforauction/export', auth.hasRole('admin'), userRegForAuction.exportData);
 
 router.post('/upload/excel',controller.bulkUpload);

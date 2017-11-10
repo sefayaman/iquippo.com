@@ -32,6 +32,7 @@
         data['mobile'] = vm.data.mobile;
         data['otpOn'] = "mobile";
       }
+      data.forAuction = false;
       Auth.validateUser(data).
       success(function(res) {
         if (res && res.errorCode == 0) {

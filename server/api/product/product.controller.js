@@ -759,6 +759,7 @@ function updateProduct(req,res){
   Product.findById(req.params.id, function (err, product) {
     if (err) { return handleError(res, err); }
     if(!product) { return res.status(404).send('Not Found'); }
+    req.proData = product.toObject();
     if(req.body.featured){
       var imgPath = config.uploadPath + req.body.assetDir + "/" + req.body.primaryImg;
       var featureFilePath=config.uploadPath+"featured/"+req.body.primaryImg;
@@ -837,6 +838,12 @@ function updateProduct(req,res){
         if((req.body.tradeType === 'SELL' || req.body.tradeType === 'BOTH') && req.body.auctionListing) {
           req.body._id = req.params.id;
           postRequest(req, res);
+        } else if(req.proData.auctionListing && !req.body.auctionListing) {
+          req.body._id = req.params.id;
+          if(req.body.assetMapData)
+            delete req.body.assetMapData;
+          AuctionReq.update({_id:req.proData.auction._id},{$set:{"isDelete":true}}).exec();
+          postRequest(req, res);
         } else
           return res.status(200).json(req.body);
       });
@@ -905,9 +912,7 @@ function addProduct(req, res){
 
   Product.create(req.body, function(err, product) {
     if(err) { return handleError(res, err); }
-    console.log("product created ####", product.assetId);
     if((product.tradeType === 'SELL' || product.tradeType === 'BOTH') && product.auctionListing) {
-      console.log("product.tradeType22@@@@", product.tradeType);
       req.body._id = product._id;
       postRequest(req, res);
     }
@@ -922,14 +927,17 @@ function postRequest(req, res){
   Product.find({
       _id: req.body._id
     }, function(err, proResult) {
-      options.dataToSend = req.body.assetMapData;
+      options.dataToSend ={};
+      if(req.body.assetMapData)
+        options.dataToSend = req.body.assetMapData;
+      else
+        options.dataToSend.isDeleted = true;
       options.dataToSend._id = req.body._id;
+      options.dataToSend.assetId = req.body.assetId;
       options.dataType = "assetData";
       if (options.dataToSend.createdBy)
         delete options.dataToSend.createdBy;
-      console.log("result.err@@@@!optionsoptions!!!!", options);
       Utillity.sendCompiledData(options, function(err, result) {
-        console.log("result.err@@@@result!!!!!", result);
         if (err || (result && result.err)) {
           options.dataToSend.reqSubmitStatus = ReqSubmitStatuses[1];
           //options.dataToSend.status = false;

@@ -7,7 +7,6 @@ angular.module('admin').factory("userRegForAuctionSvc", userRegForAuctionSvc);
 
     svc.get = get;
     svc.save = save;
-    svc.validateUser = validateUser;
     svc.exportData = exportData;
     svc.getFilterOnRegisterUser = getFilterOnRegisterUser;
     svc.sendUserData=sendUserData;
@@ -63,13 +62,10 @@ angular.module('admin').factory("userRegForAuctionSvc", userRegForAuctionSvc);
           .catch(function(err){
             throw err;
           });
-
-
       }
 
       function saveOfflineRequest(data){
         // var path = '/api/auction/checkUserRegis';
-
          return $http.post(svcPath + '/saveOfflineRequest',data)
          .then(function(res){
            return res.data;
@@ -77,12 +73,6 @@ angular.module('admin').factory("userRegForAuctionSvc", userRegForAuctionSvc);
          .catch(function(err){
            throw err;
          });
-
-
-     }
-
-     function validateUser(data) {
-      return $http.post(svcPath + '/validateuser',data);
      }
 
      function exportData(data) {

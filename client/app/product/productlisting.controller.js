@@ -69,6 +69,15 @@ function ProductListingCtrl($scope, $location, $rootScope, $http, productSvc, cl
 
   function sendReqToCreateAsset(data) {
     $rootScope.loading = true;
+    /*if(($scope.product.tradeType === 'SELL' || $scope.product.tradeType === 'BOTH') && $scope.product.auctionListing) {
+      sendAssetInfoToAuction();
+      $scope.product.assetMapData = {};
+      $scope.product.assetMapData = $scope.setAssetMapData;
+    } else {
+      $scope.product.assetMapData = {};
+    }
+    if (!product.auctionListing)
+      product.auction = {};*/
     PaymentSvc.sendReqToCreateUser(data)
       .then(function(res) {
           if (res.errorCode == 0) {

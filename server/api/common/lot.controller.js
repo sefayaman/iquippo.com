@@ -351,7 +351,7 @@ function viewData(options, callback) {
     lotObj[x.lotNumber].amount = lotInfo[x.lot_id].amount;
     lotObj[x.lotNumber].id = x.lot_id;
     if (x.primaryImg !== "")
-      lotObj[x.lotNumber].primaryImg = x.primaryImg;
+      lotObj[x.lotNumber].primaryImg = x.product.primaryImg;
   });
 
   return callback(null, lotObj);

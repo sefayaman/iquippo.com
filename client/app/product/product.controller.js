@@ -1887,14 +1887,19 @@
         sendAssetInfoToAuction();
         $scope.product.assetMapData = {};
         $scope.product.assetMapData = $scope.setAssetMapData;
+      } else {
+        $scope.product.assetMapData = {};
       }
+      if (!product.auctionListing)
+        product.auction = {};
       productSvc.updateProduct(product).then(function(proResult) {
 
         if(proResult.errorCode === 1) {
           Modal.alert(proResult.message); 
           return;
         }
-        angular.copy(proResult.product[0], result);
+        var result = {};
+        angular.copy(proResult.product, result);
         $rootScope.loading = false;
         setScroll(0);
         $scope.successMessage = "Product updated successfully";

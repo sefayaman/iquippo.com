@@ -137,7 +137,7 @@ exports.getEmdData = function(req, res) {
     }
   }
   filter.isDeleted=false;
-  var query = Emd.find(filter);
+  var query = Emd.find(filter).sort({createdAt: -1});
   query.exec(function(err, result) {
     if (err) {
       res.status(err.status || 500).send(err);

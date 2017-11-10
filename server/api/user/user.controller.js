@@ -1277,9 +1277,18 @@ exports.authCallback = function(req, res, next) {
 
 exports.validateUser = function(req, res) {
   var filter = {}
-  filter.deleted= false;
-  if (!req.body.mobile && !req.body.email)
+  filter.deleted = false;
+  if (!req.body.mobile && !req.body.email && !req.body.forAuction)
     return res.status(401).send('Unauthorized');
+  
+  if (req.body.userId && req.body.forAuction) {
+    if (/^\d+$/.test(req.body.userId)) {
+      filter.mobile = req.body.userId;
+    } else {
+      filter.email = req.body.userId.toLowerCase();
+    }
+  }
+
   if (req.body.email)
     filter.email = req.body.email;
   if (req.body.mobile)

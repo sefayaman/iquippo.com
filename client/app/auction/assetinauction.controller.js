@@ -63,38 +63,6 @@
           Modal.openDialog('auctionRegistration', regUserAuctionScope);
         }
       });
-      /* Auth.isLoggedInAsync(function(loggedIn) {
-         if (loggedIn) {
-           filter = {};
-           filter._id = $location.search().id;
-           AuctionSvc.getAuctionDateData(filter)
-             .then(function(result) {
-               if(!result)
-                 return;
-               var dataObj = {};
-               dataObj.auction = {};
-               dataObj.user = {};
-               dataObj.auction.dbAuctionId = result.items[0]._id;
-               dataObj.auction.name = result.items[0].name;
-               dataObj.auction.auctionId = result.items[0].auctionId;
-               dataObj.auction.emdAmount = result.items[0].emdAmount;
-               dataObj.auction.auctionOwnerMobile = result.items[0].auctionOwnerMobile;
-               dataObj.user._id = Auth.getCurrentUser()._id;
-               dataObj.user.fname = Auth.getCurrentUser().fname;
-               dataObj.user.lname = Auth.getCurrentUser().lname;
-               dataObj.user.countryCode = LocationSvc.getCountryCode(Auth.getCurrentUser().country);
-               dataObj.user.mobile = Auth.getCurrentUser().mobile;
-               if(Auth.getCurrentUser().email)
-                 dataObj.user.email = Auth.getCurrentUser().email;
-               save(dataObj);
-             });
-           } else {
-              var regUserAuctionScope = $rootScope.$new();
-              regUserAuctionScope._id = query.id;
-              //regUserAuctionScope.emdAmount = query.emdAmount;
-              Modal.openDialog('auctionRegistration', regUserAuctionScope);
-             }
-          });*/
     }
 
     function openLiveAuctionURL() {
@@ -316,14 +284,21 @@
           if (res && Object.keys(res).length) {
             Object.keys(res).forEach(function(key) {
               var obj={};
-              console.log("key",key);
+              var firstPrimaryImg = true;
+              //console.log("key",key);
               obj.lotNumber=key;
               obj.assetDesc=res[key].assetDescription;
               obj.amount=res[key].amount;
               obj.id=res[key].id;
-              obj.primaryImg=res[key].primaryImg;
+              //obj.assetDir = res[key].assetDescription[0];
+              if(firstPrimaryImg) {
+                obj.primaryImg= $rootScope.uploadImagePrefix + res[key].assetDescription[0] +"/" + res[key].primaryImg;
+                firstPrimaryImg = false;
+              }
+              //obj.primaryImg= res[key].primaryImg;
+              //console.log("obj.primaryImg", obj.primaryImg);
               obj.url = auctionURL+ "/bidwidget/" + query.id + "/" + obj.id + "/" + Auth.getCurrentUser()._id;
-              console.log("object",obj);
+              //console.log("object",obj);
               var dataObj={};
               dataObj.auction = {};
               dataObj.user = {};

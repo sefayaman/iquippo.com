@@ -5,7 +5,8 @@
   </div>
   <div class="modal-body">
     <div ng-if="true">
-      <p>Are you an existing user on iQuippo?</p>
+      <p ng-if="!isAdmin()">Are you an existing user on iQuippo?</p>
+      <p ng-if="isAdmin()">Does the user already exist on iQuippo?</p>
       <div class="row">
         <div class="col-xs-6">
           <div class="radio radio-info">
@@ -15,7 +16,7 @@
         </div>
         <div class="col-xs-6">
           <div class="radio radio-info">
-            <input type="radio"  placeholder="" id="notregister" name="register" ng-model="option.select" value="no">
+            <input type="radio" placeholder="" id="notregister" name="register" ng-model="option.select" value="no">
             <label for="notregister"> No </label>
           </div>
         </div>
@@ -26,7 +27,7 @@
           <div class="row">
             <div class="col-sm-offset-2 col-sm-8 form-group" ng-class="{'has-error': aucform.userId.$invalid && form.submitted }">
               <input type="text" class="form-control form-group" name="userId" placeholder="Mobile Number or Email Address" ng-model="auctionRegVm.userId" required>
-              <input class="form-control form-group" placeholder="Password" type="password" name="passwordlogin" ng-model="auctionRegVm.passwordlogin" required>
+              <input ng-if="!isAdmin()" class="form-control form-group" placeholder="Password" type="password" name="passwordlogin" ng-model="auctionRegVm.passwordlogin" required>
               <!-- <select ng-if="currentAuction.emdTax === 'lotWise'" class="form-control form-group" name="selectedLots" id="selectedLots" style="height: 80px;" ng-options="lots.lotNumber as lots.lotNumber for lots in auctionRegVm.lotList" ng-model="auctionRegVm.selectedLots.lotNumber" multiple>
               </select> --> 
               <div class="text-right">
@@ -67,42 +68,42 @@
           </div>
         </div>
           <div class="row">
-                    <div class="form-group col-sm-4" ng-class="{'has-error': form.country.$invalid && submitted }">
-                    <select class="form-control" name="country" ng-model="auctionRegVm.user.country" ng-change="getCountryWiseState(auctionRegVm.user.country)" required>
-                    <option value="" disabled>*Select Country</option>
-                    <option  ng-repeat ="country in allCountries | orderBy:'name'" value="{{country.name}}">{{country.name}}</option>
-                    <option value="Other">Other</option>
-                    </select>
-                    <i class="caret"></i>
-                    </div>                   
-                    <div class="form-group col-sm-4" ng-class="{'has-error': form.state.$invalid && submitted }">
-                    <select class="form-control" name="state" ng-model="auctionRegVm.user.state" ng-change="getStateWiseLocation(auctionRegVm.user.state)" required>
-                    <option value="" disabled="">*Select State</option>
-                    <option ng-repeat="state in stateList| orderBy:'name'" value="{{state.name}}">{{state.name}}</option>
-                    <option value="Other">Other</option> 
-                    </select>
-                    <i class="caret"></i>
-                    </div> 
-                    <div class="form-group col-sm-4" ng-class="{'has-error': form.location.$invalid && submitted }">
-                    <select class="form-control" name="location" ng-model="auctionRegVm.user.city" required>
-                    <option value="" disabled>*Select Location</option>
-                    <option ng-repeat="location in locationList| orderBy:'name'" value="{{location.name}}">{{location.name}}</option>
-                    <option value="Other">Other</option>
-                    </select>
-                    <i class="caret"></i>
-                    </div>                 
-                    </div>
-                    <div class="row" ng-if="auctionRegVm.user.country=='Other' ||auctionRegVm.user.state=='Other'|| auctionRegVm.user.city=='Other' ">
-                    <div class="form-group col-sm-4"  ng-class="{'has-error': form.otherCountry.$invalid && submitted}">
-                    <input class="form-control" ng-show="auctionRegVm.user.country=='Other'" type="text" name="otherCountry" ng-model="auctionRegVm.user.otherCountry" placeholder="*Other Country" ng-required= "auctionRegVm.user.country == 'Other'" ng-disabled="auctionRegVm.user.country != 'Other'">
-                    </div>
-                    <div class="form-group col-sm-4"  ng-class="{'has-error': form.otherState.$invalid && submitted}">
-                    <input class="form-control" ng-show="auctionRegVm.user.country =='Other' || auctionRegVm.user.state =='Other'" type="text" name="otherState" ng-model="auctionRegVm.user.otherState" placeholder="*Other State" ng-required= "auctionRegVm.user.state == 'Other'" ng-disabled="auctionRegVm.user.state != 'Other'">
-                    </div>
-                    <div class="form-group col-sm-4"  ng-class="{'has-error': form.otherLocation.$invalid && submitted}">
-                    <input class="form-control" ng-show="auctionRegVm.user.city=='Other'|| auctionRegVm.user.country =='Other' || auctionRegVm.user.state =='Other'" type="text" name="otherLocation" ng-model="auctionRegVm.user.otherCity" placeholder="*Other Location" ng-required= "auctionRegVm.user.city == 'Other'" ng-disabled="auctionRegVm.user.city != 'Other'">
-                    </div>                
-                </div> 
+            <div class="form-group col-sm-4" ng-class="{'has-error': form.country.$invalid && submitted }">
+            <select class="form-control" name="country" ng-model="auctionRegVm.user.country" ng-change="getCountryWiseState(auctionRegVm.user.country)" required>
+            <option value="" disabled>*Select Country</option>
+            <option  ng-repeat ="country in allCountries | orderBy:'name'" value="{{country.name}}">{{country.name}}</option>
+            <option value="Other">Other</option>
+            </select>
+            <i class="caret"></i>
+            </div>                   
+            <div class="form-group col-sm-4" ng-class="{'has-error': form.state.$invalid && submitted }">
+            <select class="form-control" name="state" ng-model="auctionRegVm.user.state" ng-change="getStateWiseLocation(auctionRegVm.user.state)" required>
+            <option value="" disabled="">*Select State</option>
+            <option ng-repeat="state in stateList| orderBy:'name'" value="{{state.name}}">{{state.name}}</option>
+            <option value="Other">Other</option> 
+            </select>
+            <i class="caret"></i>
+            </div> 
+            <div class="form-group col-sm-4" ng-class="{'has-error': form.location.$invalid && submitted }">
+            <select class="form-control" name="location" ng-model="auctionRegVm.user.city" required>
+            <option value="" disabled>*Select Location</option>
+            <option ng-repeat="location in locationList| orderBy:'name'" value="{{location.name}}">{{location.name}}</option>
+            <option value="Other">Other</option>
+            </select>
+            <i class="caret"></i>
+            </div>                 
+            </div>
+            <div class="row" ng-if="auctionRegVm.user.country=='Other' ||auctionRegVm.user.state=='Other'|| auctionRegVm.user.city=='Other' ">
+            <div class="form-group col-sm-4"  ng-class="{'has-error': form.otherCountry.$invalid && submitted}">
+            <input class="form-control" ng-show="auctionRegVm.user.country=='Other'" type="text" name="otherCountry" ng-model="auctionRegVm.user.otherCountry" placeholder="*Other Country" ng-required= "auctionRegVm.user.country == 'Other'" ng-disabled="auctionRegVm.user.country != 'Other'">
+            </div>
+            <div class="form-group col-sm-4"  ng-class="{'has-error': form.otherState.$invalid && submitted}">
+            <input class="form-control" ng-show="auctionRegVm.user.country =='Other' || auctionRegVm.user.state =='Other'" type="text" name="otherState" ng-model="auctionRegVm.user.otherState" placeholder="*Other State" ng-required= "auctionRegVm.user.state == 'Other'" ng-disabled="auctionRegVm.user.state != 'Other'">
+            </div>
+            <div class="form-group col-sm-4"  ng-class="{'has-error': form.otherLocation.$invalid && submitted}">
+            <input class="form-control" ng-show="auctionRegVm.user.city=='Other'|| auctionRegVm.user.country =='Other' || auctionRegVm.user.state =='Other'" type="text" name="otherLocation" ng-model="auctionRegVm.user.otherCity" placeholder="*Other Location" ng-required= "auctionRegVm.user.city == 'Other'" ng-disabled="auctionRegVm.user.city != 'Other'">
+            </div>                
+        </div> 
         <div class="row">
          <!-- <div class="col-sm-6 form-group">
             <input type="text" class="form-control" name="" value="" placeholder="Location">

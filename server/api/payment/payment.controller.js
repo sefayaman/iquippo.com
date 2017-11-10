@@ -72,7 +72,7 @@ exports.getOnFilter = function(req, res) {
     filter.requestType= typeFilter;
   }
 
-  var query = Payment.find(filter);
+  var query = Payment.find(filter).sort({createdAt: -1});
   query.exec(
                function (err, payments) {
                       if(err) { return handleError(res, err); }
@@ -93,7 +93,7 @@ exports.update = function(req, res) {
           req.body._id = req.params.id;
           postRequest(req, res);
         } else
-        return res.status(201).json({errorCode: 0,message: "You have sucessfully registered for the auction. Please pay the EMD amount and inform our customer care team."});
+        return res.status(201).json({errorCode: 0,message: "Payment request submitted successfully !!!"});
     });
   });
 };
@@ -126,7 +126,7 @@ exports.update = function(req, res) {
             update(options.dataToSend);
             if(result && result.err)
               return res.status(412).send(result.err);
-            return res.status(412).send("Unable to post payment request. Please contact support team.");
+            return res.status(412).send("Payment details saved successfully. Details not passed to AS portal. Use Retry button");
           }
           if(result){
             options.dataToSend.reqSubmitStatus =  ReqSubmitStatuses[0];
