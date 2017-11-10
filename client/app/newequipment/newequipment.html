@@ -41,7 +41,7 @@
 
 <!-- Browse Brand -->
 <section class="category-block" ng-controller="NewEquipmentCtrl as newEquipmentVm">
-  <div class="container-fluid text-center">
+  <div class="container text-center">
     <div class="heading-titles">
       <h4>[ Browse By Brands ]</h4> 
       <a href="javascript:void(0);">View All ({{newEquipmentVm.bTotalItems}})</a>
@@ -50,7 +50,9 @@
     <div class="row">
       <div class="col-sm-4 form-group text-center" ng-repeat="brand in allBrand | limitTo:newEquipmentVm.bLimit" >   
         <div class="brand-logo">
-          <img src="{{uploadImagePrefix}}{{categoryDir}}/{{brand.imgSrc}}">
+          <a href="javascript:void(0);">
+            <img src="{{uploadImagePrefix}}{{categoryDir}}/{{brand.imgSrc}}" width="100%" height="100">
+          </a>
         </div>
       </div>
     </div>
@@ -65,8 +67,8 @@
       <h3>FOR BULK ORDERS </h3>
       <p>Wholesale is selling goods in tremendous quantities at a low unit price to retail merchants. Choose your desired equipments and get a quote.</p>
     </div>
-    <div class="col-sm-4 text-right">
-      <button type="button" class="btn btn-primary btn-lg">Select Items</button>
+    <div class="col-sm-offset-2 col-sm-2 text-right">
+      <button type="button" class="btn btn-primary btn-block">Select Items</button>
     </div>
   </div>
 </section>
