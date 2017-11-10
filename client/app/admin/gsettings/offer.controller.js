@@ -11,7 +11,6 @@
         vm.update = update;
         vm.editClicked = editClicked;
         vm.financegroupObj = {};
-        //$scope.onTabChange = onTabChange;
         $scope.onCategoryChange = onCategoryChange;
         $scope.onBrandChange = onBrandChange;
         $scope.Addfinance = Addfinance;
@@ -30,6 +29,7 @@
             categorySvc.getAllCategory()
             .then(function(result) {
               $scope.allCategory = result;
+
 
             });
                  
@@ -75,7 +75,6 @@
         $scope.openForm = function(data){
           
           var financer =JSON.parse(data);
-          console.log("dvvfv",financer);
           if(financer.name !=""){
              $scope.openform = true;  
           }else{
@@ -153,6 +152,7 @@
   
       function save(form){
           if(form.$invalid){
+           
              $scope.submitted = true;
              return;
           }
@@ -173,32 +173,23 @@
           vm.dataModel.model.id = model._id;
           vm.dataModel.model.name = model.name; 
 
-          //vm.dataModel.brandId = $scope.container.selectedBrandId;
-          //vm.dataModel.modelId = $scope.container.selectedModelId;
-
-          var $i = 1;
+   
+          var $i = 0;
 
           $scope.financerinfo.forEach(function(item) {
 
-            console.log("info",item);
 
               vm.financegroupObj[$i] = item;
               $i++;
            });
 
-           //console.log("vvhbhb",vm.financegroupObj);
-         vm.dataModel.location = $scope.container.location;
+          vm.dataModel.location = $scope.container.location;
           vm.dataModel.cash_purchase =  $scope.purchase;
           vm.dataModel.price = $scope.container.price;
           vm.dataModel.freeofcost = $scope.container.freeofcost;
           vm.dataModel.finance = $scope.finance;
           vm.dataModel.financer = $scope.container.financer;
           vm.dataModel.financeDetail = vm.financegroupObj;
-          //vm.dataModel.rate = $scope.container.rate;
-         // vm.dataModel.margin = $scope.container.margin;
-          //vm.dataModel.processingfee = $scope.container.processingfee;
-          //vm.dataModel.installment = $scope.container.installment;
-          //vm.dataModel.freecost = $scope.container.freecost;
           vm.dataModel.lease = $scope.Inlease;
           vm.dataModel.leaseprice = $scope.container.leaseprice;
 
@@ -232,13 +223,12 @@
                       $scope.container.price = rowData.price;
                       $scope.container.freeofcost = rowData.freeofcost;
                       $scope.finance = rowData.finance;
-                      $scope.financer = rowData.financer;
-                      //$scope.container.tenure = rowData.tenure;
-                      //$scope.container.rate = rowData.rate;
-                      //$scope.container.margin = rowData.margin;
-                      //$scope.container.processingfee = rowData.processingfee;
-                      //$scope.container.installment = rowData.installment;
-                      //$scope.container.freecost = rowData.freecostt;
+                      $scope.container.financer = rowData.financer;
+                      $scope.financerinfo = rowData.financeDetail;
+                      if($scope.financerinfo.length > 0){
+                        $scope.openform = true; 
+                      }
+             
                       $scope.Inlease = rowData.lease;
                       $scope.container.leaseprice = rowData.leaseprice;
 
@@ -252,6 +242,43 @@
             $scope.submitted = true;
             return;
             }
+
+            var cat =JSON.parse($scope.container.selectedCategoryId);
+            vm.dataModel.category = {};
+            vm.dataModel.category.id = cat._id;
+            vm.dataModel.category.name = cat.name; 
+  
+            var brand =JSON.parse($scope.container.selectedBrandId);
+            vm.dataModel.brand = {};
+            vm.dataModel.brand.id = brand._id;
+            vm.dataModel.brand.name = brand.name; 
+  
+  
+            var model =JSON.parse($scope.container.selectedModelId);
+            vm.dataModel.model = {};
+            vm.dataModel.model.id = model._id;
+            vm.dataModel.model.name = model.name; 
+  
+     
+            var $i = 0;
+  
+            $scope.financerinfo.forEach(function(item) {
+  
+  
+                vm.financegroupObj[$i] = item;
+                $i++;
+             });
+  
+            vm.dataModel.location = $scope.container.location;
+            vm.dataModel.cash_purchase =  $scope.purchase;
+            vm.dataModel.price = $scope.container.price;
+            vm.dataModel.freeofcost = $scope.container.freeofcost;
+            vm.dataModel.finance = $scope.finance;
+            vm.dataModel.financer = $scope.container.financer;
+            vm.dataModel.financeDetail = vm.financegroupObj;
+            vm.dataModel.lease = $scope.Inlease;
+            vm.dataModel.leaseprice = $scope.container.leaseprice;
+  
             OfferSvc.update(vm.dataModel)
             .then(function(){
             vm.dataModel = {};
@@ -268,25 +295,37 @@
 
 
         function get(){
-          // vm.auctionListing = result.items;
-          OfferSvc.get(vm.dataModel).then(function(result){
-              if(result.length>0){
-                   vm.offer = result;
+            // vm.auctionListing = result.items;
+            OfferSvc.get(vm.dataModel).then(function(result){
+            if(result.length>0){
+                  vm.offer = result;
 
-                  }else{
-                     // vm.dataModel = {};
-                     $scope.isEdit = false;
-                  }
-              
-      })
-      .catch(function(res){
-      });
+                }else{
+                    // vm.dataModel = {};
+                    $scope.isEdit = false;
+                }
 
-          
+            })
+            .catch(function(res){
+            });
         }
 
         
-
+        function destroy(id){
+          Modal.confirm("Are you sure want to delete?",function(ret){
+                if(ret == "yes"){
+                  OfferSvc.destroy(id)
+                  .then(function(){
+                    get();
+                    Modal.alert('Data successfully Deleted!');
+                  })
+                  .catch(function(err){
+                      console.log("purpose err",err);
+                  });
+                }
+                  
+            });
+        }
 
         Auth.isLoggedInAsync(function(loggedIn){
           if(loggedIn){
