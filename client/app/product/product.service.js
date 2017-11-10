@@ -45,6 +45,7 @@
       prdService.statusWiseCount = statusWiseCount;
       prdService.createOrUpdateAuction = createOrUpdateAuction;
       prdService.getProductOnSellerId = getProductOnSellerId;
+      prdService.importData = importData;
 
        function getFeaturedProduct(id){
           var deferred = $q.defer();
@@ -254,7 +255,7 @@
               })
               .catch(function(res){
                 throw res;
-              })
+              });
       }
 
     function parseExcel(fileName){
@@ -271,6 +272,27 @@
         user.country = Auth.getCurrentUser().country;
         user.company = Auth.getCurrentUser().company;
           return $http.post(path + "/v1/import",{filename:fileName,user:user})
+                .then(function(res){
+                  return res.data;
+                })
+                .catch(function(res){
+                  throw res;
+                })
+      }
+     function importData(data){
+        var user = {};
+        user._id = Auth.getCurrentUser()._id;
+        user.fname = Auth.getCurrentUser().fname;
+        user.mname = Auth.getCurrentUser().mname;
+        user.lname = Auth.getCurrentUser().lname;
+        user.role = Auth.getCurrentUser().role;
+        user.userType = Auth.getCurrentUser().userType;
+        user.phone = Auth.getCurrentUser().phone;
+        user.mobile = Auth.getCurrentUser().mobile;
+        user.email = Auth.getCurrentUser().email;
+        user.country = Auth.getCurrentUser().country;
+        user.company = Auth.getCurrentUser().company;
+          return $http.post(path + "/v1/import",{data:data,user:user})
                 .then(function(res){
                   return res.data;
                 })

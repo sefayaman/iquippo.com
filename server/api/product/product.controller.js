@@ -1347,7 +1347,6 @@ function fetchModel(model, cb) {
 
 exports.updateExcelData = function (req,res,next){
   var successCount = 0;
-
   if(!req.updateData.length && !req.errorList.length){
     req.errorList = [];
     for(var j = 0 ; j < req.totalCount ; j++){
@@ -1382,15 +1381,15 @@ exports.updateExcelData = function (req,res,next){
         req.errorList.push({
           Error:'Error while updating information',
           rowCount : data.rowCount
-        })
+        });
         return cb();
       }
       successCount++;
       return cb();
-    })
+    });
   }
     
-}
+};
 
 exports.createProductReq = function(req,res,next){
   if(!req.updateData.length && !req.errorList.length)
@@ -1437,6 +1436,7 @@ exports.createProductReq = function(req,res,next){
 }
 
 exports.parseExcel = function(req,res,next){
+    
   var body = req.body;
   var ret;
   ['fileName', 'user','type'].some(function(x) {
@@ -1457,7 +1457,41 @@ exports.parseExcel = function(req,res,next){
   req.excelData = Utillity.toJSON(options);
   req.reqType = 'Update';
   return next();
-}
+};
+
+exports.parseUpdateData = function(req,res,next){
+  var data = req.body;
+//  var ret;
+//  ['fileName', 'user','type'].some(function(x) {
+//    if (!body[x]) {
+//      ret = x;
+//    }
+//  });
+
+//  if(ret)
+//    return next(new APIError(412,'Missing mandatory parameter: ' + ret));
+
+  
+  if (!data.length) {
+      return res.status(400).send('Missing mandatory parameter');
+    }
+    
+    data = data.filter(function(x) {
+        Object.keys(x).forEach(function(key) {
+          if (productFieldsMap[key]) {
+            x[productFieldsMap[key]] = trim(x[key] || "");
+          }
+          delete x[key];
+        });
+        x.rowCount = x.__rowNum__;
+        return x;
+      });
+  req.excelData = data;
+  req.reqType = 'Update';
+  return next();
+};
+
+
 
 exports.parseImportExcel = function(req,res,next){
   var body = req.body;
@@ -1483,6 +1517,32 @@ exports.parseImportExcel = function(req,res,next){
   return next();
 }
 
+exports.parseImportData = function(req,res,next){
+    var data = req.body.data;
+    //var fieldMapping = Object.keys(productFieldsMap);
+    if (!productFieldsMap || !data.length) {
+      return res.status(400).send('Invalid or Missing mapping');//new Error('Invalid or Missing mapping');
+    }
+
+//    if (!fieldMapping.__rowNum__)
+//      fieldMapping.__rowNum__ = 'rowCount';
+
+    data = data.filter(function(x) {
+      Object.keys(x).forEach(function(key) {
+        if (productFieldsMap[key]) {
+          x[productFieldsMap[key]] = trim(x[key] || "");
+        }
+        delete x[key];
+      });
+      x.rowCount = x.__rowNum__;
+      return x;
+    });
+    req.excelData = data;
+    
+    req.reqType = 'Upload';
+    return next();
+};
+
 
 exports.validateExcelData = function(req, res, next) {
   var excelData = req.excelData;
@@ -1500,22 +1560,18 @@ exports.validateExcelData = function(req, res, next) {
     return next(new APIError(404,'No Data to update'));
   }
 
-  
-
   var updateData = [];
   var errorList = [];
   var assetIdObj = {};
   req.totalCount = excelData.length;
   async.eachLimit(excelData, 10, intialize, finalize);
-
   function finalize(err) {
     if (err) {
       console.log(err);
       return next(new APIError(500,'Error while updating'));
     }
-
     if(!updateData.length && !errorList.length){
-      return res.json({successCount:0 , errorList : excelData.length,totalCount : req.totalCount});
+      return res.json({successCount:0 , errorList : req.errorList,totalCount : req.totalCount});
     }
     req.errorList = errorList;
     req.updateData = updateData;
@@ -1540,7 +1596,7 @@ exports.validateExcelData = function(req, res, next) {
     validateAdditionalInfo : Any othe column would be added here which does not require any processing
     validateOnlyAdminCols : This function validates the cols which only admin can update
     */
-    if(reqType == 'Update'){
+    if(reqType === 'Update'){
       Product.find({
         assetId: row.assetId
       }, function(err, doc) {
@@ -1548,7 +1604,7 @@ exports.validateExcelData = function(req, res, next) {
           errorList.push({
             Error: 'No asset id found',
             rowCount: row.rowCount
-          })
+          });
           return cb();
         }
 
@@ -1595,7 +1651,7 @@ exports.validateExcelData = function(req, res, next) {
         errorList.push({
             Error: 'Duplicate Records in excel sheet',
             rowCount: row.rowCount
-          })
+          });
           return cb();
       }
     }

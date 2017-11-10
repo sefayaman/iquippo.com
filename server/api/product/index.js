@@ -35,10 +35,10 @@ router.post('/deleteincomingproduct', controller.deleteIncomingProduct);
 router.post('/statuswisecount', controller.statusWiseCount);
 router.post('/createauction', controller.createOrUpdateAuction);
 
-router.post('/bulkeditproduct',controller.parseExcel,controller.validateExcelData,controller.updateExcelData);
+router.post('/bulkeditproduct',controller.parseUpdateData,controller.validateExcelData,controller.updateExcelData);
 router.get('/script/featured',scriptController.script);
 //v1 version of bulk create product
-router.post('/v1/import',auth.isAuthenticated(),controller.parseImportExcel,controller.validateExcelData,controller.createProductReq);
+router.post('/v1/import',auth.isAuthenticated(),controller.parseImportData,controller.validateExcelData,controller.createProductReq);
 
 router.get('/script/modifyproducttype',scriptController.modifyProductTypeId);
 

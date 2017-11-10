@@ -1,4 +1,4 @@
-(function(){
+(function(xlsx){
 'use strict';
 angular.module('sreizaoApp')
 .controller('BulkProductCtrl',BulkProductCtrl);
@@ -111,7 +111,7 @@ function BulkProductCtrl($state,$scope,$rootScope,$window,uploadSvc,productSvc,s
   }
   getTemplateName();
 
-  function uploadExcel(file){
+  function uploadExcel(file){ 
     if(!file)
       return;
      if(file.name.indexOf('.xlsx') == -1){
@@ -119,13 +119,26 @@ function BulkProductCtrl($state,$scope,$rootScope,$window,uploadSvc,productSvc,s
         return;
 
       }
-    uploadSvc.upload(file,importDir)
-    .then(function(result){
-      var fileName = result.data.filename;
-      $rootScope.loading = true;
-      productSvc.parseExcel(fileName)
-      .then(function(res){
+      var reader = new FileReader();
 
+        reader.onload = function (e) {
+          /* read workbook */
+          var bstr = e.target.result;
+          var workbook = xlsx.read(bstr, {type:'binary'});
+          var worksheet = workbook.Sheets[workbook.SheetNames[0]];
+          var data = xlsx.utils.sheet_to_json(worksheet);
+   
+          //alert(data);
+
+      
+//    uploadSvc.upload(file,importDir)
+//    .then(function(result){
+//      var fileName = result.data.filename;
+//      $rootScope.loading = true;
+//      
+      
+      productSvc.importData(data)
+      .then(function(res){
           loadIncomingProduct();
           $rootScope.loading = false;
           var totalRecord = res.totalCount;
@@ -137,7 +150,7 @@ function BulkProductCtrl($state,$scope,$rootScope,$window,uploadSvc,productSvc,s
             var serData = {};
             serData.serverPath = serverPath;
             serData.errorList = res.errorList;
-            notificationSvc.sendNotification('BulkProductStatusUpdateError', data, serData,'email');
+            //notificationSvc.sendNotification('BulkProductStatusUpdateError', data, serData,'email');
             message += "Error details have been sent on registered email id.";
           }
           $scope.successMessage = message;
@@ -146,11 +159,14 @@ function BulkProductCtrl($state,$scope,$rootScope,$window,uploadSvc,productSvc,s
       .catch(function(res){
         $rootScope.loading = false;
         Modal.alert("error in parsing data",true);
-      })
-    })
-    .catch(function(res){
-       Modal.alert("error in file upload",true);
-    });
+      });
+    };
+
+    reader.readAsBinaryString(file);
+    //})
+//    .catch(function(res){
+//       Modal.alert("error in file upload",true);
+//    });
   }
 
   function uploadZip(files){
@@ -179,7 +195,7 @@ function BulkProductCtrl($state,$scope,$rootScope,$window,uploadSvc,productSvc,s
     .catch(function(res){
       $rootScope.loading = false;
        alert("error in file upload");
-    })
+    });
   }
 
   var imgDim = {width:700,height:459};
@@ -395,7 +411,7 @@ function mailToCustomerForApprovedAndFeatured(result, product) {
   }
 
 }
-})();
+})(XLSX);
 
 
 

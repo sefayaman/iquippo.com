@@ -1,4 +1,4 @@
-(function() {
+(function(xlsx) {
   'use strict';
   angular.module('sreizaoApp').controller('ProductCtrl', ProductCtrl);
   angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
@@ -714,20 +714,35 @@
         Modal.alert('Please upload a valid file');
         return;
       }
-      uploadSvc.upload(files[0], importDir)
-        .then(function(result) {
-          var dataToSend = {};
-          dataToSend.fileName = result.data.filename;
-          dataToSend.user = {
-            _id  : Auth.getCurrentUser()._id,
-            email : Auth.getCurrentUser().email,
-            mobile : Auth.getCurrentUser().mobile,
-            role : Auth.getCurrentUser().role
-          };
+      
+      //
+      var reader = new FileReader();
 
-          dataToSend.type = args.name || 'template_update';          
-          $rootScope.loading = true;
-          productSvc.bulkEditProduct(dataToSend)
+        reader.onload = function (e) {
+          /* read workbook */
+          var bstr = e.target.result;
+          var workbook = xlsx.read(bstr, {type:'binary'});
+          var worksheet = workbook.Sheets[workbook.SheetNames[0]];
+          var data = xlsx.utils.sheet_to_json(worksheet);
+
+          console.log("data>>>>> ",data);
+      //
+      
+//      uploadSvc.upload(files[0], importDir)
+//        .then(function(result) {
+//          var dataToSend = {};
+//          dataToSend.fileName = result.data.filename;
+//          dataToSend.user = {
+//            _id  : Auth.getCurrentUser()._id,
+//            email : Auth.getCurrentUser().email,
+//            mobile : Auth.getCurrentUser().mobile,
+//            role : Auth.getCurrentUser().role
+//          };
+//
+//          dataToSend.type = args.name || 'template_update';          
+//          $rootScope.loading = true;
+          
+          productSvc.bulkEditProduct(data)
             .then(function(res) {
               $rootScope.loading = false;
               var totalRecord = res.totalCount;
@@ -746,12 +761,14 @@
             })
             .catch(function(res) {
               $rootScope.loading = false;
-              Modal.alert("error in parsing data", true);
-            })
-        })
-        .catch(function(res) {
-          Modal.alert("error in file upload", true);
-        });
+              Modal.alert("error in parsing data ", true);
+            });
+//        })
+//        .catch(function(res) {
+//          Modal.alert("error in file upload", true);
+//        });
+        };
+        reader.readAsBinaryString(files[0]);
     }
 
     function clickHandler(type, val) {
@@ -1692,4 +1709,4 @@
 
 
 
-})();
+})(XLSX);
