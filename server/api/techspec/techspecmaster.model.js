@@ -3,14 +3,15 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 var TechSpecFieldMasterSchema = new Schema({
-  category:{
+  /*category:{
     data:{type:Schema.Types.ObjectId,ref:'Category'},
     name:String
   },
-  fields:[{
-    type:String,
-    name:String
-  }],
+  fields:[{}],*/
+  categoryId:{type:Schema.Types.ObjectId,ref:'Category'},
+  categoryName:String,
+  fieldName:String,
+  fieldType:String,
   createdAt: {type:Date,default:Date.now},
   updatedAt: {type:Date,default:Date.now}
 });

@@ -94,6 +94,7 @@ function DealerMasterCtrl($scope,$rootScope,$state,categorySvc,vendorSvc, modelS
                     i++;
             }
          }
+         console.log("dealer===",vm.dataModel);
          vm.dataModel.status = true;
         DealerMasterSvc.save(vm.dataModel)
         .then(function(){
