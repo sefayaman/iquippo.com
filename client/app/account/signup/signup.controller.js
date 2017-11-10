@@ -4,16 +4,25 @@
   angular.module('account').controller('SignupCtrl', SignupCtrl);
 
   //controller function
-  function SignupCtrl($scope, commonSvc, $rootScope, Auth, $location, UtilSvc, $window, $uibModalInstance, InvitationSvc, Modal, LocationSvc, notificationSvc, MarketingSvc) {
+  function SignupCtrl($scope, commonSvc, $rootScope, Auth, $location, UtilSvc, $window, InvitationSvc, Modal, LocationSvc, notificationSvc, MarketingSvc) {
     var vm = this;
     var facebookConversionSent = false;
+
+    $scope.step = 0;
+
     vm.user = {};
     vm.otpCode;
     vm.user.activationOTP = "mobile";
     vm.register = register;
     vm.verify = verify;
-    vm.openLogin = openLogin;
-    vm.closeDialog = closeDialog;
+
+    vm.goToNext = goToNext;
+    vm.goToPrev = goToPrev;
+    //vm.getPersonalInfo = getPersonalInfo;
+    //vm.getPersonalInfo = getPersonalInfo;
+
+    //vm.openLogin = openLogin;
+    //vm.closeDialog = closeDialog;
     vm.loginOauth = loginOauth;
     vm.sendOTP = sendOTP;
     $scope.isDisabled = false;
@@ -27,6 +36,15 @@
 
     $scope.getCountryWiseState = getCountryWiseState;
     $scope.getStateWiseLocation = getStateWiseLocation;
+
+    function goToNext(){
+      if($scope.step < 3)
+          $scope.step += 1
+    }
+
+    function goToPrev(){
+      
+    }
 
     function getCountryWiseState(country) {
       $scope.isDisabled = false;
@@ -195,7 +213,7 @@
                     //closeDialog();
                     vm.user = {};
                   }
-                  closeDialog(); // 
+                  //closeDialog(); // 
                 }
           });
            // notificationSvc.sendNotification('manpowerRegSmsToUser', data, dataToSend, 'sms');
@@ -272,15 +290,15 @@
       $window.location.href = '/auth/' + provider;
     };
 
-    function openLogin() {
+    /*function openLogin() {
       closeDialog();
       $scope.openDialog('login');
-    };
+    };*/
 
 
-    function closeDialog() {
+    /*function closeDialog() {
       $uibModalInstance.dismiss('cancel');
-    };
+    };*/
 
   }
 

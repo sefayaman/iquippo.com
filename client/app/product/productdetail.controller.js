@@ -433,7 +433,7 @@
         filter.status = true;
         productSvc.getProductOnFilter(filter).then(function(result) {
           if (result && result.length < 1) {
-            $state.go('main');
+            //$state.go('main');
             return;
           }
 

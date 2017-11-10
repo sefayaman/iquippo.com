@@ -36,10 +36,15 @@ exports.categoryCount = function(req,res){
       return res.status(200).json(req.groups);
     var groupIds = [];
     var filter = {};
+    var queryData = req.query;
     req.groups.forEach(function(item){
       groupIds.push(item._id + "");      
     });
     filter['group._id'] = {$in:groupIds};
+    if(queryData.isForUsed)
+        filter['isForUsed'] = true;
+    if(queryData.isForNew)
+      filter['isForNew'] = true;
     Category.aggregate(
     { $match:filter},
     { $group: 

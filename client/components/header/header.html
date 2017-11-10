@@ -17,7 +17,7 @@
       <!-- Collect the nav links, forms, and other content for toggling -->
       <div class="collapse navbar-collapse navbar-ex1-collapse" ng-class="!navCollapsed && 'in'" ng-click="navCollapsed = true">
         <ul class="nav navbar-nav navbar-right">
-            <li><a href="javascript:void(0);">Used Equipment</a></li>
+            <li><a href="/used">Used Equipment</a></li>
             <li><a href="/newmain">New Equipment</a></li>
             
              <li ng-class="{active: isActive(['financing'])}"><a href="javascript:void(0);" ng-click="submitToRapid(createnewloan)">Financing</a></li>
@@ -30,8 +30,8 @@
                   <li role="menuitem"><a href="/manpower"> Manpower</a></li>
                 </ul>
              </li>
-             <li ng-hide="isLoggedIn()"><a href="javascript:void(0);" ng-click="openLogin()">Login</a></li>
-             <li ng-hide="isLoggedIn()"><a href="javascript:void(0);" ng-click="loginVm.openRegister()">Signup</a></li>
+             <li ng-hide="isLoggedIn()"><a href="/signin">Login</a></li>
+             <li ng-hide="isLoggedIn()"><a href="/signup">Signup</a></li>
              <li ng-if="isLoggedIn()" class="dropdown" >
               <a href class="dropdown-toggle" data-toggle="dropdown">
                  <i class="fa fa-user" style="background-color:#ccc;color:#fff; padding:3px 5px; border-radius:50%;height:20px;width:20px;" ng-if="!getCurrentUser().imgsrc"></i>

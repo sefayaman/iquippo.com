@@ -176,6 +176,7 @@ angular.module('sreizaoApp')
 .directive('withFloatingLabel', function () {
   return {
     restrict: 'A',
+    scope:{},
     link: function ($scope, $element, attrs) {
       var template = '<div class="floating-label">' + attrs.placeholder +'</div>';
       

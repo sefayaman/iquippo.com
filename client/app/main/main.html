@@ -91,11 +91,11 @@
   <div class="container-fluid text-center">
     <div class="heading-titles">
       <h4>[ Browse Used Equipment By Category ]</h4>
-      <a href="/allcategory">View All ({{mainVm.categoryCount}})</a>
+      <a href="/used/allcategories">View All ({{mainVm.categoryCount}})</a>
     </div>
     <div class="row">
       <div class="col-sm-4 form-group text-center" ng-repeat="category in categoryList" ng-if="$index < 6">   
-        <a href="/category/{{category.name}}?currentPage=1" class="cat-rectangle">
+        <a href="/used/{{category.group.name}}/{{category.name}}?currentPage=1" class="cat-rectangle">
           <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{category.imgSrc}}" class="category-item">
         </a>
         <h5 class="category-name">{{category.name}} ({{category.count}})</h5>
@@ -108,12 +108,12 @@
   <div class="container-fluid text-center">
     <div class="heading-titles">
       <h4>[ Browse Used Equipment By Brands ]</h4>
-      <a href="javascript:void(0);">View All ({{mainVm.brandCount}})</a>
+      <a href="/used/brands">View All ({{mainVm.brandCount}})</a>
     </div>
     <div class="row">
       <div class="col-sm-4 form-group text-center" ng-repeat="brand in mainVm.brands" ng-if="$index < 6">   
         <div class="brand-logo">
-          <a href="/brand/{{brand.name}}?currentPage=1">
+          <a href="/used/brands/{{brand.name}}?currentPage=1">
             <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{brand.imgSrc}}" height="100" width="250">
           </a>
         </div>

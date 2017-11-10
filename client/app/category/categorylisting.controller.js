@@ -1,9 +1,9 @@
 (function(){
 
 'use strict';
-angular.module('sreizaoApp').controller('AllCategoryCtrl',AllCategoryCtrl);
+angular.module('sreizaoApp').controller('CategoryListingCtrl',CategoryListingCtrl);
 
-  function AllCategoryCtrl($scope,categorySvc) {
+  function CategoryListingCtrl($scope,$stateParams,categorySvc) {
     
     var vm  = this;
     vm.showedItems = 9;
@@ -11,7 +11,10 @@ angular.module('sreizaoApp').controller('AllCategoryCtrl',AllCategoryCtrl);
     vm.showMore = showMore;
 
     function init(){
-      categorySvc.getAllCategory()
+      var filter = {isForUsed:true};
+      if($stateParams.group)
+        filter.group = $stateParams.group;
+      categorySvc.getCategoryOnFilter(filter)
       .then(function(catList){
         vm.allCategoryList = catList;
       })

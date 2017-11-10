@@ -50,16 +50,16 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
         $scope.allGroup = result;
       });
 
-      categorySvc.getAllCategory({isForUsed:true})
+      categorySvc.getCategoryOnFilter({isForUsed:true})
       .then(function(result){
         $scope.categoryList = result;
         allCategory = result;
-        if($stateParams.category){
+        /*if($stateParams.category){
            allCategory.forEach(function(catObj){
             if(catObj.name === $stateParams.category)
               $scope.equipmentSearchFilter.group = catObj.group.name;
           });
-        }
+        }*/
         if($stateParams.group)
             onGroupChange($stateParams.group,true);
       });
@@ -111,7 +111,7 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
     }
 
     $scope.categoryList = allCategory.filter(function(item){
-      return item.group.name === group;
+      return item.group.name === group && item.isForUsed;
     });
 
     if(!noAction)
@@ -123,7 +123,7 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
       $scope.equipmentSearchFilter.brand = "";
     }
     $scope.brandList = allBrand.filter(function(item){
-      return item.category.name === category;
+      return item.category.name === category && item.isForUsed;
     });
     if(!noAction)
       fireCommand();

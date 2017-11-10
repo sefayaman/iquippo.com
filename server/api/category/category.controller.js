@@ -14,6 +14,8 @@ exports.get = function(req, res,next) {
     filter["status"] = queryData.status;
   if(queryData.groupId)
     filter['group._id'] = queryData.groupId;
+  if(queryData.group)
+    filter['group.name'] = queryData.group;
   if(queryData.isForNew)
     filter['isForNew'] = true;
   if(queryData.isForUsed)
