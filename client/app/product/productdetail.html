@@ -62,28 +62,29 @@
               </div>
               <div class="listed-item" ng-if="auctionsData.name"><i class="fa fa-gavel"></i> <strong>Listed in Auction:</strong> <span class="text-info">{{auctionsData.name}} ({{auctionsData.auctionId}}) </span>  <span class="pull-right"><i class="fa fa-calendar"></i> {{auctionsData.startDate | date:'MMM d'}} - {{auctionsData.endDate | date:'MMM d'}}</span>
               </div>
-               
-              <div class="row price-offer" ng-if="!currentProduct.priceOnRequest">
-                <div class="col-sm-8 form-group">
-                  <label>To Buy</label>
-                  <h1 ng-if="currentProduct.grossPrice">
-                  <i class="fa fa-inr"></i> {{currentProduct.grossPrice | number:0}}/-
-                  </h1>
-                  <span ng-if="currentProduct.grossPrice">(Inclusive of Taxes)</span>
-                  <h1 ng-if="!currentProduct.grossPrice">
-                  <i class="fa fa-inr"></i> Price On Request/-
-                  </h1>
-                </div>
-                <div class="col-sm-4 form-group">
-                  <label class="invisible">To Buy</label>
-                    <a href="javascript:void(0);" ng-click="productDetailVm.openBidModal(currentProduct.grossPrice || 0,'buynow')" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE' || auctionsData.visibleBuyNow == false  || productDetailVm.userCurrentBid.offerType == 'Buynow'" class="btn btn-primary btn-block">Buy Now</a>
+              
+              <div class="price-offer" ng-if="!currentProduct.priceOnRequest">
+                <div class="row">
+                  <div class="col-sm-8 form-group">
+                    <label>To Buy</label>
+                    <h1 ng-if="currentProduct.grossPrice">
+                    <i class="fa fa-inr"></i> {{currentProduct.grossPrice | number:0}}/-
+                    </h1>
+                    <span ng-if="currentProduct.grossPrice">(Inclusive of Taxes)</span>
+                    <h1 ng-if="!currentProduct.grossPrice">
+                    <i class="fa fa-inr"></i> Price On Request/-
+                    </h1>
+                  </div>
+                  <div class="col-sm-4 form-group">
+                    <label class="invisible">To Buy</label>
+                      <a href="javascript:void(0);" ng-click="productDetailVm.openBidModal(currentProduct.grossPrice || 0,'buynow')" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE' || auctionsData.visibleBuyNow == false  || productDetailVm.userCurrentBid.offerType == 'Buynow'" class="btn btn-primary btn-block">Buy Now</a>
+                  </div>                  
                 </div>
                 <div class="option-border text-center">
                   <span class="option">or</span>
                   <hr>
                 </div>
               </div>
-              
               
               <div class="row price-offer">
                 <div class="col-sm-6 form-group">
