@@ -16,7 +16,7 @@ var ApiError = require('../../components/_error');
  
     exports.get = function(req,res){
         var queryParam = req.query;
-        var filter = {};
+        var filter = {}; 
          var query = Offer.find(filter);
       
         query.exec(function(err, result){
@@ -26,7 +26,7 @@ var ApiError = require('../../components/_error');
           return res.status(200).json(result);
         });
     };
-
+             
     exports.update = function(req, res) {
       
                 req.body.updatedAt = new Date();
@@ -43,7 +43,24 @@ var ApiError = require('../../components/_error');
                 });
      };
       
-
+     exports.destroy = function(req, res, next) {
+      Offer.findById(req.params.id, function(err, oneRow) {
+        if (err) {
+          return handleError(res, err);
+        }
+        if (!oneRow) {
+          return next(new ApiError(404, "Not found"));
+        }
+        oneRow.remove(function(err) {
+          if (err) {
+            return handleError(res, err);
+          }
+          return res.status(204).send({
+            message: "Data deleted sucessfully!!!"
+          });
+        });
+      });
+    };
 
 
 

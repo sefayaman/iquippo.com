@@ -2,22 +2,25 @@
     'use strict';
    angular.module('admin').controller('OfferCtrl',OfferCtrl);
 
-    function OfferCtrl($scope,$state,Modal,Auth,PagerSvc,$filter,categorySvc,SubCategorySvc,LocationSvc,brandSvc,modelSvc,OfferSvc){
+    function OfferCtrl($scope,$state,Modal,Auth,PagerSvc,$filter,categorySvc,SubCategorySvc,LocationSvc,brandSvc,modelSvc,OfferSvc,vendorSvc){
         var vm  = this;
         vm.dataModel = {};
+        $scope.financerinfo =[{}];
         $scope.container = {};
         vm.save = save;
         vm.update = update;
         vm.editClicked = editClicked;
-        
-        //$scope.onTabChange = onTabChange;
+        vm.financegroupObj = {};
         $scope.onCategoryChange = onCategoryChange;
         $scope.onBrandChange = onBrandChange;
+        $scope.Addfinance = Addfinance;
+        $scope.deleteRow = deleteRow;
         $scope.isEdit = false;
         var filter = {};
         vm.offer = {};
+        
 
-        $scope.purchase = false;
+        $scope.purchase = false; 
         $scope.finance = false;
         $scope.Inlease = false;
 
@@ -26,14 +29,21 @@
             categorySvc.getAllCategory()
             .then(function(result) {
               $scope.allCategory = result;
+
+
             });
                  
             LocationSvc.getAllState()
             .then(function(result){
               $scope.stateList = result;
       
-      
-            });
+             });
+
+
+             vendorSvc.getAllVendors()
+             .then(function() {
+               $scope.agency = vendorSvc.getVendorsOnCode('Finance');
+              });
 
             get();
 
@@ -50,7 +60,7 @@
           }
         }
 
-          $scope.checkFinance = function(data){
+        $scope.checkFinance = function(data){
             //console.log("dvvfv",data);
             if(data ==true){
              $scope.finance = true;
@@ -61,6 +71,34 @@
     
         } 
 
+
+        $scope.openForm = function(data){
+          
+          var financer =JSON.parse(data);
+          if(financer.name !=""){
+             $scope.openform = true;  
+          }else{
+              $scope.openform = false;
+             }
+         
+  
+      } 
+
+      function Addfinance(index) {
+       
+
+        if($scope.financerinfo.length <= index+1){
+          $scope.financerinfo.splice(index+1,0,{});
+        }
+      }
+
+      function deleteRow($event,row){
+        
+         var index = $scope.financerinfo.indexOf(row);
+         if($event.which == 1)
+            $scope.financerinfo.splice(index,1);
+         
+       }
 
         $scope.checkLease = function(data){
           if(data ==true){
@@ -78,7 +116,6 @@
         $scope.brandList = [];
         $scope.modelList = [];
 
-        console.log("scacs",categoryId);
         //$scope.product.technicalInfo = {};
         if (!categoryId)
           return;
@@ -88,7 +125,6 @@
         brandSvc.getBrandOnFilter(filter)
           .then(function(result) {
             $scope.brandList = result;
-            console.log("brandlist",result);
   
           })
           .catch(function(res) {
@@ -116,6 +152,7 @@
   
       function save(form){
           if(form.$invalid){
+           
              $scope.submitted = true;
              return;
           }
@@ -136,19 +173,23 @@
           vm.dataModel.model.id = model._id;
           vm.dataModel.model.name = model.name; 
 
-          //vm.dataModel.brandId = $scope.container.selectedBrandId;
-          //vm.dataModel.modelId = $scope.container.selectedModelId;
+   
+          var $i = 0;
+
+          $scope.financerinfo.forEach(function(item) {
+
+
+              vm.financegroupObj[$i] = item;
+              $i++;
+           });
+
           vm.dataModel.location = $scope.container.location;
           vm.dataModel.cash_purchase =  $scope.purchase;
           vm.dataModel.price = $scope.container.price;
           vm.dataModel.freeofcost = $scope.container.freeofcost;
           vm.dataModel.finance = $scope.finance;
-          vm.dataModel.tenure = $scope.container.tenure;
-          vm.dataModel.rate = $scope.container.rate;
-          vm.dataModel.margin = $scope.container.margin;
-          vm.dataModel.processingfee = $scope.container.processingfee;
-          vm.dataModel.installment = $scope.container.installment;
-          vm.dataModel.freecost = $scope.container.freecost;
+          vm.dataModel.financer = $scope.container.financer;
+          vm.dataModel.financeDetail = vm.financegroupObj;
           vm.dataModel.lease = $scope.Inlease;
           vm.dataModel.leaseprice = $scope.container.leaseprice;
 
@@ -182,12 +223,12 @@
                       $scope.container.price = rowData.price;
                       $scope.container.freeofcost = rowData.freeofcost;
                       $scope.finance = rowData.finance;
-                      $scope.container.tenure = rowData.tenure;
-                      $scope.container.rate = rowData.rate;
-                      $scope.container.margin = rowData.margin;
-                      $scope.container.processingfee = rowData.processingfee;
-                      $scope.container.installment = rowData.installment;
-                      $scope.container.freecost = rowData.freecostt;
+                      $scope.container.financer = rowData.financer;
+                      $scope.financerinfo = rowData.financeDetail;
+                      if($scope.financerinfo.length > 0){
+                        $scope.openform = true; 
+                      }
+             
                       $scope.Inlease = rowData.lease;
                       $scope.container.leaseprice = rowData.leaseprice;
 
@@ -201,6 +242,43 @@
             $scope.submitted = true;
             return;
             }
+
+            var cat =JSON.parse($scope.container.selectedCategoryId);
+            vm.dataModel.category = {};
+            vm.dataModel.category.id = cat._id;
+            vm.dataModel.category.name = cat.name; 
+  
+            var brand =JSON.parse($scope.container.selectedBrandId);
+            vm.dataModel.brand = {};
+            vm.dataModel.brand.id = brand._id;
+            vm.dataModel.brand.name = brand.name; 
+  
+  
+            var model =JSON.parse($scope.container.selectedModelId);
+            vm.dataModel.model = {};
+            vm.dataModel.model.id = model._id;
+            vm.dataModel.model.name = model.name; 
+  
+     
+            var $i = 0;
+  
+            $scope.financerinfo.forEach(function(item) {
+  
+  
+                vm.financegroupObj[$i] = item;
+                $i++;
+             });
+  
+            vm.dataModel.location = $scope.container.location;
+            vm.dataModel.cash_purchase =  $scope.purchase;
+            vm.dataModel.price = $scope.container.price;
+            vm.dataModel.freeofcost = $scope.container.freeofcost;
+            vm.dataModel.finance = $scope.finance;
+            vm.dataModel.financer = $scope.container.financer;
+            vm.dataModel.financeDetail = vm.financegroupObj;
+            vm.dataModel.lease = $scope.Inlease;
+            vm.dataModel.leaseprice = $scope.container.leaseprice;
+  
             OfferSvc.update(vm.dataModel)
             .then(function(){
             vm.dataModel = {};
@@ -217,33 +295,37 @@
 
 
         function get(){
-          // vm.auctionListing = result.items;
-          OfferSvc.get(vm.dataModel).then(function(result){
-              if(result.length>0){
-                   vm.offer = result;
-                      //angular.copy(result[0], vm.dataModel);
-                      //$scope.isEdit = true;
-                      //vm._id = result[0]._id;
-                      //getCategoryOnFilter
+            // vm.auctionListing = result.items;
+            OfferSvc.get(vm.dataModel).then(function(result){
+            if(result.length>0){
+                  vm.offer = result;
 
+                }else{
+                    // vm.dataModel = {};
+                    $scope.isEdit = false;
+                }
 
-
-
-
-                  }else{
-                     // vm.dataModel = {};
-                     $scope.isEdit = false;
-                  }
-              
-      })
-      .catch(function(res){
-      });
-
-          
+            })
+            .catch(function(res){
+            });
         }
 
         
-
+        function destroy(id){
+          Modal.confirm("Are you sure want to delete?",function(ret){
+                if(ret == "yes"){
+                  OfferSvc.destroy(id)
+                  .then(function(){
+                    get();
+                    Modal.alert('Data successfully Deleted!');
+                  })
+                  .catch(function(err){
+                      console.log("purpose err",err);
+                  });
+                }
+                  
+            });
+        }
 
         Auth.isLoggedInAsync(function(loggedIn){
           if(loggedIn){
