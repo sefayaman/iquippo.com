@@ -80,7 +80,7 @@
             vm.cCurrentPage = 1;
             vm.cTotalItems = result.length;
             vm.cLimit = 6;
-        })
+        });
 
     }
 
