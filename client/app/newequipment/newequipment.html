@@ -16,7 +16,7 @@
     <div ng-controller="NewEquipmentCtrl as newEquipmentVm">
       <ul class="new-equipment-brand">
         <li ng-repeat="newBrand in allBrand | limitTo:newEquipmentVm.bImgLimit">
-          <a href="/viewproducts?brand={{newBrand.name}}" title="">
+          <a href="newequipment/viewproducts?brand={{newBrand.name}}" title="">
             <img src="{{uploadImagePrefix}}{{categoryDir}}/{{newBrand.imgSrc}}" alt="">
           </a>
         </li>
@@ -30,13 +30,13 @@
   <div class="container text-center">
     <div class="heading-titles">
       <h4>[ Browse By Brands ]</h4> 
-      <a href="/viewproducts">View All ({{newEquipmentVm.bTotalItems}})</a>
+      <a href="/newequipment/viewproducts">View All ({{newEquipmentVm.bTotalItems}})</a>
     </div>
 
     <div class="row">
       <div class="col-sm-4 form-group text-center" ng-repeat="brand in allBrand | limitTo:newEquipmentVm.bLimit" >   
         <div class="brand-logo">
-          <a href="/viewproducts?brand={{brand.name}}">
+          <a href="/newequipment/viewproducts?brand={{brand.name}}">
             <img src="{{uploadImagePrefix}}{{categoryDir}}/{{brand.imgSrc}}" width="100%" height="100">
           </a>
         </div>
@@ -64,16 +64,16 @@
   <div class="container-fluid text-center">
     <div class="heading-titles">
       <h4>[ Browse By Category ]</h4>
-      <a href="/viewproducts">View All ({{newEquipmentVm.cTotalItems}})</a>
+      <a href="/newequipment/viewproducts">View All ({{newEquipmentVm.cTotalItems}})</a>
     </div>
     <div class="row">
       <div class="col-sm-4 form-group text-center" ng-repeat="category in allCategory| limitTo:newEquipmentVm.cLimit">   
         <div class="cat-rectangle">
-          <a href="/viewproducts?category={{category.name}}">
+          <a href="/newequipment/viewproducts?category={{category.name}}">
             <img src="{{uploadImagePrefix}}{{categoryDir}}/{{category.imgSrc}}" class="category-item">
           </a>
         </div>
-        <h5 class="category-name"><a href="/viewproducts?category={{category.name}}">{{category.name}} </a></h5>
+        <h5 class="category-name"><a href="/newequipment/viewproducts?category={{category.name}}">{{category.name}} </a></h5>
       </div>
       
     </div>
