@@ -644,6 +644,16 @@ angular.module('sreizaoApp')
           //$rootScope.metaDescription=pagesTitles.valuation.meta;
         }
       })
+       .state('newequipmentlist', {
+        url:"/newequipment/viewproducts",
+        templateUrl: 'app/newequipment/newproductslist.html',
+        controller:"NewEquipmentListCtrl",
+        layout:'client',
+        onEnter:function($rootScope){
+          //$rootScope.choosenTitle=pagesTitles.valuation.title;
+          //$rootScope.metaDescription=pagesTitles.valuation.meta;
+        }
+      })
 
       $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
   });
