@@ -13,28 +13,14 @@
       <h4>[ NEW EQUIPMENTS ]</h4>
       <p>Choose from a complete range of Jcb®, TataMotors® &amp; Cat® equipments, power systems, work tools and technology solutions.</p>
     </div>
-    <div class="row" ng-controller="NewEquipmentCtrl as newEquipmentVm">
-
-      <div class="col-sm-6 form-group text-center" ng-repeat="newBrand in allBrand | limitTo:newEquipmentVm.bImgLimit">
-        <a href="/viewproducts?brand={{newBrand.name}}" title="">
-          <img src="{{uploadImagePrefix}}{{categoryDir}}/{{newBrand.imgSrc}}" alt="" class="img-responsive">
-        </a>
-      </div>
-      <!-- <div class="col-sm-6 form-group text-center"> 
-        <div class="row">
-          <div class="col-sm-12 form-group">
-            <a href="javascript:void(0);" title="" class="form-group">
-              <img src="/assets/images/cat-NewEquipment.jpg" alt="" class="img-responsive">
-            </a>
-          </div>
-          <div class="col-sm-12 form-group">
-             <a href="javascript:void(0);" title="" class="form-group">
-              <img src="/assets/images/cat-NewEquipment.jpg" alt="" class="img-responsive">
-            </a>
-          </div>
-        </div>
-      </div> -->
-
+    <div ng-controller="NewEquipmentCtrl as newEquipmentVm">
+      <ul class="new-equipment-brand">
+        <li ng-repeat="newBrand in allBrand | limitTo:newEquipmentVm.bImgLimit">
+          <a href="/viewproducts?brand={{newBrand.name}}" title="">
+            <img src="{{uploadImagePrefix}}{{categoryDir}}/{{newBrand.imgSrc}}" alt="">
+          </a>
+        </li>
+      </ul>
     </div>
   </div>
 </section>

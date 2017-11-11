@@ -1,0 +1,275 @@
+<div class="container-fluid">
+  <ol class="breadcrumb">
+    <li>
+      <a href="/main"> Home </a>
+    </li>
+    <li><a href="/main"> New Equipments </a></li>
+    <li class="active"> JCB Equipments </li>
+  </ol>
+</div>
+<div class="new-equipments-banner">
+  <img src="http://placehold.it/1920x300" height="200" width="100%" alt="">
+</div>
+<div class="view-content">
+  <section class="wrapper">
+    <div class="container-fluid">
+      <div class="alert alert-danger" ng-if="currentProduct.assetStatus == 'sold' || currentProduct.assetStatus == 'rented'">
+        The product has been <span ng-if="currentProduct.assetStatus == 'sold'">sold</span><span ng-if="currentProduct.assetStatus == 'rented'">rented</span>
+      </div>
+      <div class="alert alert-danger" ng-if="currentProduct.tradeType == 'NOT_AVAILABLE'">
+        This asset is currently not available for sale
+      </div>
+      <div class="row">
+        <div class="col-sm-7 form-group">
+          <div class="carousel slide article-slide form-group" id="article-photo-carousel">
+            <!-- Wrapper for slides -->
+            <div class="carousel-inner cont-slider">
+              <div class="item" ng-repeat="thumbnailImage in currentProduct.images" ng-class="{'active':thumbnailImage.isPrimary && !thumbnailImage.catImgType}">
+                <img alt="" title="" ng-src="{{thumbnailImage.displaySrc}}" class="img-responsive" ng-click="productDetailVm.previewProduct(currentProduct.images, $index)">
+              </div>
+            </div>            
+          </div>
+          The JCB JS370 sits in the middle of our range of heavy tracked excavators. Weighing in at around 36 ton, it’s engineered with exceptional strength, productivity, efficiency, comfort, safety and ease of maintenance.
+
+          A closed box section revolving frame increases strength and reduces stress. It also makes these tracked excavators highly resistant to impact damage. We’ve used strong parts too – premium industry standards in fact. Meanwhile, this tracked excavator’s engine is a highly efficient Isuzu  285hp (212kW) 6HK unit, compliant with Stage 3b and Tier 4i. The benefits of the JS370 series of tracked excavators don’t end there either.
+        </div>
+        <div class="col-sm-5 form-group">
+          <div class="currentproduct-info">
+            <h2>
+            JCB EXCAVATOR 240B PRIME
+            </h2>
+            <div class="row maximum-capacity">
+              <div class="col-xs-6 form-group">
+                Maximum Bucket Capacity
+              </div>
+              <div class="col-xs-6 form-group text-warning">
+                1.85m3(2yd3)
+              </div>
+            </div>
+            <div class="row maximum-capacity">
+              <div class="col-xs-6 form-group">
+                Maximum Engine Power
+              </div>
+              <div class="col-xs-6 form-group text-warning">
+                212kW(285hp)
+              </div>
+            </div>
+            <div class="row maximum-capacity">
+              <div class="col-xs-6 form-group">
+                Maximum Operating Weight
+              </div>
+              <div class="col-xs-6 form-group text-warning">
+                38372kg(84596lb)
+              </div>
+            </div>
+            <div class="row maximum-capacity">
+              <div class="col-xs-6 form-group">
+                Maximum Digging Depth
+              </div>
+              <div class="col-xs-6 form-group text-warning">
+                6680mm(21’)
+              </div>
+            </div>
+          </div>
+          
+          <div class="row text-center form-group download-brochure">            
+            <div class="col-xs-4">
+              <a href="javascript:void(0);">
+                <i class="fa fa-exchange fa-4x"></i>
+                ADD TO COMPARE
+              </a>
+            </div>
+            <div class="col-xs-4">
+              <a href="javascript:void(0);">
+                <i class="fa fa-plus fa-4x"></i>
+                BOOK A DEMO
+              </a>
+            </div>
+            <div class="col-xs-4">
+              <a href="javascript:void(0);">
+                <i class="fa fa-download fa-4x"></i>
+                DOWNLOAD BROCHURE
+              </a>
+            </div>
+          </div>
+          <div class="asset-sale">
+            <button type="button" class="btn btn-primary btn-block">VIEW OFFERS</button>
+          </div>
+        </div>
+      </div>
+  
+      <uib-tabset justified="true" class="information-tabs">
+        <uib-tab heading="STRENGTH">
+          <p>
+            We’ve designed JCB JS360 tracked excavators to be low maintenance and easily serviceable. Which makes them affordable, efficient and highly productive.
+          </p>
+
+          <p>
+            Hoods open and close easily with gas-assisted cylinders, and the service bays are large and wide for good access. 1000-hour boom and dipper greasing intervals and a 5000-hour oil life provide maximum uptime on these 360 excavators. Grease points are centralized on JS360 tracked excavators too, for safe and easy access to high level pivots. Likewise filters (engine oil, hydraulic oil and fuel).
+          </p>
+
+          <p>
+            Because they’re mounted side by side, the JS360 tracked excavator’s engine radiator, hydraulic cooler and intercooler can be serviced individually and cleaned easily.
+          </p>
+        </uib-tab>
+        <uib-tab heading="PRODUCTIVITY">
+          <p>
+            We’ve designed JCB JS360 tracked excavators to be low maintenance and easily serviceable. Which makes them affordable, efficient and highly productive.
+          </p>
+
+          <p>
+            Hoods open and close easily with gas-assisted cylinders, and the service bays are large and wide for good access. 1000-hour boom and dipper greasing intervals and a 5000-hour oil life provide maximum uptime on these 360 excavators. Grease points are centralized on JS360 tracked excavators too, for safe and easy access to high level pivots. Likewise filters (engine oil, hydraulic oil and fuel).
+          </p>
+
+          <p>
+            Because they’re mounted side by side, the JS360 tracked excavator’s engine radiator, hydraulic cooler and intercooler can be serviced individually and cleaned easily.
+          </p>
+        </uib-tab>
+        <uib-tab heading="OPERATOR COMFORT & SAFETY">
+          <p>
+            We’ve designed JCB JS360 tracked excavators to be low maintenance and easily serviceable. Which makes them affordable, efficient and highly productive.
+          </p>
+
+          <p>
+            Hoods open and close easily with gas-assisted cylinders, and the service bays are large and wide for good access. 1000-hour boom and dipper greasing intervals and a 5000-hour oil life provide maximum uptime on these 360 excavators. Grease points are centralized on JS360 tracked excavators too, for safe and easy access to high level pivots. Likewise filters (engine oil, hydraulic oil and fuel).
+          </p>
+
+          <p>
+            Because they’re mounted side by side, the JS360 tracked excavator’s engine radiator, hydraulic cooler and intercooler can be serviced individually and cleaned easily.
+          </p>
+        
+        </uib-tab>
+        <uib-tab heading="SERVICEABILITY">
+          <p>
+            We’ve designed JCB JS360 tracked excavators to be low maintenance and easily serviceable. Which makes them affordable, efficient and highly productive.
+          </p>
+
+          <p>
+            Hoods open and close easily with gas-assisted cylinders, and the service bays are large and wide for good access. 1000-hour boom and dipper greasing intervals and a 5000-hour oil life provide maximum uptime on these 360 excavators. Grease points are centralized on JS360 tracked excavators too, for safe and easy access to high level pivots. Likewise filters (engine oil, hydraulic oil and fuel).
+          </p>
+
+          <p>
+            Because they’re mounted side by side, the JS360 tracked excavator’s engine radiator, hydraulic cooler and intercooler can be serviced individually and cleaned easily.
+          </p>
+        </uib-tab>
+      </uib-tabset>
+    </div>
+  </section>
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+$('.collapse').on('shown.bs.collapse', function(){
+$(this).parent().find("i").removeClass("fa-plus").addClass("fa-minus");
+}).on('hidden.bs.collapse', function(){
+$(this).parent().find("i").removeClass("fa-minus").addClass("fa-plus");
+});
+});
+function goTo(dir){
+$('#article-photo').carousel(dir);
+}
+</script>
+<script type="text/ng-template" id="magnifier.html">
+<div id="magnifier-modal">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="close()" aria-hidden="true">&times;</button>
+  </div>
+  <div class="modal-body">
+    <div class="carousel slide article-slide" id="article-photo">
+      <!-- Wrapper for slides -->
+      <div class="carousel-inner cont-slider">
+        <div class="item" ng-repeat="thumbnailImage in images" ng-class="{'active':$index == idx}" >
+          <img alt="" title="" ng-src="{{thumbnailImage.displaySrc}}" class="img-responsive">
+        </div>
+      </div>
+      <!-- Indicators -->
+      <ol class="carousel-indicators">
+        <li class="" data-slide-to="{{$index}}" ng-class="{'active':$index == idx}" data-target="#article-photo" ng-repeat="thumbnailImage in images">
+          <img alt="" ng-src="{{uploadImagePrefix}}{{currentProduct.assetDir}}/{{thumbnailImage.src}}" class="img-responsive img-thumbnail">
+        </li>
+      </ol>
+      <!-- Controls -->
+      <a class="left carousel-control" href="javascript:goTo('prev');"  role="button" ng-non-bindable>
+        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+      </a>
+      <a class="right carousel-control" href="javascript:goTo('next');"  role="button" ng-non-bindable>
+        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+      </a>
+    </div>
+  </div>
+</div>
+</script>
+<!-- popup after click agree button -->
+<script type="text/ng-template" id="price_trend_survey.html">
+<div>
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="priceTrendSurveyVm.close()" aria-hidden="true">&times;</button>
+    <h4 class="modal-title">Leave your Comment</h4>
+  </div>
+  <div class="modal-body">
+    <form class="form-signin" name="surveyForm" novalidate>
+      <div class="row">
+        <div class="form-group col-sm-6" ng-class="{'has-error': surveyForm.fname.$invalid && submitted}">
+          <input type="text" class="form-control" name="fname" ng-model="priceTrendSurveyVm.priceTrendSurvey.user.fname" placeholder="First Name" required>
+        </div>
+        
+        <div class="form-group col-sm-6" ng-class="{'has-error': surveyForm.lname.$invalid && submitted}">
+          <input type="text" class="form-control" name="lname" ng-model="priceTrendSurveyVm.priceTrendSurvey.user.lname" placeholder="Last Name" required>
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="form-group col-sm-6" ng-class="{'has-error': surveyForm.mobile.$invalid && submitted}">
+          <div class="row">
+            <div class="col-sm-4 padd-right search-field">
+              <select class="form-control" ng-model="priceTrendSurveyVm.priceTrendSurvey.user.countryCode" ng-change="priceTrendSurveyVm.onCodeChange(priceTrendSurveyVm.priceTrendSurvey.user.countryCode)" required>
+                <option value="" disabled>*Code</option>
+                <option  ng-repeat ="country in allCountries | orderBy:'name'" value="{{country.countryCode}}">+{{country.countryCode}}</option>
+              </select>
+              <i class="caret"></i>
+            </div>
+            <div class="col-sm-8 padd-left">
+              <input type="text" class="form-control" name="mobile" placeholder="Mobile No." uib-tooltip="98-XXXX-XXXX" tooltip-trigger="focus" tooltip-placement="top" ng-model="priceTrendSurveyVm.priceTrendSurvey.user.mobile"  required>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 form-group">
+          <input type="email" class="form-control" name="email" placeholder="Email Address" ng-model="priceTrendSurveyVm.priceTrendSurvey.user.email" >
+          
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12 form-group" ng-class="{'has-error': surveyForm.comment.$invalid && agree == 'No' && submitted}">
+          <textarea class="form-control" name="comment" placeholder="Comments" ng-model="priceTrendSurveyVm.priceTrendSurvey.comment" ng-required="agree == 'No'"></textarea>
+        </div>
+      </div>
+      
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-md btn-default" ng-click="priceTrendSurveyVm.save(surveyForm)">Ok</button>
+    <button type="submit" class="btn btn-md btn-danger" ng-click="priceTrendSurveyVm.close()">Cancel</button>
+  </div>
+</div>
+</script>
+<!-- end poup -->
+<!-- user detail popup -->
+<script type="text/ng-template" id="price_trend_survey_detail.html">
+<div>
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="close()" aria-hidden="true">&times;</button>
+    <h4 class="modal-title">User Details</h4>
+  </div>
+  <div class="modal-body">
+    <div class="row text-center">
+      <div class="col-sm-12" ng-repeat="survey in surveys">
+        <p class="text-ellips"><strong>{{survey.user.fname}} {{survey.user.lname}}</strong></p>
+        <p class="text-ellips">{{survey.comment}}</p>
+        <hr>
+      </div>
+    </div>
+  </div>
+</div>
+</script>
+<!-- end -->

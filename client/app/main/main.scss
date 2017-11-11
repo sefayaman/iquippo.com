@@ -44,7 +44,6 @@ a:focus,.btn{outline: none;}
 .bid-gif{position: absolute; left: 50px; top: 50px; z-index: 99;}
 .bid-gif img{width: 150px !important; height: 40px !important;}
 .form-control{border-radius:0;box-shadow:none;width:100%;height:40px;}
-.text-warning{color:#E05F45;font-weight:bold;}
 .btn-default{border-radius:0;}
 .footer-border{border-color:#EC7358;border-width:3px;}
 .btn-warning{background:#e3000f;border:1px solid #fff;border-radius:0;width:180px;}
@@ -1003,7 +1002,7 @@ footer .nav{margin-bottom:15px;}
 .search-banner .btn.btn-default{text-transform: uppercase; font-size: 16px; padding:10px 25px; color: #004299; margin-top: 25px; border-radius: 3px; box-shadow: 0px 2px 3px #ccc;}
 
 .or-devided{padding: 15px; color: #fff;}
-
+.text-warning{color: #FFA600;}
 .upcoming-auction .media{
   display: block;
   box-shadow: 0px 0px 3px #ccc;
@@ -1088,6 +1087,7 @@ align-items: center; justify-content: center;
 .article-slide .carousel-indicators img{float:left;height:100%;left:0;width:100%;}
 .article-slide .carousel-indicators .active img{border:1px solid #428BCA;opacity:0.7;}
 .information-tabs{box-shadow: 1px 1px 4px #ccc; border: 1px solid #ddd; margin: 2em 0;}
+.information-tabs .information-padd{padding: 2em;}
 .information-tabs .nav-tabs>li.active>a,.information-tabs .nav-tabs>li.active>a:focus,.information-tabs .nav-tabs>li.active>a:hover
 {
   border:0; border-bottom: 2px solid #5e8ccc; color: #000;
@@ -1096,6 +1096,15 @@ align-items: center; justify-content: center;
 .information-tabs .tab-content{padding: 2em; color: #666;}
 .information-tabs .tab-content label{color: #999; font-weight: normal;}
 .information-tabs .tab-content h4{margin: 0; font-size: 1.3em;}
+.maximum-capacity{font-size: 1.2em; margin: 20px 15px; border-bottom: 1px dashed #bbb;}
+.maximum-capacity:nth-of-type(4){border:0;}
+.download-brochure{margin-bottom: 2em;}
+.download-brochure a,.download-brochure a:hover{color: #333; text-decoration: none;}
+.download-brochure i{display: block;}
+.new-equipment-brand{padding: 0; margin:0 -15px; box-sizing: border-box;}
+.new-equipment-brand li{display: block; padding: 0 15px; width: 50%; height: 230px; float: left;}
+.new-equipment-brand li:first-child{height: 500px;}
+.new-equipment-brand li img{width: 100%; height: 100%;}
 .spacial-products{
   -ms-background: -ms-linear-gradient(top, #e6bdcb 0%, #b6c9e3 100%);
   -moz-background: -moz-linear-gradient(top, #e6bdcb 0%, #b6c9e3 100%);
