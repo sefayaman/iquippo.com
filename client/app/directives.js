@@ -192,6 +192,7 @@ angular.module('sreizaoApp')
             });
         }
     };
+    })
 .directive('withFloatingLabel', function () {
   return {
     restrict: 'A',
