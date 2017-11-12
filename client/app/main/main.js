@@ -643,17 +643,23 @@ angular.module('sreizaoApp')
           //$rootScope.choosenTitle=pagesTitles.valuation.title;
           //$rootScope.metaDescription=pagesTitles.valuation.meta;
         }
+      })       
+      .state("newequipmentlist", {
+        url: "/newequipment/viewproducts?currentPage&group&category&brand&model" + 
+            "&type&currencyType&currencyMin&currencyMax&" +
+            "&mfgYearMin&mfgYearMax&stateName&cityName&assetId&"+
+            "searchstr&operatingHour&mileage&productName&location&locationName",
+        templateUrl: "app/newequipment/newproductslist.html",
+        controller: "NewEquipmentListCtrl as newequipmentlistVm",
+        layout:"client"
       })
-       .state('newequipmentlist', {
-        url:"/newequipment/viewproducts",
-        templateUrl: 'app/newequipment/newproductslist.html',
-        controller:"NewEquipmentListCtrl",
-        layout:'client',
-        onEnter:function($rootScope){
-          //$rootScope.choosenTitle=pagesTitles.valuation.title;
-          //$rootScope.metaDescription=pagesTitles.valuation.meta;
-        }
-      })
+      
+        .state('bulkorder', {
+        url:"/newequipment/bulkorder",
+        templateUrl: 'app/newequipment/bulkorder.html',
+        controller:"NewEquipmentCtrl",
+        layout:'client'
+      });
 
       $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
   });
