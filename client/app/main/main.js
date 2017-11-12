@@ -644,6 +644,12 @@ angular.module('sreizaoApp')
           //$rootScope.metaDescription=pagesTitles.valuation.meta;
         }
       })
+        .state('bulkorder', {
+        url:"/bulkorder",
+        templateUrl: 'app/newequipment/bulkorder.html',
+        controller:"NewEquipmentCtrl",
+        layout:'client',
+      })
 
       $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
   });
