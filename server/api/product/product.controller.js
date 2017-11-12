@@ -836,14 +836,24 @@ function updateProduct(req,res){
       Product.update({_id:req.params.id},{$set:req.body},function(err){
         if (err) { return handleError(res, err); }
         if((req.body.tradeType === 'SELL' || req.body.tradeType === 'BOTH') && req.body.auctionListing) {
+          if(req.body.deleted) {
+            AuctionReq.update({_id:req.proData.auction._id},{$set:{"isDeleted":true}}, function(aucErr, resultData) {
+              if (aucErr)
+                return handleError(res, err);
+            });
+          }
           req.body._id = req.params.id;
           postRequest(req, res);
         } else if(req.proData.auctionListing && !req.body.auctionListing) {
-          req.body._id = req.params.id;
           if(req.body.assetMapData)
             delete req.body.assetMapData;
-          AuctionReq.update({_id:req.proData.auction._id},{$set:{"isDelete":true}}).exec();
-          postRequest(req, res);
+          //AuctionReq.update({_id:req.proData.auction._id},{$set:{"isDeleted":true}}).exec();
+          AuctionReq.update({_id:req.proData.auction._id},{$set:{"isDeleted":true}}, function(aucErr, resultData) {
+            if (aucErr)
+              return handleError(res, err);
+            req.body._id = req.params.id;
+            postRequest(req, res);
+          });
         } else
           return res.status(200).json(req.body);
       });
@@ -950,7 +960,7 @@ function postRequest(req, res){
           options.dataToSend.reqSubmitStatus = ReqSubmitStatuses[0];
           //options.dataToSend.status = true;
           update(options.dataToSend);
-          return res.status(201).json({errorCode: 0,message: "Product request submitted successfully !!!", product:proResult});
+          return res.status(201).json({errorCode: 0,message: "Product request submitted successfully !!!", product:proResult[0]});
         }
       });
     });
@@ -1079,9 +1089,7 @@ exports.userWiseProductCount = function(req,res){
         },
         function (err, data) {
           if (err) return handleError(err);
-          //console.log(data);
           result = result.concat(data);
-          //return res.status(200).json(result);
           delete filter.assetStatus;
            Product.aggregate(
             { $match: filter },
@@ -3822,9 +3830,12 @@ exports.createOrUpdateAuction = function(req,res){
       var self = this;
       var auctionUpdate = {};
       auctionUpdate._id = req.auctionId + "";
-      if(req.valuationId)
+      // if(req.body.auction.dbAuctionId)
+      //   auctionUpdate.auction_id = req.body.auction.dbAuctionId;
+      // if(req.body.auction.lot_id)
+      //   auctionUpdate.lot_id = req.body.auction.lot_id;
+      if(req.valuationId) 
         auctionUpdate.valuationId = req.valuationId + "";
-      
       Product.update({_id:req.body.auction.product._id},{$set:{auction:auctionUpdate}},function(err,prds){
          if(err){return handleError(res,err)}
           else{
@@ -3834,7 +3845,6 @@ exports.createOrUpdateAuction = function(req,res){
               resObj.transactionId = req.payTransId;
             if(req.valuationId)
               resObj.valuationId = req.valuationId;
-            console.log("resObj####", resObj);
             res.status(200).json(resObj);
           }
       })

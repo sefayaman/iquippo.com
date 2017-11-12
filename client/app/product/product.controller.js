@@ -111,9 +111,7 @@
         $scope.mandatory = false;
       } else {
         $scope.mandatory = true;
-
       }
-
     }
 
     $scope.listInPortal = function(data) {
@@ -121,23 +119,20 @@
         $scope.mandatory = true;
       } else {
         $scope.mandatory = false;
-
       }
-
     }
+
     $scope.checkauction = function(data) {
       if (data == true) {
         $scope.auctionselect = true;
       } else {
         $scope.auctionselect = false;
-
       }
-
     }
-
 
     function onAuctionSelection(dbAuctionId) {
       $scope.lot = {};
+      $scope.auctionReq.dbAuctionId = dbAuctionId;
       filter = {};
       filter.auction_id = dbAuctionId;
       filter.isDeleted = false;
@@ -206,12 +201,10 @@
           return false;
         }
       }
-
       return true;
     }
 
     function init() {
-
       if (Auth.getCurrentUser().profileStatus == 'incomplete') {
         $state.go('myaccount');
         return;
@@ -281,14 +274,12 @@
             return;
           }
           product = $scope.product = response[0];
-
           $scope.imagesEngine = [];
           $scope.imagesHydraulic = [];
           $scope.imagesCabin = [];
           $scope.imagesUnderCarrage = [];
           $scope.imagesOther = [];
           $scope.images = [];
-
 
           if (response[0].serviceInfo.length > 0) {
             for (var i = 0; i < response[0].serviceInfo.length; i++) {
@@ -347,16 +338,14 @@
             $scope.assetMapCreationPossibility = false;
           }
 
-          if (product.auction && product.auction._id) {
+          if (product.auctionListing && product.auction && product.auction._id) {
             var serData = {};
             serData._id = product.auction._id;
             AuctionSvc.getOnFilter(serData)
               .then(function(result) {
                 if (result.length > 0) {
                   $scope.auctionReq = result[0];
-                  //console.log("AuctionData after Edit case",$scope.auctionReq);
                   var assetfilter = {};
-                  //filter.auctionId=$scope.auctionReq.dbAuctionId;
                   assetfilter.assetId = $scope.product.assetId;
                   assetfilter.auction_id = $scope.auctionReq.dbAuctionId;
                   var auctionexpiredata = {};
@@ -372,9 +361,9 @@
                     } else {
                       $scope.isExpire = false;
                       onAuctionSelection($scope.auctionReq.dbAuctionId);
-                      fetchLot(filter);
+                      checkForLot($scope.auctionReq.lot_id);
                       //assetfilter.isDeleted = false;
-                      if ($scope.assetMapCreationPossibility) {
+                      /*if ($scope.assetMapCreationPossibility) {
                         productSvc.getAssetMapData(assetfilter)
                           .then(function(res) {
                             console.log("lot data edit", res);
@@ -439,7 +428,7 @@
                       } else {
                         console.log("possible not");
                         $scope.assetMapCreationPossibility = false;
-                      }
+                      }*/
                     }
                   });
                 } else {
@@ -1127,14 +1116,12 @@
       filter = {};
       filter['yetToStartDate'] = new Date();
 
-
       AuctionMasterSvc.get(filter)
         .then(function(aucts) {
           $scope.auctions = aucts;
         });
 
       $scope.auctionReq.valuationReport = checkValuationReport();
-
     }
 
     function checkValuationReport() {
@@ -1350,6 +1337,7 @@
       $scope.auctionReq.product.assetDir = productObj.assetDir;
       $scope.auctionReq.product.primaryImg = productObj.primaryImg;
       $scope.auctionReq.product.city = productObj.city;
+      $scope.auctionReq.reqSubmitStatus = ReqSubmitStatuses[0];
       /*$scope.product.images.forEach(function(x) {
         $scope.setAssetMapData.images[$scope.setAssetMapData.images.length] = $rootScope.uploadImagePrefix + $scope.product.assetId + "/" + x.src;
       })*/
@@ -1596,6 +1584,13 @@
 
       });
 
+      if(($scope.product.tradeType === 'SELL' 
+        || $scope.product.tradeType === 'BOTH') 
+        && $scope.product.auctionListing) {
+        $scope.product.auction.auction_id = $scope.auctionReq.dbAuctionId;
+        $scope.product.auction.lot_id = $scope.lot.lot_id;
+      }
+      
       if (!$scope.isEdit)
         addProduct(cb);
       else {
@@ -1709,7 +1704,7 @@
             return;
           }
           var result = {};
-          angular.copy(proResult.product[0], result);
+          angular.copy(proResult.product, result);
           dataLayer.push(gaMasterObject.uploadProductSubmit);
 
           //NJ : set upload product Start time
@@ -1814,12 +1809,6 @@
 
             if (res[0]._id)
               $scope.lot._id = res[0]._id;
-            // if (res[0] && res[0].startingPrice)
-            //   $scope.lot.startingPrice = res[0].startingPrice;
-            // if (res[0] && res[0].lastMintBid)
-            //   $scope.lot.lastMintBid = res[0].lastMintBid;
-            // if (res[0] && res[0].extendedTo)
-            //   $scope.lot.extendedTo = res[0].extendedTo;
             
             if (res[0].static_increment) {
               $scope.lot.static_increment = Number(res[0].static_increment);

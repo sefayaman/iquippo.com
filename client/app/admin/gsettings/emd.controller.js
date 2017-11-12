@@ -6,14 +6,12 @@ angular.module('admin').controller('EmdCtrl', EmdCtrl);
 function EmdCtrl($scope,$rootScope,$state,Modal,Auth,PagerSvc,$filter,LotSvc,AuctionSvc,AuctionMasterSvc,EmdSvc){
   var vm  = this;
   vm.dataModel = {};
-  vm.duplicate = {};
   vm.auctionListing = [];
   vm.save = save;
   $scope.onSelectAuction = onSelectAuction; 
   vm.resendEMDMasterData = resendEMDMasterData;
   vm.EmdData = [];
   vm.filteredList = [];
-  vm.filteredduplicate = null;
   vm.editClicked = editClicked;
   $scope.isEdit = false;
   vm.update = update;
@@ -56,10 +54,9 @@ function EmdCtrl($scope,$rootScope,$state,Modal,Auth,PagerSvc,$filter,LotSvc,Auc
     vm.dataModel = {};
     angular.copy(rowData, vm.dataModel);
     vm.dataModel.auction_id = rowData.auction_id;
-    getLotData({auctionId:rowData.auction_id,isDeleted:false});
+    onSelectAuction(rowData.auction_id);
     vm.dataModel.selectedLots={};
-    vm.dataModel.selectedLots.lotNumber=rowData.selectedLots[0].lotNumber;
-    vm.dataModel.static_increment = parseInt(rowData.static_increment);
+    vm.dataModel.selectedLots.lotNumber = rowData.selectedLots[0].lotNumber;
     $scope.isEdit = true;
   }
 
@@ -73,7 +70,8 @@ function EmdCtrl($scope,$rootScope,$state,Modal,Auth,PagerSvc,$filter,LotSvc,Auc
     vm.dataModel.createdBy._id = Auth.getCurrentUser()._id;
     vm.dataModel.createdBy.name = Auth.getCurrentUser().fname + " " + Auth.getCurrentUser().lname;
     vm.dataModel.createdBy.mobile = Auth.getCurrentUser().mobile;
-    vm.dataModel.customerId = Auth.getCurrentUser().customerId;
+    if(Auth.getCurrentUser().customerId)
+      vm.dataModel.createdBy.customerId = Auth.getCurrentUser().customerId;
     
     $rootScope.loading = true;
     EmdSvc.saveEmd(vm.dataModel).then(function(res){
@@ -93,14 +91,6 @@ function EmdCtrl($scope,$rootScope,$state,Modal,Auth,PagerSvc,$filter,LotSvc,Auc
     vm.dataModel = {};
     $scope.submitted = false;
     getEmdData();
-  }
-
-  function checkDeuplicate(data){
-    EmdSvc.getData(data).then(function(result){
-      vm.filteredduplicate = "exist";
-    })
-    .catch(function(res){
-    });
   }
 
   function resendEMDMasterData(emdData) {
@@ -125,6 +115,13 @@ function EmdCtrl($scope,$rootScope,$state,Modal,Auth,PagerSvc,$filter,LotSvc,Auc
     $scope.submitted = true;
     return;
     }
+    if(vm.dataModel.lots)
+      delete vm.dataModel.lots;
+    
+    var tempValue = {}
+    angular.copy(vm.dataModel.selectedLots, tempValue);
+    vm.dataModel.selectedLots = [];
+    vm.dataModel.selectedLots.push(tempValue);
     $rootScope.loading = true;
     EmdSvc.update(vm.dataModel)
     .then(function(res){
@@ -143,17 +140,21 @@ function EmdCtrl($scope,$rootScope,$state,Modal,Auth,PagerSvc,$filter,LotSvc,Auc
   }
 
 
-  function destroy(id){
+  function destroy(data){
     Modal.confirm("Are you sure want to delete?",function(ret){
       if(ret == "yes")
-        EmdSvc.destroy(id)
+        $rootScope.loading = true;
+        EmdSvc.destroy(data)
         .then(function(result){
           if (result.errorCode == 0)
             getEmdData();
           Modal.alert(result.message);
+          $rootScope.loading = false;
         })
         .catch(function(err){
-          console.log("purpose err",err);
+          if(err)
+            Modal.alert(err.data);
+          $rootScope.loading = false;
         });
     });
   }
@@ -163,14 +164,13 @@ function EmdCtrl($scope,$rootScope,$state,Modal,Auth,PagerSvc,$filter,LotSvc,Auc
     filter.isDeleted=false;
     EmdSvc.getData()
     .then(function(result){
-
     vm.EmdData = result;
     result.forEach(function(x){
-      filter._id=x.auction_id;
+      filter._id = x.auction_id;
       AuctionMasterSvc.get(filter)
       .then(function(res){
-        x.auctionName=res[0].name;
-        x.auctionId=res[0].auctionId;
+        x.auctionName = res[0].name;
+        x.auctionId = res[0].auctionId;
         if(x.selectedLots && x.selectedLots[0].lotNumber.length > 0){
         x.lots=x.selectedLots[0].lotNumber.toString();
       }

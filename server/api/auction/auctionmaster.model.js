@@ -28,7 +28,7 @@ var AuctionMasterSchema = new Schema({
 	factorCreditlimit:Number,
 	taxApplicability:String,
 	static_increment:Number,
-	bidIncrement:Object,
+	bidIncrement:[{}],
 	lastMinuteBid:Number,
 	extendedTo:Number,
 	status:{type:Boolean,default:true},

@@ -509,7 +509,7 @@
 							<div ng-if="gsettingVm.auctionData.rangeIncrement">
 								<legend></legend>
 								<h5>Bid Range Increment</h5>
-								<div class="row" ng-repeat="bidinfo in gsettingVm.auctionData.bidInfo">
+								<div class="row" ng-repeat="bidinfo in gsettingVm.auctionData.bidIncrement">
 									<div class="col-sm-3 form-group" ng-class="{'has-error': auctionDateForm.bidFrom.$invalid && submitted }">
 										<input type="number" min="0" class="form-control"  ng-model="bidinfo.bidFrom" name="bidFrom" value="" placeholder="Bid From" ng-required="!gsettingVm.auctionData.staticIncrement && gsettingVm.auctionData.rangeIncrement">
 									</div>
@@ -520,8 +520,8 @@
 										<input type="number" min="0" class="form-control" ng-model="bidinfo.bidIncrement" name="bidIncrement" value="" placeholder="Increment" ng-required="!gsettingVm.auctionData.staticIncrement && gsettingVm.auctionData.rangeIncrement">
 									</div>
 									<div class="col-sm-3 form-group ">
-										<button type="button" class="btn btn-default" ng-click="gsettingVm.auctionData.bidInfo.push({})" ng-if="$last">Add More</button>
-										<button type="button" class="btn btn-default" ng-click="gsettingVm.auctionData.bidInfo.splice($index,1)" ng-if="!$last">Delete</button>
+										<button type="button" class="btn btn-default" ng-click="gsettingVm.auctionData.bidIncrement.push({})" ng-if="$last">Add More</button>
+										<button type="button" class="btn btn-default" ng-click="gsettingVm.auctionData.bidIncrement.splice($index,1)" ng-if="!$last">Delete</button>
 									</div>
 									
 								</div>
@@ -614,7 +614,7 @@
 						<td>{{gsettingVm.getProductData(auc._id, "total_products")}}</td>
 						<td>
 							<a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="gsettingVm.editAuctionMaster($index)"><i class="fa fa-pencil"></i> </a>
-							<a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deleteAuctionMaster($index)"><i class="fa fa-trash"></i> </a>
+							<a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deleteAuctionMaster(auc)"><i class="fa fa-trash"></i> </a>
 							<a class="btn btn-info btn-md" href="javascript:void(0);" ng-click="gsettingVm.resendAuctionMasterData($index)" ng-if="auc.reqSubmitStatus == ReqSubmitStatuses[1]"><i class="fa fa-repeat"></i> </a>
 						</td>
 					</tr>
@@ -2952,7 +2952,7 @@
 									<a href="javascript:void(0);" class="btn btn-primary btn-sm" uib-popover="Edit" popover-trigger="mouseenter" ng-click="emdVm.editClicked(emddata)">
 										<i class="fa fa-pencil"></i>
 									</a>
-									<a href="javascript:void(0);" class="btn btn-danger btn-sm" uib-popover="Edit" popover-trigger="mouseenter" ng-click="emdVm.destroy(emddata._id)"><i class="fa fa-trash" ></i></a>
+									<a href="javascript:void(0);" class="btn btn-danger btn-sm" uib-popover="Edit" popover-trigger="mouseenter" ng-click="emdVm.destroy(emddata)"><i class="fa fa-trash" ></i></a>
 									<a class="btn btn-info btn-md" href="javascript:void(0);" ng-click="emdVm.resendEMDMasterData(emddata)" ng-if="emddata.reqSubmitStatus == ReqSubmitStatuses[1]"><i class="fa fa-repeat"></i> </a>
 								</td>
 							</tr>
@@ -3034,7 +3034,7 @@
 					<div ng-if="lotVm.dataModel.rangeIncrement">
 						<legend></legend>
 						<h5>Bid Range Increment</h5>
-						<div class="row" ng-repeat="bidinfo in lotVm.dataModel.bidInfo">
+						<div class="row" ng-repeat="bidinfo in lotVm.dataModel.bidIncrement">
 							<div class="col-sm-3 form-group" ng-class="{'has-error':lotform.bidFrom.$invalid && submitted}">
 								<input type="number" class="form-control"  ng-model="bidinfo.bidFrom" min="0" name="bidFrom" value="" placeholder="Bid From" ng-required="!lotVm.dataModel.staticIncrement && lotVm.dataModel.rangeIncrement">
 							</div>
@@ -3045,8 +3045,8 @@
 								<input type="number" class="form-control" ng-model="bidinfo.bidIncrement" name="bidIncrement" value="" placeholder="Increment" min="0" ng-required="!lotVm.dataModel.staticIncrement && lotVm.dataModel.rangeIncrement">
 							</div>
 							<div class="col-sm-3 form-group ">
-								<button type="button" class="btn btn-default" ng-click="lotVm.dataModel.bidInfo.push({})" ng-if="$last">Add More</button>
-								<button type="button" class="btn btn-default" ng-click="lotVm.dataModel.bidInfo.splice($index,1)" ng-if="!$last">Delete</button>
+								<button type="button" class="btn btn-default" ng-click="lotVm.dataModel.bidIncrement.push({})" ng-if="$last">Add More</button>
+								<button type="button" class="btn btn-default" ng-click="lotVm.dataModel.bidIncrement.splice($index,1)" ng-if="!$last">Delete</button>
 							</div>
 							
 						</div>
@@ -3103,7 +3103,7 @@
 									<a href="javascript:void(0);" class="btn btn-primary btn-sm" uib-popover="Edit" popover-trigger="mouseenter" ng-click="lotVm.editClicked(lotdata)">
 										<i class="fa fa-pencil"></i>
 									</a>
-									<a href="javascript:void(0);" class="btn btn-danger btn-sm" uib-popover="Delete" popover-trigger="mouseenter" ng-click="lotVm.destroy(lotdata._id)"><i class="fa fa-trash" ></i></a>
+									<a href="javascript:void(0);" class="btn btn-danger btn-sm" uib-popover="Delete" popover-trigger="mouseenter" ng-click="lotVm.destroy(lotdata)"><i class="fa fa-trash" ></i></a>
 									<a class="btn btn-info btn-md" href="javascript:void(0);" ng-click="lotVm.resendLotMasterData(lotdata)" ng-if="lotdata.reqSubmitStatus == ReqSubmitStatuses[1]"><i class="fa fa-repeat"></i> </a>
 								</td>
 							</tr>

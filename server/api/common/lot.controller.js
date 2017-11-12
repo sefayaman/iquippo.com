@@ -81,7 +81,7 @@ var ReqSubmitStatuses = ['Request Submitted', 'Request Failed'];
   function update(lotReq){
     var id = lotReq._id;
     delete lotReq._id;
-    Lot.update({_id:id},{$set:{"reqSubmitStatus":lotReq.reqSubmitStatus}},function(err,retVal){
+    Lot.update({_id:id},{$set:lotReq},function(err,retVal){
       if (err) { console.log("Error with updating lot request"); }
     console.log("Auction Lot Updated");
     }); 
@@ -180,7 +180,6 @@ exports.getLots = function(req, res) {
   ], function(err, results) {
     if (err) handleError(res, err);
 
-    console.log("resultsresultsresults get lot###", results);
     return res.json(results[2]);
   })
 };
@@ -382,23 +381,16 @@ lotInfo[1] =
 */
 
 exports.destroy = function(req, res) {
-  var options = {};
-  Lot.update({
-      '_id': req.params.id
-    }, {
-      "$set": {
-        "isDeleted": true
-      }
-    })
+  //var options = {};
+  Lot.findOneAndUpdate({_id: req.params.id}, {"$set": {"isDeleted": true}})
     .exec(function(err, doc) {
-      if (err) {
+      if (err)
         return handleError(res, err);
-      }
-
-      options = {};
+      var options = {};
       options.dataToSend = {
         "_id": req.params.id,
-        "isDeleted": true
+        "isDeleted": true,
+        "auction_id": req.body.auction_id
       }
       options.dataType = "lotData";
       Lot.find({'_id': req.params.id}, function(err, lotResult) {
@@ -418,7 +410,7 @@ exports.destroy = function(req, res) {
             if(result){
               options.dataToSend.isDeleted = true;
               update(options.dataToSend);
-              AuctionRequest.update({'lot_id': req.params.id, 'auction_id':lotResult[0].auction_id}, {$set: {'isDeleted': true}}, {multi: true}, function(aucErr, resultData) {
+              AuctionRequest.update({'lot_id': req.params.id, 'dbAuctionId':lotResult[0].auction_id}, {$set: {'isDeleted': true}}, {multi: true}, function(aucErr, resultData) {
                 if (aucErr)
                   return handleError(res, err);
                 return res.status(200).send({errorCode: 0,message: "Lot master deleted sucessfully!!!"});

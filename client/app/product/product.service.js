@@ -15,7 +15,6 @@
       prdService.getProductOnId = getProductOnId;
       prdService.addProduct = addProduct;
       prdService.serviceRequest=serviceRequest;
-      prdService.saveAssetMap=saveAssetMap;
 
       prdService.negotiation=negotiation;
 
@@ -46,8 +45,7 @@
       prdService.statusWiseCount = statusWiseCount;
       prdService.createOrUpdateAuction = createOrUpdateAuction;
       prdService.getProductOnSellerId = getProductOnSellerId;
-      prdService.updateAssetMap=updateAssetMap;
-      prdService.getAssetMapData=getAssetMapData
+      //prdService.getAssetMapData=getAssetMapData
       prdService.sendReqToCreateAsset = sendReqToCreateAsset;
 
        function getFeaturedProduct(id){
@@ -71,17 +69,6 @@
           }
           return deferred.promise;
         };
-
-        function saveAssetMap(data){
-           return $http.post(path + "/assetmap", data) 
-                .then(function(res) {
-                   //lot response data come console.log("reslotdata",res.data.lotData);
-                    return res.data;
-                })
-                .catch(function(err) {
-                    throw err;
-                });
-        }
         
         function sendReqToCreateAsset(data){
           return $http.post(path + "/sendreqtocreateasset",data)
@@ -93,17 +80,7 @@
           });
         }
 
-        function updateAssetMap(data) {
-          return $http.put(path + "/assetmap/update/" + data._id, data)
-            .then(function(res) {
-              return res.data;
-            })
-            .catch(function(err) {
-              throw err;
-            });
-         }
-
-         function getAssetMapData(filter){
+        /*function getAssetMapData(filter){
           var svcPath = path + "/assetmap/getdata";
             var queryParam = "";
             if (filter)
@@ -119,8 +96,7 @@
                 .catch(function(err) {
                     throw err;
                 });
-
-         }
+         }*/
 
       function getProductOnId(id,fromServer){
 

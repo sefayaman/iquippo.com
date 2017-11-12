@@ -342,6 +342,9 @@ function compileData(options, callback) {
     case "lotData":
       if (options.dataToSend.hasOwnProperty('assetDir'))
         delete options.dataToSend.assetDir;
+      if (options.dataToSend.bidIncrement && options.dataToSend.bidIncrement.length < 1) {
+        options.dataToSend.bidIncrement = [{}];
+      }
       callback(null, options);
       break;
     case "emdData":
@@ -351,10 +354,10 @@ function compileData(options, callback) {
       if(options.dataToSend.primaryImg)
         options.dataToSend.primaryImg = config.awsUrl + config.awsBucket + "/assets/uploads/auctionmaster/" + options.dataToSend.primaryImg;
 
-      if (isEmpty(options.dataToSend.bidIncrement)) {
-        delete options.dataToSend.bidIncrement;
+      if (options.dataToSend.bidIncrement && options.dataToSend.bidIncrement.length < 1) {
+        options.dataToSend.bidIncrement = [{}];
       }
-      
+
       if (options.dataToSend.hasOwnProperty('staticIncrement'))
         delete options.dataToSend.staticIncrement;
       if (options.dataToSend.hasOwnProperty('rangeIncrement'))

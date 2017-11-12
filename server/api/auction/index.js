@@ -8,7 +8,7 @@ var auth = require('../../auth/auth.service');
 //var auctionDetailController=require('./auctionDetail.controller');
 
 var router = express.Router();
-router.get('/changeauctiontype', controller.changeAuctionType);
+//router.get('/changeauctiontype', controller.changeAuctionType);
 router.get('/', controller.getAll);
 router.get('/:id', controller.getOnId);
 router.post('/', controller.create);
@@ -24,7 +24,8 @@ router.put('/auctionmaster/:id', controller.updateAuctionMaster);
 router.put('/auctionmasterproduct/:id', controller.updateAuctionMasterproduct);
 router.put('/removeauctionmasterproduct/:id', controller.removeAuctionMasterproduct);
 router.post('/auctionmaster', controller.importAuctionMaster);
-router.delete('/auctionmaster/:id', controller.deleteAuctionMaster);
+//router.delete('/auctionmaster/:id', controller.deleteAuctionMaster);
+router.put('/auctionmaster/delete/:id', controller.deleteAuctionMaster);
 router.post('/auctionmaster/onauctionmasterfilter', controller.getFilterOnAuctionMaster);
 router.get('/checkforasset/asset',controller.getAssetInfo);
 router.post('/sendreqtocreateauction', controller.sendReqToCreateAuction);
@@ -48,6 +49,6 @@ router.post('/userregforauction/export', auth.hasRole('admin'), userRegForAuctio
 router.post('/upload/excel',controller.bulkUpload);
 
 router.post('/auctionmaster/getauctionwiseproductdata', controller.getAuctionWiseProductData);
-router.get('/updateauctions/isdeleted',controller.updateauctionsisdeleted);
+//router.get('/updateauctions/isdeleted',controller.updateauctionsisdeleted);
 
 module.exports = router;

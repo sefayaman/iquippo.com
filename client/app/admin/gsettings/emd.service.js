@@ -73,8 +73,8 @@
                 });
             }
 
-            function destroy(id){
-                return $http.delete(svcPath + "/emd/" + id)
+            function destroy(data){
+                return $http.put(svcPath + "/emd/delete/" + data._id,data)
                 .then(function(res){
                 return res.data;
                 })

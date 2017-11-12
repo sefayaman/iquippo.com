@@ -604,7 +604,7 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
     }
 
     function delAuctionMaster(data){
-      return $http.delete(path + "/" + data._id)
+      return $http.put(path + "/delete/" + data._id, data)
           .then(function(res){
              auctionMasterCache = [];
             return res.data;

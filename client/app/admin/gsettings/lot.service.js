@@ -105,8 +105,8 @@ function LotSvc($http, $q, $httpParamSerializer) {
      }
 
 
-    function destroy(id) {
-        return $http.delete(svcPath + "/lot/" + id)
+    function destroy(data) {
+        return $http.put(svcPath + "/lot/delete/" + data._id, data)
             .then(function(res) {
                 return res.data;
             })

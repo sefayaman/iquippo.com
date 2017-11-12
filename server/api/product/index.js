@@ -39,9 +39,9 @@ router.post('/bulkeditproduct',controller.parseExcel,controller.validateExcelDat
 router.get('/script/featured',scriptController.script);
 //v1 version of bulk create product
 router.post('/v1/import',auth.isAuthenticated(),controller.parseImportExcel,controller.validateExcelData,controller.createProductReq);
-router.post('/assetmap',assetCtrl.create);
-router.put('/assetmap/update/:id',assetCtrl.update);
-router.get('/assetmap/getdata',assetCtrl.getData);
+// router.post('/assetmap',assetCtrl.create);
+// router.put('/assetmap/update/:id',assetCtrl.update);
+//router.get('/assetmap/getdata',assetCtrl.getData);
 router.get('/script/modifyproducttype',scriptController.modifyProductTypeId);
 
 

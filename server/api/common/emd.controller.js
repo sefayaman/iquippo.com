@@ -39,8 +39,8 @@ var ReqSubmitStatuses = ['Request Submitted', 'Request Failed'];
     filter.isDeleted = false;
     if (data.auction_id)
       filter.auction_id = data.auction_id;
-    if (data._id)
-      filter._id = data._id;
+    // if (data._id)
+    //   filter._id = data._id;
      if (data.selectedLots && data.selectedLots.lotNumber) {
       filter["selectedLots.lotNumber"] = {
         $in: data.selectedLots.lotNumber
@@ -93,10 +93,6 @@ var ReqSubmitStatuses = ['Request Submitted', 'Request Failed'];
   
 exports.updateEmdData = function(req, res) {
   var options={};
-  /*if(req.body.reqSubmitStatus === ReqSubmitStatuses[1]) {
-    postRequest(req, res);
-    return;
-  }*/
   options.dataToSend=req.body;
   req.body.updatedAt = new Date();
   if(req.body._id)
@@ -110,6 +106,7 @@ exports.updateEmdData = function(req, res) {
         return res.status(412).send("Unable to update EMD request. Please contact support team.");
       
       options.dataToSend = req.body;
+      options.dataToSend._id = req.params.id;
       options.dataType = "emdData";
       Util.sendCompiledData(options, function(err, result) {
         if (err || (result && result.err)) {
@@ -229,17 +226,20 @@ function arraySum(array) {
 
 exports.destroy = function(req, res) {
   var options={};
-  Emd.update({'_id':req.params.id},{$set:{'isDeleted':true}}, function(err, data) {
-    if (err) {
+  Emd.findOneAndUpdate({_id:req.params.id},{$set:{'isDeleted':true}}, function(err, data) {
+    if (err)
       res.status(err.status || 500).send(err);
-    }
+    
     options.dataToSend={};
     options.dataToSend={
       '_id':req.params.id,
-      'isDeleted':true
+      'isDeleted':true,
+      'auction_id': req.body.auction_id,
+      'selectedLots': req.body.selectedLots
     };
+    
     options.dataType="emdData";
-    Util.sendCompiledData(options,function(err,results){
+    Util.sendCompiledData(options,function(err,result){
       if (err || (result && result.err)) {
         options.dataToSend.isDeleted = false;
         update(options.dataToSend);
