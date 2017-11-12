@@ -2,7 +2,7 @@
   'use strict';
   angular.module('sreizaoApp').controller('NewEquipmentCtrl', NewEquipmentCtrl);
 
-  function NewEquipmentCtrl($scope, NewEquipmentSvc,categorySvc,brandSvc, Modal ) {
+  function NewEquipmentCtrl($scope, NewEquipmentSvc, categorySvc, brandSvc, Modal, $location ) {
     var vm = this;
     //var filter = {};
    
@@ -83,6 +83,10 @@
         });
 
     }
+    $scope.goBulkOrders = function() {
+        $location.url('/newequipment/bulkorder');
+    };
+    
 
 } 
 })();
