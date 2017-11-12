@@ -172,6 +172,27 @@ angular.module('sreizaoApp')
         }
     };
 })
+.directive('onFileSelectTech', function ($parse) {
+    return {
+         restrict: 'A',
+         scope:{
+          params:"="
+         },
+        link: function (scope, el, attrs) {
+            var onChangeHandler = scope.$parent.$eval(attrs.onFileSelectTech);
+            el.bind('change', function (event) {
+                var files = event.target.files;
+                if(!files || !files.length || !onChangeHandler)
+                  return;
+                if(!scope.params)
+                  scope.params = [];
+                scope.params[0] = files;
+               scope.params[1] = event.currentTarget.id;
+                onChangeHandler.apply(scope.$parent,scope.params);                              
+            });
+        }
+    };
+})
 .filter('titleCase', function() {
   return function(input) {
     input = input || '';

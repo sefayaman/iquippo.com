@@ -3007,161 +3007,232 @@
 	
 	 <!--- Technical Specification master ng-controller="TechSpecMasterCtrl as techspecVm -->
   	<div ng-if="gsettingVm.tabValue =='techspec'" ng-controller="TechSpecMasterCtrl as techspecVm">
-		<uib-tabset justified="true">
-			<uib-tab heading="Category Technical Specification Master">
-				<h4>Technical Specification Master</h4>
-				
-				<div class="form-group">
-					<form class="techInformationForm" name="techform" novalidate>
-						<div class="row form-group">
-							<div class="col-sm-3" ng-class="{'has-error':techspecVm.category.$invalid && submitted}" >
-								<label>Select Category</label>
-								<select class="form-control form-group" ng-change="techspecVm.getTechSpecData(techspecVm.dataModel.categoryId);" name="category" ng-model="techspecVm.dataModel.categoryId"  required> 
-									<option value=""> Select Category </option> 
-									<option value="{{category._id}}" ng-repeat="category in allCategory">{{category.name}}</option>
-									
+		<div class="col-sm-12">
+			<uib-tabset justified="true">
+				<uib-tab heading="Category Technical Specification Master">
+					<h4>Technical Specification Master</h4>
+					
+					<div class="form-group">
+						<form class="techInformationForm" name="techform" novalidate>
+							<div class="row form-group">
+								<div class="col-sm-3" ng-class="{'has-error':techspecVm.category.$invalid && submitted}" >
+									<label>Select Category</label>
+									<select class="form-control form-group" ng-change="techspecVm.getTechSpecData(techspecVm.dataModel.categoryId);" name="category" ng-model="techspecVm.dataModel.categoryId"  required> 
+										<option value=""> Select Category </option> 
+										<option value="{{category._id}}" ng-repeat="category in allCategory">{{category.name}}</option>
+										
+									</select>
+								</div>
+							</div>
+							<div ng-if="!isEdit" class="row" ng-repeat="fieldinfo in techspecVm.fieldInfo">
+								<div class="col-sm-3 form-group">
+									<label>Field Name : </label>
+									<input type="text" class="form-control"  ng-model="techspecVm.fieldArr[$index].name" name="" value="" placeholder="Field Name" required>
+								</div>
+								<div class="col-sm-3 form-group">
+								<label>Select Field Type</label>	
+								<select class="form-control form-group" name="type" ng-model="techspecVm.fieldArr[$index].type"  required> 
+										<option value=""> Select Field Type</option> 
+										<option value="file">File</option>
+										<option value="text">Text</option>
+										
 								</select>
-							</div>
-						</div>
-						<div ng-if="!isEdit" class="row" ng-repeat="fieldinfo in techspecVm.fieldInfo">
-							<div class="col-sm-3 form-group">
-								<label>Field Name : </label>
-								<input type="text" class="form-control"  ng-model="techspecVm.fieldArr[$index].name" name="" value="" placeholder="Field Name" required>
-							</div>
-							<div class="col-sm-3 form-group">
-							<label>Select Field Type</label>	
-							<select class="form-control form-group" name="type" ng-model="techspecVm.fieldArr[$index].type"  required> 
-									<option value=""> Select Field Type</option> 
-									<option value="file">File</option>
-									<option value="text">Text</option>
-									
-							</select>
-							</div>
-							
-							<div ng-if="!isEdit" class="col-sm-3 form-group ">
-								<button type="button" class="btn btn-default" ng-click="techspecVm.fieldInfo.push({})" ng-if="$last">Add More</button>
-								<button type="button" class="btn btn-default" ng-click="techspecVm.fieldInfo.splice($index,1)" ng-if="!$last">Delete</button>
-							</div>
-							
-						</div>
-						<div ng-if="isEdit" class="row" ng-repeat="fieldinfo in techspecVm.fieldInfo">
-							<div class="col-sm-3 form-group">
-								<label>Field Name : </label>
-								<input type="text" class="form-control"  ng-model="techspecVm.dataModel.fieldName" name="" value="" placeholder="Field Name" required>
-							</div>
-							<div class="col-sm-3 form-group">
-							<label>Select Field Type</label>	
-							<select class="form-control form-group" name="type" ng-model="techspecVm.dataModel.fieldType"  required> 
-									<option value=""> Select Field Type</option> 
-									<option value="file">File</option>
-									<option value="text">Text</option>
-									
-							</select>
-							</div>
-							
-						</div>
-						<div class="row form-group">
-						<div class="col-sm-2 pull-right">
-							<button type="button" class="btn btn-block btn-primary"   ng-if="isEdit" ng-click="techspecVm.update(techspecform)">Update</button>
-							<button type="button" class="btn btn-block btn-primary"   ng-if="!isEdit" ng-click="techspecVm.save(techspecform)">Save</button> 
-						</div>
-						</div>
-					</form>
-			<div class="row">
-				<div class="col-sm-12">
-					<div class=" table-responsive ">
-						<table class="table table-bordered table-striped">
-							<thead>
-								<tr>
-									<th>Category Name</th>
-									<th>Field Name</th>
-									<th>Field Type</th>
-									<th>Actions</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr ng-repeat="fielddata in techspecVm.listData">
-									<td>{{fielddata.categoryName}}
-                                   </td>
-									<td>{{fielddata.fieldName}}</td>
-									<td>{{fielddata.fieldType}}</td>
-									
-									<td>
-								      <a href="javascript:void(0);" class="btn btn-primary btn-sm" uib-popover="Edit" popover-trigger="mouseenter" ng-click="techspecVm.editClicked(fielddata)">
-											<i class="fa fa-pencil"></i>
-										</a>
-										<a href="javascript:void(0);" class="btn btn-danger btn-sm" uib-popover="Edit" popover-trigger="mouseenter" ng-click="techspecVm.destroy(fielddata._id)"><i class="fa fa-trash" ></i></a>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-					<uib-pagination total-items="techspecVm.totalProductTechInfoCount" ng-model="techspecVm.currentPage" items-per-page="techspecVm.itemsPerPage" max-size="techspecVm.maxSize" ng-change="techspecVm.fireCommand(false,null,'technical')" class="pagination-sm" rotate="false">  </uib-pagination>
-				</div>
-			</div>
-		
-				</div>
-				
-			</uib-tab>
-
-			<uib-tab heading="Brand Technical Specification Master">
-			<h4>Technical Specification Master</h4>
-			<legend></legend>
-				<div class="form-group">
-					<form class="techInformationForm" name="techform" novalidate>
-						<div class="row form-group">
-
-							<div class="col-sm-3" ng-class="{'has-error':techspecVm.category.$invalid && submitted}">
-								<label>Select Category</label>
-								<select class="form-control form-group" name="category" ng-model="container.selectedCategoryId" ng-change="onCategoryChange(container.selectedCategoryId)" required> 
-									<option value=""> Select Category </option> 
-									<option value="{{category}}" ng-repeat="category in allCategory">{{category.name}}</option>
-									
-								</select>
+								</div>
+								
+								<div ng-if="!isEdit" class="col-sm-3 form-group ">
+									<button type="button" class="btn btn-default" ng-click="techspecVm.fieldInfo.push({})" ng-if="$last">Add More</button>
+									<button type="button" class="btn btn-default" ng-click="techspecVm.fieldInfo.splice($index,1)" ng-if="!$last">Delete</button>
+								</div>
 								
 							</div>
-						
-
-							<div class="col-sm-3" ng-class="{'has-error':offerVm.brand.$invalid && submitted}">
-								<label>Select Brand</label>
-								<select class="form-control form-group" name="brand" ng-model="container.selectedBrandId" ng-change="onBrandChange(container.selectedBrandId)" required> 
-									<option value=""> Select Brand </option> 
-									<option value="{{brand}}" ng-repeat="brand in brandList| orderBy:'name'">{{brand.name}}</option>
-									
+							<div ng-if="isEdit" class="row" ng-repeat="fieldinfo in techspecVm.fieldInfo">
+								<div class="col-sm-3 form-group">
+									<label>Field Name : </label>
+									<input type="text" class="form-control"  ng-model="techspecVm.dataModel.fieldName" name="" value="" placeholder="Field Name" required>
+								</div>
+								<div class="col-sm-3 form-group">
+								<label>Select Field Type</label>	
+								<select class="form-control form-group" name="type" ng-model="techspecVm.dataModel.fieldType"  required> 
+										<option value=""> Select Field Type</option> 
+										<option value="file">File</option>
+										<option value="text">Text</option>
+										
 								</select>
+								</div>
 								
 							</div>
-
-							<div class="col-sm-3" ng-class="{'has-error':offerVm.model.$invalid && submitted}">
-								<label>Select Model</label>
-								<select class="form-control form-group" name="model" ng-model="container.selectedModelId" required > 
-									<option value=""> Select Model </option> 
-									<option value="{{model}}" ng-repeat="model in modelList| orderBy:'name'">{{model.name}}</option>
-								</select>
-
-							</div>
-
-						<div class="row form-group">
-						
+							<div class="row form-group">
 							<div class="col-sm-2 pull-right">
-								<button type="button" class="btn btn-block btn-primary"   ng-if="isEdit" ng-click="offerVm.update(offerform)">Update</button>
-								<button type="button" class="btn btn-block btn-primary"   ng-if="!isEdit" ng-click="offerVm.save(offerform)">Save</button> 
+								<button type="button" class="btn btn-block btn-primary"   ng-if="isEdit" ng-click="techspecVm.update(techspecform)">Update</button>
+								<button type="button" class="btn btn-block btn-primary"   ng-if="!isEdit" ng-click="techspecVm.save(techspecform)">Save</button> 
+							</div>
+							</div>
+						</form>
+						<div class="row">
+							<div class="col-sm-12">
+								<div class=" table-responsive ">
+									<table class="table table-bordered table-striped">
+										<thead>
+											<tr>
+												<th>Category Name</th>
+												<th>Field Name</th>
+												<th>Field Type</th>
+												<th>Actions</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr ng-repeat="fielddata in techspecVm.listData">
+												<td>{{fielddata.categoryName}}
+											</td>
+												<td>{{fielddata.fieldName}}</td>
+												<td>{{fielddata.fieldType}}</td>
+												
+												<td>
+												<a href="javascript:void(0);" class="btn btn-primary btn-sm" uib-popover="Edit" popover-trigger="mouseenter" ng-click="techspecVm.editClicked(fielddata)">
+														<i class="fa fa-pencil"></i>
+													</a>
+													<a href="javascript:void(0);" class="btn btn-danger btn-sm" uib-popover="Edit" popover-trigger="mouseenter" ng-click="techspecVm.destroy(fielddata._id)"><i class="fa fa-trash" ></i></a>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+								<uib-pagination total-items="techspecVm.totalProductTechInfoCount" ng-model="techspecVm.currentPage" items-per-page="techspecVm.itemsPerPage" max-size="techspecVm.maxSize" ng-change="techspecVm.fireCommand(false,null,'technical')" class="pagination-sm" rotate="false">  </uib-pagination>
 							</div>
 						</div>
-					</form>
-
-					<div class="row">
-						<div class="col-sm-12">
-							<div class=" table-responsive ">
-								
-							</div>
-							<uib-pagination total-items="gsettingVm.totalProductTechInfoCount" ng-model="offerVm.currentPage" items-per-page="offerVm.itemsPerPage" max-size="offerVm.maxSize" ng-change="offerVm.fireCommand(false,null,'technical')" class="pagination-sm" rotate="false">  </uib-pagination>
-						</div>
+			
 					</div>
-				</div>
-				<legend></legend>
-			</uib-tab>
-		</uib-tabset>
+					
+				</uib-tab>
+
+				<uib-tab heading="Brand Technical Specification Master">
+					<h4>Technical Specification Master</h4>
+					<legend></legend>
+					<div class="form-group">
+						<form class="techInformationForm" name="techfieldform" novalidate>
+							<div class="row form-group">
+
+								<div class="col-sm-3" ng-class="{'has-error':techspecVm.category.$invalid && submitted}">
+									<label>Select Category</label>
+									<select ng-disabled="isView || isFieldEdit" class="form-control form-group" name="category" ng-model="techspecVm.dataModel.categoryId" ng-change="techspecVm.onCategoryChange(techspecVm.dataModel.categoryId)" required> 
+										<option value=""> Select Category </option> 
+										<option value="{{category._id}}" ng-repeat="category in allCategory">{{category.name}}</option>
+									</select>
+								</div>
+
+								<div class="col-sm-3" ng-class="{'has-error':techspecVm.brand.$invalid && submitted}">
+									<label>Select Brand</label>
+									<select ng-disabled="isView || isFieldEdit" class="form-control form-group" name="brand" ng-model="techspecVm.dataModel.brandId" ng-change="techspecVm.onBrandChange(techspecVm.dataModel.brandId)" required> 
+										<option value=""> Select Brand </option> 
+										<option value="{{brand._id}}" ng-repeat="brand in brandList| orderBy:'name'">{{brand.name}}</option>
+									</select>
+									
+								</div>
+
+								<div class="col-sm-3" ng-class="{'has-error':techspecVm.model.$invalid && submitted}">
+									<label>Select Model</label>
+									<select ng-disabled="isView || isFieldEdit" class="form-control form-group" name="model" ng-model="techspecVm.dataModel.modelId" ng-change="techspecVm.onModelChange(techspecVm.dataModel.modelId)"required > 
+										<option value=""> Select Model </option> 
+										<option value="{{model._id}}" ng-repeat="model in modelList| orderBy:'name'">{{model.name}}</option>
+									</select>
+
+								</div>
+
+							<div class="row form-group">
+							
+								<div class="col-sm-2 pull-right">
+									<button type="button" class="btn btn-block btn-primary" ng-if="isFieldEdit" ng-click="techspecVm.fieldUpdate(techfieldform)">Update</button>
+									<button type="button" class="btn btn-block btn-primary" ng-if="!isFieldEdit" ng-click="techspecVm.fieldSave(techfieldform)">Save</button> 
+								</div>
+							</div>
+							<div ng-if="fieldShow" class="row">
+								<div class="col-sm-3 form-group" ng-repeat="field in techspecVm.fieldList">
+									<label>{{field.fieldName}}:</label>
+									<input ng-if="field.fieldType == 'file'" type="file" name=""  id="{{$index}}" accept="image/*" params="['files','$index']" on-file-select-tech="techspecVm.uploadTechFile"ng-model="techspecVm.fields[$index]">
+									<!--<input type="file"  id="{{field._id}}" accept="image/*" params="['files','$index']" on-file-select-tech="techspecVm.uploadImage1" ng-model="techspecVm.fields[$index]">-->
+									<input ng-if="field.fieldType == 'text'" type="text" class="form-control" name="" ng-model="techspecVm.fields[$index]">
+									<input  type="checkbox" class="form-control" name="" ng-change="techspecVm.checkCount(techspec.checks[$index])" ng-model="techspecVm.checks[$index]">
+								</div>
+							</div>
+							<div ng-if="isFieldEdit" class="row">
+							<div class="col-sm-3 form-group" ng-repeat="field in techspecVm.viewFieldList">
+								<label>{{field.fieldName}}:</label>
+								<input ng-if="field.fieldType == 'file'" type="file" name=""  id="{{$index}}" accept="image/*" params="['files','$index']" on-file-select-tech="techspecVm.uploadTechFile"ng-model="techspecVm.fields[$index]">
+								<!--<input type="file"  id="{{field._id}}" accept="image/*" params="['files','$index']" on-file-select-tech="techspecVm.uploadImage1" ng-model="techspecVm.fields[$index]">-->
+								<input ng-if="field.fieldType == 'text'" type="text" class="form-control" value="{{techspecVm.listFieldData[field._id].fieldValue}}" name="" ng-model="techspecVm.fields[$index]">
+								<input ng-if="techspecVm.checks[$index]" ng-checked="true" type="checkbox" class="form-control" name="" ng-change="techspecVm.checkCount(techspec.checks[$index])" ng-model="techspecVm.checks[$index]">
+								<input ng-if="!techspecVm.checks[$index]"  type="checkbox" class="form-control" name="" ng-change="techspecVm.checkCount(techspec.checks[$index])" ng-model="techspecVm.checks[$index]">
+							</div>
+						</div>
+						</form>
+						<!--view data -->
+						<div class="row" ng-if="isView">
+							<div class="col-sm-12">
+								<div class=" table-responsive ">
+									<table class="table table-bordered table-striped">
+										<thead>
+											<tr>
+												<th>Field Name</th>
+												<th>Field Value</th>
+												<th>Actions</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr ng-repeat="field in techspecVm.viewFieldList">
+												<td>{{field.fieldName}}</td>
+												<td>{{techspecVm.listFieldData[field._id].fieldValue}}</td>
+												<td>
+												    <a href="javascript:void(0);" class="btn btn-primary btn-sm" uib-popover="Edit" popover-trigger="mouseenter" ng-click="techspecVm.editClicked(fielddata)">
+														<i class="fa fa-pencil"></i>
+													</a>
+													<a href="javascript:void(0);" class="btn btn-danger btn-sm" uib-popover="Edit" popover-trigger="mouseenter" ng-click="techspecVm.destroy(fielddata._id)"><i class="fa fa-trash" ></i></a>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+						<!-- end view data -->
+						<div class="row">
+							<div class="col-sm-12">
+								<div class=" table-responsive ">
+									<table class="table table-bordered table-striped">
+										<thead>
+											<tr>
+												<th>Category Name</th>
+												<th>Brand Name</th>
+												<th>Model Name</th>
+												<th>Actions</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr ng-repeat="fielddata in techspecVm.listFieldData">
+												<td>{{fielddata.categoryId}}</td>
+												<td>{{fielddata.brandId}}</td>
+												<td>{{fielddata.modelId}}</td>
+												<td>
+												<a href="javascript:void(0);" class="btn btn-primary " uib-popover="View" popover-trigger="mouseenter" ng-click="techspecVm.viewClicked(fielddata.categoryId,fielddata.brandId,fielddata.modelId)">
+													View Data	
+												</a>
+												<a href="javascript:void(0);" class="btn btn-primary btn-sm" uib-popover="Edit" popover-trigger="mouseenter" ng-click="techspecVm.fieldEditClicked(fielddata)">
+														<i class="fa fa-pencil"></i>
+													</a>
+													<a href="javascript:void(0);" class="btn btn-danger btn-sm" uib-popover="Edit" popover-trigger="mouseenter" ng-click="techspecVm.destroy(fielddata._id)"><i class="fa fa-trash" ></i></a>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+								<uib-pagination total-items="techspecVm.totalProductTechInfoCount" ng-model="techspecVm.currentPage" items-per-page="techspecVm.itemsPerPage" max-size="techspecVm.maxSize" ng-change="techspecVm.fireCommand(false,null,'technical')" class="pagination-sm" rotate="false">  </uib-pagination>
+							</div>
+						</div>
+						
+					</div>
+					<legend></legend>
+				</uib-tab>
+			</uib-tabset>
+		</div>
 			
     </div>
 
