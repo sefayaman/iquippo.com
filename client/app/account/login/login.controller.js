@@ -42,13 +42,13 @@ angular.module('account').controller('LoginCtrl', LoginCtrl);
            $rootScope.loading = false;
            if(loggedIn){
               if(Auth.isAdmin()){
-                if(!Auth.doNotRedirect)
-                    $state.go('productlisting');
+                  return $state.go('productlisting');
               }
-              if(Auth.postLoginCallback)
-                  Auth.postLoginCallback();
-              if($state.current.name === "valuation")
-                $rootScope.$broadcast('callValuationRequest');
+              $state.go("main");
+             /* if(Auth.postLoginCallback)
+                  Auth.postLoginCallback();*/
+             /* if($state.current.name === "valuation")
+                $rootScope.$broadcast('callValuationRequest');*/
            }
          });
 

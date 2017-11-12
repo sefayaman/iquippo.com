@@ -7,7 +7,7 @@
           <img src="/assets/images/loging-image.png" class="img-responsive" alt="">
         </div>
         <div class="col-xs-offset-1 col-xs-10 col-sm-offset-0 col-sm-5 form-group">
-          <form>
+          <form name="infoForm">
             <div class="signup" ng-if="step == 0">
               <h3 class="text-center form-group">Signup with iQuippo</h3>
               <h5 class="text-center">Easily Using</h5>
@@ -30,111 +30,158 @@
 
               <div class="row">
                 <div class="col-sm-6 form-group">
-                  <div class="floating-label-wrapper">
-                    <label for="fname">First Name</label>
-                    <input type="text" class="form-control" id="fname" placeholder="First Name" ng-model="user.fname"  with-floating-label>
+                  <div class="floating-label-wrapper" ng-class="{'has-error': infoForm.fname.$invalid && submitted }">
+                    <label for="fname">*First Name</label>
+                    <input type="text" class="form-control" id="fname" name="fname" placeholder="*First Name" ng-model="signupVm.user.fname"   with-floating-label required>
                   </div>
                 </div>
                 <div class="col-sm-6 form-group">
-                   <div class="floating-label-wrapper">
-                    <label for="lname">Last Name</label>
-                    <input type="text" class="form-control" id="lname" placeholder="Last Name" ng-model="user.lname"  with-floating-label>
+                   <div class="floating-label-wrapper" ng-class="{'has-error': infoForm.lname.$invalid && submitted }">
+                    <label for="lname">*Last Name</label>
+                    <input type="text" class="form-control" id="lname" name="lname" placeholder="*Last Name" ng-model="signupVm.user.lname"   with-floating-label required>
                   </div>
                 </div>
               </div>
               <div class="row">
                 <div class="col-sm-6 form-group">
-                  <div class="floating-label-wrapper">
+                  <div class="floating-label-wrapper" ng-class="{'has-error': infoForm.email.$invalid && submitted }">
                     <label for="email">Enter Email</label>
-                    <input type="text" class="form-control" id="email" placeholder="Enter Email" ng-model="user.email"  with-floating-label>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="Enter Email" ng-model="signupVm.user.email"  with-floating-label mongoose-error>
                   </div>
+                   <p class="help-block" ng-show="infoForm.email.$error.mongoose">
+                      {{ errors.email }}
+                   </p>
                 </div>
                 <div class="col-sm-6 form-group">
-                   <div class="floating-label-wrapper">
-                    <label for="mobile">Mobile Number</label>
-                    <input type="text" class="form-control" id="mobile" placeholder="Mobile Number" ng-model="user.mobile"  with-floating-label>
+                   <div class="floating-label-wrapper" ng-class="{'has-error': infoForm.mobile.$invalid && submitted }">
+                    <label for="mobile">*Mobile Number</label>
+                    <input type="number" class="form-control" id="mobile" name="mobile" placeholder="*Mobile Number" ng-model="signupVm.user.mobile"  with-floating-label required mongoose-error>
                   </div>
+                  <p class="help-block" ng-show="infoForm.mobile.$error.mongoose">
+                      {{ errors.mobile }}
+                   </p>
                 </div>
               </div>
               <div class="row">
                 <div class="col-sm-6 form-group">
-                  <div class="floating-label-wrapper">
-                    <!-- <label for="country">Country</label> -->
-                    <select class="form-control">
-                      <option>Country</option>
+                  <div class="floating-label-wrapper" ng-class="{'has-error': infoForm.country.$invalid && submitted }">
+                    <select class="form-control" name="country" ng-model="signupVm.user.country" ng-change="getCountryWiseState(signupVm.user.country)" required>
+                      <option value="">*Country</option>
+                      <option value="{{country.name}}" ng-repeat ="country in allCountries | orderBy:'name'">{{country.name}}</option>
                     </select>
                   </div>
                 </div>                
                 <div class="col-sm-6 form-group">
-                   <div class="floating-label-wrapper">
-                    <!-- <label for="state">State</label> -->
-                    <select class="form-control">
-                      <option>State</option>
+                   <div class="floating-label-wrapper" ng-class="{'has-error': infoForm.state.$invalid && submitted }">
+                   <select class="form-control" name="state" ng-model="signupVm.user.state" ng-change="getStateWiseLocation(signupVm.user.state)" required>
+                      <option value="" disabled="">*State</option>
+                      <option ng-repeat="state in stateList| orderBy:'name'" value="{{state.name}}">{{state.name}}</option>
                     </select>
                   </div>
                 </div>
               </div>
               <div class="row">
                 <div class="col-sm-6 form-group">
-                  <div class="floating-label-wrapper">
-                    <!-- <label for="city">City</label> -->
-                    <select class="form-control">
-                      <option>City</option>
+                  <div class="floating-label-wrapper" ng-class="{'has-error': infoForm.location.$invalid && submitted }">
+                    <select class="form-control" name="location" ng-model="signupVm.user.city" required>
+                      <option value="" disabled>*City</option>
+                        <option ng-repeat="location in locationList| orderBy:'name'" value="{{location.name}}">{{location.name}}</option>
                     </select>
                   </div>
                 </div>
               </div>
+              <div class="row form-group">
+                <div class="col-sm-12 text-left form-group">
+                  <div class="checkbox checkbox-info">
+                    <input id="checkbox3" type="checkbox" name="agree" ng-model="signupVm.user.agree" value="">
+                    <label for="checkbox3">
+                        I Agree
+                        <span>By clicking submit, you agree to the <a href="/privacy" target="_blank" aria-hidden="true">Terms &amp; Conditions</a>.</span>
+                    </label>
+                  </div>
+                </div>                    
+              </div>
+              <div class="row">
+                <div class="col-sm-6">
+                  Don't have an account?
+                  <h5><a href="/signin" class="text-danger">Login</a></h5>
+                </div>
+                <div class="col-sm-6">
+                  <button type="button" class="btn btn-primary btn-block" ng-click="signupVm.submitPersonalInfo(infoForm)">Next</button>
+                </div>
+              </div>
             </div>
 
+          </form>
+          <form name="otpForm">
             <div class="floating-lable-form" ng-if="step == 1">
               <h4>Hi, First Name! Verify its you.</h4>
               <small>We have send you and OTP on your email and mobile number.</small>
               <div class="form-group"></div>
               <div class="row">
                 <div class="col-sm-6 form-group">
-                  <div class="floating-label-wrapper">
+                  <div class="floating-label-wrapper" ng-class="{'has-error':otpForm.otp.$invalid && submiited}">
                     <label for="otp">Enter OTP</label>
-                    <input type="text" class="form-control" id="otp" placeholder="Enter OTP" ng-model="user.otp"  with-floating-label>
+                    <input type="text" class="form-control" id="otp" name="otp" placeholder="Enter OTP" ng-model="signupVm.user.otp"  with-floating-label required>
                   </div>
                   <small>Check your phone for 4-digit OTP.</small>
                 </div>
                 <div class="col-sm-6 form-group">
-                   <a href="javascript:void(0);">Resend OTP</a>
+                   <a href="javascript:void(0);" ng-click="signupVm.sendOTP(user)">Resend OTP</a>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-sm-6">
+                  Don't have an account?
+                  <h5><a href="/signin" class="text-danger">Login</a></h5>
+                </div>
+                <div class="col-sm-6">
+                    <button type="button" class="btn btn-primary btn-block" ng-click="signupVm.verifyOtp(otpForm)">Verify</button>
                 </div>
               </div>
             </div>
-
+            
+          </form>
+          <form name="passwordForm">
             <div class="floating-lable-form" ng-if="step == 2">
-              <h4>Almost Done Brijesh, just set your password to continue.</h4>
+              <h4>Almost Done {{signupVm.user.fname}}, just set your password to continue.</h4>
               <div class="row">
                 <div class="col-sm-8 form-group">
-                  <div class="floating-label-wrapper">
+                  <div class="floating-label-wrapper" ng-class="{'has-error': passwordForm.password.$invalid && submitted }">
                     <label for="cpassword">Create Password</label>
-                    <input type="text" class="form-control" id="cpassword" placeholder="Create Password" ng-model="user.cpassword"  with-floating-label>
+                    <input type="password" class="form-control" id="cpassword" placeholder="Create Password" ng-model="signupVm.user.password" name="password" with-floating-label  ng-minlength="6"
+                     required
+                     mongoose-error>
                   </div>
+                    <p class="help-block" ng-show=" passwordForm.password.$error.mongoose">
+                      {{ errors.password }}
+                    </p>
                   <small>Create a password (min. 6 characters).</small>
                 </div>
               </div>
               <div class="row">
                 <div class="col-sm-8 form-group">
-                  <div class="floating-label-wrapper">
+                  <div class="floating-label-wrapper" ng-class="{'has-error': passwordForm.passwordCompare.$invalid && submitted }">
                     <label for="repassword">Re-enter Password</label>
-                    <input type="text" class="form-control" id="repassword" placeholder="Re-enter Password" ng-model="user.repassword"  with-floating-label>
+                    <input type="password" class="form-control" id="repassword" placeholder="Re-enter Password" ng-model="signupVm.user.passwordConfirm" name="passwordCompare" ng-minlength="6"
+                     valid-password-c="signupVm.user.password" required mongoose-error>
                   </div>
+                  <p class="help-block" ng-show="passwordForm.passwordCompare.$error.noMatch && submitted">
+                    Passwords Do not match
+                  </p>
                 </div>
               </div>
-            </div>
-
-            <div class="row">
-              <div class="col-sm-6">
-                Don't have an account?
-                <h5><a href="/signin" class="text-danger">Login</a></h5>
+              <div class="row">
+                <div class="col-sm-6">
+                  Don't have an account?
+                  <h5><a href="/signin" class="text-danger">Login</a></h5>
+                </div>
+                <div class="col-sm-6">
+                  <button type="button" class="btn btn-primary btn-block" ng-click="signupVm.register(passwordForm)">Verify</button>
+                </div>
               </div>
-              <div class="col-sm-6">
-                <button type="submit" class="btn btn-primary btn-block" ng-if="step == 0 || step == 1">Next</button>
-                <button type="submit" class="btn btn-primary btn-block" ng-if="step == 2">Verify</button>
-              </div>
-            </div>           
+            </div>  
             
           </form>
         </div>

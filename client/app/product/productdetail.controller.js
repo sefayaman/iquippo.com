@@ -32,7 +32,7 @@
       init();
       //countBid();
       //getLastBidForUser();
-    })
+    });
 
     //$scope.financeContact.interestedIn="finance";
     $scope.buycontact.interestedIn = "buyORrent";
@@ -438,13 +438,13 @@
           }
 
 
-          Auth.isLoggedInAsync(function(loggedIn) {
+          /*Auth.isLoggedInAsync(function(loggedIn) {
             if (!loggedIn) {
               Modal.openDialog('login');
               Auth.doNotRedirect = true;
               Auth.postLoginCallback = loadUserDetail;
             }
-          });
+          });*/
 
           $scope.currentProduct = result[0];
           if ($scope.currentProduct.auctionListing && $scope.currentProduct.auction && $scope.currentProduct.auction._id) {

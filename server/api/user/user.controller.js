@@ -22,6 +22,7 @@ var USER_REG_REQ="userRegEmailFromAdminChannelPartner";
 var Seqgen = require('./../../components/seqgenerator').sequence();
 var AppSetting = require('../common/setting.model');
 var validationError = function(res, err) {
+  console.log(err);
   return res.status(422).json(err);
 }; 
 

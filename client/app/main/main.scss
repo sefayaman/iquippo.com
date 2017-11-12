@@ -1359,6 +1359,7 @@ footer .subscribe{height: 40px;}
   position: relative;
 }
 .floating-label-wrapper .form-control{border: 0; border-bottom: 1px solid #ccc; padding: 0;}
+.floating-label-wrapper.has-error .form-control{border-bottom: 1px solid #a94442 !important; box-shadow: none;}
 .floating-label-wrapper .form-control:focus, .floating-label-wrapper .form-control:not(.empty){border-color: #004394; box-shadow: none;}
   .floating-label {
     color: #7E7E7E;
