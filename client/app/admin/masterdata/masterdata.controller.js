@@ -60,6 +60,8 @@ function MasterDataCtrl($scope, $rootScope,MasterDataService, groupSvc, modelSvc
 	//$scope.updateImage = updateImage;
 	$scope.importMasterData = importMasterData;
 	$scope.getStatus = getStatus;
+	$scope.checkCategoryFor = checkCategoryFor;
+	$scope.checkBrandFor = checkBrandFor;
 
 	function loadAllGroup(fromCache){
 		if(!fromCache)
@@ -84,6 +86,7 @@ function MasterDataCtrl($scope, $rootScope,MasterDataService, groupSvc, modelSvc
 			vm.cSearch = "";
 			vm.cCurrentPage = 1;
 			vm.cTotalItems = result.length;
+			
 		})
 	}
 
@@ -439,11 +442,14 @@ function MasterDataCtrl($scope, $rootScope,MasterDataService, groupSvc, modelSvc
 	     })
 	 }
 
-	 function uploadImage(files,modelRef,type,autoUpdate){
+	 function uploadImage(files,modelRef,type,autoUpdate,key){
 	 	if(!files.length)
 	 		return;
 	 	uploadSvc.upload(files[0],categoryDir).then(function(result){
-	 		modelRef.imgSrc = result.data.filename;
+	 		if(key)
+			 modelRef[key] = result.data.filename;
+			else
+			 modelRef.imgSrc = result.data.filename;
 	 		if(autoUpdate && type){
 	 			modelRef.type = type;
 	 			updateMasterdataStatus(modelRef);
@@ -589,7 +595,14 @@ function MasterDataCtrl($scope, $rootScope,MasterDataService, groupSvc, modelSvc
 		retObject.name = obj.name;
 		return retObject;
 	}
-
+	function checkCategoryFor(category){
+		$scope.b.useFor = category.useFor;
+		console.log("$scope.b.useFor==",$scope.b.useFor);
+	}
+	function checkBrandFor(brand){console.log("brand==",brand);
+		$scope.m.useFor = brand.useFor;
+		console.log("muserfor",$scope.m.useFor);
+	}
 }
 
 })();

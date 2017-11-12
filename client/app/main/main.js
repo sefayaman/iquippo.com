@@ -677,6 +677,16 @@ angular.module('sreizaoApp')
         layout:'client',
         authenticate:true
       })
+       .state('newequipment', {
+        url:"/newequipment",
+        templateUrl: 'app/newequipment/newequipment.html',
+        controller:"NewEquipmentCtrl",
+        layout:'client',
+        onEnter:function($rootScope){
+          //$rootScope.choosenTitle=pagesTitles.valuation.title;
+          //$rootScope.metaDescription=pagesTitles.valuation.meta;
+        }
+      })
 
       $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
   });

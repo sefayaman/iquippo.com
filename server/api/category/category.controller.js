@@ -138,6 +138,67 @@ exports.updateCategory = function(req, res) {
   });
 };
 
+exports.searchCategory = function(req, res) {
+  var filter = {};
+  filter["deleted"] = false;
+  if(req.body.status)
+    filter["status"] = req.body.status;
+  if(req.body.groupId)
+    filter['group._id'] = req.body.groupId;
+  if(req.body._id){
+     filter['_id'] = req.body._id;
+  }
+  if(req.body.searchStr){
+    var term = new RegExp(req.body.searchStr, 'i');
+    filter['name'] = { $regex: term };
+  }
+  var query = Category.find(filter);
+  query.exec(
+       function (err, category) {
+              if(err) { return handleError(res, err); }
+              res.setHeader('Cache-Control', 'private, max-age=2592000');
+              return res.status(200).json(category);
+       }
+  );
+
+};
+
+
+// Get list of sub category
+exports.getAllSubCategory = function(req, res) {
+  SubCategory.find(function (err, subcategory) {
+    if(err) { return handleError(res, err); }
+    return res.status(200).json(subcategory);
+  });
+};
+
+
+// Creates a new sub category in the DB.
+exports.createSubCategory = function(req, res) {
+  req.body.createdAt = new Date();
+  req.body.updatedAt = req.body.createdAt;
+  var filter = {};
+  filter["name"] =req.body.name;
+  filter["category.name"] =req.body.category.name;
+  SubCategory.find(filter,function (err, categories) {
+    if(err) { return handleError(res, err); }
+    else
+    {
+      if(categories.length > 0)
+      {
+        return res.status(201).json({errorCode:1, message:"SubCategory already exits!!!"});
+      }
+        else{
+          SubCategory.create(req.body, function(err, category) {
+              if(err) { return handleError(res, err); }
+               return res.status(200).json({errorCode:0, message:"Sub Category saved sucessfully"});
+             });
+        }  
+    
+    }
+    
+  });
+};
 /*exports.searchCategory = function(req, res) {
   
 
