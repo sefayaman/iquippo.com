@@ -281,3 +281,53 @@
       </div>
   </div>
 </script>
+
+<script type="text/ng-template" id="search.html">
+  <div>
+    <div class="modal-header">
+    <button type="button" class="close"  data-ng-click="close()" aria-hidden="true"><i class="fa fa-times"></i></button>
+    </div>
+    <div class="modal-body text-center">
+       <div class="category-block">
+         <div class="search-tabs filter">
+            <div class="row" ng-if="mainVm.singleBox">
+              <div class="col-sm-offset-3 col-sm-6">          
+                <div class="input-group">
+                  <input type="text" placeholder="Search for Assets and More" ng-model="mainVm.searchstr" class="form-control"  ng-keypress="mainVm.myFunct($event)" />
+                  <a href="javascript:void(0);" class="input-group-addon" ng-click="mainVm.toggleSearchBox(false)">Choose</a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tab panes -->
+            <div class="row" ng-if="!mainVm.singleBox">
+              <div class="col-sm-offset-2 col-sm-8">
+                <div class="filter">
+                  <div class="row">
+                    <div class="col-xs-6 col-sm-3 form-group select-text">
+                      <input type="text" placeholder="Industry Name" ng-model="mainVm.groupSearchText" class="form-control" uib-typeahead="address for address in getGroupHelp($viewValue,'isForUsed')" typeahead-focus-first = "false" typeahead-wait-ms="200" ng-keypress="mainVm.myFunct($event)"/>
+                    </div>
+                    <div class="col-xs-6 col-sm-3 form-group select-text">
+                      <input type="text" ng-model="mainVm.categorySearchText" placeholder="Category" uib-typeahead="address for address in getCategoryHelp($viewValue,'isForUsed')"  class="form-control"  ng-keypress="mainVm.myFunct($event)" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
+                    </div>
+                    <div class="col-xs-6 col-sm-3 form-group select-text">
+                      <input type="text" class="form-control" ng-model="mainVm.locationSearchText" placeholder="Seller Location" uib-typeahead="address for address in getLocationHelp($viewValue)"  class="form-control" ng-keypress="mainVm.myFunct($event)" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
+                    </div> 
+                    <div class="col-xs-6 col-sm-3 form-group select-text">
+                      <input type="text" class="form-control" placeholder="Brand" ng-model="mainVm.brandSearchText" class="form-control" uib-typeahead="address for address in getBrandHelp($viewValue,'isForUsed')" typeahead-wait-ms="200" ng-keypress="mainVm.myFunct($event)"/>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="text-center">
+            <button type="button" class="btn btn-primary" data-ng-click="mainVm.doSearch()">Search</button>
+          </div>
+       </div>
+    </div>
+     <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-ng-click="close()">Close</button>
+      </div>
+  </div>
+</script>
