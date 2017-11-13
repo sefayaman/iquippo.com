@@ -25,6 +25,9 @@
                 <img alt="" title="" ng-src="{{thumbnailImage.displaySrc}}" class="img-responsive" ng-click="productDetailVm.previewProduct(currentProduct.images, $index)">
               </div>
             </div>
+            <div class="stamp-image">
+              <img src="/assets/images/certified.png" class="img-responsive">
+            </div>
             <!-- Indicators -->
             <ol class="carousel-indicators">
               <li class="" data-slide-to="{{$index}}" ng-class="{'active':thumbnailImage.isPrimary && !thumbnailImage.catImgType}" data-target="#article-photo-carousel" ng-repeat="thumbnailImage in currentProduct.images | limitTo:5">

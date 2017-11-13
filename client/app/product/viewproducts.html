@@ -108,18 +108,18 @@
                 <div class="row">
                   <div class="col-xs-6 form-group">
                     <h4>{{product.category.name}}</h4>     
-                    <h5 class="text-info">Model : {{product.model.name}}</h5>
+                    <h5 class="text-info text-ellips">Model : {{product.model.name}}</h5>
                   </div>
                   <div class="col-xs-6 form-group text-right padd-left">
-                    <h3><i class="fa fa-inr"></i>{{product.grossPrice}}</h3>
+                    <h3><i class="fa fa-inr"></i> {{product.grossPrice}}</h3>
                   </div>
                 </div> 
                  <div class="row">
                   <div class="col-xs-6 form-group">
                     <i class="fa fa-check-circle-o"></i> Available for {{product.tradeType === 'RENT'?'Rent' : 'Sale'}}
                   </div>
-                  <div class="col-xs-6 form-group text-right">
-                    <a href="javascript:void(0);" class="text-danger"> Add to Compare</a>
+                  <div class="col-xs-6 form-group">
+                    <a href="javascript:void(0);" class="text-danger"> <img src="/assets/images/compare.png" width="16" height="20" alt=""> Add to Compare</a>
                   </div>
                 </div>                 
                                     
