@@ -93,8 +93,9 @@
         vm.closeTechInfo = closeTechInfo;
         $scope.lotDate=false;
         $scope.lotCreation=true;
-        $scope.lot={};
-        $scope.lotsaved ={};
+        $scope.lot = {};
+        $scope.lot.bidIncrement = [{}];
+        var filter = {};
         vm.financeData = {};
         $scope.updateAuctionMasterImage = updateAuctionMasterImage
         vm.saveFinanceMaster = saveFinanceMaster;
@@ -102,9 +103,10 @@
         vm.updateFinanceMaster = updateFinanceMaster;
         //import location
         $scope.importLocation = importLocation;
-        $scope.checkForLot=checkForLot;
+        $scope.checkForLot = checkForLot;
         $scope.onAuctionSelection=onAuctionSelection;
         $scope.ReqSubmitStatuses = ReqSubmitStatuses;
+        vm.reSendReqToCreateAsset = reSendReqToCreateAsset;
 
         //vm.auctionSearchFilter = {};
         var dataToSend = {};
@@ -121,7 +123,6 @@
         $scope.resetPagination = resetPagination;
 
         vm.auctionProduct = {};
-        vm.auctionProduct.bidInfo = [{}];
         vm.techInformation = {
             type: 'technical'
         };
@@ -139,10 +140,10 @@
         vm.updateProductTechInfo = updateProductTechInfo;
         vm.deleteProductTechInfo = deleteProductTechInfo;
         vm.productTechInfoTemplate = 'ProductTechInfoTemplate.xlsx';
-        vm.bidIncrementObj = {};
-        $scope.bidIncrementObj = {};
+        // vm.bidIncrementObj = {};
+        // $scope.bidIncrementObj = {};
         vm.getChangeAuctionMasterData = getChangeAuctionMasterData;
-        vm.checkBidIncrement = checkBidIncrement;
+        //vm.checkBidIncrement = checkBidIncrement;
         vm.checkBidIncrementAuction = checkBidIncrementAuction;
         vm.deleteDocumentFieldAuction = deleteDocumentFieldAuction;
 
@@ -150,11 +151,11 @@
             return $scope.isTechCollapsed = !$scope.isTechCollapsed;
         }
 
-      function onAuctionSelection(dbAuctionId) {
-      $scope.lot = "";
+    function onAuctionSelection(dbAuctionId) {
+      $scope.lot = {};
       var filter = {};
       filter.auction_id = dbAuctionId;
-      filter.isDeleted=false;
+      //filter.isDeleted=false;
       console.log("filter", filter);
       fetchLot(filter);
     }
@@ -235,7 +236,7 @@
                     getAuctionMaster(dataToSend);
                     loadAuctionData();
                     loadAllCategory();
-                    checkForLot();
+                    //checkForLot();
                     break;
                 case 'inv':
                     getInvitationMasterData();
@@ -812,9 +813,7 @@
             vm.auctionEdit = false;
             $scope.isCollapsed = !$scope.isCollapsed;
             vm.auctionData = {};
-            vm.auctionData.bidInfo=[{}];
-            
-           
+            vm.auctionData.bidIncrement=[{}];
             loadAuctionData();
         }
 
@@ -851,19 +850,6 @@
                 return;
             }*/
             
-            /*if(vm.auctionData.rangeIncrement){
-              vm.auctionData.bidIncrement = vm.auctionData.bidIncrement.filter(function(item, idx) {
-                if (item && (item.bidFrom || item.bidTo || item.bidIncrement))
-                  return true;
-                else
-                  return false;
-              });
-            } else {
-              vm.auctionData.bidIncrement = [];
-            }
-
-            if(!vm.auctionData.staticIncrement) 
-              vm.auctionData.static_increment = "";*/
             $scope.submitted = false;
             getChangeAuctionMasterData();
             $rootScope.loading = true;
@@ -895,19 +881,7 @@
                 $scope.submitted = true;
                 return;
             }
-            /*if(vm.auctionData.rangeIncrement){
-              vm.auctionData.bidIncrement = vm.auctionData.bidIncrement.filter(function(item, idx) {
-                if (item && (item.bidFrom || item.bidTo || item.bidIncrement))
-                  return true;
-                else
-                  return false;
-              });
-            } else {
-              vm.auctionData.bidIncrement = [];
-            }
 
-            if(!vm.auctionData.staticIncrement)
-              vm.auctionData.static_increment = "";*/
             $scope.submitted = false;
             getChangeAuctionMasterData();
             $rootScope.loading = true;
@@ -935,12 +909,6 @@
                 //vm.auctionData.auctionOwner = item.user.fname + " " + item.user.lname;
             });
            
-            /*vm.auctionData.bidInfo.forEach(function(item) {
-                var range = item.bidFrom+"-"+item.bidTo;
-                 vm.bidIncrementObj[range] = item.bidIncrement;
-            });
-            vm.auctionData.bidIncrement = '';
-            vm.auctionData.bidIncrement = vm.bidIncrementObj;*/
             if(vm.auctionData.rangeIncrement){
               vm.auctionData.bidIncrement = vm.auctionData.bidIncrement.filter(function(item, idx) {
                 if (item && (item.bidFrom || item.bidTo || item.bidIncrement))
@@ -1039,7 +1007,6 @@
             filter.first_id = first_id;
             filter.last_id = last_id;
             filter.isDeleted=false;
-
             AuctionMasterSvc.getFilterOnAuctionMaster(filter)
                 .then(function(result) {
                     getAuctionWiseProductData(result);
@@ -1087,7 +1054,7 @@
                     vm.auctionData.bidIncrement = [{}];
                 }else{
                     vm.auctionData.rangeIncrement = false;
-                    if(vm.auctionData.bidInfo[0].bidFrom)
+                    if(vm.auctionData.bidIncrement[0].bidFrom)
                       deleteDocumentFieldAuction(vm.auctionData._id,2);
                 }
                 vm.auctionData.staticIncrement = false;
@@ -1426,75 +1393,29 @@
         }
 
         function getApprovedAuctionAsset(filter) {
-
             filter.prevPage = prevPage;
             filter.currentPage = vm.currentPage;
             filter.first_id = first_id;
             filter.last_id = last_id;
             filter['status'] = auctionStatuses[2].code;
+
             AuctionSvc.getOnFilter(filter)
                 .then(function(result) {
-                    /*vm.assetsInAuction = result.items;
+                    vm.assetsInAuction = result.items;
                     vm.totalItems = result.totalItems;
                     prevPage = vm.currentPage;
                     if (vm.assetsInAuction.length > 0) {
                         first_id = vm.assetsInAuction[0]._id;
                         last_id = vm.assetsInAuction[vm.assetsInAuction.length - 1]._id;
-                    }*/
-
-
-                    vm.assetsInAuction = [];
-
-                    result.items.forEach(function(x){
-
-                        var auctionfilter ={};
-                        auctionfilter._id = x.dbAuctionId;
-                        AuctionSvc.getAuctionDateData(auctionfilter).then(function(result){
-                          var filter={};
-                          filter.auctionId = result.items[0].auctionId;
-                          filter.assetId =  x.product.assetId;
-                         
-                              LotSvc.getData(filter)
-                              .then(function(res){
-                                if(res.length > 0){
-                                    if(res[0]._id){
-                                        res[0].lotId=res[0]._id;
-                                        delete res[0]._id;
-                                    }
-                                   var c =  extend(x, res[0]);
-
-
-                                   vm.assetsInAuction.push(c);
-                                    
-                                  }else{
-                                    var c = x;
-                                    //console.log("sxsc",c);
-                                    vm.assetsInAuction.push(c);
-                                  }
-                                  
-                               }) 
-                              .catch(function(err){
-              
-                              });
-                          });
-                       });
-
-
-                      // vm.assetsInAuction = result.items;
-                       vm.totalItems = result.totalItems;
-                       prevPage = vm.currentPage;
-                       if (vm.assetsInAuction.length > 0) {
-                           first_id = vm.assetsInAuction[0]._id;
-                           last_id = vm.assetsInAuction[vm.assetsInAuction.length - 1]._id;
-                       }
-                })
+                    }
+                });
         }
 
         function addAssetInAuctionClicked() {
             $scope.isEdit = false;
             $scope.isAssetCollapsed = !$scope.isAssetCollapsed;
             vm.auctionProduct = {};
-            vm.auctionProduct.bidInfo = [{}];
+            $scope.lot.bidIncrement = [{}];
             vm.brandList = [];
             vm.modeList = [];
             if (!$scope.isAssetCollapsed) {
@@ -1552,58 +1473,55 @@
                 });
         }
           
-        function checkForLot(lotNumber,auctionId){
-            var auctionfilter ={};
-            auctionfilter._id = auctionId;
-
-           AuctionSvc.getAuctionDateData(auctionfilter).then(function(result){
-        
-            var filter = {};
+        function checkForLot(lotNumber){
+            $scope.lot = {};
+            if(!lotNumber)
+                return;
+            
+            filter = {};
+            filter.isDeleted = false;
             filter._id = lotNumber;
-            filter.auction_id = result.items[0]._id;
            
-                LotSvc.getData(filter)
-                .then(function(res){
-                  if(res.length > 0){
-                     vm.auctionProduct.lotNo = res[0]._id;
-                     vm.auctionProduct.startingPrice = res[0].startingPrice;
-                     vm.auctionProduct.reservePrice = res[0].reservePrice;
-                     $scope.lotsaved.reservePrice = res[0].reservePrice;
-
-                    if(res[0].startDate && res[0].endDate){
-                        $scope.lotDate = true;
-                        vm.auctionProduct.startDate = moment(res[0].startDate).format('MM/DD/YYYY hh:mm A');
-                        vm.auctionProduct.endDate = moment(res[0].endDate).format('MM/DD/YYYY hh:mm A');
-                    }
-                    vm.auctionProduct.bidInfo = [];
-                    if (res[0].bidIncrement){
-                        var range = Object.keys(res[0].bidIncrement);
-                        Object.keys(res[0].bidIncrement).forEach(function(item,index) {
-                        var arr = item.split('-');
-                        vm.auctionProduct.bidInfo[index] = {bidFrom:arr[0],bidTo:arr[1],bidIncrement:res[0].bidIncrement[item]};
-                        });
-                    }else{
-                        vm.auctionProduct.bidInfo = [{}];
-                    }
-                    $scope.lot._id = res[0]._id;
-
-                    $scope.lotCreation=false;
-
-                    }
-                    else
-                    {
-
-                    $scope.lotCreation=true;
-
-                    }
-                    
-                })
-                .catch(function(err){
-
-                });
+            LotSvc.getData(filter)
+            .then(function(res){
+              if(res.length > 0){
+                angular.copy(res[0], $scope.lot);
+                //$scope.lot.lot_id = lotNumber;
+                if (res[0] && res[0].startDate && res[0].endDate) {
+                  $scope.lot.startDate = moment(res[0].startDate).format('MM/DD/YYYY hh:mm A');
+                  $scope.lot.endDate = moment(res[0].endDate).format('MM/DD/YYYY hh:mm A');
+                }
+                $scope.lot.lot_id = res[0]._id;
+                
+                if (res[0].bidIncrement && res[0].bidIncrement[0] && res[0].bidIncrement.length > 0) {
+                  for (var i = 0; i < res[0].bidIncrement.length; i++) {
+                    if (res[0].bidIncrement[i] && res[0].bidIncrement[i].bidFrom)
+                      res[0].bidIncrement[i].bidFrom = Number(res[0].bidIncrement[i].bidFrom);
+                      res[0].bidIncrement[i].bidTo = Number(res[0].bidIncrement[i].bidTo);
+                      res[0].bidIncrement[i].bidIncrement = Number(res[0].bidIncrement[i].bidIncrement);
+                  }
+                  $scope.lot.rangeIncrement = true;
+                } else {
+                  $scope.lot.rangeIncrement = false;
+                  $scope.lot.bidIncrement = [{}];
+                }
+                if(res[0].static_increment) {
+                  $scope.lot.static_increment = parseInt(res[0].static_increment);
+                  $scope.lot.staticIncrement = true;
+                } else {
+                  $scope.lot.static_increment = "";
+                  $scope.lot.staticIncrement = false;
+                }
+                //$scope.lot._id = res[0]._id;
+                $scope.lotCreation=false;
+                }
+                else
+                {
+                $scope.lotCreation=true;
+                }
+            })
+            .catch(function(err){
             });
-
-
         }
       
         function checkForasset(assetId,auctionId){
@@ -1625,7 +1543,7 @@
             });
         }
 
-    function checkBidIncrement(checkbox,val){
+    /*function checkBidIncrement(checkbox,val){
         if(val == 'static'){
           if(checkbox == true){
             vm.auctionProduct.staticIncrement = true;
@@ -1649,7 +1567,7 @@
           vm.auctionProduct.staticIncrement = false;
           delete vm.auctionProduct.static_increment;
         }
-    }
+    }*/
 
     function deleteDocumentField(id,flag){
       vm.auctionProduct.flag = flag;
@@ -1659,12 +1577,10 @@
       .then(function(){
       Modal.alert('Data updated successfully!');
       if(flag==2){
-          delete vm.auctionProduct.bidIncrement;
-          delete vm.auctionProduct.bidInfo;
-          vm.auctionProduct.bidInfo = [{}];
+          $scope.lot.bidIncrement = [{}];
         }
         if(flag==1){
-          delete vm.auctionProduct.static_increment;
+          delete $scope.lot.static_increment;
         }
       })
       .catch(function(err){
@@ -1674,7 +1590,6 @@
       });
     }         
         function saveAssetInAuction(form) {
-            
             if (form.$invalid) {
                 $scope.submitted = true;
                 return;
@@ -1687,63 +1602,25 @@
                     vm.auctionProduct.endDate = vm.upcomingAuctions[i].endDate;
                 }
             }
-            
+            if($scope.lot) {
+                vm.auctionProduct.lot_id = $scope.lot._id;
+                vm.auctionProduct.lotNumber = $scope.lot.lotNumber;
+            }
+            $rootScope.loading = true;
             AuctionSvc.save(vm.auctionProduct)
                 .then(function(result) {
-                    if (!result.errorCode) {
+                    if (result.errorCode == 0) {
                         $scope.submitted = false;
-                        $scope.isAssetCollapsed = !$scope.isAssetCollapsed;
-                        fireCommand('true', null, "auctionrequest");
-                    } else
-                        Modal.alert(result.message);
-
+                    $scope.isAssetCollapsed = !$scope.isAssetCollapsed;
+                    fireCommand('true', null, "auctionrequest");
+                    }
+                    Modal.alert(result.message);
+                    $rootScope.loading = false;
                 })
                 .catch(function(err) {
-                    console.log(err);
-                    //error handling
-                });
-
-                var auctionfilter ={};
-                auctionfilter._id = vm.auctionProduct.dbAuctionId;
-                AuctionSvc.getAuctionDateData(auctionfilter).then(function(result){
-                    var filter={};
-                    filter.auctionId = result.items[0].auctionId;
-                    filter.assetId =  vm.auctionProduct.product.assetId;
-                   
-                        LotSvc.getData(filter)
-                        .then(function(res){
-                            if(res.length > 0){
-                                Modal.alert("This asset is already assign to this auction.", true);
-                                return;
-                            }
-                            else
-                            {
-                                $scope.lotsaved.assetId   = vm.auctionProduct.product.assetId;
-                                $scope.lotsaved.assetDesc = vm.auctionProduct.product.description;
-                                $scope.lotsaved.auctionId = result.items[0].auctionId;
-                                $scope.lotsaved.lotNumber = vm.auctionProduct.lotNo;
-                                $scope.lotsaved.userId = Auth.getCurrentUser()._id;
-                                $scope.lotsaved.startingPrice = vm.auctionProduct.startingPrice;
-                                $scope.lotsaved.startDate= vm.auctionProduct.startDate;
-                                $scope.lotsaved.endDate = vm.auctionProduct.endDate;
-                                $scope.lotsaved.reservePrice = vm.auctionProduct.reservePrice;
-                                $scope.lotsaved.primaryImg = vm.auctionProduct.product.primaryImg;
-    			$scope.lotsaved.static_increment = vm.auctionProduct.static_increment;                               
-    				$scope.bidIncrementObj = {};
-                                vm.auctionProduct.bidInfo.forEach(function(item) {
-                                    var range = item.bidFrom+"-"+item.bidTo;
-                                    $scope.bidIncrementObj[range] = item.bidIncrement;
-                                });
-                                $scope.lotsaved.bidIncrement = '';
-                                $scope.lotsaved.bidIncrement = $scope.bidIncrementObj;
-                                LotSvc.saveLot($scope.lotsaved)
-                                .then(function(result){
-                                  //console.log("result",result);
-                                });
-                            } 
-                        })
-                        .catch(function(err){
-                        });
+                    if(err && err.data)
+                      Modal.alert(err.data);
+                    $rootScope.loading = false;
                 });
         }
 
@@ -1756,52 +1633,48 @@
             angular.copy(assetInAuct, vm.auctionProduct);
             onCategoryChange(vm.auctionProduct.product.category, false);
             onBrandChange(vm.auctionProduct.product.brand, false);
-            LotData();
+            //LotData();
+            onAuctionSelection(vm.auctionProduct.dbAuctionId);
+            checkForLot(vm.auctionProduct.lot_id)
         }
 
-        function LotData(){
+        /*function LotData(){
           var auctionfilter ={};
           auctionfilter._id = vm.auctionProduct.dbAuctionId;
-
            AuctionSvc.getAuctionDateData(auctionfilter).then(function(result){
             var filter={};
             filter.auctionId = result.items[0].auctionId;
             filter.assetId =  vm.auctionProduct.product.assetId;
-           
                 LotSvc.getData(filter)
                 .then(function(res){
                   if(res.length > 0){
-                     vm.auctionProduct.lotNo = res[0].lotNumber;
-                     vm.auctionProduct.startingPrice = res[0].startingPrice;
-                     vm.auctionProduct.reservePrice = res[0].reservePrice;
-                     $scope.lotsaved.reservePrice = res[0].reservePrice;
-    	     $scope.lotsaved.static_increment = res[0].static_increment;
-                    if(res[0].startDate && res[0].endDate){
-                            $scope.lotDate = true;
-                            vm.auctionProduct.startDate = res[0].startDate;
-                            vm.auctionProduct.endDate = res[0].endDate;
-                        }
-                        if(res[0].static_increment){
-                            vm.auctionProduct.staticIncrement = true;
-                        }else{
-                            vm.auctionProduct.staticIncrement = false;
-                        }
-                        if(res[0].bidIncrement){
-                            vm.auctionProduct.rangeIncrement = true;
-                        }else{
-                            vm.auctionProduct.rangeIncrement = false;
-                        }
-                    vm.auctionProduct.bidInfo = [];
-                    if (res[0].bidIncrement){
-                        var range = Object.keys(res[0].bidIncrement);
-                        Object.keys(res[0].bidIncrement).forEach(function(item,index) {
-                        var arr = item.split('-');
-                        vm.auctionProduct.bidInfo[index] = {bidFrom:arr[0],bidTo:arr[1],bidIncrement:res[0].bidIncrement[item]};
-                        });
-                    }else{
-                        vm.auctionProduct.bidInfo = [{}];
+                    angular.copy(res[0], $scope.lot);
+                    //$scope.lot.lot_id = lotNumber;
+                    if (res[0] && res[0].startDate && res[0].endDate) {
+                      $scope.lot.startDate = moment(res[0].startDate).format('MM/DD/YYYY hh:mm A');
+                      $scope.lot.endDate = moment(res[0].endDate).format('MM/DD/YYYY hh:mm A');
                     }
-                        $scope.lot._id = res[0]._id;
+                    $scope.lot.lot_id = res[0]._id;
+                    
+                    if (res[0].bidIncrement && res[0].bidIncrement[0] && res[0].bidIncrement.length > 0) {
+                      for (var i = 0; i < res[0].bidIncrement.length; i++) {
+                        if (res[0].bidIncrement[i] && res[0].bidIncrement[i].bidFrom)
+                          res[0].bidIncrement[i].bidFrom = Number(res[0].bidIncrement[i].bidFrom);
+                          res[0].bidIncrement[i].bidTo = Number(res[0].bidIncrement[i].bidTo);
+                          res[0].bidIncrement[i].bidIncrement = Number(res[0].bidIncrement[i].bidIncrement);
+                      }
+                      $scope.lot.rangeIncrement = true;
+                    } else {
+                      $scope.lot.rangeIncrement = false;
+                      $scope.lot.bidIncrement = [{}];
+                    }
+                    if(res[0].static_increment) {
+                      $scope.lot.static_increment = parseInt(res[0].static_increment);
+                      $scope.lot.staticIncrement = true;
+                    } else {
+                      $scope.lot.static_increment = "";
+                      $scope.lot.staticIncrement = false;
+                    }
                         $scope.lotCreation=false;
                     }
                     else
@@ -1813,7 +1686,7 @@
                 .catch(function(err){
                 });
             });
-        }
+        }*/
 
         function updateAssetInAuction(form) {
             if (form.$invalid) {
@@ -1828,77 +1701,28 @@
                     vm.auctionProduct.endDate = vm.upcomingAuctions[i].endDate;
                 }
             }
+
+            if($scope.lot){
+                vm.auctionProduct.lot_id = $scope.lot._id;
+                vm.auctionProduct.lotNumber = $scope.lot.lotNumber;
+            }
             console.log("the auction Data",vm.auctionProduct);
+            $rootScope.loading = true;
             AuctionSvc.update(vm.auctionProduct)
                 .then(function(result) {
-                    if (!result.errorCode) {
+                    if (result.errorCode == 0) {
                         $scope.submitted = false;
-                        $scope.isAssetCollapsed = true;
-                        console.log("auctionData",vm.auctionProduct);
-                        fireCommand('true', null, "auctionrequest");
-                    } else{
-                        Modal.alert(result.message);
+                    $scope.isAssetCollapsed = true;
+                    fireCommand('true', null, "auctionrequest");
                     }
+                    Modal.alert(result.message);
+                    $rootScope.loading = false;
                 })
                 .catch(function(err) {
-                    console.log(err);
-                    //error handling
+                    if(err && err.data)
+                        Modal.alert(err.data); 
+                    $rootScope.loading = false;
                 });
-                var auctionfilter ={};
-                auctionfilter._id = vm.auctionProduct.dbAuctionId;
-           AuctionSvc.getAuctionDateData(auctionfilter).then(function(result){
-                if($scope.lotCreation){
-                    $scope.lotsaved.assetId   = vm.auctionProduct.product.assetId;
-                    $scope.lotsaved.assetDesc = vm.auctionProduct.product.description;
-                    $scope.lotsaved.auctionId = result.items[0].auctionId;
-                    $scope.lotsaved.lotNumber = vm.auctionProduct.lotNo;
-                    $scope.lotsaved.userId = Auth.getCurrentUser()._id;
-                    $scope.lotsaved.startingPrice = vm.auctionProduct.startingPrice;
-                    $scope.lotsaved.startDate= vm.auctionProduct.startDate;
-                    $scope.lotsaved.endDate = vm.auctionProduct.endDate;
-                    $scope.lotsaved.reservePrice = vm.auctionProduct.reservePrice;
-                    $scope.lotsaved.primaryImg = vm.auctionProduct.product.primaryImg;
-        			$scope.lotsaved.static_increment = vm.auctionProduct.static_increment;                    
-            			//$scope.lotsaved._id =  $scope.lot._id;
-                    //bid
-                    //vm.auctionProduct.bidInfo = [];
-                    $scope.bidIncrementObj = {};
-                    vm.auctionProduct.bidInfo.forEach(function(item) {
-                        var range = item.bidFrom+"-"+item.bidTo;
-                        $scope.bidIncrementObj[range] = item.bidIncrement;
-                     });
-                    $scope.lotsaved.bidIncrement = '';
-                    $scope.lotsaved.bidIncrement = $scope.bidIncrementObj;
-                    LotSvc.saveLot($scope.lotsaved)
-                    .then(function(result){
-                    });
-                }else{
-                    $scope.lotsaved.assetId   = vm.auctionProduct.product.assetId;
-                    $scope.lotsaved.assetDesc = vm.auctionProduct.product.description;
-                    $scope.lotsaved.auctionId = result.items[0].auctionId;
-                    $scope.lotsaved.lotNumber = vm.auctionProduct.lotNo;
-                    $scope.lotsaved.userId = Auth.getCurrentUser()._id;
-                    $scope.lotsaved.startingPrice = vm.auctionProduct.startingPrice;
-                    $scope.lotsaved.startDate= vm.auctionProduct.startDate;
-                    $scope.lotsaved.endDate = vm.auctionProduct.endDate;
-                    $scope.lotsaved.reservePrice = vm.auctionProduct.reservePrice;
-                    $scope.lotsaved._id =  $scope.lot._id;
-                    $scope.lotsaved.primaryImg = vm.auctionProduct.product.primaryImg;
-        			$scope.lotsaved.static_increment = vm.auctionProduct.static_increment;                        
-        			//bid
-                    //vm.auctionProduct.bidInfo = [];
-                    $scope.bidIncrementObj = {};
-                    vm.auctionProduct.bidInfo.forEach(function(item) {
-                        var range = item.bidFrom+"-"+item.bidTo;
-                        $scope.bidIncrementObj[range] = item.bidIncrement;
-                    });
-                    $scope.lotsaved.bidIncrement = '';
-                    $scope.lotsaved.bidIncrement = $scope.bidIncrementObj;
-                    LotSvc.updateProductLot($scope.lotsaved)
-                    .then(function(result){
-                    });
-                }
-             });
         }
 
         function deleteAssetFromAuction(auct) {
@@ -1909,6 +1733,23 @@
                     deleteFn(auct);
             });
         }
+
+        function reSendReqToCreateAsset(lotData) {
+            $rootScope.loading = true;
+            AuctionSvc.reSendReqToCreateAsset(lotData)
+              .then(function(res) {
+                  if (res.errorCode == 0) {
+                    fireCommand('true', null, "auctionrequest");
+                  }
+                  Modal.alert(res.message);
+                  $rootScope.loading = false;
+              })
+              .catch(function(err){
+                if(err)
+                  Modal.alert(err.data);
+                $rootScope.loading = false;
+              });
+          }
 
         function addTechnicalInfoClicked() {
             $scope.isEdit = false;
@@ -1921,9 +1762,7 @@
             if (!$scope.isTechCollapsed) {
                 vm.techInformation.information = {};
             }
-
         }
-
 
         function getProductTechInfo(filter) {
             var countFilter = {
@@ -2134,8 +1973,10 @@
         }
 
         function deleteFn(auct) {
-            AuctionSvc.delAuction(auct)
+            auct.isDeleted = true;
+            AuctionSvc.update(auct)
                 .then(function(res) {
+                    Modal.alert("Asset Deleted", true);
                     fireCommand(true, null, 'auctionrequest');
                 });
         }

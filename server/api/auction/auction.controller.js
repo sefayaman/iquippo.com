@@ -177,7 +177,6 @@ function _create(data, cb) {
 
 // Creates a new valuation in the DB.
 exports.create = function(req, res, next) {
-
   var assetIdExist = false;
   if (!req.body.product.assetId)
     return next(new ApiError(400, "Asset Id is mandatory"));
@@ -222,10 +221,9 @@ exports.create = function(req, res, next) {
       req.body.createdAt = new Date();
       req.body.updatedAt = new Date();
       AuctionRequest.create(req.body, function(err, auction) {
-        return res.status(201).json({
-          errorCode: 0,
-          message: "Success."
-        });
+        //return res.status(201).json({errorCode: 0,message: "Success."});
+        req.body._id = auction._id;
+        postRequestAsset(req, res);
       });
 
     })
@@ -233,6 +231,69 @@ exports.create = function(req, res, next) {
       return handleError(res, err);
     })
 }
+      
+  function postRequestAsset(req, res){
+    var options = {};
+    AuctionRequest.find({
+        _id: req.body._id
+      }, function(err, proResult) {
+        options.dataToSend ={};
+        if(req.body.isDeleted)
+          options.dataToSend.isDeleted = true;
+        options.dataToSend._id = req.body._id;
+        options.dataToSend.assetId = req.body.product.assetId;
+        options.dataToSend.assetDesc = req.body.product.description;
+        options.dataToSend.auction_id = req.body.dbAuctionId;
+        options.dataToSend.auctionId = req.body.auctionId;
+        options.dataToSend.lot_id = req.body.lot_id;
+        options.dataToSend.assetDir = req.body.product.assetDir;
+        options.dataToSend.primaryImg = config.awsUrl + config.awsBucket + "/assets/uploads/" + req.body.product.assetDir + "/" + req.body.product.primaryImg;
+        if(req.body.product.otherImages) {
+          options.dataToSend.images = [];
+          for (var i=0; i < req.body.product.otherImages.length; i++) {
+            options.dataToSend.images[options.dataToSend.images.length] = config.awsUrl + config.awsBucket + "/assets/uploads/" + req.body.product.assetDir + "/" + req.body.product.otherImages[i];
+          }
+        }
+        
+        options.dataToSend.seller = {};
+        options.dataToSend.seller.contactNumber = req.body.product.contactNumber;
+        options.dataToSend.seller.contactName = req.body.product.contactName;
+        options.dataType = "assetData";
+        
+        Utility.sendCompiledData(options, function(err, result) {
+          if (err || (result && result.err)) {
+            options.dataToSend.reqSubmitStatus = ReqSubmitStatuses[1];
+            updateAsset(options.dataToSend);
+            if(result && result.err)
+                return res.status(412).send(result.err);
+            return res.status(412).send("Unable to post asset request. Please contact support team.");
+          }
+          if(result){
+            options.dataToSend.reqSubmitStatus = ReqSubmitStatuses[0];
+            updateAsset(options.dataToSend);
+            if(req.body.isDeleted)
+              return res.status(201).json({errorCode: 0,message: "Asset deleted successfully !!!"});
+            else if(req.isUpdate)
+              return res.status(201).json({errorCode: 0,message: "Asset request updated successfully  !!!"});
+            else
+              return res.status(201).json({errorCode: 0,message: "Asset request submitted successfully !!!"});
+          }
+        });
+      });
+  }
+
+  function updateAsset(assetReq){
+    var id = assetReq._id;
+    delete assetReq._id;
+    AuctionRequest.update({_id:id},{$set:assetReq},function(err,retVal){
+      if (err) { console.log("Error with updating auction request");}
+    console.log("Asset updated Updated");
+    });
+  }
+
+  exports.reSendReqToCreateAsset=function(req,res){
+    postRequestAsset(req, res);
+  };
 
 function validateData(data) {
   var manadatoryParams = ['auctionId', 'lotNo', 'assetId', 'category', 'brand', 'model'];
@@ -450,7 +511,7 @@ exports.getOnFilter = function(req, res) {
   var filter = {};
 
   var orFilter = [];
-
+  filter.isDeleted=false;
   if (req.body.searchStr) {
 
     var term = new RegExp(req.body.searchStr, 'i');
@@ -649,7 +710,11 @@ exports.update = function(req, res) {
       }
       if (!req.body.external && req.body.product.isSold)
         updateProduct(req.body);
-      return res.status(200).json(req.body)
+      
+      req.body._id = req.params.id;
+      req.isUpdate = true;
+      postRequestAsset(req, res);
+      //return res.status(200).json(req.body)
     });
   });
 };

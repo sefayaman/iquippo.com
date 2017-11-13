@@ -107,7 +107,7 @@ function LotCtrl($scope, $rootScope, $state,Modal,Auth,PagerSvc,$filter,AuctionS
         $rootScope.loading = false;
       })
       .catch(function(err){
-        if(err)
+        if(err && err.data)
           Modal.alert(err.data);
         $rootScope.loading = false;
         resetLotData(); 
@@ -151,7 +151,7 @@ function LotCtrl($scope, $rootScope, $state,Modal,Auth,PagerSvc,$filter,AuctionS
       $rootScope.loading = false;
     })
     .catch(function(err){
-      if(err.data)
+      if(err && err.data)
         Modal.alert(err.data); 
       $rootScope.loading = false;
     });
@@ -175,7 +175,7 @@ function LotCtrl($scope, $rootScope, $state,Modal,Auth,PagerSvc,$filter,AuctionS
         vm.dataModel.bidIncrement = [{}];
       }else{
         vm.dataModel.rangeIncrement = false;
-        if(vm.dataModel.bidInfo[0].bidFrom)
+        if(vm.dataModel.bidIncrement[0].bidFrom)
           deleteDocumentField(vm.dataModel._id,2);
       }
       vm.dataModel.staticIncrement = false;

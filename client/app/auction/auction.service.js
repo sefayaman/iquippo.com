@@ -29,6 +29,7 @@ function AuctionSvc($http,$q,notificationSvc,Auth,$httpParamSerializer){
   svc.checkForAsset=checkForAsset; 
   svc.getAuctionInfoForProduct = getAuctionInfoForProduct;
   svc.sendUserToAs=sendUserToAs;
+  svc.reSendReqToCreateAsset = reSendReqToCreateAsset;
 
   function getAll(){
         return $http.get(path)
@@ -51,15 +52,15 @@ function AuctionSvc($http,$q,notificationSvc,Auth,$httpParamSerializer){
    });
  }
 
-function sendUserToAs(user){
- return $http.post(path+"/sendusertoas/asset",user)
-.then(function(res){
-return res.data;
-})
-.catch(function(err){
-throw err;
-});
- }
+  function sendUserToAs(user){
+   return $http.post(path+"/sendusertoas/asset",user)
+  .then(function(res){
+  return res.data;
+  })
+  .catch(function(err){
+  throw err;
+  });
+   }
 
     function getOnFilter(data) {
       return $http.post(path + "/onfilter", data)
@@ -67,6 +68,16 @@ throw err;
           return res.data
         })
         .catch(function(err) {
+          throw err
+        })
+    }
+
+    function reSendReqToCreateAsset(data){
+        return $http.post(path + "/sendreqtocreateasset",data)
+        .then(function(res){
+          return res.data;
+        })
+        .catch(function(err){
           throw err
         })
     }

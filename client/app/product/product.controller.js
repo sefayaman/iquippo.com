@@ -1350,8 +1350,10 @@
           break;
         }
       }
-      if($scope.lot.lot_id)
+      if($scope.lot.lot_id) {
         $scope.auctionReq.lot_id = $scope.lot.lot_id;
+        $scope.auctionReq.lotNumber = $scope.lot.lotNumber;
+      }
       
       if ($scope.valuationReq.valuate) {
         createValuationRequest(productObj, "Listing in auction");

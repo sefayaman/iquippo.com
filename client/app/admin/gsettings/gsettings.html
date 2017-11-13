@@ -648,10 +648,10 @@
 						</select>
 						<i class="caret"></i>
 					</div>
-					<div class="col-sm-3 form-group" ng-class="{'has-error' : assetAuctionForm.lotNo.$invalid && submitted}">
-						<select class="form-control" name="lotNo" ng-model="gsettingVm.auctionProduct.lotNo" ng-change="checkForLot(gsettingVm.auctionProduct.lotNo,gsettingVm.auctionProduct.dbAuctionId)">
-                        <option value="">Select Lot</option>
-                        <option  ng-repeat="lot in lots" value="{{lot._id}}">{{lot.lotNumber}}</option>
+					<div class="col-sm-3 form-group" ng-class="{'has-error' : assetAuctionForm.lot_id.$invalid && submitted}">
+						<select class="form-control" name="lot_id" ng-model="lot.lot_id" ng-change="checkForLot(lot.lot_id)">
+                        <option value="">*Select Lot</option>
+                        <option ng-repeat="lot in lots" value="{{lot._id}}">{{lot.lotNumber}}</option>
                         </select>
                         <i class="caret"></i>
 					</div>
@@ -676,16 +676,16 @@
 				</div>
 				<div class="row">
 					<div class="col-sm-3 form-group">
-						<input class="form-control" name="startDate" ng-model="gsettingVm.auctionProduct.startDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="Start Date" />
+						<input class="form-control" name="startDate" ng-model="lot.startDate" datetime-picker readonly date-format="MM/dd/yyyy hh:mm a" date-only placeholder="Start Date" disabled/>
 					</div>
 					<div class="col-sm-3 form-group">
-						<input class="form-control" name="endDate" ng-model="gsettingVm.auctionProduct.endDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="End Date" />
+						<input class="form-control" name="endDate" ng-model="lot.endDate" datetime-picker readonly date-format="MM/dd/yyyy hh:mm a" date-only placeholder="End Date" disabled/>
 					</div>
 					<div class="col-sm-3 form-group">
-						<input type="text" class="form-control" name="startingPrice" value="" ng-model="gsettingVm.auctionProduct.startingPrice" placeholder="Starting Price">
+						<input type="text" class="form-control" name="startingPrice" value="" ng-model="lot.startingPrice" placeholder="Starting Price" disabled>
 					</div>
 					<div class="col-sm-3 form-group">
-						<input type="text" class="form-control" name="reservePrice" value="" ng-model="gsettingVm.auctionProduct.reservePrice" placeholder="Reserve Price">
+						<input type="text" class="form-control" name="reservePrice" value="" ng-model="lot.reservePrice" placeholder="Reserve Price" disabled>
 					</div>
 				</div>
 				<div class="row">
@@ -788,48 +788,40 @@
 							<div class="col-sm-3 form-group">	
 								<div class="row">
 								<div class="col-xs-6 ">
-									<input type="checkbox" name="staticIncrement" ng-model="gsettingVm.auctionProduct.staticIncrement" ng-change ="gsettingVm.checkBidIncrement(gsettingVm.auctionProduct.staticIncrement,'static')" ng-value="Static"> Static
+									<input type="checkbox" name="staticIncrement" ng-model="lot.staticIncrement" ng-change ="gsettingVm.checkBidIncrement(lot.staticIncrement,'static')" ng-value="Static" disabled> Static
 								</div>
 								<div class="col-xs-6">
-									<input type="checkbox" name="rangeIncrement" ng-model="gsettingVm.auctionProduct.rangeIncrement" ng-change ="gsettingVm.checkBidIncrement(gsettingVm.auctionProduct.rangeIncrement,'bid')" ng-value="Range"> Bid Range
+									<input type="checkbox" name="rangeIncrement" ng-model="lot.rangeIncrement" ng-change ="gsettingVm.checkBidIncrement(lot.rangeIncrement,'bid')" ng-value="Range" disabled> Bid Range
 								</div>
-						</div>								
-								<!--<div class="row">
-									<div class="col-xs-6 ">
-										<input type="checkbox" name="increment" ng-model="gsettingVm.auctionData.increment" value="Static"> Static
-									</div>
-									<div class="col-xs-6">
-										<input type="checkbox" name="increment" ng-model="gsettingVm.auctionData.increment" value="Range"> Bid Range
-									</div>
-								</div>-->
+								</div>
 							</div>								
 						</div>
-						<div ng-if="gsettingVm.auctionProduct.staticIncrement == true">
+						<div ng-if="lot.staticIncrement">
 							<legend></legend>
 							<h5>Bid Static Increment</h5>
 							<div class="row">
 								<div class="col-sm-3 form-group">										
-									<input type="text" class="form-control" ng-model="gsettingVm.auctionProduct.static_increment" name="" value="" placeholder="Bid Increment">
+									<input type="number" class="form-control" ng-model="lot.static_increment" name="static_increment" placeholder="Bid Increment" disabled>
 								</div>
 							</div>
 						</div>
-						<div ng-if="gsettingVm.auctionProduct.rangeIncrement == true">
+						<div ng-if="lot.rangeIncrement">
 							<legend></legend>
 							<h5>Bid Range Increment</h5>
-							<div class="row" ng-repeat="bidinfo in gsettingVm.auctionProduct.bidInfo">
+							<div class="row" ng-repeat="bidinfo in lot.bidIncrement">
 								<div class="col-sm-3 form-group">
-									<input type="text" class="form-control"  ng-model="bidinfo.bidFrom" name="" value="" placeholder="Bid From">
-								</div>
-								<div class="col-sm-3 form-group">
-									<input type="text" class="form-control" ng-model="bidinfo.bidTo" name="" value="" placeholder="Bid To">
+									<input type="number" class="form-control" ng-model="bidinfo.bidFrom" name="bidFrom" placeholder="Bid From" disabled>
 								</div>
 								<div class="col-sm-3 form-group">
-									<input type="text" class="form-control" ng-model="bidinfo.bidIncrement" name="" value="" placeholder="Increment">
+									<input type="number" class="form-control" ng-model="bidinfo.bidTo" name="bidTo" placeholder="Bid To" disabled>
 								</div>
-								<div class="col-sm-3 form-group ">
-									<button type="button" class="btn btn-default" ng-click="gsettingVm.auctionProduct.bidInfo.push({})" ng-if="$last">Add More</button>
-									<button type="button" class="btn btn-default" ng-click="gsettingVm.auctionProduct.bidInfo.splice($index,1)" ng-if="!$last">Delete</button>
+								<div class="col-sm-3 form-group">
+									<input type="number" class="form-control" ng-model="bidinfo.bidIncrement" name="bidIncrement" placeholder="Increment" disabled>
 								</div>
+								<!-- <div class="col-sm-3 form-group ">
+									<button type="button" class="btn btn-default" ng-click="lot.bidIncrement.push({})" ng-if="$last">Add More</button>
+									<button type="button" class="btn btn-default" ng-click="lot.bidIncrement.splice($index,1)" ng-if="!$last">Delete</button>
+								</div> -->
 								
 							</div>
 						</div>
@@ -910,7 +902,8 @@
 						<td>{{auct.product.saleVal}}</td>
 						<td>
 							<a ng-disabled="auct.product.isSold" class="btn btn-primary btn-md" href="javascript:void(0);" ng-click=""><i class="fa fa-pencil" ng-click="gsettingVm.editAssetInAuctionClicked(auct)"></i> </a>
-							<a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deleteAssetFromAuction(auct._id)"><i class="fa fa-trash"></i> </a>
+							<a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deleteAssetFromAuction(auct)"><i class="fa fa-trash"></i> </a>
+							<a class="btn btn-info btn-md" href="javascript:void(0);" ng-click="gsettingVm.reSendReqToCreateAsset(auct)" uib-popover="Resubmit" ng-if="auct.reqSubmitStatus == ReqSubmitStatuses[1] && auct.external"><i class="fa fa-repeat"></i> </a>
 						</td>
 					</tr>
 				</tbody>
