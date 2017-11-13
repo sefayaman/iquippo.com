@@ -36,6 +36,12 @@ angular.module('sreizaoApp')
         templateUrl: 'app/account/signup/signup-new.html',
         controller: 'SignupCtrl as signupVm',
         layout:'client'
+      }) 
+      .state('forgotpassword', {
+        url: '/forgotpassword',
+        templateUrl: 'app/account/forgotpassword/forgotpassword.html',
+        controller: 'ForgotPasswordCtrl as ForgotPasswordVm',
+        layout:'client'
       })  
       .state('contactus', {
         url: '/contactus',
