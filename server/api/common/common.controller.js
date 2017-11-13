@@ -57,7 +57,6 @@ exports.sendOtp = function(req, res) {
 	async.parallel([sendOtpOnMobile,sendOtpOnEmail],function(err){
 		if(err)
 			return handleError(res, "Unable to send otp.Please contact suppport team.");
-		console.log("@@@@@@@@@@",otp);
 		var sendOtpToClient = req.body.sendToClient == 'y' ? true : false;
 		if(sendOtpToClient)
 			return res.status(200).send("" + req.otp);
@@ -80,9 +79,9 @@ exports.sendOtp = function(req, res) {
 	});
 
 	function sendOtpOnMobile(cb){
-		var ret = true;
+		/*var ret = true;
 		if(!req.body.mobile || ret)
-			return cb();
+			return cb();*/
 
 		var smsData = {};
 		smsData.subject = 'OTP Message';
@@ -97,9 +96,9 @@ exports.sendOtp = function(req, res) {
 	}
 
 	function sendOtpOnEmail(cb){
-		var ret = true;
+		/*var ret = true;
 		if(!req.body.email || ret)
-			return cb()
+			return cb()*/
 		var emailData = {};
 		emailData.to = req.body.email;
 		emailData.subject = 'OTP Message';

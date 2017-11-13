@@ -1,10 +1,10 @@
 <div class="container-fluid">
-  <ol class="breadcrumb">
+  <!-- <ol class="breadcrumb">
     <li>
       <a href="/main">Home</a>
     </li>
     <li class="active">Used Equipments</li>
-  </ol>
+  </ol> -->
 </div>
 
 <section class="category-block">
@@ -16,181 +16,188 @@
         </h4>
       </div>
       <div class="col-sm-9 information-tabs">
-        <h3>Congratulations! Your account has been created successfully.</h3>
-        <!-- Details in brif -->
-        <div class="row form-group">
-          <div class="col-sm-3">
-            <div class="profilePic-button">
-              <img class="media-object img-rounded" ng-if="myAccountVm.userInfo.imgsrc" ng-src="{{uploadImagePrefix}}{{avatarDir}}/{{myAccountVm.userInfo.imgsrc}}" alt="Image">
-              <img class="media-object img-rounded" ng-if="!myAccountVm.userInfo.imgsrc" src="assets/images/profile.png" alt="Image">
-              <span class="btn btn-default fileinput-button">
-                <input type="file" name="file" onchange="angular.element(this).scope().updateAvatar(this.files,this)"  class="ng-scope">
-                <span><i class="fa fa-camera"></i></span>
-              </span>
+        <h3 ng-if="isNew">Congratulations! Your account has been created successfully.</h3>
+          <!-- Details in brif -->
+          <div class="row form-group">
+            <div class="col-sm-3">
+              <div class="profilePic-button">
+                <img class="media-object img-rounded" ng-if="getCurrentUser().imgsrc" ng-src="{{uploadImagePrefix}}{{avatarDir}}/{{getCurrentUser().imgsrc}}" alt="Image">
+                <img class="media-object img-rounded" ng-if="!getCurrentUser().imgsrc" src="assets/images/profile.png" alt="Image">
+                <span class="btn btn-default fileinput-button">
+                  <input type="file" name="file" onchange="angular.element(this).scope().updateAvatar(this.files,this)"  class="ng-scope">
+                  <span><i class="fa fa-camera"></i></span>
+                </span>
+              </div>
             </div>
-          </div>
-          <div class="col-sm-9">
-            <h4>
-              Personal Information
+            <form name="basicForm">
 
+            <div class="col-sm-9">
+              <h4>
+                Personal Information
+
+                <a href="javascript:void(0);" class="pull-right" ng-click="myAccountVm.editClicked('editBasicInfo')"> 
+                  <small><i class="fa fa-pencil"></i> Edit details</small> 
+                </a>
+              </h4>
+              <legend></legend>
+
+              <div class="row">
+                  <div class="col-sm-6 form-group">
+                    <div class="floating-label-wrapper" ng-class="{'has-error':basicForm.fname.$invalid && submitted}">
+                      <label for="fname">First Name</label>
+                      <input type="text" class="form-control" id="fname" name="fname" placeholder="First Name" ng-model="myAccountVm.userInfo.fname" ng-disabled="!myAccountVm.editBasicInfo" with-floating-label required>
+                    </div>
+                  </div>
+                  <div class="col-sm-6 form-group">
+                     <div class="floating-label-wrapper" ng-class="{'has-error':basicForm.lname.$invalid && submitted}">
+                      <label for="lname">Last Name</label>
+                      <input type="text" class="form-control" id="lname" name="lname" ng-disabled="!myAccountVm.editBasicInfo" placeholder="Last Name" ng-model="myAccountVm.userInfo.lname"  with-floating-label required>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-6 form-group">
+                    <div class="floating-label-wrapper">
+                      <label for="email">Enter Email</label>
+                      <input type="email" class="form-control" id="email" placeholder="Enter Email" ng-model="myAccountVm.userInfo.email"  with-floating-label ng-disabled="!myAccountVm.editBasicInfo">
+                    </div>
+                  </div>
+                  <div class="col-sm-6 form-group">
+                     <div class="floating-label-wrapper" ng-class="{'has-error':basicForm.mobile.$invalid && submitted}">
+                      <label for="mobile">Mobile Number</label>
+                      <input type="text" class="form-control" id="mobile" name="mobile" placeholder="Mobile Number" ng-model="myAccountVm.userInfo.mobile"  with-floating-label ng-disabled="myAccountVm.userInfo.mobile" required>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-6 form-group">
+                    <div class="floating-label-wrapper" ng-class="{'has-error':basicForm.country.$invalid && submitted}">
+                      <select class="form-control" name="country" ng-model="myAccountVm.userInfo.country" ng-disabled="!myAccountVm.editBasicInfo" required>
+                        <option value="">Country</option>
+                        <option value="{{country.name}}" ng-repeat ="country in allCountries | orderBy:'name'">{{country.name}}</option>
+                      </select>
+                    </div>
+                  </div>                
+                  <div class="col-sm-6 form-group">
+                     <div class="floating-label-wrapper" ng-class="{'has-error':basicForm.state.$invalid && submitted}">
+                      <select class="form-control" name="state" ng-model="myAccountVm.userInfo.state" ng-disabled="!myAccountVm.editBasicInfo" required>
+                        <option value="">State</option>
+                        <option value="{{state.name}}" ng-repeat="state in stateList">{{state.name}}</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-6 form-group">
+                    <div class="floating-label-wrapper" ng-class="{'has-error':basicForm.city.$invalid && submitted}">
+                      <select class="form-control" name="city" ng-model="myAccountVm.userInfo.city" ng-disabled="!myAccountVm.editBasicInfo" required>
+                        <option value="">City</option>
+                        <option value="{{location.name}}" ng-repeat="location in locationList">{{location.name}}</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+            </div>
+            </form>
+          </div>
+          
+          <!-- Additional info -->
+          <form name="professionForm">
+            <div class="category-block">
+              <h4>Additional Information
+                <a href="javascript:void(0);" class="pull-right" ng-click="myAccountVm.editClicked('editProfessionalInfo')"> 
+                  <small><i class="fa fa-pencil"></i> Edit details</small> 
+                </a>
+              </h4>
+              <legend></legend>
+              <div class="row">
+                <div class="col-sm-3 form-group">
+                  <div class="floating-label-wrapper">
+                    <label for="profession">Profession</label>
+                    <input type="text" class="form-control" id="profession" placeholder="Profession" ng-model="myAccountVm.userInfo.profession"  ng-disabled="!myAccountVm.editProfessionalInfo" with-floating-label>
+                  </div>
+                </div>
+                <div class="col-sm-3 form-group">
+                   <div class="floating-label-wrapper">
+                    <label for="jprofile">Job Profile</label>
+                    <input type="text" class="form-control" id="jprofile" placeholder="Job Profile" ng-model="myAccountVm.userInfo.jobProfile"  ng-disabled="!myAccountVm.editProfessionalInfo" with-floating-label>
+                  </div>
+                </div>
+                <div class="col-sm-3 form-group">
+                  <div class="floating-label-wrapper">
+                    <label for="pan">PAN Number</label>
+                    <input type="text" class="form-control" id="pan" placeholder="PAN Number" ng-model="myAccountVm.userInfo.panNumber" ng-disabled="!myAccountVm.editProfessionalInfo" with-floating-label>
+                  </div>
+                </div>
+                <div class="col-sm-3 form-group">
+                   <div class="floating-label-wrapper">
+                    <label for="aadhaar">AADHAAR Number</label>
+                    <input type="text" class="form-control" id="aadhaar" name="aadhaarNumber" placeholder="AADHAAR Number" ng-model="myAccountVm.userInfo.aadhaarNumber" ng-disabled="!myAccountVm.editProfessionalInfo" uib-tooltip="9999 9999 9999" tooltip-trigger="focus" ng-keyup="myAccountVm.validateAadhaar(myAccountVm.userInfo.aadhaarNumber)"
+                          tooltip-placement="top" with-floating-label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+          <!-- <div class="category-block">
+            <h4>Address Information
               <a href="javascript:void(0);" class="pull-right"> 
                 <small><i class="fa fa-pencil"></i> Edit details</small> 
               </a>
             </h4>
             <legend></legend>
-
             <div class="row">
-                <div class="col-sm-6 form-group">
-                  <div class="floating-label-wrapper">
-                    <label for="fname">First Name</label>
-                    <input type="text" class="form-control" id="fname" placeholder="First Name" ng-model="user.fname"  with-floating-label>
-                  </div>
-                </div>
-                <div class="col-sm-6 form-group">
-                   <div class="floating-label-wrapper">
-                    <label for="lname">Last Name</label>
-                    <input type="text" class="form-control" id="lname" placeholder="Last Name" ng-model="user.lname"  with-floating-label>
-                  </div>
+              <div class="col-sm-4 form-group">
+                <div class="floating-label-wrapper">
+                  <label for="houseno">House No./Block</label>
+                  <input type="text" class="form-control" id="houseno" placeholder="House No./Block" ng-model="user.houseno"  with-floating-label>
                 </div>
               </div>
-              <div class="row">
-                <div class="col-sm-6 form-group">
-                  <div class="floating-label-wrapper">
-                    <label for="email">Enter Email</label>
-                    <input type="text" class="form-control" id="email" placeholder="Enter Email" ng-model="user.email"  with-floating-label>
-                  </div>
-                </div>
-                <div class="col-sm-6 form-group">
-                   <div class="floating-label-wrapper">
-                    <label for="mobile">Mobile Number</label>
-                    <input type="text" class="form-control" id="mobile" placeholder="Mobile Number" ng-model="user.mobile"  with-floating-label>
-                  </div>
+              <div class="col-sm-4 form-group">
+                 <div class="floating-label-wrapper">
+                  <label for="locality">Locality</label>
+                  <input type="text" class="form-control" id="locality" placeholder="Locality" ng-model="user.locality"  with-floating-label>
                 </div>
               </div>
-              <div class="row">
-                <div class="col-sm-6 form-group">
-                  <div class="floating-label-wrapper">
-                    <!-- <label for="country">Country</label> -->
-                    <select class="form-control">
-                      <option>Country</option>
-                    </select>
-                  </div>
-                </div>                
-                <div class="col-sm-6 form-group">
-                   <div class="floating-label-wrapper">
-                    <!-- <label for="state">State</label> -->
-                    <select class="form-control">
-                      <option>State</option>
-                    </select>
-                  </div>
+              <div class="col-sm-4 form-group">
+                <div class="floating-label-wrapper">
+                  <label for="landmark">Landmark</label>
+                  <input type="text" class="form-control" id="landmark" placeholder="Landmark" ng-model="user.landmark"  with-floating-label>
                 </div>
-              </div>
-              <div class="row">
-                <div class="col-sm-6 form-group">
-                  <div class="floating-label-wrapper">
-                    <!-- <label for="city">City</label> -->
-                    <select class="form-control">
-                      <option>City</option>
-                    </select>
-                  </div>
+              </div>            
+            </div>
+            <div class="row">
+              <div class="col-sm-4 form-group">
+                <div class="floating-label-wrapper">
+                  <select class="form-control">
+                    <option>Country</option>
+                  </select>
                 </div>
-              </div>
-          </div>
-        </div>
-        <!-- Additional info -->
-        <div class="category-block">
-          <h4>Additional Information
-            <a href="javascript:void(0);" class="pull-right"> 
-              <small><i class="fa fa-pencil"></i> Edit details</small> 
-            </a>
-          </h4>
-          <legend></legend>
-          <div class="row">
-            <div class="col-sm-3 form-group">
-              <div class="floating-label-wrapper">
-                <label for="profession">Profession</label>
-                <input type="text" class="form-control" id="profession" placeholder="Profession" ng-model="user.profession"  with-floating-label>
+              </div>                
+              <div class="col-sm-4 form-group">
+                 <div class="floating-label-wrapper">
+                  <select class="form-control">
+                    <option>State</option>
+                  </select>
+                </div>
+              </div>         
+              <div class="col-sm-4 form-group">
+                <div class="floating-label-wrapper">
+                  <select class="form-control">
+                    <option>City</option>
+                  </select>
+                </div>
               </div>
             </div>
-            <div class="col-sm-3 form-group">
-               <div class="floating-label-wrapper">
-                <label for="jprofile">Job Profile</label>
-                <input type="text" class="form-control" id="jprofile" placeholder="Job Profile" ng-model="user.jprofile"  with-floating-label>
-              </div>
-            </div>
-            <div class="col-sm-3 form-group">
-              <div class="floating-label-wrapper">
-                <label for="pan">PAN Number</label>
-                <input type="text" class="form-control" id="pan" placeholder="PAN Number" ng-model="user.pan"  with-floating-label>
-              </div>
-            </div>
-            <div class="col-sm-3 form-group">
-               <div class="floating-label-wrapper">
-                <label for="aadhaar">AADHAAR Number</label>
-                <input type="text" class="form-control" id="aadhaar" placeholder="AADHAAR Number" ng-model="user.aadhaar"  with-floating-label>
-              </div>
-            </div>
-          </div>
-        </div>
+          </div> -->
 
-        <div class="category-block">
-          <h4>Address Information
-            <a href="javascript:void(0);" class="pull-right"> 
-              <small><i class="fa fa-pencil"></i> Edit details</small> 
-            </a>
-          </h4>
-          <legend></legend>
-          <div class="row">
-            <div class="col-sm-4 form-group">
-              <div class="floating-label-wrapper">
-                <label for="houseno">House No./Block</label>
-                <input type="text" class="form-control" id="houseno" placeholder="House No./Block" ng-model="user.houseno"  with-floating-label>
-              </div>
-            </div>
-            <div class="col-sm-4 form-group">
-               <div class="floating-label-wrapper">
-                <label for="locality">Locality</label>
-                <input type="text" class="form-control" id="locality" placeholder="Locality" ng-model="user.locality"  with-floating-label>
-              </div>
-            </div>
-            <div class="col-sm-4 form-group">
-              <div class="floating-label-wrapper">
-                <label for="landmark">Landmark</label>
-                <input type="text" class="form-control" id="landmark" placeholder="Landmark" ng-model="user.landmark"  with-floating-label>
-              </div>
-            </div>            
+        <div class="row form-group" ng-if="myAccountVm.editProfessionalInfo || myAccountVm.editBasicInfo">
+          <div class="col-xs-offset-2 col-xs-4 form-group">
+            <button type="button" class="btn btn-primary btn-block" ng-click="myAccountVm.save(basicForm,'basicInfo')"       ng-if="myAccountVm.editBasicInfo">Save</button>
+            <button type="button" class="btn btn-primary btn-block" ng-click="myAccountVm.save(professionForm,'professionalInfo')" ng-if="myAccountVm.editProfessionalInfo">Save</button>
           </div>
-          <div class="row">
-            <div class="col-sm-4 form-group">
-              <div class="floating-label-wrapper">
-                <!-- <label for="country">Country</label> -->
-                <select class="form-control">
-                  <option>Country</option>
-                </select>
-              </div>
-            </div>                
-            <div class="col-sm-4 form-group">
-               <div class="floating-label-wrapper">
-                <!-- <label for="state">State</label> -->
-                <select class="form-control">
-                  <option>State</option>
-                </select>
-              </div>
-            </div>         
-            <div class="col-sm-4 form-group">
-              <div class="floating-label-wrapper">
-                <!-- <label for="city">City</label> -->
-                <select class="form-control">
-                  <option>City</option>
-                </select>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="row form-group">
-          <div class="col-xs-offset-4 col-xs-4 form-group">
-            <button type="button" class="btn btn-primary btn-block">Save</button>
+          <div class="col-xs-4 form-group">
+            <button type="button" class="btn btn-primary btn-block" ng-click="myAccountVm.cancelClicked()">Cancel</button>
           </div>
         </div>
       </div>
