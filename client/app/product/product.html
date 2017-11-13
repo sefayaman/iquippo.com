@@ -125,7 +125,7 @@
                     <div class="form-group col-xs-6 col-sm-5">Asset Id</div>
                     <div class="form-group col-xs-6  col-sm-4">
                       <span ng-if="product.assetId">{{product.assetId}}</span>
-                      <span ng-if="!product.assetId">{{product.assetDir}}</span></div>
+                      <!-- <span ng-if="!product.assetId">{{product.assetDir}}</span></div> -->
                     </div>
                     <div class="row">
                       <div class="form-group col-xs-6  col-sm-5">List for Auction</div>
@@ -885,9 +885,9 @@
                 <option value="Policy">Insurance Policy</option>
                 <option value="Certification">Inspection Certificate</option>
                 <option value="Valuation">Valuation Report</option>
-                <option value="rcupload">RC Upload</option>
-                <option value="invoice">Invoice</option>
-                <option value="taxchallan">Tax Challan</option>
+                <option value="Rcupload">RC Upload</option>
+                <option value="Invoice">Invoice</option>
+                <option value="Taxchallan">Tax Challan</option>
                 <option value="Other">Other</option>
               </select>
               <i class="caret"></i>
@@ -913,11 +913,12 @@
           <h3 class="panel-title">Certificate</h3>
         </div>
         <div class="panel-body">
-          <div class="form-group row" ng-repeat="miscDoc in product.miscDocuments">
+          <div class="form-group row">
             <div class="col-sm-3 form-group">Certificate</div>
             <div class="col-sm-5 form-group">
-              <select class="form-control">
-                <option value="">Certificate Type</option>
+              <select class="form-control" ng-model="product.certificationName">
+                <option value="">Select Certification</option>
+                <option value="{{cert.name}}" ng-repeat="cert in certificationList">{{cert.name}}</option>
               </select>
             </div>
           </div>

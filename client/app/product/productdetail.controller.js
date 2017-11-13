@@ -429,7 +429,7 @@
       if ($stateParams.id) {
         filter = {};
         filter.getDate = true;
-        filter._id = $stateParams.id;
+        filter.assetId = $stateParams.id;
         filter.status = true;
         productSvc.getProductOnFilter(filter).then(function(result) {
           if (result && result.length < 1) {

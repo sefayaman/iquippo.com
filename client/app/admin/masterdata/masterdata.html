@@ -25,8 +25,11 @@
 				    		<h4>Add New Group</h4>
 				    		<legend></legend>
                           <div class="row">
-                         	 <div class="form-group col-sm-4" ng-class="{'has-error': form.errorGroup && submitted}">
+                         	 <div class="form-group col-sm-3" ng-class="{'has-error': form.errorGroup && submitted}">
                                 <input id="groupName" name="groupName" ng-model="g.name" type="text" class="form-control" placeholder="Enter Group Name" required>
+                            </div>
+                            <div class="form-group col-sm-3">
+                                <input id="groupDesc" name="groupDesc" ng-model="g.description" type="text" class="form-control" placeholder="Enter Group Description">
                             </div>
                              <div class="col-sm-2 form-group text-center">
 				    	  		<div class="checkbox"><input type="checkbox" name="equipment"  id="usedequip" placeholder="" ng-model="g.isForUsed"> <label for="usedequip"> Used Equipment </label>
@@ -40,11 +43,11 @@
                             <div class="form-group col-sm-2">
                             	<span class="btn btn-warning fileinput-button">
 	                                <span>Browse image...</span>
-	                                <input type="file" accept="image/*" params="['files',g,'Group',0]" on-file-select="uploadImage">
+	                                <input type="file" accept="image/*" ng-model ="files" ng-change="uploadImage(files,g,'Group',0)" file>
 			                    </span>
 			                     <span>{{g.imgSrc}}</span>		                    
                             </div>     
-                            <div class="col-sm-3"><span>{{}}</span></div>                  	
+                            <div class="col-sm-2"><span>{{}}</span></div>                  	
                            	<div class="form-group col-sm-2 pull-right">
                            		<button type="button" class="btn btn-primary btn-md btn-block" ng-click="masterDataVm.Save('Group')" ng-if="!groupEdit">Save</button>
                            		<button type="button" class="btn btn-primary btn-md btn-block" ng-click="masterDataVm.update('Group')" ng-if="groupEdit">Update</button>
@@ -65,6 +68,7 @@
 									<thead>
 										<th>Images</th>
 										<th>Product Group</th>
+										<th>Description</th>
 										<th>Actions</th>
 									</thead>
 									<tbody>												
@@ -72,10 +76,11 @@
 											<td>
 												<span class="master-browse" tooltip-trigger="mouseenter" tooltip-placement="top" uib-tooltip="Change Image">
 													<img class="sheduleImg img-circle" ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{group.imgSrc}}" alt="Image">
-												<input type="file"  params="['files',group,'Group',1]" on-file-select="uploadImage">
+												<input type="file" ng-model ="files" ng-change="uploadImage(files,group,'Group',1)" file>
 												</span>
 											</td>
 											<td>{{group.name}}</td>
+											<td>{{group.description}}</td>
 											<td>
 											    <a class="btn btn-primary btn-sm" href="javascript:void(0);" ng-click="masterDataVm.editClick('Group',group)" ><i class="fa fa-pencil"></i> </a>
 		  										<a class="btn btn-danger btn-sm" href="javascript:void(0);" ng-click="masterDataVm.deleteClick('Group',group)"><i class="fa fa-trash"></i> </a>
@@ -126,7 +131,7 @@
                             <div class="form-group col-sm-2">
                             	<span class="btn btn-warning fileinput-button">
 	                                <span>Browse image...</span>
-	                                <input type="file"   accept="image/*" params="['files',c,'Category',0]" on-file-select="uploadImage">
+	                                <input type="file"   accept="image/*" ng-model ="files" ng-change="uploadImage(files,c,'Category',0)" file>
 			                    </span>
 			                    <span>{{c.imgSrc}}</span>
                             </div>                            
@@ -164,7 +169,7 @@
 									<td>
 										<span class="master-browse" tooltip-trigger="mouseenter" tooltip-placement="top" uib-tooltip="Change Image">
 											<img class="sheduleImg img-circle" ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{category.imgSrc}}" alt="Image">
-										<input type="file" accept="image/*" params="['files',category,'Category',1]" on-file-select="uploadImage">
+										<input type="file" accept="image/*" ng-model ="files" ng-change="uploadImage(files,category,'Category',1)" file>
 										</span>
 									</td>									
 									<td>{{category.name}}</td>
@@ -217,16 +222,16 @@
 	                            <div class="form-group col-sm-2">
 	                            	<span class="btn btn-warning fileinput-button">
 		                                <span>Browse image...</span>
-		                                <input type="file"   accept="image/*" params="['files',b,'Brand',0]" on-file-select="uploadImage">
+		                                <input type="file"   accept="image/*" ng-model ="files" ng-change="uploadImage(files,b,'Brand',0)" file>
 				                    </span>
-				                    <span>{{c.imgSrc}}</span>
+				                    <span>{{b.imgSrc}}</span>
 	                            </div>
 								<div class="form-group col-sm-2">
 	                            	<span class="btn btn-warning fileinput-button">
 		                                <span>Browse image...</span>
-		                                <input type="file"   accept="image/*" params="['files',b,'Brand',0,'imgNewEquipmentSrc']" on-file-select="uploadImage">
+		                                <input type="file"   accept="image/*" ng-model ="files" ng-change="uploadImage(files,b,'Brand',0,'imgNewEquipmentSrc')" file>
 				                    </span>
-				                    <span>{{c.imgNewEquipmentSrc}}</span>
+				                    <span>{{b.imgNewEquipmentSrc}}</span>
 	                            </div>
 				    	  	                    	
 	                           	<div class="form-group col-sm-2 pull-right">
@@ -261,7 +266,7 @@
                          		  	<td>
                          		  		<span class="master-browse" tooltip-trigger="mouseenter" tooltip-placement="top" uib-tooltip="Change Image">
 											<img class="sheduleImg img-circle" ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{brand.imgSrc}}" alt="Image">
-										<input type="file" accept="image/*" params="['files',brand,'Brand',1]" on-file-select="uploadImage">
+										<input type="file" accept="image/*" ng-model ="files" ng-change="uploadImage(files,brand,'Brand',1)" file>
 										</span>
                          		  	</td>                         		  	
 									<td>{{brand.name}}</td>

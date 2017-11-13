@@ -101,7 +101,7 @@
         <div class="row">      
           <div class="col-sm-6 col-md-4 form-group" ng-repeat="product in productList | startFrom:(viewproductVm.currentPage -1 )*viewproductVm.itemsPerPage | limitTo:viewproductVm.itemsPerPage">
             <div class="media text-center form-group">
-              <a ng-href="/used/{{product.group.name}}/{{product.category.name}}/{{product._id}}">
+              <a ng-href="/used/{{product.category.name}}/{{product.brand.name}}/{{product.assetId}}">
                  <img ng-src="{{uploadImagePrefix}}{{product.assetDir}}/{{product.primaryImg}}" class="img-responsive">              
               </a>          
               <div class="media-body text-left"> 
@@ -144,7 +144,7 @@
                   </tbody>
                 </table>
               </div>
-              <a ng-href="/used/{{product.group.name}}/{{product.category.name}}/{{product._id}}" class="btn btn-primary btn-block" >
+              <a ng-href="/used/{{product.category.name}}/{{product.brand.name}}/{{product.assetId}}" class="btn btn-primary btn-block" >
                 View Details
               </a>     
             </div>

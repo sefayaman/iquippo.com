@@ -152,27 +152,41 @@ angular.module('sreizaoApp')
         }
     };
 })
-.directive('onFileSelect', function ($parse) {
+/*.directive('onFileSelect', function ($parse) {
     return {
          restrict: 'A',
          scope:{
-          params:"="
+          //params:"="
          },
         link: function (scope, el, attrs) {
             var onChangeHandler = scope.$parent.$eval(attrs.onFileSelect);
+            var params = scope.$parent.$eval(attrs.params);
             el.bind('change', function (event) {
                 var files = event.target.files;
                 if(!files || !files.length || !onChangeHandler)
                   return;
-                if(!scope.params)
-                  scope.params = [];
-                scope.params[0] = files;
-                onChangeHandler.apply(scope.$parent,scope.params);                              
+                if(!params)
+                  params = [];
+                params[0] = files;
+                onChangeHandler.apply(scope.$parent,params);                              
+            });
+        }
+    };
+})*/
+.directive('file', function() {
+    return {
+        require:"ngModel",
+        restrict: 'A',
+        scope:{},
+        link: function($scope, el, attrs, ngModel){
+            el.bind('change', function(event){
+                var files = event.target.files;
+                var file = files[0];
+                ngModel.$setViewValue(files);
             });
         }
     };
 })
-
 .directive('withFloatingLabel', function () {
   return {
     restrict: 'A',

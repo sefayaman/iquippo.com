@@ -239,6 +239,8 @@ exports.search = function(req, res) {
     filter["mileage"] = req.body.mileage;
   if(req.body.country)
     filter["country"] = req.body.country;
+  if(req.body.certificationName)
+    filter["certificationName"] = req.body.certificationName;
    var currencyFilter = {};
    var isCFilter = false;
   if(req.body.currency && req.body.currency.type){

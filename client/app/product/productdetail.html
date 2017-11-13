@@ -106,21 +106,28 @@
             </form>
           </div>
           <div class="row text-center">
-            <div class="col-xs-4">
+            <div class="col-xs-4" ng-repeat="doc in currentProduct.miscDocuments" ng-if="doc.type == 'Rcupload' && doc.name">
               <h1>
-              <i class="fa fa-file-text-o fa-2x"></i>
+              <a href="{{uploadImagePrefix}}{{currentProduct.assetDir}}/{{doc.name}}" target="_blank">
+                <i class="fa fa-file-text-o fa-2x"></i>
+              </a>
               </h1>
               Registration Certificate
             </div>
-            <div class="col-xs-4">
+            <div class="col-xs-4" ng-repeat="doc in currentProduct.miscDocuments" ng-if="doc.type == 'Invoice' && doc.name">
               <h1>
-              <i class="fa fa-file-text-o fa-2x"></i>
+
+              <a href="{{uploadImagePrefix}}{{currentProduct.assetDir}}/{{doc.name}}" target="_blank">
+                <i class="fa fa-file-text-o fa-2x"></i>
+              </a>
               </h1>
               Original Invoice
             </div>
-            <div class="col-xs-4">
+            <div class="col-xs-4" ng-repeat="doc in currentProduct.miscDocuments" ng-if="doc.type == 'Taxchallan' && doc.name">
               <h1>
-              <i class="fa fa-file-text-o fa-2x"></i>
+              <a href="{{uploadImagePrefix}}{{currentProduct.assetDir}}/{{doc.name}}" target="_blank">
+                <i class="fa fa-file-text-o fa-2x"></i>
+              </a>
               </h1>
               Tax Recipts
             </div>

@@ -16,20 +16,6 @@ exports.get = function(req, res) {
       }
   }
 
- /* if (queryParam.category)
-    filter.category = queryParam.category;
-  if (queryParam.brand)
-    filter.brand = queryParam.brand;
-  if (queryParam.model)
-    filter.model = queryParam.model;
-  if (queryParam.userId)
-    filter['user.userData'] = queryParam.userId;
-
-  if (queryParam.pagination) {
-    Utility.paginatedResult(req, res, InputFormReq, filter, {});
-    return;
-  }*/
-
   var query = CertificateMaster.find(filter);
 
   query.exec(function(err, result) {
@@ -40,61 +26,13 @@ exports.get = function(req, res) {
   });
 };
 
-exports.create = function(req, res) {console.log("req.body=",req.body);
+exports.create = function(req, res) {
   CertificateMaster.create(req.body, function(err, respo) {
-    if(err) { return handleError(res, err); }console.log("res=",res);
+    if(err) { return handleError(res, err); }
      return res.status(200).json({errorCode:0, message:"Data saved sucessfully", data:respo});
   });
 };
 
-//search based on filter
-exports.getOnFilter = function(req, res) {
-  var filter = {};
-  // if(req.body._id)
-  //   filter["_id"] = req.body._id;
-  // if(req.body.userId)
-  //   filter["user._id"] = req.body.userId;
-  // if(req.body.mobile)
-  //   filter["user.mobile"] = req.body.mobile;
-  if (req.query.searchStr) {
-    filter['$text'] = {
-      '$search': "\""+req.query.searchStr+"\""
-    }
-  }
-
-  var result = {};
-  if(req.body.pagination){
-    Utility.paginatedResult(req,res,CertificateMaster,filter,{});
-    return;    
-  }
-  var sortObj = {}; 
-  if(req.body.sort)
-    sortObj = req.body.sort;
-  sortObj['createdAt'] = -1;
-
-  var query = CertificateMaster.find(filter).sort(sortObj);
-  Seq()
-  .par(function(){
-    var self = this;
-    CertificateMaster.count(filter,function(err, counts){
-      result.totalItems = counts;
-      self(err);
-    })
-  })
-  .par(function(){
-    var self = this;
-    query.exec(function (err, inputReq) {
-        if(err) { return handleError(res, err); }
-        result.inputReqs = inputReq;
-        self();
-       }
-    );
-
-  })
-  .seq(function(){
-    return res.status(200).json(result.inputReqs);
-  })
-};
 
 // Updates an existing input req in the DB.
 exports.update = function(req, res) {

@@ -129,31 +129,17 @@
       <h4>[ Spacial Products ]</h4>
     </div>
     <div class="row">
-      <div class="col-sm-6 form-group text-center">   
+      <div class="col-sm-6 form-group text-center" ng-repeat="cert in mainVm.certificationList">   
         <div class="spacial-products">
-          <img src="/assets/images/certification-iquippo.png" width="100%" height="100%">
-          <div class="gradiant-overlay1"></div>
+          <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{cert.primaryImg}}" class="category-item"  width="100%" height="100%">
+          <div class="gradiant-overlay1" ></div>
           <div class="certify-content">
-            <img src="/assets/images/guarantee-icon.png">
+            <!-- <img src="/assets/images/guarantee-icon.png">
             <h4>100% iQuippo Certification</h4>
             <p>
               Shop through a specially curated range of high grade construction equipments inspected, refurbished and guranateed by iQuippo’s trusted services.
-            </p>
-            <button type="button" class="btn btn-default">Shop Now</button>
-          </div>
-        </div>
-      </div>
-      <div class="col-sm-6 form-group text-center">   
-        <div class="spacial-products">
-          <img src="/assets/images/certificationJCB.png" width="100%" height="100%">
-          <div class="gradiant-overlay2"></div>
-          <div class="certify-content">
-            <img src="/assets/images/guarantee-icon.png">
-            <h4>100% JCB Certification</h4>
-            <p>
-              Shop through a specially curated range of high grade construction equipments inspected, refurbished and guranateed by JCB trusted services.
-            </p>
-            <button type="button" class="btn btn-default">Shop Now</button>
+            </p> -->
+            <a href="/used/spl/{{cert.name}}?currentPage=1" class="btn btn-default">Shop Now</a>
           </div>
         </div>
       </div>

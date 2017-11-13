@@ -2754,7 +2754,7 @@
 					<button type="button" class="btn btn-block btn-primary" ng-if="!isEdit" ng-click="dealerVm.save(dealerForm)">Save</button>
 				</div>
 			</div>
-		<form>
+		</form>
 		<div class="row">
 			<div class="col-sm-3 pull-right">
 				<div class="tablesearch text-right form-group">
@@ -2794,30 +2794,42 @@
 	<div ng-if="gsettingVm.tabValue == 'certificate'" ng-controller="CertificateMasterCtrl as certificateVm">
     	<h4>Add Certificate </h4>
 		<div class="row">
-		<form class="" name="certificateForm" >			
-				<div class="col-sm-3" ng-class="{'has-error':certificateForm.state.$invalid && submitted}">
-					<input type="text" placeholder="Add Certificate value..."class="form-control" name="certificate" ng-model="certificateVm.dataModel.certificate"  required>
+		<form name="certificateForm" >			
+				<div class="col-sm-3" ng-class="{'has-error':certificateForm.certName.$invalid && submitted}">
+					<input type="text" placeholder="Add Certificate value..."class="form-control" name="cerName" ng-model="certificateVm.dataModel.name"  required>
 				</div>
-				<div class="col-sm-3" ng-class="{'has-error':certificateForm.state.$invalid && submitted}">
-					<input type="text" placeholder="Add Certificate Desc..."class="form-control" name="certificateDesc" ng-model="certificateVm.dataModel.certificateDesc"  required>
+				<div class="col-sm-3" ng-class="{'has-error':certificateForm.certDesc.$invalid && submitted}">
+					<input type="text" placeholder="Add Certificate Desc..."class="form-control" name="certDesc" ng-model="certificateVm.dataModel.description">
 				</div>
-				<div class="form-group col-sm-3">
+				<div class="form-group col-sm-2">
                     <span class="btn btn-warning fileinput-button">
-	                    <span>Browse image...</span>
-	                        <input type="file" name="image"  data-index="{{$index}}" data-filetype="image" ng-model="certificateVm.image" image-upload>
+	                    <span>Upload logo image</span>
+	                        <input type="file" name="image1" accept="image/*" ng-model ="files" ng-change="certificateVm.uploadImage(files,'logoImg')" file>
 			         </span>
+			         <div>
+							{{certificateVm.dataModel.logoImg}}
+						</div>
+                </div>
+                <div class="form-group col-sm-2">
+                    <span class="btn btn-warning fileinput-button">
+	                    <span>Upload primary image</span>
+	                       <input type="file" name="image2" accept="image/*" ng-model ="files" ng-change="certificateVm.uploadImage(files,'primaryImg')" file>
+			         </span>
+			         <div>
+							{{certificateVm.dataModel.primaryImg}}
+						</div>
                 </div>
 				<div class="col-sm-2 pull-right">
 					<button type="button" class="btn btn-block btn-primary" ng-if="isEdit" ng-click="certificateVm.update(certificateForm)">Update</button>
 					<button type="button" class="btn btn-block btn-primary" ng-if="!isEdit" ng-click="certificateVm.save(certificateForm)">Save</button>
 				</div>
 			
-		<form>
+		</form>
 		</div>
 		<div class="row">
 			<div class="col-sm-3 pull-right">
 				<div class="tablesearch text-right form-group">
-					Search: <input type="text" placeholder="Search..." ng-model="certificateVm.searchStr" ng-change="certificateVm.fireCommand(true,null,'certificate')" ng-model-options="{debounce:500}">
+					Search: <input type="text" placeholder="Search..." ng-model="certificateVm.searchStr" ng-change="certificateVm.searchFn()" ng-model-options="{debounce:500}">
 			
 				</div>
 			</div>
@@ -2833,8 +2845,8 @@
 				</thead>
 				<tbody>
 					<tr  ng-repeat="certificate in certificateVm.filteredList">
-						<td>1</td>
-						<td>{{certificate.certificate}}</td>
+						<td>{{$index + 1}}</td>
+						<td>{{certificate.name}}</td>
 						<td>
 							<button type="button" class="btn btn-sm btn-primary" ng-click="certificateVm.editClicked(certificate)"><i class="fa fa-pencil"></i></button>
 							<button type="button" class="btn btn-sm btn-danger" ng-click="certificateVm.destroy(certificate._id)"><i class="fa fa-trash"></i></button>
@@ -2843,7 +2855,7 @@
 				</tbody>
 			</table>
 		</div>
-		<!--<uib-pagination total-items="dealerVm.totalItems" ng-model="dealerVm.currentPage" items-per-page="dealerVm.itemsPerPage" max-size="dealerVm.maxSize" ng-change="dealerVm.fireCommand(false,null,'dealermaster')" class="pagination-sm" rotate="false">  </uib-pagination>-->
+		<uib-pagination total-items="certificateVm.pager.totalItems" ng-model="certificateVm.pager.currentPage" items-per-page="certificateVm.pager.itemsPerPage" max-size="6"  class="pagination-sm" rotate="false">  </uib-pagination>
 	</div>
 	<!-- New Equipment tab value-->
 	<!--<div ng-if="gsettingVm.tabValue == 'newequipment'" ng-controller="NewEquipmentCtrl as newequipmentVm">

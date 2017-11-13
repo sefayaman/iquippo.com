@@ -3,7 +3,7 @@
 'use strict';
 angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
 
-  function MainCtrl($scope, $rootScope, $uibModal, Auth, productSvc, categorySvc,groupSvc,brandSvc,LocationSvc,$state, Modal, UtilSvc,spareSvc,ManpowerSvc,BannerSvc,BiddingSvc,CountSvc,AuctionSvc) {
+  function MainCtrl($scope, $rootScope, $uibModal, Auth, productSvc, categorySvc,groupSvc,brandSvc,LocationSvc,$state, Modal, UtilSvc,spareSvc,ManpowerSvc,BannerSvc,BiddingSvc,CountSvc,AuctionSvc,CertificateMasterSvc) {
     var vm = this;
     vm.allCategoryList = [];
     vm.activeCategoryList = [];
@@ -114,6 +114,16 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
       groupSvc.getAllGroup({isForUsed:true,visibleOnUsed:true,categoryCount:true})
       .then(function(groups){
         vm.groups = groups;
+      })
+      .catch(function(err){
+        Modal.alert("Error in fetching group");
+      });
+    }
+
+    function getCertification(){
+      CertificateMasterSvc.get({})
+      .then(function(certList){
+        vm.certificationList = certList;
       })
       .catch(function(err){
         Modal.alert("Error in fetching group");
@@ -236,5 +246,6 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
     getBrandCount();
     getCategoryCount();
     getAuctions();
+    getCertification();
   }
 })();

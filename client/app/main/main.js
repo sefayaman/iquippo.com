@@ -152,7 +152,7 @@ angular.module('sreizaoApp')
         url:"/used/viewproducts?currentPage&group&category&brand&model" + 
             "&type&currencyType&currencyMin&currencyMax&" +
             "&mfgYearMin&mfgYearMax&stateName&cityName&assetId&"+
-            "searchstr&operatingHour&mileage&productName&location&locationName",
+            "searchstr&operatingHour&mileage&productName&location&locationName&certificationName",
         templateUrl: 'app/product/viewproducts.html',
         controller: 'ViewProductsCtrl as viewproductVm',
          layout:'client'
@@ -193,6 +193,12 @@ angular.module('sreizaoApp')
         controller: 'ViewProductsCtrl as viewproductVm',
         layout:'client'
       })
+       .state('splproduct',{
+        url: '/used/spl/:certificationName?currentPage',
+        templateUrl: 'app/product/viewproducts.html',
+        controller: 'ViewProductsCtrl as viewproductVm',
+        layout:'client'
+      })
       .state('productbygrouporcategory', {
         url: '/used/:group/:category?currentPage',
         templateUrl: 'app/product/viewproducts.html',
@@ -200,7 +206,7 @@ angular.module('sreizaoApp')
         layout:'client'
       })
       .state('productdetail', {
-        url: '/used/:group/:category/:id',
+        url: '/used/:category/:brand/:id',
         templateUrl: 'app/product/productdetail.html',
         controller: 'ProductDetailCtrl as productDetailVm',
         layout:'client'
