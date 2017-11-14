@@ -1008,7 +1008,7 @@ body{font-family: Lato-Regular ,sans-serif;}
     border: 0;
     right: 2.5em;
     top: 1.4em; text-decoration: none; text-shadow: none; color: #00429A;}
-.search-banner .btn.btn-default{text-transform: uppercase; font-size: 1em; padding:10px 15px; color: #00429A; margin-top: 25px; border-radius: 3px; box-shadow: 0px 2px 3px #ccc; font-weight: bold; word-spacing: 1px;}
+.search-banner .btn.btn-default{text-transform: uppercase; font-size: 1em; padding:10px 25px; color: #00429A; margin-top: 25px; border-radius: 3px; box-shadow: 0px 2px 3px #ccc; font-weight: bold; word-spacing: 1px;}
 
 .or-devided{padding: 15px; color: #fff;}
 
@@ -1041,25 +1041,29 @@ body{font-family: Lato-Regular ,sans-serif;}
 .upcoming-auction .media .calendar-date h4{margin: 0; font-size: 3em;}
 .category-block{padding: 3em 0;}
 .heading-titles{margin: 2.5em auto;}
-.heading-titles h4{word-spacing: 2px; text-transform: uppercase; font-size: 24px; font-weight: bold; color: #333;}
+.heading-titles h4{letter-spacing: 1px; text-transform: uppercase; font-size: 24px; font-weight: bold; color: #333;}
+.how-works .heading-titles h4{color: #fff;}
+.heading-titles span{display: inline-block;}
+.heading-titles span:first-letter{text-transform: lowercase;}
 .heading-titles a{margin: 0.5em 1em;}
 .heading-titles .active{color: #666;}
 .cat-rectangle{
-  height: 246px;  width: 265px;  border-radius: 3px; margin: 1em auto; display: block;
-  border: 8px solid transparent;
-  -moz-border-image: -moz-linear-gradient(top, #e6bdcb 0%, #b6c9e3 100%);
-  -webkit-border-image: -webkit-linear-gradient(top, #e6bdcb 0%, #b6c9e3 100%);
-  border-image: linear-gradient(to bottom, #e6bdcb 0%, #b6c9e3 100%);
-  border-image-slice: 1;
+  height: 246px; margin: 0 auto; display: block;
+  background: url('../assets/images/back-border.png'); background-position: center; background-repeat: no-repeat;
+  display: flex; align-items: center; justify-content: center;
+  
 }
-.category-name{text-transform: uppercase; font-weight: bold;}
+.category-name{text-transform: uppercase; font-weight: bold; margin: 0.5em 0 2em;}
+.category-name h5{margin-bottom: 2px; font-weight: bold;}
+.category-name span{font-size: 13px; text-transform: capitalize;}
 .category-item{
-  height: 210px;  width: 308px;
+  max-width: 100%;
 }
 .brand-logo{
   height: 200px; display: flex; display: -webkit-flex; -webkit-align-items: center;
 align-items: center; justify-content: center;
 }
+.brand-logo img{max-width: 100%;}
 #search-result_wrapper{background-color:#f9f9f9; padding: 10px;}
 #search-result_wrapper .btn-equipment .btn{padding-top: 0.7em; padding-bottom: 0.7em; border:0;}
 #search-result_wrapper .btn-equipment .active{
@@ -1077,7 +1081,8 @@ align-items: center; justify-content: center;
 #search-result_wrapper .media a img.img-responsive{height: 200px; width: 100%;}
 #search-result_wrapper .media .table{margin: 0;}
 #search-result_wrapper .media .table small{font-size: 1rem;}
-#search-result_wrapper .media .btn-primary, .asset-sale .btn-primary, .information-tabs .btn-primary{border-radius: 4px; font-size: 1em; text-transform: uppercase; padding-top: 0.7em; padding-bottom: 0.7em; font-size: 12px; letter-spacing: 2px;}
+#search-result_wrapper .media .table > tbody > tr > td{padding: 5px;}
+#search-result_wrapper .media .btn-primary, .asset-sale .btn-primary, .information-tabs .btn-primary{border-radius: 4px; font-size: 1em; text-transform: uppercase; padding-top: 0.9em; padding-bottom: 0.9em; font-size: 12px; letter-spacing: 2px;}
 .information .panel-group .panel.panel-default{box-shadow: 0 1px 3px #eee; border: #efefef;}
 .information .panel-group .panel.panel-default .panel-heading{background: transparent; border:0; padding: 0;}
 .information .panel-group .panel.panel-default .panel-heading a{display:block;outline:none;text-decoration:none;padding:10px;}
@@ -1115,10 +1120,10 @@ align-items: center; justify-content: center;
   border-radius: 10px;
   position: relative;
   overflow: hidden;
-  padding: 10px;
+  padding: 7px;
   margin: 2em auto;
   height: 420px;
-  width: 570px;
+  width: 100%;
 }
 .framwork-background{
   -ms-background: -ms-linear-gradient(top, #e6bdcb 0%, #b6c9e3 100%);
@@ -1126,7 +1131,8 @@ align-items: center; justify-content: center;
   -webkit-background: -webkit-linear-gradient(top, #e6bdcb 0%, #b6c9e3 100%);
   background: linear-gradient(to bottom, #e6bdcb 0%, #b6c9e3 100%);
   border-radius: 10px;
-  padding: 10px;
+  padding: 7px;
+  margin-top: 3em;
 }
 .industy-rectangle{
   -ms-background: -ms-linear-gradient(top, #e6bdcb 0%, #b6c9e3 100%);
@@ -1134,10 +1140,11 @@ align-items: center; justify-content: center;
   -webkit-background: -webkit-linear-gradient(top, #e6bdcb 0%, #b6c9e3 100%);
   background: linear-gradient(to bottom, #e6bdcb 0%, #b6c9e3 100%);
   border-radius: 10px;
-  padding: 10px;
+  padding: 7px;
   display: block;
+  margin: 1em;
 }
-.industy-rectangle img{width: 100%; height: 250px;}
+.industy-rectangle img{width: 100%; height: 250px; max-width: 100%;}
 .spacial-products img{border-radius: 10px;}
 .spacial-products .btn{
   margin: auto;
@@ -1207,6 +1214,7 @@ background-image:         linear-gradient(170.11deg, hsla(354,100%,98%,.8), hsla
 .media-news li em.news-date{ float: right;}
 
 /*footer*/
+footer{color: #999;}
 footer .foot{
   -ms-background: -ms-linear-gradient(170.11deg, rgba(251,0,26,0.4) 0%, rgba(0,66,154,0.5) 100%);
   -moz-background: -moz-linear-gradient(170.11deg, rgba(251,0,26,0.4) 0%, rgba(0,66,154,0.5) 100%);
@@ -1214,6 +1222,7 @@ footer .foot{
    background: linear-gradient(170.11deg, rgba(251,0,26,0.4) 0%, rgba(0,66,154,0.5) 100%);
    padding: 2em 0;
 }
+footer .foot h4{font-weight: bold; font-size: 16px; color: #000;}
 .footer-logos {border-right: 1px solid #666;}
 .footer-logos ul{padding: 0;}
 .footer-logos ul li{display: block; padding: 1em 0;}
@@ -1242,7 +1251,7 @@ footer .subscribe{height: 40px;}
 
 .medianame ul{margin:0;padding:0;}
 .medianame ul li{display: inline-block;list-style: none;padding: 0 5px 0 3px;line-height: 13px;border-right: 1px solid #ccc;}
-.medianame ul li a{color: #636363;}
+.medianame ul li a{color: #999;}
 .medianame ul li:last-child{border-right: 0;}
 .breadcrumb{border-radius:0;margin-bottom:0; margin-top: 3em; background: transparent;}
 .breadcrumb li a{text-decoration: none; color:#333;}

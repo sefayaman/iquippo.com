@@ -55,16 +55,35 @@
       </div>
     </div>
     <div class="col-sm-offset-3 col-sm-6 text-center">
-      <button type="button" class="btn btn-default" data-ng-click="mainVm.doSearch()">Search Used Equipments</button>
+      <button type="button" class="btn btn-default" data-ng-click="mainVm.doSearch()">Search</button>
     </div>
 
   </div>
 </section>
 
+<!-- Browse Brand -->
+<section class="category-block">
+  <div class="container text-center">
+    <div class="heading-titles">
+      <h4>[ Browse New Equipment By Brands ]</h4>
+      <a href="/used/brands">View All ({{mainVm.brandCount}})</a>
+    </div>
+    <div class="row">
+      <div class="col-sm-4 form-group text-center" ng-repeat="brand in mainVm.brands" ng-if="$index < 6">   
+        <div class="brand-logo">
+          <a href="/used/brands/{{brand.name}}?currentPage=1">
+            <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{brand.imgSrc}}">
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+      
+</section>
 <!-- Upcoming Auction -->
 <section class="category-block upcoming-auction">
   <div class="heading-titles text-center">
-    <h4>[ Upcoming Auction ]</h4>
+    <h4>[ Upcoming Auctions ]</h4>
     <a href="/viewauctions?type=upcoming">View All Auctions (20)</a>
   </div>
 
@@ -88,7 +107,7 @@
 </section>
 <!-- Browse Category -->
 <section class="category-block">
-  <div class="container-fluid text-center">
+  <div class="container text-center">
     <div class="heading-titles">
       <h4>[ Browse Used Equipment By Category ]</h4>
       <a href="/used/allcategories">View All ({{mainVm.categoryCount}})</a>
@@ -103,28 +122,10 @@
   </div>
       
 </section>
-<!-- Browse Brand -->
-<section class="category-block">
-  <div class="container-fluid text-center">
-    <div class="heading-titles">
-      <h4>[ Browse Used Equipment By Brands ]</h4>
-      <a href="/used/brands">View All ({{mainVm.brandCount}})</a>
-    </div>
-    <div class="row">
-      <div class="col-sm-4 form-group text-center" ng-repeat="brand in mainVm.brands" ng-if="$index < 6">   
-        <div class="brand-logo">
-          <a href="/used/brands/{{brand.name}}?currentPage=1">
-            <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{brand.imgSrc}}" height="100" width="250">
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
-      
-</section>
+
 <!-- Spacial Products -->
 <section class="category-block">
-  <div class="container-fluid text-center">
+  <div class="container text-center">
     <div class="heading-titles">
       <h4>[ Special Products ]</h4>
     </div>
@@ -164,13 +165,15 @@
 <section class="category-block how-works">
   <div class="container-fluid text-center">
     <div class="heading-titles">
-      <h4>[ HOW iQUIPPO WORKS? ]</h4>     
-      <div class="row">
-        <div class="col-sm-offset-3 col-sm-6 form-group">
-         iQuippo is India’s first and a one-of- its-kind digital marketplace for construction equipment, machinery and services. Our platform allows buyers and sellers to interact, negotiate and close transactions in a timely, transparent and cost-effective manner.
-        </div>
-      </div> 
+      <h4>[ HOW <span>iQUIPPO</span> WORKS? ]</h4>     
     </div>
+    <div class="row">
+      <div class="col-sm-offset-2 col-sm-8">
+       <strong>
+         iQuippo is India’s first and a one-of- its-kind digital marketplace for construction equipment, machinery and services. Our platform allows buyers and sellers to interact, negotiate and close transactions in a timely, transparent and cost-effective manner.
+       </strong>
+      </div>
+    </div> 
     <div class="row">
       <div class="col-sm-offset-3 col-sm-6">
         <div class="framwork-background">
@@ -194,52 +197,52 @@
     </div>
     <div class="row form-group press-media">
       <div class="col-xs-4 col-sm-2 form-group">   
-        <img src="/assets/images/business-standard-logo.png" class="img-responsive">
-      </div>
-      <div class="col-xs-4 col-sm-2 form-group">   
         <img src="/assets/images/financial-express logo.png" class="img-responsive">
       </div>
       <div class="col-xs-4 col-sm-2 form-group">   
-        <img src="/assets/images/india-techonline-logo.png" class="img-responsive">
-      </div>
-      <div class="col-xs-4 col-sm-2 form-group">   
-        <img src="/assets/images/india-today-logo.png" class="img-responsive">
+        <img src="/assets/images/business-standard-logo.png" class="img-responsive">
       </div>
       <div class="col-xs-4 col-sm-2 form-group">   
         <img src="/assets/images/money-control.png" class="img-responsive">
       </div>
       <div class="col-xs-4 col-sm-2 form-group">   
+        <img src="/assets/images/india-today-logo.png" class="img-responsive">
+      </div>
+      <div class="col-xs-4 col-sm-2 form-group">   
         <img src="/assets/images/telegraph-logo.png" class="img-responsive">
-      </div>      
+      </div> 
+      <div class="col-xs-4 col-sm-2 form-group">   
+        <img src="/assets/images/india-techonline-logo.png" class="img-responsive">
+      </div>
     </div>
 
     <div class="row">
       <div class="col-sm-6 form-group">
         <ul class="media-news">
           <li>
-            <a href="javascript:void(0);">Click Clique- Infrastructure Today</a>
-            <em>The Financial Express</em>
-            <em class="news-date">23 August, 2017.</em>
+            <a href="http://economictimes.indiatimes.com/small-biz/startups/srei-launches-digital-marketplace-iquippo-for-infra-sector/articleshow/55094769.cms" target="_blank">Srei launches digital marketplace iQuippo for infra sector</a>
+            <em>The Economic Times​</i></em>
+            <em class="news-date">27 October, 2016.</em>
           </li>
           <li>
-            <a href="javascript:void(0);">Srei launches digital marketplace iQuippo for Infra Sector.</a>
-            <em>The Economic Times</em>
-            <em class="news-date">09 July, 2017.</em>
+            <a href="http://www.business-standard.com/article/pti-stories/srei-launches-digital-marketplace-iquippo-for-infra-sector-116102700853_1.html" target="_blank">Srei launches digital marketplace iQuippo for infra sector.</a>
+            <em>Business Standard</em>
+            <em class="news-date">27 October, 2016.</em>
           </li>
           <li>
-            <a href="javascript:void(0);">Srei launches digital marketplace iQuippo for Infra Sector.</a>
-            <em>The Economic Times</em>
-            <em class="news-date">01 June, 2017.</em>
+            <a href="http://www.business-standard.com/article/companies/srei-ventures-into-digital-marketplace-for-equipment-biz-116102700821_1.html" target="_blank">Srei ventures into digital marketplace for equipment biz.</a>
+            <em>Business Standard</em>
+            <em class="news-date">27 October, 2016.</em>
           </li>
           <li>
-            <a href="javascript:void(0);">Srei Infra goes Amazon way, takes iQuippo global.</a>
-            <em>DNA</em>
-            <em class="news-date">23 March, 2017.</em>
+            <a href="http://www.livemint.com/Industry/8Zhrj5JkavLCmTCaqi48vK/Srei-launches-online-marketplace-iQuippo-for-construction-eq.html" target="_blank">Srei launches online marketplace iQuippo for construction equipment.</a>
+            <em>Mint</em>
+            <em class="news-date">27 October, 2016.</em>
           </li>
           <li>
-            <a href="javascript:void(0);">Srei Infra goes Amazon way, takes iQuippo global.</a>
-            <em>DNA</em>
-            <em class="news-date">13 Feburary, 2017.</em>
+            <a href="http://www.thehindubusinessline.com/info-tech/srei-launches-digital-platform-iquippo/article9276237.ece" target="_blank">Srei launches online platform iQuippo.</a>
+            <em>The Hindu Business Line</em>
+            <em class="news-date">27 October, 2016.</em>
           </li>
         </ul>
       </div>
