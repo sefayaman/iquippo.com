@@ -183,6 +183,7 @@
             filter.enterpriseId = Auth.getCurrentUser().enterpriseId; 
           }
         }
+        filter.productCondition = "used";
         productSvc.getProductOnFilter(filter).then(function(response) {
           if(response && response.length < 1) {
             $state.go('main');

@@ -284,6 +284,8 @@ exports.search = function(req, res) {
     filter.bidRequestApproved = false;
   if(req.body.bidReceived)
     filter.bidReceived = true;
+  if(req.body.productCondition)
+    filter.productCondition = req.body.productCondition;
   if(req.body.role && req.body.userid) {
     var usersArr = [req.body.userid];
     fetchUsers(req.body.userid,function(data){
@@ -323,6 +325,8 @@ exports.search = function(req, res) {
     Seq()
     .par(function(){
       var self = this;
+      if(!req.query.count)
+        return self();
       Product.count(filter,function(err,counts){
         result.totalItems = counts;
         self(err);
@@ -330,6 +334,9 @@ exports.search = function(req, res) {
     })
     .par(function(){
       var self = this;
+      if(req.query.count)
+        return self();
+
       var assetIdCache ={};
       query.exec(function (err, products) {
           if(err) { return handleError(res, err); }
@@ -452,6 +459,8 @@ exports.search = function(req, res) {
       }
     })
     .seq(function(){
+      if(req.query.count)
+        return res.status(200).json(result.totalItems);
       res.setHeader('Cache-Control','private,max-age=2592000');
       return res.status(200).json(result.products);
     })
@@ -515,7 +524,6 @@ function paginatedProducts(req,res,filter,result){
   })
  
 }
-
 
 //bulk product update
 exports.bulkUpdate = function(req,res){

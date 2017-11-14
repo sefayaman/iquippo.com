@@ -4,18 +4,57 @@
   angular.module('account').controller('ForgotPasswordCtrl', ForgotPasswordCtrl);
 
   //Controller function
-  function ForgotPasswordCtrl($scope, Auth,LocationSvc, $rootScope, $uibModal, $uibModalInstance, commonSvc, Modal, notificationSvc) {
+  function ForgotPasswordCtrl($scope,$state,Auth,LocationSvc, $rootScope,commonSvc, Modal, notificationSvc) {
 
     var vm = this;
     vm.data = {};
     vm.sendOTP = sendOTP;
-    vm.closeDialog = closeDialog;
+    vm.validateUser = validateUser;
+    //vm.closeDialog = closeDialog;
     vm.validateOtp = validateOtp;
     vm.changePassword = changePassword;
 
-
-    $scope.isApproved = false;
+    $scope.isUserFound = false;
+    $scope.step = 1;
     $scope.errors = {};
+
+    function validateUser(form){
+
+      if(form.$invalid){
+        $scope.submitted = true;
+        return;
+      }
+
+      if (!vm.data.mobile && !vm.data.email) {
+        Modal.alert('Please enter registered email address or mobile number', true);
+        return;
+      }
+      var data = {};
+      if (vm.data.email) 
+          data['email'] = vm.data.email;
+      if(vm.data.mobile)
+        data['mobile'] = vm.data.mobile;
+      $rootScope.loading = true;
+      Auth.validateUser(data)
+      .then(function(res) {
+        $rootScope.loading = false;
+        if (res && res.data.errorCode == 0) {
+          $scope.user = res.data.user;
+          $scope.isUserFound = true;
+          sendOTP();
+
+        } else {
+          Modal.alert("We are unable to find your account.Please provide your register email", true);
+        }
+      })
+      .catch(function(res) {
+        $rootScope.loading = false;
+        $scope.isUserFound = false;
+        console.log(res.data);
+      });
+
+
+    }
 
     function sendOTP() {
 
@@ -23,89 +62,86 @@
         Modal.alert('Please enter registered email address or mobile number', true);
         return;
       }
+
       var data = {};
       data['sendToClient'] = 'n';
-      if (vm.data.email) {
-        data['email'] = vm.data.email;
-        data['otpOn'] = "email";
-      } else {
+      if (vm.data.email) 
+          data['email'] = vm.data.email;
+      if(vm.data.mobile)
         data['mobile'] = vm.data.mobile;
-        data['otpOn'] = "mobile";
-      }
-      Auth.validateUser(data).
-      success(function(res) {
-        if (res && res.errorCode == 0) {
-          $scope.user = res.user;
-          data['countryCode']=LocationSvc.getCountryCode($scope.user.country);
-          data['userId'] = res.user._id;
-          data['content'] = 'Your verification OTP is';
-          commonSvc.sendOtp(data)
-            .then(function() {
-              Modal.alert('OTP has been sent successfully!', true);
-            })
-            .catch(function(res) {
-              Modal.alert("Error occured in sending OTP.Please try again.", true);
-            })
-
-        } else {
-          Modal.alert("We are unable to find your account.Please provide your register email", true);
-        }
-      }).
-      error(function(res) {
-        console.log(res);
-      });
+        data['countryCode']= LocationSvc.getCountryCode($scope.user.country);
+        data['userId'] = $scope.user._id;
+        data['content'] = 'Your verification OTP is';
+        $rootScope.loading = true;
+        commonSvc.sendOtp(data)
+          .then(function() {
+            $rootScope.loading = false;
+            Modal.alert('OTP has been sent successfully!', true);
+          })
+          .catch(function(res) {
+            $rootScope.loading = true;
+            Modal.alert("Error occured in sending OTP.Please try again.", true);
+          });
     }
 
     function validateOtp() {
       var data = {};
       data['otp'] = vm.data.otp;
-      Auth.validateOtp(data).
-      success(function(res) {
-        $scope.isApproved = true;
-      }).
-      error(function(res) {
-
+      data['userId'] = $scope.user._id;
+      Auth.validateOtp(data)
+      .then(function(res) {
+        $scope.step = 2;
+      })
+      .catch(function(res) {
+        if(res.data)
+          Modal.alert(res.data);
+        $scope.step = 1;
       })
     }
 
 
-    function changePassword(form1) {
+    function changePassword(form) {
 
-      if (!vm.data.password || vm.data.password !== vm.data.confirmPassword) {
-        Modal.alert("Password and confirm password should be same");
-        return;
+       if(form.$invalid) {
+          $scope.submitted = true;
+          return;
       }
-      if (form1.$invalid) {
-        $scope.submitted = true;
+
+      if (!vm.data.password || !vm.data.passwordConfirm) {
+        Modal.alert("Password and confirm password should be same");
         return;
       }
 
       Auth.resetPassword($scope.user._id, vm.data.password)
-        .success(function(res) {
-          $scope.message = 'Password successfully changed.';
+        .then(function(res) {
           var data = {};
-          data['to'] = Auth.getCurrentUser().email;
+          data['to'] = $scope.user.email;
           data['subject'] = 'Password Changed: Success';
           var dataToSend = {};
-          dataToSend['fname'] = Auth.getCurrentUser().fname;
-          dataToSend['lname'] = Auth.getCurrentUser().lname;
+          dataToSend['fname'] = $scope.user.fname;
+          dataToSend['lname'] = $scope.user.lname;
           dataToSend['serverPath'] = serverPath;
           notificationSvc.sendNotification('userPasswordChangedEmail', data, dataToSend, 'email');
-          data['to'] = Auth.getCurrentUser().mobile;
+          data['to'] = $scope.user.mobile;
           data['countryCode']=LocationSvc.getCountryCode($scope.user.country);
           notificationSvc.sendNotification('passwordChangesSmsToUser', data, dataToSend, 'sms');
-          closeDialog();
+          Modal.alert('Password successfully changed.');
+          $state.go("main");
         })
-        .error(function(res) {
-          form1.password.$setValidity('mongoose', false);
+        .catch(function(res) {
+          if(res.data)
+            Modal.alert(res.data);
+          form.password.$setValidity('mongoose', false);
           $scope.errors.other = 'Incorrect password';
           $scope.message = '';
         });
     }
 
-    function closeDialog() {
-      $uibModalInstance.dismiss('cancel');
-    };
+    Auth.isLoggedInAsync(function(isLooogedIn){
+      if(isLooogedIn)
+        $state.go('main');
+    });
+
   }
 
 })();

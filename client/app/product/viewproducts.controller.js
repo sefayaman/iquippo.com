@@ -54,12 +54,6 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
       .then(function(result){
         $scope.categoryList = result;
         allCategory = result;
-        /*if($stateParams.category){
-           allCategory.forEach(function(catObj){
-            if(catObj.name === $stateParams.category)
-              $scope.equipmentSearchFilter.group = catObj.group.name;
-          });
-        }*/
         if($stateParams.group)
             onGroupChange($stateParams.group,true);
       });
@@ -74,33 +68,6 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
       restoreState();
       fireCommand(true,true);
       
-     /* switch($state.current.name){
-        case 'productbygroup':
-            $scope.equipmentSearchFilter = {group:$stateParams.group};
-            onGroupChange($scope.equipmentSearchFilter.group,true);
-            fireCommand(true,true);   
-          break;
-        case 'productbycategory':
-              $scope.equipmentSearchFilter = {category:$stateParams.category};
-              onCategoryChange($scope.equipmentSearchFilter.category,true);
-              fireCommand(true,true);
-          break;
-        case 'productbybrand':
-            $scope.equipmentSearchFilter = {brand:$stateParams.brand};
-            fireCommand(true,true);
-          break;
-        case 'viewproduct':
-            $scope.equipmentSearchFilter = $stateParams;
-            fireCommand(true,true);
-            //if($stateParams.category)
-             // $scope.equipmentSearchFilter
-        break;
-        default:
-            //$state.go('main');
-          break;
-      }*/
-
-    //updateCompareCount();
   }
 
   function onGroupChange(group,noAction){
@@ -155,6 +122,7 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
       filter['status'] = true;
       filter['sort'] = {featured:-1};
       $scope.searching = true;
+      filter.productCondition = "used";
 
      productSvc.getProductOnFilter(filter)
       .then(function(result){
@@ -170,6 +138,11 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
       })
       .catch(function(){
         //error handling
+      });
+
+      productSvc.getProductCount(filter)
+      .then(function(count){
+        $scope.count = count;
       });
   };
 

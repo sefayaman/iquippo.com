@@ -445,7 +445,9 @@ function MasterDataCtrl($scope, $rootScope,MasterDataService, groupSvc, modelSvc
 	 function uploadImage(files,modelRef,type,autoUpdate,key){
 	 	if(!files.length)
 	 		return;
+	 	$rootScope.loading = true;
 	 	uploadSvc.upload(files[0],categoryDir).then(function(result){
+	 		$rootScope.loading = false;
 	 		if(key)
 			 modelRef[key] = result.data.filename;
 			else
@@ -455,6 +457,9 @@ function MasterDataCtrl($scope, $rootScope,MasterDataService, groupSvc, modelSvc
 	 			updateMasterdataStatus(modelRef);
 	 		}
 	 		
+	    })
+	    .catch(function(err){
+	    	$rootScope.loading = false;
 	    });
 	 }
 

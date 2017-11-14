@@ -333,18 +333,18 @@ var StatusChangeConfirmationMsg = {
 }
 
 var tradeType = [
-{
+/*{
   "name" : "Rent",
   "code" : "RENT"
-},
+},*/
 {
   "name" : "Sell",
   "code" : "SELL"
-},
+}/*,
 {
   "name" : "Both",
   "code" : "BOTH"
-}
+}*/
 ];
 
 var rateMyEquipmentOpt = [

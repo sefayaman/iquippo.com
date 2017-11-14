@@ -28,7 +28,7 @@ var ProductSchema = new Schema({
   country:String,
   state:String,
   city:String,
-  productCondition:String,
+  productCondition:{type:String,default:'used'},
   images:[{}],
   videos:[{}],
   primaryImg: String,

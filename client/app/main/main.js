@@ -40,7 +40,7 @@ angular.module('sreizaoApp')
       .state('forgotpassword', {
         url: '/forgotpassword',
         templateUrl: 'app/account/forgotpassword/forgotpassword.html',
-        controller: 'ForgotPasswordCtrl as ForgotPasswordVm',
+        controller: 'ForgotPasswordCtrl as forgetPassVm',
         layout:'client'
       })  
       .state('contactus', {

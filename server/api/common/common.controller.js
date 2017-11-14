@@ -79,9 +79,8 @@ exports.sendOtp = function(req, res) {
 	});
 
 	function sendOtpOnMobile(cb){
-		/*var ret = true;
-		if(!req.body.mobile || ret)
-			return cb();*/
+		if(!req.body.mobile)
+			return cb();
 
 		var smsData = {};
 		smsData.subject = 'OTP Message';
@@ -96,9 +95,9 @@ exports.sendOtp = function(req, res) {
 	}
 
 	function sendOtpOnEmail(cb){
-		/*var ret = true;
-		if(!req.body.email || ret)
-			return cb()*/
+		if(!req.body.email)
+			return cb();
+
 		var emailData = {};
 		emailData.to = req.body.email;
 		emailData.subject = 'OTP Message';
