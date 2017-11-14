@@ -1030,6 +1030,11 @@ body{font-family: Lato-Regular ,sans-serif;}
   border-radius:3px 0 0 3px;
 }
 .upcoming-auction .media a{display: block; padding: 10px;}
+.upcoming-auction .media.all-auctions a{display: inline-block; padding: 0;}
+.upcoming-auction .media.all-auctions a.pull-left{display: block; padding: 0;}
+.upcoming-auction .media.all-auctions a.pull-left img{width: 170px; height: 215px;}
+.upcoming-auction .media.all-auctions i{margin-right:8px; font-size: 1.2em;}
+.upcoming-auction .media.all-auctions .btn{border-radius: 4px; border-color: #ddd; padding: 15px; font-size: 12px; font-weight: bold; letter-spacing: 1px; box-shadow: 0 0 3px #eee; text-transform: uppercase;}
 .upcoming-auction .media a img{height: 200px; max-width: 100%;}
 .upcoming-auction .media .category-block .btn{padding: .6em 3em; border-radius: 3px; font-size: 1.2em;}
 .upcoming-auction .media .calendar-date h4{margin: 0; font-size: 3em;}
@@ -1076,7 +1081,7 @@ align-items: center; justify-content: center;
 #search-result_wrapper .media .table{margin: 0;}
 #search-result_wrapper .media .table small{font-size: 1rem;}
 #search-result_wrapper .media .table > tbody > tr > td{padding: 5px;}
-#search-result_wrapper .media .btn-primary, .asset-sale .btn-primary, .information-tabs .btn-primary{border-radius: 4px; font-size: 1em; text-transform: uppercase; padding-top: 0.9em; padding-bottom: 0.9em; font-size: 12px; letter-spacing: 2px;}
+#search-result_wrapper .media .btn-primary, .asset-sale .btn-primary, .asset-sale .btn-danger, .information-tabs .btn-primary, {border-radius: 4px; text-transform: uppercase; padding-top: 0.9em; padding-bottom: 0.9em; font-size: 12px; letter-spacing: 2px;}
 .information .panel-group .panel.panel-default{box-shadow: 0 1px 3px #eee; border: #efefef;}
 .information .panel-group .panel.panel-default .panel-heading{background: transparent; border:0; padding: 0;}
 .information .panel-group .panel.panel-default .panel-heading a{display:block;outline:none;text-decoration:none;padding:10px;}
@@ -1423,7 +1428,7 @@ footer .subscribe{height: 40px;}
 .signin .btn-primary{padding: 0.8em 2em; font-size: 12px;}
 .signin .floating-lable-form{min-height: calc(150px - 10px); padding-top: 1em;}
 .signin small, .signup small{font-size: 10px; color: #999;}
-.signin .text-danger, .signup .text-danger{color: #e31e24;}
+.text-danger{color: #e31e24;}
 .stamp-image{position: absolute; top: 5%; left: 5%; max-width: 150px;}
 .social-facebook,.social-twitter,.social-linkedin{color: #999; font-size: 12px; border-radius: 4px; word-spacing: 5px;}
 .social-facebook i{color:#3A5795; font-size: 18px; vertical-align:  middle;}
@@ -1437,6 +1442,7 @@ footer .subscribe{height: 40px;}
 .brand-name{display: flex; align-items: center; justify-content: center; min-height: 130px;}
 .registration-forms{display: flex; align-items: center; min-height: 130px;}
 .brand-name img{max-width: 100%;}
+.modal-title{text-transform: uppercase; font-size: 16px; font-weight: bold;}
 
 @media (max-width:640px){
 
