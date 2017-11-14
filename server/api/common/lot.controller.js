@@ -81,7 +81,7 @@ var ReqSubmitStatuses = ['Request Submitted', 'Request Failed'];
   function update(lotReq){
     var id = lotReq._id;
     delete lotReq._id;
-    Lot.update({_id:id},{$set:lotReq},function(err,retVal){
+    Lot.update({_id:id},{$set:{"reqSubmitStatus":lotReq.reqSubmitStatus}},function(err,retVal){
       if (err) { console.log("Error with updating lot request"); }
     console.log("Auction Lot Updated");
     }); 
@@ -396,8 +396,9 @@ exports.destroy = function(req, res) {
       Lot.find({'_id': req.params.id}, function(err, lotResult) {
         Util.sendCompiledData(options, function(err, result) {
           if (err || (result && result.err)) {
-              options.dataToSend.isDeleted = false;
-              update(options.dataToSend);
+              //options.dataToSend.isDeleted = false;
+              //update(options.dataToSend);
+              Lot.update({_id:req.params.id},{$set:{"isDeleted":false}}).exec();
               if(result && result.err) {
                 return res.status(412).send(result.err); 
               }
@@ -408,8 +409,9 @@ exports.destroy = function(req, res) {
               });
             }
             if(result){
-              options.dataToSend.isDeleted = true;
-              update(options.dataToSend);
+              //options.dataToSend.isDeleted = true;
+              //update(options.dataToSend);
+              Lot.update({_id:req.params.id},{$set:{"isDeleted":true}}).exec();
               AuctionRequest.update({'lot_id': req.params.id, 'dbAuctionId':lotResult[0].auction_id}, {$set: {'isDeleted': true}}, {multi: true}, function(aucErr, resultData) {
                 if (aucErr)
                   return handleError(res, err);

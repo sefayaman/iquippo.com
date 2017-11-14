@@ -6,9 +6,9 @@
 	<div class="modal-body">
 		<form class="techInformationForm" name="offlineform" ng-if="viewMode === 'paymentAdd'" novalidate>
 			<div class="row">
-				<div class="col-sm-6 form-group text-left" ng-class="{'has-error': offlineform.paymentMode.$invalid && submitted}">
+				<div class="col-sm-6 form-group text-left" ng-class="{'has-error': offlineform.paymentModeType.$invalid && submitted}">
 					<label>*Mode of Payment</label>
-					<select class="form-control" ng-model="offlinePaymentVm.dataModel.paymentMode" name="paymentMode" required>
+					<select class="form-control" ng-model="offlinePaymentVm.dataModel.paymentModeType" name="paymentModeType" required>
 		              <option value="">Mode of Payment</option>
 		              <option ng-repeat="mode in modeOfPayment" value="{{mode.name}}">{{mode.name}}</option>
 		            </select>

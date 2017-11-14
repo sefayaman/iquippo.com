@@ -1352,7 +1352,7 @@
       }
       if($scope.lot.lot_id) {
         $scope.auctionReq.lot_id = $scope.lot.lot_id;
-        $scope.auctionReq.lotNumber = $scope.lot.lotNumber;
+        $scope.auctionReq.lotNo = $scope.lot.lotNumber;
       }
       
       if ($scope.valuationReq.valuate) {

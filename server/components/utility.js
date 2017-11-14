@@ -337,6 +337,10 @@ function fetchAuctionId(options, callback) {
 function compileData(options, callback) {
   switch (options.dataType) {
     case "userInfo":
+    /*if(options.dataToSend.selectedLots) {
+      options.dataToSend.selectedLots = options.dataToSend.selectedLots.join();
+      console.log("options.dataToSend.selectedLots", options.dataToSend.selectedLots)
+    }*/
       callback(null, options);
       break;
     case "lotData":

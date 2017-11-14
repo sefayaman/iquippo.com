@@ -8,14 +8,12 @@ function OfflinePaymentCtrl($scope,$rootScope,Modal,$stateParams,$state,$uibModa
   var vm = this;
   vm.dataModel = {};
   $scope.modeOfPayment = modeOfPayment;
-  //vm.dataModel.paymentMode = "";
   vm.save = save;
   vm.closeDialog = closeDialog;
 
  	function init(){
     angular.copy($scope.offlinePayment, vm.dataModel);
-    vm.dataModel.paymentMode = "";
-		vm.dataModel.amount =  $scope.offlinePayment.totalAmount;
+    vm.dataModel.amount =  $scope.offlinePayment.totalAmount;
     vm.dataModel.transactionId =  $scope.offlinePayment.transactionId;
    }
    
@@ -26,7 +24,7 @@ function OfflinePaymentCtrl($scope,$rootScope,Modal,$stateParams,$state,$uibModa
     }
     vm.dataModel.payments = [];
     var stsObj = {};
-    stsObj.paymentMode = vm.dataModel.paymentMode;
+    stsObj.paymentModeType = vm.dataModel.paymentModeType;
     stsObj.refNo = vm.dataModel.refNo;
     stsObj.paymentDate = vm.dataModel.paymentDate;
     stsObj.amount = vm.dataModel.amount;

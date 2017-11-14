@@ -159,13 +159,48 @@ function _create(data, cb) {
         });
       data.createdAt = new Date();
       data.updatedAt = new Date();
-      AuctionRequest.create(data, function(err, auction) {
+        
+      AuctionRequest.create(data, function(err, auctionAsset) {
         if (err) {
           return new Error('Unable to create auction : ', data.auctionId)
         }
-        return cb({
-          errorCode: 0,
-          message: "Success."
+        //return cb({errorCode: 0,message: "Success."});
+        
+        //data._id = auction._id;
+        var options = {};
+        options.dataToSend ={};
+        options.dataToSend._id = auctionAsset._id;
+        options.dataToSend.assetId = auctionAsset.product.assetId;
+        options.dataToSend.assetDesc = auctionAsset.product.description;
+        options.dataToSend.auction_id = auctionAsset.dbAuctionId;
+        options.dataToSend.auctionId = auctionAsset.auctionId;
+        options.dataToSend.lot_id = auctionAsset.lot_id;
+        options.dataToSend.assetDir = auctionAsset.product.assetDir;
+        options.dataToSend.primaryImg = config.awsUrl + config.awsBucket + "/assets/uploads/" + auctionAsset.product.assetDir + "/" + auctionAsset.product.primaryImg;
+        if(auctionAsset.product.otherImages) {
+          options.dataToSend.images = [];
+          for (var i=0; i < auctionAsset.product.otherImages.length; i++) {
+            options.dataToSend.images[options.dataToSend.images.length] = config.awsUrl + config.awsBucket + "/assets/uploads/" + auctionAsset.product.assetDir + "/" + auctionAsset.product.otherImages[i];
+          }
+        }
+        
+        options.dataToSend.seller = {};
+        options.dataToSend.seller.contactNumber = auctionAsset.product.contactNumber;
+        options.dataToSend.seller.contactName = auctionAsset.product.contactName;
+        options.dataType = "assetData";
+        
+        Utility.sendCompiledData(options, function(err, result) {
+             if (err || (result && result.err)) {
+              options.dataToSend.reqSubmitStatus = ReqSubmitStatuses[1];
+              updateAsset(options.dataToSend);
+              if (result && result.err)
+                return cb({errorCode: 3,message: "Unable to post asset request. Please contact support team."});
+            }
+            if (result) {
+              options.dataToSend.reqSubmitStatus = ReqSubmitStatuses[0];
+              updateAsset(options.dataToSend);
+              return cb({errorCode: 0,message: "Asset request submitted successfully !!!"});
+            }
         });
       });
 
@@ -413,7 +448,6 @@ exports.bulkUpload = function(req, res, next) {
     return next(new APIError(404, 'No Excel sheet found for upload'));
 
   var worksheet = workbook.Sheets[workbook.SheetNames[0]];
-
   var data = xlsx.utils.sheet_to_json(worksheet);
   var field_map = {
     'Auction_ID*': 'auctionId',
@@ -1083,7 +1117,7 @@ function postRequest(req, res){
   function update(auctionReq){
     var _id = auctionReq._id;
     delete auctionReq._id;
-    AuctionMaster.update({_id:_id},{$set:auctionReq},function(err,retVal){
+    AuctionMaster.update({_id:_id},{$set:{"reqSubmitStatus":auctionReq.reqSubmitStatus}},function(err,retVal){
       if (err) { console.log("Error with updating auction request");}
       console.log("Auction Request Updated");
     }); 
@@ -1603,18 +1637,18 @@ exports.deleteAuctionMaster = function(req, res) {
       options.dataType="auctionData";
       Utility.sendCompiledData(options,function(err,result){
         if (err || (result && result.err)) {
-          options.dataToSend.isDeleted = false;
-          update(options.dataToSend);
-          //AuctionMaster.update({_id: req.params.id}, {$set: {isDeleted: false}}).exec();
+          //options.dataToSend.isDeleted = false;
+          //update(options.dataToSend);
+          AuctionMaster.update({_id: req.params.id}, {$set: {isDeleted: false}}).exec();
           if(result && result.err) {
             return res.status(412).send(result.err); 
           }
           return res.status(412).send("Unable to delete auction request. Please contact support team.");
         }
         if(result){
-          options.dataToSend.isDeleted = true;
-          update(options.dataToSend);
-          //AuctionMaster.update({_id: req.params.id}, {$set: {isDeleted: true}}).exec();
+          //options.dataToSend.isDeleted = true;
+          //update(options.dataToSend);
+          AuctionMaster.update({_id: req.params.id}, {$set: {isDeleted: true}}).exec();
           return res.status(201).json({errorCode: 0,message: "Auction request deleted successfully !!!"});
         }
       });

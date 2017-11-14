@@ -7,7 +7,7 @@ var commonFunc = require('./commonFunc');
 
 function _insertAuctionData(uploadData, cb) {
 	var productCols = ['assetId', 'productId', 'brand', 'category', 'city', 'contactName', 'contactNumber', 'description', 'engineNo', 'invioceDate', 'isSold', 'model', 'originalInvoice', 'registrationNo', 'vatPercentage', 'saleVal'];
-	var auctionCols = ['auctionId', 'dbAuctionId', 'endDate', 'external', 'startDate'];
+	var auctionCols = ['auctionId', 'dbAuctionId','lot_id','endDate', 'external', 'startDate'];
 	var userCols = ['_id','email','mobile'];
 	var duplicateRecords = [],
 		errObj = [];
@@ -71,7 +71,6 @@ function _insertAuctionData(uploadData, cb) {
 
 						return next();
 					}
-
 					commonFunc.fetchAuctionMaster(collec.auctionId, function(err, auctionMaster) {
 						if (err) {
 							errObj.push({
@@ -80,7 +79,6 @@ function _insertAuctionData(uploadData, cb) {
 							})
 							return next();
 						}
-
 						if (auctionMaster && !auctionMaster.length) {
 							errObj.push({
 								Error: 'Auction not exist in auction master ' + collec.auctionId,
@@ -88,6 +86,29 @@ function _insertAuctionData(uploadData, cb) {
 							})
 							return next();
 						}
+
+						obj.auctionId = auctionMaster[0]._id + "";
+						var lotFilter = {
+							lotNumber: collec.lotNo,
+							auction_id: auctionMaster[0]._id.toString()
+						};
+
+						commonFunc.fetchLotMaster(lotFilter, function(err, lotData) {
+							if (err) {
+								errObj.push({
+									Error: 'Unable to fetch lot master' + collec.auctionId,
+									rowCount: collec.rowCount
+								})
+								return next();
+							}
+
+							if (lotData && !lotData.length) {
+								errObj.push({
+									Error: 'Lot not exist in lot master ' + collec.auctionId,
+									rowCount: collec.rowCount
+								})
+								return next();
+							}
 
 						commonFunc.fetchCategory(collec.category, function(err, categoryData) {
 							if (err) {
@@ -188,7 +209,15 @@ function _insertAuctionData(uploadData, cb) {
 									})
 
 									obj.type = 'auction';
-									obj.lotNo = collec.lotNo;
+									obj.auction.lot_id = lotData[0]._id.toString();
+									obj.lotNo = lotData[0].lotNumber;
+
+									obj.statuses=[{
+										"createdAt":new Date(),
+										"userId":obj.user._id,
+										"status":'request submitted'
+									}]
+									obj.status='request submitted';
 									insertData.push(obj);
 
 									return next();
@@ -199,7 +228,8 @@ function _insertAuctionData(uploadData, cb) {
 				})
 			})
 		})
-	}
+	})
+}
 
 	function finalize(err) {
 		if (err) {

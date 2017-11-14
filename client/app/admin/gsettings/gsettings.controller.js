@@ -1604,7 +1604,7 @@
             }
             if($scope.lot) {
                 vm.auctionProduct.lot_id = $scope.lot._id;
-                vm.auctionProduct.lotNumber = $scope.lot.lotNumber;
+                vm.auctionProduct.lotNo = $scope.lot.lotNumber;
             }
             $rootScope.loading = true;
             AuctionSvc.save(vm.auctionProduct)
@@ -1704,7 +1704,7 @@
 
             if($scope.lot){
                 vm.auctionProduct.lot_id = $scope.lot._id;
-                vm.auctionProduct.lotNumber = $scope.lot.lotNumber;
+                vm.auctionProduct.lotNo = $scope.lot.lotNumber;
             }
             console.log("the auction Data",vm.auctionProduct);
             $rootScope.loading = true;
