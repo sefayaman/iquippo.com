@@ -83,7 +83,7 @@
           </div>
         </div>
         <div class="row">      
-            <div class="col-sm-6 col-md-4 form-group" ng-repeat="product in productList" >
+            <div class="col-sm-6 col-md-4 form-group" ng-repeat="product in productList  | startFrom:(newequipmentlistVm.currentPage -1 )*newequipmentlistVm.itemsPerPage | limitTo:newequipmentlistVm.itemsPerPage" >
             <div class="media text-center form-group">
               <a href="javascript:void(0);">
                  <img src="{{uploadImagePrefix}}{{product.assetDir}}/{{product.primaryImg}}" class="img-responsive">              

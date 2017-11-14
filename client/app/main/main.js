@@ -167,7 +167,7 @@ angular.module('sreizaoApp')
             "&type&currencyType&currencyMin&currencyMax&" +
             "&mfgYearMin&mfgYearMax&stateName&cityName&assetId&"+
             "searchstr&operatingHour&mileage&productName&location&locationName&certificationName",
-        templateUrl: 'app/product/viewproducts.html',
+        templateUrl: 'app/newequipment/newproducts.html',
         controller: 'NewViewProductsCtrl as newviewproductVm',
          layout:'client'
       })
