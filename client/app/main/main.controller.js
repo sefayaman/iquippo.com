@@ -6,7 +6,7 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
   function MainCtrl($scope, $rootScope, $uibModal, Auth, productSvc, categorySvc,groupSvc,brandSvc,LocationSvc,$state, Modal, UtilSvc,spareSvc,ManpowerSvc,BannerSvc,BiddingSvc,CountSvc,AuctionSvc,CertificateMasterSvc) {
     var vm = this;
     vm.allCategoryList = [];
-    vm.activeCategoryList = [];
+    //vm.categoryList = [];
     vm.newsEvents = newsEvents;
     vm.myInterval = 7000;
     vm.noWrapSlides = false;
@@ -14,6 +14,10 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
     $scope.toggle1=true;
     $scope.toggle2=true;
     $scope.toggle3=true;
+
+    vm.newBrand = true;
+    vm.newCategory = true;
+    vm.newGroup = true;
 
     vm.singleBox = true;
 
@@ -33,11 +37,33 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
     vm.toggleSearchBox = toggleSearchBox;
     vm.getBrandCount = getBrandCount;
     vm.getCategoryCount = getCategoryCount;
+    vm.toggleTab = toggleTab;
+
+    var usedFilter = {
+      isForUsed : true,
+      visibleOnUsed :true,
+      sortBy:'priorityForUsed'
+    };
+
+    var newFilter = {
+      isForNew : true,
+      visibleOnNew :true,
+      sortBy:'priorityForNew'
+    };
   
     $scope.$on('resetBannerTimer',function(){
       vm.myInterval = 7000;
       getHighestBids();
-    })
+    });
+
+    function toggleTab(tabType,isNew){
+      if(tabType === 0)
+        vm.newBrand = isNew;
+      else if(tabType === 1)
+        vm.newCategory = isNew;
+      else if(tabType === 2)
+        vm.newGroup = isNew;
+    }
 
     function toggleSearchBox(showSingleBox){
       vm.singleBox = showSingleBox;
@@ -99,10 +125,24 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
 
 
     function getCategories(){
-      categorySvc.getCategoryForMain()
+      var filter = angular.copy(usedFilter);
+      filter.productCount = true;
+      categorySvc.getCategoryOnFilter(filter)
       .then(function(result){
-          vm.activeCategoryList = result;
-          $scope.categoryList = vm.activeCategoryList.slice(0,12);
+          vm.categoryList = result;
+      })
+      .catch(function(res){
+        //error handling
+      });
+
+    }
+
+    function getCategoriesForNew(){
+      var filter = angular.copy(newFilter);
+      filter.productCount = true;
+      categorySvc.getCategoryOnFilter(filter)
+      .then(function(result){
+          vm.categoryListForNew = result;
       })
       .catch(function(res){
         //error handling
@@ -111,9 +151,23 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
     }
 
     function getGroup(){
-      groupSvc.getAllGroup({isForUsed:true,visibleOnUsed:true,categoryCount:true})
+     var filter = angular.copy(usedFilter);
+     filter.categoryCount = true;
+       groupSvc.getAllGroup(filter)
       .then(function(groups){
         vm.groups = groups;
+      })
+      .catch(function(err){
+        Modal.alert("Error in fetching group");
+      });
+    }
+
+    function getGroupForNew(){
+    var filter = angular.copy(newFilter);
+     filter.categoryCount = true;
+      groupSvc.getAllGroup(filter)
+      .then(function(groups){
+        vm.groupsForNew = groups;
       })
       .catch(function(err){
         Modal.alert("Error in fetching group");
@@ -131,9 +185,19 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
     }
 
     function getBrands(){
-      brandSvc.getBrandOnFilter({isForUsed:true,visibleOnUsed:true})
+      brandSvc.getBrandOnFilter(usedFilter)
       .then(function(brands){
         vm.brands = brands;
+      })
+      .catch(function(err){
+        Modal.alert("Error in fetching brands");
+      });
+    }
+
+    function getBrandsForNew(){
+      brandSvc.getBrandOnFilter(newFilter)
+      .then(function(newBrands){
+        vm.brandsForNew = newBrands;
       })
       .catch(function(err){
         Modal.alert("Error in fetching brands");
@@ -144,6 +208,13 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
       brandSvc.getCount({isForUsed:true})
       .then(function(brandCount){
         vm.brandCount = brandCount;
+      });
+    }
+
+    function getBrandCountForNew(){
+      brandSvc.getCount({isForNew:true})
+      .then(function(brandCount){
+        vm.brandCountForNew = brandCount;
       });
     }
 
@@ -193,6 +264,13 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
       });
     }
 
+    function getCategoryCountForNew(){
+      categorySvc.getCount({isForNew:true})
+      .then(function(categoryCount){
+        vm.categoryCountForNew = categoryCount;
+      });
+    }
+
      function myFunct(keyEvent) {
       if(keyEvent)
           keyEvent.stopPropagation();
@@ -202,23 +280,11 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
     }
  
 
-    function doSearch(){
+    function doSearch(isNew){
 
       if(!vm.searchstr && !vm.categorySearchText && !vm.locationSearchText && !vm.groupSearchText && !vm.brandSearchText){
-        //Modal.alert("Please enter category name or location or product name");
         return;
       }
-
-      /*if(vm.categorySearchText && !UtilSvc.validateCategory(vm.allCategoryList, vm.categorySearchText)){
-        Modal.alert("Please enter valid category");
-        return;
-      }
-
-      if(vm.groupSearchText && !groupSvc.validateCategory(vm.allCategoryList, vm.categorySearchText)){
-        Modal.alert("Please enter valid category");
-        return;
-      }*/
-      
       var filter = {};
       if(vm.categorySearchText)
         filter['category'] = vm.categorySearchText.trim();
@@ -234,17 +300,25 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
         filter['searchstr'] = vm.searchstr.trim();
 
       //productSvc.setFilter(filter);
-      $state.go('viewproduct',filter);
+      if(!isNew)
+        $state.go('viewproduct',filter);
+      else
+        Modal.alert("go to new equipment serach");
     }
     
     //Clearing Finance integration cookie
     Auth.removeCookies();
     getHomeBanner();
     getGroup();
+    getGroupForNew();
     getCategories();
+    getCategoriesForNew();
     getBrands();
+    getBrandsForNew();
     getBrandCount();
+    getBrandCountForNew();
     getCategoryCount();
+    getCategoryCountForNew();
     getAuctions();
     getCertification();
   }

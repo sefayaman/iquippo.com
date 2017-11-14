@@ -59,6 +59,8 @@ exports.getBrandOnFilter = function(req,res){
       filter['isForNew'] = true;
   if(data.visibleOnUsed)
       filter['visibleOnUsed'] = true;
+   if(data.visibleOnNew)
+    filter['visibleOnNew'] = true;
   filter['$or'] = [{name:'Other'}];
    if(data.brandId)
     tempFilter['_id'] = data.brandId;

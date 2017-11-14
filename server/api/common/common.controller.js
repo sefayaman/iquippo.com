@@ -250,7 +250,7 @@ exports.getSettingByKey = function(req, res) {
 
 exports.updateMasterDataStatus = function(req,res){
 
-	var UpdatableField = ['visibleOnUsed','imgSrc'];
+	var UpdatableField = ['visibleOnUsed','visibleOnNew','imgSrc'];
 	var type = req.body.type;
 	var modelRef = null;
 	if(type === 'Group')

@@ -20,6 +20,10 @@ exports.get = function(req, res,next) {
     filter['isForNew'] = true;
   if(queryData.isForUsed)
     filter['isForUsed'] = true;
+  if(queryData.visibleOnUsed)
+    filter['visibleOnUsed'] = true;
+   if(queryData.visibleOnNew)
+    filter['visibleOnNew'] = true;
   if(queryData.searchStr){
     var term = new RegExp(queryData.searchStr, 'i');
     filter['name'] = { $regex: term };
@@ -199,10 +203,6 @@ exports.createSubCategory = function(req, res) {
     
   });
 };
-/*exports.searchCategory = function(req, res) {
-  
-
-};*/
 
 function handleError(res, err) {
   return res.status(500).send(err);

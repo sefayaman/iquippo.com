@@ -21,7 +21,7 @@
       <div class="row" ng-if="mainVm.singleBox">
         <div class="col-sm-offset-3 col-sm-6">          
           <div class="input-group">
-            <input type="text" placeholder="Search for Assets and More" ng-model="mainVm.searchstr" class="form-control"  ng-keypress="mainVm.myFunct($event)" />
+            <input type="text" placeholder="Search for Assets and More" ng-model="mainVm.searchstr" class="form-control"/>
             <a href="javascript:void(0);" class="input-group-addon" ng-click="mainVm.toggleSearchBox(false)">Choose</a>
           </div>
         </div>
@@ -38,16 +38,16 @@
                 </div>
               </div>
               <div class="col-sm-3 padd-left padd-right select-text">
-                <input type="text" placeholder="Industry Name" ng-model="mainVm.groupSearchText" class="form-control" uib-typeahead="address for address in getGroupHelp($viewValue,'isForUsed')" typeahead-focus-first = "false" typeahead-wait-ms="200" ng-keypress="mainVm.myFunct($event)"/>
+                <input type="text" placeholder="Industry Name" ng-model="mainVm.groupSearchText" class="form-control" uib-typeahead="address for address in getGroupHelp($viewValue,'isForUsed')" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
               </div>
               <div class="col-sm-3 padd-left padd-right select-text">
-                <input type="text" ng-model="mainVm.categorySearchText" placeholder="Category" uib-typeahead="address for address in getCategoryHelp($viewValue,'isForUsed')"  class="form-control"  ng-keypress="mainVm.myFunct($event)" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
+                <input type="text" ng-model="mainVm.categorySearchText" placeholder="Category" uib-typeahead="address for address in getCategoryHelp($viewValue,'isForUsed')"  class="form-control" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
               </div>
               <div class="col-sm-3 padd-left padd-right select-text">
-                <input type="text" class="form-control" ng-model="mainVm.locationSearchText" placeholder="Seller Location" uib-typeahead="address for address in getLocationHelp($viewValue)"  class="form-control" ng-keypress="mainVm.myFunct($event)" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
+                <input type="text" class="form-control" ng-model="mainVm.locationSearchText" placeholder="Seller Location" uib-typeahead="address for address in getLocationHelp($viewValue)"  class="form-control" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
               </div> 
               <div class="col-sm-2 padd-left padd-right select-text">
-                <input type="text" class="form-control" placeholder="Brand" ng-model="mainVm.brandSearchText" class="form-control" uib-typeahead="address for address in getBrandHelp($viewValue,'isForUsed')" typeahead-wait-ms="200" ng-keypress="mainVm.myFunct($event)"/>
+                <input type="text" class="form-control" placeholder="Brand" ng-model="mainVm.brandSearchText" class="form-control" uib-typeahead="address for address in getBrandHelp($viewValue,'isForUsed')" typeahead-wait-ms="200"/>
               </div>
             </div>
           </div>
@@ -55,8 +55,8 @@
       </div>
     </div>
     <div class="col-sm-offset-3 col-sm-6 text-center">
-      <button type="button" class="btn btn-default" data-ng-click="mainVm.doSearch()">New Equipment</button>
-      <button type="button" class="btn btn-default" data-ng-click="mainVm.doSearch()">Used Equipment</button>
+      <button type="button" class="btn btn-default" data-ng-click="mainVm.doSearch(true)">New Equipment</button>
+      <button type="button" class="btn btn-default" data-ng-click="mainVm.doSearch(false)">Used Equipment</button>
     </div>
 
   </div>
@@ -67,12 +67,13 @@
   <div class="container text-center">
     <div class="heading-titles">
       <h4>[ Browse By Brands ]</h4>
-      <a href="/used/brands">View All ({{mainVm.brandCount}})</a>
+      <a href="/used/brands" ng-if="!mainVm.newBrand">View All ({{mainVm.brandCount || 0}})</a>
+      <a href="/new/brands" ng-if="mainVm.newBrand">View All ({{mainVm.brandCountForNew || 0}})</a>
     </div>
     <uib-tabset justified="false">
-      <uib-tab heading="New Equipment">
+      <uib-tab heading="New Equipment" select="mainVm.toggleTab(0,true)">
         <div class="row">
-          <div class="col-xs-6 col-sm-4 form-group text-center" ng-repeat="brand in mainVm.brands" ng-if="$index < 3">   
+          <div class="col-xs-6 col-sm-4 form-group text-center" ng-repeat="brand in mainVm.brandsForNew" ng-if="$index < 3">   
             <div class="brand-logo">
               <a href="/new/brands/{{brand.name}}?currentPage=1">
                 <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{brand.imgSrc}}">
@@ -81,7 +82,7 @@
           </div>
         </div>
       </uib-tab>
-      <uib-tab heading="Used Equipment">
+      <uib-tab heading="Used Equipment" select="mainVm.toggleTab(0,false)">
         <div class="row">
           <div class="col-xs-6 col-sm-4 form-group text-center" ng-repeat="brand in mainVm.brands" ng-if="$index < 3">   
             <div class="brand-logo">
@@ -126,22 +127,23 @@
   <div class="container text-center">
     <div class="heading-titles">
       <h4>[ Browse Used Equipment By Category ]</h4>
-      <a href="/used/allcategories">View All ({{mainVm.categoryCount}})</a>
+      <a href="/used/allcategories" ng-if="!mainVm.newCategory">View All ({{mainVm.categoryCount || 0}})</a>
+      <a href="/new/allcategories" ng-if="mainVm.newCategory">View All ({{mainVm.categoryCountForNew || 0}})</a>
     </div>
     <uib-tabset justified="false">
-      <uib-tab heading="New Equipment">
+      <uib-tab heading="New Equipment" select="mainVm.toggleTab(1,true)">
         <div class="row">
-          <div class="col-sm-4 form-group text-center" ng-repeat="category in categoryList" ng-if="$index < 6">   
-            <a href="/used/{{category.group.name}}/{{category.name}}?currentPage=1" class="cat-rectangle">
+          <div class="col-sm-4 form-group text-center" ng-repeat="category in mainVm.categoryListForNew" ng-if="$index < 6">   
+            <a href="/new/{{category.group.name}}/{{category.name}}?currentPage=1" class="cat-rectangle">
               <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{category.imgSrc}}" class="category-item">
             </a>
             <h5 class="category-name">{{category.name}} ({{category.count}})</h5>
           </div>
         </div>
       </uib-tab>
-      <uib-tab heading="Used Equipment">
+      <uib-tab heading="Used Equipment" select="mainVm.toggleTab(1,false)">
         <div class="row">
-          <div class="col-sm-4 form-group text-center" ng-repeat="category in categoryList" ng-if="$index < 6">   
+          <div class="col-sm-4 form-group text-center" ng-repeat="category in mainVm.categoryList" ng-if="$index < 6">   
             <a href="/used/{{category.group.name}}/{{category.name}}?currentPage=1" class="cat-rectangle">
               <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{category.imgSrc}}" class="category-item">
             </a>
@@ -177,10 +179,10 @@
       <h4>[ Browse Used Equipment By Industry ]</h4>
     </div>
     <uib-tabset justified="false">
-      <uib-tab heading="New Equipment">
+      <uib-tab heading="New Equipment" select="mainVm.toggleTab(2,true)">
         <div class="row">
-          <div class="col-sm-4 form-group text-center" ng-repeat="group in mainVm.groups" ng-if="$index < 9">   
-            <a href="/used/{{group.name}}?currentPage=1" class="industy-rectangle">
+          <div class="col-sm-4 form-group text-center" ng-repeat="group in mainVm.groupsForNew" ng-if="$index < 6">   
+            <a href="/new/{{group.name}}?currentPage=1" class="industy-rectangle">
               <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{group.imgSrc}}" class="category-item">
             </a>
             <div class="category-name">
@@ -190,9 +192,9 @@
           </div>
         </div>
       </uib-tab>
-      <uib-tab heading="Used Equipment">
+      <uib-tab heading="Used Equipment" select="mainVm.toggleTab(2,true)">
         <div class="row">
-          <div class="col-sm-4 form-group text-center" ng-repeat="group in mainVm.groups" ng-if="$index < 9">   
+          <div class="col-sm-4 form-group text-center" ng-repeat="group in mainVm.groups" ng-if="$index < 6">   
             <a href="/used/{{group.name}}?currentPage=1" class="industy-rectangle">
               <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{group.imgSrc}}" class="category-item">
             </a>
