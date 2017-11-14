@@ -13,15 +13,15 @@
       <h4>[ NEW EQUIPMENTS ]</h4>
       <p>Choose from a complete range of Jcb®, TataMotors® &amp; Cat® equipments, power systems, work tools and technology solutions.</p>
     </div>
-    <div ng-controller="NewEquipmentCtrl as newEquipmentVm">
+<!--    <div ng-controller="NewEquipmentCtrl as newEquipmentVm">
       <ul class="new-equipment-brand">
         <li ng-repeat="newBrand in allBrand | limitTo:newEquipmentVm.bImgLimit">
-          <a href="newequipment/viewproducts?brand={{newBrand.name}}" title="">
+          <a href="new/viewproducts?brand={{newBrand.name}}" title="">
             <img src="{{uploadImagePrefix}}{{categoryDir}}/{{newBrand.imgSrc}}" alt="">
           </a>
         </li>
       </ul>
-    </div>
+    </div>-->
   </div>
 </section>
 
@@ -30,13 +30,13 @@
   <div class="container text-center">
     <div class="heading-titles">
       <h4>[ Browse By Brands ]</h4> 
-      <a href="/newequipment/viewproducts">View All ({{newEquipmentVm.bTotalItems}})</a>
+      <a href="/new/brands">View All ({{newEquipmentVm.bTotalItems}})</a>
     </div>
 
     <div class="row">
       <div class="col-sm-4 form-group text-center" ng-repeat="brand in allBrand | limitTo:newEquipmentVm.bLimit" >   
         <div class="brand-logo">
-          <a href="/newequipment/viewproducts?brand={{brand.name}}">
+          <a href="/new/brands/{{brand.name}}">
             <img src="{{uploadImagePrefix}}{{categoryDir}}/{{brand.imgSrc}}" width="100%" height="100">
           </a>
         </div>
@@ -64,16 +64,16 @@
   <div class="container-fluid text-center">
     <div class="heading-titles">
       <h4>[ Browse By Category ]</h4>
-      <a href="/newequipment/viewproducts">View All ({{newEquipmentVm.cTotalItems}})</a>
+      <a href="/new/viewproducts">View All ({{newEquipmentVm.cTotalItems}})</a>
     </div>
     <div class="row">
       <div class="col-sm-4 form-group text-center" ng-repeat="category in allCategory| limitTo:newEquipmentVm.cLimit">   
         <div class="cat-rectangle">
-          <a href="/newequipment/viewproducts?category={{category.name}}">
+          <a href="/new/{{category.group.name}}/{{category.name}}?currentPage=1"> {{category.group.name}}/{{category.name}}
             <img src="{{uploadImagePrefix}}{{categoryDir}}/{{category.imgSrc}}" class="category-item">
           </a>
         </div>
-        <h5 class="category-name"><a href="/newequipment/viewproducts?category={{category.name}}">{{category.name}} </a></h5>
+        <h5 class="category-name"><a href="/new/{{category.name}}?currentPage=1">{{category.name}} </a></h5>
       </div>
       
     </div>

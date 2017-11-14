@@ -1,0 +1,751 @@
+<div class="container-fluid">
+  <ol class="breadcrumb">
+    <li><a href="/">Home</a></li>
+    <li><a href="/new/viewproducts">{{currentProduct.group.name}}</a></li>
+    <li ng-if="currentProduct.category.name != 'Other'">{{currentProduct.category.name}}</li>
+    <li ng-if="currentProduct.category.name == 'Other'">{{currentProduct.category.otherName}}</li>
+    <li><a class="active">{{currentProduct.name}}</a></li>
+  </ol>
+</div>
+<div class="view-content">
+  <section class="wrapper">
+    <div class="container-fluid">
+      <div class="alert alert-danger" ng-if="currentProduct.assetStatus == 'sold' || currentProduct.assetStatus == 'rented'">
+        The product has been <span ng-if="currentProduct.assetStatus == 'sold'">sold</span><span ng-if="currentProduct.assetStatus == 'rented'">rented</span>
+      </div>
+      <div class="alert alert-danger" ng-if="currentProduct.tradeType == 'NOT_AVAILABLE'">
+        This asset is currently not available for sale
+      </div>
+      <div class="row">
+        <div class="col-sm-7 form-group">
+          <div class="carousel slide article-slide" id="article-photo-carousel">
+            <!-- Wrapper for slides -->
+            <div class="carousel-inner cont-slider">
+              <div class="item" ng-repeat="thumbnailImage in currentProduct.images" ng-class="{'active':thumbnailImage.isPrimary && !thumbnailImage.catImgType}">
+                <img alt="" title="" ng-src="{{thumbnailImage.displaySrc}}" class="img-responsive" ng-click="productDetailVm.previewProduct(currentProduct.images, $index)">
+              </div>
+            </div>
+            <div class="stamp-image">
+              <img src="/assets/images/certified.png" class="img-responsive">
+            </div>
+            <!-- Indicators -->
+            <ol class="carousel-indicators">
+              <li class="" data-slide-to="{{$index}}" ng-class="{'active':thumbnailImage.isPrimary && !thumbnailImage.catImgType}" data-target="#article-photo-carousel" ng-repeat="thumbnailImage in currentProduct.images | limitTo:5">
+                <img alt="" ng-src="{{uploadImagePrefix}}{{currentProduct.assetDir}}/{{thumbnailImage.src}}" class="img-responsive img-thumbnail" ng-click = "imageClick()">
+              </li>
+            </ol>
+          </div>
+        </div>
+        <div class="col-sm-5 form-group">
+          <div class="currentproduct-info">
+            <h2>
+            {{currentProduct.name}}
+            </h2>
+            <div class="row locale-operation">
+              <div class="col-xs-4 form-group">
+                <span><i class="fa fa-map-marker"></i> {{currentProduct.country}}</span>
+              </div>
+              <div class="col-xs-4 form-group">
+                <span><i class="fa fa-clock-o"></i> {{currentProduct.operatingHour}}Hours</span>
+              </div>
+              <div class="col-xs-4 form-group">
+                <span><i class="fa fa-calendar-o"></i> {{currentProduct.mfgYear}}</span>
+              </div>
+            </div>
+          </div>
+          <div class="asset-sale" ng-if="currentProduct.tradeType == 'SELL' || currentProduct.tradeType == 'BOTH' || currentProduct.tradeType == 'NOT_AVAILABLE'">
+            <form novalidate name="assetSale">
+              <div class="row">
+                <div class="col-sm-8">
+                  <div> Asset ID: <strong>{{currentProduct.assetId}}</strong> </div>
+                </div>
+                <div class="col-sm-4 text-right" ng-if="productDetailVm.bidCount !== 0">
+                  <p>[{{productDetailVm.bidCount}} Bids]</p>
+                </div>
+              </div>
+              <div class="listed-item" ng-if="auctionsData.name"><i class="fa fa-gavel"></i> <strong>Listed in Auction:</strong> <span class="text-info">{{auctionsData.name}} ({{auctionsData.auctionId}}) </span>  <span class="pull-right"><i class="fa fa-calendar"></i> {{auctionsData.startDate | date:'MMM d'}} - {{auctionsData.endDate | date:'MMM d'}}</span>
+              </div>
+              
+              <div class="price-offer" ng-if="!currentProduct.priceOnRequest">
+                <div class="row">
+                  <div class="col-sm-8 form-group">
+                    <label>To Buy</label>
+                    <h1 ng-if="currentProduct.grossPrice">
+                    <i class="fa fa-inr"></i> {{currentProduct.grossPrice | number:0}}/-
+                    </h1>
+                    <span ng-if="currentProduct.grossPrice">(Inclusive of Taxes)</span>
+                    <h1 ng-if="!currentProduct.grossPrice">
+                    <i class="fa fa-inr"></i> Price On Request/-
+                    </h1>
+                  </div>
+                  <div class="col-sm-4 form-group">
+                    <label class="invisible">To Buy</label>
+                      <a href="javascript:void(0);" ng-click="productDetailVm.openBidModal(currentProduct.grossPrice || 0,'buynow')" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE' || auctionsData.visibleBuyNow == false  || productDetailVm.userCurrentBid.offerType == 'Buynow'" class="btn btn-primary btn-block">Buy Now</a>
+                  </div>                  
+                </div>
+                <div class="option-border text-center">
+                  <span class="option">or</span>
+                  <hr>
+                </div>
+              </div>
+              
+              <div class="row price-offer">
+                <div class="col-sm-6 form-group">
+                  <label>To Negotiate</label>
+                  <div ng-class="{'has-error': assetSale.bidAmount.$invalid && bidSubmitted}">
+                        <input type="number" class="form-control" name="bidAmount" ng-model="productDetailVm.bidAmount" placeholder="Enter Bid Amount" required>
+                  </div>
+                </div>
+                <div class="col-sm-6 form-group">
+                  <label class="invisible">To Negotiate</label> <br>
+                  <button type="button" ng-if="(!isLoggedIn() || userBids == 0) && allowBid != 'No'" class="btn btn-primary" ng-click="productDetailVm.openBidModal(productDetailVm.bidAmount,'placebid',assetSale)" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE'">
+                  Place Bid
+                  </button>
+                  <button type="button" ng-if="isLoggedIn() && userBids >= 1 && (allowBid != 'No')" class="btn btn-primary" ng-click="productDetailVm.openBidModal(productDetailVm.bidAmount,'placebid',assetSale)" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE'">Change Bid</button>
+                  <button type="button" ng-if="isLoggedIn() && userBids >= 1 && (allowBid != 'No')" class="btn btn-primary" ng-click="productDetailVm.withdrawBid()" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE'">Withdraw</button>
+                  <button type="button" ng-if="allowBid == 'No'" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE' || auctionsData.visibleBuyNow == false" class="btn btn-primary" ng-click="productDetailVm.openBidModal(productDetailVm.bidAmount,'proxybid',assetSale)">Proxy Bid</button>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="row text-center">
+            <div class="col-xs-4" ng-repeat="doc in currentProduct.miscDocuments" ng-if="doc.type == 'Rcupload' && doc.name">
+              <h1>
+              <a href="{{uploadImagePrefix}}{{currentProduct.assetDir}}/{{doc.name}}" target="_blank">
+                <i class="fa fa-file-text-o fa-2x"></i>
+              </a>
+              </h1>
+              Registration Certificate
+            </div>
+            <div class="col-xs-4" ng-repeat="doc in currentProduct.miscDocuments" ng-if="doc.type == 'Invoice' && doc.name">
+              <h1>
+
+              <a href="{{uploadImagePrefix}}{{currentProduct.assetDir}}/{{doc.name}}" target="_blank">
+                <i class="fa fa-file-text-o fa-2x"></i>
+              </a>
+              </h1>
+              Original Invoice
+            </div>
+            <div class="col-xs-4" ng-repeat="doc in currentProduct.miscDocuments" ng-if="doc.type == 'Taxchallan' && doc.name">
+              <h1>
+              <a href="{{uploadImagePrefix}}{{currentProduct.assetDir}}/{{doc.name}}" target="_blank">
+                <i class="fa fa-file-text-o fa-2x"></i>
+              </a>
+              </h1>
+              Tax Recipts
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="information-tabs" ng-if="currentProduct.tradeType == 'RENT' || currentProduct.tradeType == 'BOTH'">
+        <h3>For Rent</h3>
+        <div>
+          <form novalidate class="forRent" name="forRent">
+            
+            <div class="table-responsive">
+              <table class="table table-bordered">
+                <tr>
+                  <th class="col-sm-4">Time Duration</th>
+                  <th class="col-sm-4">Rate</th>
+                  <th class="col-sm-4">Security Deposit</th>
+                </tr>
+                <tr ng-if="currentProduct.rent.rateHours.rateType == 'hours'">
+                  <td>Hourly</td>
+                  <td><i class="fa fa-inr"></i> {{currentProduct.rent.rateHours.rentAmountH}}</td>
+                  <td><i class="fa fa-inr"></i>{{currentProduct.rent.rateHours.seqDepositH}} </td>
+                </tr>
+                <tr ng-if="currentProduct.rent.rateDays.rateType == 'days'">
+                  <td>Daily</td>
+                  <td><i class="fa fa-inr"></i> {{currentProduct.rent.rateDays.rentAmountD}}</td>
+                  <td><i class="fa fa-inr"></i>{{currentProduct.rent.rateDays.seqDepositD}}</td>
+                </tr>
+                <tr ng-if="currentProduct.rent.rateMonths.rateType == 'months'">
+                  <td>Monthly</td>
+                  <td><i class="fa fa-inr"></i> {{currentProduct.rent.rateMonths.rentAmountM}}</td>
+                  <td><i class="fa fa-inr"></i> {{currentProduct.rent.rateMonths.seqDepositM}}</td>
+                </tr>
+              </table>
+            </div>
+            <div class="text-right">
+              <button type="submit" ng-disabled="currentProduct.assetStatus == 'sold'" class="btn btn-warning" ng-click="negotiate('forRent','rent')">Get it Now</button>
+            </div>
+          </form>
+          <hr>
+          <div class="text-right">
+            <button type="submit" class="btn btn-primary" ng-click="productDetailVm.addProductToCart(currentProduct)">Add to Cart</button>
+          </div>
+          <small>* Other Terms &amp; Conditions applied.</small>
+        </div>
+      </div>
+      <div class="information-tabs" ng-if="isLoggedIn()">
+        <div ng-if="currentProduct.dispSellerInfo == 'yes'">
+          <h3>Contact Seller</h3>
+        </div>
+        <div ng-if="currentProduct.dispSellerInfo == 'yes'">
+          <form novalidate name="">
+            <div class="row">
+              <div class="col-xs-6 col-sm-4">
+                <div class="form-group">
+                  Name
+                </div>
+              </div>
+              <div class="col-xs-6 col-sm-4">
+                <div class="form-group">
+                  {{currentProduct.seller.fname + ' ' + currentProduct.seller.mname + ' ' + currentProduct.seller.lname}}
+                </div>
+              </div>
+            </div>
+          </form>
+          <div class="row" ng-if="currentProduct.dispSellerContact == 'true' ">
+            <form novalidate name="">
+              <div class="col-xs-6 col-sm-4">
+                <div class="form-group" >
+                  Contact Number
+                </div>
+              </div>
+              <div class="col-xs-6 col-sm-4">
+                <div class="form-group">
+                  {{currentProduct.seller.mobile}}
+                </div>
+              </div>
+              
+            </form>
+          </div>
+          <div class="row" ng-if="currentProduct.dispSellerAlternateContact == 'true' ">
+            <form novalidate name="">
+              <div class="col-xs-6 col-sm-4">
+                <div class="form-group" >
+                  Contact Number
+                </div>
+              </div>
+              <div class="col-xs-6 col-sm-4">
+                <div class="form-group">
+                  {{currentProduct.alternateMobile}}
+                </div>
+              </div>
+              
+            </form>
+          </div>
+          
+          
+        </div>
+      </div>
+
+      <uib-tabset justified="true" class="information-tabs">
+        <uib-tab heading="Basic information">
+          <div class="row">
+            <div class="col-xs-6 col-sm-4 col-md-2 form-group">
+              <label>Asset ID</label>
+              <h4>{{currentProduct.assetId}}</h4>
+            </div>
+            <div class="col-xs-6 col-sm-4 col-md-2 form-group">
+              <label>Brand / Model</label>
+              <h4 ng-if="currentProduct.brand.name != 'Other' && currentProduct.model.name != 'Other'">{{currentProduct.brand.name}} / {{currentProduct.model.name}}</h4>
+              <h4 ng-if="currentProduct.brand.name == 'Other' && currentProduct.model.name == 'Other'">{{currentProduct.brand.otherName}} / {{currentProduct.model.otherName}}</h4>
+              <h4 ng-if="currentProduct.brand.name != 'Other' && currentProduct.model.name == 'Other'">{{currentProduct.brand.name}} / {{currentProduct.model.otherName}}</h4>
+            </div>
+            <div class="col-xs-6 col-sm-4 col-md-2 form-group">
+              <label>Category</label>
+              <h4 ng-if="currentProduct.category.name != 'Other'">{{currentProduct.category.name}}</h4>
+              <h4 ng-if="currentProduct.category.name == 'Other'">{{currentProduct.category.otherName}}</h4>
+            </div>
+            <div class="col-xs-6 col-sm-4 col-md-2 form-group">
+              <label>Manufacturing Year</label>
+              <h4>{{currentProduct.mfgYear}}</h4>
+            </div>
+            <div class="col-xs-6 col-sm-4 col-md-2 form-group" ng-if="currentProduct.operatingHour">
+              <label>Operating Hours/HMR</label>
+              <h4>{{currentProduct.operatingHour}}</h4>
+            </div>
+            <div class="col-xs-6 col-sm-4 col-md-2 form-group" ng-if="currentProduct.mileage">
+              <label>Mileage/KMR</label>
+              <h4>{{currentProduct.mileage}}</h4>
+            </div>
+            <div class="col-xs-6 col-sm-4 col-md-2 form-group" ng-if="currentProduct.serialNo">
+              <label>Machine Serial No.</label>
+              <h4>{{currentProduct.serialNo}}</h4>
+            </div>
+            <div class="col-xs-6 col-sm-4 col-md-2 form-group">
+              <label>Country</label>
+              <h4>{{currentProduct.country}}</h4>
+            </div>
+            <div class="col-xs-6 col-sm-4 col-md-2 form-group">
+              <label>Location</label>
+              <h4>{{currentProduct.city}}</h4>
+            </div>
+            <div class="col-xs-6 col-sm-4 col-md-2 form-group" ng-if="currentProduct.tradeType != 'RENT'">
+              <label>Price (Excl. Tax).</label>
+              <h4>
+              <span ng-if="currentProduct.priceOnRequest">Price On Request</span>
+              <span ng-if="!currentProduct.priceOnRequest">
+                <i class="fa fa-inr" ng-if="currentProduct.currencyType == 'INR'"></i>
+              {{currentProduct.grossPrice |number:0}} </span>
+              </h4>
+            </div>
+            <div class="col-xs-6 col-sm-4 col-md-2 form-group" ng-if="currentProduct.productCondition">
+              <label>Product Condition</label>
+              <h4>{{currentProduct.productCondition}}</h4>
+            </div>
+            <div class="col-xs-6 col-sm-4 col-md-2 form-group" ng-if="currentProduct.documentName">
+              <label>Documents</label>
+              <h4>
+              <span ng-repeat="miscDoc in currentProduct.miscDocuments" class="document-space">
+                <a href="{{uploadImagePrefix}}{{currentProduct.assetDir}}/{{currentProduct.documentName}}" class="" target="_blank" uib-popover="{{miscDoc.type}}" popover-trigger="mouseenter" ><span><i class="fa fa-file-pdf-o"></i></span></a>
+              </span>
+              </h4>
+            </div>
+            <div class="col-xs-12 form-group" ng-if="currentProduct.comment">
+              <label>Comments</label>
+              <h4>{{currentProduct.comment}}</h4>
+            </div>
+          </div>
+        </uib-tab>
+        <uib-tab heading="Rent information" ng-if="currentProduct.tradeType != 'SELL' && currentProduct.tradeType != 'NOT_AVAILABLE'">
+          <h5 class="text-left"><strong>Availability of asset</strong></h5>
+          <div class="row">
+            <div class="col-sm-6 text-left">
+              <label>From </label>
+              <p>{{productDetailVm.getDateFormat(currentProduct.rent.fromDate)}}</p>
+            </div>
+            <div class="col-sm-6 text-left">
+              <label>To</label>
+              <p>{{productDetailVm.getDateFormat(currentProduct.rent.toDate)}}</p>
+            </div>
+          </div>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Min. Rental Period</th>
+                <th>Max. Rental Period</th>
+                <th>Rent Amount</th>
+                <th>Security Deposit</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-if="currentProduct.rent.rateHours.rateType == 'hours'">
+                <td><b>Hours</b></td>
+                <td>{{currentProduct.rent.rateHours.minPeriodH}}</td>
+                <td>{{currentProduct.rent.rateHours.maxPeriodH}}</td>
+                <td>{{currentProduct.rent.rateHours.rentAmountH}}</td>
+                <td>{{currentProduct.rent.rateHours.seqDepositH}}</td>
+              </tr>
+              <tr ng-if="currentProduct.rent.rateDays.rateType == 'days'">
+                <td><b>Days</b></td>
+                <td>{{currentProduct.rent.rateDays.minPeriodD}}</td>
+                <td>{{currentProduct.rent.rateDays.maxPeriodD}}</td>
+                <td>{{currentProduct.rent.rateDays.rentAmountD}}</td>
+                <td>{{currentProduct.rent.rateDays.seqDepositD}}</td>
+              </tr>
+              <tr ng-if="currentProduct.rent.rateMonths.rateType == 'months'">
+                <td><b>Months</b></td>
+                <td>{{currentProduct.rent.rateMonths.minPeriodM}}</td>
+                <td>{{currentProduct.rent.rateMonths.maxPeriodM}}</td>
+                <td>{{currentProduct.rent.rateMonths.rentAmountM}}</td>
+                <td>{{currentProduct.rent.rateMonths.seqDepositM}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </uib-tab>
+        <uib-tab heading="Technical information">
+          <table class="table table-striped">
+            <tr ng-repeat="techInfo in currentProduct.technicalInfo.params" ng-if="techInfo.key">
+              <td widtd="50%">{{techInfo.key}}</td>
+              <td>{{techInfo.value}}</td>
+            </tr>
+            <tr ng-if="currentProduct.technicalInfo.grossWeight">
+              <td>Gross Weight</td>
+              <td>{{currentProduct.technicalInfo.grossWeight}}</td>
+            </tr>
+            <tr ng-if="currentProduct.technicalInfo.operatingWeight">
+              <td>Operating Weight</td>
+              <td>{{currentProduct.technicalInfo.operatingWeight}}</td>
+            </tr>
+            <tr ng-if="currentProduct.technicalInfo.bucketCapacity">
+              <td>Bucket Capacity</td>
+              <td>{{currentProduct.technicalInfo.bucketCapacity}}</td>
+            </tr>
+            <tr ng-if="currentProduct.technicalInfo.enginePower">
+              <td>Engine Power</td>
+              <td>{{currentProduct.technicalInfo.enginePower}}</td>
+            </tr>
+            <tr ng-if="currentProduct.technicalInfo.liftingCapacity">
+              <td>Lifting Capacity</td>
+              <td>{{currentProduct.technicalInfo.liftingCapacity}}</td>
+            </tr>
+            <!-- <tr>
+              <td>Specification Document</td>
+              <td><a href="{{uploadImagePrefix}}{{currentProduct.documentName}}" class="text-muted" target="_blank" >{{currentProduct.documentName}}</a></td>
+            </tr> -->
+            <!-- <tr>
+              <td>Product Video</td>
+              <td>{{currentProduct.videoName}}</td>
+            </tr> -->
+          </table>
+        
+        </uib-tab>
+        <uib-tab heading="Service information" ng-if="!productDetailVm.checkServiceInfo(currentProduct.serviceInfo)">
+          <table class="table table-striped">
+            <tr>
+              <td>Service Date</td>
+              <td>Operating hrs(km/m.hrs)</td>
+              <td>Service At</td>
+              <td>Authorized Service Station</td>
+            </tr>
+            <tr ng-repeat="serviceInfo in currentProduct.serviceInfo">
+              <td>{{serviceInfo.servicedate}}</td>
+              <td>{{serviceInfo.operatingHour}}</td>
+              <td>{{serviceInfo.serviceAt}}</td>
+              <td>{{serviceInfo.authServiceStation}}</td>
+            </tr>
+          </table>
+        </uib-tab>
+      </uib-tabset>
+      <div class="information-tabs" ng-if="(currentProduct.tradeType == 'BOTH') || (currentProduct.tradeType == 'SELL') || (currentProduct.tradeType == 'NOT_AVAILABLE')">
+        <h4>Terms &amp; Conditions</h4>
+        <div>
+          <h5>Buy Now:</h5>
+          <ul>
+            <li>
+              Buyer needs to deposit an EMD of INR 1,00,000 within 24 hours of the acceptance of offer
+            </li>
+            <li>
+              Buyer must make full payment within the stipulated time period as communicated by the facilitator.
+            </li>
+            <li>
+              In case the buyer fails to deposit the sale consideration within the stipulated time frame, the EMD would stand forfeited and offer as null and void.
+            </li>
+            <li>
+              Payment can be made online through iQuippo payment gateway or directly into the bank account through cheque, DD, RTGS or NetBanking.
+            </li>
+            <li class="bank-detail">
+              <table class="table">
+                <tr>
+                  <th colspan="2">Bank Details:</th>
+                </tr>
+                <tr>
+                  <td>Bank Name:</td>
+                  <td>AXIS BANK LIMITED</td>
+                </tr>
+                <tr>
+                  <td>Branch Name:</td>
+                  <td>ELECTRONIC COMPLEX,SALT LAKE,SECTOR-V</td>
+                </tr>
+                <tr>
+                  <td>Account Number:</td>
+                  <td>917020058796837</td>
+                </tr>
+                <tr>
+                  <td>Account Holder Name:</td>
+                  <td>IQUIPPO SERVICES PRIVATE LIMITED</td>
+                </tr>
+                <tr>
+                  <td>IFSC Code:</td>
+                  <td>UTIB0000319</td>
+                </tr>
+              </table>
+            </li>
+            <li>
+              Listed Price inclusive of GST and Parking &amp; Upkeep Charges.
+            </li>
+            <li>
+              TCS over and above the offer amount.
+            </li>
+          </ul>
+          <h5>Make an Offer:</h5>
+          <ul>
+            <li>
+              In case the asset is listed in auction, bidder needs to agree to the terms &amp; conditions, and deposit an EMD for the offer to be considered as a proxy bid.
+            </li>
+            <li>
+              In case the bid is approved in the auction, the buyer needs to deposit the consideration price as per the terms and conditions of the auction. Failure to do so will result in forfeiture of EMD.
+            </li>
+            <li>
+              Payment can be made online through iQuippo payment gateway or directly into the bank account through cheque, DD, RTGS or NetBanking.
+            </li>
+            <li>
+              Offer to be made inclusive of GST.
+            </li>
+            <li>
+              TCS and Parking &amp; Upkeep Charges as applicable and payable by the buyer over and above the offer amount.
+            </li>
+          </ul>
+          <p>
+            <strong>Note:</strong> For further details and assistance, please contact 033 66022059 / 66245500
+          </p>
+        </div>
+      </div>
+      <uib-tabset justified="true" class="information-tabs">
+        <uib-tab heading="Easy Financing">
+          <form  novalidate class="financeReq" name="financeReq">
+            <div>
+              <div class="row">
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <input type="number"  class="form-control" min="0" name="assetCost" ng-model="reqFinance.financeInfo.assetCost" ng-value="currentProduct.grossPrice" placeholder="Amount to be Financed">
+                  </div>
+                </div>
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <input type="number" class="form-control" name="indicativeRate" ng-model="reqFinance.financeInfo.indicativeRate" min= '0' placeholder="Indicative Rate">
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <input type="text" class="form-control" name="periodInMonths" ng-model="reqFinance.financeInfo.periodInMonths" min= '0' placeholder="Tenure (in Months)">
+                  </div>
+                </div>
+                <div class="col-xs-6">
+                  <div class="form-group" ng-class="{'has-error': financeReq.finAgency.$invalid && financeSubmitted }">
+                    <select class="form-control" name="finAgency" ng-model="reqFinance.financeInfo.finAgency" required>
+                      <option value="" disabled>* Financing Company</option>
+                      <option  ng-repeat="finAgency in valDetailsAgencies" value="{{finAgency.name}}">{{finAgency.name}}</option>
+                    </select>
+                    <i class="caret"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <textarea class="form-control" name="message" ng-model="reqFinance.message" placeholder="Comments"></textarea>
+            </div>
+            <button type="submit"  ng-if="currentProduct.assetStatus == 'listed'" ng-disabled="currentProduct.tradeType == 'NOT_AVAILABLE'" ng-click="productDetailVm.requestForFinance(financeReq)" class="btn btn-primary pull-right">Submit</button>
+          </form>
+          <strong>Note:</strong> Financing at the sole discretion of the financier.
+        </uib-tab>
+        <uib-tab heading="Valuation Report">
+          <div ng-controller="ValuationRequestCtrl as valuationVm">
+            <form  novalidate class="valReqForm" name="valReqForm">
+              <div class="row">
+                <div class="col-sm-6 form-group">
+                  <input type="text" class="form-control" ng-value="valuationVm.valuationReq.product.category" placeholder="Category" disabled>
+                </div>
+                <div class="col-sm-6 form-group">
+                  <input type="text" class="form-control" ng-value="valuationVm.valuationReq.product.name" placeholder="Asset Name" disabled>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-6 form-group">
+                  <input type="text" class="form-control" ng-value="valuationVm.valuationReq.product.serialNumber" placeholder="Serial Number" disabled>
+                </div>
+                <div class="col-sm-6 form-group">
+                  <input type="text" class="form-control" ng-value="valuationVm.valuationReq.product.city" placeholder="Asset Location" disabled>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-6 form-group" ng-class="{'has-error':valReqForm.valagency.$invalid && valSubmitted}">
+                  <select class="form-control" name="valagency" required ng-model="valuationVm.valuationReq.valuationAgency._id">
+                    <option value="">Agency Name</option>
+                    <option value="{{agency._id}}" ng-repeat="agency in valAgencies">{{agency.name}}</option>
+                  </select>
+                  <i class="caret"></i>
+                </div>
+                <div class="col-sm-6 form-group" ng-class="{'has-error': valReqForm.purpose.$invalid && valSubmitted}">
+                  <select class="form-control" name="purpose" ng-model="valuationVm.valuationReq.purpose" required>
+                    <option value="Financing">Financing</option>
+                    <option ng-repeat="valuation in valuationList" value="{{valuation.name}}">{{valuation.name}}</option>
+                  </select>
+                  <i class="caret"></i>
+                </div>
+              </div>
+              <button type="submit" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE'" ng-click="valuationVm.submitValuationReq(valReqForm)" class="btn btn-primary pull-right">Submit</button>
+              <strong>Note:</strong> Valuation Charges - <i class="fa fa-inr"></i> 5,000
+            </form>
+          </div>
+        </uib-tab>
+        <uib-tab heading="Inspection Request">
+          <form  novalidate class="reqForCertify" name="reqForCertify">
+            <div class="row text-left">
+              <div class="col-xs-12 col-sm-4 form-group">Purpose of Inspection</div>
+              <div class="col-xs-6 col-sm-4 form-group" ng-class="{'has-error': reqForCertify.certification.$invalid && inspectSubmitted}">
+                <select class="form-control" ng-model="productQuote.certifiedByIQuippoQuote.valuation" name="certification" required>
+                  <option value="">*Select Purpose</option>
+                  <option ng-repeat="valuation in valuationList" value="{{valuation.name}}">{{valuation.name}}</option>
+                </select>
+              </div>
+              <div class="col-xs-6 col-sm-4 form-group" ng-class="{'has-error': productQuote.certifiedByIQuippoQuote.valuation == 'Other' &&!productQuote.certifiedByIQuippoQuote.otherName && !certifiedByIQuippoQuote.valid && inspectSubmitted}">
+                <input class="form-control" type="text" name="otherName" ng-model="productQuote.certifiedByIQuippoQuote.otherName" ng-disabled ="productQuote.certifiedByIQuippoQuote.valuation != 'Other'" placeholder="*Other" ng-required= "productQuote.certifiedByIQuippoQuote.valuation == 'Other'">
+              </div>
+            </div>
+            <div class="row text-left">
+              <div class="col-xs-12 col-sm-4 form-group">Schedule a call</div>
+              <div class="col-xs-6 col-sm-4 form-group">
+                <div class="radio radio-info">
+                  <input type="radio"  placeholder="" id="certifiedRadio1" name="scheduleC" ng-model="productQuote.certifiedByIQuippoQuote.scheduleC" value="yes">
+                  <label for="certifiedRadio1"> Yes </label>
+                </div>
+              </div>
+              <div class="col-xs-6 col-sm-4 form-group">
+                <div class="radio radio-info">
+                  <input type="radio" placeholder="" id="certifiedRadio2" name="scheduleC" ng-model="productQuote.certifiedByIQuippoQuote.scheduleC" value="no">
+                  <label for="certifiedRadio2"> No </label>
+                </div>
+                
+              </div>
+              
+              <div class="clerafix"></div>
+              <div class="col-xs-6 col-sm-offset-4 col-sm-4 form-group" ng-if="productQuote.certifiedByIQuippoQuote.scheduleC == 'yes'">
+                <small>Pick Date</small>
+                <div class="input-group" ng-class="{'has-error': !productQuote.certifiedByIQuippoQuote.scheduleDate && !certifiedByIQuippoQuote.valid && inspectSubmitted}">
+                  <input type="text" class="form-control pick-width" ng-model="productQuote.certifiedByIQuippoQuote.scheduleDate" uib-datepicker-popup="{{format}}" ng-name="scheduleDate" ng-value="" is-open="popup2.opened" min-date="minDate" max-date="maxDate" datepicker-options="datepickerOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" placeholder="dd/mm/yyyy" />
+                  <span class="input-group-addon">
+                    <a href class="btn btn-default" ng-click="open2()"><i class="fa fa-calendar-o"></i></a>
+                  </span>
+                </div>
+              </div>
+              
+              <div class="col-xs-6 col-sm-4 form-group" ng-if="productQuote.certifiedByIQuippoQuote.scheduleC == 'yes'">
+                <small>Set Time</small>
+                <div class="input-group">
+                  <input type="text" class="form-control" placeholder="HH:MM" ng-model="productQuote.certifiedByIQuippoQuote.scheduledTime" is-open=""  ng-value="{{productQuote.certifiedByIQuippoQuote.scheduledTime | date:'shortTime' }}" timepicker-options="timepickerOptions">
+                  <span class="input-group-addon">
+                    <button class="btn btn-default" ng-click="toggleMode()"><i class="fa fa-clock-o"></i></button>
+                  </span>
+                </div>
+                <uib-timepicker ng-if="isShow" ng-model="mytime" ng-change="changedCertified(mytime)" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></uib-timepicker>
+                
+              </div>
+            </div>
+            <div class="form-group">
+              <textarea class="form-control" placeholder="Comments" ng-model="productQuote.certifiedByIQuippoQuote.comment"></textarea>
+            </div>
+            <button type="submit" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE'" class="btn btn-primary pull-right" ng-click="productDetailVm.addProductQuote(reqForCertify)">Submit</button>
+            <strong>Note:</strong> Inspection Charges - <i class="fa fa-inr"></i> 3,000
+          </form>
+        </uib-tab>
+      </uib-tabset>
+      <div class="row">
+        
+        <!-- <div class="col-sm-5 col-md-5 panel-group" >
+          
+          <ul class="list-inline list-unstyled">
+            
+            <li ng-if="currentProduct.documentName">|</li>
+            <li ng-if="currentProduct.documentName">
+              <a href="{{uploadImagePrefix}}{{currentProduct.assetDir}}/{{currentProduct.documentName}}" class="text-muted" target="_blank" ><span><i class="fa fa-file-pdf-o"></i></span></a>
+            </li>
+          </ul>
+        </div> -->
+      </div>
+    </div>
+  </section>
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+$('.collapse').on('shown.bs.collapse', function(){
+$(this).parent().find("i").removeClass("fa-plus").addClass("fa-minus");
+}).on('hidden.bs.collapse', function(){
+$(this).parent().find("i").removeClass("fa-minus").addClass("fa-plus");
+});
+});
+function goTo(dir){
+$('#article-photo').carousel(dir);
+}
+</script>
+<script type="text/ng-template" id="magnifier.html">
+<div id="magnifier-modal">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="close()" aria-hidden="true">&times;</button>
+  </div>
+  <div class="modal-body">
+    <div class="carousel slide article-slide" id="article-photo">
+      <!-- Wrapper for slides -->
+      <div class="carousel-inner cont-slider">
+        <div class="item" ng-repeat="thumbnailImage in images" ng-class="{'active':$index == idx}" >
+          <img alt="" title="" ng-src="{{thumbnailImage.displaySrc}}" class="img-responsive">
+        </div>
+      </div>
+      <!-- Indicators -->
+      <ol class="carousel-indicators">
+        <li class="" data-slide-to="{{$index}}" ng-class="{'active':$index == idx}" data-target="#article-photo" ng-repeat="thumbnailImage in images">
+          <img alt="" ng-src="{{uploadImagePrefix}}{{currentProduct.assetDir}}/{{thumbnailImage.src}}" class="img-responsive img-thumbnail">
+        </li>
+      </ol>
+      <!-- Controls -->
+      <a class="left carousel-control" href="javascript:goTo('prev');"  role="button" ng-non-bindable>
+        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+      </a>
+      <a class="right carousel-control" href="javascript:goTo('next');"  role="button" ng-non-bindable>
+        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+      </a>
+    </div>
+  </div>
+</div>
+</script>
+<!-- popup after click agree button -->
+<script type="text/ng-template" id="price_trend_survey.html">
+<div>
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="priceTrendSurveyVm.close()" aria-hidden="true">&times;</button>
+    <h4 class="modal-title">Leave your Comment</h4>
+  </div>
+  <div class="modal-body">
+    <form class="form-signin" name="surveyForm" novalidate>
+      <div class="row">
+        <div class="form-group col-sm-6" ng-class="{'has-error': surveyForm.fname.$invalid && submitted}">
+          <input type="text" class="form-control" name="fname" ng-model="priceTrendSurveyVm.priceTrendSurvey.user.fname" placeholder="First Name" required>
+        </div>
+        
+        <div class="form-group col-sm-6" ng-class="{'has-error': surveyForm.lname.$invalid && submitted}">
+          <input type="text" class="form-control" name="lname" ng-model="priceTrendSurveyVm.priceTrendSurvey.user.lname" placeholder="Last Name" required>
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="form-group col-sm-6" ng-class="{'has-error': surveyForm.mobile.$invalid && submitted}">
+          <div class="row">
+            <div class="col-sm-4 padd-right search-field">
+              <select class="form-control" ng-model="priceTrendSurveyVm.priceTrendSurvey.user.countryCode" ng-change="priceTrendSurveyVm.onCodeChange(priceTrendSurveyVm.priceTrendSurvey.user.countryCode)" required>
+                <option value="" disabled>*Code</option>
+                <option  ng-repeat ="country in allCountries | orderBy:'name'" value="{{country.countryCode}}">+{{country.countryCode}}</option>
+              </select>
+              <i class="caret"></i>
+            </div>
+            <div class="col-sm-8 padd-left">
+              <input type="text" class="form-control" name="mobile" placeholder="Mobile No." uib-tooltip="98-XXXX-XXXX" tooltip-trigger="focus" tooltip-placement="top" ng-model="priceTrendSurveyVm.priceTrendSurvey.user.mobile"  required>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 form-group">
+          <input type="email" class="form-control" name="email" placeholder="Email Address" ng-model="priceTrendSurveyVm.priceTrendSurvey.user.email" >
+          
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12 form-group" ng-class="{'has-error': surveyForm.comment.$invalid && agree == 'No' && submitted}">
+          <textarea class="form-control" name="comment" placeholder="Comments" ng-model="priceTrendSurveyVm.priceTrendSurvey.comment" ng-required="agree == 'No'"></textarea>
+        </div>
+      </div>
+      
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-md btn-default" ng-click="priceTrendSurveyVm.save(surveyForm)">Ok</button>
+    <button type="submit" class="btn btn-md btn-danger" ng-click="priceTrendSurveyVm.close()">Cancel</button>
+  </div>
+</div>
+</script>
+<!-- end poup -->
+<!-- user detail popup -->
+<script type="text/ng-template" id="price_trend_survey_detail.html">
+<div>
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="close()" aria-hidden="true">&times;</button>
+    <h4 class="modal-title">User Details</h4>
+  </div>
+  <div class="modal-body">
+    <div class="row text-center">
+      <div class="col-sm-12" ng-repeat="survey in surveys">
+        <p class="text-ellips"><strong>{{survey.user.fname}} {{survey.user.lname}}</strong></p>
+        <p class="text-ellips">{{survey.comment}}</p>
+        <hr>
+      </div>
+    </div>
+  </div>
+</div>
+</script>
+<!-- end -->

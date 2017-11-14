@@ -5,6 +5,7 @@
   function NewEquipmentCtrl($scope, NewEquipmentSvc, categorySvc, brandSvc, Modal, $location ) {
     var vm = this;
     //var filter = {};
+    $scope.newEquipBrand = [];
    
     vm.fireCommand = fireCommand;
     //pagination variables
@@ -30,10 +31,10 @@
     function init() {
         getAllBrands();
         getAllCategory();
-        //getAllNewEquipments();
+        getNewEquipment();
 
     }
-
+    //console.log($scope.newEquipBrand,'------');
     init();
         
     /*Get All brands by filter*/
@@ -50,6 +51,8 @@
             vm.bTotalItems = result.length;
             vm.bLimit = 6;
             vm.bImgLimit = 3;
+//            $scope.newEquipBrand = getNewEquipmentBrand(result);
+//            console.log($scope.newEquipBrand);
         });
     };
 
@@ -83,10 +86,32 @@
         });
 
     }
+    
+    function getNewEquipment(){
+       var filter = {};
+        filter['isForNew'] = true; //For New Equipment
+        //filter['limit'] = 5;
+        brandSvc.getBrandOnFilter(filter)
+          .then(function(result){
+            $scope.allNewEquipment = result;
+            getNewEquipmentBrand(result);
+        }); 
+    }
+    
     $scope.goBulkOrders = function() {
-        $location.url('/newequipment/bulkorder');
+        $location.url('/new/bulkorder');
     };
     
+    function getNewEquipmentBrand(res){
+       
+        for (var i = 0; i <= res.length; i++)  {
+            //console.log(res[i],'--------');
+            if (typeof res.position !== 'undefined' && res.position ) {
+                $scope.newBrand = res[i];
+            }
+        }
+        return $scope.newBrand;
+    }
 
 } 
 })();

@@ -3,8 +3,8 @@
     <li>
       <a href="/main"> Home </a>
     </li>
-    <li><a href="/newequipment"> New Equipments </a></li>
-    <li class="active"> JCB Equipments </li>
+    <li><a href="/new"> New Equipments </a></li>
+    <li class="active"> {{displayText || equipmentSearchFilter.group || equipmentSearchFilter.category || equipmentSearchFilter.brand || equipmentSearchFilter.tradeType || equipmentSearchFilter.location || equipmentSearchFilter.tradeType || equipmentSearchFilter.assetId || "XXXXX"}} </li>
   </ol>
 </div>
 <div class="new-equipments-banner">
@@ -15,77 +15,57 @@
     <div class="col-sm-3">
       <h4>Filter By:</h4>
       <uib-accordion close-others="oneAtATime" class="information">
-        <uib-accordion-group is-open="status.specialOffers">
+        <uib-accordion-group is-open="status.group">
           <uib-accordion-heading>
-            Product Condition (1)<i class="pull-right fa" ng-class="{'fa-minus': status.specialOffers, 'fa-plus': !status.specialOffers}"></i>
+            Industry ({{allGroup.length || 0}})<i class="pull-right fa" ng-class="{'fa-minus': status.group, 'fa-plus': !status.group}"></i>
           </uib-accordion-heading>
-            <div class="checkbox">
-              <input type="checkbox" name="" value="" id="newEquipment"> <label for="newEquipment">New Equipments</label>
-            </div>
-            <div class="checkbox">
-              <input type="checkbox" name="" value="" id="usedEquipment"> <label for="usedEquipment">Used Equipments</label>
+            <div class="radio" ng-repeat="group in allGroup">
+              <input type="radio" ng-model="equipmentSearchFilter.group" ng-change="newequipmentlistVm.onGroupChange(equipmentSearchFilter.group)" name="group" value="{{group.name}}" id="gp_{{$index}}"> <label for="gp_{{$index}}">{{group.name}}</label>
             </div>
         </uib-accordion-group>
 
-        <uib-accordion-group is-open="status.pricetrend">
+        <uib-accordion-group is-open="status.category">
           <uib-accordion-heading>
-            Manufacturer (1)<i class="pull-right fa" ng-class="{'fa-minus': status.pricetrend, 'fa-plus': !status.pricetrend}"></i>
+            Category  <i class="pull-right fa" ng-class="{'fa-minus': status.category, 'fa-plus': !status.category}"></i>
           </uib-accordion-heading>
-            <div class="checkbox">
-              <input type="checkbox" name="" value="" id="jcbCat"> <label for="jcbCat">JCB</label>
-            </div>
-            <div class="checkbox">
-              <input type="checkbox" name="" value="" id="tatamotors"> <label for="tatamotors">Tata Motors</label>
-            </div>
-            <div class="checkbox">
-              <input type="checkbox" name="" value="" id="komatsu"> <label for="komatsu">L&amp;T Komatsu</label>
-            </div>
-        </uib-accordion-group>
-
-        <uib-accordion-group is-open="rentstatus.open">
-          <uib-accordion-heading>
-            Category  <i class="pull-right fa" ng-class="{'fa-minus': rentstatus.open, 'fa-plus': !rentstatus.open}"></i>
-          </uib-accordion-heading>
-            <div ng-model="equipmentSearchFilter.category">
-              <div class="checkbox" ng-repeat="cat in allCategory">
-                <input type="checkbox" name="category" value="{{cat.name}}" id="{{cat.name}}"> <label for="{{cat.name}}">{{cat.name}}</label>
+            <div>
+              <div class="radio" ng-repeat="cat in categoryList">
+                <input type="radio" ng-model="equipmentSearchFilter.category" ng-change="newequipmentlistVm.onCategoryChange(equipmentSearchFilter.category)" name="category" value="{{cat.name}}" id="cat_{{$index}}"> <label for="cat_{{$index}}">{{cat.name}}</label>
               </div>
               
             </div>
         </uib-accordion-group>
 
-        <uib-accordion-group is-open="Techstatus.open">
+        <uib-accordion-group is-open="status.brand">
           <uib-accordion-heading>
-            Product Brand <i class="pull-right fa" ng-class="{'fa-minus': Techstatus.open, 'fa-plus': !Techstatus.open}"></i>
+            Product Brand <i class="pull-right fa" ng-class="{'fa-minus': status.brand, 'fa-plus': !status.brand}"></i>
           </uib-accordion-heading>
-            <div ng-model="equipmentSearchFilter.brand">
-              <div class="checkbox" ng-repeat="br in brandList">
-                <input type="checkbox" name="brand" value="{{br.name}}" id="{{br.name}}"> <label for="{{br.name}}">{{br.name}}</label>
+            <div>
+              <div class="radio" ng-repeat="br in brandList">
+                <input type="radio" ng-model="equipmentSearchFilter.brand" name="brand" value="{{br.name}}" id="brand_{{$index}}"> <label for="brand_{{$index}}">{{br.name}}</label>
               </div>
               
             </div>
         </uib-accordion-group>
-         <uib-accordion-group is-open="status.basicInformation">
+        <uib-accordion-group is-open="status.location">
           <uib-accordion-heading>
-            Location <i class="pull-right fa" ng-class="{'fa-minus': status.basicInformation, 'fa-plus': !status.basicInformation}"></i>
+            Location <i class="pull-right fa" ng-class="{'fa-minus': status.location, 'fa-plus': !status.location}"></i>
           </uib-accordion-heading>
-          <input type="text" class="form-control form-group" ng-model="equipmentSearchFilter.locationName" placeholder="Enter Country/State/Location" uib-typeahead="address for address in getLocationHelp($viewValue)"  class="form-control" typeahead-focus-first = "false" typeahead-wait-ms="200" ng-change="viewproductVm.fireCommand()" typeahead-on-select="viewproductVm.fireCommand()"  ng-model-options="{debounce:1000}" autocomplete="off"/>
+          <input type="text" class="form-control form-group" ng-model="equipmentSearchFilter.location" placeholder="Enter Country/State/Location" uib-typeahead="address for address in getLocationHelp($viewValue)"  class="form-control" typeahead-focus-first = "false" typeahead-wait-ms="200" ng-change="newequipmentlistVm.fireCommand()" typeahead-on-select="newequipmentlistVm.fireCommand()"  ng-model-options="{debounce:1000}" autocomplete="off"/>
         </uib-accordion-group>
-        <uib-accordion-group is-open="Infostatus.open">
-          <uib-accordion-heading>
-            Asset Id  <i class="pull-right fa" ng-class="{'fa-minus': Infostatus.open, 'fa-plus': !Infostatus.open}"></i>
-          </uib-accordion-heading>
-          <input type="text" class="form-control form-group" placeholder="Asset Id"  ng-model="equipmentSearchFilter.assetId" class="form-control" ng-change="viewproductVm.fireCommand()">
-        </uib-accordion-group>
+              
       </uib-accordion>
     </div>
+      
+    <!--Grid Mode Start-->  
+      
     <div class="col-sm-9">
       <div class="row">
         <div class="col-sm-10 form-group">
-          <h4>NEW JCB EQUIPMENTS (65 Results Found)</h4>
+          <h4>{{equipmentSearchFilter.category}} ({{newequipmentlistVm.totalItems}} Results Found)</h4>
         </div>
         <div class="col-sm-2 form-group">
-          <select class="form-control" ng-change="viewproductVm.sortBy()" ng-model="viewproductVm.sortByFlag">
+          <select class="form-control" ng-change="newequipmentlistVm.sortBy()" ng-model="newequipmentlistVm.sortByFlag">
             <option value="">Sort By</option>
             <option value="lh">Price : Low to High</option>
             <option value="hl">Price : High to Low</option>
@@ -94,28 +74,27 @@
           </select>
         </div>
       </div>
-      <div id="search-result_wrapper">
+      <div id="search-result_wrapper" ng-if="!searching && !noResult">
         <div class="row">
-          <div class="col-sm-4 col-md-offset-3 col-md-3 form-group pull-right">
-            <div class="btn-group pull-right">
-              <button type="button" class="btn btn-default"><< Previous</button>
-              <button type="button" class="btn btn-default">Next >></button>
-            </div>
+          <div class="col-sm-8 col-md-6 form-group padd-right">
+          </div>
+          <div class="col-sm-4 col-md-offset-3 col-md-3 form-group text-right">
+            <uib-pagination total-items="newequipmentlistVm.totalItems" ng-click="newequipmentlistVm.onPageChange()" ng-model="newequipmentlistVm.currentPage" items-per-page="newequipmentlistVm.itemsPerPage" max-size="0" boundary-links="false" rotate="false" next-text="Next >>" previous-text="<< Previous"></uib-pagination>
           </div>
         </div>
         <div class="row">      
-          <div class="col-sm-6 col-md-4 form-group">
+            <div class="col-sm-6 col-md-4 form-group" ng-repeat="product in productList" >
             <div class="media text-center form-group">
               <a href="javascript:void(0);">
-                 <img src="/assets/images/certificationJCB.png" class="img-responsive">              
+                 <img src="{{uploadImagePrefix}}{{product.assetDir}}/{{product.primaryImg}}" class="img-responsive">              
               </a>          
               <div class="media-body text-left"> 
                 <div class="row">
                   <div class="col-xs-6 form-group">
-                    <h4>JCB Excavator</h4>                  
+                    <h4>{{product.name}}</h4>                  
                   </div>
                   <div class="col-xs-6 form-group text-right padd-left">
-                    <h5 class="text-info">Model: 240B Prime</h5>                    
+                    <h5 class="text-info">Model: {{product.model.name}}</h5>                    
                   </div>
                 </div> 
                 <div class="row">
@@ -123,7 +102,7 @@
                     Engine Power                                  
                   </div>
                   <div class="col-xs-6 form-group text-right padd-left">
-                    55kW(74 hp)                   
+                     {{product.technicalInfo.enginePower}}              
                   </div>
                 </div> 
                 <div class="row">
@@ -131,7 +110,7 @@
                     Operating Weight               
                   </div>
                   <div class="col-xs-6 form-group text-right padd-left">                    
-                    14,038kg(31,499 lbs)           
+                    {{product.technicalInfo.operatingWeight}}          
                   </div>
                 </div> 
                 <div class="row">
@@ -139,10 +118,10 @@
                     Bucket Capacity                  
                   </div>
                   <div class="col-xs-6 form-group text-right padd-left">                   
-                    0.91m3(1.2yd3)                    
+                    {{product.technicalInfo.bucketCapacity}}                  
                   </div>
                 </div> 
-                <div class="row">
+<!--                <div class="row">
                   <div class="col-xs-12 form-group">
                     <h5 class="text-warning">
                       <i class="fa fa-star"></i>
@@ -153,305 +132,22 @@
                     </h5>
                     <span class="text-info">12 Expert Reviews</span>
                   </div>                  
-                </div>                 
+                </div>                 -->
                                     
               </div> 
-              <a ng-href="/productdetail/{{product._id}}" class="btn btn-primary btn-block" >
+              <a ng-href="/new/{{product.category.name}}/{{product.brand.name}}/{{product.assetId}}" class="btn btn-primary btn-block" >
                 View Details
               </a>     
             </div>
           </div>
-          <div class="col-sm-6 col-md-4 form-group">
-            <div class="media text-center form-group">
-              <a href="javascript:void(0);">
-                 <img src="/assets/images/certificationJCB.png" class="img-responsive">              
-              </a>          
-              <div class="media-body text-left"> 
-                <div class="row">
-                  <div class="col-xs-6 form-group">
-                    <h4>JCB Excavator</h4>                  
-                  </div>
-                  <div class="col-xs-6 form-group text-right padd-left">
-                    <h5 class="text-info">Model: 240B Prime</h5>                    
-                  </div>
-                </div> 
-                <div class="row">
-                  <div class="col-xs-6 form-group">
-                    Engine Power                                  
-                  </div>
-                  <div class="col-xs-6 form-group text-right padd-left">
-                    55kW(74 hp)                   
-                  </div>
-                </div> 
-                <div class="row">
-                  <div class="col-xs-6 form-group">                    
-                    Operating Weight               
-                  </div>
-                  <div class="col-xs-6 form-group text-right padd-left">                    
-                    14,038kg(31,499 lbs)           
-                  </div>
-                </div> 
-                <div class="row">
-                  <div class="col-xs-6 form-group">                   
-                    Bucket Capacity                  
-                  </div>
-                  <div class="col-xs-6 form-group text-right padd-left">                   
-                    0.91m3(1.2yd3)                    
-                  </div>
-                </div> 
-                <div class="row">
-                  <div class="col-xs-12 form-group">
-                    <h5 class="text-warning">
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star-o"></i>
-                      <i class="fa fa-star-o"></i>
-                    </h5>
-                    <span class="text-info">12 Expert Reviews</span>
-                  </div>                  
-                </div>                 
-                                    
-              </div> 
-              <a ng-href="/productdetail/{{product._id}}" class="btn btn-primary btn-block" >
-                View Details
-              </a>     
-            </div>
-          </div>
-          <div class="col-sm-6 col-md-4 form-group">
-            <div class="media text-center form-group">
-              <a href="javascript:void(0);">
-                 <img src="/assets/images/certificationJCB.png" class="img-responsive">              
-              </a>          
-              <div class="media-body text-left"> 
-                <div class="row">
-                  <div class="col-xs-6 form-group">
-                    <h4>JCB Excavator</h4>                  
-                  </div>
-                  <div class="col-xs-6 form-group text-right padd-left">
-                    <h5 class="text-info">Model: 240B Prime</h5>                    
-                  </div>
-                </div> 
-                <div class="row">
-                  <div class="col-xs-6 form-group">
-                    Engine Power                                  
-                  </div>
-                  <div class="col-xs-6 form-group text-right padd-left">
-                    55kW(74 hp)                   
-                  </div>
-                </div> 
-                <div class="row">
-                  <div class="col-xs-6 form-group">                    
-                    Operating Weight               
-                  </div>
-                  <div class="col-xs-6 form-group text-right padd-left">                    
-                    14,038kg(31,499 lbs)           
-                  </div>
-                </div> 
-                <div class="row">
-                  <div class="col-xs-6 form-group">                   
-                    Bucket Capacity                  
-                  </div>
-                  <div class="col-xs-6 form-group text-right padd-left">                   
-                    0.91m3(1.2yd3)                    
-                  </div>
-                </div> 
-                <div class="row">
-                  <div class="col-xs-12 form-group">
-                    <h5 class="text-warning">
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star-o"></i>
-                      <i class="fa fa-star-o"></i>
-                    </h5>
-                    <span class="text-info">12 Expert Reviews</span>
-                  </div>                  
-                </div>                 
-                                    
-              </div> 
-              <a ng-href="/productdetail/{{product._id}}" class="btn btn-primary btn-block" >
-                View Details
-              </a>     
-            </div>
-          </div>
-          <div class="col-sm-6 col-md-4 form-group">
-            <div class="media text-center form-group">
-              <a href="javascript:void(0);">
-                 <img src="/assets/images/certificationJCB.png" class="img-responsive">              
-              </a>          
-              <div class="media-body text-left"> 
-                <div class="row">
-                  <div class="col-xs-6 form-group">
-                    <h4>JCB Excavator</h4>                  
-                  </div>
-                  <div class="col-xs-6 form-group text-right padd-left">
-                    <h5 class="text-info">Model: 240B Prime</h5>                    
-                  </div>
-                </div> 
-                <div class="row">
-                  <div class="col-xs-6 form-group">
-                    Engine Power                                  
-                  </div>
-                  <div class="col-xs-6 form-group text-right padd-left">
-                    55kW(74 hp)                   
-                  </div>
-                </div> 
-                <div class="row">
-                  <div class="col-xs-6 form-group">                    
-                    Operating Weight               
-                  </div>
-                  <div class="col-xs-6 form-group text-right padd-left">                    
-                    14,038kg(31,499 lbs)           
-                  </div>
-                </div> 
-                <div class="row">
-                  <div class="col-xs-6 form-group">                   
-                    Bucket Capacity                  
-                  </div>
-                  <div class="col-xs-6 form-group text-right padd-left">                   
-                    0.91m3(1.2yd3)                    
-                  </div>
-                </div> 
-                <div class="row">
-                  <div class="col-xs-12 form-group">
-                    <h5 class="text-warning">
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star-o"></i>
-                      <i class="fa fa-star-o"></i>
-                    </h5>
-                    <span class="text-info">12 Expert Reviews</span>
-                  </div>                  
-                </div>                 
-                                    
-              </div> 
-              <a ng-href="/productdetail/{{product._id}}" class="btn btn-primary btn-block" >
-                View Details
-              </a>     
-            </div>
-          </div>
-          <div class="col-sm-6 col-md-4 form-group">
-            <div class="media text-center form-group">
-              <a href="javascript:void(0);">
-                 <img src="/assets/images/certificationJCB.png" class="img-responsive">              
-              </a>          
-              <div class="media-body text-left"> 
-                <div class="row">
-                  <div class="col-xs-6 form-group">
-                    <h4>JCB Excavator</h4>                  
-                  </div>
-                  <div class="col-xs-6 form-group text-right padd-left">
-                    <h5 class="text-info">Model: 240B Prime</h5>                    
-                  </div>
-                </div> 
-                <div class="row">
-                  <div class="col-xs-6 form-group">
-                    Engine Power                                  
-                  </div>
-                  <div class="col-xs-6 form-group text-right padd-left">
-                    55kW(74 hp)                   
-                  </div>
-                </div> 
-                <div class="row">
-                  <div class="col-xs-6 form-group">                    
-                    Operating Weight               
-                  </div>
-                  <div class="col-xs-6 form-group text-right padd-left">                    
-                    14,038kg(31,499 lbs)           
-                  </div>
-                </div> 
-                <div class="row">
-                  <div class="col-xs-6 form-group">                   
-                    Bucket Capacity                  
-                  </div>
-                  <div class="col-xs-6 form-group text-right padd-left">                   
-                    0.91m3(1.2yd3)                    
-                  </div>
-                </div> 
-                <div class="row">
-                  <div class="col-xs-12 form-group">
-                    <h5 class="text-warning">
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star-o"></i>
-                      <i class="fa fa-star-o"></i>
-                    </h5>
-                    <span class="text-info">12 Expert Reviews</span>
-                  </div>                  
-                </div>                 
-                                    
-              </div> 
-              <a ng-href="/productdetail/{{product._id}}" class="btn btn-primary btn-block" >
-                View Details
-              </a>     
-            </div>
-          </div>
-          <div class="col-sm-6 col-md-4 form-group">
-            <div class="media text-center form-group">
-              <a href="javascript:void(0);">
-                 <img src="/assets/images/certificationJCB.png" class="img-responsive">              
-              </a>          
-              <div class="media-body text-left"> 
-                <div class="row">
-                  <div class="col-xs-6 form-group">
-                    <h4>JCB Excavator</h4>                  
-                  </div>
-                  <div class="col-xs-6 form-group text-right padd-left">
-                    <h5 class="text-info">Model: 240B Prime</h5>                    
-                  </div>
-                </div> 
-                <div class="row">
-                  <div class="col-xs-6 form-group">
-                    Engine Power                                  
-                  </div>
-                  <div class="col-xs-6 form-group text-right padd-left">
-                    55kW(74 hp)                   
-                  </div>
-                </div> 
-                <div class="row">
-                  <div class="col-xs-6 form-group">                    
-                    Operating Weight               
-                  </div>
-                  <div class="col-xs-6 form-group text-right padd-left">                    
-                    14,038kg(31,499 lbs)           
-                  </div>
-                </div> 
-                <div class="row">
-                  <div class="col-xs-6 form-group">                   
-                    Bucket Capacity                  
-                  </div>
-                  <div class="col-xs-6 form-group text-right padd-left">                   
-                    0.91m3(1.2yd3)                    
-                  </div>
-                </div> 
-                <div class="row">
-                  <div class="col-xs-12 form-group">
-                    <h5 class="text-warning">
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star-o"></i>
-                      <i class="fa fa-star-o"></i>
-                    </h5>
-                    <span class="text-info">12 Expert Reviews</span>
-                  </div>                  
-                </div>                 
-                                    
-              </div> 
-              <a ng-href="/productdetail/{{product._id}}" class="btn btn-primary btn-block" >
-                View Details
-              </a>     
-            </div>
-          </div>
+          
         </div>
 
         <div class="text-center">
-          <uib-pagination total-items="viewproductVm.totalItems" ng-click="viewproductVm.onPageChange()" ng-model="viewproductVm.currentPage" items-per-page="viewproductVm.itemsPerPage" max-size="viewproductVm.maxSize" boundary-links="true" rotate="false"></uib-pagination>
+          <uib-pagination total-items="newequipmentlistVm.totalItems" ng-click="newequipmentlistVm.onPageChange()" ng-model="newequipmentlistVm.currentPage" items-per-page="newequipmentlistVm.itemsPerPage" max-size="newequipmentlistVm.maxSize" boundary-links="true" rotate="false"></uib-pagination>
         </div>
       </div>
     </div>
+    <!--Grid Mode End-->  
   </div>
 </section>
