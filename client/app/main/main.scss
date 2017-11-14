@@ -44,7 +44,6 @@ a:focus,.btn{outline: none;}
 .tricker{position: absolute;top: 0; width: 100%; background: rgba(0,0,0,0.6); padding: 10px 100px 5px; z-index: 8; color: #fff;}
 .bid-gif{position: absolute; left: 50px; top: 50px; z-index: 99;}
 .bid-gif img{width: 150px !important; height: 40px !important;}
-.form-control{border-radius:0;box-shadow:none;width:100%;height:40px;}
 .text-warning{color:#E05F45;font-weight:bold;}
 .btn-default{border-radius:0;}
 .footer-border{border-color:#EC7358;border-width:3px;}
@@ -273,9 +272,6 @@ img.sheduleImg{width:50px;height:50px;border-radius:50%;margin:0 auto}
 .modal-content{border-radius:0;}
 .form-signin{width:90%;margin:0 auto;}
 .form-signin .btn-default{width:50px;}
-.social-facebook:hover{background-color:#3A5795;border-color:#3A5794;color:#fff;}
-.social-twitter:hover{background-color:#55ACEE;border-color:#55ACEd;color:#fff;}
-.social-linkedin:hover{background-color:#0077B5;border-color:#0077B4;color:#fff;}
 .social-google:hover{background-color:#EA4335;border-color:#EA4334;color:#fff;}
 .nav-pills .btn-default{width:100px;border-radius:0;font-size:12px;}
 
@@ -842,8 +838,6 @@ footer .footer-icon li{margin-bottom:5px;}
 .navbar-inverse .navbar-nav > li.active a{top: 0;}
 .navbar { position: absolute; top: 0; left: 0;}
 .open > .dropdown-menu {left: -90px;}
-.navbar-collapse{position: absolute; width: 280px; max-height: 410px; z-index: 99; background: #e31e24; top: 45px; left: -999px;}
-.navbar-collapse.in{left: -1px;}
 .icn2{left: 271px;}
 .top-menu {z-index: 99;position: relative;left:15px; top: 5px;}
 
@@ -1384,12 +1378,13 @@ footer .subscribe{height: 40px;}
   background-color: #5bc0de; }
 
 /* floating label */
-.floating-label-wrapper {
-  position: relative;
-}
-.floating-label-wrapper .form-control{border: 0; border-bottom: 1px solid #ccc; padding: 0;}
+.floating-label-wrapper {position: relative; padding: 0.5em 0;}
+.floating-label-wrapper label{margin: 0; font-size: 13px; text-transform: uppercase;}
+.floating-label-wrapper input:-webkit-autofill, .floating-label-wrapper input{background: transparent;}
+.form-control{border-radius:0;box-shadow:none;width:100%;}
+.floating-label-wrapper .form-control{border: 0; border-bottom: 1px solid #ccc; padding: 0; box-shadow: none;}
 .floating-label-wrapper.has-error .form-control{border-bottom: 1px solid #a94442 !important; box-shadow: none;}
-.floating-label-wrapper .form-control:focus, .floating-label-wrapper .form-control:not(.empty){border-color: #004394; box-shadow: none;}
+.floating-label-wrapper .form-control:focus{border-color: #004394; box-shadow: none;}
   .floating-label {
     color: #7E7E7E;
     font-size: 14px;
@@ -1404,8 +1399,11 @@ footer .subscribe{height: 40px;}
   .form-control:not(.empty) ~ .floating-label {
     top: -15px;
     left: 0;
-    font-size: 11px;
+    font-size: 13px;
     opacity: 1;
+    color: #333;
+    font-weight: bold;
+    text-transform: uppercase;
   }
 
   .form-control.empty ~ .floating-label  {
@@ -1415,6 +1413,11 @@ footer .subscribe{height: 40px;}
   textarea ~ .form-control-highlight {
     margin-top: -11px;
   }
+.login-titles{text-transform: uppercase; letter-spacing: 1px; text-align: center; margin: 2em 0;}
+.login-titles h4{font-weight: bold;}
+.login-titles h4 span{display: inline-block;}
+.login-titles h4 span:first-letter{text-transform: lowercase;}
+.login-titles h5{color: #999; margin: 1em 0;}
 .signin{padding: 2em 0; height: 100%;}
 .signin h3{margin-bottom: 1.5em;}
 .signin .btn-primary{padding: 0.8em 2em; font-size: 12px;}
@@ -1422,14 +1425,28 @@ footer .subscribe{height: 40px;}
 .signin small, .signup small{font-size: 10px; color: #999;}
 .signin .text-danger, .signup .text-danger{color: #e31e24;}
 .stamp-image{position: absolute; top: 5%; left: 5%; max-width: 150px;}
+.social-facebook,.social-twitter,.social-linkedin{color: #999; font-size: 12px; border-radius: 4px; word-spacing: 5px;}
+.social-facebook i{color:#3A5795; font-size: 18px; vertical-align:  middle;}
+.social-facebook:hover{color:#3A5795; border-color: #3A5795; background: transparent;}
+.social-twitter i{color:#55ACEE; font-size: 18px; vertical-align:  middle;}
+.social-twitter:hover{color:#55ACEE; border-color: #55ACEE; background: transparent;}
+.social-linkedin i{color:#0077B5;font-size: 18px; vertical-align:  middle;}
+.social-linkedin:hover{color:#0077B5;border-color:#0077B5; background: transparent;}
+.category-block .nav-tabs > li.active > a, .category-block .nav-tabs > li.active > a:hover, .category-block .nav-tabs > li.active > a:focus{color: #00429A;}
+.category-block .nav-tabs > li > a{text-transform: uppercase; color: #999;}
+.brand-name{display: flex; align-items: center; justify-content: center; min-height: 130px;}
+.registration-forms{display: flex; align-items: center; min-height: 130px;}
+.brand-name img{max-width: 100%;}
 
 @media (max-width:640px){
 
 .navbar-toggle{float: left;margin-left: 0px; top: 5px; left: 0.5em;}
 .navbar-toggle .icon-bar {background-color: #666;}
 .navbar-toggle .icon-bar{width: 18px;}
+.navbar-collapse{position: absolute; width: 100%; max-height: 410px; z-index: 99; background: #fff; top: 50px; left: -999px; box-shadow: 2px 2px 15px #666;}
+.navbar-collapse.in{left: -1px;}
 .navbar.navbar-client{min-height: 100px; background-position: center;}
-.navbar-brand{width: 50%; position: absolute;  top: 0; left: 0; z-index: 100; margin: auto; right: 0; text-align: center;}
+.navbar-brand{width: 50%; padding: 8px 10px; position: absolute;  top: 0; left: 0; z-index: 100; margin: auto; right: 0; text-align: center;}
 .navbar-brand img{width: 70px;}
 .search-toggle-right{position: absolute; right: 0.5em; padding: 1em; font-size: 18px; top: 0;}
 .search-toggle-right a{color: #666;}
@@ -1438,20 +1455,18 @@ footer .subscribe{height: 40px;}
 #view-container .banner .carousel-inner{height: 180px; margin-bottom: 10px;}
 .carousel-inner > .item > a > img,.carousel-inner > .item > img{height:180px;}
 #view-container .banner .carousel-indicators{top: auto;}
-
+.heading-titles h4{font-size: 16px;}
 .category-block{padding: 2em 0;}
-.cat-rectangle{width: 80%; height: 200px;}
-.cat-rectangle .category-item{width: 110%; height: 190px;}
-
 .spacial-products{width: 100%; height: 310px;}
-
+.brand-logo{height: 140px;}
+.brand-logo img{max-width: 90%;}
 .industy-rectangle img{padding: 0;}
 .press-media{display: block;}
 .footer-logos{border: 0;}
 .footer-logos ul li{width: 50%; float: left;}
 .copy{clear: both;}
 .media-headings{margin-top: 10em;}
-
+.media-news li a{font-size: 13px;}
 .navbar-default .navbar-nav > li > a{text-align: left; padding-left: 15px;}
 .nav > li {position: relative;display: block; text-align: center;}
 .media-coverage { overflow-y: scroll;}

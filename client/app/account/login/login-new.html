@@ -2,23 +2,26 @@
 <section class="category-block">
   <div class="container">
     <div class="information-tabs">
-      <div class="row">
+      <div class="row registration-forms">
         <div class="col-sm-6">
           <img src="/assets/images/loging-image.png" class="img-responsive" alt="">
         </div>
         <div class="col-xs-offset-1 col-xs-10 col-sm-offset-0 col-sm-5 form-group">
-            <h3 class="text-center form-group">Signin with iQuippo</h3>
-            <h5 class="text-center">Easily Using</h5>
+            <div class="login-titles">
+              <h4>Signin with <span>iQuippo</span></h4>
+              <h5>Easily Using</h5>
+            </div>            
             <div class="row">
-              <div class="col-xs-6 form-group text-right">
-                <a href="javascript:void(0);" ng-click="loginVm.loginOauth('facebook')">
-                  <img src="/assets/images/facebook.png" alt="">
-                </a>
+              <div class="col-xs-4 form-group">
+                <a class="btn btn-default btn-block social-facebook" href="javascript:void(0);" ng-click="loginVm.loginOauth('facebook')"><i class="fa fa-facebook-square"></i> Facebook</a>                  
               </div>
-              <div class="col-xs-6 form-group text-left">
-                <a href="javascript:void(0);" ng-click="loginVm.loginOauth('linkedin')">
-                  <img src="/assets/images/google.png" alt="">
-                </a>
+              <div class="col-xs-4 form-group">
+                <a class="btn btn-default btn-block social-twitter" href="javascript:void(0);" ng-click="loginVm.loginOauth('twitter')"><i class="fa fa-twitter-square"></i> Twitter</a>     
+                
+              </div>
+              <div class="col-xs-4 form-group">
+                <a class="btn btn-default btn-block social-linkedin" href="javascript:void(0)" ng-click="loginVm.loginOauth('linkedin')"><i class="fa fa-linkedin-square"></i> Linkedin</a>
+                
               </div>
             </div>
             <div class="option-border text-center">

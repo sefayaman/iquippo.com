@@ -55,7 +55,8 @@
       </div>
     </div>
     <div class="col-sm-offset-3 col-sm-6 text-center">
-      <button type="button" class="btn btn-default" data-ng-click="mainVm.doSearch()">Search</button>
+      <button type="button" class="btn btn-default" data-ng-click="mainVm.doSearch()">New Equipment</button>
+      <button type="button" class="btn btn-default" data-ng-click="mainVm.doSearch()">Used Equipment</button>
     </div>
 
   </div>
@@ -65,18 +66,33 @@
 <section class="category-block">
   <div class="container text-center">
     <div class="heading-titles">
-      <h4>[ Browse New Equipment By Brands ]</h4>
+      <h4>[ Browse By Brands ]</h4>
       <a href="/used/brands">View All ({{mainVm.brandCount}})</a>
     </div>
-    <div class="row">
-      <div class="col-sm-4 form-group text-center" ng-repeat="brand in mainVm.brands" ng-if="$index < 6">   
-        <div class="brand-logo">
-          <a href="/used/brands/{{brand.name}}?currentPage=1">
-            <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{brand.imgSrc}}">
-          </a>
+    <uib-tabset justified="false">
+      <uib-tab heading="New Equipment">
+        <div class="row">
+          <div class="col-xs-6 col-sm-4 form-group text-center" ng-repeat="brand in mainVm.brands" ng-if="$index < 3">   
+            <div class="brand-logo">
+              <a href="/new/brands/{{brand.name}}?currentPage=1">
+                <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{brand.imgSrc}}">
+              </a>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
+      </uib-tab>
+      <uib-tab heading="Used Equipment">
+        <div class="row">
+          <div class="col-xs-6 col-sm-4 form-group text-center" ng-repeat="brand in mainVm.brands" ng-if="$index < 3">   
+            <div class="brand-logo">
+              <a href="/used/brands/{{brand.name}}?currentPage=1">
+                <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{brand.imgSrc}}">
+              </a>
+            </div>
+          </div>
+        </div>
+      </uib-tab>
+    </uib-tabset>
   </div>
       
 </section>
@@ -112,15 +128,29 @@
       <h4>[ Browse Used Equipment By Category ]</h4>
       <a href="/used/allcategories">View All ({{mainVm.categoryCount}})</a>
     </div>
-    <div class="row">
-      <div class="col-sm-4 form-group text-center" ng-repeat="category in categoryList" ng-if="$index < 6">   
-        <a href="/used/{{category.group.name}}/{{category.name}}?currentPage=1" class="cat-rectangle">
-          <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{category.imgSrc}}" class="category-item">
-        </a>
-        <h5 class="category-name">{{category.name}} ({{category.count}})</h5>
-      </div>
-  </div>
-      
+    <uib-tabset justified="false">
+      <uib-tab heading="New Equipment">
+        <div class="row">
+          <div class="col-sm-4 form-group text-center" ng-repeat="category in categoryList" ng-if="$index < 6">   
+            <a href="/used/{{category.group.name}}/{{category.name}}?currentPage=1" class="cat-rectangle">
+              <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{category.imgSrc}}" class="category-item">
+            </a>
+            <h5 class="category-name">{{category.name}} ({{category.count}})</h5>
+          </div>
+        </div>
+      </uib-tab>
+      <uib-tab heading="Used Equipment">
+        <div class="row">
+          <div class="col-sm-4 form-group text-center" ng-repeat="category in categoryList" ng-if="$index < 6">   
+            <a href="/used/{{category.group.name}}/{{category.name}}?currentPage=1" class="cat-rectangle">
+              <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{category.imgSrc}}" class="category-item">
+            </a>
+            <h5 class="category-name">{{category.name}} ({{category.count}})</h5>
+          </div>
+        </div>
+      </uib-tab>
+    </uib-tabset>
+    </div>      
 </section>
 
 <!-- Spacial Products -->
@@ -146,17 +176,34 @@
     <div class="heading-titles">
       <h4>[ Browse Used Equipment By Industry ]</h4>
     </div>
-    <div class="row">
-      <div class="col-sm-4 form-group text-center" ng-repeat="group in mainVm.groups" ng-if="$index < 9">   
-        <a href="/used/{{group.name}}?currentPage=1" class="industy-rectangle">
-          <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{group.imgSrc}}" class="category-item">
-        </a>
-        <div class="category-name">
-          <h5>{{group.name}}</h5>
-          <span>({{group.count || 0}} Categories)</span>
+    <uib-tabset justified="false">
+      <uib-tab heading="New Equipment">
+        <div class="row">
+          <div class="col-sm-4 form-group text-center" ng-repeat="group in mainVm.groups" ng-if="$index < 9">   
+            <a href="/used/{{group.name}}?currentPage=1" class="industy-rectangle">
+              <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{group.imgSrc}}" class="category-item">
+            </a>
+            <div class="category-name">
+              <h5>{{group.name}}</h5>
+              <span>({{group.count || 0}} Categories)</span>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
+      </uib-tab>
+      <uib-tab heading="Used Equipment">
+        <div class="row">
+          <div class="col-sm-4 form-group text-center" ng-repeat="group in mainVm.groups" ng-if="$index < 9">   
+            <a href="/used/{{group.name}}?currentPage=1" class="industy-rectangle">
+              <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{group.imgSrc}}" class="category-item">
+            </a>
+            <div class="category-name">
+              <h5>{{group.name}}</h5>
+              <span>({{group.count || 0}} Categories)</span>
+            </div>
+          </div>
+        </div>
+      </uib-tab>
+    </uib-tabset>    
   </div>
       
 </section>

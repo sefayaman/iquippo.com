@@ -2,25 +2,28 @@
 <section class="category-block">
   <div class="container">
     <div class="information-tabs">
-      <div class="row">
-        <div class="col-sm-6">
+      <div class="row registration-forms">
+        <div class="col-sm-5">
           <img src="/assets/images/loging-image.png" class="img-responsive" alt="">
         </div>
-        <div class="col-xs-offset-1 col-xs-10 col-sm-offset-0 col-sm-5 form-group">
+        <div class="col-xs-offset-1 col-xs-10 col-sm-offset-1 col-sm-5 form-group">
           <form name="infoForm">
             <div class="signup" ng-if="step == 0">
-              <h3 class="text-center form-group">Signup with iQuippo</h3>
-              <h5 class="text-center">Easily Using</h5>
+              <div class="login-titles">
+                <h4>Signup with <span>iQuippo</span></h4>
+                <h5>Easily Using</h5>
+              </div>
               <div class="row">
-                <div class="col-xs-6 form-group text-right">
-                  <a href="javascript:void(0);">
-                    <img src="/assets/images/facebook.png" alt="">
-                  </a>
+                <div class="col-xs-4 form-group">
+                  <a class="btn btn-default btn-block social-facebook" href="javascript:void(0);" ng-click="loginVm.loginOauth('facebook')"><i class="fa fa-facebook-square"></i> Facebook</a>                  
                 </div>
-                <div class="col-xs-6 form-group text-left">
-                  <a href="javascript:void(0);">
-                    <img src="/assets/images/google.png" alt="">
-                  </a>
+                <div class="col-xs-4 form-group">
+                  <a class="btn btn-default btn-block social-twitter" href="javascript:void(0);" ng-click="loginVm.loginOauth('twitter')"><i class="fa fa-twitter-square"></i> Twitter</a>     
+                  
+                </div>
+                <div class="col-xs-4 form-group">
+                  <a class="btn btn-default btn-block social-linkedin" href="javascript:void(0)" ng-click="loginVm.loginOauth('linkedin')"><i class="fa fa-linkedin-square"></i> Linkedin</a>
+                  
                 </div>
               </div>
               <div class="option-border text-center">
@@ -31,14 +34,14 @@
               <div class="row">
                 <div class="col-sm-6 form-group">
                   <div class="floating-label-wrapper" ng-class="{'has-error': infoForm.fname.$invalid && submitted }">
-                    <label for="fname">*First Name</label>
-                    <input type="text" class="form-control" id="fname" name="fname" placeholder="*First Name" ng-model="signupVm.user.fname"   with-floating-label required>
+                    <label for="fname">First Name*</label>
+                    <input type="text" class="form-control" id="fname" name="fname" placeholder="First Name*" ng-model="signupVm.user.fname"   with-floating-label required>
                   </div>
                 </div>
                 <div class="col-sm-6 form-group">
                    <div class="floating-label-wrapper" ng-class="{'has-error': infoForm.lname.$invalid && submitted }">
-                    <label for="lname">*Last Name</label>
-                    <input type="text" class="form-control" id="lname" name="lname" placeholder="*Last Name" ng-model="signupVm.user.lname"   with-floating-label required>
+                    <label for="lname">Last Name*</label>
+                    <input type="text" class="form-control" id="lname" name="lname" placeholder="Last Name*" ng-model="signupVm.user.lname"   with-floating-label required>
                   </div>
                 </div>
               </div>
@@ -54,8 +57,8 @@
                 </div>
                 <div class="col-sm-6 form-group">
                    <div class="floating-label-wrapper" ng-class="{'has-error': infoForm.mobile.$invalid && submitted }">
-                    <label for="mobile">*Mobile Number</label>
-                    <input type="number" class="form-control" id="mobile" name="mobile" placeholder="*Mobile Number" ng-model="signupVm.user.mobile"  with-floating-label required mongoose-error>
+                    <label for="mobile">Mobile Number*</label>
+                    <input type="number" class="form-control" id="mobile" name="mobile" placeholder="Mobile Number*" ng-model="signupVm.user.mobile"  with-floating-label required mongoose-error>
                   </div>
                   <p class="help-block" ng-show="infoForm.mobile.$error.mongoose">
                       {{ errors.mobile }}
@@ -65,16 +68,18 @@
               <div class="row">
                 <div class="col-sm-6 form-group">
                   <div class="floating-label-wrapper" ng-class="{'has-error': infoForm.country.$invalid && submitted }">
+                    <label>Country*</label>
                     <select class="form-control" name="country" ng-model="signupVm.user.country" ng-change="getCountryWiseState(signupVm.user.country)" required>
-                      <option value="">*Country</option>
+                      <option value="">Select Country</option>
                       <option value="{{country.name}}" ng-repeat ="country in allCountries | orderBy:'name'">{{country.name}}</option>
                     </select>
                   </div>
                 </div>                
                 <div class="col-sm-6 form-group">
                    <div class="floating-label-wrapper" ng-class="{'has-error': infoForm.state.$invalid && submitted }">
+                    <label>State*</label>
                    <select class="form-control" name="state" ng-model="signupVm.user.state" ng-change="getStateWiseLocation(signupVm.user.state)" required>
-                      <option value="" disabled="">*State</option>
+                      <option value="" disabled="">Select State</option>
                       <option ng-repeat="state in stateList| orderBy:'name'" value="{{state.name}}">{{state.name}}</option>
                     </select>
                   </div>
@@ -83,8 +88,9 @@
               <div class="row">
                 <div class="col-sm-6 form-group">
                   <div class="floating-label-wrapper" ng-class="{'has-error': infoForm.location.$invalid && submitted }">
+                    <label>City*</label>
                     <select class="form-control" name="location" ng-model="signupVm.user.city" required>
-                      <option value="" disabled>*City</option>
+                      <option value="" disabled>Select City</option>
                         <option ng-repeat="location in locationList| orderBy:'name'" value="{{location.name}}">{{location.name}}</option>
                     </select>
                   </div>
@@ -118,6 +124,7 @@
               <h4>Hi, First Name! Verify its you.</h4>
               <small>We have send you and OTP on your email and mobile number.</small>
               <div class="form-group"></div>
+
               <div class="row">
                 <div class="col-sm-6 form-group">
                   <div class="floating-label-wrapper" ng-class="{'has-error':otpForm.otp.$invalid && submiited}">
@@ -130,7 +137,7 @@
                    <a href="javascript:void(0);" ng-click="signupVm.sendOTP(user)">Resend OTP</a>
                 </div>
               </div>
-
+              <hr>
               <div class="row">
                 <div class="col-sm-6">
                   <small>Already have an account?</small>
