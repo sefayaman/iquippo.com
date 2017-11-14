@@ -297,7 +297,7 @@ angular.module('sreizaoApp').controller('NewEquipmentListCtrl', NewEquipmentList
     if(retainState)
       $state.go($state.current.name,$scope.equipmentSearchFilter,{location:'replace',notify:false});
     else
-      $state.go("new/:category",$scope.equipmentSearchFilter,{location:'replace',notify:false});
+      $state.go("newviewproduct",$scope.equipmentSearchFilter,{location:'replace',notify:false});
   }
 
   function restoreState(){
