@@ -21,11 +21,11 @@ var TechSpecValueMasterSchema = new Schema({
     value:String
   }],*/
   categoryId:{type:Schema.Types.ObjectId,ref:'Category'},
-  //categoryName:String,
+  categoryName:String,
   brandId:{type:Schema.Types.ObjectId,ref:'Brand'},
-  //brandName:String,
+  brandName:String,
   modelId:{type:Schema.Types.ObjectId,ref:'Model'},
-  //modelName:String,
+  mName:String,
   fieldId:{type:Schema.Types.ObjectId,ref:'TechSpecMaster'},
   fieldType:String,
   fieldName:String,

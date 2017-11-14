@@ -1,0 +1,759 @@
+<div id="wrapper">
+  <section class="wrapper">
+    <div class="container-fluid">
+      <div id="page-wrapper">
+        <div class="row">
+          <div class="col-sm-8">
+            <h3>
+            New Equipment Upload
+            </h3>
+          </div>
+          <div class="col-xs-4 col-sm-2 text-right">
+            <h3>
+            <div class="bulks" ng-if="isBulkUpload()">
+              <span class="btn btn-warning btn-block fileinput-button">
+                <input type="file" name="template_update" onchange="angular.element(this).scope().updateAssetTemp(this.files,this)">
+                <span>
+                  <i class="fa fa-database"></i> Bulk Product Update
+                </span>
+              </span>
+            </div>
+            </h3>
+          </div>
+          <div class="col-xs-4 col-sm-2 text-right">
+            <h3>
+            <div class="" ng-if="isBulkUpload()">
+              <span class="fileinput-button" >
+                <a href="/bulkproduct" class="btn btn-block btn-primary"><i class="fa fa-database"></i> Bulk Product Upload</a>
+              </span>
+            </div>
+            </h3>
+          </div>
+        </div>
+        <hr>
+        <div class="row">
+          <div class="col-sm-12">
+            <!-- success error start-->
+            <div class="row animate-show" ng-show="isSuccess" >
+              <div class="col-sm-12">
+                <div class="alert alert-success alert-dismissible fade in" role="alert">
+                  <button type="button" class="close" ng-click="closeMeassage()" aria-label="Close"><span aria-hidden="true">×</span></button>
+                  {{successMessage}}
+                </div>
+              </div>
+            </div>
+            <div class="row animate-show" ng-show="isError">
+              <div class="col-sm-12">
+                <div class="alert alert-danger alert-dismissible fade in" role="alert">
+                  <button type="button" class="close" ng-click="closeMeassage()" aria-label="Close"><span aria-hidden="true">×</span></button>
+                  {{errorMessage}}
+                </div>
+              </div>
+            </div>
+            <!-- success error end -->
+            <!-- tabs -->
+            <uib-tabset justified="true">
+            <uib-tab heading="Step1" index="0" active="tabObj.step1">
+            <form name="form" novalidate>
+              <div class="panel panel-default seller_info" ng-if="isActive() || isChannelPartner()">
+                <div class="panel-heading">
+                  <h3 class="panel-title">Seller Information
+                  <a href="javascript:void(0)" ng-click="goToUsermanagement()" class="pull-right text-primary">Create User</a>
+                  </h3>
+                </div>
+                <div class="panel-body">
+                  <div class="row">
+                    <div class="col-sm-3" ng-class="{'has-error': form.userType.$invalid && submitted }">
+                      <select  class="form-control" name="userType" ng-model="product.seller.userType" ng-change="reset()" ng-required="isActive() || isChannelPartner()">
+                        <option value="">* Customer Type</option>
+                        <option value="individual">Individual</option>
+                        <option value="private">Private Entrepreneur</option>
+                        <option value="legalentity">Legal Entity</option>
+                      </select>
+                      <i class="caret"></i>
+                    </div>
+                    <!-- <div class="col-sm-3 " ng-if="container.userType != 'legalentity'" ng-class="{'has-error': form.userName.$invalid && submitted}">
+                      <select  class="form-control" name="userName"  ng-model="container.selectedUserId" ng-change="onUserChange(container.selectedUserId)" required>
+                        <option value="">* Select User</option>
+                        <option value="{{user._id}}" ng-repeat="user in getUsersOnUserType| orderBy:'fname'">{{user.fname}} {{user.lname}} ({{user.mobile}})</option>
+                      </select>
+                      <i class="caret"></i>
+                      
+                    </div> -->
+                     <div class="col-sm-3 " ng-class="{'has-error': form.sellerMobile.$invalid && submitted}">
+                      <input type="text" class="form-control" placeholder="*Mobile No." ng-value="product.seller.mobile" ng-model="product.seller.mobile" name="sellerMobile" uib-typeahead="mobile for mobile in userSearch($viewValue)"  class="form-control" typeahead-focus-first = "false" typeahead-wait-ms="200" ng-change="fireCommand()" typeahead-on-select="fireCommand()" ng-model-options="{debounce:1000}" autocomplete="off" required>
+                    </div>
+                    <!-- <div class="col-sm-3 " ng-if="container.userType == 'legalentity'" ng-class="{'has-error': form.company.$invalid && submitted}">
+                      <select class="form-control" name="company"  ng-model="container.selectedUserId" ng-change="onUserChange(container.selectedUserId)" required>
+                        <option value="">* Select Company</option>
+                        <option value="{{user._id}}" ng-repeat="user in getUsersOnUserType| orderBy:'company'" >{{user.company}}</option>
+                      </select>
+                      <i class="caret"></i>
+                    </div> -->
+                    <div class="col-sm-3 ">
+                      <input type="text" ng-disabled="true" class="form-control" placeholder="Name" ng-value="container.sellerName" ng-model="container.sellerName">
+                    </div>
+                    
+                    <div class="col-sm-3 ">
+                      <input ng-disabled="true" type="email" class="form-control" placeholder="Email Address" ng-value="product.seller.email" ng-model="product.seller.email" name="sellerEmail">
+                    </div>                 
+                  </div>
+                  <p class="help-block cart_item" ng-show="(form.userName.$error.required || form.company.$error.required || form.userType.$invalid) && submitted">
+                      Selection of Customer type and User/Company is must to upload your product.
+                    </p>
+                </div>
+              </div>
+              <div class="clearfix"></div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h3 class="panel-title">Basic Information</h3>
+                </div>
+                <div class="panel-body">
+                  <div class="row">
+                    <div class="form-group col-xs-6 col-sm-5">Asset Id</div>
+                    <div class="form-group col-xs-6  col-sm-4">
+                      <span ng-if="product.assetId">{{product.assetId}}</span>
+                      <span ng-if="!product.assetId">{{product.assetDir}}</span></div>
+                    </div>
+                    <div class="row">
+                      <div class="form-group col-sm-5">Trade Type<span class="text-warning">*</span></div>
+                      <div class="form-group col-sm-7">
+                        Sell
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="form-group col-sm-5"> Category<span class="text-warning">*</span></div>
+                      <div class="form-group col-sm-4" ng-class="{'has-error': form.category.$invalid && submitted}">
+                        <select  class="form-control" name="category"  ng-model="container.selectedCategoryId" ng-change="onCategoryChange(container.selectedCategoryId)" required>
+                          <option value="">Select Category</option>
+                          <option value="{{category._id}}" ng-repeat="category in allCategory">{{category.name}}</option>
+                        </select>
+                        <i class="caret"></i>
+                      </div>
+                      <div class="col-sm-3 form-group" ng-class="{'has-error': form.otherCategory.$invalid && submitted}">
+                        <input type="text" class="form-control" name="otherCategory" ng-model="product.category.otherName" ng-value="{{product.category.otherName}}" ng-disabled ="product.category.name != 'Other'" placeholder="Other" ng-required= "product.category.name == 'Other'">
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="form-group col-sm-5">Product Brand<span class="text-warning">*</span></div>
+                      <div class="form-group col-sm-4" ng-class="{'has-error': form.brand.$invalid && submitted}">
+                        <select  class="form-control" name="brand" ng-model="container.selectedBrandId" ng-change="onBrandChange(container.selectedBrandId)" required>
+                          <option value="">Select Brand</option>
+                          <option value="{{brand._id}}" ng-repeat="brand in brandList| orderBy:'name'">{{brand.name}}</option>
+                        </select>
+                        <i class="caret"></i>
+                      </div>
+                      <div class="col-sm-3 form-group" ng-class="{'has-error': form.otherBrand.$invalid && submitted}">
+                        <input type="text" class="form-control" name="otherBrand" ng-model="product.brand.otherName" ng-value="{{product.brand.otherName}}" ng-disabled ="product.brand.name != 'Other'" placeholder="Other" ng-required= "product.brand.name == 'Other'">
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="form-group col-sm-5">Product Model<span class="text-warning">*</span></div>
+                      <div class="form-group col-sm-4" ng-class="{'has-error': form.model.$invalid && submitted}">
+                        <select  class="form-control" name="model" ng-model="container.selectedModelId" required  ng-change="onModelChange(container.selectedModelId)">
+                          <option value="">Select Model</option>
+                          <option value="{{model._id}}" ng-repeat="model in modelList| orderBy:'name'">{{model.name}}</option>
+                        </select>
+                        <i class="caret"></i>
+                      </div>
+                      <div class="col-sm-3 form-group" ng-class="{'has-error': form.otherModel.$invalid && submitted}">
+                        <input type="text" class="form-control" name="otherModel" ng-model="product.model.otherName" ng-value="{{product.model.otherName}}" ng-disabled ="product.model.name != 'Other'" placeholder="Other" ng-required= "product.model.name == 'Other'">
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="form-group col-sm-5">Variant</div>
+                      <div class="form-group col-sm-7">
+                        <input type="text" placeholder="Variant" ng-value="product.variant" ng-model="product.variant" name="variant" class="form-control">
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="form-group col-sm-5">Product Group </div>
+                      <div class="form-group col-sm-4">
+                        <input type="text" placeholder="Group Name" ng-value="product.group.name" ng-model="product.group.name" name="group" class="form-control" ng-disabled="true">
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="form-group col-sm-5">Product Name</div>
+                      <div class="form-group col-sm-7" ng-class="{'has-error': form.productName.$invalid && submitted}">
+                        <input ng-disabled="true" type="text" placeholder="Product Name" ng-value="product.name" ng-model="product.name" name="productName" class="form-control" required>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="form-group col-sm-5">Manufacturing Year<span class="text-warning">*</span></div>
+                      <div class="form-group col-xs-9 col-sm-6" ng-class="{'has-error': form.mfgyear.$invalid && submitted}">
+                        <input type="text" name="mfgyear" ng-value="container.mfgYear" ng-model="container.mfgYear" class="form-control" placeholder="yyyy" uib-datepicker-popup="{{format}}" datepicker-options="{{datepickerOptions}}" is-open="container.opened" max-date="maxDate" min-date="minDate" date-disabled="disabled(date, mode)" close-text="Close" required disabled ngMinlength="4" ngMaxlength="4"/>
+                      </div>
+                      <div class="form-group col-xs-3 col-sm-1 text-center padd">
+                        <a href class="form-control btn btn-default" ng-click="open($event, 'mfgYear')">
+                          <i class="fa fa-calendar-o fa-1x"></i>
+                        </a>
+                      </div>
+                    </div>                    
+                    <div class="row" ng-if="product.tradeType != 'RENT'">
+                      <div class="form-group col-sm-5">Sale Price (Excl. Tax).<span class="text-warning">*</span></div>
+                      <div class="form-group col-sm-4">
+                        <div class="input-group">
+                          <span class="input-group-addon">
+                            <i class="fa fa-inr"></i>
+                          </span>
+                          <input type="number"  placeholder="20,000" name="gPrice" min="0" ng-value="product.grossPrice" class="form-control" ng-model="product.grossPrice">
+                        </div>
+                      </div>
+                    </div>                    
+                    <div class="row">
+                      <div class="form-group col-sm-5">Country<span class="text-warning">*</span></div>
+                      <div class="form-group col-sm-7" ng-class="{'has-error': form.country.$invalid && submitted}">
+                        <select class="form-control" name="country" ng-model="product.country" ng-change="onCountryChange()" required>
+                          <option value="">Select Country</option>
+                          <option  ng-repeat="country in allCountries| orderBy:'name'" value="{{country.name}}">{{country.name}}</option>
+                        </select>
+                        <i class="caret"></i>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="form-group col-sm-5">State<span class="text-warning">*</span></div>
+                      <div class="form-group col-sm-7" ng-class="{'has-error': form.state.$invalid && submitted}">
+                        <select class="form-control" name="state" ng-model="product.state" ng-change="onStateChange()" required >
+                          <option value="">Select State</option>
+                          <option value="{{st.name}}" ng-repeat="st in stateList| orderBy:'name'">{{st.name}}</option>
+                        </select>
+                        <i class="caret"></i>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="form-group col-sm-5">Location<span class="text-warning">*</span></div>
+                      <div class="form-group col-sm-7" ng-class="{'has-error': form.location.$invalid && submitted}">
+                        <select class="form-control" name="location" ng-model="product.city" required>
+                          <option value="">Select Location</option>
+                          <option ng-repeat="location in locationList| orderBy:'name'" value="{{location.name}}">{{location.name}}</option>
+                        </select>
+                        <i class="caret"></i>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="form-group col-sm-5">Product Condition</div>
+                      <div class="form-group col-sm-7">
+                        New
+                      </div>
+                    </div>
+                    
+                    <div class="row">
+                      <div class="form-group col-sm-5">Rate Equipment</div>
+                      <div class="form-group col-sm-7">
+                        <select class="form-control" name="rateMyEquipment" ng-model="product.rateMyEquipment">
+                          <option value="" disabled>Rate Equipment</option>
+                          <option ng-repeat="rateMyEquipment in rateMyEquipmentOpt" value="{{rateMyEquipment.name}}">{{rateMyEquipment.name}}</option>
+                        </select>
+                        <i class="caret"></i>
+                      </div>
+                    </div>
+                    <p>
+                      To ensure picture quality we suggest minimum image resolutions as 450*300 pixels.
+                    </p>
+                    <div class="row form-group">
+                      <div class="form-group col-sm-5 pic-popover">General Appearence Pictures*</div>
+                      <div class="col-sm-7 col-xs-12">
+                        <div class="row pic-popover">
+                          <div class="col-sm-3 col-xs-6 primary-upload text-center" ng-repeat="img in images track by $index">
+                            <div class="br5">
+                              <span class="fileinput-button browse-icon" ng-show="!img.src">
+                                <span><i class="fa fa-plus-circle"></i></span>
+                                <input type="file" name="files_{{$index}}"  data-index="{{$index}}" data-filetype="image" image-upload>
+                              </span>
+                              <span ng-show="img.src">
+                                <div class="icn2">
+                                  <a href="javascript:void(0);" ng-click="deleteImg($index,images)"><i class="fa fa-times" ng-if="!img.isPrimary"></i></a>
+                                </div>
+                                <div class="icn">
+                                  <a href="javascript:void(0);" ng-click="rotate(img)"><i class="fa fa-repeat"></i></a>
+                                </div>
+                                <span class="fileinput-button"><a href="javascript:void(0);"  class="al2">
+                                  <img ng-src="{{getImageURL(assetDir,img.src)}}?timestamp={{timestamp}}" class="img-responsive">
+                                </a>
+                              </span>
+                            </span>
+                          </div>
+                          <span ng-show="img.src"><input type="radio" name="prvRadio" value="{{$index}}" ng-click="makePrimary($index,images)" ng-checked="img.isPrimary"/>Primary</span>
+                        </div>
+                        <div class="col-sm-3 clearfix">
+                          <button class="btn btn-block active" ng-click="images.push({})" ng-if="!$last">Add More</button>
+                          <button class="btn btn-block active" ng-click="" ng-if="$last">Delete</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row form-group">
+                    <div class="form-group col-sm-5 pic-popover">Engine Pictures</div>
+                    <div class="col-sm-7 col-xs-12">
+                      <div class="row pic-popover">
+                        <div class="col-sm-3 col-xs-6 primary-upload text-center" ng-repeat="img in imagesEngine track by $index">
+                          <div class="br5">
+                            <span class="fileinput-button browse-icon" ng-show="!img.src">
+                              <span><i class="fa fa-plus-circle"></i></span>
+                              <input type="file" id="eP" name="files_{{$index}}"  data-index="{{$index}}" data-filetype="image" image-upload>
+                            </span>
+                            <span ng-show="img.src">
+                              <div class="icn2">
+                                <a href="javascript:void(0);" ng-click="deleteImg($index,imagesEngine)"><i class="fa fa-times" ng-if="!img.isPrimary"></i></a>
+                              </div>
+                              <div class="icn">
+                                <a href="javascript:void(0);" ng-click="rotate(img)"><i class="fa fa-repeat"></i></a>
+                              </div>
+                              <span class="fileinput-button"><a href="javascript:void(0);"  class="al2">
+                                <img ng-src="{{uploadImagePrefix}}{{assetDir}}/{{img.src}}?timestamp={{timestamp}}" class="img-responsive">
+                              </a>
+                            </span>
+                          </span>
+                        </div>
+                        <span ng-show="img.src"><input type="radio" name="prvRadioEP" value="{{$index}}" ng-click="makePrimary($index,
+                        imagesEngine)" ng-checked="img.isPrimary"/>Primary</span>
+                      </div>
+                      <div class="col-sm-3 clearfix">
+                        <button class="btn btn-block active" ng-click="imagesEngine.push({catImgType:'eP'})" ng-if="!$last">Add More</button>
+                        <button class="btn btn-block active" ng-click="" ng-if="$last">Delete</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row form-group">
+                  <div class="form-group col-sm-5 pic-popover">Hydraulic Pictures</div>
+                  <div class="col-sm-7 col-xs-12">
+                    <div class="row pic-popover">
+                      <div class="col-sm-3 col-xs-6 primary-upload text-center" ng-repeat="img in imagesHydraulic track by $index">
+                        <div class="br5">
+                          <span class="fileinput-button browse-icon" ng-show="!img.src">
+                            <span><i class="fa fa-plus-circle"></i></span>
+                            <input type="file" id="hP" name="files_{{$index}}"  data-index="{{$index}}" data-filetype="image" image-upload>
+                          </span>
+                          <span ng-show="img.src">
+                            <div class="icn2">
+                              <a href="javascript:void(0);" ng-click="deleteImg($index,imagesHydraulic)"><i class="fa fa-times" ng-if="!img.isPrimary"></i></a>
+                            </div>
+                            <div class="icn">
+                              <a href="javascript:void(0);" ng-click="rotate(img)"><i class="fa fa-repeat"></i></a>
+                            </div>
+                            <span class="fileinput-button"><a href="javascript:void(0);"  class="al2">
+                              <img ng-src="{{uploadImagePrefix}}{{assetDir}}/{{img.src}}?timestamp={{timestamp}}" class="img-responsive">
+                            </a>
+                          </span>
+                        </span>
+                      </div>
+                      <span ng-show="img.src"><input type="radio" name="prvRadioHP" value="{{$index}}" ng-click="makePrimary($index,imagesHydraulic)" ng-checked="img.isPrimary"/>Primary</span>
+                    </div>
+                    <div class="col-sm-3 clearfix">
+                      <button class="btn btn-block active" ng-click="imagesHydraulic.push({catImgType:'hP'})" ng-if="!$last">Add More</button>
+                      <button class="btn btn-block active" ng-click="" ng-if="$last">Delete</button>
+                    </div>
+                  </div>
+                </div>
+                </div>
+                <div class="row form-group">
+                  <div class="form-group col-sm-5 pic-popover">Cabin Pictures</div>
+                  <div class="col-sm-7 col-xs-12">
+                    <div class="row pic-popover">
+                      <div class="col-sm-3 col-xs-6 primary-upload text-center" ng-repeat="img in imagesCabin track by $index">
+                        <div class="br5">
+                          <span class="fileinput-button browse-icon" ng-show="!img.src">
+                            <span><i class="fa fa-plus-circle"></i></span>
+                            <input type="file" id="cP" name="files_{{$index}}"  data-index="{{$index}}" data-filetype="image" image-upload>
+                          </span>
+                          <span ng-show="img.src">
+                            <div class="icn2">
+                              <a href="javascript:void(0);" ng-click="deleteImg($index,imagesCabin)"><i class="fa fa-times" ng-if="!img.isPrimary"></i></a>
+                            </div>
+                            <div class="icn">
+                              <a href="javascript:void(0);" ng-click="rotate(img)"><i class="fa fa-repeat"></i></a>
+                            </div>
+                            <span class="fileinput-button"><a href="javascript:void(0);"  class="al2">
+                              <img ng-src="{{uploadImagePrefix}}{{assetDir}}/{{img.src}}?timestamp={{timestamp}}" class="img-responsive">
+                            </a>
+                          </span>
+                        </span>
+                      </div>
+                      <span ng-show="img.src"><input type="radio" name="prvRadioCP" value="{{$index}}" ng-click="makePrimary($index,imagesCabin)" ng-checked="img.isPrimary"/>Primary</span>
+                    </div>
+                    <div class="col-sm-3 clearfix">
+                      <button class="btn btn-block active" ng-click="imagesCabin.push({catImgType:'cP'})" ng-if="!$last">Add More</button>
+                      <button class="btn btn-block active" ng-click="" ng-if="$last">Delete</button>
+                    </div>
+                  </div>
+                  </div>
+                </div>
+                <div class="row form-group">
+                  <div class="form-group col-sm-5 pic-popover">Under Carriage/Tyre Pictures</div>
+                  <div class="col-sm-7 col-xs-12">
+                    <div class="row pic-popover">
+                      <div class="col-sm-3 col-xs-6 primary-upload text-center" ng-repeat="img in imagesUnderCarrage track by $index">
+                        <div class="br5">
+                          <span class="fileinput-button browse-icon" ng-show="!img.src">
+                            <span><i class="fa fa-plus-circle"></i></span>
+                            <input type="file" id="uC" name="files_{{$index}}"  data-index="{{$index}}" data-filetype="image" image-upload>
+                          </span>
+                          <span ng-show="img.src">
+                            <div class="icn2">
+                              <a href="javascript:void(0);" ng-click="deleteImg($index,imagesUnderCarrage)"><i class="fa fa-times" ng-if="!img.isPrimary"></i></a>
+                            </div>
+                            <div class="icn">
+                              <a href="javascript:void(0);" ng-click="rotate(img)"><i class="fa fa-repeat"></i></a>
+                            </div>
+                            <span class="fileinput-button"><a href="javascript:void(0);"  class="al2">
+                              <img ng-src="{{uploadImagePrefix}}{{assetDir}}/{{img.src}}?timestamp={{timestamp}}" class="img-responsive">
+                            </a>
+                          </span>
+                        </span>
+                      </div>
+                      <span ng-show="img.src"><input type="radio" name="prvRadioUC" value="{{$index}}" ng-click="makePrimary($index,imagesUnderCarrage)" ng-checked="img.isPrimary"/>Primary</span>
+                    </div>
+                    <div class="col-sm-3 clearfix">
+                      <button class="btn btn-block active" ng-click="imagesUnderCarrage.push({catImgType:'uC'})" ng-if="!$last">Add More</button>
+                      <button class="btn btn-block active" ng-click="" ng-if="$last">Delete</button>
+                    </div>
+                  </div>
+                  </div>
+                </div>
+                <div class="row form-group">
+                  <div class="form-group col-sm-5 pic-popover">Others Pictures</div>
+                  <div class="col-sm-7 col-xs-12">
+                    <div class="row pic-popover">
+                      <div class="col-sm-3 col-xs-6 primary-upload text-center" ng-repeat="img in imagesOther track by $index">
+                        <div class="br5">
+                          <span class="fileinput-button browse-icon" ng-show="!img.src">
+                            <span><i class="fa fa-plus-circle"></i></span>
+                            <input type="file" id="oP" name="files_{{$index}}"  data-index="{{$index}}" data-filetype="image" image-upload>
+                          </span>
+                          <span ng-show="img.src">
+                            <div class="icn2">
+                              <a href="javascript:void(0);" ng-click="deleteImg($index,imagesOther)"><i class="fa fa-times" ng-if="!img.isPrimary"></i></a>
+                            </div>
+                            <div class="icn">
+                              <a href="javascript:void(0);" ng-click="rotate(img)"><i class="fa fa-repeat"></i></a>
+                            </div>
+                            <span class="fileinput-button"><a href="javascript:void(0);"  class="al2">
+                              <img ng-src="{{uploadImagePrefix}}{{assetDir}}/{{img.src}}?timestamp={{timestamp}}" class="img-responsive">
+                            </a>
+                          </span>
+                        </span>
+                      </div>
+                      <span ng-show="img.src"><input type="radio" name="prvRadioOP" value="{{$index}}" ng-click="makePrimary($index,imagesOther)" ng-checked="img.isPrimary"/>Primary</span>
+                    </div>
+                    <div class="col-sm-3 clearfix">
+                      <button class="btn btn-block active" ng-click="imagesOther.push({catImgType:'oP'})" ng-if="!$last">Add More</button>
+                      <button class="btn btn-block active" ng-click="" ng-if="$last">Delete</button>
+                    </div>
+                  </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+           
+     
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title">Doc Upload and Categorization</h3>
+              </div>
+              <div class="panel-body">
+                <div class="form-group row" ng-repeat="miscDoc in product.miscDocuments">
+                  <div class="col-sm-3 form-group">Document Category</div>
+                  <div class="col-sm-2 form-group">
+                    <select class="form-control" ng-model="miscDoc.type">
+                      <option value="">Document Type</option>
+                      <option value="Policy">Insurance Policy</option>
+                      <option value="Certification">Inspection Certificate</option>
+                      <option value="Valuation">Valuation Report</option>
+                      <option value="Other">Other</option>
+                    </select>
+                    <i class="caret"></i>
+                  </div>
+                  <div class="col-sm-2 form-group">
+                    <span class="btn btn-warning fileinput-button">
+                      <input type="file" data-index="{{$index}}" name="doc"  data-filetype="mdoc" file-upload ng-disabled="!miscDoc.type">
+                      <span><i class="fa fa-upload"></i> Upload Document</span>
+                    </span>
+                  </div>
+                  <div class="col-sm-2 uploads-doc">
+                    <a href="{{uploadImagePrefix}}{{assetDir}}/{{miscDoc.name}}" target="_blank">{{miscDoc.name}}</a>
+                  </div>
+                  <div class="col-xs-12 col-sm-3 col-md-2 pull-right">
+                    <button class="active btn btn-default btn-block" ng-click="product.miscDocuments.push({})" ng-if="$last">Add More</button>
+                    <button class="active btn btn-default btn-block" ng-click="product.miscDocuments.splice($index,1)" ng-if="!$last">Delete</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="clearfix form-group"></div>
+      <div class="row" ng-if="isAdmin()">
+        <div class="col-sm-3">Upload Stamp</div>
+        <div class="form-group col-sm-2">
+          <span class="btn btn-success fileinput-button">
+            <input type="file" name="valStamp"  data-filetype="valStamp" file-upload>
+            <span><i class="fa fa-img"></i> Browse Stamp</span>
+          </span>
+        </div>
+        <div class="col-sm-2 uploads-doc">
+          {{product.valuationStamp}}
+        </div>
+      </div>
+      <div class="clearfix form-group"></div>
+      <div class="row form-group">
+        <div class="col-sm-3">Upload Terms &amp; Conditions</div>
+        <div class="col-sm-2">
+          <span class="btn btn-success fileinput-button">
+            <span>Browse File...</span>
+            <input type="file" name="tcDoc"  data-filetype="tcDoc" file-upload>
+          </span>
+        </div>
+        <div class="col-sm-2 uploads-doc">
+          {{product.tcDocumentName}}
+        </div>
+      </div>
+      <div class="row" ng-show="isActive()">
+        <div class="col-xs-6 col-sm-6">
+          <div class="row">           
+            <div class="col-xs-12">
+              <div class="checkbox">
+                <input type="checkbox" id="active" name="status"  ng-model="product.status" ng-value="product.status"> 
+                <label for="active">Active</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    <div class="clearfix form-group"></div>
+    <div class="form-group text-right">
+      <button class="btn" type="button" ng-click="resetClick(form)" ng-show="!isEdit">Reset</button>
+      <button class="btn btn-primary" type="button" ng-click="previewProduct()">Preview</button>
+      <button ng-hide="enableButton" class="btn btn-danger" ng-click="firstStep(form,product)">Submit</button>
+      <button ng-show="enableButton" class="btn btn-danger" confirmed-click="firstStep(form,product)" ng-confirm-click="This operation will make product inactive and needs administrator approval for activation. Do you want to continue?">Submit</button>
+    </div>
+  </form>
+  </uib-tab>
+  <uib-tab heading="Step2" index="1" active="tabObj.step2" disable="true">
+  <form name="auctForm" novalidate>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Auction Details</h3>
+      </div>
+      <div class="panel-body">
+        <div class="row" ng-if="product.auctionListing">
+          <div class="form-group col-sm-5">Auction</div>
+          <div class="form-group col-sm-7" ng-class="{'has-error': auctForm.auctionDate.$invalid && auctSubmitted}">
+            <select class="form-control" name="auctionDate" ng-model="auctionReq.dbAuctionId" required>
+              <option value="">Select Date</option>
+              <option  ng-repeat="act in auctions" value="{{act._id}}">{{act.name}}({{act.startDate|date:MM/dd/yyyy}}-{{act.endDate|date:MM/dd/yyyy}})</option>
+            </select>
+            <i class="caret"></i>
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-sm-5">EMD Amount </div>
+          <div class="form-group col-sm-7" ng-class="{'has-error': auctForm.emdAmount.$invalid && auctSubmitted}">
+            <input type="number" name="emdAmount" class="form-control" ng-model="auctionReq.emdAmount" min="0" placeholder="EMD Ammount" required>
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-sm-5">Valuation Report</div>
+          <div class="form-group col-sm-7">
+            <input type="text" class="form-control" placeholder="URL" disabled value="{{auctionReq.valuationReport}}">
+          </div>
+        </div>
+        <div class="form-group text-right">
+          
+          <button class="btn btn-danger" ng-click="secondStep(auctForm,product)">Submit</button>
+        </div>
+      </div>
+    </div>
+  </form>
+  </uib-tab>
+  </uib-tabset>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+<div class="form-group"></div>
+<script type="text/ng-template" id="productPreview.html">
+<div>
+<div class="modal-header">
+<button type="button" class="close" ng-click="dismiss()" aria-hidden="true">&times;</button>
+<h4 class="modal-title">Preview Product Upload</h4>
+</div>
+<div class="modal-body">
+<div class="form-group">
+<ul class="img-magnifier text-center">
+<li ng-repeat="img in images" ng-if="img.src">
+<div class="removePrinary">
+  <input type="radio" name="prvRadio" value="{{$index}}" ng-checked="img.isPrimary" ng-click="makePrimary($index,images)" uib-tooltip="Make it Primary" tooltip-placement="top"tooltip-trigger="mouseenter">
+  <a href="javascript:void(0);" ng-click="deleteImg($index,images)" ng-if="!img.isPrimary" uib-tooltip="Remove" tooltip-placement="top" tooltip-trigger="mouseenter">
+    <i class="fa fa-close"></i>
+  </a>
+</div>
+<div>
+  <img width="80" height="80" ng-src="{{prefix}}{{assetDir}}/{{img.src}}" class="img-responsive">
+</div>
+</li>
+</ul>
+</div>
+<div class="form-group"></div>
+<h4 class="text-left">Basic Information</h4>
+<div class="table-responsive">
+<table class="table table-bordered" align="left">
+<tr>
+<td>Trading Type</td>
+<td>Product Group</td>
+<td>Categories</td>
+<td>Product Brand</td>
+<td>Product Model</td>
+<td>Product Name</td>
+<td>Mfg. Year</td>
+<td>Operating Hours/HMR</td>
+<td>Mileage/KMR</td>
+<td>Machine Serial No.</td>
+<td>Gross Price</td>
+<td>Country</td>
+<td>Location</td>
+<td>Product Condition</td>
+<td>Video</td>
+</tr>
+<tr>
+<td>{{product.tradeType}}</td>
+<td>{{product.group.name}}</td>
+<td ng-if="product.category.name != 'Other'">{{product.category.name}}</td>
+<td ng-if="product.category.name == 'Other'">{{product.category.otherName}}</td>
+<td ng-if="product.brand.name != 'Other'">{{product.brand.name}}</td>
+<td ng-if="product.brand.name == 'Other'">{{product.brand.otherName}}</td>
+<td ng-if="product.brand.name != 'Other'">{{product.model.name}}</td>
+<td ng-if="product.brand.name == 'Other'">{{product.model.otherName}}</td>
+<td>{{product.name}}</td>
+<td>{{product.mfgYear | date:'yyyy'}}</td>
+<td>{{product.operatingHour}}</td>
+<td>{{product.mileage}}</td>
+<td>{{product.serialNo}}</td>
+<td>{{product.grossPrice}}</td>
+<td>{{product.country}}</td>
+<td>{{product.city}}</td>
+<td>{{product.productCondition}}</td>
+<td>{{product.videoName}}</td>
+</tr>
+</table>
+</div>
+<h4 class="text-left">Renting information</h4>
+<h5 class="text-left">Availability of asset</h5>
+<div class="row">
+<div class="col-sm-2 text-left">
+<label>From </label>
+<p>{{getDateFormat(product.rent.fromDate)}}</p>
+</div>
+<div class="col-sm-2 text-left">
+<label>To</label>
+<p>{{getDateFormat(product.rent.toDate)}}</p>
+</div>
+</div>
+<table class="table">
+<thead>
+<tr>
+<th></th>
+<th>Min. Rental Period</th>
+<th>MAx. Rental Period</th>
+<th>Rent Amount</th>
+<th>Security Deposit</th>
+</tr>
+</thead>
+<tbody>
+<tr ng-if="product.rent.rateHours.rateType == 'hours'">
+<td><b>Hours</b></td>
+<td>{{product.rent.rateHours.minPeriodH}}</td>
+<td>{{product.rent.rateHours.maxPeriodH}}</td>
+<td>{{product.rent.rateHours.rentAmountH}}</td>
+<td>{{product.rent.rateHours.seqDepositH}}</td>
+</tr>
+<tr ng-if="product.rent.rateDays.rateType == 'days'">
+<td><b>Days</b></td>
+<td>{{product.rent.rateDays.minPeriodD}}</td>
+<td>{{product.rent.rateDays.maxPeriodD}}</td>
+<td>{{product.rent.rateDays.rentAmountD}}</td>
+<td>{{product.rent.rateDays.seqDepositD}}</td>
+</tr>
+<tr ng-if="product.rent.rateMonths.rateType == 'months'">
+<td><b>Months</b></td>
+<td>{{product.rent.rateMonths.minPeriodM}}</td>
+<td>{{product.rent.rateMonths.maxPeriodM}}</td>
+<td>{{product.rent.rateMonths.rentAmountM}}</td>
+<td>{{product.rent.rateMonths.seqDepositM}}</td>
+</tr>
+</tbody>
+</table>
+<h4 class="text-left">Technical Information</h4>
+<div class="table-responsive">
+<table class="table table-bordered">
+<tr>
+<td>Document</td>
+<td>Gross Weight</td>
+<td>Operating Weight</td>
+<td>Bucket Capacity</td>
+<td>Engine Power</td>
+<td>Lifting Capacity</td>
+<td ng-repeat="techInfo in product.technicalInfo.params">{{techInfo.key}}</td>
+</tr>
+<tr>
+<td>{{product.documentName}}</td>
+<td>{{product.technicalInfo.grossWeight}}</td>
+<td>{{product.technicalInfo.operatingWeight}}</td>
+<td>{{product.technicalInfo.bucketCapacity}}</td>
+<td>{{product.technicalInfo.enginePower}}</td>
+<td>{{product.technicalInfo.liftingCapacity}}</td>
+<td ng-repeat="techInfo in product.technicalInfo.params">{{techInfo.value}}</td>
+</tr>
+</table>
+</div>
+<h4 class="text-left">Service information</h4>
+<div class="table-responsive">
+<table class="table table-bordered">
+<tr>
+<td>Date</td>
+<td>Operating hrs</td>
+<td>Service At</td>
+<td>Autdorized Station</td>
+</tr>
+<tr ng-repeat="serviceinfo in product.serviceInfo">
+<td>{{getDateFormat(serviceinfo.servicedate)}}</td>
+<td>{{serviceinfo.operatingHour}}</td>
+<td>{{serviceinfo.serviceAt}}</td>
+<td>{{serviceinfo.authServiceStation}}</td>
+</tr>
+</table>
+<table class="table table-bordered">
+<tr>
+<td>Engine Repaired/Overhauling</td>
+<td>Comments</td>
+<td>Status</td>
+</tr>
+<tr>
+<td>{{isEngineRepaired(product.isEngineRepaired)}}</td>
+<td>{{product.comment}}</td>
+<td ng-if="product.status">Approved</td>
+<td ng-if="!product.status">Not approved</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="modal-footer">
+</div>
+</div>
+</script>
+<script type="text/ng-template" id="cropImage.html">
+<div>
+<div class="modal-header">
+<button type="button" class="close"  ng-click="dismissModal()" aria-hidden="true"><i class="fa fa-times"></i></button>
+</div>
+<div class="modal-body">
+<image-crop image-out="imageOut"  crop-options="options" ng-transclude crop-image-save="saveCrop">
+<edit-crop></edit-crop>
+</image-crop>
+</div>
+<div class="modal-footer">
+<button type="button" class="btn btn-success" ng-click="cropImage()">Crop <i class="fa fa-crop"></i></button>
+<button type="button" class="btn btn-danger" data-dismiss="modal" ng-click="saveImage()">Save</button>
+</div>
+</div>
+</script>

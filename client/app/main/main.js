@@ -650,6 +650,27 @@ angular.module('sreizaoApp')
         controller:"NewEquipmentCtrl",
         layout:'client',
       })
-
+       .state('uploadnewequipment', {
+        url: '/uploadnewequipment',
+        templateUrl: 'app/newequipment/product-new.html',
+        controller: 'NewEquipmentMasterCtrl as neweqipVm',
+        authenticate:true,
+        layout:'admin'
+      })
+      .state('newequipmentlisting', {
+        url: '/newequipmentlisting?first_id&last_id&currentPage&prevPage&searchstr&statusText' +
+              '&featured&tradeValue&assetStatus&searchType&coulmnSearchStr&reset',
+        templateUrl: 'app/newequipment/productlisting.html',
+        controller: 'NewEquipmentListingCtrl as newequipmentListingVm',
+        authenticate:true,
+        layout:'admin'
+      })
+      .state('newequipmentedit', {
+        url: '/uploadnewequipment/:id',
+        templateUrl: 'app/newequipment/product-new.html',
+        controller: 'NewEquipmentMasterCtrl as neweqipVm',
+        authenticate:true,
+        layout:'admin'
+      })
       $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
   });
