@@ -20,6 +20,7 @@ var LotSchema = new Schema({
   status:{type:Boolean,default:true},
   isDeleted:{type:Boolean,default:false},
   reqSubmitStatus:{type:String,default:"Request Failed"},
+  lotStatus:{type:String,default:'Open'},
   createdBy:{},
   createdAt: {type:Date,default:Date.now},
   updatedAt: {type:Date,default:Date.now}

@@ -16,6 +16,7 @@ var PaymentMasterModel = require('../common/paymentmaster.model');
 var PaymentTransactionModel = require('../payment/payment.model');
 var UserModel = require('../user/user.model');
 var vendorModel = require('../vendor/vendor.model');
+var LotModel = require('../common/lot.model');
 
 // Get list of auctions
 
@@ -1971,6 +1972,156 @@ function importAuctionMaster(req, res, data) {
   });
 };*/
 /* end of auctionmaster */
+var FIELDS = ['auction_id','lot_id',"lot_status"];
+exports.validateUpdateLotStatus = function(req,res,next){
+  
+  var bodyData = req.body;
+  var result = {};
+  result.err = "";
+  result.results = "";
+
+  for(var i=0;i<FIELDS.length;i++){
+    if(!bodyData[FIELDS[i]]){
+      result.err = FIELDS[i] + " is missing";
+      break;
+    }
+  }
+  if(result.err)
+    return sendResponse();
+  if(['Closed','Sold'].indexOf(bodyData.lot_status) === -1){
+    result.err = "Invalid status";
+    return sendResponse();
+  }
+  var parallelFns = [getLot];
+  if(bodyData.lot_status === 'Sold')
+    parallelFns[parallelFns.length] = getAssetInLot;
+
+  async.parallel(parallelFns,function(err){
+    if(err){
+      result.err = err;
+      return sendResponse();
+    };
+    var idArr = [];
+    req.assets.forEach(function(item){
+      if(!item.external && item.product && item.product._id)
+        idArr.push(item.product._id);
+    });
+
+    Product.find({_id:{$in:idArr},deleted:false},function(prErr,products){
+      if(err){
+        result.err = "Error in getting product";
+        return sendResponse();
+      }
+      req.products = products;
+      return next();
+    });
+  });
+
+  function getLot(cb){
+    LotModel.find({_id:bodyData.lot_id,status:true,isDeleted:false,lotStatus:'Open'},function(err,lots){
+      if(err)
+        return cb("Error in finding lot");
+      if(!lots.length)
+        return cb("Lot not found");
+      req.lot = lots[0];
+      return cb();
+    });
+  }
+
+  function getAssetInLot(cb){
+    AuctionRequest.find({lot_id:bodyData.lot_id,dbAuctionId:bodyData.auction_id},function(err,assets){
+      if(err)
+        return cb("Error in asset lot");
+      if(!assets.length)
+        return cb("NO asset in lot");
+      req.assets = assets;
+      return cb();
+
+    });
+  };
+
+  function sendResponse(){
+     return res.status(200).json(result);
+  }
+
+};
+
+exports.updateLotStatus = function(req,res){
+  var bodyData = req.body;
+  var result = {};
+  result.err = "";
+  result.results = "";
+  async.parallel([updateLot,updateAssetInAuction,updateProduct],function(err){
+    if(err)
+      result.err = err;
+    else
+      result.results = "Lot status updated successfully";
+    return res.status(200).json(result);
+
+  });
+
+  function updateLot(callback){
+    var updatedData = {lotStatus:bodyData.lot_status};
+    updatedData.updatedAt = new Date();
+    LotModel.update({_id:bodyData.lot_id},{$set:updatedData},function(err){
+      if(err)
+        return callback("Error in updating lot");
+      return callback();
+    });
+  }
+
+  function updateAssetInAuction(callback){
+    if(bodyData.lot_status === 'Closed')
+      return callback();
+    async.eachLimit(req.assets,2,_updateAsset,function(err){
+      return callback(err);
+    });
+
+    function _updateAsset(data,cb){
+      data = data.toObject();
+      var _id = data._id;
+      delete data._id;
+      if(data && data.product)
+        data.product.isSold = true;
+      AuctionRequest.update({_id: _id+ ""},{$set:data},function(err){
+        if(err)return cb("Error in asset in auction product update with id " + _id);
+        return cb();
+      });
+    }
+  }
+
+  function updateProduct(callback){
+     if(bodyData.lot_status === 'Closed')
+      return callback();
+    async.eachLimit(req.products,2,_updateProduct,function(err){
+      return callback(err);
+    });
+
+    function _updateProduct(data,cb){
+      if(data.assetStatus === 'sold')
+        return cb();
+
+       var updatedData = {updatedAt:new Date()};
+      updatedData.isSold = true;
+      updatedData.assetStatus = "sold";
+      updatedData.assetStatuses = data.assetStatuses;
+      if(!updatedData.assetStatuses || !updatedData.assetStatuses.length)
+        updatedData.assetStatuses = [];
+      var stsObj = { 
+                      createdAt:new Date(),
+                      status:'sold',
+                      userId:"Auction"
+                    };
+      updatedData.assetStatuses[updatedData.assetStatuses.length] = stsObj;
+      Product.update({_id:data._id},{$set:updatedData},function(err){
+        if(err)
+          return cb("Error in product update for id " + data._id);
+        return cb();
+      });
+    }
+  }
+};
+
 function handleError(res, err) {
   return res.status(500).send(err);
 }

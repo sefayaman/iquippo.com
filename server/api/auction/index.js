@@ -48,6 +48,7 @@ router.post('/userregforauction/senddata',userRegForAuction.sendUserToAs);
 router.post('/userregforauction/export', auth.hasRole('admin'), userRegForAuction.exportData);
 
 router.post('/upload/excel',controller.bulkUpload);
+router.post('/lotstatusupdate',controller.validateUpdateLotStatus,controller.updateLotStatus);
 
 router.post('/auctionmaster/getauctionwiseproductdata', controller.getAuctionWiseProductData);
 //router.get('/updateauctions/isdeleted',controller.updateauctionsisdeleted);
