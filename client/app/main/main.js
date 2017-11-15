@@ -456,7 +456,7 @@ angular.module('sreizaoApp')
         }
       })
       .state('assetinacuction', {
-        url: '/assetinauction',
+        url: '/assetinauction/:auctionId',
         templateUrl: 'app/auction/auctionsdetail.html',
         controller: 'AssetInAuctionCtrl as auctionDetailsVm',
         layout:'client'

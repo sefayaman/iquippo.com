@@ -3,12 +3,12 @@
 
   angular.module('sreizaoApp').controller('AssetInAuctionCtrl', AssetInAuctionCtrl);
 
-  function AssetInAuctionCtrl($scope, $state, $rootScope, $window, categorySvc, Auth, Modal, brandSvc, LocationSvc, modelSvc, userRegForAuctionSvc, productSvc, AuctionSvc, $location, $uibModal) {
+  function AssetInAuctionCtrl($scope, $state,$stateParams, $rootScope, $window, categorySvc, Auth, Modal, brandSvc, LocationSvc, modelSvc,groupSvc, userRegForAuctionSvc, productSvc, AuctionSvc, $location) {
     var vm = this;
-
-    var query = $location.search();
+    var dbAuctionId = $stateParams.id;
+    //var query = $location.search();
     //$scope.auctionName=$location.search().auctionName;
-    $scope.auctionType=$location.search().auctionType;
+    /*$scope.auctionType=$location.search().auctionType;
     $scope.auctionTypeValue=$location.search().auctionTypeValue;
     var filter = {};
     $scope.equipmentSearchFilter={};
@@ -26,33 +26,83 @@
     vm.auctionOwnerMobile=$location.search().auctionOwnerMobile;
     vm.auctionCity=$location.search().auctionCity;
     vm.auctionTypeValue=$location.search().auctionTypeValue;
-    vm.termAuction=$location.search().termAuction;
-    $scope.openUrl = openUrl;
+    vm.termAuction=$location.search().termAuction;*/
+    //$scope.openUrl = openUrl;
 
     //registering category brand functions
-    vm.onCategoryChange=onCategoryChange;
-    vm.onBrandChange=onBrandChange;
+    vm.onCategoryChange= onCategoryChange;
+    vm.onBrandChange= onBrandChange;
     vm.openBidModal = openBidModal;
-    vm.getAuctionById = getAuctionById;
+    //vm.getAuctionById = getAuctionById;
+
+    $scope.auctionData = null;
+    function init(){
+
+      var filter = {};
+      filter._id = dbAuctionId;
+      $rootScope.loading = true;
+      AuctionSvc.getAuctionDateData(filter)
+        .then(function(result) {
+          $rootScope.loading = false;
+          if(!result || !result.length)
+            return backButton();
+          auctionData = result[0];
+        })
+        .catch(function(res){
+          $rootScope.loading = false;
+          backButton();
+        });
+
+
+     /* categorySvc.getAllCategory()
+      .then(function(result){
+        $scope.allCategory = result;
+      });*/
+      groupSvc.getAllGroup({isForUsed:true})
+      .then(function(result){
+        $scope.allGroup = result;
+      });
+
+      categorySvc.getCategoryOnFilter({isForUsed:true})
+      .then(function(result){
+        $scope.categoryList = result;
+        allCategory = result;
+        if($stateParams.group)
+            onGroupChange($stateParams.group,true);
+      });
+
+      brandSvc.getBrandOnFilter({isForUsed:true})
+      .then(function(result){
+        allBrand = result;
+        $scope.brandList = result;
+        if($stateParams.category)
+            onCategoryChange($stateParams.category,true); 
+      });
+      //$scope.auctionId=query.auctionId;
+      //filter.auctionId = query.auctionId;
+      //getAuctionById();
+      //filter.status = "request_approved";
+      getAssetsInAuction({dbAuctionId:dbAuctionId,status:"request_approved"});
+    }
 
     // bid summary
     function openBidModal(){
       Auth.isLoggedInAsync(function(loggedIn) {
         if (loggedIn) {
-          filter = {};
-          filter._id = $location.search().id;
-          AuctionSvc.getAuctionDateData(filter)
-            .then(function(result) {
-              if(!result)
-                return;
+         // filter = {};
+          //filter._id = $location.search().id;
+          //AuctionSvc.getAuctionDateData(filter)
+            //.then(function(result) {
+              //if(!result)
+                //return;
               var dataObj = {};
               dataObj.auction = {};
               dataObj.user = {};
-              dataObj.auction.dbAuctionId = result.items[0]._id;
-              dataObj.auction.name = result.items[0].name;
-              dataObj.auction.auctionId = result.items[0].auctionId;
-              dataObj.auction.emdAmount = result.items[0].emdAmount;
-              dataObj.auction.auctionOwnerMobile = result.items[0].auctionOwnerMobile;
+              dataObj.auction.dbAuctionId = auctionData._id;
+              dataObj.auction.name = auctionData.name;
+              dataObj.auction.auctionId = auctionData.auctionId;
+              dataObj.auction.emdAmount = auctionData.emdAmount;
+              dataObj.auction.auctionOwnerMobile = auctionData.auctionOwnerMobile;
               dataObj.user._id = Auth.getCurrentUser()._id;
               dataObj.user.fname = Auth.getCurrentUser().fname;
               dataObj.user.lname = Auth.getCurrentUser().lname;
@@ -61,7 +111,7 @@
               if(Auth.getCurrentUser().email)
                 dataObj.user.email = Auth.getCurrentUser().email;
               save(dataObj);
-            });
+           // });
         } else {
           var regUserAuctionScope = $rootScope.$new();
           regUserAuctionScope._id = query.id;
@@ -81,28 +131,18 @@
               Modal.alert(err.data); 
       });
     }
+
     function openUrl(_id) {
       if (!_id)
         return;
-
       $window.open('/productdetail/' + _id, '_blank');
     }
 
-    function init() {
-      categorySvc.getAllCategory()
-      .then(function(result){
-        $scope.allCategory = result;
-      });
-      $scope.auctionId=query.auctionId;
-      filter.auctionId = query.auctionId;
-      getAuctionById();
-      filter.status = "request_approved";
-     
-      getAssetsInAuction(filter);
-    }
+    /*function init() {
 
-    init();
-    function getAuctionById() {
+    }*/
+
+    /*function getAuctionById() {
       var filter = {};
        filter._id  = $location.search().id;
       AuctionSvc.getAuctionDateData(filter)
@@ -125,14 +165,14 @@
     .catch(function(err){
 
     });
-    }
+    }*/
 
     function backButton() {
       $window.history.back();
       //$state.go("auctions?type="+ $scope.auctionType);
     }
 
-    function onCategoryChange(category,noAction){
+    /*function onCategoryChange(category,noAction){
       $scope.brandList = [];
       $scope.modelList = [];
       if(!noAction){
@@ -172,7 +212,7 @@
     if(!noAction)
         fireCommand();
 
-  }
+  }*/
 
   function fireCommand(noReset,doNotSaveState){
       if(vm.show == true)
@@ -240,7 +280,7 @@
         });
   }
 
-  $scope.today = function() {
+  /*$scope.today = function() {
     $scope.mfgyr = new Date();
   };
   $scope.today();
@@ -250,14 +290,14 @@
   };
   $scope.clear = function () {
     $scope.mfgyr = null;
-  };
+  };*/
 
   // Disable weekend selection
   /*$scope.disabled = function(date, mode) {
     return ( mode === 'day' && ( date.getDay() === 0 || date.getDay() === 6 ) );
   };*/
 
-  $scope.toggleMin = function() {
+  /*$scope.toggleMin = function() {
     $scope.minDate = $scope.minDate ? null : new Date();
   };
   $scope.toggleMin();
@@ -301,11 +341,11 @@
 
   $scope.status = {
     opened: false
-  };
+  };*/
 
   //date picker end
 
-  function productSearchOnMfg(){
+  f/*unction productSearchOnMfg(){
 
     if(!$scope.mfgyr.min && !$scope.mfgyr.max){
       delete $scope.equipmentSearchFilter.mfgYear;
@@ -324,10 +364,10 @@
     else
       delete $scope.equipmentSearchFilter.mfgYear.max;
       fireCommand();
-  }
+  }*/
 
-
-
+  //Entry point
+  init();
 
   }
 })();
