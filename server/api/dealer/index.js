@@ -10,5 +10,6 @@ router.post('/', controller.create);
 router.put('/:id', controller.update);
 router.delete('/:id', controller.delete);
 router.post('/onfilter', controller.getOnFilter);
+router.get('/check', controller.check);
 
 module.exports = router;

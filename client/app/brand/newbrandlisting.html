@@ -1,0 +1,28 @@
+<div class="container-fluid">
+  <ol class="breadcrumb">
+    <li>
+      <a href="/main">Home</a>
+    </li>
+    <li class="active">New Equipments</li>
+  </ol>
+</div>
+
+<!-- Upcoming Auction -->
+<section class="category-block">
+  <div class="container">
+    <div class="heading-titles text-center">
+      <h4>[ BROWSE BY BRANDS ]</h4>
+      <p>Now browse equipments from a list of top leading brands in the market and choose your product according to your necessity.</p>
+    </div>
+    <div class="row">      
+      <div class="col-sm-4 col-md-3 form-group" ng-repeat="brand in newbrandListingVm.brandList">
+        <div class="media text-center">
+          <a href="/new/brands/{{brand.name}}?currentPage=1">             
+             <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{brand.imgSrc}}" class="img-responsive" ng-if="brand.imgSrc">  <img src="/assets/images/JCBlogo.png" class="img-responsive" ng-if="!brand.imgSrc">            
+          </a>
+          <h4>{{brand.name}}</h4>               
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

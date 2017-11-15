@@ -64,16 +64,16 @@ function MasterDataCtrl($scope, $rootScope,MasterDataService, groupSvc, modelSvc
 	$scope.checkBrandFor = checkBrandFor;
 
 	function loadAllGroup(fromCache){
-		if(!fromCache)
-			groupSvc.clearCache();
-		groupSvc.getAllGroup()
-		.then(function(result){
-			$scope.allGroup = result;
-			$scope.filteredGroup = result;
-			vm.gCurrentPage = 1;
-			vm.gSearch = "";
-			vm.gTotalItems = result.length;
-		})
+            if(!fromCache)
+            groupSvc.clearCache();
+            groupSvc.getAllGroup()
+            .then(function(result){
+                    $scope.allGroup = result;
+                    $scope.filteredGroup = result;
+                    vm.gCurrentPage = 1;
+                    vm.gSearch = "";
+                    vm.gTotalItems = result.length;
+            });
 	}
 
 	function loadAllCategory(fromCache){

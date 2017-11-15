@@ -3,6 +3,7 @@
 angular.module("account",[]);
 angular.module("classifiedAd",[]);
 angular.module("product",[]);
+angular.module("newequipment",[]);
 angular.module("admin",[]);
 angular.module("manpower",[]);
 angular.module("spare",[]);
@@ -22,6 +23,7 @@ angular.module('sreizaoApp',[
   "account",
   'classifiedAd',
   'product',
+  'newequipment',
   'admin',
   'manpower',
   'spare',

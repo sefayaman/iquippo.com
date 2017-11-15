@@ -210,9 +210,9 @@
 							<uib-pagination total-items="masterDataVm.cTotalItems" ng-model="masterDataVm.cCurrentPage" items-per-page="masterDataVm.itemsPerPage" max-size="masterDataVm.maxSize" class="pagination-sm" rotate="false">  </uib-pagination>
 					    </uib-tab>
 					    <uib-tab heading="Brand" select="masterDataVm.reset()">	
-					    	<form  name="brandForm" novalidate class="form">
-					    		<h4>Add New Brand</h4>
-					    		<legend></legend>
+                                <form  name="brandForm" novalidate class="form">
+                                    <h4>Add New Brand</h4>
+                                    <legend></legend>
 	                          <div class="row">
 	                         	<div class="form-group col-sm-3" ng-class="{'has-error': form.errorGroup && submitted}">
 	                                <select class="form-control" ng-model="b.group" ng-change="masterDataVm.onGroupChange(b.group)" ng-options="group.name for group in allGroup track by group._id" name="groupList" required ng-disabled="brandEdit">
@@ -221,20 +221,20 @@
 	                            </div> 
 	                            <div class="form-group col-sm-3" ng-class="{'has-error': form.errorCategory && submitted}">
 	                                <select class="form-control" ng-model="b.category" name="categoryList" ng-options="category.name for category in categoryList track by category._id" required ng-disabled="brandEdit">
-		                            <option value="" disabled>Select Category</option>
-					                <!-- <option ng-repeat="category in categoryList" ng-selected="b.category._id == category._id" value="{{category._id}}">{{category.name}}</option> -->
-					                </select> 
+                                            <option value="" disabled>Select Category</option>
+                                            <!-- <option ng-repeat="category in categoryList" ng-selected="b.category._id == category._id" value="{{category._id}}">{{category.name}}</option> -->
+                                        </select> 
 	                            </div>	                            
 	                            <div class="col-sm-3 form-group text-center">
-					    	  		<div class="checkbox"><input type="checkbox" name="brandEquipment" value="" id="Brandusedequip" placeholder="" ng-model="b.isForUsed"> <label for="Brandusedequip"> Used Equipment </label>
-					    	  		</div>
-					    	  		
-					    	  	</div>
-					    	  	<div class="col-sm-3 form-group text-center">
-					    	  		<div class="checkbox"><input type="checkbox" name="brandEquipment" value="" id="Brandnewequip" placeholder="" ng-model="b.isForNew"> <label for="Brandnewequip"> New Equipment </label>
-					    	  		</div>
-					    	  	</div>
-					    	  	<div class="form-group col-sm-3" ng-class="{'has-error': form.errorBrand && submitted}">
+                                        <div class="checkbox"><input type="checkbox" name="brandEquipment" value="" id="Brandusedequip" placeholder="" ng-model="b.isForUsed"> <label for="Brandusedequip"> Used Equipment </label>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-sm-3 form-group text-center">
+                                        <div class="checkbox"><input type="checkbox" name="brandEquipment" value="" id="Brandnewequip" placeholder="" ng-model="b.isForNew"> <label for="Brandnewequip"> New Equipment </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-3" ng-class="{'has-error': form.errorBrand && submitted}">
 	                                <input id="brandName" name="brandName" ng-model="b.name" type="text"  class="form-control" placeholder="Enter Brand Name" required>
 	                            </div> 
 	                            <div class="col-sm-2 form-group">
@@ -250,7 +250,17 @@
 				                    </span>
 				                    <span>{{b.imgSrc}}</span>
 	                            </div>
-								<div class="form-group col-sm-2">
+                                    
+                                    <div class="form-group col-sm-3">
+                                        <select class="form-control" ng-model="b.position" name="bannerPosition">
+>                                            <option value="" disabled>Select Placing</option>
+                                            <option value="noPosition">None</option>
+                                            <option value="left">Left</option>
+                                            <option value="topRight">Top Right</option>
+                                            <option value="bottomRight">Bottom Right</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-sm-2">
 	                            	<span class="btn btn-warning fileinput-button">
 		                                <span>Browse image...</span>
 		                                <input type="file"   accept="image/*" ng-model ="files" ng-change="uploadImage(files,b,'Brand',0,'imgNewEquipmentSrc')" file>
@@ -258,10 +268,10 @@
 				                    <span>{{b.imgNewEquipmentSrc}}</span>
 	                            </div>
 				    	  	                    	
-	                           	<div class="form-group col-sm-2 pull-right">
-	                           		<button type="button" class="btn btn-primary btn-md btn-block" ng-click="masterDataVm.Save('Brand')" ng-if="!brandEdit">Save</button>
-	                           		<button type="button" class="btn btn-primary btn-md btn-block" ng-click="masterDataVm.update('Brand')" ng-if="brandEdit">Update</button>
-	                           	</div>
+                                    <div class="form-group col-sm-2 pull-right">
+                                        <button type="button" class="btn btn-primary btn-md btn-block" ng-click="masterDataVm.Save('Brand')" ng-if="!brandEdit">Save</button>
+                                        <button type="button" class="btn btn-primary btn-md btn-block" ng-click="masterDataVm.update('Brand')" ng-if="brandEdit">Update</button>
+                                    </div>
 	                           	
 	                          </div>
 	                     	</form>					      

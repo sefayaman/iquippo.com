@@ -163,6 +163,15 @@ angular.module('sreizaoApp')
         controller: 'ViewProductsCtrl as viewproductVm',
          layout:'client'
       })
+      .state('newviewproduct', {
+        url:"/new/viewproducts?currentPage&group&category&brand&model" + 
+            "&type&currencyType&currencyMin&currencyMax&" +
+            "&mfgYearMin&mfgYearMax&stateName&cityName&assetId&"+
+            "searchstr&operatingHour&mileage&productName&location&locationName&certificationName",
+        templateUrl: 'app/newequipment/newproducts.html',
+        controller: 'NewViewProductsCtrl as newviewproductVm',
+         layout:'client'
+      })
      /* .state('productbycategory', {
         url: '/category/:category?currentPage',
         templateUrl: 'app/product/viewproducts.html',
@@ -689,16 +698,119 @@ angular.module('sreizaoApp')
         layout:'client',
         authenticate:true
       })
-       .state('newequipment', {
-        url:"/newequipment",
-        templateUrl: 'app/newequipment/newequipment.html',
+       .state("newequipment", {
+        url:"/new",
+        templateUrl: "app/newequipment/newequipment.html",
         controller:"NewEquipmentCtrl",
-        layout:'client',
+        layout:"client",
         onEnter:function($rootScope){
           //$rootScope.choosenTitle=pagesTitles.valuation.title;
           //$rootScope.metaDescription=pagesTitles.valuation.meta;
         }
+      })       
+      .state("newequipmentlist", {
+        url: "/new/viewproducts?currentPage&group&category&brand&model" + 
+            "&type&currencyType&currencyMin&currencyMax&" +
+            "&mfgYearMin&mfgYearMax&stateName&cityName&assetId&"+
+            "searchstr&operatingHour&mileage&productName&location&locationName",
+        templateUrl: "app/newequipment/newproducts.html",
+        controller: "NewEquipmentListCtrl as newequipmentlistVm",
+        layout:"client"
       })
-
+      .state("newequipmentproduct", {
+        url: "/new/viewproducts/:id?currentPage",
+        templateUrl: "app/newequipment/newproducts.html",
+        controller: "NewEquipmentListCtrl as newequipmentlistVm",
+        layout:"client",
+        onEnter:function ($rootScope,$stateParams,$http){
+          $http.post("/api/getseo/",{categoryId:$stateParams.id})
+          .then(function(res){
+            if(res && res.data.length > 0) {
+              $rootScope.choosenTitle=res.data[res.data.length-1].title;
+              $rootScope.metaDescription=res.data[res.data.length-1].meta;
+            }
+          })
+          .catch(function(err){
+           
+          });
+        }
+      })
+      .state('newbulkorder', {
+        url:"/new/bulkorder",
+        templateUrl: "app/newequipment/bulkorder.html",
+        controller:"NewEquipmentCtrl",
+        layout:"client"
+      })
+       .state('uploadnewequipment', {
+        url: '/uploadnewequipment',
+        templateUrl: 'app/newequipment/product-new.html',
+        controller: 'NewEquipmentMasterCtrl as neweqipVm',
+        authenticate:true,
+        layout:'admin'
+      })
+      .state('newequipmentlisting', {
+        url: '/newequipmentlisting?first_id&last_id&currentPage&prevPage&searchstr&statusText' +
+              '&featured&tradeValue&assetStatus&searchType&coulmnSearchStr&reset',
+        templateUrl: 'app/newequipment/productlisting.html',
+        controller: 'NewEquipmentListingCtrl as newequipmentListingVm',
+        authenticate:true,
+        layout:'admin'
+      })
+      .state('newequipmentedit', {
+        url: '/uploadnewequipment/:id',
+        templateUrl: 'app/newequipment/product-new.html',
+        controller: 'NewEquipmentMasterCtrl as neweqipVm',
+        authenticate:true,
+        layout:'admin'
+      })
+      .state('newgrouplisting', {
+        url: '/new',
+        templateUrl: 'app/group/grouplisting.html',
+        controller: 'GroupListingCtrl as groupListingVm',
+        layout:'client'
+      })
+      .state('newcategorylisting', {
+        url: '/new/allcategories',
+        templateUrl: 'app/category/newcategorylisting.html',
+        controller: 'NewCategoryListingCtrl as newcategoryListingVm',
+        layout:'client'
+      })
+      .state('newbrandlisting', {
+        url: '/new/brands',
+        templateUrl: 'app/brand/newbrandlisting.html',
+        controller: 'NewBrandListingCtrl as newbrandListingVm',
+        layout:'client'
+      })
+      .state('newcategorybycat', {
+        url: '/new/:category',
+        templateUrl: "app/newequipment/newproducts.html",
+        controller: "NewEquipmentListCtrl as newequipmentlistVm",
+        layout:'client'
+      })
+      .state('newproductbybrand',{
+        url: '/new/brands/:brand?currentPage',
+        templateUrl: 'app/newequipment/newproducts.html',
+        controller: 'NewEquipmentListCtrl as newequipmentlistVm',
+        layout:'client'
+      })
+       .state('newsplproduct',{
+        url: '/new/spl/:certificationName?currentPage',
+        templateUrl: 'app/newequipment/newproducts.html',
+        controller: 'NewEquipmentListCtrl as newequipmentlistVm',
+        layout:'client'
+      })
+      .state('newproductbygrouporcategory', {
+        url: '/new/:group/:category?currentPage',
+        templateUrl: 'app/newequipment/newproducts.html',
+        controller: 'NewEquipmentListCtrl as newequipmentlistVm',
+        layout:'client'
+      })
+      .state('newproductdetail', {
+        url: '/new/:category/:brand/:id',
+        templateUrl: 'app/newequipment/newproductdetail.html',
+        controller: 'NewProductDetailCtrl as newproductDetailVm',
+        layout:'client'
+      })
+      
       $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
   });
