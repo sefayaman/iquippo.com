@@ -346,16 +346,18 @@ function compileData(options, callback) {
     case "lotData":
       if (options.dataToSend.hasOwnProperty('assetDir'))
         delete options.dataToSend.assetDir;
-      if (options.dataToSend.bidIncrement && options.dataToSend.bidIncrement.length < 1) {
-        //options.dataToSend.bidIncrement = [{}];
-        options.dataToSend.bidIncrement = {};
-      } else {
-          var bidIncObj = {};
-          options.dataToSend.bidIncrement.forEach(function(x) {
-            bidIncObj[x.bidFrom + "-" + x.bidTo] = x.bidIncrement;
-          });
-          options.dataToSend.bidIncrement = bidIncObj;
-        }
+      if(!options.dataToSend.isDeleted) {
+        if (options.dataToSend.bidIncrement && options.dataToSend.bidIncrement.length < 1) {
+          //options.dataToSend.bidIncrement = [{}];
+          options.dataToSend.bidIncrement = {};
+        } else {
+            var bidIncObj = {};
+            options.dataToSend.bidIncrement.forEach(function(x) {
+              bidIncObj[x.bidFrom + "-" + x.bidTo] = x.bidIncrement;
+            });
+            options.dataToSend.bidIncrement = bidIncObj;
+          }
+      }
       callback(null, options);
       break;
     case "emdData":
@@ -364,16 +366,17 @@ function compileData(options, callback) {
     case "auctionData":
       if(options.dataToSend.primaryImg)
         options.dataToSend.primaryImg = config.awsUrl + config.awsBucket + "/assets/uploads/auctionmaster/" + options.dataToSend.primaryImg;
-
-      if (options.dataToSend.bidIncrement && options.dataToSend.bidIncrement.length < 1) {
-        options.dataToSend.bidIncrement = {};
-      } else {
-          var bidIncObj = {};
-          options.dataToSend.bidIncrement.forEach(function(x) {
-            bidIncObj[x.bidFrom + "-" + x.bidTo] = x.bidIncrement;
-          });
-          options.dataToSend.bidIncrement = bidIncObj;
-        }
+      if(!options.dataToSend.isDeleted) {
+        if (options.dataToSend.bidIncrement && options.dataToSend.bidIncrement.length < 1) {
+          options.dataToSend.bidIncrement = {};
+        } else {
+            var bidIncObj = {};
+            options.dataToSend.bidIncrement.forEach(function(x) {
+              bidIncObj[x.bidFrom + "-" + x.bidTo] = x.bidIncrement;
+            });
+            options.dataToSend.bidIncrement = bidIncObj;
+          }
+      }
 
       if (options.dataToSend.hasOwnProperty('staticIncrement'))
         delete options.dataToSend.staticIncrement;
