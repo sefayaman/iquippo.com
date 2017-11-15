@@ -39,8 +39,10 @@ angular.module('admin').factory("NewEquipmentBannersSvc",NewEquipmentBannersSvc)
      }
 
      function save(data){
+         console.log('rhrerjkerj=============',data);
         return $http.post(svcPath, data)
         .then(function(res){
+            console.log('fkdjfkjjdfkfjkjdf');
           return res.data;
         })
         .catch(function(err){

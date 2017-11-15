@@ -27,7 +27,6 @@ exports.get = function(req, res) {
 };
 
 exports.create = function(req, res) {
-    //console.log("req.body=",req.body);
   NewEquipmentBannerMaster.create(req.body, function(err, respo) {
     if(err) { return handleError(res, err); }
     //console.log("res=",res);

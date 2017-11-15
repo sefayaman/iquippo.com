@@ -60,16 +60,25 @@ function NewEquipmentBannersCtrl($scope, $state, vendorSvc, brandSvc, Modal, New
             return;
         }
         
-        console.log(vm.dataModel);return;
-        let objBrand = vm.brandList.find(o => o._id === vm.dataModel.brand.data);
-        vm.dataModel.brand.name = objBrand.name; 
-        //let objPromotion = vm.promotionList.find(o => o._id === vm.dataModel.promotion.data);
-         vm.dataModel.promotion.name = vm.dataModel.promotion.data;
-         vm.dataModel.position.name = vm.dataModel.position.data;
+        if (!vm.newEquipBannerImg) {
+            Modal.alert("Please upload image for web.", true);
+            return;
+        }
+        if(vm.dataModel.brand.data){
+            for(var k in  vm.brandList) {
+              if(vm.brandList[k]._id == vm.dataModel.brand.data)
+             vm.dataModel.brand.name = vm.brandList[k].name;
+            }
+        }
+        if(vm.dataModel.position.data){
+          vm.dataModel.position = vm.dataModel.position.data;
+        }
+        if(vm.dataModel.promotion.data){
+          vm.dataModel.promotion = vm.dataModel.promotion.data;
+        }
          var i=0;
          
-         console.log("promotion===",vm.dataModel);
-         vm.dataModel.status = true;
+        vm.dataModel.status = true;
         NewEquipmentBannersSvc.save(vm.dataModel)
         .then(function(){
             vm.dataModel = {};
