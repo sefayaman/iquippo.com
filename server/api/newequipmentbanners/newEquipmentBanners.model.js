@@ -8,7 +8,10 @@ var NewEquipmentBannerSchema = new Schema({
     name:String
   },
   position:String,
-  promotion:String,
+  promotion:{
+      data:{type:Schema.Types.ObjectId,ref:'Promotion'},
+      name:String
+  },
   newEquipBannerImg: String,
   status:String,
   createdAt: {type:Date,default:Date.now},

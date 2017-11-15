@@ -3,7 +3,7 @@
 
 angular.module('admin').controller('NewEquipmentBannersCtrl', NewEquipmentBannersCtrl);
 
-function NewEquipmentBannersCtrl($scope, $state, vendorSvc, brandSvc, Modal, NewEquipmentBannersSvc, uploadSvc, Auth, PagerSvc){
+function NewEquipmentBannersCtrl($scope, $state, vendorSvc, brandSvc, Modal, NewEquipmentBannersSvc, CertificateMasterSvc, uploadSvc, Auth, PagerSvc){
     var vm  = this;
     vm.dataModel = {brand:{}};
     $scope.isEdit = false;
@@ -25,6 +25,7 @@ function NewEquipmentBannersCtrl($scope, $state, vendorSvc, brandSvc, Modal, New
         angular.copy(initFilter, filter);
         loadAllBrand();
         loadViewData(filter);
+        loadPromoData(filter);
     } 
   
     function loadAllBrand() {
@@ -41,6 +42,15 @@ function NewEquipmentBannersCtrl($scope, $state, vendorSvc, brandSvc, Modal, New
             vm.filteredList = result;
             vm.totalItems = result.totalItems;
             $scope.pager.update(result.items, result.totalItems);
+        });
+    }
+    
+    function loadPromoData(filter){
+        $scope.pager.copy(filter);
+        CertificateMasterSvc.get(filter)
+        .then(function(result){
+           vm.promoList = result;;
+            vm.promoTotalItems = result.totalItems;
         });
     }
     
@@ -61,22 +71,31 @@ function NewEquipmentBannersCtrl($scope, $state, vendorSvc, brandSvc, Modal, New
         }
         
         if (!vm.newEquipBannerImg) {
-            Modal.alert("Please upload image for web.", true);
+            Modal.alert("Please upload image for Banner.", true);
             return;
         }
         if(vm.dataModel.brand.data){
             for(var k in  vm.brandList) {
               if(vm.brandList[k]._id == vm.dataModel.brand.data)
-             vm.dataModel.brand.name = vm.brandList[k].name;
+              vm.dataModel.brand.name = vm.brandList[k].name;
             }
         }
         if(vm.dataModel.position.data){
           vm.dataModel.position = vm.dataModel.position.data;
         }
+//        if(vm.dataModel.promotion.data){
+//          vm.dataModel.promotion = vm.dataModel.promotion.data;
+//        }
         if(vm.dataModel.promotion.data){
-          vm.dataModel.promotion = vm.dataModel.promotion.data;
+            for(var k in  vm.promoList) {
+              if(vm.promoList[k]._id == vm.dataModel.promotion.data)
+                vm.dataModel.promotion.name = vm.promoList[k].certificate;
+            }
         }
-         var i=0;
+        if(vm.newEquipBannerImg){
+            vm.dataModel.newEquipBannerImg = vm.newEquipBannerImg;
+        }
+        var i=0;
          
         vm.dataModel.status = true;
         NewEquipmentBannersSvc.save(vm.dataModel)
@@ -93,6 +112,7 @@ function NewEquipmentBannersCtrl($scope, $state, vendorSvc, brandSvc, Modal, New
     }
 
     function editClicked(rowData){
+        console.log('rrrrrrr',rowData);
         vm.dataModel = {};
         vm.dataModel = angular.copy(rowData);
         var i=0;
