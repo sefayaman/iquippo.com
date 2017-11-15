@@ -1175,6 +1175,37 @@ function auctionListing(results){
         return result;
       }
 
+  exports.getAuctionMasterCount = function(req,res){
+    var currentDate = new Date();
+    var result = {};
+    async.parallel([upcominAuctionCount,closedAuctionCount],function(err){
+      if(err) return handleError(res,err);
+      res.status(200).json(result);
+    })
+    function upcominAuctionCount(cb){
+      var filter = {};
+      filter.endDate ={'$gt': currentDate};
+      var query = AuctionMaster.find(filter).count();
+      query.exec(function(err,upcomingCount){
+        if(!err && upcomingCount)
+          result.upcomingCount = upcomingCount;
+        return cb();
+      });
+        
+    }
+
+    function closedAuctionCount(cb){
+      var filter = {};
+      filter.endDate = {'$lt': currentDate};
+      var query = AuctionMaster.find(filter).count();
+        query.exec(function(err,closeCount){
+        if(!err && closeCount)
+          result.closeCount = closeCount;
+        return cb();
+      });
+    }
+  }
+
 exports.getAuctionWiseProductData = function(req, res) {
   var filter = {};
   if(req.body.auctionIds)

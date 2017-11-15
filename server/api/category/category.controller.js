@@ -51,6 +51,10 @@ exports.productCount = function(req,res){
         categoryIds.push(item._id + "");
     });
     filter['category._id'] = {$in:categoryIds};
+    if(req.query.isForUsed)
+      filter['productCondition'] = "used";
+    if(req.query.isForNew)
+      filter['productCondition'] = "new";
     Product.aggregate(
     { $match:filter},
     { $group: 

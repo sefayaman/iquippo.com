@@ -11,125 +11,44 @@
 <section class="category-block upcoming-auction">
   <div class="heading-titles text-center">
     <h4>[ All Auctions ]</h4>
-    <a href="javascript:void(0);">UPCOMING AUCTIONS(10)</a>
-    <a href="javascript:void(0);" class="active">CLOSED AUCTIONS(25)</a>
+    <a href="javascript:void(0);" ng-class="{'active' : auctionType === 'upcoming'}" ng-click="auctionDateVm.fireCommandType('upcoming')">UPCOMING AUCTIONS({{upcomingCount}})</a>
+    <a href="javascript:void(0);"  ng-class="{'active' : auctionType === 'closed'}" ng-click="auctionDateVm.fireCommandType('closed')">CLOSED AUCTIONS({{closeCount}})</a>
   </div>
-
+<div  ng-if="auctionType === 'upcoming'">
   <div class="container form-group">
     <h4><strong>ONGOING</strong></h4>
     <legend></legend>
     <div class="row">
-      <div class="col-sm-6 col-md-6 form-group">
+      <div class="col-sm-6 col-md-6 form-group" ng-repeat="auction in auctionDateVm.auctionListing" ng-if="auction.auctionValue == 'ongoingAuctions'">
         <div class="media all-auctions">
-          <a class="pull-left" href="javascript:void(0);">
-            <img src="/assets/images/ongoing.jpg">
+          <a class="pull-left" href="javascript:void(0)" ng-if="auction.total_products === 0">
+            <img class="media-object" ng-if="auction.primaryImg" src="{{uploadImagePrefix}}{{auctionmasterDir}}/{{auction.primaryImg}}" alt="Image">
+            <img src="/assets/images/ongoing.jpg" ng-if="!auction.primaryImg">
+          </a>
+          <a class="pull-left" href="/assetinauction?auctionId={{auction.auctionId}}&auctionType={{auction.auctionValue}}&auctionName={{auction.name}}" ng-if="auction.total_products !== 0">
+            <img class="media-object" ng-if="auction.primaryImg" src="{{uploadImagePrefix}}{{auctionmasterDir}}/{{auction.primaryImg}}" alt="Image">
+            <img src="/assets/images/ongoing.jpg" ng-if="!auction.primaryImg">
           </a>
           <div class="media-body">
             <div class="row">
               <div class="col-sm-9 form-group">
-                <h4 class="media-heading">Sale of used caterplillar dozers</h4>
-                <p>(2 Assets  |  Faridabad)</p>
+                <h4 class="media-heading">{{auction.auctionType | titleCase}} {{auction.name}} - {{auction.city}}</h4>
+                <p>({{auction.total_products}} Assets  |  {{auction.state}})</p>
               </div>
               <div class="col-sm-3 form-group text-success">
                 <i class="fa fa-circle"></i><strong class="text-danger">Now</strong>
               </div>
             </div>
-            <p><i class="fa fa-gavel"></i> <strong>Live Auction</strong></p>
-            <p><i class="fa fa-clock-o"></i> <strong class="text-success">2 days, 5 hours, 19 minutes, 57 seconds</strong></p>
-            <p><a href="javascript:void(0);"><i class="fa fa-file-text-o"></i> <strong class="text-info">Download Catalog</strong></a></p>
+            <p><i class="fa fa-gavel"></i> <strong ng-if="auction.auctionType === 'online'">Online</strong>
+            <strong ng-if="auction.auctionType === 'live'">Live Auction</strong></p>
+            <p><i class="fa fa-clock-o"></i> <strong class="text-success"><timer end-time="auction.endTimer">{{days}} days, {{hours}} hours, {{minutes}} minutes, {{seconds}} seconds.</timer></strong></p>
+            <p><a href="{{uploadImagePrefix}}{{auctionDir}}/{{auction.docName}}" ng-if="auction.docType == 'tc'"><i class="fa fa-file-text-o"></i> <strong class="text-info">Download Catalog</strong></a></p>
             <div class="row">
               <div class="col-sm-6">
-                <a href="javascript:void(0);" class="btn btn-default btn-block">Register</a>
+                <a href="javascript:void(0);" class="btn btn-default btn-block" ng-click="auctionDateVm.openBidModal(auction)">Register</a>
               </div>
               <div class="col-sm-6">
-                <a href="javascript:void(0);" class="btn btn-primary btn-block">View Assets</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-sm-6 col-md-6 form-group">
-        <div class="media all-auctions">
-          <a class="pull-left" href="javascript:void(0);">
-            <img src="/assets/images/ongoing.jpg">
-          </a>
-          <div class="media-body">
-            <div class="row">
-              <div class="col-sm-9 form-group">
-                <h4 class="media-heading">Sale of used caterplillar dozers</h4>
-                <p>(2 Assets  |  Faridabad)</p>
-              </div>
-              <div class="col-sm-3 form-group text-success">
-                <i class="fa fa-circle"></i><strong class="text-danger">Now</strong>
-              </div>
-            </div>
-            <p><i class="fa fa-gavel"></i> <strong>Live Auction</strong></p>
-            <p><i class="fa fa-clock-o"></i> <strong class="text-success">2 days, 5 hours, 19 minutes, 57 seconds</strong></p>
-            <p><a href="javascript:void(0);"><i class="fa fa-file-text-o"></i> <strong class="text-info">Download Catalog</strong></a></p>
-            <div class="row">
-              <div class="col-sm-6">
-                <a href="javascript:void(0);" class="btn btn-default btn-block">Register</a>
-              </div>
-              <div class="col-sm-6">
-                <a href="javascript:void(0);" class="btn btn-primary btn-block">View Assets</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-sm-6 col-md-6 form-group">
-        <div class="media all-auctions">
-          <a class="pull-left" href="javascript:void(0);">
-            <img src="/assets/images/ongoing.jpg">
-          </a>
-          <div class="media-body">
-            <div class="row">
-              <div class="col-sm-9 form-group">
-                <h4 class="media-heading">Sale of used caterplillar dozers</h4>
-                <p>(2 Assets  |  Faridabad)</p>
-              </div>
-              <div class="col-sm-3 form-group text-success">
-                <i class="fa fa-circle"></i><strong class="text-danger">Now</strong>
-              </div>
-            </div>
-            <p><i class="fa fa-gavel"></i> <strong>Live Auction</strong></p>
-            <p><i class="fa fa-clock-o"></i> <strong class="text-success">2 days, 5 hours, 19 minutes, 57 seconds</strong></p>
-            <p><a href="javascript:void(0);"><i class="fa fa-file-text-o"></i> <strong class="text-info">Download Catalog</strong></a></p>
-            <div class="row">
-              <div class="col-sm-6">
-                <a href="javascript:void(0);" class="btn btn-default btn-block">Register</a>
-              </div>
-              <div class="col-sm-6">
-                <a href="javascript:void(0);" class="btn btn-primary btn-block">View Assets</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-sm-6 col-md-6 form-group">
-        <div class="media all-auctions">
-          <a class="pull-left" href="javascript:void(0);">
-            <img src="/assets/images/ongoing.jpg">
-          </a>
-          <div class="media-body">
-            <div class="row">
-              <div class="col-sm-9 form-group">
-                <h4 class="media-heading">Sale of used caterplillar dozers</h4>
-                <p>(2 Assets  |  Faridabad)</p>
-              </div>
-              <div class="col-sm-3 form-group text-success">
-                <i class="fa fa-circle"></i><strong class="text-danger">Now</strong>
-              </div>
-            </div>
-            <p><i class="fa fa-gavel"></i> <strong>Live Auction</strong></p>
-            <p><i class="fa fa-clock-o"></i> <strong class="text-success">2 days, 5 hours, 19 minutes, 57 seconds</strong></p>
-            <p><a href="javascript:void(0);"><i class="fa fa-file-text-o"></i> <strong class="text-info">Download Catalog</strong></a></p>
-            <div class="row">
-              <div class="col-sm-6">
-                <a href="javascript:void(0);" class="btn btn-default btn-block">Register</a>
-              </div>
-              <div class="col-sm-6">
-                <a href="javascript:void(0);" class="btn btn-primary btn-block">View Assets</a>
+                <a href="/assetinauction?auctionId={{auction.auctionId}}&auctionType={{auction.auctionValue}}&auctionName={{auction.name}}&docName={{auction.docName}}&docType={{auction.docType}}"  class="btn btn-primary btn-block" ng-disabled="auction.total_products === 0">View Assets</a>
               </div>
             </div>
           </div>
@@ -143,121 +62,37 @@
     <h4><strong>COMING SOON</strong></h4>
     <legend></legend>
     <div class="row">
-      <div class="col-sm-6 col-md-6 form-group">
+      <div class="col-sm-6 col-md-6 form-group" ng-repeat="auction in auctionDateVm.auctionListing" ng-if="auction.auctionValue == 'upcomingAuctions'">
         <div class="media all-auctions">
-          <a class="pull-left" href="javascript:void(0);">
-            <img src="/assets/images/upcoming.jpg">
+        <a class="pull-left" href="javascript:void(0)" ng-if="auction.total_products === 0">
+            <img class="media-object" ng-if="auction.primaryImg" src="{{uploadImagePrefix}}{{auctionmasterDir}}/{{auction.primaryImg}}" alt="Image">
+            <img src="/assets/images/ongoing.jpg" ng-if="!auction.primaryImg">
+          </a>
+          <a class="pull-left" href="/assetinauction?auctionId={{auction.auctionId}}&auctionType={{auction.auctionValue}}&auctionName={{auction.name}}" ng-if="auction.total_products !== 0">
+          <img class="media-object" ng-if="auction.primaryImg" src="{{uploadImagePrefix}}{{auctionmasterDir}}/{{auction.primaryImg}}" alt="Image">
+            <img src="/assets/images/upcoming.jpg" ng-if="!auction.primaryImg">
           </a>
           <div class="media-body">
             <div class="row">
               <div class="col-sm-9 form-group">
-                <h4 class="media-heading">Sale of used caterplillar dozers</h4>
-                <p>(2 Assets  |  Faridabad)</p>
+                <h4 class="media-heading">{{auction.auctionType | titleCase}} {{auction.name}} - {{auction.city}}</h4>
+                <p>({{auction.total_products}} Assets  |  {{auction.state}})</p>
               </div>
               <div class="col-sm-3 form-group text-center">
                 Starts
-                <p><strong class="text-danger">28 Nov</strong></p>
+                <p><strong class="text-danger">{{auction.startDate | date :'dd'}} {{auction.startDate | date :'MMM'}}</strong></p>
               </div>
             </div>
-            <p><i class="fa fa-gavel"></i> <strong>Live Auction</strong></p>
-            <p><i class="fa fa-clock-o"></i> <strong>10:00 AM to 5:00 PM</strong></p>
-            <p><i class="fa fa-file-text-o"></i> <strong class="text-info">Download Catalog</span></p>
+            <p><i class="fa fa-gavel"></i> <strong ng-if="auction.auctionType === 'online'">Online</strong>
+            <strong ng-if="auction.auctionType === 'live'">Live Auction</strong></p>
+            <p><i class="fa fa-clock-o"></i> <strong>{{auction.startTimer | date :'hh:mma'}} to {{auction.endTimer | date :'hh:mma'}}</strong></p>
+            <p><a href="{{uploadImagePrefix}}{{auctionDir}}/{{auction.docName}}" ng-if="auction.docType == 'tc'"><i class="fa fa-file-text-o"></i> <strong class="text-info">Download Catalog</strong></a></p>
             <div class="row">
               <div class="col-sm-6">
-                <a href="javascript:void(0);" class="btn btn-default btn-block">Register</a>
+                <a href="javascript:void(0);" class="btn btn-default btn-block" ng-click="auctionDateVm.openBidModal(auction)">Register</a>
               </div>
               <div class="col-sm-6">
-                <a href="javascript:void(0);" class="btn btn-primary btn-block">View Assets</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-sm-6 col-md-6 form-group">
-        <div class="media all-auctions">
-          <a class="pull-left" href="javascript:void(0);">
-            <img src="/assets/images/upcoming.jpg">
-          </a>
-          <div class="media-body">
-            <div class="row">
-              <div class="col-sm-9 form-group">
-                <h4 class="media-heading">Sale of used caterplillar dozers</h4>
-                <p>(2 Assets  |  Faridabad)</p>
-              </div>
-              <div class="col-sm-3 form-group text-center">
-                Starts
-                <p><strong class="text-danger">28 Nov</strong></p>
-              </div>
-            </div>
-            <p><i class="fa fa-gavel"></i> <strong>Live Auction</strong></p>
-            <p><i class="fa fa-clock-o"></i> <strong>10:00 AM to 5:00 PM</strong></p>
-            <p><i class="fa fa-file-text-o"></i> <strong class="text-info">Download Catalog</span></p>
-            <div class="row">
-              <div class="col-sm-6">
-                <a href="javascript:void(0);" class="btn btn-default btn-block">Register</a>
-              </div>
-              <div class="col-sm-6">
-                <a href="javascript:void(0);" class="btn btn-primary btn-block">View Assets</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-sm-6 col-md-6 form-group">
-        <div class="media all-auctions">
-          <a class="pull-left" href="javascript:void(0);">
-            <img src="/assets/images/upcoming.jpg">
-          </a>
-          <div class="media-body">
-            <div class="row">
-              <div class="col-sm-9 form-group">
-                <h4 class="media-heading">Sale of used caterplillar dozers</h4>
-                <p>(2 Assets  |  Faridabad)</p>
-              </div>
-              <div class="col-sm-3 form-group text-center">
-                Starts
-                <p><strong class="text-danger">28 Nov</strong></p>
-              </div>
-            </div>
-            <p><i class="fa fa-gavel"></i> <strong>Live Auction</strong></p>
-            <p><i class="fa fa-clock-o"></i> <strong>10:00 AM to 5:00 PM</strong></p>
-            <p><i class="fa fa-file-text-o"></i> <strong class="text-info">Download Catalog</strong></p>
-            <div class="row">
-              <div class="col-sm-6">
-                <a href="javascript:void(0);" class="btn btn-default btn-block">Register</a>
-              </div>
-              <div class="col-sm-6">
-                <a href="javascript:void(0);" class="btn btn-primary btn-block">View Assets</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-sm-6 col-md-6 form-group">
-        <div class="media all-auctions">
-          <a class="pull-left" href="javascript:void(0);">
-            <img src="/assets/images/upcoming.jpg">
-          </a>
-          <div class="media-body">
-            <div class="row">
-              <div class="col-sm-9 form-group">
-                <h4 class="media-heading">Sale of used caterplillar dozers</h4>
-                <p>(2 Assets  |  Faridabad)</p>
-              </div>
-              <div class="col-sm-3 form-group text-center">
-                Starts
-                <p><strong class="text-danger">28 Nov</strong></p>
-              </div>
-            </div>
-            <p><i class="fa fa-gavel"></i> <strong>Live Auction</strong></p>
-            <p><i class="fa fa-clock-o"></i> <strong>10:00 AM to 5:00 PM</strong></p>
-            <p><i class="fa fa-file-text-o"></i> <span class="text-info">Download Catalog</span></p>
-            <div class="row">
-              <div class="col-sm-6">
-                <a href="javascript:void(0);" class="btn btn-default btn-block">Register</a>
-              </div>
-              <div class="col-sm-6">
-                <a href="javascript:void(0);" class="btn btn-primary btn-block">View Assets</a>
+                <a href="/assetinauction?auctionId={{auction.auctionId}}&auctionType={{auction.auctionValue}}&auctionName={{auction.name}}&docName={{auction.docName}}&docType={{auction.docType}}" class="btn btn-primary btn-block" ng-disabled="auction.total_products === 0">View Assets</a>
               </div>
             </div>
           </div>
@@ -266,4 +101,49 @@
       
     </div>
   </div>
+</div>
+<div  ng-if="auctionType === 'closed'">
+  <div class="container form-group">
+    <h4><strong>Closed</strong></h4>
+    <legend></legend>
+    <div class="row">
+      <div class="col-sm-6 col-md-6 form-group" ng-repeat="auction in auctionDateVm.auctionListing" ng-if="auction.auctionValue == 'closedAuctions'">
+        <div class="media all-auctions">
+        <a class="pull-left" href="javascript:void(0)" ng-if="auction.total_products === 0">
+            <img class="media-object" ng-if="auction.primaryImg" src="{{uploadImagePrefix}}{{auctionmasterDir}}/{{auction.primaryImg}}" alt="Image">
+            <img src="/assets/images/ongoing.jpg" ng-if="!auction.primaryImg">
+          </a>
+          <a class="pull-left" href="/assetinauction?auctionId={{auction.auctionId}}&auctionType={{auction.auctionValue}}&auctionName={{auction.name}}" ng-if="auction.total_products !== 0">
+            <img class="media-object" ng-if="auction.primaryImg" src="{{uploadImagePrefix}}{{auctionmasterDir}}/{{auction.primaryImg}}" alt="Image">
+            <img src="/assets/images/ongoing.jpg" ng-if="!auction.primaryImg">
+          </a>
+          <div class="media-body">
+            <div class="row">
+              <div class="col-sm-9 form-group">
+                <h4 class="media-heading">{{auction.auctionType | titleCase}} {{auction.name}} - {{auction.city}}</h4>
+                <p>({{auction.total_products}} Assets  |  {{auction.state}})</p>
+              </div>
+              <div class="col-sm-3 form-group text-success">
+                <i class="fa fa-circle"></i><strong class="text-danger">Now</strong>
+              </div>
+            </div>
+            <p><i class="fa fa-gavel"></i> <strong ng-if="auction.auctionType === 'online'">Online</strong>
+            <strong ng-if="auction.auctionType === 'live'">Live Auction</strong></p>
+            <!-- <p><i class="fa fa-clock-o"></i> <strong class="text-success"><timer end-time="auction.endTimer">{{days}} days, {{hours}} hours, {{minutes}} minutes, {{seconds}} seconds.</timer></strong></p> -->
+            <p><a href="{{uploadImagePrefix}}{{auctionDir}}/{{auction.docName}}" ng-if="auction.docType == 'tc'"><i class="fa fa-file-text-o"></i> <strong class="text-info">Download Catalog</strong></a></p>
+            <div class="row">
+              <div class="col-sm-6">
+                <!-- <a href="javascript:void(0);" class="btn btn-default btn-block" ng-click="auctionDateVm.openBidModal(auction)">Register</a> -->
+              </div>
+              <div class="col-sm-6">
+                <a href="/assetinauction?auctionId={{auction.auctionId}}&auctionType={{auction.auctionValue}}&auctionName={{auction.name}}&docName={{auction.docName}}&docType={{auction.docType}}"  class="btn btn-primary btn-block" ng-disabled="auction.total_products === 0">View Assets</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+</div>
 </section>

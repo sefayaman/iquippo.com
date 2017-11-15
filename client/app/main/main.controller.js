@@ -305,6 +305,16 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
       else
         Modal.alert("go to new equipment serach");
     }
+
+    function getAuctionCount(){
+        AuctionSvc.getAuctionCount()
+        .then(function(result){
+          if(result && result.closeCount)
+            $scope.closeCount = result.closeCount;
+          if(result && result.upcomingCount)
+            $scope.upcomingCount = result.upcomingCount;
+        });
+    }
     
     //Clearing Finance integration cookie
     Auth.removeCookies();
@@ -321,5 +331,6 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
     getCategoryCountForNew();
     getAuctions();
     getCertification();
+    getAuctionCount();
   }
 })();
