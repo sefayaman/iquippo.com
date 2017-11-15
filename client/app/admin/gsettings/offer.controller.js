@@ -37,7 +37,6 @@
             categorySvc.getAllCategory()
             .then(function(result) {
               $scope.allCategory = result;
-              console.log("all====",$scope.allCategory);
 
             });
                  
@@ -240,8 +239,6 @@
              vm.fInfo = {};
              vm.fInfo.data = {};
             vm.fInfo.id = vm.financer[k];
-            console.log("vm.fInfo=",vm.fInfo);
-            //vm.fInfo.name = 'assd';
             vm.fInfo.data = vm.financerinfo[k];
             vm.financeData[k] = vm.fInfo;
            }
@@ -252,7 +249,6 @@
              vm.lInfo = {};
              vm.lInfo.data = {};
             vm.lInfo.id = vm.leaser[k];
-            //vm.fInfo.name = 'assd';
             vm.lInfo.data = vm.leaserinfo[k];
             vm.leaseData[k] = vm.lInfo;
            }
@@ -266,7 +262,6 @@
             .then(function(){
                 vm.dataModel = {};
                 Modal.alert('Data saved successfully!');
-                // getAssetCount();
                 get();
             vm.dataModel = {};
             $scope.container ={};
@@ -287,18 +282,11 @@
         }
 
         function editClicked(rowData){
-                   // vm.purchaseFields = [{}];
-                    vm.financeFields = [{}];
-                 //vm.financerFields = [{}];
-                   //vm.financerInfoFields = [[{}]];
+                  vm.financeFields = [{}];
                   vm.leaseFields = [{}];
                   vm.leaserFields = [{}];
                      //vm.leaserInfoFields = [[{}]];
                       $scope.financerinfo =[{}];
-
-
-
-
                       vm.dataModel._id = rowData._id;
                       $scope.container = {};
                       vm.purchaseArr = [];
@@ -472,18 +460,13 @@
             OfferSvc.get().then(function(result){
             if(result.length>0){
                   vm.offer = result;
-
                 }else{
-                    // vm.dataModel = {};
                     $scope.isEdit = false;
                 }
-
             })
             .catch(function(res){
             });
         }
-
-        
         function destroy(id){
           Modal.confirm("Are you sure want to delete?",function(ret){
                 if(ret == "yes"){

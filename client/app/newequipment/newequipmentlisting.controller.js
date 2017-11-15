@@ -68,7 +68,7 @@ function NewEquipmentListingCtrl($scope, $location, $rootScope, $http, productSv
   function loadProducts(filter){
     if(vm.currentPage == prevPage)
       return;
-    
+    filter.productCondition = 'new';
     filter.prevPage = prevPage;
     filter.currentPage = vm.currentPage;
     filter.first_id = first_id;

@@ -180,6 +180,8 @@ exports.search = function(req, res) {
 
   if(req.body.sellerName)
    filter["seller.fname"] = {$regex:new RegExp(req.body.sellerName,'i')};
+   if(req.body.productCondition)
+   filter["productCondition"] = {$regex:new RegExp(req.body.productCondition,'i')};
 
   if(req.body.location){
     var locRegEx = new RegExp(req.body.location, 'i');

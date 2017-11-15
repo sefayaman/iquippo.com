@@ -2938,7 +2938,8 @@
                                    </td>
 									<td>{{offer.brand.name}}</td>
 									<td>{{offer.model.name}}</td>
-									<td><span ng-repeat="state in offer.location">{{state.name}},</span></td>
+									<td ng-if="stateList.length === offer.location.length">All</td>
+									<td ng-if="stateList.length != offer.location.length"><span ng-repeat="state in offer.location">{{state.name}}</span></td>
 									<td>{{offer.cash_purchase}}</td>
 				 					<td>{{offer.finance}}</td>
 									<td>{{offer.lease}}</td>
