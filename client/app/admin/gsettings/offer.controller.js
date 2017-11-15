@@ -31,9 +31,9 @@
         $scope.purchase = false; 
         $scope.finance = false;
         $scope.lease = false;
+        $scope.stateName = [];
 
         function init(){
-
             categorySvc.getAllCategory()
             .then(function(result) {
               $scope.allCategory = result;
@@ -47,27 +47,25 @@
       
              });
              loadAllFinancer();
-
-             /*vendorSvc.getAllVendors()
-             .then(function() {
-               $scope.agency = vendorSvc.getVendorsOnCode('Finance');
-              });*/
-
             get();
-
+            
         }
-        
+        function state(){
+          if($scope.stateList){
+              for(var val of $scope.stateList) {
+                  $scope.stateName[val._id] = val.name;
+              }
+          }
+        }
         function loadAllFinancer(){
           var filter = {};
           filter['service'] = 'Finance';  
           vendorSvc.getFilter(filter)
             .then(function(result) {
               $scope.agency = result;
-              console.log("financer=====",$scope.agency);
           })
         }
         $scope.checkPurchase = function(data){
-          console.log("dvvfv",data);
           if(data ==true){
            $scope.purchase = true;
           }else{
@@ -170,7 +168,7 @@
           .catch(function(res) {
             console.log("error in fetching model", res);
           })
-  
+        
       }
   
       function save(form){
@@ -215,12 +213,22 @@
           vm.pInfo = {};
           vm.fInfo.data = [];
            vm.lInfo.data = [];
-         
-          vm.dataModel.location = $scope.container.location;
+           state();
+          //vm.dataModel.location = $scope.container.location;
           vm.dataModel.cash_purchase =  $scope.purchase;
           vm.dataModel.finance = $scope.finance;
           vm.dataModel.lease = $scope.lease;
-          
+          vm.dataModel.location = [];
+          var i = 0
+                if($scope.container.locationArr){
+                   for(var id of $scope.container.locationArr) {
+                    vm.dataModel.location[i] = {};
+                    vm.dataModel.location[i]['id'] = id;
+                    vm.dataModel.location[i]['name'] = $scope.stateName[id];
+                    i++;
+                  }
+                }
+                
           for(var k in  vm.purchaseArr) {
             vm.pInfo.price = vm.purchaseArr[k].price;
             vm.pInfo.freeofcost = vm.purchaseArr[k].freeofcost;
@@ -237,27 +245,13 @@
             vm.fInfo.data = vm.financerinfo[k];
             vm.financeData[k] = vm.fInfo;
            }
-          /* for(var k in  vm.financer) {
-            vm.fInfo.id = vm.financer[k];
-            //vm.fInfo.name = 'assd';
-            vm.fInfo.data = vm.financerinfo[k];
-            vm.financeData[k] = vm.fInfo;
-           }*/
            
            vm.dataModel.financeInfo =  vm.financeData;
 
-          /*for(var k in  vm.leaser) {
-            vm.lInfo.id = vm.leaser[k];
-            //vm.lInfo.name = 'assd';
-            vm.lInfo.data = vm.leaserinfo[k];
-            vm.leaseData[k] = vm.lInfo;
-
-           }*/
            for(var k in  vm.leaser) {
              vm.lInfo = {};
              vm.lInfo.data = {};
             vm.lInfo.id = vm.leaser[k];
-            console.log("vm.lInfo=",vm.lInfo);
             //vm.fInfo.name = 'assd';
             vm.lInfo.data = vm.leaserinfo[k];
             vm.leaseData[k] = vm.lInfo;
@@ -317,14 +311,19 @@
                       vm.leaserFields = [{}];
                       vm.leaserInfoFields = [[{}]];
                       vm.leaserinfo = {};
+                      $scope.container.locationArr = [];
                       $scope.container._id  = rowData._id;
                       $scope.container.selectedCategoryId = rowData.category.id;
                       $scope.container.selectedBrandId = rowData.brand.id;
                       $scope.container.selectedModelId = rowData.model.id;
-                      $scope.container.location = rowData.location;
+                      //$scope.container.location = rowData.location;
                       $scope.purchase = rowData.cash_purchase;
                       $scope.container.price = rowData.price;
                       $scope.finance = rowData.finance;
+                      //location
+                      for(var k in  rowData.location) {
+                       $scope.container.locationArr[k] = rowData.location[k].id;
+                      }
                       //case purchase
                       for(var k in  rowData.caseInfo) {
                         vm.purchaseArr[k] = rowData.caseInfo[k];
@@ -345,7 +344,6 @@
                          vm.leaserinfo[k] = rowData.leaseInfo[k].data;
                       }
                       
-                      console.log("vm.financerFields=",vm.financerFields);
                       onCategoryChange($scope.container.selectedCategoryId);
                       onBrandChange($scope.container.selectedBrandId);
                      /* if($scope.financerinfo.length > 0){
@@ -387,6 +385,17 @@
               vm.dataModel.model.name = $scope.modelList[k].name;
             }
           }
+          //location
+          vm.dataModel.location = [];
+          var i = 0
+          if($scope.container.locationArr){
+            for(var id of $scope.container.locationArr) {
+              vm.dataModel.location[i] = {};
+              vm.dataModel.location[i]['id'] = id;
+              vm.dataModel.location[i]['name'] = $scope.stateName[id];
+              i++;
+            }
+          }
           vm.financeData = [];
           vm.leaseData = [];
           vm.purchaseData = [];
@@ -396,7 +405,7 @@
           //vm.fInfo.data = [];
           // vm.lInfo.data = [];
          
-          vm.dataModel.location = $scope.container.location;
+         // vm.dataModel.location = $scope.container.location;
           vm.dataModel.cash_purchase =  $scope.purchase;
           vm.dataModel.finance = $scope.finance;
           vm.dataModel.lease = $scope.lease;
@@ -416,7 +425,6 @@
             vm.fInfo.data = vm.financerinfo[k];
             vm.financeData[k] = vm.fInfo;
            }
-           console.log("vm.financeData====",vm.financeData);
            vm.dataModel.financeInfo =  vm.financeData;
           for(var k in  vm.leaser) {
                   vm.lInfo = {};
@@ -427,7 +435,6 @@
                   vm.lInfo.data = vm.leaserinfo[k];
                   vm.leaseData[k] = vm.lInfo;
                 }
-              console.log("vm.leaseData=====",vm.leaseData);
                vm.dataModel.leaseInfo =  vm.leaseData;
            OfferSvc.update(vm.dataModel)
             .then(function(){

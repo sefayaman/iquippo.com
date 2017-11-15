@@ -2761,9 +2761,9 @@
 
                    <div class="col-sm-3" ng-class="{'has-error':offerVm.location.$invalid && submitted}">
 			        	<label>Select Location</label>
-		 		       	<select class="form-control" name="location"  ng-model="container.location"> 
+		 		       	<select multiple="true" class="form-control" name="location"  ng-model="container.locationArr" style="height:70px;" required> 
 							 <option value=""> Select Location </option> 
-							 <option value="{{st.name}}" ng-repeat="st in stateList| orderBy:'name'">{{st.name}}</option>
+							 <option ng-repeat="state in stateList" value="{{state._id}}">{{state.name}}</option>
 						</select>
 						
 					</div>
@@ -2938,7 +2938,7 @@
                                    </td>
 									<td>{{offer.brand.name}}</td>
 									<td>{{offer.model.name}}</td>
-									<td>{{offer.location}}</td>
+									<td><span ng-repeat="state in offer.location">{{state.name}},</span></td>
 									<td>{{offer.cash_purchase}}</td>
 				 					<td>{{offer.finance}}</td>
 									<td>{{offer.lease}}</td>

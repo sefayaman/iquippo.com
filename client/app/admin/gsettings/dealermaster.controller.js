@@ -146,35 +146,7 @@ function DealerMasterCtrl($scope,$rootScope,$state,categorySvc,vendorSvc, modelS
             }
             
         });
-        /*let objBrand = vm.brandList.find(o => o._id === vm.dataModel.brand.data);
-        vm.dataModel.brand.name = objBrand.name; 
-        let objDealer = vm.dealerList.find(o => o._id === vm.dataModel.dealer.data);
-         vm.dataModel.dealer.name = objDealer.entityName;
-         vm.dataModel.state = [];
-         var i=0;
-         
-         if(vm.stateIdArr[0]){
-            for(var id of vm.stateIdArr) {
-                    let objState = vm.stateList.find(o => o._id === id);
-                    vm.dataModel.state[i] = {};
-                    vm.dataModel.state[i]['data'] = id;
-                    vm.dataModel.state[i]['name'] = objState.name;
-                    i++;
-            }
-         }
-         console.log("dealer===",vm.dataModel);
-         vm.dataModel.status = true;
-        DealerMasterSvc.save(vm.dataModel)
-        .then(function(){
-            vm.dataModel = {};
-            resetValue();
-            fireCommand(true);
-            Modal.alert('Data saved successfully!');
-        })
-        .catch(function(err){
-           if(err.data)
-                Modal.alert(err.data); 
-        });*/
+       
     }
 
     function editClicked(rowData){
