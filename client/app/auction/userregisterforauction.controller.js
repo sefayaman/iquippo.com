@@ -3,7 +3,7 @@
 
   angular.module('sreizaoApp').controller('userRegForAuctionCtrl', userRegForAuctionCtrl);
 
-  function userRegForAuctionCtrl($scope, $http, $rootScope, userRegForAuctionSvc,$state,LocationSvc, Modal, Auth, AuctionSvc, UtilSvc, $uibModal, $uibModalInstance, notificationSvc, MarketingSvc, EmdSvc, LotSvc) {
+  function userRegForAuctionCtrl($scope, $http, $rootScope, userRegForAuctionSvc,$state,LocationSvc, Modal, Auth, AuctionSvc, UtilSvc, $uibModal, $uibModalInstance, notificationSvc, LotSvc, commonSvc) {
     var vm = this;
     vm.closeDialog = closeDialog;
     vm.submit = submit;
@@ -12,10 +12,14 @@
     vm.dataModel = {};
     vm.user = {};
     vm.lotList = [];
+    vm.otpCode = "";
+    $scope.isRegister = true;
     vm.user.countryCode = "91";
     vm.onLocationChange = onLocationChange;
     $scope.getCountryWiseState = getCountryWiseState;
     $scope.getStateWiseLocation = getStateWiseLocation;
+    vm.Verify = Verify;
+    vm.sendOTP = sendOTP;
 
     function init() {
       LotSvc.getData({auction_id: $scope.currentAuction._id}).then(function(res) {
@@ -185,7 +189,7 @@
       vm.UserObj.state = userData.state;
       vm.UserObj.city = userData.city;
       vm.UserObj.panNumber = userData.panNumber;
-      vm.UserObj.password = "123456";
+      vm.UserObj.password = userData.password;
       if(Auth.isAdmin()) {
         vm.UserObj.createdBy = {};
         vm.UserObj.createdBy._id = Auth.getCurrentUser()._id;
@@ -194,26 +198,59 @@
         vm.UserObj.createdBy.role = Auth.getCurrentUser().role;
         vm.UserObj.createdBy.mobile = Auth.getCurrentUser().mobile;
         vm.UserObj.createdBy.email = Auth.getCurrentUser().email;
-        var dataToSend = {};
-        if(vm.UserObj.email) 
-          dataToSend.email = vm.UserObj.email;
-        if(vm.UserObj.mobile) 
-          dataToSend.mobile = vm.UserObj.mobile;
-        Auth.validateSignup(dataToSend).then(function(data){
-          if(data.errorCode == 1){
-             Modal.alert("The specified mobile is already in use.",true);
-             return;
-          } else if(data.errorCode == 2){
-            Modal.alert("The specified email is already in use.",true);
-             return;
-          } else {
+        vm.UserObj.password = "1234";
+        vm.UserObj.customerId = userData.customerId;
+      }
+      var dataToSend = {};
+      if(vm.UserObj.email) 
+        dataToSend.email = vm.UserObj.email;
+      if(vm.UserObj.mobile) 
+        dataToSend.mobile = vm.UserObj.mobile;
+      Auth.validateSignup(dataToSend).then(function(data){
+        if(data.errorCode == 1){
+           Modal.alert("The specified mobile is already in use.",true);
+           return;
+        } else if(data.errorCode == 2){
+          Modal.alert("The specified email is already in use.",true);
+           return;
+        } else {
+          if(Auth.isAdmin())
             saveNewUser(auctionData, vm.UserObj);
-          }
+          else
+            sendOTP();
+          
+        }
+      });
+    }
+
+    function sendOTP() {
+      var dataToSend = {};
+      dataToSend['content'] = 'Dear User, One TimePassword (OTP) to verify your iQuippo account is ';
+      dataToSend['otpOn'] = "mobile";
+      dataToSend['sendToClient'] = 'y';
+      if (vm.user.mobile)
+          dataToSend['mobile'] = vm.user.mobile;
+      if ($scope.code)
+          dataToSend['countryCode'] = vm.user.countryCode;
+      $scope.isRegister = false;
+      commonSvc.sendOtp(dataToSend)
+        .then(function(result) {
+          vm.otpCode = result;
+          Modal.alert('OTP has been sent successfully', true);
+        })
+        .catch(function(res) {
+          Modal.alert("Error occured in sending OTP.Please try again.", true);
+          $scope.isRegister = true;
         });
-      } else {
+    }
+
+    function Verify() {
+      if (!angular.isUndefined(vm.otpCode) && !angular.isUndefined(vm.user.otp) && vm.otpCode === vm.user.otp) {
+        vm.UserObj.mobileVerified = true;
+        
         Auth.createUser(vm.UserObj)
           .then(function(result) {
-            sendMailToUser(auctionData, result);
+            sendMailToUser($scope.currentAuction, result);
           })
           .catch(function(err) {
             err = err.data;
@@ -222,10 +259,13 @@
             vm.otpCode = "";
             // Update validity of form fields that match the mongoose errors
             angular.forEach(err.errors, function(error, field) {
+              //form[field].$setValidity('mongoose', false);
               Modal.alert(error.message, true);
             });
           });
-        }
+      } else {
+        Modal.alert("Incorrect OTP please enter correct OTP", true);
+      }
     }
 
     function saveNewUser(auctionData,userData){
@@ -233,7 +273,6 @@
       if(result && result.errorCode == 1){
         Modal.alert(result.message, true);
       } else {
-        console.log("result admin user###", result);
         userData.customerId = result.customerId;
         userData._id = result._id;
         sendMailToUser(auctionData, userData);
@@ -254,9 +293,21 @@
       dataToSend['lname'] = vm.user.lname;
       dataToSend['mobile'] = vm.user.mobile;
       dataToSend['email'] = vm.user.email;
-      dataToSend['password'] = "123456";
       dataToSend['serverPath'] = serverPath;
-      notificationSvc.sendNotification('manpowerRegSmsToUser', data, dataToSend, 'sms');
+      dataToSend['password'] = vm.user.password;
+      if(userData.customerId) {
+        dataToSend['userId'] = userData.customerId;
+        dataToSend['customerId'] = userData.customerId;
+      }
+      dataToSend['existFlag'] = true;
+      if(Auth.isAdmin()) {
+        dataToSend['password'] = "1234";
+        dataToSend['existFlag'] = false;
+      }
+      
+      notificationSvc.sendNotification('partnerRegSmsToUser', data, dataToSend,'sms');
+      // dataToSend['serverPath'] = serverPath;
+      // notificationSvc.sendNotification('manpowerRegSmsToUser', data, dataToSend, 'sms');
       if (vm.user.email) {
         data['to'] = vm.user.email;
         notificationSvc.sendNotification('userRegEmail', data, dataToSend, 'email');

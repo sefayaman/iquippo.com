@@ -8,13 +8,37 @@ function OfflinePaymentCtrl($scope,$rootScope,Modal,$stateParams,$state,$uibModa
   var vm = this;
   vm.dataModel = {};
   $scope.modeOfPayment = modeOfPayment;
+  $scope.transactionStatuses = transactionStatuses;
   vm.save = save;
   vm.closeDialog = closeDialog;
 
  	function init(){
-    angular.copy($scope.offlinePayment, vm.dataModel);
-    vm.dataModel.amount =  $scope.offlinePayment.totalAmount;
-    vm.dataModel.transactionId =  $scope.offlinePayment.transactionId;
+    if($scope.registerByAdmin) {
+      var tid = $stateParams.tid;
+      PaymentSvc.getOnFilter({_id:tid})
+      .then(function(result){
+        if(result.length == 0){
+          Modal.alert("Invalid payment access");
+          return;
+        }
+        angular.copy(result[0], vm.dataModel);
+        vm.dataModel.paymentMode = $scope.offlinePayment.paymentMode;
+        vm.dataModel.amount =  vm.dataModel.totalAmount;
+        vm.dataModel.auctionId = $scope.offlinePayment.auctionId;
+        vm.dataModel.auction_id = $scope.offlinePayment.auction_id;
+        vm.dataModel.emdTax = $scope.offlinePayment.emdTax;
+        vm.dataModel.requestType = "Auction Request";
+        vm.dataModel.status = transactionStatuses[5].code;
+      })
+      .catch(function(err){
+        // $state.go("main");
+        // Modal.alert("Unknown error occured in payment system");
+      })
+    } else {
+      angular.copy($scope.offlinePayment, vm.dataModel);
+      vm.dataModel.amount =  $scope.offlinePayment.totalAmount;
+      vm.dataModel.transactionId =  $scope.offlinePayment.transactionId;
+    }
    }
    
   function save(form){

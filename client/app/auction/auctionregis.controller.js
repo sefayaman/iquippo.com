@@ -167,9 +167,17 @@ function AuctionRegisCtrl($scope, $rootScope, $location, Modal, Auth,PagerSvc,$u
     stObj.status = transactionStatuses[1].code;
     stObj.createdAt = new Date();
     paymentObj.statuses[paymentObj.statuses.length] = stObj;
-    userRegForAuctionSvc.saveOfflineRequest(paymentObj).then(function(rd){
-      Modal.alert("You have sucessfully registered for the auction. Please pay the EMD amount and inform our customer care team."); 
-    });
+    if(Auth.isAdmin()) {
+      var OfflinePaymentScope = $rootScope.$new();
+      OfflinePaymentScope.offlinePayment = paymentObj;
+      OfflinePaymentScope.viewMode = "paymentAdd";
+      OfflinePaymentScope.registerByAdmin = true;
+      Modal.openDialog('OfflinePaymentPopup',OfflinePaymentScope);
+    } else {
+      userRegForAuctionSvc.saveOfflineRequest(paymentObj).then(function(rd){
+        Modal.alert("You have sucessfully registered for the auction. Please pay the EMD amount and inform our customer care team."); 
+      });
+    }
   }
   function save(dataObj,amount){
     dataObj.totalAmount = amount;

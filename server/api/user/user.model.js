@@ -220,6 +220,8 @@ UserSchema
       var self = this;
       var sequence = seqGenerator.sequence();
       sequence.next(function(seqnum){
+        if(self.customerId)
+          return next();
         self.customerId = 'IQ'+seqnum;
         return next();
       },'users',100108);

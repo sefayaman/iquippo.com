@@ -20,15 +20,12 @@ function AuctionSvc($http,$q,notificationSvc,Auth,$httpParamSerializer){
   svc.getAuctionData=getAuctionData;
   svc.getLatLong=getLatLong;
   svc.getTotalAuctionItemsCount=getTotalAuctionItemsCount;
-  svc.getAuctionItemData=getAuctionItemData;
-  svc.liveAuctionRoomData = liveAuctionRoomData;
   svc.getAuctionDateData=getAuctionDateData;  
   svc.getAuctionWiseProductData = getAuctionWiseProductData;
   svc.getOnId = getOnId;
   svc.getAuctionExpire = getAuctionExpire;
   svc.checkForAsset=checkForAsset; 
   svc.getAuctionInfoForProduct = getAuctionInfoForProduct;
-  svc.sendUserToAs=sendUserToAs;
   svc.reSendReqToCreateAsset = reSendReqToCreateAsset;
 
   function getAll(){
@@ -52,16 +49,6 @@ function AuctionSvc($http,$q,notificationSvc,Auth,$httpParamSerializer){
    });
  }
 
-  function sendUserToAs(user){
-   return $http.post(path+"/sendusertoas/asset",user)
-  .then(function(res){
-  return res.data;
-  })
-  .catch(function(err){
-  throw err;
-  });
-   }
-
     function getOnFilter(data) {
       return $http.post(path + "/onfilter", data)
         .then(function(res) {
@@ -80,24 +67,6 @@ function AuctionSvc($http,$q,notificationSvc,Auth,$httpParamSerializer){
         .catch(function(err){
           throw err
         })
-    }
-
-    function liveAuctionRoomData(filter) {
-      var path = "http://auctionsoftwaremarketplace.com:3007/bidapi/LiveAuctionRoom";
-       var queryParam = "";
-            if (filter)
-                queryParam = $httpParamSerializer(filter);
-            if (queryParam)
-                path = path + "?" + queryParam;
-      return $http.get(path,filter)
-        .then(function(res) {
-          console.log("Api result call",res);
-          return res;
-        })
-        .catch(function(err) {
-          throw err;
-        });
-
     }
 
     function getOnId(auctionId) {
@@ -242,17 +211,6 @@ function AuctionSvc($http,$q,notificationSvc,Auth,$httpParamSerializer){
         })
         .catch(function(err) {
           throw err;
-        })
-
-    }
-
-    function getAuctionItemData(data) {
-      return $http.get(path + "/auctionmaster/fetchAuctionItemsData?auctionId=" + data.auctionId)
-        .then(function(res) {
-          return res.data
-        })
-        .catch(function(err) {
-          throw err
         })
 
     }

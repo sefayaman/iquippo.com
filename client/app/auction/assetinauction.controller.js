@@ -93,26 +93,6 @@
         });
     }
 
-    /*function save(dataObj) {
-      userRegForAuctionSvc.save(dataObj)
-        .then(function() {
-          Modal.alert('Your request has been successfully submitted!');
-        })
-        .catch(function(err) {
-          if (err.data)
-            Modal.alert(err.data);
-        });
-    }*/
-
-    /* function fetchASURL(lotNumber,auctionOrientation){
-       var displayBid='true';
-       var aswidgetUrl="http://auctionsoftwaremarketplace.com:3007/bidwidget/";
-       aswidgetUrl=aswidgetUrl + $scope.auctionId + '/' + lotNumber + '/' + Auth.getCurrentUser()._id; 
-       $scope.aswidgetUrlSCE=$sce.trustAsResourceUrl(aswidgetUrl);
-       console.log("URL",$scope.asWidgetURLSCE);
-       return $scope.aswidgetUrlSCE;
-     }*/
-
     function openUrl(_id) {
       if (!_id)
         return;

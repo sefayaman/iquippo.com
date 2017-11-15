@@ -1159,31 +1159,6 @@ exports.getAssetInfo = function(req, res) {
   });
 };
 
-exports.sendUserToAs=function(req,res){
-var userData={};
-var filter={};
-filter._id=req.body._id;
-UserModel.find(filter,function(err,res){
-  if(err) return handleError(res,err);
-  if(res.length > 0){
-   userData=res[0];
-   
-   Utility.sendUserInfo(userData,function(err,asData){
-  if(err){
-    return handleError(res,err);
-  }
-  
-  return res.status(200).json(asData);
-});
-  }
-  else{
-    return res.status(500).json({"message":"no user Data"});
-  }
-})
-};
-
-
-
 exports.updateAuctionMasterproduct = function(req, res) {
     var _id = req.body._id;
     AuctionMaster.update({
@@ -1315,9 +1290,9 @@ exports.getFilterOnAuctionMaster = function(req, res) {
     filter["user.mobile"] = req.body.mobile;
   if (req.body.auctionId)
     filter.auctionId = req.body.auctionId;
-  if(req.body.hasOwnProperty('isDeleted')){
-    filter.isDeleted=req.body.isDeleted;
-  }
+  // if(req.body.hasOwnProperty('isDeleted')){
+  //   filter.isDeleted=req.body.isDeleted;
+  // }
   if (req.body.emdTax)
     filter.emdTax = req.body.emdTax;
   /*if(req.body.statusType){
@@ -1358,15 +1333,16 @@ exports.getFilterOnAuctionMaster = function(req, res) {
     filter.auctionType = {
       '$ne': "S"
     };
-
-
-
   } else if (req.body.auctionType === 'S') {
     //var currentDate = new Date();
-
     filter.auctionType = "S";
-
   }
+
+  if (req.body.statusType === 'live')
+    filter.auctionType = "L";
+
+  if (req.body.statusType === 'online')
+    filter.auctionType = "A";
 
   var arr = [];
 
@@ -1470,14 +1446,6 @@ function auctionListing(results) {
   result.totalItems = results.totalItems;
   return result;
 }
-
-/*exports.updateauctionsisdeleted=function(req,res){
-  AuctionMaster.update({},{$set:{"isDeleted":false}},{multi: true})
-  .exec(function(err,result){
-    if(err) return handleError(res,err);
-    return res.status(200).json({message:"updated Successfully"});
-  });
-}*/
 
 exports.getAuctionWiseProductData = function(req, res) {
   var filter = {};
