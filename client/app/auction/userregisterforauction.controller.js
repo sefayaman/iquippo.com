@@ -83,7 +83,8 @@
             dataObj.user.mobile = userData.mobile;
           }
           if($scope.currentAuction.emdTax === 'lotWise') {
-            dataObj.selectedLots =  vm.dataToSend.selectedLots;
+            //dataObj.selectedLots =  vm.dataToSend.selectedLots;
+            return;
           }
           else {
             dataObj.selectedLots = [];
@@ -150,6 +151,7 @@
     function login(auctionData, userData) {
       if(Auth.isAdmin()) {
         //openActionDialog(auctionData, userData);
+        userData.batonNo = vm.user.batonNo;
         validateRegisterUser(auctionData, userData);
       } else {
         var dataToSend = {};
@@ -198,8 +200,10 @@
         vm.UserObj.createdBy.role = Auth.getCurrentUser().role;
         vm.UserObj.createdBy.mobile = Auth.getCurrentUser().mobile;
         vm.UserObj.createdBy.email = Auth.getCurrentUser().email;
+        vm.UserObj.createdBy.customerId = Auth.getCurrentUser().customerId;
+        
         vm.UserObj.password = "1234";
-        vm.UserObj.customerId = userData.customerId;
+        vm.UserObj.batonNo = userData.batonNo;
       }
       var dataToSend = {};
       if(vm.UserObj.email) 
@@ -295,19 +299,14 @@
       dataToSend['email'] = vm.user.email;
       dataToSend['serverPath'] = serverPath;
       dataToSend['password'] = vm.user.password;
-      if(userData.customerId) {
-        dataToSend['userId'] = userData.customerId;
-        dataToSend['customerId'] = userData.customerId;
-      }
-      dataToSend['existFlag'] = true;
-      if(Auth.isAdmin()) {
+      dataToSend['userId'] = userData.customerId;
+      dataToSend['customerId'] = userData.customerId;
+
+      if(Auth.isAdmin())
         dataToSend['password'] = "1234";
-        dataToSend['existFlag'] = false;
-      }
+      dataToSend['existFlag'] = false;
       
       notificationSvc.sendNotification('partnerRegSmsToUser', data, dataToSend,'sms');
-      // dataToSend['serverPath'] = serverPath;
-      // notificationSvc.sendNotification('manpowerRegSmsToUser', data, dataToSend, 'sms');
       if (vm.user.email) {
         data['to'] = vm.user.email;
         notificationSvc.sendNotification('userRegEmail', data, dataToSend, 'email');

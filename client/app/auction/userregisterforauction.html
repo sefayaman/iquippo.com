@@ -26,9 +26,12 @@
       <div ng-if="option.select == 'yes'">
         <form class="aucform" name="aucform" novalidate>
           <div class="row">
-            <div class="col-sm-offset-2 col-sm-8 form-group" ng-class="{'has-error': aucform.userId.$invalid && form.submitted }">
+            <div class="col-sm-offset-2 col-sm-8 form-group" ng-class="{'has-error': aucform.userId.$invalid && aucform.submitted }">
               <input type="text" class="form-control form-group" name="userId" placeholder="Mobile Number or Email Address" ng-model="auctionRegVm.userId" required>
               <input ng-if="!isAdmin()" class="form-control form-group" placeholder="Password" type="password" name="passwordlogin" ng-model="auctionRegVm.passwordlogin" required>
+              <div class="form-group" ng-class="{'has-error': aucform.batonNo.$invalid && aucform.submitted }">
+                <input ng-if="isAdmin()" class="form-control form-group" placeholder="Baton No." type="text" name="batonNo" ng-model="auctionRegVm.user.batonNo" required>
+              </div>
               <!-- <select ng-if="currentAuction.emdTax === 'lotWise'" class="form-control form-group" name="selectedLots" id="selectedLots" style="height: 80px;" ng-options="lots.lotNumber as lots.lotNumber for lots in auctionRegVm.lotList" ng-model="auctionRegVm.selectedLots.lotNumber" multiple>
               </select> --> 
               <div class="text-right">
@@ -42,13 +45,13 @@
         <div class="" ng-show="isRegister">
           <form class="reqForm" name="reqForm" novalidate>
             <div class="row">
-              <div class="col-sm-4 form-group" ng-class="{'has-error': reqForm.fname.$invalid && reqForm.submitted }">
+              <div class="col-sm-6 form-group" ng-class="{'has-error': reqForm.fname.$invalid && reqForm.submitted }">
                 <input type="text" class="form-control" name="fname" ng-model="auctionRegVm.user.fname" placeholder="*First Name" required>
               </div>
-              <div class="col-sm-4 form-group" ng-class="{'has-error': reqForm.mname.$invalid && reqForm.submitted }">
+              <!-- <div class="col-sm-6 form-group" ng-class="{'has-error': reqForm.mname.$invalid && reqForm.submitted }">
                 <input type="text" class="form-control" name="mname" placeholder="Middle Name" required>
-              </div>
-              <div class="col-sm-4 form-group" ng-class="{'has-error': reqForm.lname.$invalid && reqForm.submitted }">
+              </div> -->
+              <div class="col-sm-6 form-group" ng-class="{'has-error': reqForm.lname.$invalid && reqForm.submitted }">
                 <input type="text" class="form-control" name="lname" ng-model="auctionRegVm.user.lname" placeholder="*Last Name" required>
               </div>
             </div>
@@ -126,12 +129,11 @@
                 {{ errors.password }}
               </p>
              </div>
-            </div>
-            <div class="row" ng-if="isAdmin()">
-              <div class="col-sm-6 form-group" ng-class="{'has-error': reqForm.customerId.$invalid && reqForm.submitted}">
-                <input type="text" class="form-control" placeholder="*Baton No." name="customerId" ng-model="auctionRegVm.user.customerId" required="isAdmin()">
+             <div class="col-sm-6 form-group" ng-if="isAdmin()" ng-class="{'has-error': reqForm.batonNo.$invalid && reqForm.submitted}">
+                <input type="text" class="form-control" placeholder="*Baton No." name="batonNo" ng-model="auctionRegVm.user.batonNo" required="isAdmin()">
               </div>
-            </div>         
+            </div>
+                     
             <div class="text-right">
               <button type="button" class="btn btn-danger" ng-click="auctionRegVm.submit(reqForm)">Submit</button>
             </div>

@@ -111,6 +111,8 @@ exports.update = function(req, res) {
         options.dataToSend.user = {};
         options.dataToSend.user.user_id = paymentResult[0].user._id;
         options.dataToSend.user.iq_id = paymentResult[0].user.customerId;
+        if(paymentResult[0].user.batonNo)
+          options.dataToSend.user.iq_id = paymentResult[0].user.batonNo;
         options.dataToSend.user.fname = paymentResult[0].user.fname;
         options.dataToSend.user.lname = paymentResult[0].user.lname;
         options.dataToSend.user.email = paymentResult[0].user.email;

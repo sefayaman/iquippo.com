@@ -88,6 +88,7 @@ function AuctionRegisCtrl($scope, $rootScope, $location, Modal, Auth,PagerSvc,$u
           if(Auth.getCurrentUser().email)
             dataObj.user.email = Auth.getCurrentUser().email;
         } else {
+          dataObj.user.batonNo = $scope.registerUser.batonNo;
           dataObj.user.customerId = $scope.registerUser.customerId;
           dataObj.user._id = $scope.registerUser._id;
           dataObj.user.fname = $scope.registerUser.fname;
@@ -98,7 +99,8 @@ function AuctionRegisCtrl($scope, $rootScope, $location, Modal, Auth,PagerSvc,$u
             dataObj.user.email = $scope.registerUser.email;
         }
         if($scope.currentAuction.emdTax === 'lotWise') {
-          dataObj.selectedLots =  vm.dataToSend.selectedLots;
+          //dataObj.selectedLots =  vm.dataToSend.selectedLots;
+          return;
         }
         else {
           dataObj.selectedLots = [];
