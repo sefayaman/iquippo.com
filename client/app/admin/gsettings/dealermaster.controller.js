@@ -15,6 +15,8 @@ function DealerMasterCtrl($scope,$rootScope,$state,categorySvc,vendorSvc, modelS
     vm.editClicked = editClicked;
     vm.fireCommand = fireCommand;
     vm.stateIdArr = [{}];
+    vm.checkDealer = checkDealer;
+    vm.changeStatus = changeStatus;
     
     var initFilter = {};
     var filter = {};
@@ -62,7 +64,33 @@ function DealerMasterCtrl($scope,$rootScope,$state,categorySvc,vendorSvc, modelS
             $scope.pager.update(result.items, result.totalItems);
         });
     }
-    
+    function checkDealer(brandId,dealerId){
+       var filter = {};
+       filter['brandId'] = brandId;
+       filter['dealerId'] = dealerId;
+        DealerMasterSvc.get(filter)
+        .then(function(result){
+            vm.filteredList = result;
+            
+        });
+    }
+    function changeStatus(data,status){
+      data.status = status;
+       DealerMasterSvc.update(data)
+        .then(function(){
+            vm.dataModel = {};
+            data = '';
+            resetValue();
+            $scope.isEdit = false;
+            fireCommand(true);
+            Modal.alert('Data updated successfully!');
+        })
+        .catch(function(err){
+            if(err.data)
+                Modal.alert(err.data); 
+        });
+       
+    }
     function fireCommand(reset){
         if (reset)
             $scope.pager.reset();
@@ -78,35 +106,47 @@ function DealerMasterCtrl($scope,$rootScope,$state,categorySvc,vendorSvc, modelS
             $scope.submitted = true;
             return;
         }
-        let objBrand = vm.brandList.find(o => o._id === vm.dataModel.brand.data);
-        vm.dataModel.brand.name = objBrand.name; 
-        let objDealer = vm.dealerList.find(o => o._id === vm.dataModel.dealer.data);
-         vm.dataModel.dealer.name = objDealer.entityName;
-         vm.dataModel.state = [];
-         var i=0;
-         
-         if(vm.stateIdArr[0]){
-            for(var id of vm.stateIdArr) {
-                    let objState = vm.stateList.find(o => o._id === id);
-                    vm.dataModel.state[i] = {};
-                    vm.dataModel.state[i]['data'] = id;
-                    vm.dataModel.state[i]['name'] = objState.name;
-                    i++;
+        var filter = {};
+       filter['brandId']= vm.dataModel.brand.data;
+       filter['dealerId']= vm.dataModel.dealer.data;
+        DealerMasterSvc.check(filter)
+        .then(function(result){
+            if(result.length != 0){
+                Modal.alert('This dealer already added in this brand if you want add location than you edit this dealer and location!');
+            }else{
+
+                let objBrand = vm.brandList.find(o => o._id === vm.dataModel.brand.data);
+                vm.dataModel.brand.name = objBrand.name; 
+                let objDealer = vm.dealerList.find(o => o._id === vm.dataModel.dealer.data);
+                vm.dataModel.dealer.name = objDealer.entityName;
+                vm.dataModel.state = [];
+                var i=0;
+                
+                if(vm.stateIdArr[0]){
+                    for(var id of vm.stateIdArr) {
+                            let objState = vm.stateList.find(o => o._id === id);
+                            vm.dataModel.state[i] = {};
+                            vm.dataModel.state[i]['data'] = id;
+                            vm.dataModel.state[i]['name'] = objState.name;
+                            i++;
+                    }
+                }
+                vm.dataModel.status = true;
+                DealerMasterSvc.save(vm.dataModel)
+                .then(function(){
+                    vm.dataModel = {};
+                    resetValue();
+                    fireCommand(true);
+                    Modal.alert('Data saved successfully!');
+                })
+                .catch(function(err){
+                if(err.data)
+                        Modal.alert(err.data); 
+                });
             }
-         }
-         console.log("dealer===",vm.dataModel);
-         vm.dataModel.status = true;
-        DealerMasterSvc.save(vm.dataModel)
-        .then(function(){
-            vm.dataModel = {};
-            resetValue();
-            fireCommand(true);
-            Modal.alert('Data saved successfully!');
-        })
-        .catch(function(err){
-           if(err.data)
-                Modal.alert(err.data); 
+            
         });
+       
     }
 
     function editClicked(rowData){
@@ -125,6 +165,17 @@ function DealerMasterCtrl($scope,$rootScope,$state,categorySvc,vendorSvc, modelS
         if(form.$invalid){
             $scope.submitted = true;
             return;
+        }
+        var i=0;
+        vm.dataModel.state = [];
+        if(vm.stateIdArr[0]){
+            for(var id of vm.stateIdArr) {
+                    let objState = vm.stateList.find(o => o._id === id);
+                    vm.dataModel.state[i] = {};
+                    vm.dataModel.state[i]['data'] = id;
+                    vm.dataModel.state[i]['name'] = objState.name;
+                    i++;
+            }
         }
         DealerMasterSvc.update(vm.dataModel)
         .then(function(){

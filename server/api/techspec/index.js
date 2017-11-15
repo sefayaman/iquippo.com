@@ -10,5 +10,8 @@ router.post('/', controller.create);
 router.put('/:id', controller.update);
 router.delete('/:id', controller.delete);
 router.post('/onfilter', controller.getOnFilter);
+router.post('/field', controller.createfield);
+router.get('/fielddata', controller.getFieldData);
+router.put('/fieldupdate/:id', controller.fieldUpdate);
 
 module.exports = router;

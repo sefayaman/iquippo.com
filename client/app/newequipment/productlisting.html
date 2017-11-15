@@ -1,0 +1,187 @@
+<div id="wrapper">
+  <section class="wrapper">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-12">
+          <div id="page-wrapper">
+            <!-- Page Heading -->
+            <div id="products">
+              <div class="row">
+                <div class="col-sm-11">
+                  <h3> New Equipment Information</h3>
+                </div>
+                <div class="col-sm-1">
+                  <h3>
+                  <button class="btn btn-md btn-success pull-right" ng-click="newequipmentListingVm.exportExcel()"><i class="fa fa-file-excel-o"></i> Export</button>
+                  </h3>
+                </div>
+              </div>
+              
+              <hr>
+              <div class="clearfix"></div>
+              
+            </div>
+            <p class="text-right">Showing : {{newequipmentListingVm.totalItems}} Records</p>
+            <div class="row featured">
+              <div class="col-sm-9 form-group">
+                <span>
+                  <input type="checkbox" id="" name="active" ng-model="newequipmentListingVm.active" ng-change="newequipmentListingVm.fireCommand(true)" ng-true-value="'active'"> Active 
+                </span>
+                <span>
+                  <input type="checkbox" id="" name="inactive" ng-model="newequipmentListingVm.active" ng-change="newequipmentListingVm.fireCommand(true)" ng-true-value="'inactive'"> Inactive 
+                </span>
+                <span>
+                  <input type="checkbox" id="" name="featured" ng-model="newequipmentListingVm.featured" ng-change="newequipmentListingVm.fireCommand(true)"> Featured
+                </span>
+                <select ng-model="newequipmentListingVm.searchType" ng-change="newequipmentListingVm.showFilter(newequipmentListingVm.searchType)" class="tableFilter">
+                  <option value="">Column Filters </option>
+                  <option value="assetId">Asset Id</option>
+                  <option value="assetStatus">Asset Status</option>
+                  <option value="seller">Seller</option>
+                  <option value="tradeType">Trading Type</option>
+                  <option value="group">Group</option>
+                  <option value="category">Category</option>
+                  <option value="brand">Brand</option>
+                  <option value="model">Model</option>
+                  <option value="location">Location</option>
+                </select>
+                <input type="text" class="tableFilter" ng-if="newequipmentListingVm.searchType != ''" name="searchTxt" ng-model="newequipmentListingVm.coulmnSearchStr" ng-change="newequipmentListingVm.fireCommand(true)" ng-model-options="{debounce:500}" placeholder="Search text..."/>
+                <button class="btn btn-primary btn-xs" ng-click="newequipmentListingVm.bulkUpdate('priceonrequest')">Price on request</button>
+                <button class="btn btn-primary btn-xs" ng-click="newequipmentListingVm.bulkUpdate('active')" ng-if="isAdmin()">Activate</button>
+                <button class="btn btn-primary btn-xs" ng-click="newequipmentListingVm.bulkUpdate('deactive')" ng-if="isAdmin()">Deactivate</button>
+                <button class="btn btn-primary btn-xs" ng-click="newequipmentListingVm.bulkUpdate('delete')">Delete</button>
+               
+                </div>
+                <div class="col-sm-3 tablesearch text-right">
+                   Search: <input type="text" placeholder="Search..." ng-model="newequipmentListingVm.searchstr" ng-change="newequipmentListingVm.fireCommand(true)" ng-model-options="{debounce:500}">
+                </div>
+                </div>
+                <div class="row">
+              <div class="col-sm-12 form-group">
+                
+                <div class=" table-responsive ">
+                  <table class="table table-bordered table-striped">
+                    <thead>
+                      <tr>
+                        <th>Select</th>
+                        <th>Image</th>
+                        <th>Asset ID</th>
+                        <th>Trading Type</th>
+                        <th>Categories</th>
+                        <th>Brand</th>
+                        <th>Model</th>
+                        <th>Price</th>
+                        <th>Assets Status</th>
+                        <th>Seller &amp; Type</th>
+                        <th>Mfg. Year</th>
+                        <th>Location</th>
+                        <th>Status</th>
+                        <th width="10%">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      
+                      <tr ng-repeat="product in products" ng-class="{'info':product.featured}">
+                    <td><input type="checkbox" ng-click="newequipmentListingVm.updateSelection($event,product._id)" ng-disabled="(product.isSold || product.status) && !isAdmin()"/></td>
+                    <td><img ng-src="{{uploadImagePrefix}}{{product.assetDir}}/{{product.primaryImg}}" width="50" height="50"></td>
+                    <!-- <td>{{product.productId}}</td> -->
+                    <td>{{product.assetId}}</td>
+                    <td>{{product.tradeType}}</td>
+                    <td>
+                      <span ng-if="product.category.name != 'Other'">{{product.category.name}}</span>
+                      <span ng-if="product.category.name == 'Other'">{{product.category.otherName}}</span>
+                    </td>
+                    <td>
+                      <span ng-if="product.brand.name != 'Other'">{{product.brand.name}}</span>
+                      <span ng-if="product.brand.name == 'Other'">{{product.brand.otherName}}</span>
+                    </td>
+                    <td>
+                      <span ng-if="product.brand.name != 'Other'">{{product.model.name}}</span>
+                      <span ng-if="product.brand.name == 'Other'">{{product.model.otherName}}</span>
+                    </td>
+                    <td>
+                      <span ng-if="product.tradeType != 'RENT'"><i class="fa fa-inr" ng-if="product.currencyType == 'INR' && product.grossPrice"></i>{{product.grossPrice |number:0}}</span>
+                      <span ng-if="product.priceOnRequest && product.tradeType != 'RENT'">(Price On Request)</span>
+                    </td>
+                    <td>{{product.assetStatus | uppercase}}</td>
+                    <td>
+                        <a ng-if="product.seller.userType == 'individual'" href="javascript:void(0);" ng-click="newequipmentListingVm.previewSellerDetail(product)" uib-popover="Seller Information" popover-trigger="mouseenter">{{product.seller.fname}} (Individual)</a>
+
+                        <a ng-if="product.seller.userType == 'private'" href="javascript:void(0);" ng-click="newequipmentListingVm.previewSellerDetail(product)" uib-popover="Seller Information" popover-trigger="mouseenter">{{product.seller.fname}} (Private Entrepreneur)</a>
+
+                        <a  ng-if="product.seller.userType == 'legalentity'" href="javascript:void(0);" ng-click="newequipmentListingVm.previewSellerDetail(product)" uib-popover="Seller Information" popover-trigger="mouseenter">{{product.seller.fname}} (Legal Entity)</a>
+
+                    </td>
+
+                    <td>{{product.mfgYear}}</td>
+                    <td>{{product.city}}</td>
+                    <td>{{newequipmentListingVm.getStatus(product.status, product.isSold)}}</td>
+                    <td>
+                      <a href="javascript:void(0);" ng-disabled="product.isSold && !isAdmin()" ng-click="newequipmentListingVm.productEditHandler(product)" class="btn btn-primary btn-sm" uib-popover="Edit" popover-trigger="mouseenter">
+                        <i class="fa fa-pencil"></i>
+                      </a>
+                      <button class="btn btn-danger btn-sm" ng-disabled="(product.isSold || product.status) && !isAdmin()" class="btn btn-primary btn-xs" uib-popover="Delete" popover-trigger="mouseenter"  confirmed-click="newequipmentListingVm.deleteProduct(product)" ng-confirm-click="Would you like to delete this record?"><i class="fa fa-trash"></i>
+
+                      </button>
+                      <!-- <a href="javascript:void(0);" class="btn btn-sm btn-success"><i class="fa fa-gavel"></i></a> -->
+                    </td>
+                  </tr>
+                      
+                    </tbody>
+                    
+                  </table>                  
+                </div>
+                <uib-pagination total-items="newequipmentListingVm.totalItems" ng-model="newequipmentListingVm.currentPage" items-per-page="newequipmentListingVm.itemsPerPage" max-size="newequipmentListingVm.maxSize" ng-click="newequipmentListingVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+                
+              </div>
+            </div>
+          </div>
+          <!-- /#page-wrapper -->
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+<script>
+$(document).ready(function(){
+$('.dashboard-nav a').on('click', function(){
+$('.dashboard-nav a').removeClass('active')
+$(this).addClass('active')
+});
+});
+</script>
+<script type="text/ng-template" id="sellerDetail.html">
+<div>
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="close()" aria-hidden="true">&times;</button>
+    <h4 class="modal-title">Seller Detail</h4>
+  </div>
+  <div class="modal-body">
+    <div class="row form-group">
+      <div class="col-xs-offset-1 col-xs-4 text-right">Seller Name :</div>
+      <div class="col-xs-6 text-left">{{product.fname}} {{product.lname}}</div>
+    </div>
+    <div class="row form-group">
+      <div class="col-xs-offset-1 col-xs-4 text-right">Email :</div>
+      <div class="col-xs-6 text-left">{{product.email}}</div>
+    </div>
+    <div class="row form-group">
+      <div class="col-xs-offset-1 col-xs-4 text-right">Phone No. :</div>
+      <div class="col-xs-6 text-left">{{product.phone}}</div>
+    </div>
+    <div class="row form-group">
+      <div class="col-xs-offset-1 col-xs-4 text-right">Mobile No. :</div>
+      <div class="col-xs-6 text-left">{{product.mobile}}</div>
+    </div>
+    <div class="row form-group">
+      <div class="col-xs-offset-1 col-xs-4 text-right">Uploaded By :</div>
+      <div class="col-xs-6 text-left" ng-if= "product.role != 'customer'">{{product.createdBy}}</div>
+      <div class="col-xs-6 text-left" ng-if= "product.role == 'customer'">Self</div>
+    </div>
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-lg btn-default" ng-click="close()">Ok</button>
+</div>
+</div>
+</script>

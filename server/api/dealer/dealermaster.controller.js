@@ -121,7 +121,19 @@ exports.delete = function(req, res) {
     });
   });
 };
-
+exports.check = function(req, res) {
+  var queryParam = req.query;
+  var filter = {};
+  var brandId = queryParam.brandId;
+  var dealerId = queryParam.dealerId;
+  var query = DealerMaster.find({"brand.data":brandId, "dealer.data":dealerId});
+  query.exec(function(err, result) {console.log(result);
+    if (err) {
+      return handleError(res, err);
+    }
+    return res.status(200).json(result);
+  });
+};
 function handleError(res, err) {
   return res.status(500).send(err);
 }
