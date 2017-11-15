@@ -40,6 +40,7 @@
 						<option value="dealermaster">Dealer Location Master</option>
 						<option value="certificate">Certificate Master</option>
 						<option value="techspec">Technical Specification Master</option>
+						<option value="newEquipmentBanners">New Equipment Banners</option>
 					</select>
 					<i class="caret"></i>
 				</div>
@@ -3326,4 +3327,86 @@
     </div>
 
 </div>
+         
+    <!-- New Equipment Banner tab value-->
+   <div ng-if="gsettingVm.tabValue == 'newEquipmentBanners'" ng-controller="NewEquipmentBannersCtrl as newBannerVm">
+   <h4>Listing New Equipment Banner Data</h4>
+   <form class="" name="newEquipBannerForm">			
+       <div class="row form-group">
+           <div class="col-sm-3" ng-class="{'has-error':newEquipBannerForm.brand.$invalid && submitted}">
+               <label> Brand</label>
+               <select class="form-control" name="brand" ng-model="newBannerVm.dataModel.brand.data" required>
+                   <option value="">Select Brand</option>
+                   <option ng-repeat="brand in newBannerVm.brandList" value="{{brand._id}}">{{brand.name}}</option>
+               </select>
+           </div>
+           <div class="col-sm-3">
+                <label> Promotion Name</label>
+                <input id="promotion" name="promotion" ng-model="newBannerVm.dataModel.promotion.data" type="text" class="form-control" placeholder="Enter Promotion">
+           </div>
+           <div class="col-sm-3" ng-class="{'has-error':newEquipBannerForm.position.$invalid && submitted}">
+               <label> Position</label>
+               <select class="form-control" name="position" ng-model="newBannerVm.dataModel.position.data" required>
+                   <option value="">*Select Position</option>
+                   <option value="left"> Left </option>
+                   <option value="topRight"> Top Right </option>
+                   <option value="bottomRight"> Bottom Right </option>
+                   <option value="none"> None </option>
+               </select>
+           </div>
+           
+           <div class="form-group col-sm-2">
+               <label> Banner Image</label>
+               <span class="btn btn-warning fileinput-button">
+                   <span>Browse image...</span>
+                   <input type="file" name="file" onchange="angular.element(this).scope().updateBannerImage(this.files,this)" accept="image/*" class="ng-scope">
+               </span>
+               <div class="col-sm-2">
+                   {{newBannerVm.newEquipBannerImg}}
+               </div>
+           </div>
+           
+           <div class="col-sm-2 pull-right">
+               <button type="button" class="btn btn-block btn-primary" ng-if="isEdit" ng-click="newBannerVm.update(newEquipBannerForm)">Update</button>
+               <button type="button" class="btn btn-block btn-primary" ng-if="!isEdit" ng-click="newBannerVm.save(newEquipBannerForm)">Save</button>
+           </div>
+       </div>
+       <form>
+           <div class="row">
+               <div class="col-sm-3 pull-right">
+                   <div class="tablesearch text-right form-group">
+                       Search: <input type="text" placeholder="Search..." ng-model="newBannerVm.searchStr" ng-change="gsettingVm.fireCommand(true,null,'leadmaster')" ng-model-options="{debounce:500}">
+                   </div>
+               </div>
+           </div>		
+           <div class="table-responsive">
+               <table class="table table-bordered">
+                   <thead>
+                       <tr>
+                           <th>Image</th>
+                           <th>Brand</th>
+                           <th>Promotions</th>
+                           <th>Position</th>
+                           <th>Status</th>
+                           <th>Action</th>
+                       </tr>
+                   </thead>
+                   <tbody>
+                       <tr ng-repeat="banner in newBannerVm.filteredList">
+                           <td><img class="sheduleImg img-circle" ng-src="{{uploadImagePrefix}}{{manufacturerDir}}/{{banner.newEquipBannerImg}}" alt="Image"></td>
+                           <td>{{banner.brand.name}}</td>
+                           <td>{{banner.promotion}}</td>
+                           <td>{{banner.position}}</td>
+                           <td>{{banner.status}}</td>
+                           <td>
+                               <button type="button" class="btn btn-sm btn-primary" ng-click="newBannerVm.editClicked(dealer)"><i class="fa fa-pencil"></i></button>
+                               <button type="button" class="btn btn-sm btn-danger" ng-click="newBannerVm.destroy(dealer._id)"><i class="fa fa-trash"></i></button>
+                           </td>
+
+                       </tr>
+                   </tbody>
+               </table>
+           </div>
+           
+   </div>
 </div>

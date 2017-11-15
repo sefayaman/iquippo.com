@@ -54,6 +54,7 @@ module.exports = function(app) {
    app.use('/api/certificate', require('./api/certificate'));
   // app.use('/api/newequipment', require('./api/newequipment'));
    app.use('/api/techspec', require('./api/techspec'));
+   app.use('/api/newequipmentbanners', require('./api/newequipmentbanners'));
   
   
   // All undefined asset or api routes should return a 404
