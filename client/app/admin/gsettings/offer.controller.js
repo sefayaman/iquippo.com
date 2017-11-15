@@ -14,7 +14,7 @@
         $scope.onCategoryChange = onCategoryChange;
         $scope.onBrandChange = onBrandChange;
         $scope.Addfinance = Addfinance;
-        $scope.deleteRow = deleteRow;
+        $scope.changeStatus = changeStatus;
         $scope.isEdit = false;
         var filter = {};
         vm.offer = {};
@@ -83,18 +83,6 @@
     
         } 
 
-
-        $scope.openForm = function(data){
-          
-          var financer =JSON.parse(data);
-          if(financer.name !=""){
-             $scope.openform = true;  
-          }else{
-              $scope.openform = false;
-             }
-         
-  
-      } 
       $scope.leaseForm = function(data){
           
           var leaser =JSON.parse(data);
@@ -113,11 +101,19 @@
         }
       }
 
-      function deleteRow($event,row){
-         var index = $scope.financerinfo.indexOf(row);
-         if($event.which == 1)
-            $scope.financerinfo.splice(index,1);
-         
+      function changeStatus(id,cstatus){
+        var data = {};
+        data._id = id;
+        data.status = cstatus;
+        OfferSvc.update(data)
+          .then(function(){
+              get();
+              Modal.alert('Data updated successfully!');
+          })
+          .catch(function(err){
+              if(err.data)
+                  Modal.alert(err.data); 
+          });
        }
 
         $scope.checkLease = function(data){
@@ -132,7 +128,7 @@
         
 
 
-    function onCategoryChange(categoryId) {console.log("categoryId",categoryId);
+    function onCategoryChange(categoryId) {
         $scope.brandList = [];
         $scope.modelList = [];
 
@@ -418,8 +414,6 @@
                   vm.lInfo = {};
                   vm.lInfo.data = {};
                   vm.lInfo.id = vm.leaser[k];
-                  console.log("vm.lInfo=",vm.lInfo);
-                  //vm.fInfo.name = 'assd';
                   vm.lInfo.data = vm.leaserinfo[k];
                   vm.leaseData[k] = vm.lInfo;
                 }
@@ -455,9 +449,8 @@
         }
 
 
-        function get(){
-            // vm.auctionListing = result.items;
-            OfferSvc.get().then(function(result){
+        function get(filter){
+            OfferSvc.get(filter).then(function(result){
             if(result.length>0){
                   vm.offer = result;
                 }else{

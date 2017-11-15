@@ -16,7 +16,9 @@ var ApiError = require('../../components/_error');
  
     exports.get = function(req,res){
         var queryParam = req.query;
-        var filter = {}; 
+        var filter = {};
+        if(queryParam.status)
+        filter["status"] = queryParam.status;
          var query = Offer.find(filter);
       
         query.exec(function(err, result){

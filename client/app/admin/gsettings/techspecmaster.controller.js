@@ -185,7 +185,7 @@ function TechSpecMasterCtrl($scope,$rootScope,$state,uploadSvc,categorySvc,brand
             $scope.pager.update(result.items, result.totalItems);
         });
     }
-    function loadViewFieldData(filter){console.log("filter=",filter);
+    function loadViewFieldData(filter){
         $scope.pager.copy(filter);
         TechSpecMasterSvc.getFieldData(filter)
         .then(function(result){

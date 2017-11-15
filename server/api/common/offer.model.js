@@ -18,6 +18,7 @@ var OfferSchema = new Schema({
         leaseInfo:{},
         lease: {type:Boolean,default:false},
         createdBy:{},  
+        status: {type:Boolean,default:true},  
         createdAt: {type:Date,default:Date.now},
         updatedAt: {type:Date,default:Date.now}
 });

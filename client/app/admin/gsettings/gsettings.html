@@ -2930,6 +2930,7 @@
 									<th>Cash On Purcahe</th>
 									<th>List in Finance</th>
 									<th>Lease</th>
+									<th>Status</th>
 									<th>Actions</th>
 								</tr>
 							</thead>
@@ -2944,11 +2945,20 @@
 									<td>{{offer.cash_purchase}}</td>
 				 					<td>{{offer.finance}}</td>
 									<td>{{offer.lease}}</td>
+									<td ng-if="offer.status === true">Active</td>
+									<td ng-if="offer.status != true">Inactive</td>
 									<td>
 								      <a href="javascript:void(0);" class="btn btn-primary btn-sm" uib-popover="Edit" popover-trigger="mouseenter" ng-click="offerVm.editClicked(offer)">
 											<i class="fa fa-pencil"></i>
 										</a>
 										<a href="javascript:void(0);" class="btn btn-danger btn-sm" uib-popover="Delete" popover-trigger="mouseenter" ng-click="offerVm.destroy(offer._id)"><i class="fa fa-trash" ></i></a>
+										
+										<button class="btn btn-success" ng-model="offer.status" uib-btn-checkbox ng-click="changeStatus(offer._id,offer.status)">
+										<span ng-if="offer.status" uib-popover="Activate" popover-trigger="mouseenter">
+										<i class="fa fa-toggle-off"></i>							
+										</span> <span ng-if="!offer.status" uib-popover="Deactivate" popover-trigger="mouseenter">
+										<i class="fa fa-toggle-on"></i>							
+										</span></button>
 									</td>
 								</tr>
 							</tbody>

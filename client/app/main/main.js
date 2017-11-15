@@ -752,7 +752,7 @@ angular.module('sreizaoApp')
       })
       .state('newproductdetail', {
         url: '/new/:category/:brand/:id',
-        templateUrl: 'app/product/newproductdetail.html',
+        templateUrl: 'app/newequipment/newproductdetail.html',
         controller: 'NewProductDetailCtrl as newproductDetailVm',
         layout:'client'
       });
