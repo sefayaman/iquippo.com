@@ -3,16 +3,14 @@
     <li>
       <a href="/main"> Home </a>
     </li>
-    <li><a href="/main"> New Equipments </a></li>
-    <li class="active"> JCB Equipments </li>
+    
+    <li><a href="/new"> New Equipments </a></li>
+    <li class="active"> {{displayText || equipmentSearchFilter.group || equipmentSearchFilter.category || equipmentSearchFilter.brand || equipmentSearchFilter.tradeType || equipmentSearchFilter.location || equipmentSearchFilter.tradeType || equipmentSearchFilter.assetId || "XXXXX"}} </li>
   </ol>
-</div>
-<div class="new-equipments-banner">
-  <img src="http://placehold.it/1920x300" height="200" width="100%" alt="">
 </div>
 <div class="view-content">
   <section class="wrapper">
-    <div class="container-fluid">
+    <div class="container">
       <div class="alert alert-danger" ng-if="currentProduct.assetStatus == 'sold' || currentProduct.assetStatus == 'rented'">
         The product has been <span ng-if="currentProduct.assetStatus == 'sold'">sold</span><span ng-if="currentProduct.assetStatus == 'rented'">rented</span>
       </div>
@@ -29,9 +27,11 @@
               </div>
             </div>            
           </div>
-          The JCB JS370 sits in the middle of our range of heavy tracked excavators. Weighing in at around 36 ton, it’s engineered with exceptional strength, productivity, efficiency, comfort, safety and ease of maintenance.
-
-          A closed box section revolving frame increases strength and reduces stress. It also makes these tracked excavators highly resistant to impact damage. We’ve used strong parts too – premium industry standards in fact. Meanwhile, this tracked excavator’s engine is a highly efficient Isuzu  285hp (212kW) 6HK unit, compliant with Stage 3b and Tier 4i. The benefits of the JS370 series of tracked excavators don’t end there either.
+          <ol class="carousel-indicators">
+            <li class="" data-slide-to="{{$index}}" ng-class="{'active':thumbnailImage.isPrimary && !thumbnailImage.catImgType}" data-target="#article-photo-carousel" ng-repeat="thumbnailImage in currentProduct.images | limitTo:5">
+                <img alt="" ng-src="{{uploadImagePrefix}}{{currentProduct.assetDir}}/{{thumbnailImage.src}}" class="img-responsive img-thumbnail" ng-click = "imageClick()">
+            </li>
+          </ol>
         </div>
         <div class="col-sm-5 form-group">
           <div class="currentproduct-info">
@@ -39,34 +39,34 @@
             JCB EXCAVATOR 240B PRIME
             </h2>
             <div class="row maximum-capacity">
-              <div class="col-xs-6 form-group">
+              <div class="col-xs-7 padd-left">
                 Maximum Bucket Capacity
               </div>
-              <div class="col-xs-6 form-group text-warning">
+              <div class="col-xs-5 text-warning text-right">
                 1.85m3(2yd3)
               </div>
             </div>
             <div class="row maximum-capacity">
-              <div class="col-xs-6 form-group">
+              <div class="col-xs-7 padd-left">
                 Maximum Engine Power
               </div>
-              <div class="col-xs-6 form-group text-warning">
+              <div class="col-xs-5 text-warning text-right">
                 212kW(285hp)
               </div>
             </div>
             <div class="row maximum-capacity">
-              <div class="col-xs-6 form-group">
+              <div class="col-xs-7 padd-left">
                 Maximum Operating Weight
               </div>
-              <div class="col-xs-6 form-group text-warning">
+              <div class="col-xs-5 text-warning text-right">
                 38372kg(84596lb)
               </div>
             </div>
             <div class="row maximum-capacity">
-              <div class="col-xs-6 form-group">
+              <div class="col-xs-7 padd-left">
                 Maximum Digging Depth
               </div>
-              <div class="col-xs-6 form-group text-warning">
+              <div class="col-xs-5 text-warning text-right">
                 6680mm(21’)
               </div>
             </div>
@@ -75,30 +75,45 @@
           <div class="row text-center form-group download-brochure">            
             <div class="col-xs-4">
               <a href="javascript:void(0);">
-                <i class="fa fa-exchange fa-4x"></i>
+                <img src="/assets/images/icon-compare.png" alt="">
                 ADD TO COMPARE
               </a>
             </div>
             <div class="col-xs-4">
               <a href="javascript:void(0);">
-                <i class="fa fa-plus fa-4x"></i>
+                <img src="/assets/images/icon-book-demo.png" alt="">
                 BOOK A DEMO
               </a>
             </div>
             <div class="col-xs-4">
               <a href="javascript:void(0);">
-                <i class="fa fa-download fa-4x"></i>
+                <img src="/assets/images/icon-download.png" alt="">
                 DOWNLOAD BROCHURE
               </a>
             </div>
+          </div>
+
+          
+          <div class="floating-label-wrapper form-group">
+            <label>Location</label>
+            <select class="form-control">
+              <option value="">Select City</option>              
+            </select>
+            <small>Select a location to view all applicable offers.</small>
           </div>
           <div class="asset-sale">
             <button type="button" class="btn btn-primary btn-block">VIEW OFFERS</button>
           </div>
         </div>
       </div>
-  
-      <uib-tabset justified="true" class="information-tabs">
+    <p>
+      The JCB JS370 sits in the middle of our range of heavy tracked excavators. Weighing in at around 36 ton, it’s engineered with exceptional strength, productivity, efficiency, comfort, safety and ease of maintenance.
+    </p>
+    <p>
+
+      A closed box section revolving frame increases strength and reduces stress. It also makes these tracked excavators highly resistant to impact damage. We’ve used strong parts too – premium industry standards in fact. Meanwhile, this tracked excavator’s engine is a highly efficient Isuzu  285hp (212kW) 6HK unit, compliant with Stage 3b and Tier 4i. The benefits of the JS370 series of tracked excavators don’t end there either.
+    </p>
+      <uib-tabset justified="true" class="information-tabs" ng-if="false">
         <uib-tab heading="STRENGTH">
           <p>
             We’ve designed JCB JS360 tracked excavators to be low maintenance and easily serviceable. Which makes them affordable, efficient and highly productive.
@@ -153,123 +168,284 @@
           </p>
         </uib-tab>
       </uib-tabset>
+
+      <div>
+        <h4 class="form-group">
+            <strong>ALL AVAILABLE OFFERS</strong> <br>
+            <small>You can choose multiple offers and submit your querry</small>
+        </h4>
+        <div class="form-group"></div>
+        <uib-accordion close-others="oneAtATime" class="view-offer">
+          <uib-accordion-group is-open="status.cash">
+            <uib-accordion-heading>
+              CASH OFFERS (2 Available)
+              <p><small>Get additional 2 years service free from iQuippo.</small></p>
+              <i class="pull-right fa" ng-class="{'fa-angle-up': status.cash, 'fa-angle-down': !status.cash}"></i>
+            </uib-accordion-heading>
+            <div class="row">
+              <div class="col-sm-offset-1 col-sm-5 form-group">
+                <div class="checkbox">
+                  <input type="checkbox" id="amount1" name="" value="">
+                  <label for="amount1">
+                    <i class="fa fa-inr"></i> 4,050,000/-
+                  </label>
+                  <small>Total Amount to be paid</small>
+                </div>
+              </div>
+              <div class="col-sm-5 form-group">
+                <ul>
+                  <li>
+                      Get first two services free
+                  </li>
+                  <li>
+                      Get first two services free
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-offset-1 col-sm-5 form-group">
+                <div class="checkbox">
+                  <input type="checkbox" id="amount2" name="" value="">
+                  <label for="amount2">
+                    <i class="fa fa-inr"></i> 3,750,000/-
+                  </label>
+                  <small>Total Amount to be paid</small>
+                </div>
+              </div>
+              <div class="col-sm-5 form-group">
+                <ul>
+                  <li>
+                      Get first two services free
+                  </li>
+                  <li>
+                      Get first two services free
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </uib-accordion-group>
+
+          <uib-accordion-group is-open="status.finance">
+            <uib-accordion-heading>
+              FINANCING OFFERS (3 Available)
+              <p><small>Get additional 2 years service free from iQuippo.</small></p>
+              <i class="pull-right fa" ng-class="{'fa-angle-up': status.finance, 'fa-angle-down': !status.finance}"></i>
+            </uib-accordion-heading>
+            <div class="row">
+              <div class="col-sm-offset-1 col-sm-5 form-group">
+                <div class="checkbox">
+                  <input type="checkbox" id="financer1" name="" value="">
+                  <label for="financer1">
+                    Financer 1
+                  </label>
+                </div>
+              </div>
+              <div class="col-sm-5 form-group">
+                <ul>
+                  <li>
+                      Get first two services free
+                  </li>
+                  <li>
+                      Get first two services free
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-sm-2">
+                <h5 class="text-center"><small>Select Quantity &amp; Tenure</small></h5>                
+                <div class="floating-label-wrapper form-group">
+                  <label>Quantity</label>              
+                  <div class="input-group">
+                    <a href="javascript:void(0);" class="input-group-addon"><i class="fa fa-minus"></i></a>
+                    <input type="number" class="form-control" name="" placeholder="1" min="1">
+                    <a href="javascript:void(0);" class="input-group-addon"><i class="fa fa-plus"></i></a>
+                  </div>
+                </div>
+
+                <div class="floating-label-wrapper">
+                  <label>TENURE*(In Months)</label>
+                  <select class="form-control">
+                    <option value="">1</option>              
+                  </select>
+                </div>
+              </div>
+              <div class="col-sm-7">
+                <h5 class="text-center"><small>Check per unit and total cost</small></h5>
+                <div class="row">
+                  <div class="col-sm-4 form-group">
+                    <label>Finance Amount per unit</label>
+                    <div class="floating-label-wrapper">                      
+                      <input type="text" class="form-control" name="" value="" placeholder="" disabled>
+                    </div>
+                  </div>
+                  <div class="col-sm-4 form-group">
+                    <label>Down-payment per unit</label>
+                    <div class="floating-label-wrapper">                      
+                      <input type="text" class="form-control" name="" value="" placeholder="" disabled>
+                    </div>
+                  </div>
+                  <div class="col-sm-4 form-group">
+                    <label>Processing Fee per unit</label>
+                    <div class="floating-label-wrapper">                      
+                      <input type="text" class="form-control" name="" value="" placeholder="" disabled>
+                    </div>
+                  </div>
+                  <div class="col-sm-4 form-group">
+                    <label>Total Finance Amount</label>
+                    <div class="floating-label-wrapper">                      
+                      <input type="text" class="form-control" name="" value="" placeholder="" disabled>
+                    </div>
+                  </div>
+                  <div class="col-sm-4 form-group">
+                    <label>Total Down-payment</label>
+                    <div class="floating-label-wrapper">                      
+                      <input type="text" class="form-control" name="" value="" placeholder="" disabled>
+                    </div>
+                  </div>
+                  <div class="col-sm-4 form-group">
+                    <label>Total Processing Fee</label>
+                    <div class="floating-label-wrapper">                      
+                      <input type="text" class="form-control" name="" value="" placeholder="" disabled>
+                    </div>
+                  </div>
+                  
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <h5 class="text-center"><small>Amount to be paid</small></h5>
+                <div class="form-group">
+                  <h4>10%</h4>
+                  <small>Rate Of Interest</small>
+                </div>
+                <div class="form-group">
+                  <h4><i class="fa fa-inr"></i> 5,590/-</h4>
+                  <small>Total Monthly Repayment(E.M.I)</small>
+                </div>
+                <div class="form-group">
+                  <h4><i class="fa fa-inr"></i> 5,590/-</h4>
+                  <small>Down-Payment+Processing Fee</small>
+                </div>
+              </div>
+            </div>
+
+          </uib-accordion-group>
+
+          <uib-accordion-group is-open="status.leasing">
+            <uib-accordion-heading>
+              LEASING OFFERS (2 Available)
+              <p><small>Get additional 2 years service free from iQuippo.</small></p>
+              <i class="pull-right fa" ng-class="{'fa-angle-up': status.leasing, 'fa-angle-down': !status.leasing}"></i>
+            </uib-accordion-heading>
+
+            <div class="row">
+              <div class="col-sm-offset-1 col-sm-5 form-group">
+                <div class="checkbox">
+                  <input type="checkbox" id="leasing" name="" value="">
+                  <label for="leasing">
+                    Leasing Offer 1
+                  </label>
+                </div>
+              </div>
+              <div class="col-sm-5 form-group">
+                <ul>
+                  <li>
+                      Get first two services free
+                  </li>
+                  <li>
+                      Get first two services free
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-sm-2">
+                <h5 class="text-center"><small>Select Quantity &amp; Tenure</small></h5>                
+                <div class="floating-label-wrapper form-group">
+                  <label>Quantity</label>              
+                  <div class="input-group">
+                    <a href="javascript:void(0);" class="input-group-addon"><i class="fa fa-minus"></i></a>
+                    <input type="number" class="form-control" name="" placeholder="1" min="1">
+                    <a href="javascript:void(0);" class="input-group-addon"><i class="fa fa-plus"></i></a>
+                  </div>
+                </div>
+
+                <div class="floating-label-wrapper">
+                  <label>TENURE*(In Months)</label>
+                  <select class="form-control">
+                    <option value="">1</option>              
+                  </select>
+                </div>
+              </div>
+              <div class="col-sm-7">
+                <h5 class="text-center"><small>Check per unit and total cost</small></h5>
+                <div class="row">
+                  <div class="col-sm-4 form-group">
+                    <label>Finance Amount per unit</label>
+                    <div class="floating-label-wrapper">                      
+                      <input type="text" class="form-control" name="" value="" placeholder="" disabled>
+                    </div>
+                  </div>
+                  <div class="col-sm-4 form-group">
+                    <label>Down-payment per unit</label>
+                    <div class="floating-label-wrapper">                      
+                      <input type="text" class="form-control" name="" value="" placeholder="" disabled>
+                    </div>
+                  </div>
+                  <div class="col-sm-4 form-group">
+                    <label>Processing Fee per unit</label>
+                    <div class="floating-label-wrapper">                      
+                      <input type="text" class="form-control" name="" value="" placeholder="" disabled>
+                    </div>
+                  </div>
+                  <div class="col-sm-4 form-group">
+                    <label>Total Finance Amount</label>
+                    <div class="floating-label-wrapper">                      
+                      <input type="text" class="form-control" name="" value="" placeholder="" disabled>
+                    </div>
+                  </div>
+                  <div class="col-sm-4 form-group">
+                    <label>Total Down-payment</label>
+                    <div class="floating-label-wrapper">                      
+                      <input type="text" class="form-control" name="" value="" placeholder="" disabled>
+                    </div>
+                  </div>
+                  <div class="col-sm-4 form-group">
+                    <label>Total Processing Fee</label>
+                    <div class="floating-label-wrapper">                      
+                      <input type="text" class="form-control" name="" value="" placeholder="" disabled>
+                    </div>
+                  </div>
+                  
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <h5 class="text-center"><small>Amount to be paid</small></h5>
+                <div class="form-group">
+                  <h4>10%</h4>
+                  <small>Rate Of Interest</small>
+                </div>
+                <div class="form-group">
+                  <h4><i class="fa fa-inr"></i> 5,590/-</h4>
+                  <small>Total Monthly Repayment(E.M.I)</small>
+                </div>
+                <div class="form-group">
+                  <h4><i class="fa fa-inr"></i> 5,590/-</h4>
+                  <small>Down-Payment+Processing Fee</small>
+                </div>
+              </div>
+            </div>
+          </uib-accordion-group>
+        </uib-accordion>
+
+        <div class="asset-sale text-center">
+          <h5><small>Choose at least one offer to proceed.</small></h5>
+          <button type="button" class="btn btn-primary">Proceed</button>
+        </div>
+      </div>
     </div>
   </section>
 </div>
-<script type="text/javascript">
-$(document).ready(function() {
-$('.collapse').on('shown.bs.collapse', function(){
-$(this).parent().find("i").removeClass("fa-plus").addClass("fa-minus");
-}).on('hidden.bs.collapse', function(){
-$(this).parent().find("i").removeClass("fa-minus").addClass("fa-plus");
-});
-});
-function goTo(dir){
-$('#article-photo').carousel(dir);
-}
-</script>
-<script type="text/ng-template" id="magnifier.html">
-<div id="magnifier-modal">
-  <div class="modal-header">
-    <button type="button" class="close" ng-click="close()" aria-hidden="true">&times;</button>
-  </div>
-  <div class="modal-body">
-    <div class="carousel slide article-slide" id="article-photo">
-      <!-- Wrapper for slides -->
-      <div class="carousel-inner cont-slider">
-        <div class="item" ng-repeat="thumbnailImage in images" ng-class="{'active':$index == idx}" >
-          <img alt="" title="" ng-src="{{thumbnailImage.displaySrc}}" class="img-responsive">
-        </div>
-      </div>
-      <!-- Indicators -->
-      <ol class="carousel-indicators">
-        <li class="" data-slide-to="{{$index}}" ng-class="{'active':$index == idx}" data-target="#article-photo" ng-repeat="thumbnailImage in images">
-          <img alt="" ng-src="{{uploadImagePrefix}}{{currentProduct.assetDir}}/{{thumbnailImage.src}}" class="img-responsive img-thumbnail">
-        </li>
-      </ol>
-      <!-- Controls -->
-      <a class="left carousel-control" href="javascript:goTo('prev');"  role="button" ng-non-bindable>
-        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-        <span class="sr-only">Previous</span>
-      </a>
-      <a class="right carousel-control" href="javascript:goTo('next');"  role="button" ng-non-bindable>
-        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-        <span class="sr-only">Next</span>
-      </a>
-    </div>
-  </div>
-</div>
-</script>
-<!-- popup after click agree button -->
-<script type="text/ng-template" id="price_trend_survey.html">
-<div>
-  <div class="modal-header">
-    <button type="button" class="close" ng-click="priceTrendSurveyVm.close()" aria-hidden="true">&times;</button>
-    <h4 class="modal-title">Leave your Comment</h4>
-  </div>
-  <div class="modal-body">
-    <form class="form-signin" name="surveyForm" novalidate>
-      <div class="row">
-        <div class="form-group col-sm-6" ng-class="{'has-error': surveyForm.fname.$invalid && submitted}">
-          <input type="text" class="form-control" name="fname" ng-model="priceTrendSurveyVm.priceTrendSurvey.user.fname" placeholder="First Name" required>
-        </div>
-        
-        <div class="form-group col-sm-6" ng-class="{'has-error': surveyForm.lname.$invalid && submitted}">
-          <input type="text" class="form-control" name="lname" ng-model="priceTrendSurveyVm.priceTrendSurvey.user.lname" placeholder="Last Name" required>
-        </div>
-      </div>
-      
-      <div class="row">
-        <div class="form-group col-sm-6" ng-class="{'has-error': surveyForm.mobile.$invalid && submitted}">
-          <div class="row">
-            <div class="col-sm-4 padd-right search-field">
-              <select class="form-control" ng-model="priceTrendSurveyVm.priceTrendSurvey.user.countryCode" ng-change="priceTrendSurveyVm.onCodeChange(priceTrendSurveyVm.priceTrendSurvey.user.countryCode)" required>
-                <option value="" disabled>*Code</option>
-                <option  ng-repeat ="country in allCountries | orderBy:'name'" value="{{country.countryCode}}">+{{country.countryCode}}</option>
-              </select>
-              <i class="caret"></i>
-            </div>
-            <div class="col-sm-8 padd-left">
-              <input type="text" class="form-control" name="mobile" placeholder="Mobile No." uib-tooltip="98-XXXX-XXXX" tooltip-trigger="focus" tooltip-placement="top" ng-model="priceTrendSurveyVm.priceTrendSurvey.user.mobile"  required>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-6 form-group">
-          <input type="email" class="form-control" name="email" placeholder="Email Address" ng-model="priceTrendSurveyVm.priceTrendSurvey.user.email" >
-          
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-sm-12 form-group" ng-class="{'has-error': surveyForm.comment.$invalid && agree == 'No' && submitted}">
-          <textarea class="form-control" name="comment" placeholder="Comments" ng-model="priceTrendSurveyVm.priceTrendSurvey.comment" ng-required="agree == 'No'"></textarea>
-        </div>
-      </div>
-      
-    </form>
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-md btn-default" ng-click="priceTrendSurveyVm.save(surveyForm)">Ok</button>
-    <button type="submit" class="btn btn-md btn-danger" ng-click="priceTrendSurveyVm.close()">Cancel</button>
-  </div>
-</div>
-</script>
-<!-- end poup -->
-<!-- user detail popup -->
-<script type="text/ng-template" id="price_trend_survey_detail.html">
-<div>
-  <div class="modal-header">
-    <button type="button" class="close" ng-click="close()" aria-hidden="true">&times;</button>
-    <h4 class="modal-title">User Details</h4>
-  </div>
-  <div class="modal-body">
-    <div class="row text-center">
-      <div class="col-sm-12" ng-repeat="survey in surveys">
-        <p class="text-ellips"><strong>{{survey.user.fname}} {{survey.user.lname}}</strong></p>
-        <p class="text-ellips">{{survey.comment}}</p>
-        <hr>
-      </div>
-    </div>
-  </div>
-</div>
-</script>
-<!-- end -->
