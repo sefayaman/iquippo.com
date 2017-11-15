@@ -10,7 +10,6 @@ angular.module('admin').factory("CertificateMasterSvc",CertificateMasterSvc);
     svc.save = save;
     svc.update = update;
     svc.destroy = destroy;
-    svc.search = search;
      
    function get(filter){
       var path = svcPath; 
@@ -28,15 +27,6 @@ angular.module('admin').factory("CertificateMasterSvc",CertificateMasterSvc);
           });
      }
 
-     function search(filter){
-       return $http.post(svcPath+'/search',filter)
-          .then(function(res){
-            return res.data;
-          })
-          .catch(function(err){
-            throw err;
-          });
-     }
 
      function save(data){
         return $http.post(svcPath, data)

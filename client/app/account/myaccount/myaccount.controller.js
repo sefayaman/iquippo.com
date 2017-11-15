@@ -4,71 +4,44 @@
 angular.module('account').controller('MyAccountCtrl',MyAccountCtrl);
 
 //controller function
-function MyAccountCtrl($scope,Auth,$state,Modal,LocationSvc,userSvc,User,uploadSvc,productSvc, UtilSvc, ManpowerSvc, InvitationSvc, SubCategorySvc, categorySvc) {
+function MyAccountCtrl($scope,$rootScope,Auth,$state,Modal,LocationSvc,userSvc,User,uploadSvc,productSvc, UtilSvc, ManpowerSvc, InvitationSvc, SubCategorySvc, categorySvc) {
     var vm = this;
-    vm.currentTab = "basic";
-    vm.userInfo = {};
-    vm.assetsList = [];
-    vm.manpowerInfo = {};
-    vm.editOrAddClick = editOrAddClick;
-    vm.cancelEditOrAdd = cancelEditOrAdd;
-    vm.save=save;
+    vm.editClicked = editClicked;
+    vm.cancelClicked = cancelClicked;
+    vm.save = save;
     $scope.updateAvatar = updateAvatar;
-    $scope.uploadDoc = uploadDoc;
-    vm.updateManpowerUser = updateManpowerUser;
     vm.onCountryChange = onCountryChange;
     vm.onStateChange = onStateChange;
     
     vm.editBasicInfo = false;
-    vm.editPersonalInfo = false;
     vm.editProfessionalInfo = false;
-    vm.editSocialInfo = false;
-    vm.editManpowerInfo = false;
-    vm.getDateFormat = getDateFormat;
     vm.validateAadhaar = validateAadhaar;
-    var path = '/api/products';
-    $scope.docDir = "";
-    var filter = {};
-  
-    function inti(){
-      /*LocationSvc.getAllLocation()
-          .then(function(result){
-          $scope.locationList = result;
-      });*/
-      /*SubCategorySvc.getAllSubCategory()
-      .then(function(result){
-        result.forEach(function(item){
-          vm.assetsList[vm.assetsList.length] =  item.category.name + "-" + item.name;
-        });
-      })*/ 
-      categorySvc.getAllCategory()
-       .then(function(result){
-        result.forEach(function(item){
-          vm.assetsList[vm.assetsList.length] = item.name;
-        });
-       });
-        
-      var dataToSend = {};
+    var FIELDS_MAPPING = {
+                            basicInfo:['fname','lname','email','mobile','country','state','city'],
+                            professionalInfo:['profession','jobProfile','panNumber','aadhaarNumber']
+                        };
 
-      Auth.isLoggedInAsync(function(loggedIn){
-       if(loggedIn){
-          if(Auth.getCurrentUser().role != 'admin')
-              dataToSend["userId"] = Auth.getCurrentUser()._id;
-            productSvc.userWiseProductCount(dataToSend)
-            .then(function(count){
-              vm.count = count;
-            });
-
-          cloneUser();
-        if(Auth.getCurrentUser().profileStatus == 'incomplete')
-          vm.editBasicInfo = true;
-         }else{
-          $state.go("main");
-        }
-     });
-        
+    function init(){
+      vm.userInfo = angular.copy(Auth.getCurrentUser());
+      onCountryChange(vm.userInfo.country,true);
+      onStateChange(vm.userInfo.state,true);
     }
-    inti();
+
+    function editClicked(prop){
+      vm.editBasicInfo = false;
+      vm.editProfessionalInfo = false;
+      if(prop === 'editBasicInfo')
+        vm.editBasicInfo = true;
+      if(prop === 'editProfessionalInfo')
+        vm.editProfessionalInfo = true;
+
+    }
+
+    function cancelClicked(){
+      vm.editBasicInfo = false;
+      vm.editProfessionalInfo = false;
+      vm.userInfo = angular.copy(Auth.getCurrentUser());
+    }
     
     function validateAadhaar(aadhaarNumber) {
       if(!aadhaarNumber)
@@ -77,188 +50,116 @@ function MyAccountCtrl($scope,Auth,$state,Modal,LocationSvc,userSvc,User,uploadS
       vm.userInfo.aadhaarNumber = UtilSvc.validateAadhaar(aadhaarNumber, false);
     }
 
-    function save(form,isBasic){
+    function save(form,fieldKey){
+
+      if(form.$invalid){
+        $scope.submitted = true;
+        return;
+      }
+
+      var userData = {_id:vm.userInfo._id};
+
+      FIELDS_MAPPING[fieldKey].forEach(function(key){
+        if(vm.userInfo[key])
+          userData[key] = vm.userInfo[key];
+      });
+
       var ret = false;
-      if(isBasic && vm.userInfo.country && vm.userInfo.mobile) { 
-        var value = UtilSvc.validateMobile(vm.userInfo.country, vm.userInfo.mobile);
+      if(userData.country && userData.mobile) { 
+        var value = UtilSvc.validateMobile(userData.country, userData.mobile);
         if(!value) {
           form.mobile.$invalid = true;
           ret = true;
-        } else {
-          form.mobile.$invalid = false;
-          ret = false;
-        }
+        } 
       }
-      
-      if(vm.editPersonalInfo && vm.userInfo.aadhaarNumber) {
-        var validFlag = UtilSvc.validateAadhaar(vm.userInfo.aadhaarNumber, true);  
+
+      if(userData.aadhaarNumber) {
+        var validFlag = UtilSvc.validateAadhaar(userData.aadhaarNumber, true);  
         form.aadhaarNumber.$invalid = validFlag;
         ret = validFlag;
       }
 
-      if(form && form.$invalid || ret){
+
+      if(ret){
         $scope.submitted = true;
         return;
       }
-      if(isBasic){
-        var dataToSend = {};
-        if(vm.userInfo.email) 
-          dataToSend['email'] = vm.userInfo.email;
-        if(vm.userInfo.mobile) 
-          dataToSend['mobile'] = vm.userInfo.mobile;
-        if(vm.userInfo._id) 
-          dataToSend['userid'] = vm.userInfo._id;
-        Auth.validateSignup(dataToSend).then(function(data){
-         if(data.errorCode != 0){
-            Modal.alert(data.message,true);
-             return;
-          }else{
-                vm.userInfo.profileStatus = 'complete';
-               updateUser(vm.userInfo);
-          }
-        });
-      }else{
-        updateUser();
+
+      var dataToSend = {};
+      var checkUser = false;
+      if(userData.email){
+        dataToSend['email'] = userData.email;
+        checkUser = true;
+      } 
+      if(userData.mobile){
+        dataToSend['mobile'] = userData.mobile;
+        checkUser = true;
       }
-    }
+      if(userData._id) 
+        dataToSend['userid'] = userData._id;
+      if(!checkUser)
+        return updateUser(userData);
 
-    function editOrAddClick(param){
-        vm.editBasicInfo = false;
-        vm.editPersonalInfo = false;
-        vm.editProfessionalInfo = false;
-        vm.editSocialInfo = false;
-        vm.editManpowerInfo = false;
-        cloneUser();
-        switch(param){
-          case 'basic':
-            vm.editBasicInfo = true; 
-            onCountryChange(vm.userInfo.country, true);  
-            if(vm.userInfo.state)
-              onStateChange(vm.userInfo.state, true);  
-            else {
-              var state = LocationSvc.getStateByCity(vm.userInfo.city);
-              onStateChange(state, true);
-            }
-          break;
-          case 'personal':
-          vm.editPersonalInfo = true;
-          $scope.panNumber = "";
-          $scope.aadhaarNumber = "";
-          if(vm.userInfo.panNumber)
-            $scope.panNumber = vm.userInfo.panNumber;
-          if(vm.userInfo.aadhaarNumber)
-            $scope.aadhaarNumber = vm.userInfo.aadhaarNumber;
-          break;
-          case 'professional':
-           vm.editProfessionalInfo = true;
-          break;
-          case 'social':
-              vm.editSocialInfo = true;
-          break;
-          case 'manpower':
-              vm.editManpowerInfo = true;
-          break;
+      Auth.validateSignup(dataToSend).then(function(data){
+       if(data.errorCode != 0){
+          Modal.alert(data.message,true);
+           return;
+        }else{
+             vm.userInfo.profileStatus = 'complete';
+             updateUser(userData,false);
         }
+      });
     }
 
-    function cancelEditOrAdd(param){
-        switch(param){
-          case 'basic':
-            vm.editBasicInfo = false; 
-          break;
-          case 'personal':
-          vm.editPersonalInfo = false;
-          break;
-          case 'professional':
-           vm.editProfessionalInfo = false;
-          break;
-          case 'social':
-              vm.editSocialInfo = false;
-          break;
-          case 'manpower':
-              vm.editManpowerInfo = false;
-          break;
-        }
-        cloneUser();
-
-    }
-
-     function updateUser(noAlert){
-       userSvc.updateUser(vm.userInfo).then(function(result){
-        Auth.refreshUser();
+     function updateUser(userData,noAlert){
+        $rootScope.loading = true;
+       userSvc.updateUser(userData).then(function(result){
+        $rootScope.loading = false;
+        Auth.refreshUser(init);
         vm.editBasicInfo = false;
-        vm.editPersonalInfo = false;
         vm.editProfessionalInfo = false;
-        vm.editSocialInfo = false;
-        vm.editManpowerInfo = false;
         if(!noAlert)
-          Modal.alert("User Updated.",true);
-          InvitationSvc.getCouponOnId(vm.userInfo._id)
-            .then(function(couponData){
-              if(couponData.errorCode == 1){
-                console.log("Coupon not created.");
-              } else {
-                var dataToSend = {}
-                dataToSend = couponData;
-                dataToSend.user._id = couponData.user._id;
-                dataToSend.user.fname = vm.userInfo.fname;
-                dataToSend.user.lname = vm.userInfo.lname;
-                dataToSend.user.email = vm.userInfo.email;
-                dataToSend.user.mobile = vm.userInfo.mobile;
-                if(vm.userInfo.imgsrc)
-                  dataToSend.user.imgsrc = vm.userInfo.imgsrc;
-                InvitationSvc.updateCoupon(dataToSend);
-            }
-          });
-      });
+            Modal.alert("User Updated.",true);
+        updateCoupon();
+      })
+       .catch(function(){
+          $rootScope.loading = false;
+       });
     }
 
-    function updateManpowerUser(form){
-      if(form && form.$invalid){
-        $scope.submitted = true;
-        return;
-      }
-      ManpowerSvc.updateManpower(vm.manpowerInfo).then(function(result){
-        Modal.alert("User Updated.",true);
-        vm.editBasicInfo = false;
-        vm.editPersonalInfo = false;
-        vm.editProfessionalInfo = false;
-        vm.editSocialInfo = false;
-        vm.editManpowerInfo = false;
+    function updateCoupon(){
+       InvitationSvc.getCouponOnId(vm.userInfo._id)
+        .then(function(couponData){
+          if(couponData.errorCode == 1){
+            console.log("Coupon not created.");
+          } else {
+            var dataToSend = {}
+            dataToSend = couponData;
+            dataToSend.user._id = couponData.user._id;
+            dataToSend.user.fname = vm.userInfo.fname;
+            dataToSend.user.lname = vm.userInfo.lname;
+            dataToSend.user.email = vm.userInfo.email;
+            dataToSend.user.mobile = vm.userInfo.mobile;
+            if(vm.userInfo.imgsrc)
+              dataToSend.user.imgsrc = vm.userInfo.imgsrc;
+            InvitationSvc.updateCoupon(dataToSend);
+        }
       });
-    }
-
-    function getDateFormat(date) {
-      if(!date)
-        return;
-      return moment(date).format('DD/MM/YYYY');
     }
 
     function updateAvatar(files){
       if(files.length == 0)
         return;
-      editOrAddClick();
+      $rootScope.loading = true;
       uploadSvc.upload(files[0],avatarDir).then(function(result){
-          vm.userInfo.imgsrc = result.data.filename;
-          updateUser(true);
+          $rootScope.loading = false;
+          var userData = {_id:vm.userInfo._id};
+          userData.imgsrc = result.data.filename;
+          updateUser(userData,true);
+        })
+        .catch(function(err){
+          $rootScope.loading = false;
         });
-    }
-
-    function uploadDoc(files){
-      if(files.length == 0)
-        return;
-      if(vm.manpowerInfo.docDir)
-        $scope.docDir = vm.manpowerInfo.docDir;
-      else
-        $scope.docDir = manpowerDir;
-      uploadSvc.upload(files[0], $scope.docDir, null, true).then(function(result){
-      /*if(files[0].name.indexOf('.docx') == -1){
-        Modal.alert('Please upload a valid file');
-        return;
-      }*/
-      vm.manpowerInfo.docDir = result.data.assetDir;
-      vm.manpowerInfo.resumeDoc = result.data.filename;
-      });
     }
 
     function onCountryChange(country,noChange){
@@ -269,7 +170,7 @@ function MyAccountCtrl($scope,Auth,$state,Modal,LocationSvc,userSvc,User,uploadS
       
       $scope.stateList = [];
       $scope.locationList = [];
-      filter = {};
+      var filter = {};
       filter.country = country;
       LocationSvc.getStateHelp(filter).then(function(result){
           $scope.stateList = result;
@@ -281,83 +182,20 @@ function MyAccountCtrl($scope,Auth,$state,Modal,LocationSvc,userSvc,User,uploadS
         vm.userInfo.city = "";
       
       $scope.locationList = [];
-      filter = {};
+      var filter = {};
       filter.stateName = state;
       LocationSvc.getLocationOnFilter(filter).then(function(result){
           $scope.locationList = result;
       });
     }
 
-    function cloneUser(){
-       if(Auth.getCurrentUser()._id){
-        angular.copy(Auth.getCurrentUser(), vm.userInfo);
-      // onCountryChange(vm.userInfo.country, true);  
-      // onStateChange(vm.userInfo.state, true);  
-      ManpowerSvc.getManpowerDataOnUserId(Auth.getCurrentUser()._id).then(function(data){
-        angular.copy(data, vm.manpowerInfo);
-        if(vm.manpowerInfo.availableFrom)
-          vm.manpowerInfo.availableFrom = moment(vm.manpowerInfo.availableFrom).toDate();
-      });
-
-      if(!vm.userInfo.personalInfo){
-          vm.userInfo.personalInfo = {};
-          
-      }
-      if(!vm.userInfo.personalInfo.educations)
-          vm.userInfo.personalInfo.educations = [{}];
-      vm.userInfo.personalInfo.educations.forEach(function(item,index){
-        if(!item){
-           vm.userInfo.personalInfo.educations.splice(index,1);
-           vm.userInfo.personalInfo.educations.push({});
-        }
-      })
-      if(!vm.userInfo.professionalInfo)
-        vm.userInfo.professionalInfo = {};
-      if(!vm.userInfo.socialInfo)
-        vm.userInfo.socialInfo = {};
-      if(!vm.manpowerInfo)
-        vm.manpowerInfo = {};
-      
-      }
-    }
-  //date picker
-  $scope.today = function() {
-    $scope.availableFrom = new Date();
-  };
-  $scope.today();
-
-  $scope.clear = function() {
-    $scope.availableFrom = null;
-  };
-
-  $scope.toggleMin = function() {
-    $scope.minDate = $scope.minDate ? null : new Date();
-  };
-
-  $scope.toggleMin();
-  //$scope.maxDate = new Date(2020, 5, 22);
-  $scope.minDate = new Date();
-
-  //function open1() {
-  $scope.open1 = function() {
-    $scope.popup1.opened = true;
-  };
-
-   $scope.setDate = function(year, month, day) {
-    $scope.availableFrom = new Date(year, month, day);
-  };
-
-  $scope.dateOptions = {
-    formatYear: 'yy',
-    startingDay: 1
-  };
-
-  $scope.formats = ['dd/MM/yyyy', 'dd.MM.yyyy', 'shortDate'];
-  $scope.format = $scope.formats[0];
-
-  $scope.popup1 = {
-    opened: false
-  };
+    //Entry point
+     Auth.isLoggedInAsync(function(loggedIn){
+          if(loggedIn)
+            return init();
+          else
+            $state.go('main');
+        });
   }
 
 })()

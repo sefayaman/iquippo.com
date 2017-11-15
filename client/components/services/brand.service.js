@@ -37,9 +37,11 @@
          });
       };
 
-      function getHelp(searchText) {
+      function getHelp(searchText,isForKey) {
         var serData = {};
         serData['searchStr'] = searchText;
+        if(isForKey)
+          serData[isForKey] = true;
         return getBrandOnFilter(serData)
         .then(function(result){
           var cache = {};

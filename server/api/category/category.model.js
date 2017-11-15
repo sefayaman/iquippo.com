@@ -17,6 +17,7 @@ var CategorySchema = new Schema({
     default: false
   },
   visibleOnUsed:{type:Boolean,default:false},
+  visibleOnNew:{type:Boolean,default:false},
   isForNew:{type:Boolean,default:false},
   isForUsed:{type:Boolean,default:false},
   createdAt: {type:Date,default:Date.now},

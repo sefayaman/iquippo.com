@@ -4,7 +4,7 @@
       <a href="/main"> Home </a>
     </li>
     <li><a href="/main"> Used Equipments </a></li>
-    <li class="active"> Construction &amp; Mining </li>
+    <li class="active"> {{displayText || equipmentSearchFilter.group || equipmentSearchFilter.category || equipmentSearchFilter.brand || equipmentSearchFilter.location || equipmentSearchFilter.assetId || "XXXXX"}} </li>
   </ol>
 </div>
 
@@ -13,73 +13,55 @@
     <div class="col-sm-3">
       <h4>Filter By:</h4>
       <uib-accordion close-others="oneAtATime" class="information">
-        <uib-accordion-group is-open="status.specialOffers">
+        <uib-accordion-group is-open="status.group">
           <uib-accordion-heading>
-            Industry (1)<i class="pull-right fa" ng-class="{'fa-minus': status.specialOffers, 'fa-plus': !status.specialOffers}"></i>
+            Industry ({{allGroup.length || 0}})<i class="pull-right fa" ng-class="{'fa-minus': status.group, 'fa-plus': !status.group}"></i>
           </uib-accordion-heading>
-            <div class="checkbox">
-              <input type="checkbox" name="" value="" id="mining"> <label for="mining">Construction &amp; Mining</label>
-            </div>
-            <div class="checkbox">
-              <input type="checkbox" name="" value="" id="commercial"> <label for="commercial">Commercial &amp; Transportation</label>
-            </div>
-            <div class="checkbox">
-              <input type="checkbox" name="" value="" id="concrete"> <label for="concrete">Asphalt &amp; Concrete</label>
-            </div>
-            <div class="checkbox">
-              <input type="checkbox" name="" value="" id="farmequipments"> <label for="farmequipments">Farm Equipments</label>
-            </div>
-            <div class="checkbox">
-              <input type="checkbox" name="" value="" id="industrial"> <label for="industrial">Industrial &amp; Infrastructure</label>
-            </div>
-            <div class="checkbox">
-              <input type="checkbox" name="" value="" id="materialhandling"> <label for="materialhandling">Material Handling &amp; Cranes</label>
+            <div class="radio" ng-repeat="group in allGroup">
+              <input type="radio" ng-model="equipmentSearchFilter.group" ng-change="viewproductVm.onGroupChange(equipmentSearchFilter.group)" name="group" value="{{group.name}}" id="gp_{{$index}}"> <label for="gp_{{$index}}">{{group.name}}</label>
             </div>
         </uib-accordion-group>
 
-        <uib-accordion-group is-open="status.pricetrend">
+       <!--  <uib-accordion-group is-open="status.tradeType">
           <uib-accordion-heading>
-            Available For (2)<i class="pull-right fa" ng-class="{'fa-minus': status.pricetrend, 'fa-plus': !status.pricetrend}"></i>
+            Available For (2)<i class="pull-right fa" ng-class="{'fa-minus': status.tradeType, 'fa-plus': !status.tradeType}"></i>
           </uib-accordion-heading>
-            <div class="checkbox">
-              <input type="checkbox" name="" value="" id="buying"> <label for="buying">Buying</label>
+            <div class="radio">
+              <input type="radio" ng-model="equipmentSearchFilter.tradeType" name="tradetype" value="SELL" id="buying"> <label for="buying">Buying</label>
             </div>
-            <div class="checkbox">
-              <input type="checkbox" name="" value="" id="renting"> <label for="renting">Renting</label>
+            <div class="radio">
+              <input type="radio" ng-model="equipmentSearchFilter.tradeType" name="tradetype" value="RENT" id="renting"> <label for="renting">Renting</label>
             </div>
-            <div class="checkbox">
-              <input type="checkbox" name="" value="" id="inauction"> <label for="inauction">In Auction</label>
-            </div>
-        </uib-accordion-group>
+        </uib-accordion-group> -->
 
-        <uib-accordion-group is-open="rentstatus.open">
+        <uib-accordion-group is-open="status.category">
           <uib-accordion-heading>
-            Category  <i class="pull-right fa" ng-class="{'fa-minus': rentstatus.open, 'fa-plus': !rentstatus.open}"></i>
+            Category  <i class="pull-right fa" ng-class="{'fa-minus': status.category, 'fa-plus': !status.category}"></i>
           </uib-accordion-heading>
-            <div ng-model="equipmentSearchFilter.category">
-              <div class="checkbox" ng-repeat="cat in allCategory">
-                <input type="checkbox" name="category" value="{{cat.name}}" id="{{cat.name}}"> <label for="{{cat.name}}">{{cat.name}}</label>
+            <div>
+              <div class="radio" ng-repeat="cat in categoryList">
+                <input type="radio" ng-model="equipmentSearchFilter.category" ng-change="viewproductVm.onCategoryChange(equipmentSearchFilter.category)" name="category" value="{{cat.name}}" id="cat_{{$index}}"> <label for="cat_{{$index}}">{{cat.name}}</label>
               </div>
               
             </div>
         </uib-accordion-group>
 
-        <uib-accordion-group is-open="Techstatus.open">
+        <uib-accordion-group is-open="status.brand">
           <uib-accordion-heading>
-            Product Brand <i class="pull-right fa" ng-class="{'fa-minus': Techstatus.open, 'fa-plus': !Techstatus.open}"></i>
+            Product Brand <i class="pull-right fa" ng-class="{'fa-minus': status.brand, 'fa-plus': !status.brand}"></i>
           </uib-accordion-heading>
-            <div ng-model="equipmentSearchFilter.brand">
-              <div class="checkbox" ng-repeat="br in brandList">
-                <input type="checkbox" name="brand" value="{{br.name}}" id="{{br.name}}"> <label for="{{br.name}}">{{br.name}}</label>
+            <div>
+              <div class="radio" ng-repeat="br in brandList">
+                <input type="radio" ng-model="equipmentSearchFilter.brand" name="brand" value="{{br.name}}" id="brand_{{$index}}"> <label for="brand_{{$index}}">{{br.name}}</label>
               </div>
               
             </div>
         </uib-accordion-group>
-         <uib-accordion-group is-open="status.basicInformation">
+         <uib-accordion-group is-open="status.location">
           <uib-accordion-heading>
-            Location <i class="pull-right fa" ng-class="{'fa-minus': status.basicInformation, 'fa-plus': !status.basicInformation}"></i>
+            Location <i class="pull-right fa" ng-class="{'fa-minus': status.location, 'fa-plus': !status.location}"></i>
           </uib-accordion-heading>
-          <input type="text" class="form-control form-group" ng-model="equipmentSearchFilter.locationName" placeholder="Enter Country/State/Location" uib-typeahead="address for address in getLocationHelp($viewValue)"  class="form-control" typeahead-focus-first = "false" typeahead-wait-ms="200" ng-change="viewproductVm.fireCommand()" typeahead-on-select="viewproductVm.fireCommand()"  ng-model-options="{debounce:1000}" autocomplete="off"/>
+          <input type="text" class="form-control form-group" ng-model="equipmentSearchFilter.location" placeholder="Enter Country/State/Location" uib-typeahead="address for address in getLocationHelp($viewValue)"  class="form-control" typeahead-focus-first = "false" typeahead-wait-ms="200" ng-change="viewproductVm.fireCommand()" typeahead-on-select="viewproductVm.fireCommand()"  ng-model-options="{debounce:1000}" autocomplete="off"/>
         </uib-accordion-group>
         <uib-accordion-group is-open="Infostatus.open">
           <uib-accordion-heading>
@@ -92,7 +74,7 @@
     <div class="col-sm-9">
       <div class="row">
         <div class="col-sm-10 form-group">
-          <h4>CONSTRUCTION &amp; MINING EQUIPMENTS (765 Results Found)</h4>
+          <h4>{{ displayText || equipmentSearchFilter.group || equipmentSearchFilter.category || equipmentSearchFilter.brand || equipmentSearchFilter.tradeType || equipmentSearchFilter.location || equipmentSearchFilter.tradeType || equipmentSearchFilter.assetId ||"XXXXX"}} ({{count || 0}} Results Found)</h4>
         </div>
         <div class="col-sm-2 form-group">
           <select class="form-control" ng-change="viewproductVm.sortBy()" ng-model="viewproductVm.sortByFlag">
@@ -104,176 +86,82 @@
           </select>
         </div>
       </div>
-      <div id="search-result_wrapper">
+      <div id="search-result_wrapper" ng-if="!searching && !noResult">
         <div class="row">
-          <div class="col-sm-8 col-md-6 form-group padd-right">
-            <div class="btn-group btn-equipment">
+          <div class="col-sm-7 col-md-6 form-group padd-right">
+            <!-- <div class="btn-group btn-equipment">
               <button type="button" class="btn btn-default active">Used Equipments(520)</button>
               <button type="button" class="btn btn-default">Auctioned Equipments(70)</button>
-            </div>
+            </div> -->
           </div>
-          <div class="col-sm-4 col-md-offset-3 col-md-3 form-group">
-            <div class="btn-group pull-right">
-              <button type="button" class="btn btn-default"><< Previous</button>
-              <button type="button" class="btn btn-default">Next >></button>
-            </div>
+          <div class="col-sm-5 col-md-offset-3 col-md-3 form-group text-right">
+            <uib-pagination total-items="viewproductVm.totalItems" ng-click="viewproductVm.onPageChange()" ng-model="viewproductVm.currentPage" items-per-page="viewproductVm.itemsPerPage" max-size="0" boundary-links="false" rotate="false" next-text="Next >>" previous-text="<< Previous"></uib-pagination>
           </div>
         </div>
         <div class="row">      
-          <div class="col-sm-6 col-md-4 form-group">
+          <div class="col-sm-6 col-md-4 form-group" ng-repeat="product in productList | startFrom:(viewproductVm.currentPage -1 )*viewproductVm.itemsPerPage | limitTo:viewproductVm.itemsPerPage">
             <div class="media text-center form-group">
-              <a href="javascript:void(0);">
-                 <img src="/assets/images/certificationJCB.png" class="img-responsive">              
+              <a ng-href="/used/{{product.category.name}}/{{product.brand.name}}/{{product.assetId}}">
+                 <img ng-src="{{uploadImagePrefix}}{{product.assetDir}}/{{product.primaryImg}}" class="img-responsive">              
               </a>          
               <div class="media-body text-left"> 
                 <div class="row">
-                  <div class="col-xs-6 form-group">
-                    <h4>Volvo Excavator</h4>     
-                    <h5 class="text-info">Model : 240B Prime</h5>
+                  <div class="col-xs-6 form-group padd-right">
+                    <h4 class="text-ellips">{{product.category.name}}</h4>     
+                    <h6 class="text-info">Model : {{product.model.name}}</h6>
                   </div>
                   <div class="col-xs-6 form-group text-right padd-left">
-                    <h3><i class="fa fa-inr"></i> 2,114,50,000</h3>
+                    <h3 ng-if="!product.priceOnRequest"><i class="fa fa-inr"></i> {{product.grossPrice}}</h3>
+                    <h4 ng-if="product.priceOnRequest">Price On Request</h4>
                   </div>
                 </div> 
                  <div class="row">
-                  <div class="col-xs-6 form-group">
-                    <i class="fa fa-check-circle-o"></i> Available for Sale
+                  <div class="col-xs-6 form-group padd-right">
+                    <i class="fa fa-check-circle-o"></i> <span>Available for {{product.tradeType === 'RENT'?'Rent' : 'Sale'}}</span>
                   </div>
-                  <div class="col-xs-6 form-group text-right">
-                    <a href="javascript:void(0);" class="text-danger"><img src="/assets/images/" alt=""> Add to Compare</a>
+                  <div class="col-xs-6 form-group text-right padd-left">
+                    <a href="javascript:void(0);" class="text-danger"> <img src="/assets/images/compare.png" width="16" height="18" alt=""> <span>Add to Compare</span></a>
                   </div>
-                </div>                 
-                                    
+                </div>  
               </div> 
-              <div class="table-responsive">
-                <table class="table">                
-                  <tbody>
-                    <tr>
-                      <td>
-                        <small>Manufactured in</small>
-                        <h4>2015</h4>
-                      </td>
-                      <td>
-                        <small>Runtime (Hours)</small>
-                        <h4>230 Hrs</h4>
-                      </td>
-                      <td>
-                        <small>Current Location</small>
-                        <h4>Hyderabad</h4>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <a ng-href="/productdetail/{{product._id}}" class="btn btn-primary btn-block" >
+               <div class="table-responsive">
+                  <table class="table">                
+                    <tbody>
+                      <tr>
+                        <td>
+                          <small>Manufactured in</small>
+                          <h3>{{product.mfgYear}}</h3>
+                        </td>
+                        <td>
+                          <small>Runtime (Hours)</small>
+                          <h3><span ng-if="product.operatingHour">{{product.operatingHour}} Hrs</span></h3>
+                        </td>
+                        <td>
+                          <small>Current Location</small>
+                          <h3>{{product.city}}</h3>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>  
+              <a ng-href="/used/{{product.category.name}}/{{product.brand.name}}/{{product.assetId}}" class="btn btn-primary btn-block" >
                 View Details
               </a>     
             </div>
           </div>
-          <div class="col-sm-6 col-md-4 form-group">
-            <div class="media text-center form-group">
-              <a href="javascript:void(0);">
-                 <img src="/assets/images/certificationJCB.png" class="img-responsive">              
-              </a>          
-              <div class="media-body text-left"> 
-                <div class="row">
-                  <div class="col-xs-6 form-group">
-                    <h4>Volvo Excavator</h4>     
-                    <h5 class="text-info">Model : 240B Prime</h5>
-                  </div>
-                  <div class="col-xs-6 form-group text-right padd-left">
-                    <h3><i class="fa fa-inr"></i> 2,114,50,000</h3>
-                  </div>
-                </div> 
-                 <div class="row">
-                  <div class="col-xs-6 form-group">
-                    <i class="fa fa-check-circle-o"></i> Available for Sale
-                  </div>
-                  <div class="col-xs-6 form-group text-right">
-                    <a href="javascript:void(0);" class="text-danger"><img src="/assets/images/" alt=""> Add to Compare</a>
-                  </div>
-                </div>                 
-                                    
-              </div> 
-              <div class="table-responsive">
-                <table class="table">                
-                  <tbody>
-                    <tr>
-                      <td>
-                        <small>Manufactured in</small>
-                        <h4>2015</h4>
-                      </td>
-                      <td>
-                        <small>Runtime (Hours)</small>
-                        <h4>230 Hrs</h4>
-                      </td>
-                      <td>
-                        <small>Current Location</small>
-                        <h4>Hyderabad</h4>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div> 
-              <a ng-href="/productdetail/{{product._id}}" class="btn btn-primary btn-block" >
-                View Details
-              </a>       
-            </div>
-          </div>
-          <div class="col-sm-6 col-md-4 form-group">
-            <div class="media text-center form-group">
-              <a href="javascript:void(0);">
-                 <img src="/assets/images/certificationJCB.png" class="img-responsive">              
-              </a>          
-              <div class="media-body text-left"> 
-                <div class="row">
-                  <div class="col-xs-6 form-group">
-                    <h4>Volvo Excavator</h4>     
-                    <h5 class="text-info">Model : 240B Prime</h5>
-                  </div>
-                  <div class="col-xs-6 form-group text-right padd-left">
-                    <h3><i class="fa fa-inr"></i> 2,114,50,000</h3>
-                  </div>
-                </div> 
-                 <div class="row">
-                  <div class="col-xs-6 form-group">
-                    <i class="fa fa-check-circle-o"></i> Available for Sale
-                  </div>
-                  <div class="col-xs-6 form-group text-right">
-                    <a href="javascript:void(0);" class="text-danger"><img src="/assets/images/" alt=""> Add to Compare</a>
-                  </div>
-                </div>                 
-                                    
-              </div> 
-              <div class="table-responsive">
-                <table class="table">                
-                  <tbody>
-                    <tr>
-                      <td>
-                        <small>Manufactured in</small>
-                        <h4>2015</h4>
-                      </td>
-                      <td>
-                        <small>Runtime (Hours)</small>
-                        <h4>230 Hrs</h4>
-                      </td>
-                      <td>
-                        <small>Current Location</small>
-                        <h4>Hyderabad</h4>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>  
-              <a ng-href="/productdetail/{{product._id}}" class="btn btn-primary btn-block" >
-                View Details
-              </a>      
-            </div>
-          </div>
+          
         </div>
 
-        <uib-pagination total-items="viewproductVm.totalItems" ng-click="viewproductVm.onPageChange()" ng-model="viewproductVm.currentPage" items-per-page="viewproductVm.itemsPerPage" max-size="viewproductVm.maxSize" boundary-links="true" rotate="false"></uib-pagination>
+        <div class="text-center form-group">
+          <uib-pagination total-items="viewproductVm.totalItems" ng-click="viewproductVm.onPageChange()" ng-model="viewproductVm.currentPage" items-per-page="viewproductVm.itemsPerPage" max-size="viewproductVm.maxSize" boundary-links="false" rotate="false" next-text=">" previous-text="<"></uib-pagination>
+        </div>
       </div>
+
+      <div class="no-result" ng-if="searching && !noResult">
+        <img src="assets/images/assets-loading.gif" class="form-group">
+        <p>Loading...</p>
+      </div>
+      <div class="no-result" ng-if="noResult && !searching">No results found</div>
     </div>
   </div>
 </section>

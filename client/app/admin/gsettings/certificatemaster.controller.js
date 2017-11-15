@@ -5,70 +5,58 @@ angular.module('admin').controller('CertificateMasterCtrl', CertificateMasterCtr
 
 function CertificateMasterCtrl($scope,$rootScope,$state,CertificateMasterSvc, Modal,Auth,PagerSvc,uploadSvc,$filter){
 	var vm  = this;
+    var initFilter = {};
+    var filter = {};
+    var dataList = [];
+
     vm.dataModel = {};
     $scope.isEdit = false;
     $scope.pager = PagerSvc.getPager();
+    vm.searchStr = "";
+
     vm.save = save;
     vm.update = update;
     vm.destroy = destroy;
     vm.editClicked = editClicked;
-    vm.fireCommand = fireCommand;
-    var initFilter = {};
-    var filter = {};
-    vm.searchStr = "";
-    $scope.fileObj = {};
-    vm.image ='';
+    vm.uploadImage = uploadImage;
+    vm.searchFn = searchFn;
+    
     function init(){
-        filter = {};
-        initFilter.pagination = true;
-        angular.copy(initFilter, filter);
-        loadViewData(filter);
+        loadViewData();
     } 
 
-    function loadViewData(filter){
-        $scope.pager.copy(filter);
-        CertificateMasterSvc.get(filter)
+    function loadViewData(){
+        CertificateMasterSvc.get({})
         .then(function(result){
-           vm.filteredList = result;;
-            vm.totalItems = result.totalItems;
-            //console.log("vm.totalItems==",vm.totalItems);
-            //$scope.pager.update(result.items, result.totalItems);
+           vm.filteredList = result;
+           dataList = result;
+           $scope.pager.update(null,vm.filteredList.length,1);
         });
     }
 
-    function fireCommand(reset){
-        if (reset)
-            $scope.pager.reset();
-        filter = {};
-        angular.copy(initFilter, filter);
-        if (vm.searchStr)
-            filter.searchStr = vm.searchStr;
-        loadViewData(filter);
+     function searchFn(){
+        vm.filteredList = $filter('filter')(dataList,vm.searchStr);
+        $scope.pager.update(null,vm.filteredList.length,1);
+    }
+
+    function uploadImage(files,prop){
+        if(!files || !files.length)
+            return;
+        uploadSvc.upload(files[0],categoryDir).then(function(result){
+            vm.dataModel[prop] = result.data.filename;
+        });
     }
 
     function save(form){
-        /*if(form.$invalid){
+        if(form.$invalid){
             $scope.submitted = true;
             return;
-        }*/
-       var createData = {};
-        //console.log("image==",vm.image);
-        createData.certificate = vm.dataModel.certificate;
-       /* console.log("$scope.fileObj.file==",$scope.fileObj.file);
-        if($scope.fileObj.file){
-            uploadSvc.upload($scope.fileObj.file,categoryDir).then(function(result){
-            $scope.fileObj = {};
-            $scope.c.imgSrc = result.data.filename;
-		    });
-        }*/
-        //CertificateMasterSvc.save(vm.dataModel)
-        
-        createData.certificate = vm.dataModel.certificate;
-        CertificateMasterSvc.save(createData)
+        }
+
+        CertificateMasterSvc.save(vm.dataModel)
         .then(function(){
-            vm.dataModel = {};
             resetValue();
-            fireCommand(true);
+            loadViewData(true);
             Modal.alert('Data saved successfully!');
         })
         .catch(function(err){
@@ -80,21 +68,18 @@ function CertificateMasterCtrl($scope,$rootScope,$state,CertificateMasterSvc, Mo
     function editClicked(rowData){
         vm.dataModel = {};
         vm.dataModel = angular.copy(rowData);
-       
         $scope.isEdit = true;
     }
 
       function update(form){
-        /*if(form.$invalid){
+        if(form.$invalid){
             $scope.submitted = true;
             return;
-        }*/
+        }
         CertificateMasterSvc.update(vm.dataModel)
         .then(function(){
-            vm.dataModel = {};
             resetValue();
-            $scope.isEdit = false;
-            fireCommand(true);
+            loadViewData(true);
             Modal.alert('Data updated successfully!');
         })
         .catch(function(err){
@@ -111,13 +96,14 @@ function CertificateMasterCtrl($scope,$rootScope,$state,CertificateMasterSvc, Mo
     }
 
     function resetValue() {
-      vm.container = {};
+      vm.dataModel = {};
+      $scope.isEdit = false;
     }
 
     function confirmDestory(id){
         CertificateMasterSvc.destroy(id)
         .then(function(){
-            fireCommand(true);
+            loadViewData(true);
         })
          .catch(function(err){
             console.log("purpose err",err);
