@@ -43,12 +43,13 @@
               <div class="col-sm-3 padd-left padd-right select-text">
                 <input type="text" ng-model="mainVm.categorySearchText" placeholder="Category" uib-typeahead="address for address in getCategoryHelp($viewValue,'isForUsed')"  class="form-control" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
               </div>
-              <div class="col-sm-3 padd-left padd-right select-text">
-                <input type="text" class="form-control" ng-model="mainVm.locationSearchText" placeholder="Seller Location" uib-typeahead="address for address in getLocationHelp($viewValue)"  class="form-control" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
-              </div> 
               <div class="col-sm-2 padd-left padd-right select-text">
                 <input type="text" class="form-control" placeholder="Brand" ng-model="mainVm.brandSearchText" class="form-control" uib-typeahead="address for address in getBrandHelp($viewValue,'isForUsed')" typeahead-wait-ms="200"/>
               </div>
+              <div class="col-sm-3 padd-left padd-right select-text">
+                <input type="text" class="form-control" ng-model="mainVm.locationSearchText" placeholder="Seller Location" uib-typeahead="address for address in getLocationHelp($viewValue)"  class="form-control" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
+              </div> 
+              
             </div>
           </div>
         </div>
@@ -126,7 +127,7 @@
 <section class="category-block">
   <div class="container text-center">
     <div class="heading-titles">
-      <h4>[ Browse Used Equipment By Category ]</h4>
+      <h4>[ Browse By Category ]</h4>
       <a href="/used/allcategories" ng-if="!mainVm.newCategory">View All ({{mainVm.categoryCount || 0}})</a>
       <a href="/new/allcategories" ng-if="mainVm.newCategory">View All ({{mainVm.categoryCountForNew || 0}})</a>
     </div>
@@ -176,7 +177,7 @@
 <section class="category-block">
   <div class="container text-center">
     <div class="heading-titles">
-      <h4>[ Browse Used Equipment By Industry ]</h4>
+      <h4>[ Browse By Industry ]</h4>
     </div>
     <uib-tabset justified="false">
       <uib-tab heading="New Equipment" select="mainVm.toggleTab(2,true)">

@@ -123,8 +123,8 @@
                 <h4 class="media-heading">{{auction.auctionType | titleCase}} {{auction.name}} - {{auction.city}}</h4>
                 <p>({{auction.total_products}} Assets  |  {{auction.state}})</p>
               </div>
-              <div class="col-sm-3 form-group text-success">
-                <i class="fa fa-circle"></i><strong class="text-danger">Now</strong>
+              <div class="col-sm-3 form-group">
+                <strong class="text-danger">Closed</strong>
               </div>
             </div>
             <p><i class="fa fa-gavel"></i> <strong ng-if="auction.auctionType === 'online'">Online</strong>
