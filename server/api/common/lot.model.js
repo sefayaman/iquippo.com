@@ -15,7 +15,7 @@ var LotSchema = new Schema({
   //bidIncrement:Object,
   bidIncrement:[{}],
   static_increment:Number,
-  lastMintBid:Number,
+  lastMinuteBid:Number,
   extendedTo:Number,
   status:{type:Boolean,default:true},
   isDeleted:{type:Boolean,default:false},

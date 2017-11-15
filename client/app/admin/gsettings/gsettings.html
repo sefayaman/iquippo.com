@@ -2988,8 +2988,8 @@
 				<!--<input class="form-control" name="endDate" ng-model="lotVm.dataModel.endDate" datetime-picker readonly date-format="MM/dd/yyyy hh:mm a" date-only  placeholder="End Date"> -->
 					<input class="form-control ng-pristine ng-invalid ng-invalid-required ng-touched" datetime-picker="" readonly="" name="endDate" ng-model="lotVm.dataModel.endDate" placeholder="Lot End Date &amp; Time*" date-format="MM/dd/yyyy hh:mm a" ng-disabled="lotDate" required="">
 				</div>
-				<div class="col-sm-3" ng-class="{'has-error':lotform.lastMintBid.$invalid && submitted}">
-					<input type="text" class="form-control" name="lastMintBid" ng-model="lotVm.dataModel.lastMintBid" placeholder="Enter Last Minute Bid">
+				<div class="col-sm-3" ng-class="{'has-error':lotform.lastMinuteBid.$invalid && submitted}">
+					<input type="text" class="form-control" name="lastMinuteBid" ng-model="lotVm.dataModel.lastMinuteBid" placeholder="Enter Last Minute Bid">
 				</div>
 				<div class="col-sm-3" ng-class="{'has-error':lotform.extendedTo.$invalid && submitted}">
 					<input type="text" class="form-control" name="extendedTo" ng-model="lotVm.dataModel.extendedTo" placeholder="Enter Extended To">
@@ -3085,7 +3085,7 @@
 								<td>{{lotdata.lotNumber}}</td>
 								<td>{{lotdata.startingPrice}}</td>
 								<td>{{lotdata.reservePrice}}</td>
-								<td>{{lotdata.lastMintBid}}</td>
+								<td>{{lotdata.lastMinuteBid}}</td>
 								<td>{{lotdata.extendedTo}}</td>
 								<td><a href="javascript:void(0);">View Range</a></td>
 								<td><a href="javascript:void(0);">View Range</a></td>
