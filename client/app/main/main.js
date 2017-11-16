@@ -683,7 +683,7 @@ angular.module('sreizaoApp')
       .state('newbulkorder', {
         url:"/new/bulkorder",
         templateUrl: "app/newequipment/bulkorder.html",
-        controller:"NewEquipmentCtrl",
+        controller:"NewBulkorderCtrl as newbulkorderVm",
         layout:"client"
       })
        .state('uploadnewequipment', {

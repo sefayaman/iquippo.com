@@ -3354,7 +3354,7 @@
                 <label> Promotion/Certificate</label>
                 <select class="form-control" name="promotion" ng-model="newBannerVm.dataModel.promotion.data" required>
                     <option value="">Select Promotion</option>
-                   <option ng-repeat="promo in newBannerVm.promoList" value="{{promo._id}}">{{promo.certificate}}</option>
+                   <option ng-repeat="promo in newBannerVm.promoList" value="{{promo._id}}">{{promo.name}}</option>
                 </select>
            </div>
            <div class="col-sm-3" ng-class="{'has-error':newEquipBannerForm.position.$invalid && submitted}">

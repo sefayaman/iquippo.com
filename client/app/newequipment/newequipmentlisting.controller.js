@@ -447,7 +447,7 @@ angular.module('sreizaoApp').controller('NewEquipmentListCtrl', NewEquipmentList
       filter['sort'] = {featured:-1};
       $scope.searching = true;
 
-     productSvc.getProductOnFilter(filter)
+     productSvc.getProductOnFilter({productCondition:'new'})
       .then(function(result){
           $scope.searching = false;
           if(result.length > 0){

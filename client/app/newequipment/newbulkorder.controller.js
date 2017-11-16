@@ -1,117 +1,163 @@
 (function() {
   'use strict';
-  angular.module('sreizaoApp').controller('NewEquipmentCtrl', NewEquipmentCtrl);
+  angular.module('sreizaoApp').controller('NewBulkorderCtrl', NewBulkorderCtrl);
 
-  function NewEquipmentCtrl($scope, NewEquipmentSvc, categorySvc, brandSvc, Modal, $location ) {
-    var vm = this;
-    //var filter = {};
-    $scope.newEquipBrand = [];
-   
-    vm.fireCommand = fireCommand;
-    //pagination variables
-        var prevPage = 0;
-        vm.itemsPerPage = 50;
-        vm.currentPage = 1;
-        vm.totalItems = 0;
-        vm.totalMItems = 0;
-        vm.maxSize = 6;
-        var first_id = null;
-        var last_id = null;
-        $scope.resetPagination = resetPagination;
+  function NewBulkorderCtrl($scope, categorySvc, brandSvc, modelSvc, LocationSvc, Modal, $location ) {
+        var vm = this;
+        //var filter = {};
+        $scope.newEquipBrand = [];
+        $scope.onStateChange = onStateChange;
+        $scope.onCategoryChange = onCategoryChange;
+        $scope.onBrandChange = onBrandChange;
+        $scope.quantity = 1;
+        $scope.incrementQty = incrementQty;
+        $scope.decrementQty = decrementQty;
+        $scope.getQuoteSubmit = getQuoteSubmit;
+        vm.fieldInfo = [{}];
+        vm.fireCommand = fireCommand;
+        var bulkorder = null;
+        //pagination variables
 
-         function resetPagination() {
-            prevPage = 0;
-            vm.currentPage = 1;
-            vm.totalItems = 0;
-            vm.totalMItems = 0;
-            first_id = null;
-            last_id = null;
-            $scope.productTechTotalItems = 0;
+        function productInit() {
+            bulkorder = $scope.bulkorder = {};
+            bulkorder.category = {};
+            bulkorder.brand = {};
+            bulkorder.model = {};
         }
-    function init() {
-        getAllBrands();
-        getAllCategory();
-        getNewEquipment();
+    
+        productInit();
+        function init() {
+            
+            categorySvc.getCategoryOnFilter({isForNew:true})
+                .then(function (result) {
+                    $scope.allCategory = result;
+                });
+            brandSvc.getBrandOnFilter({isForNew:true})
+            .then(function(result) {
+              $scope.brandList = result;
+            });
 
-    }
-    //console.log($scope.newEquipBrand,'------');
-    init();
+            modelSvc.getModelOnFilter({isForNew:true})
+            .then(function(result) {
+              $scope.modelList = result;
+            });
+
+            LocationSvc.getAllState().
+            then(function(result) {
+              $scope.stateList = result;
+            });
+            
+            
+            $scope.bulkorder.selectedCategoryId = $scope.bulkorder.category._id;
+            $scope.bulkorder.selectedBrandId = $scope.bulkorder.brand._id;
+            $scope.bulkorder.selectedModelId = $scope.bulkorder.model._id;
+            $scope.onCategoryChange($scope.bulkorder.category._id, true);
+            $scope.onBrandChange($scope.bulkorder.brand._id, true);
+            
+        }
+                
+        init();
         
-    /*Get All brands by filter*/
-    function getAllBrands(){
-        var filter = {};
-        filter['isForNew'] = true; //For New Equipment
-        //filter['limit'] = 5;
-        brandSvc.getBrandOnFilter(filter)
-          .then(function(result){
-            $scope.allBrand = result;
-            $scope.filteredBrand = result;
-            vm.bCurrentPage = 1;
-            vm.bSearch = "";
-            vm.bTotalItems = result.length;
-            vm.bLimit = 6;
-            vm.bImgLimit = 3;
-//            $scope.newEquipBrand = getNewEquipmentBrand(result);
-//            console.log($scope.newEquipBrand);
-        });
-    };
-
-    /**/
-    
-    function fireCommand(reset, filterObj, requestFor) {
-        var filter = {};
-        if (vm.searchStr)
-            filter['searchStr'] = vm.searchStr;
-       
-        switch (requestFor) {
-             case "leadmaster":
-                getLeadMaster(filter);
-                break;
+        function onStateChange(noReset) {
+          $scope.locationList = [];
+          if (!noReset)
+            bulkorder.city = "";
+          if (!$scope.bulkorder.state)
+            return;
+          LocationSvc.getAllLocation().
+          then(function(result) {
+            $scope.locationList = result.filter(function(item) {
+                return item.state.name == $scope.bulkorder.state;
+              });
+          });
         }
-    }
+        
+        
+        function onCategoryChange(categoryId, noChange) {
+            if (!noChange) {
+              bulkorder.brand = {};
+              bulkorder.model = {};
+              if (categoryId) {
+                var ct = categorySvc.getCategoryOnId(categoryId);
+                bulkorder.category._id = ct._id;
+                bulkorder.category.name = ct.name;
+              } else {
+                bulkorder.category = {};
+              }
 
-    /*Get all categories by filter*/
-    function getAllCategory(){
-        var filter = {};
-        filter['isForNew'] = true;
-        //filter['limit'] = 4;
-        categorySvc.getCategoryOnFilter(filter)
-        .then(function(result){
-            $scope.allCategory = result;
-            $scope.filteredCategory = result;
-            vm.cSearch = "";
-            vm.cCurrentPage = 1;
-            vm.cTotalItems = result.length;
-            vm.cLimit = 6;
-        });
+              $scope.bulkorder.selectedBrandId = "";
+              $scope.bulkorder.selectedModelId = "";
+            }
 
-    }
-    
-    function getNewEquipment(){
-       var filter = {};
-        filter['isForNew'] = true; //For New Equipment
-        //filter['limit'] = 5;
-        brandSvc.getBrandOnFilter(filter)
-          .then(function(result){
-            $scope.allNewEquipment = result;
-            getNewEquipmentBrand(result);
-        }); 
-    }
-    
-    $scope.goBulkOrders = function() {
-        $location.url('/new/bulkorder');
-    };
-    
-    function getNewEquipmentBrand(res){
-       
-        for (var i = 0; i <= res.length; i++)  {
-            //console.log(res[i],'--------');
-            if (typeof res.position !== 'undefined' && res.position ) {
-                $scope.newBrand = res[i];
+            $scope.brandList = [];
+            $scope.modelList = [];
+            //$scope.product.technicalInfo = {};
+            if (!categoryId)
+              return;
+            var otherBrand = null;
+            brandSvc.getBrandOnFilter({categoryId:categoryId,isForNew:true})
+              .then(function(result) {
+                $scope.brandList = result;
+                });
+        }
+
+        function onBrandChange(brandId, noChange) {
+            if (!noChange) {
+                bulkorder.model = {};
+
+                if (brandId) {
+                    var brd = [];
+                    brd = $scope.brandList.filter(function (item) {
+                        return item._id == brandId;
+                    });
+                    if (brd.length == 0)
+                        return;
+                    bulkorder.brand._id = brd[0]._id;
+                    bulkorder.brand.name = brd[0].name;
+                } else {
+                    bulkorder.brand = {};
+                }
+                $scope.bulkorder.selectedModelId = "";
+            }
+
+            $scope.modelList = [];
+            if (!brandId)
+                return;
+            var otherModel = null;
+            
+            modelSvc.getModelOnFilter({brandId:brandId,isForNew:true})
+                .then(function (result) {
+                    $scope.modelList = result;
+                });
+
+        }
+        
+        function incrementQty(){
+            $scope.quantity++;
+        }
+        function decrementQty(){
+            if($scope.quantity<=1){
+                Modal.alert("Quantity Can't be less then 1");
+                return ;
+            }
+            $scope.quantity--;
+        }
+        
+        function getQuoteSubmit(res, req){
+            console.log('form submit');
+        }
+        
+        function fireCommand(reset, filterObj, requestFor) {
+            var filter = {};
+            if (vm.searchStr)
+                filter['searchStr'] = vm.searchStr;
+
+            switch (requestFor) {
+                case "leadmaster":
+                    getLeadMaster(filter);
+                    break;
             }
         }
-        return $scope.newBrand;
-    }
 
-} 
+  } 
 })();
