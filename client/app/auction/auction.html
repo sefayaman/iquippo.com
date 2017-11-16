@@ -21,14 +21,19 @@
     <div class="row">
       <div class="col-sm-6 col-md-6 form-group" ng-repeat="auction in auctionDateVm.auctionListing" ng-if="auction.auctionValue == 'ongoingAuctions'">
         <div class="media all-auctions">
-          <a class="pull-left" href="javascript:void(0)" ng-if="auction.total_products === 0">
+          <!-- <a class="pull-left" href="javascript:void(0)" ng-if="auction.total_products === 0">
             <img class="media-object" ng-if="auction.primaryImg" src="{{uploadImagePrefix}}{{auctionmasterDir}}/{{auction.primaryImg}}" alt="Image">
             <img src="/assets/images/ongoing.jpg" ng-if="!auction.primaryImg">
           </a>
           <a class="pull-left" href="/assetinauction/{{auction._id}}" ng-if="auction.total_products !== 0">
             <img class="media-object" ng-if="auction.primaryImg" src="{{uploadImagePrefix}}{{auctionmasterDir}}/{{auction.primaryImg}}" alt="Image">
             <img src="/assets/images/ongoing.jpg" ng-if="!auction.primaryImg">
-          </a>
+          </a> -->
+          <div class="calendar-date upcoming-calendar pull-left">
+            <small>{{auction.startDate | date :'EEEE'}}</small>
+            <h4>{{auction.startDate | date :'dd'}}</h4>
+            <small>{{auction.startDate | date :'MMMM'}}</small>
+          </div>
           <div class="media-body">
             <div class="row">
               <div class="col-sm-9 form-group">
@@ -39,8 +44,11 @@
                 <i class="fa fa-circle"></i><strong class="text-danger">Now</strong>
               </div>
             </div>
-            <p><i class="fa fa-gavel"></i> <strong ng-if="auction.auctionType === 'online'">Online</strong>
-            <strong ng-if="auction.auctionType === 'live'">Live Auction</strong></p>
+            <p ng-if="auction.auctionType === 'online' || auction.auctionType === 'live'">
+              <i class="fa fa-gavel"></i> 
+              <strong ng-if="auction.auctionType === 'online'">Online</strong>
+              <strong ng-if="auction.auctionType === 'live'">Live Auction</strong>
+            </p>
             <p><i class="fa fa-clock-o"></i> <strong class="text-success"><timer end-time="auction.endTimer">{{days}} days, {{hours}} hours, {{minutes}} minutes, {{seconds}} seconds.</timer></strong></p>
             <p><a href="{{uploadImagePrefix}}{{auctionDir}}/{{auction.docName}}" ng-if="auction.docType == 'tc'"><i class="fa fa-file-text-o"></i> <strong class="text-info">Download Catalog</strong></a></p>
             
@@ -50,12 +58,10 @@
                   <a href="javascript:void(0);" class="btn btn-default btn-block" ng-click="auctionDateVm.openBidModal(auction)">Register</a>
                 </div>
                 <div class="col-sm-6">
-                  <div class="col-sm-6">
-                <a href="/assetinauction/{{auction._id}}"  class="btn btn-primary btn-block" ng-disabled="auction.total_products === 0">View Assets</a>
+                  <a href="/assetinauction/{{auction._id}}"  class="btn btn-primary btn-block" ng-disabled="auction.total_products === 0">View Assets</a>
                 </div>
               </div>
             </div>
-          </div>
         </div>
       </div>
       
