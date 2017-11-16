@@ -2,7 +2,7 @@
 'use strict';
 angular.module('product').controller('ProductListingCtrl',ProductListingCtrl);
 
-function ProductListingCtrl($scope, $location, $rootScope, $http, productSvc, classifiedSvc, Modal, DTOptionsBuilder, $uibModal, $state, Auth, notificationSvc,uploadSvc,$timeout,$stateParams) {
+function ProductListingCtrl($scope, $location, $rootScope, $http, productSvc, AuctionSvc, classifiedSvc, Modal, DTOptionsBuilder, $uibModal, $state, Auth, notificationSvc,uploadSvc,$timeout,$stateParams) {
   var vm  = this;
 
   //pagination variables
@@ -33,7 +33,6 @@ function ProductListingCtrl($scope, $location, $rootScope, $http, productSvc, cl
   var selectedIds = [];
   vm.searchstr = "";
   vm.coulmnSearchStr = "";
-
   //$scope.productSearchFilter = {};
   
   vm.featured = false;
@@ -64,21 +63,51 @@ function ProductListingCtrl($scope, $location, $rootScope, $http, productSvc, cl
       dataToSend["tradeValue"] = tradeType;
     restoreState();
     fireCommand(false);
-
   }
 
-  function sendReqToCreateAsset(data) {
-    $rootScope.loading = true;
-    /*if(($scope.product.tradeType === 'SELL' || $scope.product.tradeType === 'BOTH') && $scope.product.auctionListing) {
-      sendAssetInfoToAuction();
-      $scope.product.assetMapData = {};
-      $scope.product.assetMapData = $scope.setAssetMapData;
-    } else {
-      $scope.product.assetMapData = {};
+  function sendReqToCreateAsset(proData) {
+    if (proData.auctionListing && proData.auction && proData.auction._id && (proData.tradeType === 'SELL' || proData.tradeType === 'BOTH')) {
+      var serData = {};
+      serData._id = proData.auction._id;
+      AuctionSvc.getOnFilter(serData)
+        .then(function(result) {
+          if (result.length > 0) {
+            reSendAssetInfoToAuction(proData, result[0]);
+          } else {
+            return;
+          }
+        });
     }
-    if (!product.auctionListing)
-      product.auction = {};*/
-    PaymentSvc.sendReqToCreateUser(data)
+  }
+  
+  function reSendAssetInfoToAuction(product, auctionReq) {
+    var dataObj = {};
+    dataObj.images = [];
+    dataObj._id = product._id;
+    dataObj.assetId = product.assetId;
+    dataObj.assetDesc = product.name;
+    dataObj.auction_id = auctionReq.dbAuctionId;
+    dataObj.auctionId = auctionReq.auctionId;
+    dataObj.lot_id = auctionReq.lot_id;
+    dataObj.assetDir = product.assetDir;
+    dataObj.primaryImg = $rootScope.uploadImagePrefix + product.assetDir + "/" + product.primaryImg;
+    //dataObj.static_increment = $scope.lot.static_increment;
+    product.images.forEach(function(x) {
+      dataObj.images[dataObj.images.length] = $rootScope.uploadImagePrefix + product.assetDir + "/" + x.src;
+    })
+    
+    dataObj.seller = {};
+    dataObj.seller._id = product.seller._id;
+    dataObj.seller.fname = product.seller.fname;
+    dataObj.seller.lname = product.seller.lname;
+    dataObj.seller.role = product.seller.role;
+    dataObj.seller.customerId = product.seller.customerId;
+    dataObj.seller.mobile = product.seller.mobile;
+    dataObj.seller.email = product.seller.email;
+    dataObj.assetReqId = auctionReq._id;
+
+    $rootScope.loading = true;
+    productSvc.sendReqToCreateAsset(dataObj)
       .then(function(res) {
           if (res.errorCode == 0) {
             fireCommand(true);
@@ -91,8 +120,8 @@ function ProductListingCtrl($scope, $location, $rootScope, $http, productSvc, cl
           Modal.alert(err.data);
         $rootScope.loading = false;
       });
-  }
-  
+    }
+
   function loadProducts(filter){
     if(vm.currentPage == prevPage)
       return;
@@ -260,7 +289,7 @@ function ProductListingCtrl($scope, $location, $rootScope, $http, productSvc, cl
         Modal.alert("Product deleted successfully", true);
         data['to'] = supportMail;
         data['subject'] = 'Product Deleted';
-        result.data.serverPath = serverPath;
+        //result.data.serverPath = serverPath;
         notificationSvc.sendNotification('productDeletedEmailToAdmin', data, result.data,'email');
       });
   }

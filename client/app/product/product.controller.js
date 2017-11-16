@@ -1113,6 +1113,12 @@
         });
       }*/
 
+      getAuctions();
+
+      $scope.auctionReq.valuationReport = checkValuationReport();
+    }
+
+    function getAuctions() {
       filter = {};
       filter['yetToStartDate'] = new Date();
 
@@ -1120,9 +1126,7 @@
         .then(function(aucts) {
           $scope.auctions = aucts;
         });
-
-      $scope.auctionReq.valuationReport = checkValuationReport();
-    }
+    }    
 
     function checkValuationReport() {
       var fileName = "";
@@ -1337,7 +1341,10 @@
       $scope.auctionReq.product.assetDir = productObj.assetDir;
       $scope.auctionReq.product.primaryImg = productObj.primaryImg;
       $scope.auctionReq.product.city = productObj.city;
-      $scope.auctionReq.reqSubmitStatus = ReqSubmitStatuses[0];
+      if(productObj.reqSubmitStatus === ReqSubmitStatuses[0])
+        $scope.auctionReq.reqSubmitStatus = ReqSubmitStatuses[0];
+      else
+        $scope.auctionReq.reqSubmitStatus = ReqSubmitStatuses[1];
       /*$scope.product.images.forEach(function(x) {
         $scope.setAssetMapData.images[$scope.setAssetMapData.images.length] = $rootScope.uploadImagePrefix + $scope.product.assetId + "/" + x.src;
       })*/
@@ -1701,10 +1708,9 @@
       productSvc.addProduct(product).then(function(proResult) {
 
           //Start NJ : uploadProductSubmit object push in GTM dataLayer
-          if(proResult.errorCode === 1) {
-            Modal.alert(proResult.message); 
-            return;
-          }
+          if(proResult.errorCode === 1)
+            Modal.alert(proResult.message);
+
           var result = {};
           angular.copy(proResult.product, result);
           dataLayer.push(gaMasterObject.uploadProductSubmit);
@@ -1885,10 +1891,9 @@
         product.auction = {};
       productSvc.updateProduct(product).then(function(proResult) {
 
-        if(proResult.errorCode === 1) {
+        if(proResult.errorCode === 1)
           Modal.alert(proResult.message); 
-          return;
-        }
+        
         var result = {};
         angular.copy(proResult.product, result);
         $rootScope.loading = false;

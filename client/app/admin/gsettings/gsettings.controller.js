@@ -4,7 +4,7 @@
     angular.module('admin').controller('GSettingCtrl', GSettingCtrl);
 
     //Controller function
-    function GSettingCtrl($scope, $rootScope, Auth, PagerSvc, DTOptionsBuilder, LocationSvc, notificationSvc, SubCategorySvc, Modal, settingSvc, PaymentMasterSvc, vendorSvc, uploadSvc, AuctionMasterSvc, categorySvc, brandSvc, modelSvc, ManufacturerSvc, BannerSvc, AuctionSvc, ProductTechInfoSvc, FinanceMasterSvc, LeadMasterSvc, $window,LotSvc) {
+    function GSettingCtrl($scope, $rootScope, Auth, PagerSvc, productSvc, DTOptionsBuilder, LocationSvc, notificationSvc, SubCategorySvc, Modal, settingSvc, PaymentMasterSvc, vendorSvc, uploadSvc, AuctionMasterSvc, categorySvc, brandSvc, modelSvc, ManufacturerSvc, BannerSvc, AuctionSvc, ProductTechInfoSvc, FinanceMasterSvc, LeadMasterSvc, $window,LotSvc) {
         $scope.dtOptions = DTOptionsBuilder.newOptions().withOption('order', []);
         var vm = this;
         vm.tabValue = 'loc';
@@ -1734,9 +1734,51 @@
             });
         }
 
-        function reSendReqToCreateAsset(lotData) {
+        function reSendReqToCreateAsset(reqData) {
+            if(!reqData.external) {
+                var filter = {};
+                filter._id = reqData.product._id;
+                filter.deleted = false;
+                productSvc.getProductOnFilter(filter).then(function(response) {
+                  if (response && response.length < 1) {
+                    return;
+                  }
+                var product ={};
+                angular.copy(response[0], product);
+                var dataObj = {};
+                dataObj.images = [];
+                dataObj._id = product._id;
+                dataObj.assetId = product.assetId;
+                dataObj.assetDesc = product.name;
+                dataObj.auction_id = reqData.dbAuctionId;
+                dataObj.auctionId = reqData.auctionId;
+                dataObj.lot_id = reqData.lot_id;
+                dataObj.assetDir = product.assetDir;
+                dataObj.primaryImg = $rootScope.uploadImagePrefix + product.assetDir + "/" + product.primaryImg;
+                product.images.forEach(function(x) {
+                  dataObj.images[dataObj.images.length] = $rootScope.uploadImagePrefix + product.assetDir + "/" + x.src;
+                })
+                
+                dataObj.seller = {};
+                dataObj.seller._id = product.seller._id;
+                dataObj.seller.fname = product.seller.fname;
+                dataObj.seller.lname = product.seller.lname;
+                dataObj.seller.role = product.seller.role;
+                dataObj.seller.customerId = product.seller.customerId;
+                dataObj.seller.mobile = product.seller.mobile;
+                dataObj.seller.email = product.seller.email;
+                dataObj.assetReqId = reqData._id;
+                dataObj.external = reqData.external;
+                createDataAndSend(dataObj);
+                });  
+            } else {
+                createDataAndSend(reqData);
+            }
+        }
+
+        function createDataAndSend(reqData){
             $rootScope.loading = true;
-            AuctionSvc.reSendReqToCreateAsset(lotData)
+            AuctionSvc.reSendReqToCreateAsset(reqData)
               .then(function(res) {
                   if (res.errorCode == 0) {
                     fireCommand('true', null, "auctionrequest");
@@ -1749,7 +1791,7 @@
                   Modal.alert(err.data);
                 $rootScope.loading = false;
               });
-          }
+        }
 
         function addTechnicalInfoClicked() {
             $scope.isEdit = false;

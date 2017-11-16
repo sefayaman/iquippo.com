@@ -327,7 +327,39 @@ exports.create = function(req, res, next) {
   }
 
   exports.reSendReqToCreateAsset=function(req,res){
-    postRequestAsset(req, res);
+    if(!req.body.external) {
+      var options = {};
+      options.dataToSend ={};
+      var auctionReqId = req.body.assetReqId;
+      var productId = req.body._id;
+      if(req.body.assetReqId)
+        delete req.body.assetReqId;
+      if(req.body._id)
+        delete req.body._id;
+      if(req.body.external)
+        delete req.body.external;
+      options.dataToSend = req.body;
+      options.dataToSend._id = productId;
+      options.dataType = "assetData";
+
+      Utility.sendCompiledData(options, function(err, result) {
+        if (err || (result && result.err)) {
+          //options.dataToSend.reqSubmitStatus = ReqSubmitStatuses[1];
+          Product.findOneAndUpdate({_id: productId}, {$set: {"reqSubmitStatus":ReqSubmitStatuses[1]}}).exec();
+          AuctionRequest.findOneAndUpdate({_id: auctionReqId}, {$set: {"reqSubmitStatus":ReqSubmitStatuses[1]}}).exec();
+          return res.status(201).json({errorCode: 1,message: "Unable to post asset request. Please contact support team."});
+        }
+        if(result){
+          //options.dataToSend.reqSubmitStatus = ReqSubmitStatuses[0];
+          //options.dataToSend.status = true;
+          //update(options.dataToSend);
+          Product.findOneAndUpdate({_id: productId}, {$set: {"reqSubmitStatus":ReqSubmitStatuses[0]}}).exec();
+          AuctionRequest.findOneAndUpdate({_id: auctionReqId}, {$set: {"reqSubmitStatus":ReqSubmitStatuses[0]}}).exec();
+          return res.status(201).json({errorCode: 0,message: "Asset request submitted successfully"});
+        }
+      });
+    } else
+      postRequestAsset(req, res);
   };
 
 function validateData(data) {
@@ -1389,8 +1421,6 @@ exports.getFilterOnAuctionMaster = function(req, res) {
     filter['$or'] = arr;
 
   var result = {};
-  console.log("filter###", filter);
-  console.log("req.body.statusType###", req.body.statusType);
   if (req.body.pagination && !req.body.statusType) {
     return Utility.paginatedResult(req, res, AuctionMaster, filter, {}, function(results) {
       if (req.body.addAuctionType) {
