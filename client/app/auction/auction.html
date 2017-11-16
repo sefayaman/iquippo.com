@@ -43,12 +43,15 @@
             <strong ng-if="auction.auctionType === 'live'">Live Auction</strong></p>
             <p><i class="fa fa-clock-o"></i> <strong class="text-success"><timer end-time="auction.endTimer">{{days}} days, {{hours}} hours, {{minutes}} minutes, {{seconds}} seconds.</timer></strong></p>
             <p><a href="{{uploadImagePrefix}}{{auctionDir}}/{{auction.docName}}" ng-if="auction.docType == 'tc'"><i class="fa fa-file-text-o"></i> <strong class="text-info">Download Catalog</strong></a></p>
-            <div class="row">
-              <div class="col-sm-6">
-                <a href="javascript:void(0);" class="btn btn-default btn-block" ng-click="auctionDateVm.openBidModal(auction)">Register</a>
-              </div>
-              <div class="col-sm-6">
-                <a href="/assetinauction?auctionId={{auction.auctionId}}&auctionType={{auction.auctionValue}}&auctionName={{auction.name}}&docName={{auction.docName}}&docType={{auction.docType}}"  class="btn btn-primary btn-block" ng-disabled="auction.total_products === 0">View Assets</a>
+            
+            <div class="auctions-register-buttons">
+              <div class="row">
+                <div class="col-sm-6">
+                  <a href="javascript:void(0);" class="btn btn-default btn-block" ng-click="auctionDateVm.openBidModal(auction)">Register</a>
+                </div>
+                <div class="col-sm-6">
+                  <a href="/assetinauction?auctionId={{auction.auctionId}}&auctionType={{auction.auctionValue}}&auctionName={{auction.name}}&docName={{auction.docName}}&docType={{auction.docType}}"  class="btn btn-primary btn-block" ng-disabled="auction.total_products === 0">View Assets</a>
+                </div>
               </div>
             </div>
           </div>
@@ -87,12 +90,15 @@
             <strong ng-if="auction.auctionType === 'live'">Live Auction</strong></p>
             <p><i class="fa fa-clock-o"></i> <strong>{{auction.startTimer | date :'hh:mma'}} to {{auction.endTimer | date :'hh:mma'}}</strong></p>
             <p><a href="{{uploadImagePrefix}}{{auctionDir}}/{{auction.docName}}" ng-if="auction.docType == 'tc'"><i class="fa fa-file-text-o"></i> <strong class="text-info">Download Catalog</strong></a></p>
-            <div class="row">
-              <div class="col-sm-6">
-                <a href="javascript:void(0);" class="btn btn-default btn-block" ng-click="auctionDateVm.openBidModal(auction)">Register</a>
-              </div>
-              <div class="col-sm-6">
-                <a href="/assetinauction?auctionId={{auction.auctionId}}&auctionType={{auction.auctionValue}}&auctionName={{auction.name}}&docName={{auction.docName}}&docType={{auction.docType}}" class="btn btn-primary btn-block" ng-disabled="auction.total_products === 0">View Assets</a>
+            
+            <div class="auctions-register-buttons">
+              <div class="row">
+                <div class="col-sm-6">
+                  <a href="javascript:void(0);" class="btn btn-default btn-block" ng-click="auctionDateVm.openBidModal(auction)">Register</a>
+                </div>
+                <div class="col-sm-6">
+                  <a href="/assetinauction?auctionId={{auction.auctionId}}&auctionType={{auction.auctionValue}}&auctionName={{auction.name}}&docName={{auction.docName}}&docType={{auction.docType}}" class="btn btn-primary btn-block" ng-disabled="auction.total_products === 0">View Assets</a>
+                </div>
               </div>
             </div>
           </div>

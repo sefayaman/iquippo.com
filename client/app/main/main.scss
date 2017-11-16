@@ -1016,6 +1016,7 @@ body{font-family: Lato-Regular ,sans-serif;}
 }
 .upcoming-auction .media .media-body{
   padding: 8px;
+  min-height: 100px;
 }
 .upcoming-auction .media .media-body .media-heading{font-weight: bold; font-size: 16px;}
 .upcoming-auction .media .calendar-date{
@@ -1029,13 +1030,16 @@ body{font-family: Lato-Regular ,sans-serif;}
   border-radius:3px 0 0 3px;
 }
 .upcoming-auction .media a{display: block; padding: 10px;}
+.upcoming-auction .media.all-auctions{position: relative;}
+.upcoming-auction .media.all-auctions .auctions-register-buttons{position: absolute; bottom: 10px; width: 62%;}
+.btn-primary[disabled]{background: #ccc; color: #333;}
 .upcoming-auction .media.all-auctions a{display: inline-block; padding: 0;}
 .upcoming-auction .media.all-auctions a.pull-left{display: block; padding: 0;}
 .upcoming-auction .media.all-auctions a.pull-left img{width: 170px; height: 215px;}
 .upcoming-auction .media.all-auctions i{margin-right:8px; font-size: 1.2em;}
 .upcoming-auction .media.all-auctions .btn{border-radius: 4px; border-color: #ddd; padding: 15px; font-size: 12px; font-weight: bold; letter-spacing: 1px; box-shadow: 0 0 3px #eee; text-transform: uppercase;}
 .upcoming-auction .media a img{height: 200px; max-width: 100%;}
-.upcoming-auction .media .category-block .btn{padding: .6em 3em; border-radius: 3px; font-size: 1.2em;}
+.upcoming-auction .media .btn{padding: .6em 3em; border-radius: 4px; font-size: 1.2em;}
 .upcoming-auction .media .calendar-date h4{margin: 0; font-size: 3em;}
 .category-block{padding: 3em 0;}
 .heading-titles{margin: 2.5em auto;}
@@ -1043,7 +1047,7 @@ body{font-family: Lato-Regular ,sans-serif;}
 .how-works .heading-titles h4{color: #fff;}
 .heading-titles span{display: inline-block;}
 .heading-titles span:first-letter{text-transform: lowercase;}
-.heading-titles a{margin: 0.5em 1em;}
+.heading-titles a{margin: 0.5em 1em;  text-transform: uppercase; font-size: 12px; font-weight: bold; letter-spacing: 1px}
 .heading-titles .active{color: #666;}
 .cat-rectangle{
   height: 246px; margin: 0 auto; display: block;
@@ -1074,7 +1078,6 @@ align-items: center; justify-content: center;
 }
 #search-result_wrapper .media{background-color:#fff;}
 #search-result_wrapper .media .media-body{padding:10px ;}
-#search-result_wrapper .media .media-body h4{font-size: 18px;}
 #search-result_wrapper .media .media-body h3{font-size: 20px;}
 #search-result_wrapper .media a img.img-responsive{height: 200px; width: 100%;}
 #search-result_wrapper .media .table{margin: 0;}
@@ -1149,6 +1152,8 @@ align-items: center; justify-content: center;
   border-radius: 10px;
   padding: 7px;
   margin-top: 3em;
+  min-height: 400px;
+  height: 400px;
 }
 .industy-rectangle{
   -ms-background: -ms-linear-gradient(top, #e6bdcb 0%, #b6c9e3 100%);
@@ -1270,9 +1275,12 @@ footer .subscribe{height: 40px;}
 .medianame ul li a{color: #999;}
 .medianame ul li:last-child{border-right: 0;}
 .breadcrumb{border-radius:0;margin-bottom:0; margin-top: 3em; background: transparent;}
-.breadcrumb li a{text-decoration: none; color:#333;}
-.breadcrumb li a.active{color:#666; cursor: text; }
-.bulk-order{ background-color: rgba(0,0,0,0.54); color: #fff;}
+.breadcrumb li a{text-decoration: none; color:#333; font-weight: bold; font-size: 13px;}
+.breadcrumb li a.active{color:#666; cursor: text; font-weight: bold;}
+.bulk-order{ background-image: url('../assets/images/bulk-back.png'); background-repeat: no-repeat; background-size: cover; color: #fff; padding: 4em 0;}
+.bulk-order h3{font-size: 34px; letter-spacing: 2px; font-weight: bold;}
+.bulk-order p{font-size: 20px;}
+.bulk-order .btn{border-radius: 4px; font-size: 1em; letter-spacing: 2px; text-transform: uppercase; padding: 0.9em 2em; margin-top: 2.5em;}
 
 /*stylish radio and checkbox*/
 .checkbox {
@@ -1466,7 +1474,7 @@ footer .subscribe{height: 40px;}
 .category-block .nav-tabs > li > a{text-transform: uppercase; color: #999;}
 .brand-name{display: flex; align-items: center; justify-content: center; min-height: 130px;}
 .registration-forms{display: flex; align-items: center; min-height: 130px;}
-.brand-name img{max-width: 100%;}
+.brand-name img{max-width: 100%; max-height: 130px;}
 .modal-title{text-transform: uppercase; font-size: 16px; font-weight: bold;}
 .download-brochure a{color: #666; display: block; width: 100px; text-align: center; font-size: 12px; font-weight: bold;}
 .download-brochure a img{display: block; padding: 1.5em 1em; margin: auto; border: 1px solid #ccc; margin-bottom: 5px;}
@@ -1476,8 +1484,7 @@ footer .subscribe{height: 40px;}
 @media (max-width:640px){
 
 .navbar-toggle{float: left;margin-left: 0px; top: 5px; left: 0.5em;}
-.navbar-toggle .icon-bar {background-color: #666;}
-.navbar-toggle .icon-bar{width: 18px;}
+.navbar-toggle .icon-bar {background-color: #666; width: 18px;}
 .navbar-collapse{position: absolute; width: 100%; max-height: 410px; z-index: 99; background: #fff; top: 50px; left: -999px; box-shadow: 2px 2px 15px #666;}
 .navbar-collapse.in{left: -1px;}
 .navbar.navbar-client{min-height: 100px; background-position: center;}

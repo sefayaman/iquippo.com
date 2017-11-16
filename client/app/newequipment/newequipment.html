@@ -11,7 +11,7 @@
   <div class="container padd-left padd-right">
     <div class="heading-titles text-center">
       <h4>[ NEW EQUIPMENTS ]</h4>
-      <p>Choose from a complete range of Jcb®, TataMotors® &amp; Cat® equipments, power systems, work tools and technology solutions.</p>
+      <strong>Choose from a complete range of Jcb®, TataMotors® &amp; Cat® equipments, power systems, work tools and technology solutions.</strong>
     </div>
 <!--    <div ng-controller="NewEquipmentCtrl as newEquipmentVm">
       <ul class="new-equipment-brand">
@@ -61,7 +61,7 @@
 
 <!-- Browse Category -->
 <section class="category-block" ng-controller="NewEquipmentCtrl as newEquipmentVm">
-  <div class="container-fluid text-center">
+  <div class="container text-center">
     <div class="heading-titles">
       <h4>[ Browse By Category ]</h4>
       <a href="/new/allcategories">View All ({{newEquipmentVm.cTotalItems}})</a>
@@ -73,7 +73,7 @@
             <img src="{{uploadImagePrefix}}{{categoryDir}}/{{category.imgSrc}}" class="category-item">
           </a>
         </div>
-        <h5 class="category-name">{{category.name}}</h5>
+        <h5 class="category-name">{{category.name}} ({{category.count}})</h5>
       </div>
       
     </div>
