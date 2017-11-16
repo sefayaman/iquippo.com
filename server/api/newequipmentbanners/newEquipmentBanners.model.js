@@ -8,6 +8,7 @@ var NewEquipmentBannerSchema = new Schema({
     name:String
   },
   position:String,
+  order:String,
   promotion:{
       data:{type:Schema.Types.ObjectId,ref:'Promotion'},
       name:String

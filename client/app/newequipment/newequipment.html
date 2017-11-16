@@ -13,15 +13,17 @@
       <h4>[ NEW EQUIPMENTS ]</h4>
       <strong>Choose from a complete range of Jcb®, TataMotors® &amp; Cat® equipments, power systems, work tools and technology solutions.</strong>
     </div>
-<!--    <div ng-controller="NewEquipmentCtrl as newEquipmentVm">
+    <div ng-controller="NewEquipmentCtrl as newEquipmentVm">
       <ul class="new-equipment-brand">
-        <li ng-repeat="newBrand in allBrand | limitTo:newEquipmentVm.bImgLimit">
-          <a href="new/viewproducts?brand={{newBrand.name}}" title="">
+        <li ng-repeat="newBrand in allBanner | orderBy:'order' | limitTo:newEquipmentVm.bnrLimit">
+<!--          <a href="new/viewproducts?brand={{newBrand.name}}" title="">
             <img src="{{uploadImagePrefix}}{{categoryDir}}/{{newBrand.imgSrc}}" alt="">
-          </a>
+          </a>-->
+            <img src="{{uploadImagePrefix}}{{bannerDir}}/{{newBrand.newEquipBannerImg
+}}" alt="{{newBrand.position}}">
         </li>
       </ul>
-    </div>-->
+    </div>
   </div>
 </section>
 

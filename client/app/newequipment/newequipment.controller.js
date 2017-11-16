@@ -2,7 +2,7 @@
   'use strict';
   angular.module('sreizaoApp').controller('NewEquipmentCtrl', NewEquipmentCtrl);
 
-  function NewEquipmentCtrl($scope, NewEquipmentSvc, categorySvc, brandSvc, Modal, $location ) {
+  function NewEquipmentCtrl($scope, NewEquipmentSvc, NewEquipmentBannersSvc, categorySvc, brandSvc, Modal, $location ) {
     var vm = this;
     //var filter = {};
     $scope.newEquipBrand = [];
@@ -32,6 +32,7 @@
         getAllBrands();
         getAllCategory();
         getNewEquipment();
+        getAllBanners();
 
     }
     //console.log($scope.newEquipBrand,'------');
@@ -51,11 +52,19 @@
             vm.bTotalItems = result.length;
             vm.bLimit = 3;
             vm.bImgLimit = 3;
-//            $scope.newEquipBrand = getNewEquipmentBrand(result);
-//            console.log($scope.newEquipBrand);
         });
     };
-
+    
+    function getAllBanners(){
+        //var filter = {};
+        vm.bannerFilter = [];
+        vm.bnrCount = {};
+        NewEquipmentBannersSvc.get({status : true })
+            .then(function(result){
+            $scope.allBanner = result; 
+            vm.bnrLimit = 3;
+        });
+    }
     /**/
     
     function fireCommand(reset, filterObj, requestFor) {

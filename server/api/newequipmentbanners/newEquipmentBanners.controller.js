@@ -9,7 +9,8 @@ var Utility = require('./../../components/utility.js');
 exports.get = function(req, res) {
   var queryParam = req.query;
   var filter = {};
-  
+  if(queryParam.status)
+      filter['status'] = true;
   if (queryParam.searchStr) {
        filter['$text'] = {
         '$search': "\""+queryParam.searchStr+"\""
@@ -102,6 +103,18 @@ exports.delete = function(req, res) {
     });
   });
 };
+
+exports.check = function(req, res) {
+    var queryParam = req.query;
+    var position = queryParam.position;
+    var query = NewEquipmentBannerMaster.find({"position":position});
+    query.exec(function(err, result) {
+      if (err) {
+        return handleError(res, err);
+      }
+      return res.status(200).json(result);
+    });
+}
 
 function handleError(res, err) {
   return res.status(500).send(err);

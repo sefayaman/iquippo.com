@@ -11,6 +11,7 @@ angular.module('admin').factory("NewEquipmentBannersSvc",NewEquipmentBannersSvc)
     svc.update = update;
     svc.destroy = destroy;
     svc.search = search;
+    svc.check = check;
      
    function get(filter){
       var path = svcPath; 
@@ -30,6 +31,22 @@ angular.module('admin').factory("NewEquipmentBannersSvc",NewEquipmentBannersSvc)
 
      function search(filter){
        return $http.post(svcPath+'/search',filter)
+          .then(function(res){
+            return res.data;
+          })
+          .catch(function(err){
+            throw err;
+          });
+     }
+     
+     function check(filter){
+      var path = svcPath; 
+      var queryParam = "";
+        if(filter)
+          queryParam = $httpParamSerializer(filter);
+        if(queryParam)
+          path  = path + "/check/?" + queryParam;
+       return $http.get(path)
           .then(function(res){
             return res.data;
           })

@@ -69,50 +69,74 @@ function NewEquipmentBannersCtrl($scope, $state, vendorSvc, brandSvc, Modal, New
             $scope.submitted = true;
             return;
         }
-        
-        if (!vm.newEquipBannerImg) {
-            Modal.alert("Please upload image for Banner.", true);
-            return;
-        }
-        if(vm.dataModel.brand.data){
-            for(var k in  vm.brandList) {
-              if(vm.brandList[k]._id == vm.dataModel.brand.data)
-              vm.dataModel.brand.name = vm.brandList[k].name;
+       var filter = {};
+       filter['position']= vm.dataModel.position;
+        NewEquipmentBannersSvc.check(filter)
+        .then(function(result){
+            if(result.length != 0){
+                Modal.alert('This position is already exist. Chose "None" to reset position !');
             }
-        }
-        if(vm.dataModel.position.data){
-          vm.dataModel.position = vm.dataModel.position.data;
-        }
-//        if(vm.dataModel.promotion.data){
-//          vm.dataModel.promotion = vm.dataModel.promotion.data;
-//        }
-        if(vm.dataModel.promotion.data){
-            for(var k in  vm.promoList) {
-              if(vm.promoList[k]._id == vm.dataModel.promotion.data)
-                vm.dataModel.promotion.name = vm.promoList[k].certificate;
+            else{
+                                 
+                if (!vm.newEquipBannerImg) {
+                    Modal.alert("Please upload image for Banner.", true);
+                    return;
+                }
+                if (vm.dataModel.brand.data) {
+                    for (var k in  vm.brandList) {
+                        if (vm.brandList[k]._id == vm.dataModel.brand.data)
+                            vm.dataModel.brand.name = vm.brandList[k].name;
+                    }
+                }
+                if (vm.dataModel.position.data) {
+                    vm.dataModel.position = vm.dataModel.position.data;
+                }
+                if (vm.dataModel.promotion.data) {
+                    for (var k in  vm.promoList) {
+                        if (vm.promoList[k]._id == vm.dataModel.promotion.data)
+                            vm.dataModel.promotion.name = vm.promoList[k].certificate;
+                    }
+                }
+                if (vm.newEquipBannerImg) {
+                    vm.dataModel.newEquipBannerImg = vm.newEquipBannerImg;
+                }
+                var i = 0;
+                
+                if(vm.dataModel.position==='none'){
+                    vm.dataModel.status = false;
+                    vm.dataModel.order = false;
+                }
+                
+                if(vm.dataModel.position==='left'){
+                     vm.dataModel.order = 1;
+                 }
+                 if(vm.dataModel.position==='topRight'){
+                     vm.dataModel.order = 2;
+                 }
+                 if(vm.dataModel.position==='bottomRight'){
+                     vm.dataModel.order = 3;
+                 }
+                else{
+                    vm.dataModel.status = true;
+                }
+                
+                NewEquipmentBannersSvc.save(vm.dataModel)
+                        .then(function () {
+                            vm.dataModel = {};
+                            resetValue();
+                            fireCommand(true);
+                            Modal.alert('Data saved successfully!');
+                        })
+                        .catch(function (err) {
+                            if (err.data)
+                                Modal.alert(err.data);
+                        });
             }
-        }
-        if(vm.newEquipBannerImg){
-            vm.dataModel.newEquipBannerImg = vm.newEquipBannerImg;
-        }
-        var i=0;
-         
-        vm.dataModel.status = true;
-        NewEquipmentBannersSvc.save(vm.dataModel)
-        .then(function(){
-            vm.dataModel = {};
-            resetValue();
-            fireCommand(true);
-            Modal.alert('Data saved successfully!');
-        })
-        .catch(function(err){
-           if(err.data)
-                Modal.alert(err.data); 
         });
+        
     }
 
     function editClicked(rowData){
-        console.log('rrrrrrr',rowData);
         vm.dataModel = {};
         vm.dataModel = angular.copy(rowData);
         var i=0;
@@ -124,6 +148,19 @@ function NewEquipmentBannersCtrl($scope, $state, vendorSvc, brandSvc, Modal, New
         if(form.$invalid){
             $scope.submitted = true;
             return;
+        }
+        if(vm.dataModel.position==='none'){
+            vm.dataModel.status = false;
+            vm.dataModel.order = false;
+        }
+        if(vm.dataModel.position==='left'){
+            vm.dataModel.order = 1;
+        }
+        if(vm.dataModel.position==='topRight'){
+            vm.dataModel.order = 2;
+        }
+        if(vm.dataModel.position==='bottomRight'){
+            vm.dataModel.order = 3;
         }
         NewEquipmentBannersSvc.update(vm.dataModel)
         .then(function(){
