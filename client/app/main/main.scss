@@ -987,6 +987,7 @@ body{font-family: Lato-Regular ,sans-serif;}
 #view-container{min-height:400px;margin-bottom:15px; margin-top: 5em;}
 #view-container .banner .carousel-indicators{top:50%;}
 .search-banner{position: absolute;top:65%;z-index: 99; color: #fff;}
+.search-banner.search-banner-modal{position: inherit;top:auto;z-index: 99; color: #333;}
 .search-banner p{text-shadow: 1px 2px 3px #666;}
 .search-banner .input-group{width: 100%;}
 .search-banner .input-group .form-control{height: 50px; border-color: #eee; border-radius: 4px;}
@@ -1003,6 +1004,7 @@ body{font-family: Lato-Regular ,sans-serif;}
     right: 2.5em;
     top: 1.4em; text-decoration: none; text-shadow: none; color: #00429A;}
 .search-banner .btn.btn-default{text-transform: uppercase; font-size: 1em; padding:10px 25px; color: #00429A; margin-top: 25px; border-radius: 3px; box-shadow: 0px 2px 3px #ccc; font-weight: bold; word-spacing: 1px;}
+.search-banner.search-banner-modal .btn.btn-default{text-transform: uppercase; font-size: 0.8em; padding:10px; color: #00429A; margin-top: 25px; border-radius: 3px; box-shadow: 0px 2px 3px #ccc; font-weight: bold; word-spacing: 1px;}
 
 .or-devided{padding: 15px; color: #fff;}
 
@@ -1503,7 +1505,7 @@ footer .subscribe{height: 40px;}
 .navbar.navbar-client{min-height: 100px; background-position: center;}
 .navbar-brand{width: 50%; padding: 8px 10px; position: absolute;  top: 0; left: 0; z-index: 100; margin: auto; right: 0; text-align: center;}
 .navbar-brand img{width: 70px;}
-.search-toggle-right{position: absolute; right: 0.5em; z-index: 9999; padding: 1em; font-size: 18px; top: 0;}
+.search-toggle-right{position: absolute; right: 0.5em; z-index: 1039; padding: 1em; font-size: 18px; top: 0;}
 .search-toggle-right a{color: #666;}
 #view-container{margin-top: 3.8em;}
 #view-container .banner{min-height: 100px;}

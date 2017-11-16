@@ -1,3 +1,6 @@
+<div class="search-toggle-right visible-xs">
+  <a href="javascript:void(0);" ng-click="mainVm.openSearchModal()">  <i class="fa fa-search"></i>  </a>
+</div>
 <section class="banner">
   <div id="slides_control">
     <uib-carousel interval="mainVm.myInterval" no-wrap="noWrapSlides">
@@ -18,36 +21,36 @@
 
       <p class="text-center">I'M LOOKING FOR:</p>
 
-      <div class="row" ng-if="mainVm.singleBox">
+      <div class="row" ng-if="singleBox">
         <div class="col-sm-offset-3 col-sm-6">          
           <div class="input-group">
-            <input type="text" placeholder="Search for Assets and More" ng-model="mainVm.searchstr" class="form-control"/>
-            <a href="javascript:void(0);" class="input-group-addon" ng-click="mainVm.toggleSearchBox(false)">Choose</a>
+            <input type="text" placeholder="Search for Assets and More" ng-model="filter.searchstr" class="form-control"/>
+            <a href="javascript:void(0);" class="input-group-addon" ng-click="toggleSearchBox(false)">Choose</a>
           </div>
         </div>
       </div>
 
       <!-- Tab panes -->
-      <div class="row" ng-if="!mainVm.singleBox">
+      <div class="row" ng-if="!singleBox">
         <div class="col-sm-offset-2 col-sm-8">
           <div class="filter">
             <div class="row">
               <div class="col-sm-1 padd-left padd-right select-text">
                 <div class="form-control text-center back-tohome">
-                  <a href="javascript:void(0);" ng-click="mainVm.toggleSearchBox(true)"><i class="fa fa-angle-left fa-2x"></i></a>
+                  <a href="javascript:void(0);" ng-click="toggleSearchBox(true)"><i class="fa fa-angle-left fa-2x"></i></a>
                 </div>
               </div>
               <div class="col-sm-3 padd-left padd-right select-text">
-                <input type="text" placeholder="Industry Name" ng-model="mainVm.groupSearchText" class="form-control" uib-typeahead="address for address in getGroupHelp($viewValue)" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
+                <input type="text" placeholder="Industry Name" ng-model="filter.groupSearchText" class="form-control" uib-typeahead="address for address in getGroupHelp($viewValue)" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
               </div>
               <div class="col-sm-3 padd-left padd-right select-text">
-                <input type="text" ng-model="mainVm.categorySearchText" placeholder="Category" uib-typeahead="address for address in getCategoryHelp($viewValue)"  class="form-control" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
+                <input type="text" ng-model="filter.categorySearchText" placeholder="Category" uib-typeahead="address for address in getCategoryHelp($viewValue)"  class="form-control" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
               </div>
               <div class="col-sm-2 padd-left padd-right select-text">
-                <input type="text" class="form-control" placeholder="Brand" ng-model="mainVm.brandSearchText" class="form-control" uib-typeahead="address for address in getBrandHelp($viewValue)" typeahead-wait-ms="200"/>
+                <input type="text" class="form-control" placeholder="Brand" ng-model="filter.brandSearchText" class="form-control" uib-typeahead="address for address in getBrandHelp($viewValue)" typeahead-wait-ms="200"/>
               </div>
               <div class="col-sm-3 padd-left padd-right select-text">
-                <input type="text" class="form-control" ng-model="mainVm.locationSearchText" placeholder="Seller Location" uib-typeahead="address for address in getLocationHelp($viewValue)"  class="form-control" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
+                <input type="text" class="form-control" ng-model="filter.locationSearchText" placeholder="Seller Location" uib-typeahead="address for address in getLocationHelp($viewValue)"  class="form-control" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
               </div> 
               
             </div>
@@ -56,8 +59,8 @@
       </div>
     </div>
     <div class="col-sm-offset-3 col-sm-6 text-center">
-      <button type="button" class="btn btn-default" data-ng-click="mainVm.doSearch(true)">New Equipment</button>
-      <button type="button" class="btn btn-default" data-ng-click="mainVm.doSearch(false)">Used Equipment</button>
+      <button type="button" class="btn btn-default" data-ng-click="doSearch(true)">New Equipment</button>
+      <button type="button" class="btn btn-default" data-ng-click="doSearch(false)">Used Equipment</button>
     </div>
 
   </div>
@@ -328,50 +331,59 @@
 
 <script type="text/ng-template" id="search.html">
   <div>
-    <div class="modal-header">
-    <button type="button" class="close"  data-ng-click="close()" aria-hidden="true"><i class="fa fa-times"></i></button>
-    </div>
     <div class="modal-body text-center">
        <div class="category-block">
-         <div class="search-tabs filter">
-            <div class="row" ng-if="mainVm.singleBox">
-              <div class="col-sm-offset-3 col-sm-6">          
-                <div class="input-group">
-                  <input type="text" placeholder="Search for Assets and More" ng-model="mainVm.searchstr" class="form-control"  ng-keypress="mainVm.myFunct($event)" />
-                  <a href="javascript:void(0);" class="input-group-addon" ng-click="mainVm.toggleSearchBox(false)">Choose</a>
-                </div>
-              </div>
-            </div>
+         <div class="col-xs-12 col-sm-offset-1 col-sm-10 search-banner search-banner-modal">        
+    <div class="search-tabs">
 
-            <!-- Tab panes -->
-            <div class="row" ng-if="!mainVm.singleBox">
-              <div class="col-sm-offset-2 col-sm-8">
-                <div class="filter">
-                  <div class="row">
-                    <div class="col-xs-6 col-sm-3 form-group select-text">
-                      <input type="text" placeholder="Industry Name" ng-model="mainVm.groupSearchText" class="form-control" uib-typeahead="address for address in getGroupHelp($viewValue,'isForUsed')" typeahead-focus-first = "false" typeahead-wait-ms="200" ng-keypress="mainVm.myFunct($event)"/>
-                    </div>
-                    <div class="col-xs-6 col-sm-3 form-group select-text">
-                      <input type="text" ng-model="mainVm.categorySearchText" placeholder="Category" uib-typeahead="address for address in getCategoryHelp($viewValue,'isForUsed')"  class="form-control"  ng-keypress="mainVm.myFunct($event)" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
-                    </div>
-                    <div class="col-xs-6 col-sm-3 form-group select-text">
-                      <input type="text" class="form-control" ng-model="mainVm.locationSearchText" placeholder="Seller Location" uib-typeahead="address for address in getLocationHelp($viewValue)"  class="form-control" ng-keypress="mainVm.myFunct($event)" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
-                    </div> 
-                    <div class="col-xs-6 col-sm-3 form-group select-text">
-                      <input type="text" class="form-control" placeholder="Brand" ng-model="mainVm.brandSearchText" class="form-control" uib-typeahead="address for address in getBrandHelp($viewValue,'isForUsed')" typeahead-wait-ms="200" ng-keypress="mainVm.myFunct($event)"/>
-                    </div>
-                  </div>
-                </div>
+      <p class="text-center">I'M LOOKING FOR:</p>
+
+      <div class="row" ng-if="singleBox">
+        <div class="col-sm-offset-3 col-sm-6">          
+          <div class="input-group">
+            <input type="text" placeholder="Search for Assets and More" ng-model="filter.searchstr" class="form-control"/>
+            <a href="javascript:void(0);" class="input-group-addon" ng-click="toggleSearchBox(false)">Choose</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab panes -->
+      <div class="row" ng-if="!singleBox">
+        <div class="col-sm-offset-2 col-sm-8">
+          <div class="filter">
+            <div class="row">
+              <div class="col-sm-3 padd-left padd-right select-text">
+                <input type="text" placeholder="Industry Name" ng-model="filter.groupSearchText" class="form-control" uib-typeahead="address for address in getGroupHelp($viewValue)" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
               </div>
+              <div class="col-sm-3 padd-left padd-right select-text">
+                <input type="text" ng-model="filter.categorySearchText" placeholder="Category" uib-typeahead="address for address in getCategoryHelp($viewValue)"  class="form-control" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
+              </div>
+              <div class="col-sm-2 padd-left padd-right select-text">
+                <input type="text" class="form-control" placeholder="Brand" ng-model="filter.brandSearchText" class="form-control" uib-typeahead="address for address in getBrandHelp($viewValue)" typeahead-wait-ms="200"/>
+              </div>
+              <div class="col-sm-3 padd-left padd-right select-text">
+                <input type="text" class="form-control" ng-model="filter.locationSearchText" placeholder="Seller Location" uib-typeahead="address for address in getLocationHelp($viewValue)"  class="form-control" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
+              </div> 
+              
             </div>
           </div>
-          <div class="text-center">
-            <button type="button" class="btn btn-primary" data-ng-click="mainVm.doSearch()">Search</button>
-          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-6 text-center">
+        <button type="button" class="btn btn-default" data-ng-click="doSearch(true)">New Equipment</button>
+      </div>
+      <div class="col-xs-6 text-center">
+        <button type="button" class="btn btn-default" data-ng-click="doSearch(false)">Used Equipment</button>
+      </div>
+    </div>
+
+  </div>
        </div>
     </div>
      <div class="modal-footer">
-            <button type="button" class="btn btn-danger" data-ng-click="close()">Close</button>
+            <button type="button" class="btn btn-danger" ng-click="close()">Close</button>
       </div>
   </div>
 </script>

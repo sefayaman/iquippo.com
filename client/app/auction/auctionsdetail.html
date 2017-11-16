@@ -56,31 +56,36 @@
             Asset Id  <i class="pull-right fa" ng-class="{'fa-minus': Infostatus.open, 'fa-plus': !Infostatus.open}"></i>
           </uib-accordion-heading>
           <input type="text" class="form-control form-group" placeholder="Asset Id"  ng-model="equipmentSearchFilter.assetId" class="form-control" ng-change="auctionDetailsVm.fireCommand()">
-        </uib-accordion-group>
-        <uib-accordion-group is-open="mfy.open">
-          <uib-accordion-heading>
-            Manufacturing Year <i class="pull-right fa" ng-class="{'fa-minus': mfy.open, 'fa-plus': !mfy.open}"></i>
-          </uib-accordion-heading>
-          <div class="row">
-            <div class="col-xs-6 col-sm-6 col-md-6">
-              <div class="input-group">
-                <input type="text" class="form-control" ng-value="mfgyr.min" ng-model="mfgyr.min" uib-datepicker-popup="{{format}}" datepicker-options="{{datepickerOptions}}" is-open="datepickers.min" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" placeholder="Min" ng-keypress="$event.preventDefault()" disabled ng-change="auctionDetailsVm.productSearchOnMfg()"/>
-            <a href class="input-group-addon" ng-click="open($event,'min')">
-              <i class="fa fa-calendar-o"></i>
-            </a>
+        </uib-accordion-group>        
+      </uib-accordion>
+      <div class="panel panel-default" class="information">
+          <div class="panel-heading">
+            <h4 class="panel-titel">Manufacturing Year</h4>
+          </div>
+          <div class="panel-body">
+            <div class="row">
+              <div class="col-xs-6 col-sm-6 col-md-6">
+                <!-- <div class="input-group">
+                  <input type="text" class="form-control" ng-value="mfgyr.min" ng-model="mfgyr.min" uib-datepicker-popup="{{format}}" datepicker-options="{{datepickerOptions}}" is-open="datepickers.min" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" placeholder="Min" ng-keypress="$event.preventDefault()" disabled ng-change="auctionDetailsVm.productSearchOnMfg()"/>
+              <a href class="input-group-addon" ng-click="open($event,'min')">
+                <i class="fa fa-calendar-o"></i>
+              </a>
+                </div> -->
+                <year-only-picker ng-model="auctionDetailsVm.equipmentSearchFilter.mfgYearMin" myid="min" placeholder="Min" onChange="auctionDetailsVm.fireCommand()">
+                  
+                </year-only-picker>
               </div>
-            </div>
-            <div class="col-xs-6 col-sm-6 col-md-6">
-              <div class="input-group">
-                <input type="text" class="form-control" ng-value="mfgyr.max" ng-model="mfgyr.max" uib-datepicker-popup="{{format}}" datepicker-options="{{datepickerOptions}}" is-open="datepickers.max" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" placeholder="Max" ng-keypress="$event.preventDefault()" disabled  ng-change="auctionDetailsVm.productSearchOnMfg()"/>
-                <a href class="input-group-addon" ng-click="open($event,'max')">
-                  <i class="fa fa-calendar-o"></i>
-                </a>
+              <div class="col-xs-6 col-sm-6 col-md-6">
+                <div class="input-group">
+                  <input type="text" class="form-control" ng-value="mfgyr.max" ng-model="mfgyr.max" uib-datepicker-popup="{{format}}" datepicker-options="{{datepickerOptions}}" is-open="datepickers.max" ng-required="true" close-text="Close" placeholder="Max" ng-keypress="$event.preventDefault()" disabled  ng-change="auctionDetailsVm.productSearchOnMfg()"/>
+                  <a href class="input-group-addon" ng-click="open($event,'max')">
+                    <i class="fa fa-calendar-o"></i>
+                  </a>
+                </div>
               </div>
             </div>
           </div>
-        </uib-accordion-group>
-      </uib-accordion>
+        </div>
     </div>
     <div class="col-sm-9">
       <div class="row">

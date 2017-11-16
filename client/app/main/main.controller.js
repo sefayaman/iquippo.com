@@ -14,12 +14,18 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
     $scope.toggle1=true;
     $scope.toggle2=true;
     $scope.toggle3=true;
+    $scope.searchstr = "";
+    $scope.filter = {};
+    //$scope.categorySearchText = "";
+    //$scope.locationSearchText = "";
+    //$scope.groupSearchText = "";
+    //$scope.brandSearchText = "";
 
     vm.newBrand = true;
     vm.newCategory = true;
     vm.newGroup = true;
 
-    vm.singleBox = true;
+    $scope.singleBox = true;
 
     $scope.toggling=function(val){
       if(val=="vid1")
@@ -30,14 +36,15 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
       $scope.toggle3=false;
     }
     
-    vm.doSearch = doSearch;
-    vm.myFunct = myFunct;
+    $scope.doSearch = doSearch;
+    $scope.myFunct = myFunct;
     vm.openBidModal = openBidModal;
     vm.openPrintMedia = openPrintMedia;
-    vm.toggleSearchBox = toggleSearchBox;
+    $scope.toggleSearchBox = toggleSearchBox;
     vm.getBrandCount = getBrandCount;
     vm.getCategoryCount = getCategoryCount;
     vm.toggleTab = toggleTab;
+    vm.openSearchModal = openSearchModal;
 
     var usedFilter = {
       isForUsed : true,
@@ -66,7 +73,7 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
     }
 
     function toggleSearchBox(showSingleBox){
-      vm.singleBox = showSingleBox;
+      $scope.singleBox = showSingleBox;
     }
 
     function openPrintMedia(imageName) {
@@ -79,6 +86,17 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
 
       prMediaScope.close = function(){
         printMediaModal.close();
+      }
+    }
+
+    function openSearchModal(imageName) {
+      var searchModal = $uibModal.open({
+          templateUrl: "search.html",
+          scope: $scope
+      });
+
+      $scope.close = function(){
+        searchModal.close();
       }
     }
 
@@ -282,22 +300,22 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
 
     function doSearch(isNew){
 
-      if(!vm.searchstr && !vm.categorySearchText && !vm.locationSearchText && !vm.groupSearchText && !vm.brandSearchText){
+      if(!$scope.filter.searchstr && !$scope.filter.categorySearchText && !$scope.filter.locationSearchText && !$scope.filter.groupSearchText && !$scope.filter.brandSearchText){
         return;
       }
       var filter = {};
-      if(vm.categorySearchText)
-        filter['category'] = vm.categorySearchText.trim();
-      if(vm.groupSearchText)
-        filter['group'] = vm.groupSearchText.trim();
-      if(vm.brandSearchText)
-        filter['brand'] = vm.brandSearchText.trim();
-      /*if(vm.radioModel)
-        filter['type'] = vm.radioModel;
-      */if(vm.locationSearchText)
-        filter['location'] = vm.locationSearchText.trim();
-      if(vm.searchstr)
-        filter['searchstr'] = vm.searchstr.trim();
+      if($scope.filter.categorySearchText)
+        filter['category'] = $scope.filter.categorySearchText.trim();
+      if($scope.filter.groupSearchText)
+        filter['group'] = $scope.filter.groupSearchText.trim();
+      if($scope.filter.brandSearchText)
+        filter['brand'] = $scope.filter.brandSearchText.trim();
+      /*if($scope.radioModel)
+        filter['type'] = $scope.radioModel;
+      */if($scope.filter.locationSearchText)
+        filter['location'] = $scope.filter.locationSearchText.trim();
+      if($scope.filter.searchstr)
+        filter['searchstr'] = $scope.filter.searchstr.trim();
 
       //productSvc.setFilter(filter);
       if(!isNew)

@@ -17,15 +17,17 @@
     <div class="row">      
       <div class="col-sm-6 col-md-4 form-group" ng-repeat="group in groupListingVm.groupList">
         <div class="media text-center">
-        <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{group.imgSrc}}" ng-if="group.imgSrc" width="400" height="250">
-          <img src="http://placehold.it/400x250" width="100%" ng-if="!group.imgSrc">                        
-          <div class="media-body text-left"> 
+        <a href="/used/{{group.name}}">
+          <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{group.imgSrc}}" ng-if="group.imgSrc" width="400" height="250">
+          <img src="http://placehold.it/400x250" width="100%" ng-if="!group.imgSrc"> 
+          </a>                       
+          <div class="media-body"> 
             <h4>{{group.name}}</h4>                      
             <p>
               {{group.description}} 
             </p>                     
           </div> 
-          <div class="category-block text-center">
+          <div class="text-center">
             <a  href="/used/{{group.name}}" class="btn btn-primary">Explore</a>
           </div>         
         </div>
