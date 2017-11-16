@@ -84,6 +84,7 @@
         var filter = {};
         filter['isForNew'] = true;
         //filter['limit'] = 4;
+        filter['productCount'] = true;
         categorySvc.getCategoryOnFilter(filter)
         .then(function(result){
             $scope.allCategory = result;
