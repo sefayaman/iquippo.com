@@ -303,7 +303,7 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
       if(!isNew)
         $state.go('viewproduct',filter);
       else
-        Modal.alert("go to new equipment serach");
+        $state.go('newequipmentproduct',filter);
     }
 
     function getAuctionCount(){

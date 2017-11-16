@@ -152,27 +152,6 @@ angular.module('sreizaoApp')
         }
     };
 })
-/*.directive('onFileSelect', function ($parse) {
-    return {
-         restrict: 'A',
-         scope:{
-          //params:"="
-         },
-        link: function (scope, el, attrs) {
-            var onChangeHandler = scope.$parent.$eval(attrs.onFileSelect);
-            var params = scope.$parent.$eval(attrs.params);
-            el.bind('change', function (event) {
-                var files = event.target.files;
-                if(!files || !files.length || !onChangeHandler)
-                  return;
-                if(!params)
-                  params = [];
-                params[0] = files;
-                onChangeHandler.apply(scope.$parent,params);                              
-            });
-        }
-    };
-})*/
 .directive('file', function() {
     return {
         require:"ngModel",
@@ -234,33 +213,6 @@ angular.module('sreizaoApp')
         }
     };
     })
-.directive('withFloatingLabel', function () {
-  return {
-    restrict: 'A',
-    scope:{},
-    link: function ($scope, $element, attrs) {
-      var template = '<div class="floating-label">' + attrs.placeholder +'</div>';
-      
-      //append floating label template
-      $element.after(template);
-      
-      //remove placeholder  
-      $element.removeAttr('placeholder');
-      
-      //hide label tag assotiated with given input
-      document.querySelector('label[for="' +  attrs.id +  '"]').style.display = 'none';
-     
-      $scope.$watch(function () {
-        if($element.val().toString().length < 1) {
-          $element.addClass('empty');
-        } else {
-          $element.removeClass('empty');
-        }
-      });
-    }
-  };
-})
-
 .filter('titleCase', function() {
   return function(input) {
     input = input || '';

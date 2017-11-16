@@ -3,37 +3,21 @@
 
   angular.module('sreizaoApp').controller('AssetInAuctionCtrl', AssetInAuctionCtrl);
 
-  function AssetInAuctionCtrl($scope, $state,$stateParams, $rootScope, $window, categorySvc, Auth, Modal, brandSvc, LocationSvc, modelSvc,groupSvc, userRegForAuctionSvc, productSvc, AuctionSvc, $location) {
+  function AssetInAuctionCtrl($scope, $state,$stateParams, $rootScope, $window, categorySvc, Auth, Modal, brandSvc, LocationSvc, modelSvc,groupSvc, userRegForAuctionSvc, productSvc, AuctionSvc, $location,PagerSvc) {
     var vm = this;
-    var dbAuctionId = $stateParams.id;
-    //var query = $location.search();
-    //$scope.auctionName=$location.search().auctionName;
-    /*$scope.auctionType=$location.search().auctionType;
-    $scope.auctionTypeValue=$location.search().auctionTypeValue;
-    var filter = {};
-    $scope.equipmentSearchFilter={};
-    $scope.mfgyr = {};
-    vm.fireCommand = fireCommand;
-    vm.productSearchOnMfg=productSearchOnMfg;
-    vm.auctionDetailListing = [];
-    vm.backButton = backButton;
-    vm.auctionName=$location.search().auctionName;
-    vm.auctionOwner=$location.search().auctionOwner;
-    vm.auctionOwnerMobile=$location.search().auctionOwnerMobile;
-    vm.auctionCity=$location.search().auctionCity;
-    $scope.auctionValue=$location.search().auctionType;
-    vm.auctionOwner=$location.search().auctionOwner;
-    vm.auctionOwnerMobile=$location.search().auctionOwnerMobile;
-    vm.auctionCity=$location.search().auctionCity;
-    vm.auctionTypeValue=$location.search().auctionTypeValue;
-    vm.termAuction=$location.search().termAuction;*/
-    //$scope.openUrl = openUrl;
-
-    //registering category brand functions
+    var dbAuctionId = $stateParams.dbAuctionId;
+    $scope.equipmentSearchFilter = {};
+    $scope.pager = PagerSvc.getPager(null,1,1);
+    vm.onGroupChange = onGroupChange;
     vm.onCategoryChange= onCategoryChange;
     vm.onBrandChange= onBrandChange;
     vm.openBidModal = openBidModal;
-    //vm.getAuctionById = getAuctionById;
+    vm.onPageChange = onPageChange;
+    vm.fireCommand = fireCommand;
+    vm.productSearchOnMfg = productSearchOnMfg;
+
+    var allCategory = [];
+    var allBrand = [];
 
     $scope.auctionData = null;
     function init(){
@@ -44,20 +28,16 @@
       AuctionSvc.getAuctionDateData(filter)
         .then(function(result) {
           $rootScope.loading = false;
-          if(!result || !result.length)
+          if(result && result.items && result.items.length)
+            $scope.auctionData = result.items[0];
+          else
             return backButton();
-          auctionData = result[0];
         })
         .catch(function(res){
           $rootScope.loading = false;
-          backButton();
+          return backButton();
         });
 
-
-     /* categorySvc.getAllCategory()
-      .then(function(result){
-        $scope.allCategory = result;
-      });*/
       groupSvc.getAllGroup({isForUsed:true})
       .then(function(result){
         $scope.allGroup = result;
@@ -78,23 +58,52 @@
         if($stateParams.category)
             onCategoryChange($stateParams.category,true); 
       });
-      //$scope.auctionId=query.auctionId;
-      //filter.auctionId = query.auctionId;
-      //getAuctionById();
-      //filter.status = "request_approved";
-      getAssetsInAuction({dbAuctionId:dbAuctionId,status:"request_approved"});
+      restoreState();
+      fireCommand(false,true);
     }
+
+     function onGroupChange(group,noAction){
+        if(!noAction){
+          $scope.equipmentSearchFilter.category = "";
+          $scope.equipmentSearchFilter.brand = "";
+          $scope.brandList = [];
+        }
+
+        $scope.categoryList = allCategory.filter(function(item){
+          return item.group.name === group && item.isForUsed;
+        });
+
+        if(!noAction)
+          fireCommand();
+      }
+
+      function onCategoryChange(category,noAction){
+        if(!noAction){
+          $scope.equipmentSearchFilter.brand = "";
+        }
+        $scope.brandList = allBrand.filter(function(item){
+          return item.category.name === category && item.isForUsed;
+        });
+        if(!noAction)
+          fireCommand();
+      }
+
+      function onBrandChange(brand,noAction){
+        
+        if(!brand) {
+          fireCommand();
+          return;
+        }
+       var filter = {};
+       filter['brandName'] = brand;
+        if(!noAction)
+          fireCommand();
+      }
 
     // bid summary
     function openBidModal(){
       Auth.isLoggedInAsync(function(loggedIn) {
         if (loggedIn) {
-         // filter = {};
-          //filter._id = $location.search().id;
-          //AuctionSvc.getAuctionDateData(filter)
-            //.then(function(result) {
-              //if(!result)
-                //return;
               var dataObj = {};
               dataObj.auction = {};
               dataObj.user = {};
@@ -111,11 +120,10 @@
               if(Auth.getCurrentUser().email)
                 dataObj.user.email = Auth.getCurrentUser().email;
               save(dataObj);
-           // });
         } else {
           var regUserAuctionScope = $rootScope.$new();
-          regUserAuctionScope._id = query.id;
-          //regUserAuctionScope.emdAmount = query.emdAmount;
+          regUserAuctionScope._id = dbAuctionId;
+          regUserAuctionScope.emdAmount = $scope.auctionData.emdAmount;
           Modal.openDialog('auctionRegistration', regUserAuctionScope);
         }
       });
@@ -138,149 +146,47 @@
       $window.open('/productdetail/' + _id, '_blank');
     }
 
-    /*function init() {
-
-    }*/
-
-    /*function getAuctionById() {
-      var filter = {};
-       filter._id  = $location.search().id;
-      AuctionSvc.getAuctionDateData(filter)
-      .then(function(res){
-        
-        $scope.auctionId = res.items[0].auctionId;
-        $scope.auctionName=res.items[0].name;
-        $scope.auctionOwner= res.items[0].auctionOwner;
-        $scope.auctionTypeValue = res.items[0].auctionType;
-        $scope.auctionOwnerMobile=res.items[0].auctionOwnerMobile;
-        $scope.auctionCity = res.items[0].city;
-        $scope.termAuction = res.items[0].termAuction;
-        $scope.docName = res.items[0].docName;
-        $scope.docNameProxy = res.items[0].docNameProxy;
-        $scope.docType = res.items[0].docType;
-        $scope.contactName=res.items[0].contactName;
-        $scope.contactNumber=res.items[0].contactNumber;
-        
-    })
-    .catch(function(err){
-
-    });
-    }*/
-
     function backButton() {
       $window.history.back();
-      //$state.go("auctions?type="+ $scope.auctionType);
     }
 
-    /*function onCategoryChange(category,noAction){
-      $scope.brandList = [];
-      $scope.modelList = [];
-      if(!noAction){
-        $scope.equipmentSearchFilter.brand = "";
-        $scope.equipmentSearchFilter.model = "";
-      }
-      if(!category){
-        $scope.equipmentSearchFilter.category = "";
-        fireCommand();
-        return;
-      }
-     var filter = {};
-     filter['categoryName'] = category;
-      brandSvc.getBrandOnFilter(filter)
-      .then(function(result){
-        $scope.brandList = result;
-      });
-      if(!noAction)
-        fireCommand();
-     
-  }
 
-  function onBrandChange(brand,noAction){
-    $scope.modelList = [];
-    if(!noAction)
-        $scope.equipmentSearchFilter.model = "";
-    if(!brand) {
-      fireCommand();
-      return;
-    }
-   var filter = {};
-   filter['brandName'] = brand;
-    modelSvc.getModelOnFilter(filter)
-    .then(function(result){
-      $scope.modelList = result;
-    });
-    if(!noAction)
-        fireCommand();
-
-  }*/
-
-  function fireCommand(noReset,doNotSaveState){
+  function fireCommand(noReset,initLoad){
       if(vm.show == true)
          vm.show=false;
-    if(!$scope.mfgyr.min && !$scope.mfgyr.max)
-       delete $scope.equipmentSearchFilter.mfgYear;
-
-      /*if(!noReset)
-        vm.currentPage = 1;
-      if(!doNotSaveState){
+      if(!noReset)
+         $scope.pager.reset();
+      if(!initLoad){
         saveState(false);
-      
+      }
 
-      }*/
       var filter = {};
       angular.copy($scope.equipmentSearchFilter,filter);
-
       filter['status'] = "request_approved";
-      //filter['sort'] = {featured:-1};
       $scope.searching = true;
-
-      if($scope.equipmentSearchFilter && $scope.equipmentSearchFilter.locationName){
-        filter.location=$scope.equipmentSearchFilter.locationName;
-         delete filter.locationName;
-        }
-      filter.auctionId=$scope.auctionId;
       getAssetsInAuction(filter);
   }
 
   function getAssetsInAuction(filter){
-    var assetIds = [];
+    //var assetIds = [];
+    filter.dbAuctionId = dbAuctionId;
     AuctionSvc.getOnFilter(filter)
         .then(function(result) {
           if (result) {
-            vm.show=false;
+            vm.show = false;
             if(result.length <= 0){
-              vm.show=true;  
+              vm.show= true;  
             }
-            result.forEach(function(item) {
-              if (item.external === false && item.product.assetId)
-                assetIds[assetIds.length] = item.product.assetId;
-            });
-            var filter={};
-            if (assetIds.length > 0) {
-              filter.assetIds = assetIds;
-              productSvc.getProductOnFilter(filter)
-                .then(function(data) {
-                  data.forEach(function(item) {
-                    if (item.status === false && item.assetId) {
-                      for (var i = 0; i < result.length; i++) {
-                        if (result[i].product.assetId === item.assetId)
-                          result.splice(i, 1);
-                      }
-                    }
-                  });
-                  vm.auctionDetailListing = result;
-                  $scope.auctionValue = $location.search().auctionType;
-                });
-            } else {
-              assetIds = [];
-              vm.auctionDetailListing = result;              
-              $scope.auctionValue=$location.search().auctionType;            
-            }
+            $scope.pager.update(null,result.length,$stateParams.currentPage || 1);
+            vm.auctionDetailListing = result
           }
         });
   }
 
-  /*$scope.today = function() {
+
+//Date picker start
+
+  $scope.today = function() {
     $scope.mfgyr = new Date();
   };
   $scope.today();
@@ -290,14 +196,14 @@
   };
   $scope.clear = function () {
     $scope.mfgyr = null;
-  };*/
+  };
 
   // Disable weekend selection
-  /*$scope.disabled = function(date, mode) {
+  $scope.disabled = function(date, mode) {
     return ( mode === 'day' && ( date.getDay() === 0 || date.getDay() === 6 ) );
-  };*/
+  };
 
-  /*$scope.toggleMin = function() {
+  $scope.toggleMin = function() {
     $scope.minDate = $scope.minDate ? null : new Date();
   };
   $scope.toggleMin();
@@ -341,11 +247,11 @@
 
   $scope.status = {
     opened: false
-  };*/
+  };
 
   //date picker end
 
-  f/*unction productSearchOnMfg(){
+  function productSearchOnMfg(){
 
     if(!$scope.mfgyr.min && !$scope.mfgyr.max){
       delete $scope.equipmentSearchFilter.mfgYear;
@@ -353,18 +259,37 @@
       return;
     }
 
-    $scope.equipmentSearchFilter.mfgYear = {};
+    //$scope.equipmentSearchFilter.mfgYear = {};
     if($scope.mfgyr.min)
-      $scope.equipmentSearchFilter.mfgYear.min = $scope.mfgyr.min.getFullYear();
+      $scope.equipmentSearchFilter.mfgYearMin = $scope.mfgyr.min.getFullYear();
     else
-      delete $scope.equipmentSearchFilter.mfgYear.min;
+      delete $scope.equipmentSearchFilter.mfgYearMin;
 
     if($scope.mfgyr.max)
-      $scope.equipmentSearchFilter.mfgYear.max = $scope.mfgyr.max.getFullYear();
+      $scope.equipmentSearchFilter.mfgYearMax = $scope.mfgyr.max.getFullYear();
     else
-      delete $scope.equipmentSearchFilter.mfgYear.max;
+      delete $scope.equipmentSearchFilter.mfgYearMax;
       fireCommand();
-  }*/
+  }
+
+  function onPageChange(){
+    $window.scrollTo(0, 0);
+    saveState(true);
+  }
+
+   function saveState(retainState){
+    $scope.equipmentSearchFilter.currentPage = $scope.pager.currentPage + "";
+    //if(retainState)
+    $state.go($state.current.name,$scope.equipmentSearchFilter,{location:'replace',notify:false});
+    //else
+     // $state.go("viewproduct",$scope.equipmentSearchFilter,{location:'replace',notify:false});
+  }
+
+  function restoreState(){
+      $scope.equipmentSearchFilter = $stateParams;
+      $scope.pager.currentPage  = parseInt($stateParams.currentPage) || 1;
+      $scope.equipmentSearchFilter.currentPage = $scope.pager.currentPage + "";
+  }
 
   //Entry point
   init();
