@@ -74,11 +74,11 @@
     function getAllCategory(){
         var filter = {};
         filter['isForNew'] = true;
+        filter['productCount'] = true;
         //filter['limit'] = 4;
         categorySvc.getCategoryOnFilter(filter)
         .then(function(result){
             $scope.allCategory = result;
-            $scope.filteredCategory = result;
             vm.cSearch = "";
             vm.cCurrentPage = 1;
             vm.cTotalItems = result.length;
