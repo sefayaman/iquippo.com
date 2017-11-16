@@ -59,6 +59,8 @@ exports.getBrandOnFilter = function(req,res){
       filter['isForNew'] = true;
   if(data.visibleOnUsed)
       filter['visibleOnUsed'] = true;
+   if(data.visibleOnNew)
+    filter['visibleOnNew'] = true;
   filter['$or'] = [{name:'Other'}];
    if(data.brandId)
     tempFilter['_id'] = data.brandId;
@@ -73,8 +75,13 @@ exports.getBrandOnFilter = function(req,res){
      var term = new RegExp(data.searchStr, 'i');
       filter['name'] = { $regex: term };
   }
+   var sortObj = {name:1};
+  if(data.sortBy){
+     sortObj = {};
+     sortObj[data.sortBy] = 1;
+  }
   
-  Brand.find(filter).sort({name:1}).exec(function(err,result){
+  Brand.find(filter).sort(sortObj).exec(function(err,result){
    if(err) { return handleError(res, err); }
     return res.status(200).json(result);
 

@@ -17,7 +17,7 @@
     <div class="row">      
       <div class="col-sm-4 col-md-3 form-group" ng-repeat="brand in newbrandListingVm.brandList">
         <div class="media text-center">
-          <a href="/new/brands/{{brand.name}}?currentPage=1">             
+          <a href="/new/brands/{{brand.name}}?currentPage=1" class="brand-name">             
              <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{brand.imgSrc}}" class="img-responsive" ng-if="brand.imgSrc">  <img src="/assets/images/JCBlogo.png" class="img-responsive" ng-if="!brand.imgSrc">            
           </a>
           <h4>{{brand.name}}</h4>               

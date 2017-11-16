@@ -14,10 +14,16 @@ exports.get = function(req, res,next) {
     filter["status"] = queryData.status;
   if(queryData.groupId)
     filter['group._id'] = queryData.groupId;
+  if(queryData.group)
+    filter['group.name'] = queryData.group;
   if(queryData.isForNew)
     filter['isForNew'] = true;
   if(queryData.isForUsed)
     filter['isForUsed'] = true;
+  if(queryData.visibleOnUsed)
+    filter['visibleOnUsed'] = true;
+   if(queryData.visibleOnNew)
+    filter['visibleOnNew'] = true;
   if(queryData.searchStr){
     var term = new RegExp(queryData.searchStr, 'i');
     filter['name'] = { $regex: term };
@@ -45,10 +51,14 @@ exports.productCount = function(req,res){
         categoryIds.push(item._id + "");
     });
     filter['category._id'] = {$in:categoryIds};
+    if(req.query.isForUsed)
+      filter['productCondition'] = "used";
+    if(req.query.isForNew)
+      filter['productCondition'] = "new";
     Product.aggregate(
     { $match:filter},
     { $group: 
-      { _id: '$category._id', count: { $sum: 1 } } 
+      { _id: '$category.name', count: { $sum: 1 } } 
     },
     {$sort:{count:-1}},
     function (err, result) {
@@ -58,7 +68,7 @@ exports.productCount = function(req,res){
         cat = cat.toObject();
         resultArr.push(cat);
         result.forEach(function(item){
-          if(cat._id + "" === item._id)
+          if(cat.name + "" === item._id)
               cat.count = item.count;
         });
         if(!cat.count)
@@ -197,10 +207,6 @@ exports.createSubCategory = function(req, res) {
     
   });
 };
-/*exports.searchCategory = function(req, res) {
-  
-
-};*/
 
 function handleError(res, err) {
   return res.status(500).send(err);

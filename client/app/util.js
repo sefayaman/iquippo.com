@@ -164,9 +164,12 @@ factory("uploadSvc",['$http','$rootScope',function($http,$rootScope){
       return ret;
     }
 
-    function getCategoryHelp(categorySearchText) {
+    function getCategoryHelp(categorySearchText,isForKey) {
       var serData = {};
       serData['searchStr'] = categorySearchText;
+      if(isForKey)
+        serData[isForKey] = true;
+                
       return categorySvc.getCategoryOnFilter(serData)
       .then(function(result){
          return result.map(function(item){

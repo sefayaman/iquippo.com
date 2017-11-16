@@ -49,7 +49,7 @@
             vm.bCurrentPage = 1;
             vm.bSearch = "";
             vm.bTotalItems = result.length;
-            vm.bLimit = 6;
+            vm.bLimit = 3;
             vm.bImgLimit = 3;
 //            $scope.newEquipBrand = getNewEquipmentBrand(result);
 //            console.log($scope.newEquipBrand);

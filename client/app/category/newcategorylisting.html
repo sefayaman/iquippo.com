@@ -17,17 +17,15 @@
     <div class="row">      
       <div class="col-sm-6 col-md-4 form-group" ng-repeat="category in newcategoryListingVm.allCategoryList" ng-if="$index < newcategoryListingVm.showedItems">
         <div class="media text-center">
-          <a href="javascript:void(0);">
+          <a href="/new/{{category.group.name}}/{{category.name}}">
              <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{category.imgSrc}}" ng-if="category.imgSrc">
              <img src="/assets/images/watermark.png" ng-if="!category.imgSrc">              
           </a>          
-          <div class="media-body text-left"> 
+          <div class="media-body"> 
             <h4>{{category.name}}</h4>                      
-            <p>
-              Generally Used for Mining, Digging, Material Handling, Construction, etc…  
-            </p>                     
+                                
           </div> 
-          <div class="category-block text-center">
+          <div class="text-center">
             <a href="/new/{{category.group.name}}/{{category.name}}" class="btn btn-primary">Explore</a>
           </div>         
         </div>

@@ -23,6 +23,8 @@ var UserSchema = new Schema({
   createdBy : {},
   country: String,
   email: { type: String, lowercase: true },
+  profession:String,
+  jobProfile:String,
   panNumber:String,
   aadhaarNumber:String,
   address:String,

@@ -1,16 +1,11 @@
 (function() {
   'use strict';
   angular.module('sreizaoApp').controller('ProductCtrl', ProductCtrl);
-  angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
 
   //Product upload controller
-  function ProductCtrl($scope, $http, $rootScope, $stateParams, groupSvc, categorySvc, SubCategorySvc, LocationSvc, uploadSvc, productSvc, brandSvc, modelSvc, Auth, $uibModal, Modal, $state, notificationSvc, AppNotificationSvc, userSvc, $timeout, $sce, vendorSvc, AuctionMasterSvc, AuctionSvc, PaymentMasterSvc, ValuationSvc, ProductTechInfoSvc, AppStateSvc,VatTaxSvc) {
+  function ProductCtrl($scope, $http, $rootScope, $stateParams, groupSvc, categorySvc, SubCategorySvc, LocationSvc, uploadSvc, productSvc, brandSvc, modelSvc, Auth, $uibModal, Modal, $state, notificationSvc, AppNotificationSvc, userSvc, $timeout, $sce, vendorSvc, AuctionMasterSvc, AuctionSvc, PaymentMasterSvc, ValuationSvc, ProductTechInfoSvc, AppStateSvc,VatTaxSvc,CertificateMasterSvc) {
 
     var vm = this;
-    //Start NJ : uploadProductClick object push in GTM dataLayer
-    dataLayer.push(gaMasterObject.uploadProductClick);
-    //NJ: set upload product Start Time
-    $scope.productUploadStartTime = new Date();
     //End
     $scope.fireCommand=fireCommand;
     $scope.container = {};
@@ -145,22 +140,14 @@
           $scope.allCategory = result;
         });
 
-      /* SubCategorySvc.getAllSubCategory()
-      .then(function(result){
-        $scope.allSubCategory = result;
-      });*/
-
-      /*LocationSvc.getAllState()
-      .then(function(result){
-        $scope.stateList = result;
-
-
-      });*/
-
       if (!Auth.isAdmin() && !Auth.isChannelPartner()) {
         product.seller = Auth.getCurrentUser();
       }
 
+      CertificateMasterSvc.get()
+      .then(function(certList){
+        $scope.certificationList = certList;
+      });
 
 
       PaymentMasterSvc.getAll()
@@ -196,6 +183,7 @@
             filter.enterpriseId = Auth.getCurrentUser().enterpriseId; 
           }
         }
+        filter.productCondition = "used";
         productSvc.getProductOnFilter(filter).then(function(response) {
           if(response && response.length < 1) {
             $state.go('main');
@@ -381,8 +369,8 @@
           uploadSvc.upload(args.files[0], $scope.assetDir, resizeParam).then(function(result) {
             $rootScope.loading = false;
             $scope.assetDir = result.data.assetDir;
-            if (!$scope.product.assetId)
-              $scope.product.assetId = $scope.assetDir;
+            /*if (!$scope.product.assetId)
+              $scope.product.assetId = $scope.assetDir;*/
             if (args.id) {
               //console.log(args);
               switch (args.id) {
@@ -801,11 +789,7 @@
         Modal.alert("Seller doesn't exist!");
         return;
       }
-      /*if($scope.container.selectedSubCategory){
-         product.subcategory = {};
-         product.subcategory['_id'] = $scope.container.selectedSubCategory['_id'];
-         product.subcategory['name'] = $scope.container.selectedSubCategory['name'];
-      }*/
+
       var primarySet = "";
       product.assetDir = $scope.assetDir;
       $scope.product.images = [];
@@ -1202,6 +1186,11 @@
 
       });
 
+      $scope.certificationList.forEach(function(certObj){
+        if(certObj.name === $scope.product.certificationName)
+          $scope.product.certificationLogo = certObj.logoImg;
+      });
+
       if (!$scope.isEdit)
         addProduct(cb);
       else
@@ -1238,23 +1227,14 @@
       stObj.status = assetStatuses[0].code;
       stObj.createdAt = new Date();
       $scope.product.assetStatuses[$scope.product.assetStatuses.length] = stObj;
-      $scope.product.assetId = $scope.assetDir;
+      //$scope.product.assetId = $scope.assetDir;
 
       $rootScope.loading = true;
       productSvc.addProduct(product).then(function(result) {
-        //Start NJ : uploadProductSubmit object push in GTM dataLayer
-        dataLayer.push(gaMasterObject.uploadProductSubmit);
-        //NJ : set upload product Start time
-        var productUploadSubmitTime = new Date();
-        var timeDiff = Math.floor(((productUploadSubmitTime - $scope.productUploadStartTime) / 1000) * 1000);
-        gaMasterObject.uploadProductSubmitTime.timingValue = timeDiff;
-        ga('send', gaMasterObject.uploadProductSubmitTime);
-        //End
         $rootScope.loading = false;
         setScroll(0);
         $scope.successMessage = "Product added successfully.";
         $scope.autoSuccessMessage(20);
-        //addToHistory(result,"Create");
         if (Auth.isAdmin()) {
           if (result.status)
             AppNotificationSvc.createAppNotificationFromProduct(result);
@@ -1316,8 +1296,8 @@
         }
       }
 
-      if (!$scope.product.assetId)
-        $scope.product.assetId = $scope.assetDir;
+     /* if (!$scope.product.assetId)
+        $scope.product.assetId = $scope.assetDir;*/
       $rootScope.loading = true;
       productSvc.updateProduct(product).then(function(result) {
         $rootScope.loading = false;
@@ -1377,15 +1357,6 @@
 
     function resetClick(form) {
 
-      //Start NJ : uploadProductReset object push in GTM dataLayer
-      dataLayer.push(gaMasterObject.uploadProductReset);
-      //NJ: set upload product Reset time
-      var productUploadResetTime = new Date();
-      var timeDiff = Math.floor(((productUploadResetTime - $scope.productUploadStartTime) / 1000) * 1000);
-      gaMasterObject.uploadProductResetTime.timingValue = timeDiff;
-      ga('send', gaMasterObject.uploadProductResetTime);
-      //End
-
       productInit();
       $scope.container = {};
       $scope.brandList = [];
@@ -1415,14 +1386,6 @@
 
     // preview uploaded images
     function previewProduct() {
-      //Start NJ : uploadProductPreview object push in GTM dataLayer
-      dataLayer.push(gaMasterObject.uploadProductPreview);
-      //NJ: set upload product Preview time
-      var productUploadPreviewTime = new Date();
-      var timeDiff = Math.floor(((productUploadPreviewTime - $scope.productUploadStartTime) / 1000) * 1000);
-      gaMasterObject.uploadProductPreviewTime.timingValue = timeDiff;
-      ga('send', gaMasterObject.uploadProductPreviewTime);
-      //End
       var prevScope = $rootScope.$new();
       prevScope.images = $scope.images;
       prevScope.prefix = $rootScope.uploadImagePrefix;
@@ -1637,61 +1600,4 @@
 
 
   }
-
-  //Crop Image Controller
-  function CropImageCtrl($scope, Auth, $location, $window, $http, $uibModalInstance) {
-    $scope.imageOut = '';
-    $scope.options = {};
-    var imgParts = $scope.imgSrc.split(".");
-    var imgExt = imgParts[imgParts.length - 1];
-    $scope.options.image = $scope.prefix + $scope.imgSrc + "?timestamp=" + new Date().getTime();
-    $scope.options.viewSizeWidth = 500;
-    $scope.options.viewSizeHeight = 500;
-
-    $scope.options.viewShowRotateBtn = false;
-    $scope.options.rotateRadiansLock = false;
-
-    $scope.options.outputImageWidth = 0;
-    $scope.options.outputImageHeight = 0;
-    $scope.options.outputImageRatioFixed = false;
-    $scope.options.outputImageType = imgExt;
-    $scope.options.outputImageSelfSizeCrop = true;
-    $scope.options.viewShowCropTool = true;
-    $scope.options.inModal = true;
-    $scope.options.watermarkType = 'image';
-    $scope.options.watermarkImage = null;
-
-    $scope.cropImage = function() {
-      $scope.$broadcast('cropImage');
-    };
-
-    $scope.saveImage = function() {
-      $scope.$broadcast('cropImageSave');
-    };
-
-    $scope.saveCrop = function(data) {
-      var serData = {};
-      serData['data'] = data;
-      //serData["imgExt"] = imgExt;
-      serData['assetdir'] = $scope.assetDir;
-      serData['filename'] = $scope.imgSrc;
-      $http.post('/api/common/saveasimage', serData)
-        .then(function(res) {
-          $uibModalInstance.close("ok");
-        })
-        .catch(function(res) {
-          console.log(res);
-        })
-    };
-    $scope.closeModal = function() {
-      $uibModalInstance.close();
-    }
-    $scope.dismissModal = function() {
-      $uibModalInstance.dismiss();
-    }
-
-  }
-
-
-
 })();

@@ -9,21 +9,40 @@ angular.module('sreizaoApp')
         controller: 'MainCtrl as mainVm',
         layout:'client',
         onEnter:function($rootScope,$stateParams,Modal,Auth,$state){
-          $rootScope.choosenTitle=pagesTitles.index.title;
-          $rootScope.metaDescription=pagesTitles.index.meta;
+          $rootScope.choosenTitle= pagesTitles.index.title;
+          $rootScope.metaDescription = pagesTitles.index.meta;
           Auth.isLoggedInAsync(function(isLoggedin){
             if(isLoggedin){
                 $state.go('main',{promo:''},{location:'replace',notify:false});
                 return;
             }
             if($stateParams.promo === 'register'){
-              var scope = $rootScope.$new();
-              scope.autoOpen = true;
-              Modal.openDialog('signup',scope);
+              $state.go("signup");
+              //var scope = $rootScope.$new();
+              //scope.autoOpen = true;
+              //Modal.openDialog('signup',scope);
             }
           })
         }
+      })
+      .state('signin', {
+        url: '/signin',
+        templateUrl: 'app/account/login/login-new.html',
+        controller: 'LoginCtrl as loginVm',
+        layout:'client'
+      })
+       .state('signup', {
+        url: '/signup',
+        templateUrl: 'app/account/signup/signup-new.html',
+        controller: 'SignupCtrl as signupVm',
+        layout:'client'
       }) 
+      .state('forgotpassword', {
+        url: '/forgotpassword',
+        templateUrl: 'app/account/forgotpassword/forgotpassword.html',
+        controller: 'ForgotPasswordCtrl as forgetPassVm',
+        layout:'client'
+      })  
       .state('contactus', {
         url: '/contactus',
         templateUrl: 'app/contactus/contactus.html',
@@ -63,19 +82,7 @@ angular.module('sreizaoApp')
         controller: 'ClassifiedAdCtrl',
         layout:'client'
       })
-      .state('allcategory', {
-        url: '/allcategory',
-        templateUrl: 'app/category/allcategory.html',
-        controller: 'AllCategoryCtrl as allCategoryVm',
-        layout:'client'
-      })
-      /*.state('allbrand', {
-        url: '/allbrand',
-        templateUrl: 'app/brand/allbrand.html',
-        controller: 'AllBrandCtrl',
-        layout:'client'
-      })*/
-      .state('categoryproduct', {
+      /*.state('categoryproduct', {
         url: '/viewproducts/:id?currentPage',
         templateUrl: 'app/product/viewproducts.html',
         controller: 'ViewProductsCtrl as viewproductVm',
@@ -92,19 +99,13 @@ angular.module('sreizaoApp')
            
           })
         }
-      })
-      .state('productdetail', {
+      })*/
+     /* .state('productdetail', {
         url: '/productdetail/:id',
         templateUrl: 'app/product/productdetail.html',
         controller: 'ProductDetailCtrl as productDetailVm',
         layout:'client'
-      })
-      .state('getquote', {
-        url: '/getquote',
-        templateUrl: 'app/product/getquote.html',
-        controller: 'ProductQuoteCtrl',
-        layout:'client'
-      })
+      })*/
       .state('productlisting', {
         url: '/productlisting?first_id&last_id&currentPage&prevPage&searchstr&statusText' +
               '&featured&tradeValue&assetStatus&searchType&coulmnSearchStr&reset',
@@ -134,13 +135,13 @@ angular.module('sreizaoApp')
         authenticate:true,
         layout:'admin'
       })
-      .state('producthistory', {
+      /*.state('producthistory', {
         url: '/producthistory/:id',
         templateUrl: 'app/product/producthistory.html',
         controller: 'ProductHistoryCtrl',
         authenticate:true,
         layout:'admin'
-      })
+      })*/
       .state('quote', {
         url: '/quote',
         templateUrl: 'app/quote/quote.html',
@@ -154,10 +155,10 @@ angular.module('sreizaoApp')
          layout:'client'
       })
       .state('viewproduct', {
-        url:"/viewproducts?currentPage&group&category&brand&model" + 
+        url:"/used/viewproducts?currentPage&group&category&brand&model" + 
             "&type&currencyType&currencyMin&currencyMax&" +
             "&mfgYearMin&mfgYearMax&stateName&cityName&assetId&"+
-            "searchstr&operatingHour&mileage&productName&location&locationName",
+            "searchstr&operatingHour&mileage&productName&location&locationName&certificationName",
         templateUrl: 'app/product/viewproducts.html',
         controller: 'ViewProductsCtrl as viewproductVm',
          layout:'client'
@@ -170,6 +171,60 @@ angular.module('sreizaoApp')
         templateUrl: 'app/newequipment/newproducts.html',
         controller: 'NewViewProductsCtrl as newviewproductVm',
          layout:'client'
+      })
+     /* .state('productbycategory', {
+        url: '/category/:category?currentPage',
+        templateUrl: 'app/product/viewproducts.html',
+        controller: 'ViewProductsCtrl as viewproductVm',
+        layout:'client'
+      })*/
+      .state('grouplisting', {
+        url: '/used',
+        templateUrl: 'app/group/grouplisting.html',
+        controller: 'GroupListingCtrl as groupListingVm',
+        layout:'client'
+      })
+      .state('categorylisting', {
+        url: '/used/allcategories',
+        templateUrl: 'app/category/categorylisting.html',
+        controller: 'CategoryListingCtrl as categoryListingVm',
+        layout:'client'
+      })
+      .state('brandlisting', {
+        url: '/used/brands',
+        templateUrl: 'app/brand/brandlisting.html',
+        controller: 'BrandListingCtrl as brandListingVm',
+        layout:'client'
+      })
+      .state('categorybygroup', {
+        url: '/used/:group',
+        templateUrl: 'app/category/categorylisting.html',
+        controller: 'CategoryListingCtrl as categoryListingVm',
+        layout:'client'
+      })
+      .state('productbybrand',{
+        url: '/used/brands/:brand?currentPage',
+        templateUrl: 'app/product/viewproducts.html',
+        controller: 'ViewProductsCtrl as viewproductVm',
+        layout:'client'
+      })
+       .state('splproduct',{
+        url: '/used/spl/:certificationName?currentPage',
+        templateUrl: 'app/product/viewproducts.html',
+        controller: 'ViewProductsCtrl as viewproductVm',
+        layout:'client'
+      })
+      .state('productbygrouporcategory', {
+        url: '/used/:group/:category?currentPage',
+        templateUrl: 'app/product/viewproducts.html',
+        controller: 'ViewProductsCtrl as viewproductVm',
+        layout:'client'
+      })
+      .state('productdetail', {
+        url: '/used/:category/:brand/:id',
+        templateUrl: 'app/product/productdetail.html',
+        controller: 'ProductDetailCtrl as productDetailVm',
+        layout:'client'
       })
       .state('aboutus', {
         url:"/aboutus",
@@ -410,7 +465,7 @@ angular.module('sreizaoApp')
         }
       })
       .state('assetinacuction', {
-        url: '/assetinauction',
+        url: '/assetinauction/:dbAuctionId?group&category&brand&location&assetId&mfgYearMax&mfgYearMin&currentPage',
         templateUrl: 'app/auction/auctionsdetail.html',
         controller: 'AssetInAuctionCtrl as auctionDetailsVm',
         layout:'client'
@@ -755,7 +810,7 @@ angular.module('sreizaoApp')
         templateUrl: 'app/newequipment/newproductdetail.html',
         controller: 'NewProductDetailCtrl as newproductDetailVm',
         layout:'client'
-      });
-
+      })
+      
       $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
   });

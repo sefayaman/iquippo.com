@@ -47,7 +47,7 @@ function MasterDataCtrl($scope, $rootScope,MasterDataService, groupSvc, modelSvc
 	vm.Save = Save;
 	vm.reset = reset;
 	//vm.updateCategoryStatus = updateCategoryStatus;
-	vm.makeVisibleOnUsedHome = makeVisibleOnUsedHome;
+	vm.makeVisibleHome = makeVisibleHome;
 	vm.update = update;
 	vm.deleteClick = deleteClick;
 	vm.editClick = editClick;
@@ -379,10 +379,13 @@ function MasterDataCtrl($scope, $rootScope,MasterDataService, groupSvc, modelSvc
 	  $scope.form = {};
 	}, true);
 
-    function makeVisibleOnUsedHome(modelRef,type) {
-      if(!modelRef.imgSrc && modelRef.visibleOnUsed){
+    function makeVisibleHome(modelRef,type,isNew) {
+      if(!modelRef.imgSrc && (modelRef.visibleOnUsed || modelRef.visibleOnNew)){
       	  Modal.alert("Please upload image to make it visible on home page.");
-      	  modelRef.visibleOnUsed = false;
+      	  if(!isNew)
+      	  	modelRef.visibleOnUsed = false;
+      	  else
+      	  	modelRef.visibleOnNew = false;
       	  return;
       }
       	modelRef.type = type;
@@ -445,7 +448,9 @@ function MasterDataCtrl($scope, $rootScope,MasterDataService, groupSvc, modelSvc
 	 function uploadImage(files,modelRef,type,autoUpdate,key){
 	 	if(!files.length)
 	 		return;
+	 	$rootScope.loading = true;
 	 	uploadSvc.upload(files[0],categoryDir).then(function(result){
+	 		$rootScope.loading = false;
 	 		if(key)
 			 modelRef[key] = result.data.filename;
 			else
@@ -455,6 +460,9 @@ function MasterDataCtrl($scope, $rootScope,MasterDataService, groupSvc, modelSvc
 	 			updateMasterdataStatus(modelRef);
 	 		}
 	 		
+	    })
+	    .catch(function(err){
+	    	$rootScope.loading = false;
 	    });
 	 }
 
