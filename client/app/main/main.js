@@ -388,18 +388,6 @@ angular.module('sreizaoApp')
         templateUrl:'app/payment/offlinepayment.html',
         layout:'admin'
       })*/
-      .state('auctionlot', {
-        url: '/buyerdashboard',
-        templateUrl: 'app/auction/buyerdashboard.html',
-        authenticate:true,
-        layout:'admin'
-      })
-      .state('auctionlive', {
-        url: '/liveauction',
-        templateUrl: 'app/auction/liveauction.html',
-        controller:'LiveAuctionCtrl as liveAuctionVm',
-        layout:'client'
-      })
       .state('valuationrequests', {
         url: '/valuationrequests/:mode',
         templateUrl: 'app/valuation/valuationlisting.html',

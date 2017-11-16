@@ -116,7 +116,6 @@ exports.getAuctionInfoForProduct = function(req, res) {
 };
 
 function _create(data, cb) {
-
   var assetIdExist = false;
   if (!data.product.assetId)
     return cb(new Error('Asset Id Missing'));
@@ -134,7 +133,6 @@ function _create(data, cb) {
           assetIdExist = true;
         }
         self();
-
       });
     })
     .par(function() {
@@ -152,7 +150,6 @@ function _create(data, cb) {
       });
     })
     .seq(function() {
-
       if (assetIdExist)
         return cb({
           errorCode: 1,
@@ -160,10 +157,10 @@ function _create(data, cb) {
         });
       data.createdAt = new Date();
       data.updatedAt = new Date();
-        
       AuctionRequest.create(data, function(err, auctionAsset) {
         if (err) {
-          return new Error('Unable to create auction : ', data.auctionId)
+          //return new Error('Unable to create auction : ', data.auctionId);
+          return cb('Unable to create auction' + data.auctionId);
         }
         //return cb({errorCode: 0,message: "Success."});
         
@@ -194,17 +191,19 @@ function _create(data, cb) {
              if (err || (result && result.err)) {
               options.dataToSend.reqSubmitStatus = ReqSubmitStatuses[1];
               updateAsset(options.dataToSend);
-              if (result && result.err)
-                return cb({errorCode: 3,message: "Unable to post asset request. Please contact support team."});
+              //if (result && result.err)
+                //return cb(result.err);
+              //return cb({errorCode: 3,message: "Unable to post asset request. Please contact support team."});
+              return cb(err);
             }
             if (result) {
               options.dataToSend.reqSubmitStatus = ReqSubmitStatuses[0];
               updateAsset(options.dataToSend);
-              return cb({errorCode: 0,message: "Asset request submitted successfully !!!"});
+              //return cb({errorCode: 0,message: "Asset request submitted successfully !!!"});
             }
+            return cb();
         });
       });
-
     })
     .catch(function(err) {
       return cb(new Error(err || 'Unable to create'));
@@ -1390,7 +1389,8 @@ exports.getFilterOnAuctionMaster = function(req, res) {
     filter['$or'] = arr;
 
   var result = {};
-
+  console.log("filter###", filter);
+  console.log("req.body.statusType###", req.body.statusType);
   if (req.body.pagination && !req.body.statusType) {
     return Utility.paginatedResult(req, res, AuctionMaster, filter, {}, function(results) {
       if (req.body.addAuctionType) {

@@ -19,7 +19,7 @@
       <button type="button" class="btn btn-default" ng-class="{'active': auctionType == 'upcoming'}" ng-click="auctionDateVm.fireCommandType('upcoming')">Upcoming Auctions</button>
       <!-- <button type="button" class="btn btn-default" ng-class="{'active': auctionType == 'ongoing'}" ng-click="auctionDateVm.fireCommandType('ongoing')">Ongoing Auctions</button>  -->
       <button type="button" class="btn btn-default " ng-class="{'active': auctionType == 'closed'}" ng-click="auctionDateVm.fireCommandType('closed')">Closed Auctions</button>
-      <button type="button" class="btn btn-default " ng-class="{'active': auctionType == 'S'}" ng-click="auctionDateVm.fireCommandType('S')">Seller Auctions</button>
+      <!-- <button type="button" class="btn btn-default " ng-class="{'active': auctionType == 'S'}" ng-click="auctionDateVm.fireCommandType('S')">Seller Auctions</button> -->
       
     </div>          
 
@@ -83,7 +83,7 @@
     		<div class="no-result" ng-if="auctionDateVm.show">No records found</div>
         <div class="auction-list form-group" ng-if="auctionType == 'upcoming'" ng-repeat="product in auctionDateVm.auctionListing | orderBy :'startDate'">  
           <div class="media">
-            <a  ng-if="auctionDateVm.getProductData(product._id, 'total_products') != 0" class="pull-left" href="/assetinauction?auctionId={{product.auctionId}}&auctionType={{product.auctionValue}}&auctionTypeValue={{product.auctionType}}&auctionName={{product.name}}&auctionOwner={{product.auctionOwner}}&auctionOwnerMobile={{product.auctionOwnerMobile}}&termAuction={{product.termAuction}}&contactName={{product.contactName}}&contactNumber={{product.contactNumber}}&docName={{product.docName}}&docNameProxy={{product.docNameProxy}}&docType={{product.docType}}&auctionCity={{product.city}}&id={{product._id}}">
+            <a  ng-if="auctionDateVm.getProductData(product._id, 'total_products') != 0" class="pull-left" href="/assetinauction?auctionType={{product.auctionValue}}&id={{product._id}}&auctionId={{product.auctionId}}">
               <img class="media-object" ng-if="product.primaryImg" src="{{uploadImagePrefix}}{{auctionmasterDir}}/{{product.primaryImg}}" alt="Image">
               <img class="media-object" ng-if="!product.primaryImg && product.auctionValue =='closedAuctions'" src="assets/images/closed.jpg" alt="Image">
               <img class="media-object" ng-if="!product.primaryImg && product.auctionValue =='upcomingAuctions'" src="assets/images/upcoming.jpg" alt="Image">
@@ -100,7 +100,7 @@
                 <a ng-if="auctionDateVm.getProductData(product._id, 'total_products') == 0">
                   {{product.auctionType | titleCase}} {{product.name}} - {{product.city}}
                 </a>
-                <a ng-if="auctionDateVm.getProductData(product._id, 'total_products') != 0" href="/assetinauction?auctionId={{product.auctionId}}&auctionType={{product.auctionValue}}&auctionTypeValue={{product.auctionType}}&auctionName={{product.name}}&auctionOwner={{product.auctionOwner}}&auctionOwnerMobile={{product.auctionOwnerMobile}}&termAuction={{product.termAuction}}&contactName={{product.contactName}}&contactNumber={{product.contactNumber}}&docName={{product.docName}}&docNameProxy={{product.docNameProxy}}&docType={{product.docType}}&auctionCity={{product.city}}&id={{product._id}}">
+                <a ng-if="auctionDateVm.getProductData(product._id, 'total_products') != 0" href="/assetinauction?auctionType={{product.auctionValue}}&id={{product._id}}&auctionId={{product.auctionId}}">
                   {{product.auctionType | titleCase}} {{product.name}} - {{product.city}}
                 </a>
                 
@@ -141,7 +141,7 @@
                   <a href="{{uploadImagePrefix}}{{auctionDir}}/{{product.docNameProxy}}" class="btn btn-sm btn-primary" ng-if="!product.docType &&  product.docNameProxy" target="_blank"><i class="fa fa-file-text-o"></i> Proxy Form </a>
                   <a href="{{uploadImagePrefix}}{{auctionDir}}/{{product.docName}}" class="btn btn-sm active btn-default" ng-if="!product.docType && product.docName" target="_blank"><i class="fa fa-file-pdf-o"></i> Auction Catalogue</a>
                   <!--<a href="/assetinauction?auctionId={{product.auctionId}}&auctionType={{product.auctionValue}}&auctionName={{product.name}}&docName={{product.docName}}&docType={{product.docType}}&id={{product._id}}" class="btn btn-sm btn-danger">View Assets</a>-->
-                  <a ng-disabled="auctionDateVm.getProductData(product._id, 'total_products') == 0" href="/assetinauction?auctionType={{product.auctionValue}}&auctionId={{product.auctionId}}&id={{product._id}}&auctionOrientation={{product.auctionType}}"  class="btn btn-sm btn-danger">View Lot</a>
+                  <a ng-disabled="auctionDateVm.getProductData(product._id, 'total_products') == 0" href="/assetinauction?auctionType={{product.auctionValue}}&id={{product._id}}&auctionId={{product.auctionId}}&auctionOrientation={{product.auctionType}}"  class="btn btn-sm btn-danger">View Lot</a>
                 </div>
               </div>
             </div>
@@ -149,7 +149,7 @@
         </div>
         <div class="auction-list form-group" ng-if="auctionType == 'closed'" ng-repeat="product in auctionDateVm.auctionListing | orderBy :'-endDate'">  
           <div class="media">
-            <a  ng-if="auctionDateVm.getProductData(product._id, 'total_products') != 0" class="pull-left" href="/assetinauction?auctionType={{product.auctionValue}}&auctionId={{product.auctionId}}&id={{product._id}}">
+            <a  ng-if="auctionDateVm.getProductData(product._id, 'total_products') != 0" class="pull-left" href="/assetinauction?auctionType={{product.auctionValue}}&id={{product._id}}&auctionId={{product.auctionId}}">
               <img class="media-object" ng-if="product.primaryImg" src="{{uploadImagePrefix}}{{auctionmasterDir}}/{{product.primaryImg}}" alt="Image">
               <img class="media-object" ng-if="!product.primaryImg && product.auctionValue =='closedAuctions'" src="assets/images/closed.jpg" alt="Image">
               <img class="media-object" ng-if="!product.primaryImg && product.auctionValue =='upcomingAuctions'" src="assets/images/upcoming.jpg" alt="Image">
@@ -166,7 +166,7 @@
                 <a ng-if="auctionDateVm.getProductData(product._id, 'total_products') == 0">
                   {{product.auctionType | titleCase}} {{product.name}} - {{product.city}}
                 </a>
-                <a ng-if="auctionDateVm.getProductData(product._id, 'total_products') != 0" href="/assetinauction?auctionType={{product.auctionValue}}&auctionId={{product.auctionId}}&id={{product._id}}">
+                <a ng-if="auctionDateVm.getProductData(product._id, 'total_products') != 0" href="/assetinauction?auctionType={{product.auctionValue}}&id={{product._id}}&auctionId={{product.auctionId}}">
                   {{product.auctionType | titleCase}} {{product.name}} - {{product.city}}
                 </a>
                 
@@ -177,8 +177,6 @@
               <p ng-if="product.auctionValue =='closedAuctions'"><strong>Auction Closed</strong></p>
               <p ng-if="product.insStartDate && product.insEndDate"><strong>Inspection Date : </strong> {{product.insStartDate | date:'dd-MMM-yyyy hh:mm a'}} - {{product.insEndDate | date:'dd-MMM-yyyy hh:mm a'}} </p>
               <p ng-if="product.emdAmount"><strong>Earnest Money Deposit : </strong> <i class="fa fa-inr"></i> {{product.emdAmount}}</p>
-              <!--remove -->
-              <!-- <p ng-if="product.startDate && product.endDate"><strong>start Date : </strong> {{product.startDate | date:'dd-MMM-yyyy hh:mm a'}} - {{product.endDate | date:'dd-MMM-yyyy hh:mm a'}} </p> -->
               <p>
                 <strong>Assets Listed in Auction :</strong> {{auctionDateVm.getProductData(product._id, 'total_products')}}
               </p>
@@ -199,21 +197,17 @@
                 </div>               
                 <div class="col-xs-12 col-sm-6 text-right">
                   <button ng-if="auctionType != 'closed'" type="button" class="btn btn-default btn-sm active" ng-click="auctionDateVm.openAuctionLot(product)">Register Now</button>
-                  <!--<a href="{{uploadImagePrefix}}{{auctionDir}}/{{product.docName}}" class="btn btn-sm btn-primary" ng-if="product.docType == 'bidProxy'" target="_blank"><i class="fa fa-file-text-o"></i> Proxy Form</a>
-                  <a href="{{uploadImagePrefix}}{{auctionDir}}/{{product.docName}}" class="btn btn-sm active btn-default" ng-if="product.docType == 'tc'" target="_blank"><i class="fa fa-file-pdf-o"></i> Auction Catalogue</a>
-                  -->
                   <a href="{{uploadImagePrefix}}{{auctionDir}}/{{product.docName}}" class="btn btn-sm btn-primary" ng-if="product.docType == 'bidProxy'" target="_blank"><i class="fa fa-file-text-o"></i> Proxy Form</a>
                   <a href="{{uploadImagePrefix}}{{auctionDir}}/{{product.docName}}" class="btn btn-sm active btn-default" ng-if="product.docType == 'tc'" target="_blank"><i class="fa fa-file-pdf-o"></i> Auction Catalogue</a>
                   <a href="{{uploadImagePrefix}}{{auctionDir}}/{{product.docNameProxy}}" class="btn btn-sm btn-primary" ng-if="!product.docType &&  product.docNameProxy" target="_blank"><i class="fa fa-file-text-o"></i> Proxy Form </a>
                   <a href="{{uploadImagePrefix}}{{auctionDir}}/{{product.docName}}" class="btn btn-sm active btn-default" ng-if="!product.docType && product.docName" target="_blank"><i class="fa fa-file-pdf-o"></i> Auction Catalogue</a>
-                  <!--<a href="/assetinauction?auctionId={{product.auctionId}}&auctionType={{product.auctionValue}}&auctionName={{product.name}}&docName={{product.docName}}&docType={{product.docType}}&id={{product._id}}" class="btn btn-sm btn-danger">View Assets</a>-->
-                  <a ng-disabled="auctionDateVm.getProductData(product._id, 'total_products') == 0" href="/assetinauction?auctionType={{product.auctionValue}}&auctionId={{product.auctionId}}&id={{product._id}}"  class="btn btn-sm btn-danger">View Lot</a>
+                  <a ng-disabled="auctionDateVm.getProductData(product._id, 'total_products') == 0" href="/assetinauction?auctionType={{product.auctionValue}}&id={{product._id}}&auctionId={{product.auctionId}}"  class="btn btn-sm btn-danger">View Lot</a>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="auction-list form-group" ng-if="auctionType == 'S'" ng-repeat="product in auctionDateVm.auctionListing | orderBy :'-endDate'">  
+        <!-- <div class="auction-list form-group" ng-if="auctionType == 'S'" ng-repeat="product in auctionDateVm.auctionListing | orderBy :'-endDate'">  
           <div class="media">
             <a  ng-if="auctionDateVm.getProductData(product._id, 'total_products') != 0" class="pull-left" href="/assetinauction?auctionType={{product.auctionValue}}&auctionId={{product.auctionId}}&id={{product._id}}">
               <img class="media-object" ng-if="product.primaryImg" src="{{uploadImagePrefix}}{{auctionmasterDir}}/{{product.primaryImg}}" alt="Image">
@@ -243,8 +237,6 @@
               <p ng-if="product.auctionValue =='closedAuctions'"><strong>Auction Closed</strong></p>
               <p ng-if="product.insStartDate && product.insEndDate"><strong>Inspection Date : </strong> {{product.insStartDate | date:'dd-MMM-yyyy hh:mm a'}} - {{product.insEndDate | date:'dd-MMM-yyyy hh:mm a'}} </p>
               <p ng-if="product.emdAmount"><strong>Earnest Money Deposit : </strong> <i class="fa fa-inr"></i> {{product.emdAmount}}</p>
-              <!--remove -->
-              <!-- <p ng-if="product.startDate && product.endDate"><strong>start Date : </strong> {{product.startDate | date:'dd-MMM-yyyy hh:mm a'}} - {{product.endDate | date:'dd-MMM-yyyy hh:mm a'}} </p> -->
               <p>
                 <strong>Assets Listed in Auction :</strong> {{auctionDateVm.getProductData(product._id, 'total_products')}}
               </p>
@@ -265,20 +257,16 @@
                 </div>               
                 <div class="col-xs-12 col-sm-6 text-right">
                   <button ng-if="auctionType != 'closed'" type="button" class="btn btn-default btn-sm active" ng-click="auctionDateVm.openAuctionLot(product)">Register Now</button>
-                  <!--<a href="{{uploadImagePrefix}}{{auctionDir}}/{{product.docName}}" class="btn btn-sm btn-primary" ng-if="product.docType == 'bidProxy'" target="_blank"><i class="fa fa-file-text-o"></i> Proxy Form</a>
-                  <a href="{{uploadImagePrefix}}{{auctionDir}}/{{product.docName}}" class="btn btn-sm active btn-default" ng-if="product.docType == 'tc'" target="_blank"><i class="fa fa-file-pdf-o"></i> Auction Catalogue</a>
-                  -->
                   <a href="{{uploadImagePrefix}}{{auctionDir}}/{{product.docName}}" class="btn btn-sm btn-primary" ng-if="product.docType == 'bidProxy'" target="_blank"><i class="fa fa-file-text-o"></i> Proxy Form</a>
                   <a href="{{uploadImagePrefix}}{{auctionDir}}/{{product.docName}}" class="btn btn-sm active btn-default" ng-if="product.docType == 'tc'" target="_blank"><i class="fa fa-file-pdf-o"></i> Auction Catalogue</a>
                   <a href="{{uploadImagePrefix}}{{auctionDir}}/{{product.docNameProxy}}" class="btn btn-sm btn-primary" ng-if="!product.docType &&  product.docNameProxy" target="_blank"><i class="fa fa-file-text-o"></i> Proxy Form </a>
                   <a href="{{uploadImagePrefix}}{{auctionDir}}/{{product.docName}}" class="btn btn-sm active btn-default" ng-if="!product.docType && product.docName" target="_blank"><i class="fa fa-file-pdf-o"></i> Auction Catalogue</a>
-                  <!--<a href="/assetinauction?auctionId={{product.auctionId}}&auctionType={{product.auctionValue}}&auctionName={{product.name}}&docName={{product.docName}}&docType={{product.docType}}&id={{product._id}}" class="btn btn-sm btn-danger">View Assets</a>-->
-                  <a ng-disabled="auctionDateVm.getProductData(product._id, 'total_products') == 0" href="/assetinauction?auctionType={{product.auctionValue}}&auctionId={{product.auctionId}}&id={{product._id}}"  class="btn btn-sm btn-danger">View Lot</a>
+                  <a ng-disabled="auctionDateVm.getProductData(product._id, 'total_products') == 0" href="/assetinauction?auctionType={{product.auctionValue}}&id={{product._id}}&auctionId={{product.auctionId}}"  class="btn btn-sm btn-danger">View Lot</a>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
  <uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" ng-change="auctionDateVm.fireCommand()" class="pagination-sm" rotate="false"></uib-pagination> 
 </div>
 <div class="container" ng-if="auctionOnMap">

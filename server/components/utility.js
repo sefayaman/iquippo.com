@@ -457,10 +457,10 @@ function sendData(options, callback) {
         else
           res.results = "";
         //console.log("=======++res",res);
-        return callback(null, res);
       } catch (err) {
         //return callback(err);
       }
+      return callback(null, res);
     }
   });
 }
