@@ -465,7 +465,7 @@ angular.module('sreizaoApp')
         }
       })
       .state('assetinacuction', {
-        url: '/assetinauction',
+        url: '/assetinauction/:dbAuctionId?group&category&brand&location&assetId&mfgYearMax&mfgYearMin&currentPage',
         templateUrl: 'app/auction/auctionsdetail.html',
         controller: 'AssetInAuctionCtrl as auctionDetailsVm',
         layout:'client'
