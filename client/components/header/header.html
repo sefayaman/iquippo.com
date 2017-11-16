@@ -30,11 +30,13 @@
              </li>
              <li ng-hide="isLoggedIn()"><a href="/signin">Login</a></li>
              <li ng-hide="isLoggedIn()"><a href="/signup">Signup</a></li>
+             <li><a href="javascript:void(0);" ng-click="sendCallback()" class="text-danger"><i class="fa fa-phone"></i></a></li>
              <li ng-if="isLoggedIn()" class="dropdown" >
               <a href class="dropdown-toggle" data-toggle="dropdown">
                  <i class="fa fa-user" style="background-color:#ccc;color:#fff; padding:3px 5px; border-radius:50%;height:20px;width:20px;" ng-if="!getCurrentUser().imgsrc"></i>
-              <img src="{{uploadImagePrefix}}{{avatarDir}}/{{getCurrentUser().imgsrc}}" ng-if="getCurrentUser().imgsrc"> 
-                 <span class="hidden-xs"> {{ getCurrentUser().fname }}</span></a>
+                <img src="{{uploadImagePrefix}}{{avatarDir}}/{{getCurrentUser().imgsrc}}" ng-if="getCurrentUser().imgsrc"> 
+                 <span> {{ getCurrentUser().fname }}</span>
+              </a>
               
               <ul class="dropdown-menu">
                   <li>
@@ -89,11 +91,7 @@
         </ul> -->    
 
          
-      </div>
-      <div class="search-toggle-right visible-xs">
-        <a href="javascript:void(0);">  <i class="fa fa-search"></i>  </a>
-      </div>
-      
+      </div>      
     </div>
   </nav>
 </div>
