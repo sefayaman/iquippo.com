@@ -323,8 +323,8 @@ function fetchAssetsInLot(options, callback) {
   }, function(err, results) {
     if (err) callback(err);
     if(results.length > 0){
-    options.assetData = results;
-  return callback(null, options);
+      options.assetData = results;
+    return callback(null, options);
   }
   else
     return callback(new Error({message:"No assets in auction"}));
@@ -345,12 +345,13 @@ function viewData(options, callback) {
       lotObj[x.lotNumber] = {};
       //lotObj['lotNumber'] = lotInfo[x.lot_id].lotNumber;
       lotObj[x.lotNumber]['assetDescription'] = [];
+      lotObj[x.lotNumber].assetDir = x.product.assetDir;
+      if (x.primaryImg !== "")
+        lotObj[x.lotNumber].primaryImg = x.product.primaryImg;
     }
     lotObj[x.lotNumber].assetDescription.push(x.product.assetId);
     lotObj[x.lotNumber].amount = lotInfo[x.lot_id].amount;
     lotObj[x.lotNumber].id = x.lot_id;
-    if (x.primaryImg !== "")
-      lotObj[x.lotNumber].primaryImg = x.product.primaryImg;
   });
 
   return callback(null, lotObj);

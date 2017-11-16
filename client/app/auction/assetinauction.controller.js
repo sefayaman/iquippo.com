@@ -220,14 +220,12 @@
       //getAssetsInAuction(filter);
     }
     $scope.load = function() {
-      console.log("jh", id);
       var assetIds = [];
       filter = {};
       filter.lotNumber = id.lotNumber;
       filter.auctionid = id.auctionId;
       LotSvc.getData(filter).then(function(response) {
 
-        console.log("response123", response);
         response.forEach(function(item) {
           assetIds[assetIds.length] = item.assetId;
         });
@@ -266,21 +264,12 @@
           if (res && Object.keys(res).length) {
             Object.keys(res).forEach(function(key) {
               var obj={};
-              var firstPrimaryImg = true;
-              //console.log("key",key);
               obj.lotNumber=key;
               obj.assetDesc=res[key].assetDescription;
               obj.amount=res[key].amount;
               obj.id=res[key].id;
-              //obj.assetDir = res[key].assetDescription[0];
-              if(firstPrimaryImg) {
-                obj.primaryImg= $rootScope.uploadImagePrefix + res[key].assetDescription[0] +"/" + res[key].primaryImg;
-                firstPrimaryImg = false;
-              }
-              //obj.primaryImg= res[key].primaryImg;
-              //console.log("obj.primaryImg", obj.primaryImg);
+              obj.primaryImg= $rootScope.uploadImagePrefix + res[key].assetDir +"/" + res[key].primaryImg;
               obj.url = auctionURL+ "/bidwidget/" + query.id + "/" + obj.id + "/" + Auth.getCurrentUser()._id;
-              //console.log("object",obj);
               var dataObj={};
               dataObj.auction = {};
               dataObj.user = {};

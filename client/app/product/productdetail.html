@@ -706,7 +706,7 @@
               </div>
             </div>
 
-            <div class="panel panel-default" ng-if="assetListedInAuction && displayBid === 'true'">
+            <div class="panel panel-default" ng-if="isLoggedIn() && assetListedInAuction && displayBid === 'true'">
               <div class="panel-body" ng-disabled="true">
                 <iframe ng-src="{{asWidgetURLSCE}}" style="width: 100%; height: 300px; border: 1px solid #eee;"></iframe>
               </div>

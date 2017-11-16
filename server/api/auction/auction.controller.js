@@ -180,7 +180,8 @@ function _create(data, cb) {
           for (var i=0; i < auctionAsset.product.otherImages.length; i++) {
             options.dataToSend.images[options.dataToSend.images.length] = config.awsUrl + config.awsBucket + "/assets/uploads/" + auctionAsset.product.assetDir + "/" + auctionAsset.product.otherImages[i];
           }
-        }
+        } else
+          options.dataToSend.images = [];
         
         options.dataToSend.seller = {};
         options.dataToSend.seller.contactNumber = auctionAsset.product.contactNumber;
@@ -247,7 +248,6 @@ exports.create = function(req, res, next) {
       });
     })
     .seq(function() {
-
       if (assetIdExist)
         return res.status(201).json({
           errorCode: 1,
@@ -260,7 +260,6 @@ exports.create = function(req, res, next) {
         req.body._id = auction._id;
         postRequestAsset(req, res);
       });
-
     })
     .catch(function(err) {
       return handleError(res, err);
@@ -288,7 +287,8 @@ exports.create = function(req, res, next) {
           for (var i=0; i < req.body.product.otherImages.length; i++) {
             options.dataToSend.images[options.dataToSend.images.length] = config.awsUrl + config.awsBucket + "/assets/uploads/" + req.body.product.assetDir + "/" + req.body.product.otherImages[i];
           }
-        }
+        } else
+          options.dataToSend.images = [];
         
         options.dataToSend.seller = {};
         options.dataToSend.seller.contactNumber = req.body.product.contactNumber;
@@ -320,7 +320,7 @@ exports.create = function(req, res, next) {
   function updateAsset(assetReq){
     var id = assetReq._id;
     delete assetReq._id;
-    AuctionRequest.update({_id:id},{$set:assetReq},function(err,retVal){
+    AuctionRequest.update({_id:id},{$set:{"reqSubmitStatus":assetReq.reqSubmitStatus}},function(err,retVal){
       if (err) { console.log("Error with updating auction request");}
     console.log("Asset updated Updated");
     });
