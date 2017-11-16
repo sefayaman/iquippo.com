@@ -1503,7 +1503,7 @@ footer .subscribe{height: 40px;}
 .navbar.navbar-client{min-height: 100px; background-position: center;}
 .navbar-brand{width: 50%; padding: 8px 10px; position: absolute;  top: 0; left: 0; z-index: 100; margin: auto; right: 0; text-align: center;}
 .navbar-brand img{width: 70px;}
-.search-toggle-right{position: absolute; right: 0.5em; padding: 1em; font-size: 18px; top: 0;}
+.search-toggle-right{position: absolute; right: 0.5em; z-index: 9999; padding: 1em; font-size: 18px; top: 0;}
 .search-toggle-right a{color: #666;}
 #view-container{margin-top: 3.8em;}
 #view-container .banner{min-height: 100px;}
