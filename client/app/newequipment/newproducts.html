@@ -85,13 +85,13 @@
         <div class="row">      
             <div class="col-sm-6 col-md-4 form-group" ng-repeat="product in productList  | startFrom:(newequipmentlistVm.currentPage -1 )*newequipmentlistVm.itemsPerPage | limitTo:newequipmentlistVm.itemsPerPage" >
             <div class="media text-center form-group">
-              <a href="javascript:void(0);">
+              <a ng-href="/new/{{product.category.name}}/{{product.brand.name}}/{{product.assetId}}">
                  <img src="{{uploadImagePrefix}}{{product.assetDir}}/{{product.primaryImg}}" class="img-responsive">              
               </a>          
               <div class="media-body text-left"> 
                 <div class="row">
                   <div class="col-xs-6 form-group">
-                    <h4>{{product.name}}</h4>                  
+                    <h4 class="text-ellips">{{product.name}}</h4>                  
                   </div>
                   <div class="col-xs-6 form-group text-right padd-left">
                     <h5 class="text-info">Model: {{product.model.name}}</h5>                    

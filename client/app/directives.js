@@ -152,47 +152,20 @@ angular.module('sreizaoApp')
         }
     };
 })
-.directive('onFileSelect', function ($parse) {
+.directive('file', function() {
     return {
-         restrict: 'A',
-         scope:{
-          params:"="
-         },
-        link: function (scope, el, attrs) {
-            var onChangeHandler = scope.$parent.$eval(attrs.onFileSelect);
-            el.bind('change', function (event) {
+        require:"ngModel",
+        restrict: 'A',
+        scope:{},
+        link: function($scope, el, attrs, ngModel){
+            el.bind('change', function(event){
                 var files = event.target.files;
-                if(!files || !files.length || !onChangeHandler)
-                  return;
-                if(!scope.params)
-                  scope.params = [];
-                scope.params[0] = files;
-                onChangeHandler.apply(scope.$parent,scope.params);                              
+                var file = files[0];
+                ngModel.$setViewValue(files);
             });
         }
     };
 })
-.directive('onFileSelectTech', function ($parse) {
-    return {
-         restrict: 'A',
-         scope:{
-          params:"="
-         },
-        link: function (scope, el, attrs) {
-            var onChangeHandler = scope.$parent.$eval(attrs.onFileSelectTech);
-            el.bind('change', function (event) {
-                var files = event.target.files;
-                if(!files || !files.length || !onChangeHandler)
-                  return;
-                if(!scope.params)
-                  scope.params = [];
-                scope.params[0] = files;
-               scope.params[1] = event.currentTarget.id;
-                onChangeHandler.apply(scope.$parent,scope.params);                              
-            });
-        }
-    };
-    })
 .directive('withFloatingLabel', function () {
   return {
     restrict: 'A',
@@ -219,6 +192,27 @@ angular.module('sreizaoApp')
     }
   };
 })
+.directive('onFileSelectTech', function ($parse) {
+    return {
+         restrict: 'A',
+         scope:{
+          params:"="
+         },
+        link: function (scope, el, attrs) {
+            var onChangeHandler = scope.$parent.$eval(attrs.onFileSelectTech);
+            el.bind('change', function (event) {
+                var files = event.target.files;
+                if(!files || !files.length || !onChangeHandler)
+                  return;
+                if(!scope.params)
+                  scope.params = [];
+                scope.params[0] = files;
+               scope.params[1] = event.currentTarget.id;
+                onChangeHandler.apply(scope.$parent,scope.params);                              
+            });
+        }
+    };
+    })
 .filter('titleCase', function() {
   return function(input) {
     input = input || '';

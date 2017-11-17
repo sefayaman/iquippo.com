@@ -15,11 +15,19 @@ exports.get = function(req, res,next) {
       filter['isForNew'] = true;
   if(queryData.visibleOnUsed)
       filter['visibleOnUsed'] = true;
+   if(queryData.visibleOnNew)
+    filter['visibleOnNew'] = true;
   if(queryData.searchStr){
      var term = new RegExp(queryData.searchStr, 'i');
       filter['name'] = { $regex: term };
   }
-  Group.find(filter).sort({name:1}).exec(function (err, group) {
+  var sortObj = {name:1};
+  if(queryData.sortBy){
+     sortObj = {};
+     sortObj[queryData.sortBy] = 1;
+  }
+  console.log("sort in group",sortObj);
+  Group.find(filter).sort(sortObj).exec(function (err, group) {
     if(err) { return handleError(res, err); }
     res.setHeader('Cache-Control', 'private, max-age=2592000');
     if(queryData.categoryCount){
@@ -36,10 +44,15 @@ exports.categoryCount = function(req,res){
       return res.status(200).json(req.groups);
     var groupIds = [];
     var filter = {};
+    var queryData = req.query;
     req.groups.forEach(function(item){
       groupIds.push(item._id + "");      
     });
     filter['group._id'] = {$in:groupIds};
+    if(queryData.isForUsed)
+        filter['isForUsed'] = true;
+    if(queryData.isForNew)
+      filter['isForNew'] = true;
     Category.aggregate(
     { $match:filter},
     { $group: 
@@ -59,9 +72,9 @@ exports.categoryCount = function(req,res){
         if(!group.count)
           group.count = 0;
       });
-      resultArr.sort(function(a,b){
+      /*resultArr.sort(function(a,b){
           return b.count - a.count;
-      });
+      });*/
       return res.status(200).json(resultArr);
     }
   );

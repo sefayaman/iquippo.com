@@ -22,6 +22,7 @@ var USER_REG_REQ="userRegEmailFromAdminChannelPartner";
 var Seqgen = require('./../../components/seqgenerator').sequence();
 var AppSetting = require('../common/setting.model');
 var validationError = function(res, err) {
+  console.log(err);
   return res.status(422).json(err);
 }; 
 
@@ -1294,7 +1295,7 @@ exports.validateUser = function(req, res) {
   if (req.body.email)
     filter.email = req.body.email;
   if (req.body.mobile)
-    filter.mobile = req.body.mobile;
+    filter.mobile = req.body.mobile + "";
   User.find(filter, function(err, users) {
     if (err) {
       return handleError(res, err);
@@ -1318,11 +1319,12 @@ exports.validateUser = function(req, res) {
 
 exports.validateOtp = function(req, res) {
   var otp = req.body.otp;
-  if (!otp)
-    return res.status(401).send('Unauthorized');
-  //console.log("otp filetr",{'otp.otp':otp})
+  if (!otp || !req.body.userId)
+    return res.status(401).send('Invalid request');
+
   User.findOne({
-    'otp.otp': otp
+    'otp.otp': otp,
+    _id:req.body.userId
   }, function(err, user) {
     if (err) {
       return handleError(res, err);

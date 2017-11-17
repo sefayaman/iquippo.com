@@ -3,7 +3,7 @@
 
 angular.module('admin').controller('NewEquipmentBannersCtrl', NewEquipmentBannersCtrl);
 
-function NewEquipmentBannersCtrl($scope, $state, vendorSvc, brandSvc, Modal, NewEquipmentBannersSvc, CertificateMasterSvc, uploadSvc, Auth, PagerSvc){
+function NewEquipmentBannersCtrl($scope, $rootScope, $state, vendorSvc, brandSvc, Modal, NewEquipmentBannersSvc, CertificateMasterSvc, uploadSvc, Auth, PagerSvc){
     var vm  = this;
     vm.dataModel = {brand:{}};
     $scope.isEdit = false;
@@ -49,7 +49,8 @@ function NewEquipmentBannersCtrl($scope, $state, vendorSvc, brandSvc, Modal, New
         $scope.pager.copy(filter);
         CertificateMasterSvc.get(filter)
         .then(function(result){
-           vm.promoList = result;;
+           vm.promoList = result;
+           //console.log(vm.promoList);
             vm.promoTotalItems = result.totalItems;
         });
     }
@@ -112,7 +113,6 @@ function NewEquipmentBannersCtrl($scope, $state, vendorSvc, brandSvc, Modal, New
     }
 
     function editClicked(rowData){
-        console.log('rrrrrrr',rowData);
         vm.dataModel = {};
         vm.dataModel = angular.copy(rowData);
         var i=0;
@@ -173,8 +173,14 @@ function NewEquipmentBannersCtrl($scope, $state, vendorSvc, brandSvc, Modal, New
     function updateBannerImage(files) {
         if (files.length == 0)
             return;
+        $rootScope.loading = true;
         uploadSvc.upload(files[0], bannerDir).then(function(result) {
+            $rootScope.loading = false;
             vm.newEquipBannerImg = result.data.filename;
+            vm.dataModel.newEquipBannerImg = result.data.filename;
+        })
+        .catch(function(){
+            $rootScope.loading = false;
         });
     }
 }

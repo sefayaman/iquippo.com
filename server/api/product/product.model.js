@@ -1,12 +1,13 @@
 'use strict';
 
 //var uniqueId = require('./uid.model');
+var seqGenerator = require('../../components/seqgenerator');
 
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 var ProductSchema = new Schema({
-  productId: Number,
+  productId: String,
   name:String,
   variant:String,
   model:{},
@@ -27,7 +28,7 @@ var ProductSchema = new Schema({
   country:String,
   state:String,
   city:String,
-  productCondition:String,
+  productCondition:{type:String,default:'used'},
   images:[{}],
   videos:[{}],
   primaryImg: String,
@@ -52,6 +53,8 @@ var ProductSchema = new Schema({
   addressOfAsset:String,
   reservePrice:Number,
   parkingPaymentTo:{type:String,default:'Seller'},
+  certificationName:String,
+  certificationLogo:String,
   deleted: {
     type: Boolean,
     default: false
@@ -99,49 +102,21 @@ var ProductSchema = new Schema({
 });
 
 ProductSchema.pre('save', function(next){
-  var doc = this;
-  var uIdNum;
-  var uid = Math.round(Math.random() * 1000000) + "";
-  // get the Unique Id
-  uIdNum = parseInt(uid);
-  generateUniqueId(next, doc, uIdNum);
-});
-
-var generateUniqueId = function (next, doc, uIdNum){
-  var digitArr = [0,1,2,3,4,5,6,7,8,9];
-  var filter = {};
-  if(uIdNum <= 99999) {
-    var uIdStr = uIdNum + "";
-    uIdStr += digitArr[Math.floor(Math.random() * digitArr.length -1)];
-    if(uIdStr.length < 6) {
-      //console.log("countlength", uIdStr + "__" + uIdStr.length);
-      generateUniqueId(next, doc, parseInt(uIdStr));
-      return;
-    }
-  }
-  if(uIdStr) 
-    uIdNum = parseInt(uIdStr);
-  if(uIdNum)
-    filter['productId'] = uIdNum;
-  Product.find(filter,function(error,uIdNo){
-    if(!error){
-      if(uIdNo.length == 0) {
-          console.log("Not exist", uIdNum);
-          /*uniqueId.create({'uidNumber': uIdNum}, function(err, uIdNo) {
-            if(err) { console.log("Error", err); }
-          });*/
-          doc.productId = uIdNum;
-          next();
-        } else {
-          console.log("already exist", uIdNum);
-          var uid = Math.round(Math.random() * 1000000) + "";
-          generateUniqueId(next, doc, uid);
-          return;
-        }
-      } else {
-        console.log("Error", error);
-      }
+  var self = this;
+  var sequence = seqGenerator.sequence();
+  sequence.next(function(seqnum){
+    self.productId = seqnum + 1;
+    if(!self.assetId)
+      self.assetId = self.productId;
+    self.constructor.findOne({assetId:self.assetId,deleted:false},function(err,product){
+      if(err)
+        return next(err);
+      if(product)
+        return next(new Error("Asset id already exist"));
+      return next();
+      
     });
-}
+  },'productseq',new Date().getTime());
+});
 
 var Product = module.exports = mongoose.model('Product', ProductSchema);

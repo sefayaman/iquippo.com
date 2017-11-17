@@ -75,6 +75,7 @@ function ProductListingCtrl($scope, $location, $rootScope, $http, productSvc, cl
     filter.last_id = last_id;
     selectedIds = [];
     saveState();
+    filter.productCondition = "used";
     productSvc.getProductOnFilter(filter)
     .then(function(result){
         $scope.products  = result.products;
