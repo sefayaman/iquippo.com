@@ -12,12 +12,13 @@
 </div>
 <section class="category-block">
   <div class="container-fluid">
-    <div class="col-sm-3">
-      <h4>Filter By:</h4>
+    <div class="col-sm-3" ng-class="{hidefilter: !filterbutton.value1}">
+      <button class="btn btn-danger visible-xs filter-display" ng-click="filterbutton.value1 = !filterbutton.value1"><i class="fa fa-times"></i> Close</button>
+      <h4 class="filter-heading">Filter By:</h4>
       <uib-accordion close-others="oneAtATime" class="information">
         <uib-accordion-group is-open="status.group">
           <uib-accordion-heading>
-            Industry ({{allGroup.length || 0}})<i class="pull-right fa" ng-class="{'fa-minus': status.group, 'fa-plus': !status.group}"></i>
+            Industry<i class="pull-right fa" ng-class="{'fa-minus': status.group, 'fa-plus': !status.group}"></i>
           </uib-accordion-heading>
             <div class="radio" ng-repeat="group in allGroup">
               <input type="radio" ng-model="equipmentSearchFilter.group" ng-change="newequipmentlistVm.onGroupChange(equipmentSearchFilter.group)" name="group" value="{{group.name}}" id="gp_{{$index}}"> <label for="gp_{{$index}}">{{group.name}}</label>
@@ -60,11 +61,16 @@
     <!--Grid Mode Start-->  
       
     <div class="col-sm-9">
-      <div class="row">
+      <div>
         <div class="col-sm-10 form-group">
-          <h4>{{equipmentSearchFilter.category}} ({{newequipmentlistVm.totalItems}} Results Found)</h4>
+          <h4 class="filter-heading">{{equipmentSearchFilter.category}} ({{newequipmentlistVm.totalItems}} Results Found)</h4>
         </div>
-        <div class="col-sm-2 form-group">
+        <div class="col-xs-6 visible-xs">
+          <button class="btn btn-danger visible-xs" ng-click="filterbutton.value1 = !filterbutton.value1">
+            <i class="fa fa-filter"></i> Filter
+          </button>
+        </div>
+        <div class="col-xs-6  col-sm-2 form-group">
           <select class="form-control" ng-change="newequipmentlistVm.sortBy()" ng-model="newequipmentlistVm.sortByFlag">
             <option value="">Sort By</option>
             <option value="lh">Price : Low to High</option>
@@ -74,6 +80,7 @@
           </select>
         </div>
       </div>
+      <div class="clearfix"></div>
       <div id="search-result_wrapper" ng-if="!searching && !noResult">
         <div class="row">
           <div class="col-sm-8 col-md-6 form-group padd-right">

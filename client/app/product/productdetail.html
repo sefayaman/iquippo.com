@@ -1,8 +1,8 @@
 <div class="container-fluid">
   <ol class="breadcrumb">
     <li><a href="/">Home</a></li>
-    <li><a href="/used/viewproducts">{{currentProduct.group.name}}</a></li>
-    <li ng-if="currentProduct.category.name != 'Other'">{{currentProduct.category.name}}</li>
+    <li><a href="/viewproducts">{{currentProduct.group.name}}</a></li>
+    <li ng-if="currentProduct.category.name != 'Other'"><a href="javascript:void(0);">{{currentProduct.category.name}}</a></li>
     <li ng-if="currentProduct.category.name == 'Other'">{{currentProduct.category.otherName}}</li>
     <li><a class="active">{{currentProduct.name}}</a></li>
   </ol>
@@ -25,8 +25,8 @@
                 <img alt="" title="" ng-src="{{thumbnailImage.displaySrc}}" class="img-responsive" ng-click="productDetailVm.previewProduct(currentProduct.images, $index)">
               </div>
             </div>
-            <div class="stamp-image" ng-if="currentProduct.certificationName && currentProduct.certificationLogo">
-              <img ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{currentProduct.certificationLogo}}" class="img-responsive">
+            <div class="stamp-image">
+              <img src="/assets/images/certified.png" class="img-responsive">
             </div>
             <!-- Indicators -->
             <ol class="carousel-indicators">
@@ -82,7 +82,7 @@
                     <h1 ng-if="currentProduct.grossPrice">
                     <i class="fa fa-inr"></i> {{currentProduct.grossPrice | number:0}}/-
                     </h1>
-                    <span ng-if="currentProduct.grossPrice">(Inclusive of Taxes)</span>
+                    <!-- <span ng-if="currentProduct.grossPrice">(Inclusive of Taxes)</span> -->
                     <h1 ng-if="!currentProduct.grossPrice">
                     <i class="fa fa-inr"></i> Price On Request/-
                     </h1>
@@ -102,7 +102,7 @@
                 <div class="col-sm-8 form-group">
                   <label>To Negotiate</label>
                   <div ng-class="{'has-error': assetSale.bidAmount.$invalid && bidSubmitted}">
-                        <input type="number" class="form-control" name="bidAmount" ng-model="productDetailVm.bidAmount" placeholder="Enter Bid Amount" required>
+                        <input type="number" class="form-control" min="0" name="bidAmount" ng-model="productDetailVm.bidAmount" placeholder="Enter Bid Amount" required>
                   </div>
                 </div>
                 <div class="col-sm-4 form-group">
@@ -117,7 +117,7 @@
                 <div class="col-sm-6 form-group">
                   <label>To Negotiate</label>
                   <div ng-class="{'has-error': assetSale.bidAmount.$invalid && bidSubmitted}">
-                        <input type="number" class="form-control" name="bidAmount" ng-model="productDetailVm.bidAmount" placeholder="Enter Bid Amount" required>
+                        <input type="number" class="form-control" min="0" name="bidAmount" ng-model="productDetailVm.bidAmount" placeholder="Enter Bid Amount" required>
                   </div>
                 </div>
                 <div class="col-sm-6 form-group padd-left text-right">
@@ -129,9 +129,9 @@
             </form>
           </div>
           <div class="row text-center">
-            <div class="col-xs-4" ng-repeat="doc in currentProduct.miscDocuments" ng-if="doc.type == 'Rcupload' && doc.name">
+            <div class="col-xs-4" ng-repeat="doc in currentProduct.miscDocuments">
               <h1>
-              <a href="{{uploadImagePrefix}}{{currentProduct.assetDir}}/{{doc.name}}" target="_blank">
+              <a href="{{uploadImagePrefix}}{{currentProduct.assetDir}}/{{doc.name}}" target="_blank" ng-disabled="doc.type !== 'Rcupload' || !doc.name">
                 <i class="fa fa-file-text-o fa-2x"></i>
               </a>
               </h1>
@@ -197,57 +197,59 @@
           </div> -->
         </div>
       </div>
-      <div class="information-tabs" ng-if="isLoggedIn()">
-        <div ng-if="currentProduct.dispSellerInfo == 'yes'">
-          <h3>Contact Seller</h3>
-        </div>
-        <div ng-if="currentProduct.dispSellerInfo == 'yes'">
-          <form novalidate name="">
-            <div class="row">
-              <div class="col-xs-6 col-sm-4">
-                <div class="form-group">
-                  Name
+      <div ng-if="isLoggedIn()">
+        <div class="information-tabs" ng-if="currentProduct.dispSellerInfo == 'yes'">
+          <div class="tab-content">
+            <h3>Contact Seller</h3>
+            <div>
+              <form novalidate name="">
+                <div class="row">
+                  <div class="col-xs-6 col-sm-4">
+                    <div class="form-group">
+                      Name
+                    </div>
+                  </div>
+                  <div class="col-xs-6 col-sm-4">
+                    <div class="form-group">
+                      {{currentProduct.seller.fname + ' ' + currentProduct.seller.mname + ' ' + currentProduct.seller.lname}}
+                    </div>
+                  </div>
                 </div>
+              </form>
+              <div class="row" ng-if="currentProduct.dispSellerContact == 'true' ">
+                <form novalidate name="">
+                  <div class="col-xs-6 col-sm-4">
+                    <div class="form-group" >
+                      Contact Number
+                    </div>
+                  </div>
+                  <div class="col-xs-6 col-sm-4">
+                    <div class="form-group">
+                      {{currentProduct.seller.mobile}}
+                    </div>
+                  </div>
+                  
+                </form>
               </div>
-              <div class="col-xs-6 col-sm-4">
-                <div class="form-group">
-                  {{currentProduct.seller.fname + ' ' + currentProduct.seller.mname + ' ' + currentProduct.seller.lname}}
-                </div>
+              <div class="row" ng-if="currentProduct.dispSellerAlternateContact == 'true' ">
+                <form novalidate name="">
+                  <div class="col-xs-6 col-sm-4">
+                    <div class="form-group" >
+                      Contact Number
+                    </div>
+                  </div>
+                  <div class="col-xs-6 col-sm-4">
+                    <div class="form-group">
+                      {{currentProduct.alternateMobile}}
+                    </div>
+                  </div>
+                  
+                </form>
               </div>
+              
+              
             </div>
-          </form>
-          <div class="row" ng-if="currentProduct.dispSellerContact == 'true' ">
-            <form novalidate name="">
-              <div class="col-xs-6 col-sm-4">
-                <div class="form-group" >
-                  Contact Number
-                </div>
-              </div>
-              <div class="col-xs-6 col-sm-4">
-                <div class="form-group">
-                  {{currentProduct.seller.mobile}}
-                </div>
-              </div>
-              
-            </form>
           </div>
-          <div class="row" ng-if="currentProduct.dispSellerAlternateContact == 'true' ">
-            <form novalidate name="">
-              <div class="col-xs-6 col-sm-4">
-                <div class="form-group" >
-                  Contact Number
-                </div>
-              </div>
-              <div class="col-xs-6 col-sm-4">
-                <div class="form-group">
-                  {{currentProduct.alternateMobile}}
-                </div>
-              </div>
-              
-            </form>
-          </div>
-          
-          
         </div>
       </div>
 
@@ -397,20 +399,32 @@
           
         </uib-tab>
         <uib-tab heading="Service information" ng-if="!productDetailVm.checkServiceInfo(currentProduct.serviceInfo)">
-          <table class="table table-striped">
-            <tr>
-              <td>Service Date</td>
-              <td>Operating hrs(km/m.hrs)</td>
-              <td>Service At</td>
-              <td>Authorized Service Station</td>
-            </tr>
-            <tr ng-repeat="serviceInfo in currentProduct.serviceInfo">
-              <td>{{serviceInfo.servicedate}}</td>
-              <td>{{serviceInfo.operatingHour}}</td>
-              <td>{{serviceInfo.serviceAt}}</td>
-              <td>{{serviceInfo.authServiceStation}}</td>
-            </tr>
-          </table>
+          <div class="row">
+            <div class="col-xs-6 col-sm-4 col-md-3">
+              <div ng-repeat="serviceInfo in currentProduct.serviceInfo">
+                <label>Service Date</label>
+                <h4>{{serviceInfo.servicedate}}</h4>
+              </div>
+            </div>
+            <div class="col-xs-6 col-sm-4 col-md-3">
+              <div ng-repeat="serviceInfo in currentProduct.serviceInfo">
+                <label>Operating hrs(km/m.hrs)</label>
+                <h4>{{serviceInfo.operatingHour}}</h4>
+              </div>
+            </div>
+            <div class="col-xs-6 col-sm-4 col-md-3">
+              <div ng-repeat="serviceInfo in currentProduct.serviceInfo">
+                <label>Service At</label>
+                <h4>{{serviceInfo.serviceAt}}</h4>
+              </div>
+            </div>
+            <div class="col-xs-6 col-sm-4 col-md-3">
+              <div ng-repeat="serviceInfo in currentProduct.serviceInfo">
+                <label>Authorized Service Station</label>
+                <h4>{{serviceInfo.authServiceStation}}</h4>
+              </div>
+            </div>
+          </div>
         </uib-tab>
       </uib-tabset>
       <div class="information-tabs" ng-if="(currentProduct.tradeType == 'BOTH') || (currentProduct.tradeType == 'SELL') || (currentProduct.tradeType == 'NOT_AVAILABLE')">
@@ -494,36 +508,39 @@
           <form  novalidate class="financeReq" name="financeReq">
             <div>
               <div class="row">
-                <div class="col-xs-6">
-                  <div class="form-group">
-                    <input type="number"  class="form-control" min="0" name="assetCost" ng-model="reqFinance.financeInfo.assetCost" ng-value="currentProduct.grossPrice" placeholder="Amount to be Financed">
+                <div class="col-xs-6 col-sm-3">
+                  <div class="floating-label-wrapper form-group">
+                    <label>Amount to be Financed</label>
+                    <input type="number"  class="form-control" min="0" name="assetCost" ng-model="reqFinance.financeInfo.assetCost" ng-value="currentProduct.grossPrice" placeholder="Enter Amount to be Financed">
                   </div>
                 </div>
-                <div class="col-xs-6">
-                  <div class="form-group">
-                    <input type="number" class="form-control" name="indicativeRate" ng-model="reqFinance.financeInfo.indicativeRate" min= '0' placeholder="Indicative Rate">
+                <div class="col-xs-6 col-sm-3">
+                  <div class="floating-label-wrapper form-group">
+                    <label>Indicative Rate</label>
+                    <input type="number" class="form-control" name="indicativeRate" ng-model="reqFinance.financeInfo.indicativeRate" min= '0' placeholder="Enter Indicative Rate">
                   </div>
                 </div>
-              </div>
-              <div class="row">
-                <div class="col-xs-6">
-                  <div class="form-group">
-                    <input type="text" class="form-control" name="periodInMonths" ng-model="reqFinance.financeInfo.periodInMonths" min= '0' placeholder="Tenure (in Months)">
+             
+                <div class="col-xs-6 col-sm-3">
+                  <div class="floating-label-wrapper form-group">
+                    <label>Tenure (in Months)</label>
+                    <input type="text" class="form-control" name="periodInMonths" ng-model="reqFinance.financeInfo.periodInMonths" min= '0' placeholder="Enter Tenure (in Months)">
                   </div>
                 </div>
-                <div class="col-xs-6">
-                  <div class="form-group" ng-class="{'has-error': financeReq.finAgency.$invalid && financeSubmitted }">
+                <div class="col-xs-6 col-sm-3">
+                  <div class="floating-label-wrapper form-group" ng-class="{'has-error': financeReq.finAgency.$invalid && financeSubmitted }">
+                    <label>Financing Company</label>
                     <select class="form-control" name="finAgency" ng-model="reqFinance.financeInfo.finAgency" required>
-                      <option value="" disabled>* Financing Company</option>
+                      <option value="" disabled>Select Financing Company</option>
                       <option  ng-repeat="finAgency in valDetailsAgencies" value="{{finAgency.name}}">{{finAgency.name}}</option>
                     </select>
-                    <i class="caret"></i>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="form-group">
-              <textarea class="form-control" name="message" ng-model="reqFinance.message" placeholder="Comments"></textarea>
+            <div class="floating-label-wrapper form-group">
+              <label>Comments</label>
+              <textarea class="form-control" name="message" ng-model="reqFinance.message" placeholder="Enter Comments"></textarea>
             </div>
             <button type="submit"  ng-if="currentProduct.assetStatus == 'listed'" ng-disabled="currentProduct.tradeType == 'NOT_AVAILABLE'" ng-click="productDetailVm.requestForFinance(financeReq)" class="btn btn-primary pull-right">Submit</button>
           </form>
@@ -533,35 +550,47 @@
           <div ng-controller="ValuationRequestCtrl as valuationVm">
             <form  novalidate class="valReqForm" name="valReqForm">
               <div class="row">
-                <div class="col-sm-6 form-group">
-                  <input type="text" class="form-control" ng-value="valuationVm.valuationReq.product.category" placeholder="Category" disabled>
+                <div class="col-xs-6 col-sm-3 form-group">
+                  <div class="floating-label-wrapper">
+                    <label>Category</label>
+                    <input type="text" class="form-control" ng-value="valuationVm.valuationReq.product.category" placeholder="Enter Category" disabled>
+                  </div>
                 </div>
-                <div class="col-sm-6 form-group">
-                  <input type="text" class="form-control" ng-value="valuationVm.valuationReq.product.name" placeholder="Asset Name" disabled>
+                <div class="col-xs-6 col-sm-3 form-group">
+                  <div class="floating-label-wrapper">
+                    <label>Asset Name</label>
+                    <input type="text" class="form-control" ng-value="valuationVm.valuationReq.product.name" placeholder="Enter Asset Name" disabled>
+                  </div>
                 </div>
-              </div>
-              <div class="row">
-                <div class="col-sm-6 form-group">
-                  <input type="text" class="form-control" ng-value="valuationVm.valuationReq.product.serialNumber" placeholder="Serial Number" disabled>
+                <div class="col-xs-6 col-sm-3 form-group">
+                  <div class="floating-label-wrapper">
+                    <label>Serial Number</label>
+                    <input type="text" class="form-control" ng-value="valuationVm.valuationReq.product.serialNumber" placeholder="Enter Serial Number" disabled>
+                  </div>
                 </div>
-                <div class="col-sm-6 form-group">
-                  <input type="text" class="form-control" ng-value="valuationVm.valuationReq.product.city" placeholder="Asset Location" disabled>
+                <div class="col-xs-6 col-sm-3 form-group">
+                  <div class="floating-label-wrapper">
+                    <label>Asset Location</label>
+                    <input type="text" class="form-control" ng-value="valuationVm.valuationReq.product.city" placeholder="Enter Asset Location" disabled>
+                  </div>
                 </div>
-              </div>
-              <div class="row">
-                <div class="col-sm-6 form-group" ng-class="{'has-error':valReqForm.valagency.$invalid && valSubmitted}">
-                  <select class="form-control" name="valagency" required ng-model="valuationVm.valuationReq.valuationAgency._id">
-                    <option value="">Agency Name</option>
-                    <option value="{{agency._id}}" ng-repeat="agency in valAgencies">{{agency.name}}</option>
-                  </select>
-                  <i class="caret"></i>
+                <div class="col-xs-6 col-sm-3 form-group" ng-class="{'has-error':valReqForm.valagency.$invalid && valSubmitted}">
+                  <div class="floating-label-wrapper">
+                    <label>Agency Name</label>
+                    <select class="form-control" name="valagency" required ng-model="valuationVm.valuationReq.valuationAgency._id">
+                      <option value="">Select Agency Name</option>
+                      <option value="{{agency._id}}" ng-repeat="agency in valAgencies">{{agency.name}}</option>
+                    </select>
+                  </div>
                 </div>
-                <div class="col-sm-6 form-group" ng-class="{'has-error': valReqForm.purpose.$invalid && valSubmitted}">
-                  <select class="form-control" name="purpose" ng-model="valuationVm.valuationReq.purpose" required>
-                    <option value="Financing">Financing</option>
-                    <option ng-repeat="valuation in valuationList" value="{{valuation.name}}">{{valuation.name}}</option>
-                  </select>
-                  <i class="caret"></i>
+                <div class="col-xs-6 col-sm-3 form-group" ng-class="{'has-error': valReqForm.purpose.$invalid && valSubmitted}">
+                  <div class="floating-label-wrapper">
+                      <label>Financing</label>
+                    <select class="form-control" name="purpose" ng-model="valuationVm.valuationReq.purpose" required>
+                      <option value="Financing">Select Financing</option>
+                      <option ng-repeat="valuation in valuationList" value="{{valuation.name}}">{{valuation.name}}</option>
+                    </select>
+                  </div>
                 </div>
               </div>
               <button type="submit" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE'" ng-click="valuationVm.submitValuationReq(valReqForm)" class="btn btn-primary pull-right">Submit</button>
@@ -572,58 +601,72 @@
         <uib-tab heading="Inspection Request">
           <form  novalidate class="reqForCertify" name="reqForCertify">
             <div class="row text-left">
-              <div class="col-xs-12 col-sm-4 form-group">Purpose of Inspection</div>
-              <div class="col-xs-6 col-sm-4 form-group" ng-class="{'has-error': reqForCertify.certification.$invalid && inspectSubmitted}">
-                <select class="form-control" ng-model="productQuote.certifiedByIQuippoQuote.valuation" name="certification" required>
-                  <option value="">*Select Purpose</option>
-                  <option ng-repeat="valuation in valuationList" value="{{valuation.name}}">{{valuation.name}}</option>
-                </select>
-              </div>
-              <div class="col-xs-6 col-sm-4 form-group" ng-class="{'has-error': productQuote.certifiedByIQuippoQuote.valuation == 'Other' &&!productQuote.certifiedByIQuippoQuote.otherName && !certifiedByIQuippoQuote.valid && inspectSubmitted}">
-                <input class="form-control" type="text" name="otherName" ng-model="productQuote.certifiedByIQuippoQuote.otherName" ng-disabled ="productQuote.certifiedByIQuippoQuote.valuation != 'Other'" placeholder="*Other" ng-required= "productQuote.certifiedByIQuippoQuote.valuation == 'Other'">
-              </div>
-            </div>
-            <div class="row text-left">
-              <div class="col-xs-12 col-sm-4 form-group">Schedule a call</div>
-              <div class="col-xs-6 col-sm-4 form-group">
-                <div class="radio radio-info">
-                  <input type="radio"  placeholder="" id="certifiedRadio1" name="scheduleC" ng-model="productQuote.certifiedByIQuippoQuote.scheduleC" value="yes">
-                  <label for="certifiedRadio1"> Yes </label>
+              <div class="col-xs-12 col-sm-6 form-group">
+                <div class="floating-label-wrapper">
+                  <label>Purpose of Inspection</label>
+                </div>
+                <div class="row">
+                  <div class="col-xs-12 col-sm-6 form-group" ng-class="{'has-error': reqForCertify.certification.$invalid && inspectSubmitted}">
+                    <div class="floating-label-wrapper">
+                      <select class="form-control" ng-model="productQuote.certifiedByIQuippoQuote.valuation" name="certification" required>
+                        <option value="">*Select Purpose</option>
+                        <option ng-repeat="valuation in valuationList" value="{{valuation.name}}">{{valuation.name}}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-xs-12 col-sm-6 form-group" ng-class="{'has-error': productQuote.certifiedByIQuippoQuote.valuation == 'Other' &&!productQuote.certifiedByIQuippoQuote.otherName && !certifiedByIQuippoQuote.valid && inspectSubmitted}">
+                    <div class="floating-label-wrapper">
+                      <input class="form-control" type="text" name="otherName" ng-model="productQuote.certifiedByIQuippoQuote.otherName" ng-disabled ="productQuote.certifiedByIQuippoQuote.valuation != 'Other'" placeholder="*Other" ng-required= "productQuote.certifiedByIQuippoQuote.valuation == 'Other'">
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div class="col-xs-6 col-sm-4 form-group">
-                <div class="radio radio-info">
-                  <input type="radio" placeholder="" id="certifiedRadio2" name="scheduleC" ng-model="productQuote.certifiedByIQuippoQuote.scheduleC" value="no">
-                  <label for="certifiedRadio2"> No </label>
+              <div class="col-xs-12 col-sm-6 form-group">
+                <div class="floating-label-wrapper">
+                  <label>Schedule a call</label>
+                </div>
+                <div class="row">
+                  <div class="col-xs-12 col-sm-6 form-group">
+                    <div class="radio radio-info">
+                      <input type="radio"  placeholder="" id="certifiedRadio1" name="scheduleC" ng-model="productQuote.certifiedByIQuippoQuote.scheduleC" value="yes">
+                      <label for="certifiedRadio1"> Yes </label>
+                    </div>
+                  </div>
+                  <div class="col-xs-12 col-sm-6 form-group">
+                    <div class="radio radio-info">
+                      <input type="radio" placeholder="" id="certifiedRadio2" name="scheduleC" ng-model="productQuote.certifiedByIQuippoQuote.scheduleC" value="no">
+                      <label for="certifiedRadio2"> No </label>
+                    </div>
+                    
+                  </div>
+                </div>
+                <div class="clerafix"></div>
+                <div class="col-xs-6 col-sm-6 form-group" ng-if="productQuote.certifiedByIQuippoQuote.scheduleC == 'yes'">
+                  <small>Pick Date</small>
+                  <div class="input-group" ng-class="{'has-error': !productQuote.certifiedByIQuippoQuote.scheduleDate && !certifiedByIQuippoQuote.valid && inspectSubmitted}">
+                    <input type="text" class="form-control pick-width" ng-model="productQuote.certifiedByIQuippoQuote.scheduleDate" uib-datepicker-popup="{{format}}" ng-name="scheduleDate" ng-value="" is-open="popup2.opened" min-date="minDate" max-date="maxDate" datepicker-options="datepickerOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" placeholder="dd/mm/yyyy" />
+                    <span class="input-group-addon">
+                      <a href class="btn btn-default" ng-click="open2()"><i class="fa fa-calendar-o"></i></a>
+                    </span>
+                  </div>
                 </div>
                 
-              </div>
-              
-              <div class="clerafix"></div>
-              <div class="col-xs-6 col-sm-offset-4 col-sm-4 form-group" ng-if="productQuote.certifiedByIQuippoQuote.scheduleC == 'yes'">
-                <small>Pick Date</small>
-                <div class="input-group" ng-class="{'has-error': !productQuote.certifiedByIQuippoQuote.scheduleDate && !certifiedByIQuippoQuote.valid && inspectSubmitted}">
-                  <input type="text" class="form-control pick-width" ng-model="productQuote.certifiedByIQuippoQuote.scheduleDate" uib-datepicker-popup="{{format}}" ng-name="scheduleDate" ng-value="" is-open="popup2.opened" min-date="minDate" max-date="maxDate" datepicker-options="datepickerOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" placeholder="dd/mm/yyyy" />
-                  <span class="input-group-addon">
-                    <a href class="btn btn-default" ng-click="open2()"><i class="fa fa-calendar-o"></i></a>
-                  </span>
+                <div class="col-xs-6 col-sm-6 form-group" ng-if="productQuote.certifiedByIQuippoQuote.scheduleC == 'yes'">
+                  <small>Set Time</small>
+                  <div class="input-group">
+                    <input type="text" class="form-control" placeholder="HH:MM" ng-model="productQuote.certifiedByIQuippoQuote.scheduledTime" is-open=""  ng-value="{{productQuote.certifiedByIQuippoQuote.scheduledTime | date:'shortTime' }}" timepicker-options="timepickerOptions">
+                    <span class="input-group-addon">
+                      <button class="btn btn-default" ng-click="toggleMode()"><i class="fa fa-clock-o"></i></button>
+                    </span>
+                  </div>
+                  <uib-timepicker ng-if="isShow" ng-model="mytime" ng-change="changedCertified(mytime)" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></uib-timepicker>
+                  
                 </div>
-              </div>
-              
-              <div class="col-xs-6 col-sm-4 form-group" ng-if="productQuote.certifiedByIQuippoQuote.scheduleC == 'yes'">
-                <small>Set Time</small>
-                <div class="input-group">
-                  <input type="text" class="form-control" placeholder="HH:MM" ng-model="productQuote.certifiedByIQuippoQuote.scheduledTime" is-open=""  ng-value="{{productQuote.certifiedByIQuippoQuote.scheduledTime | date:'shortTime' }}" timepicker-options="timepickerOptions">
-                  <span class="input-group-addon">
-                    <button class="btn btn-default" ng-click="toggleMode()"><i class="fa fa-clock-o"></i></button>
-                  </span>
-                </div>
-                <uib-timepicker ng-if="isShow" ng-model="mytime" ng-change="changedCertified(mytime)" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></uib-timepicker>
-                
-              </div>
+              </div>              
             </div>
-            <div class="form-group">
-              <textarea class="form-control" placeholder="Comments" ng-model="productQuote.certifiedByIQuippoQuote.comment"></textarea>
+            <div class="form-group floating-label-wrapper">
+              <label>Comments</label>
+              <textarea class="form-control" placeholder="Enter Comments" ng-model="productQuote.certifiedByIQuippoQuote.comment"></textarea>
             </div>
             <button type="submit" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE'" class="btn btn-primary pull-right" ng-click="productDetailVm.addProductQuote(reqForCertify)">Submit</button>
             <strong>Note:</strong> Inspection Charges - <i class="fa fa-inr"></i> 3,000
