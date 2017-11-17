@@ -15,10 +15,17 @@
       <!-- Collect the nav links, forms, and other content for toggling -->
       <div class="collapse navbar-collapse navbar-ex1-collapse" ng-class="!navCollapsed && 'in'" ng-click="navCollapsed = true">
         <ul class="nav navbar-nav navbar-right">
-            <li><a href="/new">New Equipment</a></li>
-            <li><a href="/used">Used Equipment</a></li>
+            <li class="submenu dropdown">
+              <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" uib-dropdown-toggle >Equipment</a>
+                <ul class="uib-dropdown-menu" role="menu">
+                  <li role="menuitem"><a href="/used"> Used Equipment</a></li>
+                  <li role="menuitem"><a href="/new"> New Equipment</a></li>
+                  <li role="menuitem"><a href="/viewauctions?type=upcoming"> Auction</a></li>
+                </ul>
+            </li>
             
              <li ng-class="{active: isActive(['financing'])}"><a href="javascript:void(0);" ng-click="submitToRapid(createnewloan)">Financing</a></li>
+             <li><a href="https://sarv.iquippo.com/" target="_blank">Sarv</a></li>
              <li ng-class="{active: isActive(['valuation'])}"><a href="/valuation">Valuation</a></li>
              <li class="submenu dropdown">
                 <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" id="single-button"  uib-dropdown-toggle >Other Services</a>

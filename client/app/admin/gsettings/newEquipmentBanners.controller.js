@@ -93,7 +93,7 @@ function NewEquipmentBannersCtrl($scope, $rootScope, $state, vendorSvc, brandSvc
                     if (vm.dataModel.position) {
                         vm.dataModel.position = vm.dataModel.position;
                     }
-                    if (vm.dataModel.promotion.data) {
+                    if (vm.dataModel.promotion) {
                         for (var k in  vm.promoList) {
                             if (vm.promoList[k]._id == vm.dataModel.promotion.pro_id)
                                 vm.dataModel.promotion.name = vm.promoList[k].certificate;
@@ -111,12 +111,15 @@ function NewEquipmentBannersCtrl($scope, $rootScope, $state, vendorSvc, brandSvc
 
                     if(vm.dataModel.position==='left'){
                          vm.dataModel.order = 1;
+                         vm.dataModel.status = true;
                      }
                      if(vm.dataModel.position==='topRight'){
                          vm.dataModel.order = 2;
+                         vm.dataModel.status = true;
                      }
                      if(vm.dataModel.position==='bottomRight'){
                          vm.dataModel.order = 3;
+                         vm.dataModel.status = true;
                      }
                     else{
                         vm.dataModel.status = true;
@@ -157,12 +160,16 @@ function NewEquipmentBannersCtrl($scope, $rootScope, $state, vendorSvc, brandSvc
         }
         if(vm.dataModel.position==='left'){
             vm.dataModel.order = 1;
+            vm.dataModel.status = true;
         }
         if(vm.dataModel.position==='topRight'){
             vm.dataModel.order = 2;
+            vm.dataModel.status = true;
         }
         if(vm.dataModel.position==='bottomRight'){
             vm.dataModel.order = 3;
+            vm.dataModel.status = true;
+
         }
         else{
             vm.dataModel.status = true;
