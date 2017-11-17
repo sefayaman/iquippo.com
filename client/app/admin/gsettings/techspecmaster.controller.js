@@ -147,8 +147,8 @@ function TechSpecMasterCtrl($scope,$rootScope,$state,uploadSvc,categorySvc,brand
     }
     function onModelChange(modelId, noChange) {
         var filter = {};
-        filter['categoryId'] = vm.dataModel.categoryId;
-        filter['brandId'] = vm.dataModel.brandId;
+//        filter['categoryId'] = vm.dataModel.categoryId;
+//        filter['brandId'] = vm.dataModel.brandId;
         filter['modelId'] = vm.dataModel.modelId;
         TechSpecMasterSvc.getFieldData(filter)
         .then(function(result){
