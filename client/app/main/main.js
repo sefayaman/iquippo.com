@@ -701,7 +701,7 @@ angular.module('sreizaoApp')
        .state("newequipment", {
         url:"/new",
         templateUrl: "app/newequipment/newequipment.html",
-        controller:"NewEquipmentCtrl",
+        controller:"NewEquipmentCtrl as newEquipmentVm",
         layout:"client",
         onEnter:function($rootScope){
           //$rootScope.choosenTitle=pagesTitles.valuation.title;

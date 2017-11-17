@@ -1,10 +1,9 @@
 (function() {
   'use strict';
   angular.module('sreizaoApp').controller('NewEquipmentMasterCtrl', NewEquipmentMasterCtrl);
-angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
 
   //Product upload controller
-  function NewEquipmentMasterCtrl($scope, $http, $rootScope, $stateParams, groupSvc, categorySvc, SubCategorySvc, LocationSvc, uploadSvc, productSvc, brandSvc, modelSvc, Auth, $uibModal, Modal, $state, notificationSvc, AppNotificationSvc, userSvc, $timeout, $sce, vendorSvc, AuctionMasterSvc, AuctionSvc, PaymentMasterSvc, ValuationSvc, ProductTechInfoSvc, AppStateSvc,VatTaxSvc) {
+  function NewEquipmentMasterCtrl($scope, $http, $rootScope, $stateParams, groupSvc, categorySvc, SubCategorySvc, LocationSvc, uploadSvc, productSvc, brandSvc, modelSvc, Auth, $uibModal, Modal, $state, notificationSvc, AppNotificationSvc, userSvc, $timeout, $sce, vendorSvc, AuctionMasterSvc, AuctionSvc, PaymentMasterSvc, ValuationSvc, ProductTechInfoSvc, AppStateSvc,VatTaxSvc,CertificateMasterSvc) {
 
     var vm = this;
     //Start NJ : uploadProductClick object push in GTM dataLayer
@@ -135,16 +134,20 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
         $state.go('myaccount');
         return;
       }
-      groupSvc.getAllGroup()
+      groupSvc.getAllGroup({isForNew:true})
         .then(function(result) {
           $scope.allGroup = result;
         });
 
-      categorySvc.getAllCategory()
+      categorySvc.getCategoryOnFilter({isForNew:true})
         .then(function(result) {
           $scope.allCategory = result;
         });
 
+      CertificateMasterSvc.get()
+      .then(function(certList){
+        $scope.certificationList = certList;
+      });
       /* SubCategorySvc.getAllSubCategory()
       .then(function(result){
         $scope.allSubCategory = result;
@@ -578,6 +581,8 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
       var otherBrand = null;
       filter = {};
       filter['categoryId'] = categoryId;
+      filter['isForNew'] = true;
+
       brandSvc.getBrandOnFilter(filter)
         .then(function(result) {
           $scope.brandList = result;
@@ -615,6 +620,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
       var otherModel = null;
       filter = {};
       filter['brandId'] = brandId;
+      filter['isForNew'] = true;
       modelSvc.getModelOnFilter(filter)
         .then(function(result) {
           $scope.modelList = result;
@@ -1202,6 +1208,12 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
 
       });
 
+       $scope.certificationList.forEach(function(certObj){
+        if(certObj.name === $scope.product.certificationName)
+          $scope.product.certificationLogo = certObj.logoImg;
+      });
+
+
       if (!$scope.isEdit)
         addProduct(cb);
       else
@@ -1637,61 +1649,5 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
 
 
   }
-
-  //Crop Image Controller
-  function CropImageCtrl($scope, Auth, $location, $window, $http, $uibModalInstance) {
-    $scope.imageOut = '';
-    $scope.options = {};
-    var imgParts = $scope.imgSrc.split(".");
-    var imgExt = imgParts[imgParts.length - 1];
-    $scope.options.image = $scope.prefix + $scope.imgSrc + "?timestamp=" + new Date().getTime();
-    $scope.options.viewSizeWidth = 500;
-    $scope.options.viewSizeHeight = 500;
-
-    $scope.options.viewShowRotateBtn = false;
-    $scope.options.rotateRadiansLock = false;
-
-    $scope.options.outputImageWidth = 0;
-    $scope.options.outputImageHeight = 0;
-    $scope.options.outputImageRatioFixed = false;
-    $scope.options.outputImageType = imgExt;
-    $scope.options.outputImageSelfSizeCrop = true;
-    $scope.options.viewShowCropTool = true;
-    $scope.options.inModal = true;
-    $scope.options.watermarkType = 'image';
-    $scope.options.watermarkImage = null;
-
-    $scope.cropImage = function() {
-      $scope.$broadcast('cropImage');
-    };
-
-    $scope.saveImage = function() {
-      $scope.$broadcast('cropImageSave');
-    };
-
-    $scope.saveCrop = function(data) {
-      var serData = {};
-      serData['data'] = data;
-      //serData["imgExt"] = imgExt;
-      serData['assetdir'] = $scope.assetDir;
-      serData['filename'] = $scope.imgSrc;
-      $http.post('/api/common/saveasimage', serData)
-        .then(function(res) {
-          $uibModalInstance.close("ok");
-        })
-        .catch(function(res) {
-          console.log(res);
-        })
-    };
-    $scope.closeModal = function() {
-      $uibModalInstance.close();
-    }
-    $scope.dismissModal = function() {
-      $uibModalInstance.dismiss();
-    }
-
-  }
-
-
 
 })();

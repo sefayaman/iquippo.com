@@ -29,7 +29,7 @@ function NewEquipmentBannersCtrl($scope, $rootScope, $state, vendorSvc, brandSvc
     } 
   
     function loadAllBrand() {
-        brandSvc.getAllBrand()
+        brandSvc.getBrandOnFilter({isForNew:true})
         .then(function(result) {
             vm.brandList = result;
         });

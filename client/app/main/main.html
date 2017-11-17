@@ -166,7 +166,7 @@
       <h4>[ Special Products ]</h4>
     </div>
     <div class="row">
-      <div class="col-sm-6 form-group text-center" ng-repeat="cert in mainVm.certificationList">   
+      <div class="col-sm-6 form-group text-center" ng-repeat="cert in mainVm.certificationList" ng-if="$index < 2">   
         <div class="spacial-products">
           <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{cert.primaryImg}}"  width="100%" height="100%">
             <a href="/used/spl/{{cert.name}}?currentPage=1" class="btn btn-default">Shop Now</a>

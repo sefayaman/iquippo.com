@@ -480,6 +480,24 @@
                 </div>
               </div>
             </div>
+
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title">Certificate</h3>
+              </div>
+              <div class="panel-body">
+                <div class="form-group row">
+                  <div class="col-sm-3 form-group">Certificate</div>
+                  <div class="col-sm-5 form-group">
+                    <select class="form-control" ng-model="product.certificationName">
+                      <option value="">Select Certification</option>
+                      <option value="{{cert.name}}" ng-repeat="cert in certificationList">{{cert.name}}</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <div class="clearfix form-group"></div>
       <div class="row" ng-if="isAdmin()">
         <div class="col-sm-3">Upload Stamp</div>
