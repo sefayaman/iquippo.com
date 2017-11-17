@@ -183,11 +183,12 @@ exports.search = function(req, res) {
    if(req.body.productCondition)
    filter["productCondition"] = {$regex:new RegExp(req.body.productCondition,'i')};
 
+  var locationArr = [];
   if(req.body.location){
     var locRegEx = new RegExp(req.body.location, 'i');
-    arr[arr.length] = {city:{$regex:locRegEx}};
-    arr[arr.length] = {state:{$regex:locRegEx}};
-    arr[arr.length] = {country:{$regex:locRegEx}};
+    locationArr[locationArr.length] = {city:{$regex:locRegEx}};
+    locationArr[locationArr.length] = {state:{$regex:locRegEx}};
+    locationArr[locationArr.length] = {country:{$regex:locRegEx}};
   }
 
   if(req.body.productDescription){
@@ -307,8 +308,13 @@ exports.search = function(req, res) {
   }
  
   function fetchResults(){
-    if(arr.length > 0)
+    if(arr.length > 0 && locationArr.length >0 )
+       filter['$and'] = [{$or:arr},{$or:locationArr}];
+    else if(arr.length>0)
       filter['$or'] = arr;
+    else if(locationArr.length >0)
+       filter['$or'] = locationArr;
+
     var result = {};
     if(req.body.pagination){
       paginatedProducts(req,res,filter,result);
