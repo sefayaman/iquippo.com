@@ -31,7 +31,7 @@ angular.module('admin').factory("TechSpecMasterSvc",TechSpecMasterSvc);
             throw err;
           });
      }
-     function getFieldData(filter){
+     function getFieldData(filter){console.log("filter=",filter);
       var path = svcPath+'/fielddata'; 
       var queryParam = "";
         if(filter)
