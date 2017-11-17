@@ -54,7 +54,7 @@
             </uib-accordion-heading>
               <div>
                 <div class="radio" ng-repeat="br in brandList">
-                  <input type="radio" ng-model="equipmentSearchFilter.brand" name="brand" value="{{br.name}}" id="brand_{{$index}}"> <label for="brand_{{$index}}">{{br.name}}</label>
+                  <input type="radio" ng-model="equipmentSearchFilter.brand" name="brand" value="{{br.name}}" id="brand_{{$index}}" ng-change="viewproductVm.fireCommand()"> <label for="brand_{{$index}}">{{br.name}}</label>
                 </div>
                 
               </div>
