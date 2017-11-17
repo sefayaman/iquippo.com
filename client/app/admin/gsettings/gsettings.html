@@ -3357,16 +3357,16 @@
        <div class="row form-group">
            <div class="col-sm-3">
                <label> Brand</label>
-               <select class="form-control" name="brand" ng-model="newBannerVm.dataModel.brand.data">
+               <select class="form-control" name="brand" ng-model="newBannerVm.dataModel.brand.name">
                    <option value="">Select Brand</option>
-                   <option ng-repeat="brand in newBannerVm.brandList" value="{{brand._id}}">{{brand.name}}</option>
+                   <option ng-repeat="brand in newBannerVm.brandList" value="{{brand.name}}">{{brand.name}}</option>
                </select>
            </div>
            <div class="col-sm-3">
                 <label> Promotion/Certificate</label>
-                <select class="form-control" name="promotion" ng-model="newBannerVm.dataModel.promotion.data">
+                <select class="form-control" name="promotion" ng-model="newBannerVm.dataModel.promotion.name">
                     <option value="">Select Promotion</option>
-                   <option ng-repeat="promo in newBannerVm.promoList" value="{{promo._id}}">{{promo.name}} {{promo.certificate}}</option>
+                   <option ng-repeat="promo in newBannerVm.promoList" value="{{promo.name}}">{{promo.name}} {{promo.certificate}}</option>
                 </select>
            </div>
            <div class="col-sm-3" ng-class="{'has-error':newEquipBannerForm.position.$invalid && submitted}">
