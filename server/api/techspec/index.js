@@ -13,5 +13,5 @@ router.post('/onfilter', controller.getOnFilter);
 router.post('/field', controller.createfield);
 router.get('/fielddata', controller.getFieldData);
 router.put('/fieldupdate/:id', controller.fieldUpdate);
-
+//router.get('/groupbydata', controller.getGroupByData);
 module.exports = router;

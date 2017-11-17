@@ -14,6 +14,7 @@ angular.module('admin').factory("TechSpecMasterSvc",TechSpecMasterSvc);
     svc.search = search;
     svc.getFieldData = getFieldData;
     svc.fieldUpdate = fieldUpdate;
+    svc.getGroupByData = getGroupByData;
      
    function get(filter){
       var path = svcPath; 
@@ -32,6 +33,21 @@ angular.module('admin').factory("TechSpecMasterSvc",TechSpecMasterSvc);
      }
      function getFieldData(filter){
       var path = svcPath+'/fielddata'; 
+      var queryParam = "";
+        if(filter)
+          queryParam = $httpParamSerializer(filter);
+        if(queryParam)
+          path  = path + "?" + queryParam;
+       return $http.get(path)
+          .then(function(res){
+            return res.data;
+          })
+          .catch(function(err){
+            throw err;
+          });
+     }
+      function getGroupByData(filter){
+      var path = svcPath+'/groupbydata'; 
       var queryParam = "";
         if(filter)
           queryParam = $httpParamSerializer(filter);

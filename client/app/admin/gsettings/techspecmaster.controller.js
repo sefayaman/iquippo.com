@@ -38,9 +38,10 @@ function TechSpecMasterCtrl($scope,$rootScope,$state,uploadSvc,categorySvc,brand
     vm.fieldUpdate = fieldUpdate;
     $scope.isFieldEdit = false;
     vm.checkCount = checkCount;
+    vm.loadGroupByData = loadGroupByData;
     vm.checks = [];
     vm.totalChecked = 0;
-    vm.disArr = [];
+    $scope.disArr = [];
     vm.closeView = closeView;
     //vm.checkRecord = checkRecord;
     function init(){
@@ -191,17 +192,26 @@ function TechSpecMasterCtrl($scope,$rootScope,$state,uploadSvc,categorySvc,brand
         .then(function(result){
             vm.listFieldData = result;
             
-            result.forEach(function(item){
+            /*result.forEach(function(item){
                 var modelId = item.modelId;
-                 vm.disArr[modelId] = "vinay"//item;
+
+                 $scope.disArr[modelId] = item;
                 // Call asynchronous function, often a save() to DB
                 //item.someAsyncCall();
-            });
-            console.log("scope.Arr==",vm.disArr);
-            console.log("listfieldData",vm.listFieldData);
-            vm.totalItems = result.totalItems;
+            });*/
+           // console.log("scope.Arr==",$scope.disArr);
+            //console.log("listfieldData",vm.listFieldData);
+           // vm.totalItems = result.totalItems;
             $scope.pager.update(result.items, result.totalItems);
-        });console.log("scope.Arr888==",vm.disArr);
+        });//console.log("scope.Arr888==",$scope.disArr);
+    }
+    function loadGroupByData(filter){
+        //$scope.pager.copy(filter);
+        TechSpecMasterSvc.getGroupByData(filter)
+        .then(function(result){
+            vm.listGroupByData = result;
+           
+        });
     }
     function fireCommand(reset){
         if (reset)
