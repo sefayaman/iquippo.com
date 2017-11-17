@@ -7,7 +7,6 @@ angular.module('sreizaoApp')
       'link': '/'
     }];
     var facebookConversionSent = false;
-    $scope.newsEvents = newsEvents;
     $scope.isCollapsed = true;
     $scope.isLoggedIn = Auth.isLoggedIn;
     $scope.isAdmin = Auth.isAdmin;

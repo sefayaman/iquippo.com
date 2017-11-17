@@ -7,7 +7,7 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
     var vm = this;
     vm.allCategoryList = [];
     //vm.categoryList = [];
-    vm.newsEvents = newsEvents;
+    $scope.newsEvents = newsEvents;
     vm.myInterval = 7000;
     vm.noWrapSlides = false;
     vm.slides = [];
@@ -39,7 +39,7 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
     $scope.doSearch = doSearch;
     $scope.myFunct = myFunct;
     vm.openBidModal = openBidModal;
-    vm.openPrintMedia = openPrintMedia;
+    $scope.openPrintMedia = openPrintMedia;
     $scope.toggleSearchBox = toggleSearchBox;
     vm.getBrandCount = getBrandCount;
     vm.getCategoryCount = getCategoryCount;
@@ -80,7 +80,7 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
       var prMediaScope = $rootScope.$new();
       prMediaScope.url = $rootScope.uploadImagePrefix + $rootScope.newsEventsDir  + "/" + imageName;
       var printMediaModal = $uibModal.open({
-          templateUrl: "primtmedia.html",
+          templateUrl: "printmedia.html",
           scope: prMediaScope
       });
 

@@ -165,5 +165,6 @@ router.post('/offer',offerCtrl.create);
 router.get('/offer/get',auth.hasRole('admin'), offerCtrl.get);
 router.put('/offer/:id', auth.hasRole('admin'),offerCtrl.update);
 router.delete('/offer/:id',auth.hasRole('admin'), offerCtrl.destroy);
+router.get('/offer/getfilterdata', offerCtrl.getFilterData);
 
 module.exports = router;

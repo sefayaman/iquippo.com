@@ -4,7 +4,7 @@
       <a href="/main">Home</a>
     </li>
     <li>
-      <a href="/newequipments">New Equipments</a>
+      <a href="/new">New Equipments</a>
     </li>
     <li class="active">Bulk Orders</li>
   </ol>
@@ -18,103 +18,114 @@
     </div>
 
     <div class="information-tabs">
-      <div class="information-padd">
-        <h4 class="text-center">BULK INQUIRY FORM</h4>
-        <legend></legend>
+        <div class="information-padd">
+            <h4 class="text-center">BULK INQUIRY FORM</h4>
+            <legend></legend>
 
-        <div class="row">
-          <div class="col-sm-4 form-group">
-            <div class="floating-label-wrapper">
-              <label for="name">Name*</label>
-              <input type="text" class="form-control" id="name" placeholder="Name*" ng-model="user.name" required with-floating-label>
-            </div>
-          </div>
-          <div class="col-sm-4 form-group">
-            <div class="floating-label-wrapper">
-              <label for="mobile">Mobile*</label>
-              <input type="number" class="form-control" id="mobile" placeholder="Mobile*" ng-model="user.mobile" required with-floating-label>
-            </div>
-          </div>
-          <div class="col-sm-4 form-group">
-            <div class="floating-label-wrapper">
-              <label for="email">Email*</label>
-              <input type="email" class="form-control" id="email" placeholder="Email*" ng-model="user.email" required with-floating-label>
-            </div>
-          </div>
-          <div class="col-sm-4 form-group">
-            <div class="floating-label-wrapper">
-              <label>State</label>
-              <select class="form-control">
-                <option value="">Select State</option>              
-              </select>
-            </div>
-          </div>
-          <div class="col-sm-4 form-group">
-            <label>City</label>
-            <div class="floating-label-wrapper">
-              <select class="form-control">
-                <option value="">Select City</option>              
-              </select>
-            </div>
-          </div>
-        </div>
+            <form name="bulkInquiry">
+              <div class="row">
+                  <div class="col-sm-4 form-group" ng-class="{'has-error': bulkInquiry.name.$invalid && submitted }">
+                  <div class="floating-label-wrapper">
+                    <label for="name">Name*</label>
+                    <input type="text" class="form-control" id="name" name="name" placeholder="Name*" ng-model="user.name" required with-floating-label>
+                  </div>
+                </div>
+                <div class="col-sm-4 form-group">
+                  <div class="floating-label-wrapper">
+                    <label for="mobile">Mobile*</label>
+                    <input type="number" class="form-control" id="mobile" limit-to="10" placeholder="Mobile*" ng-model="user.mobile" required with-floating-label>
+                  </div>
+                </div>
+                <div class="col-sm-4 form-group">
+                  <div class="floating-label-wrapper">
+                    <label for="email">Email*</label>
+                    <input type="email" class="form-control" id="email" placeholder="Email*" ng-model="user.email" required with-floating-label>
+                  </div>
+                </div>
+                <div class="col-sm-4 form-group">
+                  <div class="floating-label-wrapper">
+                    <label>State</label>
+                    <select class="form-control" name="state" ng-model="bulkorder.state" ng-change="onStateChange(true)">
+                      <option value="">Select State</option>              
+                      <option value="{{state.name}}" ng-repeat="state in stateList| orderBy:'name'" >{{state.name}}</option>              
+                    </select>
+                  </div>
+                </div>
+                <div class="col-sm-4 form-group">
+                  <label>City</label>
+                  <div class="floating-label-wrapper">
+                      <select class="form-control" name="city" ng-model="bulkorder.city">
+                      <option value="">Select City</option>  
+                      <option value="{{location.name}}" ng-repeat="location in locationList| orderBy:'name'" >{{location.name}}</option>              
+                    </select>
+                  </div>
+                </div>
+              </div>
 
-        <h5>
-          <strong>ADD YOUR REQUIREMENTS</strong>
-        </h5>
+              <h5>
+                <strong>ADD YOUR REQUIREMENTS</strong>
+              </h5>
 
-        <div class="row">
-          <div class="col-sm-3 form-group">
-            <div class="floating-label-wrapper">
-              <label for="category">Category</label>
-              <select class="form-control">
-                <option value="">Select Category</option>              
-              </select>
-            </div>
-          </div>
-          <div class="col-sm-3 form-group">
-            <div class="floating-label-wrapper">
-              <label for="brand">Brand</label>
-              <select class="form-control" id="brand">
-                <option value="">Select Brand</option>              
-              </select>
-            </div>
-          </div>
-          <div class="col-sm-3 form-group">
-            <div class="floating-label-wrapper">
-              <label for="brand">Model</label>
-              <select class="form-control" id="brand">
-                <option value="">Select Model</option>              
-              </select>
-            </div>
-          </div>
-          <div class="col-sm-2 form-group text-center">
-            <label>Quantity</label>
-            <div class="input-group floating-label-wrapper">              
-              <a href="javascript:void(0);" class="input-group-addon"><i class="fa fa-minus"></i></a>
-              <input type="number" class="form-control" name="" placeholder="1" min="1">
-              <a href="javascript:void(0);" class="input-group-addon"><i class="fa fa-plus"></i></a>
-            </div>
-          </div>
-        </div>
-        
-        <div class="form-group">
-          <a href="javascript:void(0);">
-            <i class="fa fa-plus"></i> ADD MORE
-          </a>
-        </div>
-        <hr>
+              <div class="row" ng-repeat="field in newbulkorderVm.fieldInfo"> <!-- ng-repeat="fieldinfo in newbulkorderVm.fieldInfo"-->
+                <div class="col-sm-3 form-group">
+                  <div class="floating-label-wrapper">
+                    <label for="category">Category</label>
+                    <select class="form-control" name="category" ng-model="bulkorder.selectedCategoryId" ng-change="onCategoryChange(bulkorder.selectedCategoryId)">
+                      <option value="">Select Category</option>    
+                      <option value="{{cat._id}}" ng-repeat="cat in allCategory | orderBy:'name'">{{cat.name}}</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-sm-3 form-group">
+                  <div class="floating-label-wrapper">
+                    <label for="brand">Brand</label>
+                    <select class="form-control" id="brand" name="brand" ng-model="bulkorder.selectedBrandId" ng-change="onBrandChange(bulkorder.selectedBrandId)">
+                      <option value="">Select Brand</option>              
+                      <option value="{{brand._id}}" ng-repeat="brand in brandList">{{brand.name}}</option>              
+                    </select>
+                  </div>
+                </div>
+                <div class="col-sm-3 form-group">
+                  <div class="floating-label-wrapper">
+                    <label for="brand">Model</label>
+                    <select class="form-control" id="brand" name="model" ng-model="bulkorder.selectedModelId">
+                      <option value="">Select Model</option>              
+                      <option value="{{model._id}}" ng-repeat="model in modelList">{{model.name}}</option>              
+                    </select>
+                  </div>
+                </div>
+                <div class="col-sm-2 form-group text-center">
+                  <label>Quantity</label>
+                  <div class="input-group floating-label-wrapper">              
+                    <a href="javascript:void(0);" class="input-group-addon" ng-click="decrementQty()" ng-disabled="quantity<=1"><i class="fa fa-minus"></i></a>
+                    <input type="number" class="form-control quantity" name="quantity" ng-model="quantity" placeholder="1" min="1"/>
+                    <a href="javascript:void(0);" class="input-group-addon quantity" ng-click="incrementQty()"><i class="fa fa-plus"></i></a>
+                  </div>
+                </div>
 
-        <div class="row">
-          <div class="col-sm-8">
-            <p><em class="text-danger">*Required Fields</em></p>
-            You need not worry about anything, our customer care executive will contact you shortly with the quotations.
-          </div>
-          <div class="col-sm-2">
-            <button type="button" class="btn btn-primary btn-block">Get a Quote</button>
-          </div>
+                  <div class="form-group">
+                    <a href="javascript:void(0);">
+                      <i class="fa fa-plus" ng-click="newbulkorderVm.fieldInfo.push({})" ng-if="$last"></i> ADD MORE             
+                      <hr>
+                    </a>
+                    <a href="javascript:void(0);">
+                      <i class="fa fa-minus" ng-click="newbulkorderVm.fieldInfo.splice({})" ng-if="!$last"></i> DELETE
+                    </a>
+                  </div>
+                  <hr>
+              </div>
+
+              <div class="row">
+                <div class="col-sm-8">
+                  <p><em class="text-danger">*Required Fields</em></p>
+                  You need not worry about anything, our customer care executive will contact you shortly with the quotations.
+                </div>
+                <div class="col-sm-2">
+                    <button type="button" class="btn btn-primary btn-block" ng-click="newbulkorderVm.getQuoteSubmit()">Get a Quote</button>
+                </div>
+              </div>
+            </form>
         </div>
-      </div>
     </div>
 
     <div class="information-tabs">

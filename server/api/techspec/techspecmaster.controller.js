@@ -43,7 +43,6 @@ exports.get = function(req, res) {
 exports.getFieldData = function(req, res) {
   var queryParam = req.query;
   var filter = {};
-  console.log("queryparam==",queryParam);
   if (queryParam.searchStr) {
        filter['$text'] = {
         '$search': "\""+queryParam.searchStr+"\""
@@ -63,6 +62,19 @@ exports.getFieldData = function(req, res) {
     return;
   }*/
 
+  var query = TechSpecValMaster.find(filter);
+
+  query.exec(function(err, result) {
+    if (err) {
+      return handleError(res, err);
+    }
+    return res.status(200).json(result);
+  });
+};
+// Get list of all field data
+exports.getFieldData = function(req, res) {
+  var queryParam = req.query;
+  var filter = {};
   var query = TechSpecValMaster.find(filter);
 
   query.exec(function(err, result) {

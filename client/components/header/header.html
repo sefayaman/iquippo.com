@@ -8,16 +8,20 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
-        </button>     
+        </button>            
         <a class="navbar-brand" href="index.html"><img src="assets/images/srei-logo-img.png"></a>      
       </div>
 
       <!-- Collect the nav links, forms, and other content for toggling -->
-      <div class="collapse navbar-collapse navbar-ex1-collapse" ng-class="!navCollapsed && 'in'" ng-click="navCollapsed = true">
+      <div class="collapse navbar-collapse navbar-ex1-collapse" ng-class="!navCollapsed && 'in'">
+        <button type="button" class="navbar-toggle hidden menu-xs" ng-init="navCollapsed = true" ng-click="navCollapsed = !navCollapsed" data-target=".navbar-ex1-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="fa fa-close"></span>
+        </button> 
         <ul class="nav navbar-nav navbar-right">
             <li class="submenu dropdown">
-              <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" uib-dropdown-toggle >Equipment</a>
-                <ul class="uib-dropdown-menu" role="menu">
+              <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">Equipment</a>
+                <ul class="dropdown-menu" role="menu" ng-click="navCollapsed = true">
                   <li role="menuitem"><a href="/used"> Used Equipment</a></li>
                   <li role="menuitem"><a href="/new"> New Equipment</a></li>
                   <li role="menuitem"><a href="/viewauctions?type=upcoming"> Auction</a></li>
@@ -25,19 +29,19 @@
             </li>
             
              <li ng-class="{active: isActive(['financing'])}"><a href="javascript:void(0);" ng-click="submitToRapid(createnewloan)">Financing</a></li>
-             <li><a href="https://sarv.iquippo.com/" target="_blank">Sarv</a></li>
-             <li ng-class="{active: isActive(['valuation'])}"><a href="/valuation">Valuation</a></li>
+             <li ng-click="navCollapsed = true"><a href="https://sarv.iquippo.com/" target="_blank">Sarv</a></li>
+             <li ng-click="navCollapsed = true" ng-class="{active: isActive(['valuation'])}"><a href="/valuation">Valuation</a></li>
              <li class="submenu dropdown">
-                <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" id="single-button"  uib-dropdown-toggle >Other Services</a>
-                <ul class="uib-dropdown-menu" role="menu" aria-labelledby="single-button">
+                <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" id="single-button" >Other Services</a>
+                <ul ng-click="navCollapsed = true" class="dropdown-menu" role="menu" aria-labelledby="single-button">
                   <li role="menuitem"><a href="/shipping"> Shipping</a></li>
                   <li role="menuitem"><a href="/insurance">Insurance</a></li>
                   <li role="menuitem"><a href="/manpower"> Manpower</a></li>
                 </ul>
              </li>
-             <li ng-hide="isLoggedIn()"><a href="/signin">Login</a></li>
-             <li ng-hide="isLoggedIn()"><a href="/signup">Signup</a></li>
-             <li><a href="javascript:void(0);" ng-click="sendCallback()" class="text-danger"><i class="fa fa-phone"></i></a></li>
+             <li ng-click="navCollapsed = true" ng-hide="isLoggedIn()"><a href="/signin">Login</a></li>
+             <li ng-click="navCollapsed = true" ng-hide="isLoggedIn()"><a href="/signup">Signup</a></li>
+             <li ng-click="navCollapsed = true"><a href="javascript:void(0);" ng-click="sendCallback()" class="text-danger"><i class="fa fa-phone"></i></a></li>
              <li ng-if="isLoggedIn()" class="dropdown" >
               <a href class="dropdown-toggle" data-toggle="dropdown">
                  <i class="fa fa-user" style="background-color:#ccc;color:#fff; padding:3px 5px; border-radius:50%;height:20px;width:20px;" ng-if="!getCurrentUser().imgsrc"></i>
@@ -45,7 +49,7 @@
                  <span> {{ getCurrentUser().fname }}</span>
               </a>
               
-              <ul class="dropdown-menu">
+              <ul ng-click="navCollapsed = true" class="dropdown-menu">
                   <li>
                     <a href="/productlisting">
                       <i class="fa fa-dashboard"></i> Dashboard

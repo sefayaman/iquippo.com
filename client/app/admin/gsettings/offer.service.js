@@ -9,6 +9,7 @@
       svc.save = save;
       svc.update = update;
       svc.destroy = destroy;
+      svc.getFilterData = getFilterData;
        
      function get(filter){
 
@@ -27,7 +28,23 @@
               throw err; 
             })
        }
-  
+       function getFilterData(filter){
+
+        var path = svcPath +"/getfilterdata"; 
+        
+        var queryParam = "";
+          if(filter)
+            queryParam = $httpParamSerializer(filter);
+          if(queryParam)
+            path  = path + "?" + queryParam;
+         return $http.get(path)
+            .then(function(res){
+              return res.data;
+            })
+            .catch(function(err){
+              throw err; 
+            })
+       }
        function save(data){
           return $http.post(svcPath,data)
           .then(function(res){

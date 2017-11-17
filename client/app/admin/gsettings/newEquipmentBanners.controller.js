@@ -49,7 +49,8 @@ function NewEquipmentBannersCtrl($scope, $rootScope, $state, vendorSvc, brandSvc
         $scope.pager.copy(filter);
         CertificateMasterSvc.get(filter)
         .then(function(result){
-           vm.promoList = result;;
+           vm.promoList = result;
+           //console.log(vm.promoList);
             vm.promoTotalItems = result.totalItems;
         });
     }
@@ -223,9 +224,14 @@ function NewEquipmentBannersCtrl($scope, $rootScope, $state, vendorSvc, brandSvc
         $rootScope.loading = true;
         if (files.length == 0)
             return;
+        $rootScope.loading = true;
         uploadSvc.upload(files[0], bannerDir).then(function(result) {
             $rootScope.loading = false;
             vm.newEquipBannerImg = result.data.filename;
+            vm.dataModel.newEquipBannerImg = result.data.filename;
+        })
+        .catch(function(){
+            $rootScope.loading = false;
         });
     }
 }

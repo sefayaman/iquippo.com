@@ -28,7 +28,38 @@ var ApiError = require('../../components/_error');
           return res.status(200).json(result);
         });
     };
-             
+    // Get list of all field data
+exports.getFilterData = function(req, res) {console.log("req==",req);
+    var queryParam = req.query;
+    var filter = {};
+    if (queryParam.searchStr) {
+        filter['$text'] = {
+          '$search': "\""+queryParam.searchStr+"\""
+        }
+    }
+     if (queryParam.location) {
+        filter['$text'] = {
+          '$search': "\""+queryParam.location+"\""
+        }
+    }
+    if (queryParam.status)
+      filter.status = queryParam.status;
+    if (queryParam.category)
+      filter.category.id = queryParam.category;
+    if (queryParam.brand)
+      filter.brand.id = queryParam.brand;
+    if (queryParam.model)
+      filter.model.id = queryParam.model;
+    //if (queryParam.location)
+    //filter.location.id = queryParam.location;
+    var query = Offer.find(filter);
+    query.exec(function(err, result) {
+      if (err) {
+        return handleError(res, err);
+      }
+      return res.status(200).json(result);
+    });
+  };         
     exports.update = function(req, res) {
       
                 req.body.updatedAt = new Date();

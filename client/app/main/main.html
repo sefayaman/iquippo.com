@@ -274,7 +274,7 @@
         <ul class="media-news">
           <li>
             <a href="http://economictimes.indiatimes.com/small-biz/startups/srei-launches-digital-marketplace-iquippo-for-infra-sector/articleshow/55094769.cms" target="_blank">Srei launches digital marketplace iQuippo for infra sector</a>
-            <em>The Economic Times​</i></em>
+            <em>The Economic Times​</em>
             <em class="news-date">27 October, 2016.</em>
           </li>
           <li>
@@ -309,13 +309,27 @@
         </div>
       </div>
     </div>
+
+    <section>
+    <div class="container">
+      <div class="heading-titles text-center">
+        <h4>[ PRINT MEDIA ]</h4>
+      </div>
+      <div class="medianame">
+       <ul>
+          <li data-ng-repeat="nwEvt in newsEvents"><a href="javascript:void(0);" data-ng-click="openPrintMedia(nwEvt.image)"> {{nwEvt.name}} </a></li>
+        
+        </ul>
+       </div>
+    </div>
+  </section>
   </div>
       
 </section>
 
 
 
-<script type="text/ng-template" id="primtmedia.html">
+<script type="text/ng-template" id="printmedia.html">
   <div>
     <div class="modal-header">
     <button type="button" class="close"  data-ng-click="close()" aria-hidden="true"><i class="fa fa-times"></i></button>
