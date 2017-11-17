@@ -3,7 +3,7 @@
     <li>
       <a href="/main"> Home </a>
     </li>
-    <li><a href="/main"> Auctions </a></li>
+    <li><a href="/viewauctions?type={{equipmentSearchFilter.type}}"> Auctions </a></li>
     <li class="active"> {{displayText || equipmentSearchFilter.group || equipmentSearchFilter.category || equipmentSearchFilter.brand || equipmentSearchFilter.location || equipmentSearchFilter.assetId || "XXXXX"}} </li>
   </ol>
 </div>
@@ -65,23 +65,14 @@
           <div class="panel-body">
             <div class="row">
               <div class="col-xs-6 col-sm-6 col-md-6">
-                <!-- <div class="input-group">
-                  <input type="text" class="form-control" ng-value="mfgyr.min" ng-model="mfgyr.min" uib-datepicker-popup="{{format}}" datepicker-options="{{datepickerOptions}}" is-open="datepickers.min" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" placeholder="Min" ng-keypress="$event.preventDefault()" disabled ng-change="auctionDetailsVm.productSearchOnMfg()"/>
-              <a href class="input-group-addon" ng-click="open($event,'min')">
-                <i class="fa fa-calendar-o"></i>
-              </a>
-                </div> -->
-                <year-only-picker ng-model="auctionDetailsVm.equipmentSearchFilter.mfgYearMin" myid="min" placeholder="Min" onChange="auctionDetailsVm.fireCommand()">
+                <year-only-picker ng-model="mfgyr.min" year="equipmentSearchFilter.mfgYearMin" myid="min" placeholder="Min" on-change="auctionDetailsVm.fireCommand()">
                   
                 </year-only-picker>
               </div>
               <div class="col-xs-6 col-sm-6 col-md-6">
-                <div class="input-group">
-                  <input type="text" class="form-control" ng-value="mfgyr.max" ng-model="mfgyr.max" uib-datepicker-popup="{{format}}" datepicker-options="{{datepickerOptions}}" is-open="datepickers.max" ng-required="true" close-text="Close" placeholder="Max" ng-keypress="$event.preventDefault()" disabled  ng-change="auctionDetailsVm.productSearchOnMfg()"/>
-                  <a href class="input-group-addon" ng-click="open($event,'max')">
-                    <i class="fa fa-calendar-o"></i>
-                  </a>
-                </div>
+                 <year-only-picker ng-model="mfgyr.max" year="equipmentSearchFilter.mfgYearMax" myid="max" placeholder="Min" on-change="auctionDetailsVm.fireCommand()">
+                  
+                </year-only-picker>
               </div>
             </div>
           </div>
@@ -100,7 +91,7 @@
           <button type="button" class="btn btn-primary btn-block" ng-if="auctionData.auctionValue !='closedAuctions'" ng-click="auctionDetailsVm.openBidModal()" class="btn btn-default btn-sm active">Register</button>
         </div>
       </div>
-      <div id="search-result_wrapper">
+      <div id="search-result_wrapper" ng-if="!searching && !noResult">
         <div class="row">
           <div class="col-sm-6 col-md-6 form-group padd-right" ng-if="auctionData.contactName || auctionData.contactNumber">
             <h4 class="text-danger"><i class="fa fa-phone"></i> {{auctionData.contactName}}({{auctionData.contactNumber}})</h4>
@@ -160,7 +151,7 @@
                         </td>
                         <td>
                           <small>Current Location</small>
-                          <h3>{{auctionProduct.product.mfgYear}}</h3>
+                          <h3>{{auctionProduct.product.city}}</h3>
                         </td>
                       </tr>
                     </tbody>
@@ -176,7 +167,7 @@
         </div>
 
         <div class="text-center form-group">
-          <uib-pagination ng-change="auctionDetailsVm.onPageChange()" total-items="pager.totalItems" ng-click="auctionDetailsVm.onPageChange()" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" boundary-links="false" rotate="false" next-text=">" previous-text="<"></uib-pagination>
+          <uib-pagination ng-change="auctionDetailsVm.onPageChange()" total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" boundary-links="false" rotate="false" next-text=">" previous-text="<"></uib-pagination>
         </div>
       </div>
 

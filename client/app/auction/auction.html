@@ -39,8 +39,8 @@
           <div class="media-body">
             <div class="row">
               <div class="col-sm-9 form-group">
-                <h4 class="media-heading">{{auction.auctionType | titleCase}} {{auction.name}} - {{auction.city}}</h4>
-                <p>({{auction.total_products}} Assets  |  {{auction.state}})</p>
+                <h4 class="media-heading">{{auction.name}}</h4>
+                <p>({{auction.total_products}} Assets  |  {{auction.city}})</p>
               </div>
               <div class="col-sm-3 form-group text-success">
                 <i class="fa fa-circle"></i><strong class="text-danger">Now</strong>
@@ -60,7 +60,7 @@
                   <a href="javascript:void(0);" class="btn btn-default btn-block" ng-click="auctionDateVm.openBidModal(auction)">Register</a>
                 </div>
                 <div class="col-sm-6">
-                  <a href="/assetinauction/{{auction._id}}"  class="btn btn-primary btn-block" ng-disabled="auction.total_products === 0">View Assets</a>
+                  <a href="/assetinauction/{{auction._id}}?type={{auctionType}}"  class="btn btn-primary btn-block" ng-disabled="auction.total_products === 0">View Assets</a>
                 </div>
               </div>
             </div>
@@ -92,8 +92,8 @@
           <div class="media-body">
             <div class="row">
               <div class="col-sm-9 form-group">
-                <h4 class="media-heading">{{auction.auctionType | titleCase}} {{auction.name}} - {{auction.city}}</h4>
-                <p>({{auction.total_products}} Assets  |  {{auction.state}})</p>
+                <h4 class="media-heading"> {{auction.name}}</h4>
+                <p>({{auction.total_products}} Assets  |  {{auction.city}})</p>
               </div>
               <div class="col-sm-3 form-group text-center">
                 Starts
@@ -111,7 +111,7 @@
                   <a href="javascript:void(0);" class="btn btn-default btn-block" ng-click="auctionDateVm.openBidModal(auction)">Register</a>
                 </div>
                 <div class="col-sm-6">
-                  <a href="/assetinauction/{{auction._id}}" class="btn btn-primary btn-block" ng-disabled="auction.total_products === 0">View Assets</a>
+                  <a href="/assetinauction/{{auction._id}}?type={{auctionType}}" class="btn btn-primary btn-block" ng-disabled="auction.total_products === 0">View Assets</a>
                 </div>
               </div>
             </div>
@@ -121,6 +121,7 @@
       
     </div>
   </div>
+</div>
 </div>
 <div  ng-if="auctionType === 'closed'">
   <div class="container form-group">
@@ -140,8 +141,8 @@
           <div class="media-body">
             <div class="row">
               <div class="col-sm-9 form-group">
-                <h4 class="media-heading">{{auction.auctionType | titleCase}} {{auction.name}} - {{auction.city}}</h4>
-                <p>({{auction.total_products}} Assets  |  {{auction.state}})</p>
+                <h4 class="media-heading">{{auction.name}}</h4>
+                <p>({{auction.total_products}} Assets  |  {{auction.city}})</p>
               </div>
               <div class="col-sm-3 form-group">
                 <strong class="text-danger">Closed</strong>
@@ -156,7 +157,7 @@
                 <!-- <a href="javascript:void(0);" class="btn btn-default btn-block" ng-click="auctionDateVm.openBidModal(auction)">Register</a> -->
               </div>
               <div class="col-sm-6">
-                <a href="/assetinauction/{{auction._id}}"  class="btn btn-primary btn-block" ng-disabled="auction.total_products === 0">View Assets</a>
+                <a href="/assetinauction/{{auction._id}}?type={{auctionType}}"  class="btn btn-primary btn-block" ng-disabled="auction.total_products === 0">View Assets</a>
               </div>
             </div>
           </div>

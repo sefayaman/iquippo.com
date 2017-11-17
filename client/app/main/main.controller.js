@@ -248,7 +248,8 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
         .then(function(result) {
           filter = {};      
           var auctionIds = []; 
-          if(result && result.items) {     
+          if(result && result.items) {
+            vm.auctionListing = result.items;     
             result.items.forEach(function(item) { 
             auctionIds[auctionIds.length] = item._id;
           });
@@ -268,8 +269,7 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
                 });
                 if(!item.total_products)
                   item.total_products = 0;
-            }) 
-            vm.auctionListing = result.items; 
+            })  
         });
       };
       });

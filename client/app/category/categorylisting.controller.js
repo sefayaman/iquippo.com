@@ -9,6 +9,7 @@ angular.module('sreizaoApp').controller('CategoryListingCtrl',CategoryListingCtr
     vm.showedItems = 9;
     vm.allCategoryList = [];
     vm.showMore = showMore;
+    $scope.group = $stateParams.group || "";
 
     function init(){
       var filter = {isForUsed:true};

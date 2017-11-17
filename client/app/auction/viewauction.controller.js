@@ -66,7 +66,8 @@
         $rootScope.loading = false;
         vm.auctionListing = result.items;
         if(result.items &&result.items.length)
-            getAuctionWiseProductData(result); 
+            getAuctionWiseProductData(result);
+
       }).catch(function(err) {
         $rootScope.loading = false;
         Modal.alert("Unable to fetch auctions");

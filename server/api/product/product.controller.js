@@ -276,6 +276,17 @@ exports.search = function(req, res) {
       filter["mfgYear"] = mfgFilter;
  }
 
+ if(req.body.mfgYearMax || req.body.mfgYearMin){
+    var mfgFilter = {};
+    if(req.body.mfgYearMin){
+      mfgFilter['$gte'] = req.body.mfgYearMin;
+    }
+    if(req.body.mfgYearMax){
+      mfgFilter['$lte'] = req.body.mfgYearMax;
+    }
+    filter["mfgYear"] = mfgFilter;
+ }
+
   if(req.body.categoryId)
     filter["category._id"] = req.body.categoryId;
   

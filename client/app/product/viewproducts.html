@@ -3,7 +3,7 @@
     <li>
       <a href="/main"> Home </a>
     </li>
-    <li><a href="/main"> Used Equipments </a></li>
+    <li><a href="/used"> Used Equipments </a></li>
     <li class="active"> {{displayText || equipmentSearchFilter.group || equipmentSearchFilter.category || equipmentSearchFilter.brand || equipmentSearchFilter.location || equipmentSearchFilter.assetId || "XXXXX"}} </li>
   </ol>
 </div>
@@ -17,7 +17,7 @@
         <uib-accordion close-others="oneAtATime" class="information">
           <uib-accordion-group is-open="status.group">
             <uib-accordion-heading>
-              Industry ({{allGroup.length || 0}})<i class="pull-right fa" ng-class="{'fa-minus': status.group, 'fa-plus': !status.group}"></i>
+              Industry<i class="pull-right fa" ng-class="{'fa-minus': status.group, 'fa-plus': !status.group}"></i>
             </uib-accordion-heading>
               <div class="radio" ng-repeat="group in allGroup">
                 <input type="radio" ng-model="equipmentSearchFilter.group" ng-change="viewproductVm.onGroupChange(equipmentSearchFilter.group)" name="group" value="{{group.name}}" id="gp_{{$index}}"> <label for="gp_{{$index}}">{{group.name}}</label>
@@ -72,6 +72,25 @@
             <input type="text" class="form-control form-group" placeholder="Asset Id"  ng-model="equipmentSearchFilter.assetId" class="form-control" ng-change="viewproductVm.fireCommand()">
           </uib-accordion-group>
         </uib-accordion>
+        <div class="panel panel-default" class="information">
+          <div class="panel-heading">
+            <h4 class="panel-titel">Manufacturing Year</h4>
+          </div>
+          <div class="panel-body">
+            <div class="row">
+              <div class="col-xs-6 col-sm-6 col-md-6">
+                <year-only-picker ng-model="mfgyr.min" year="equipmentSearchFilter.mfgYearMin" myid="min" placeholder="Min" on-change="viewproductVm.fireCommand()">
+                  
+                </year-only-picker>
+              </div>
+              <div class="col-xs-6 col-sm-6 col-md-6">
+                 <year-only-picker ng-model="mfgyr.max" year="equipmentSearchFilter.mfgYearMax" myid="max" placeholder="Max" on-change="viewproductVm.fireCommand()">
+                  
+                </year-only-picker>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="col-sm-9">
         <div class="row">

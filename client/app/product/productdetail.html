@@ -1,7 +1,7 @@
 <div class="container-fluid">
   <ol class="breadcrumb">
     <li><a href="/">Home</a></li>
-    <li><a href="/viewproducts">{{currentProduct.group.name}}</a></li>
+    <li><a href="/used/viewproducts">{{currentProduct.group.name}}</a></li>
     <li ng-if="currentProduct.category.name != 'Other'">{{currentProduct.category.name}}</li>
     <li ng-if="currentProduct.category.name == 'Other'">{{currentProduct.category.otherName}}</li>
     <li><a class="active">{{currentProduct.name}}</a></li>
