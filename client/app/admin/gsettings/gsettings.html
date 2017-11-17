@@ -2824,7 +2824,10 @@
 											<div class="col-sm-12 form-group">
 												<div  class="row" ng-repeat="financerinfoField in offerVm.financerInfoFields[f1Index]" ng-init="f2Index = $index">
 													<div class="col-sm-3">
-														<input type="text" class="form-control form-group" name="tenure" ng-model="offerVm.financerinfo[f1Index][f2Index].tenure" ng-value="" placeholder="Tanure">  
+														<input type="text" class="form-control form-group" name="tenure" ng-model="offerVm.financerinfo[f1Index][f2Index].tenure" ng-value="" placeholder="Tenure">  
+													</div>
+													<div class="col-sm-3">
+														<input type="text" class="form-control form-group" name="amount" ng-model="offerVm.financerinfo[f1Index][f2Index].amount" ng-value="" placeholder="amount">  
 													</div>
 													<div class="col-sm-3">
 														<input type="text" class="form-control form-group" name="rate" ng-model="offerVm.financerinfo[f1Index][f2Index].rate" ng-value="" placeholder="Rate">  
@@ -2878,7 +2881,10 @@
 											<div class="col-sm-12 form-group">
 												<div  class="row" ng-repeat="leaserinfoField in offerVm.leaserInfoFields[l1Index]" ng-init="l2Index = $index"> 
 													<div class="col-sm-3">
-														<input type="text" class="form-control form-group" name="tenure" ng-model="offerVm.leaserinfo[l1Index][l2Index].tenure" ng-value="" placeholder="Tanure">  
+														<input type="text" class="form-control form-group" name="tenure" ng-model="offerVm.leaserinfo[l1Index][l2Index].tenure" ng-value="" placeholder="Tenure">  
+													</div>
+													<div class="col-sm-3">
+														<input type="text" class="form-control form-group" name="amount" ng-model="offerVm.leaserinfo[l1Index][l2Index].amount" ng-value="" placeholder="amount">  
 													</div>
 													<div class="col-sm-3">
 														<input type="text" class="form-control form-group" name="downpayment" ng-model="offerVm.leaserinfo[l1Index][l2Index].downpayment" ng-value="" placeholder="Rate">  
@@ -3197,7 +3203,7 @@
 					<div class="form-group">
 						<form class="techInformationForm" name="techfieldform" novalidate>
 							<div class="row form-group">
-
+							
 								<div class="col-sm-3" ng-class="{'has-error':techspecVm.categoryId.$invalid && submitted}">
 									<label>Select Category</label>
 									<select ng-disabled="isView || isFieldEdit" class="form-control form-group" name="category" ng-model="techspecVm.dataModel.categoryId" ng-change="techspecVm.onCategoryChange(techspecVm.dataModel.categoryId)" required> 
@@ -3294,13 +3300,13 @@
 							</div>
 						</div>
 						<!-- end view data -->
-						<div class="row">{{techspecVm.disArr}}
+						<div class="row">
 							<div class="col-sm-12">
 								<div class=" table-responsive ">
 									<table class="table table-bordered table-striped">
 										<thead>
 											<tr>
-												<th>Category Name{{disArr}}</th>
+												<th>Category Name</th>
 												<th>Brand Name</th>
 												<th>Model Name</th>
 												<th>Actions</th>

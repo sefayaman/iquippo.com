@@ -15,6 +15,7 @@
         $scope.onBrandChange = onBrandChange;
         $scope.Addfinance = Addfinance;
         $scope.changeStatus = changeStatus;
+        $scope.getFinanceName = getFinanceName;
         $scope.isEdit = false;
         var filter = {};
         vm.offer = {};
@@ -34,7 +35,9 @@
         $scope.stateName = [];
 
         function init(){
-            categorySvc.getAllCategory()
+          var filter = {};
+          //filter['isForNew'] = true;
+            categorySvc.getAllCategory(filter)
             .then(function(result) {
               $scope.allCategory = result;
 
@@ -49,10 +52,14 @@
             get();
             
         }
-        function state(){
+        function state(id){
           if($scope.stateList){
               for(var val of $scope.stateList) {
-                  $scope.stateName[val._id] = val.name;
+                 //$scope.stateName[val._id] = val.name;
+                if(val._id === id){
+                    return val.name;
+                }
+                  
               }
           }
         }
@@ -62,6 +69,7 @@
           vendorSvc.getFilter(filter)
             .then(function(result) {
               $scope.agency = result;
+              console.log("$scope.agency",$scope.agency);
           })
         }
         $scope.checkPurchase = function(data){
@@ -137,6 +145,7 @@
           return;
         var otherBrand = null;
         filter = {};
+        //filter['isForNew'] = true;
         filter['categoryId'] = categoryId._id;
         brandSvc.getBrandOnFilter(filter)
           .then(function(result) {
@@ -155,6 +164,7 @@
           return;
         var otherModel = null;
         filter = {};
+        //filter['isForNew'] = true;
         filter['brandId'] = brandId._id;
         modelSvc.getModelOnFilter(filter)
           .then(function(result) {
@@ -165,7 +175,14 @@
           })
         
       }
-  
+      function getFinanceName(id){
+        if(id){
+            for(var k in  $scope.agency) {
+              if($scope.agency[k]._id === id)
+              return $scope.agency[k].entityName;
+            }
+        }
+      }
       function save(form){
          if(form.$invalid){
            
@@ -219,7 +236,7 @@
                    for(var id of $scope.container.locationArr) {
                     vm.dataModel.location[i] = {};
                     vm.dataModel.location[i]['id'] = id;
-                    vm.dataModel.location[i]['name'] = $scope.stateName[id];
+                    vm.dataModel.location[i]['name'] = state(id);
                     i++;
                   }
                 }
@@ -235,6 +252,7 @@
              vm.fInfo = {};
              vm.fInfo.data = {};
             vm.fInfo.id = vm.financer[k];
+            vm.fInfo.name = getFinanceName(vm.financer[k]);
             vm.fInfo.data = vm.financerinfo[k];
             vm.financeData[k] = vm.fInfo;
            }
@@ -245,6 +263,7 @@
              vm.lInfo = {};
              vm.lInfo.data = {};
             vm.lInfo.id = vm.leaser[k];
+            vm.lInfo.name = getFinanceName(vm.leaser[k]);
             vm.lInfo.data = vm.leaserinfo[k];
             vm.leaseData[k] = vm.lInfo;
            }
@@ -370,16 +389,16 @@
             }
           }
           //location
-          vm.dataModel.location = [];
+          vm.dataModel.location = [];console.log("$scope.stateName=",$scope.stateName);
           var i = 0
           if($scope.container.locationArr){
             for(var id of $scope.container.locationArr) {
               vm.dataModel.location[i] = {};
               vm.dataModel.location[i]['id'] = id;
-              vm.dataModel.location[i]['name'] = $scope.stateName[id];
+              vm.dataModel.location[i]['name'] = state(id);
               i++;
             }
-          }
+          }console.log("lllllll",vm.dataModel.location);
           vm.financeData = [];
           vm.leaseData = [];
           vm.purchaseData = [];
@@ -406,6 +425,7 @@
              vm.fInfo = {};
              vm.fInfo.data = {};
             vm.fInfo.id = vm.financer[k];
+            vm.fInfo.name = getFinanceName(vm.financer[k]);
             vm.fInfo.data = vm.financerinfo[k];
             vm.financeData[k] = vm.fInfo;
            }
@@ -414,6 +434,7 @@
                   vm.lInfo = {};
                   vm.lInfo.data = {};
                   vm.lInfo.id = vm.leaser[k];
+                  vm.lInfo.name = getFinanceName(vm.leaser[k]);
                   vm.lInfo.data = vm.leaserinfo[k];
                   vm.leaseData[k] = vm.lInfo;
                 }
