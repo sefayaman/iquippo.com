@@ -169,7 +169,7 @@ angular.module('sreizaoApp')
             "&mfgYearMin&mfgYearMax&stateName&cityName&assetId&"+
             "searchstr&operatingHour&mileage&productName&location&locationName&certificationName",
         templateUrl: 'app/newequipment/newproducts.html',
-        controller: 'NewViewProductsCtrl as newviewproductVm',
+        controller: 'NewEquipmentListCtrl as newequipmentlistVm',
          layout:'client'
       })
      /* .state('productbycategory', {

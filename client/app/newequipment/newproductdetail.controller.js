@@ -153,7 +153,7 @@
 
 
     function init() {
-    getLocation();
+        getLocation();
       
       if ($stateParams.id) {
         filter = {};
@@ -189,10 +189,13 @@
       }
       //var data = {};
       //data.location ='56789';
-    getOffer();
+        getOffer();
       
     }
+    
     init();
+    
+    
     function getLocation(){
        var filter = {};
       filter.status = true;
