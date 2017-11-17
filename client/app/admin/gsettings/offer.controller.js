@@ -389,7 +389,7 @@
             }
           }
           //location
-          vm.dataModel.location = [];console.log("$scope.stateName=",$scope.stateName);
+          vm.dataModel.location = [];
           var i = 0
           if($scope.container.locationArr){
             for(var id of $scope.container.locationArr) {
@@ -398,7 +398,7 @@
               vm.dataModel.location[i]['name'] = state(id);
               i++;
             }
-          }console.log("lllllll",vm.dataModel.location);
+          }
           vm.financeData = [];
           vm.leaseData = [];
           vm.purchaseData = [];

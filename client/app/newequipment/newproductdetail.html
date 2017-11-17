@@ -244,14 +244,14 @@
                         <label>Quantity</label>              
                         <div class="input-group">
                           <a href="javascript:void(0);" ng-click="changeQuantityMinus(f1Index,financeinfo.data[f1Index])" class="input-group-addon"><i class="fa fa-minus"></i></a>
-                          <input type="number" class="form-control"  ng-model="financeinfo.fnumber[f1Index]" name="" ng-value="1" placeholder="1" min="1">
+                          <input type="number" class="form-control"  ng-model="fnumber[f1Index]" name="" ng-value="1" placeholder="1" min="1">
                           <a href="javascript:void(0);" ng-click="changeQuantityPlus(f1Index,financeinfo.data[f1Index])" class="input-group-addon"><i class="fa fa-plus"></i></a>
                         </div>
                       </div>
 
                       <div class="floating-label-wrapper">
                         <label>TENURE*(In Months)</label>
-                        <select class="form-control" ng-model="financeinfo.ftenure[f1Index]" ng-click="changeTenure(f1Index,ftenure[f1Index])">
+                        <select class="form-control" ng-model="ftenure[f1Index]" ng-click="changeTenure(f1Index,ftenure[f1Index])">
                           <option value="{{tenure}}" ng-selected ng-repeat="tenure in financeinfo.data">{{tenure.tenure}}</option>              
                         </select>
                       </div>
@@ -262,37 +262,37 @@
                         <div class="col-sm-4 form-group">
                           <label>Finance Amount per unit</label>
                           <div class="floating-label-wrapper">                      
-                            <input type="text" class="form-control"  ng-model="financeinfo.fAmount[f1Index]" name="" ng-value="{{financeinfo.data[0].amount}}" placeholder="" disabled>
+                            <input type="text" class="form-control"  ng-model="fAmount[f1Index]" name="" ng-value="{{financeinfo.data[0].amount}}" placeholder="" disabled>
                           </div>
                         </div>
                         <div class="col-sm-4 form-group">
                           <label>Down-payment per unit</label>
                           <div class="floating-label-wrapper">                      
-                            <input type="text" class="form-control" ng-model="financeinfo.fDownPayment[f1Index]" name="" ng-value="{{financeinfo.data[0].margin}}" placeholder="" disabled>
+                            <input type="text" class="form-control" ng-model="fDownPayment[f1Index]" name="" ng-value="{{financeinfo.data[0].margin}}" placeholder="" disabled>
                           </div>
                         </div>
                         <div class="col-sm-4 form-group">
                           <label>Processing Fee per unit</label>
                           <div class="floating-label-wrapper">                      
-                            <input type="text" class="form-control" ng-model="financeinfo.fProcessingFee[f1Index]" name="" ng-value="{{financeinfo.data[0].processingfee}}" placeholder="" disabled>
+                            <input type="text" class="form-control" ng-model="fProcessingFee[f1Index]" name="" ng-value="{{financeinfo.data[0].processingfee}}" placeholder="" disabled>
                           </div>
                         </div>
                         <div class="col-sm-4 form-group">
                           <label>Total Finance Amount</label>
                           <div class="floating-label-wrapper">                      
-                            <input type="text" ng-model="financeinfo.fTotalAmount[f1Index]" class="form-control" name="" ng-value="{{financeinfo.data[0].amount}}" placeholder="" disabled>
+                            <input type="text" ng-model="fTotalAmount[f1Index]" class="form-control" name="" ng-value="{{financeinfo.data[0].amount}}" placeholder="" disabled>
                           </div>
                         </div>
                         <div class="col-sm-4 form-group">
                           <label>Total Down-payment</label>
                           <div class="floating-label-wrapper">                      
-                            <input type="text" ng-model="financeinfo.fTotalDownAmount[f1Index]" class="form-control" name="" ng-value="{{financeinfo.data[0].margin}}" placeholder="" disabled>
+                            <input type="text" ng-model="fTotalDownAmount[f1Index]" class="form-control" name="" ng-value="{{financeinfo.data[0].margin}}" placeholder="" disabled>
                           </div>
                         </div>
                         <div class="col-sm-4 form-group">
                           <label>Total Processing Fee</label>
                           <div class="floating-label-wrapper">                      
-                            <input type="text" ng-model="financeinfo.fTotalFee[f1Index]" class="form-control" name="" ng-value="{{financeinfo.data[0].processingfee}}" placeholder="" disabled>
+                            <input type="text" ng-model="fTotalFee[f1Index]" class="form-control" name="" ng-value="{{financeinfo.data[0].processingfee}}" placeholder="" disabled>
                           </div>
                         </div>
                         
@@ -301,15 +301,15 @@
                     <div class="col-sm-3">
                       <h5  class="text-center"><small>Amount to be paid</small></h5>
                       <div class="form-group floating-label-wrapper">
-                        <input type="text" ng-model="financeinfo.fRate[f1Index]" class="form-control" name="" ng-value="{{financeinfo.data[0].rate}}" placeholder="" disabled>
+                        <input type="text" ng-model="fRate[f1Index]" class="form-control" name="" ng-value="{{financeinfo.data[0].rate}}" placeholder="" disabled>
                         <small>Rate Of Interest(%)</small>
                       </div>
                       <div class="form-group floating-label-wrapper">
-                        <i class="fa fa-inr"></i> <input type="text" ng-model="financeinfo.fTotalInstallment[f1Index]" class="form-control" name="" ng-value="{{financeinfo.data[0].installment}}" placeholder="" disabled>{{financeinfo.data[0].installment}}
+                        <i class="fa fa-inr"></i> <input type="text" ng-model="fTotalInstallment[f1Index]" class="form-control" name="" ng-value="{{financeinfo.data[0].installment}}" placeholder="" disabled>{{financeinfo.data[0].installment}}
                         <small>Total Monthly Repayment(E.M.I)</small>
                       </div>
                       <div class="form-group floating-label-wrapper">
-                      <i class="fa fa-inr"></i> <input type="text" ng-model="financeinfo.fTotalDownAndProcessing[f1Index]" class="form-control" name="" ng-value="{{financeinfo.data[0].processingfee}}+{{financeinfo.data[0].margin}}" placeholder="" disabled>
+                      <i class="fa fa-inr"></i> <input type="text" ng-model="fTotalDownAndProcessing[f1Index]" class="form-control" name="" ng-value="{{financeinfo.data[0].processingfee}}+{{financeinfo.data[0].margin}}" placeholder="" disabled>
                         <small>Down-Payment+Processing Fee</small>
                       </div>
                     </div>
@@ -328,7 +328,7 @@
                   <div class="row">
                     <div class="col-sm-offset-1 col-sm-5 form-group">
                       <div class="checkbox">
-                        <input type="checkbox" id="leaserid.l1Index"  ng-model="leaseinfo.leaser[l1Index]" name="" ng-value="{{leaseinfo.name}}">
+                        <input type="checkbox" id="leaserid.l1Index"  ng-model="leaser[l1Index]" name="" ng-value="{{leaseinfo.name}}">
                         <label for="leaserid.l1Index">
                           {{leaseinfo.name}}
                         </label>
