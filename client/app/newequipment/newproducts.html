@@ -4,7 +4,10 @@
       <a href="/main"> Home </a>
     </li>
     <li><a href="/new"> New Equipments </a></li>
-    <li class="active"> {{displayText || equipmentSearchFilter.group || equipmentSearchFilter.category || equipmentSearchFilter.brand || equipmentSearchFilter.tradeType || equipmentSearchFilter.location || equipmentSearchFilter.tradeType || equipmentSearchFilter.assetId || "XXXXX"}} </li>
+    <li><a href="/viewproducts">{{equipmentSearchFilter.group.name}}</a></li>
+    <li ng-if="equipmentSearchFilter.category.name != 'Other'"><a href="javascript:void(0);">{{equipmentSearchFilter.category.name}}</a></li>
+    <li ng-if="equipmentSearchFilter.category.name == 'Other'">{{equipmentSearchFilter.category.otherName}}</li>
+    <li><a class="active">{{currentProduct.name}}</a></li>
   </ol>
 </div>
 <div class="new-equipments-banner">
@@ -44,7 +47,7 @@
           </uib-accordion-heading>
             <div>
               <div class="radio" ng-repeat="br in brandList">
-                <input type="radio" ng-model="equipmentSearchFilter.brand" name="brand" value="{{br.name}}" id="brand_{{$index}}"> <label for="brand_{{$index}}">{{br.name}}</label>
+                <input type="radio" ng-model="equipmentSearchFilter.brand" name="brand" value="{{br.name}}" id="brand_{{$index}}" ng-change="newequipmentlistVm.fireCommand()"> <label for="brand_{{$index}}">{{br.name}}</label>
               </div>
               
             </div>
@@ -99,7 +102,7 @@
               <div class="media-body text-left"> 
                 <div class="row">
                   <div class="col-xs-6 form-group">
-                    <h4 class="text-ellips">{{product.name}}</h4>                  
+                    <h4 class="text-ellips">{{product.name}} {{product}}</h4>                  
                   </div>
                   <div class="col-xs-6 form-group text-right padd-left">
                     <h5 class="text-info">Model: {{product.model.name}}</h5>                    

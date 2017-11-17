@@ -2,7 +2,7 @@
 'use strict';
 angular.module('sreizaoApp').controller('NewEquipmentListCtrl', NewEquipmentListCtrl);
 
-  function NewEquipmentListCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Auth, CartSvc, productSvc,categorySvc,SubCategorySvc,LocationSvc,brandSvc,modelSvc, groupSvc ,DTOptionsBuilder,Modal,$timeout,$window) {
+  function NewEquipmentListCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Auth, CartSvc, productSvc,categorySvc,SubCategorySvc,LocationSvc,brandSvc,modelSvc, groupSvc,TechSpecMasterSvc ,DTOptionsBuilder,Modal,$timeout,$window) {
     var vm = this;
     $scope.productList = [];
     $scope.equipmentSearchFilter = {};
@@ -12,6 +12,7 @@ angular.module('sreizaoApp').controller('NewEquipmentListCtrl', NewEquipmentList
     $scope.searching = true;
     $scope.noResult = false;
     $scope.status = {};
+    $scope.techSpecification = {};
     $scope.displayText = $stateParams.group || $stateParams.category || "";
 
     /* pagination flag */
@@ -20,21 +21,16 @@ angular.module('sreizaoApp').controller('NewEquipmentListCtrl', NewEquipmentList
     vm.totalItems = 0;
     vm.maxSize = 6;
     vm.sortByFlag = "";
-    vm.productListToCompare = [{},{},{},{}];
-    vm.compareCount = 0;
-
     vm.onGroupChange = onGroupChange;
     vm.onCategoryChange = onCategoryChange;
     vm.fireCommand = fireCommand;
     vm.getAssetIdHelp = getAssetIdHelp;
+    vm.getTechSpec = getTechSpec;
 
     vm.sortBy = sortBy;
-    vm.addProductToCart = addProductToCart;
-    vm.addToCompare = addToCompare;
-    vm.compare = compare;
-    vm.removeProductFromCompList = removeProductFromCompList;
     vm.onPageChange = onPageChange;
-
+    vm.creatSpecification = creatSpecification;
+    
     var allCategory = [];
     var allBrand = [];
 
@@ -65,6 +61,7 @@ angular.module('sreizaoApp').controller('NewEquipmentListCtrl', NewEquipmentList
         if($stateParams.category)
             onCategoryChange($stateParams.category,true); 
       });
+      getTechSpec();
       restoreState();
       fireCommand(true,true);
     
@@ -123,21 +120,21 @@ angular.module('sreizaoApp').controller('NewEquipmentListCtrl', NewEquipmentList
       filter['sort'] = {featured:-1};
       $scope.searching = true;
       filter.productCondition = "new";
-     productSvc.getProductOnFilter(filter)
-      .then(function(result){
-          $scope.searching = false;
-          if(result.length > 0){
-            vm.totalItems = result.length;
-            $scope.noResult = false;
-          }else{
-            $scope.noResult = true;
-          }
-          $scope.productList = result;
-          productList = result;
-      })
-      .catch(function(){
-        //error handling
-      });
+        productSvc.getProductOnFilter(filter)
+         .then(function(result){
+             $scope.searching = false;
+             if(result.length > 0){
+               vm.totalItems = result.length;
+               $scope.noResult = false;
+             }else{
+               $scope.noResult = true;
+             }
+             $scope.productList = result;
+             productList = result;
+         })
+         .catch(function(){
+           //error handling
+         });
   };
 
 
@@ -191,101 +188,6 @@ angular.module('sreizaoApp').controller('NewEquipmentListCtrl', NewEquipmentList
     
   }
 
-  function addProductToCart(product){
-    var prdObj = {};
-    prdObj.type = "equipment";
-    prdObj._id = product._id;
-    prdObj.assetDir = product.assetDir;
-    prdObj.name = product.name;
-    prdObj.primaryImg = product.primaryImg
-    prdObj.condition = product.productCondition;
-    filter = {};
-    filter._id = prdObj._id;
-    filter.status = true;
-    productSvc.getProductOnFilter(filter)
-      .then(function(result){
-          if(result && result.length < 1) {
-            $state.go('main');
-            return;
-          }
-          CartSvc.addProductToCart(prdObj);
-      })
-      .catch(function(){
-        //error handling
-      });
-    //CartSvc.addProductToCart(prdObj);
-  }
-
-  function compare(){
-
-     if(vm.productListToCompare.length < 2){
-          Modal.alert("Please select at least two products to compare.",true);
-          return;
-      }
-       var prevScope = $rootScope.$new();
-       prevScope.productList = vm.productListToCompare;
-       prevScope.uploadImagePrefix = $rootScope.uploadImagePrefix;
-       var prvProductModal = $uibModal.open({
-            templateUrl: "app/product/productcompare.html",
-            scope: prevScope,
-            windowTopClass:'product-preview',
-            size: 'lg'
-        });
-         prevScope.dismiss = function () {
-          prvProductModal.dismiss('cancel');
-        };
-        prevScope.removeProductFromCompList = removeProductFromCompList;
-  }
-
-  function addToCompare(prd){
-    if(vm.compareCount == 4){
-       Modal.alert("You have already 4 product into compare list.",true);
-      return;
-    }
-    var idx = getIndex(prd);
-    if(idx != -1){
-       Modal.alert("Product is already added to compare list.",true);
-      return;
-    }
-    var freeIndex = getIndexFree();
-    vm.productListToCompare[freeIndex] = prd;
-    updateCompareCount();
-  }
-
-  function getIndex(prd){
-    var index = -1;
-    vm.productListToCompare.forEach(function(item,idx){
-      if(item._id == prd._id)
-        index = idx;
-    });
-    return index;
-  }
-
-  function getIndexFree(){
-    var index = -1;
-    for(var i =0;i < vm.productListToCompare.length;i++){
-      if(!vm.productListToCompare[i]._id){
-        index = i;
-        break;
-      }
-    }
-    return index;
-  }
-
-  function removeProductFromCompList(index){
-     var removedProduct = vm.productListToCompare[index];
-     vm.productListToCompare[index] = {};
-      updateCompareCount();
-  }
-
-
-  function updateCompareCount(){
-    vm.compareCount = 0;
-    vm.productListToCompare.forEach(function(item,index){
-      if(item._id)
-         vm.compareCount ++;
-    });
-  }
 
   function onPageChange(){
     $window.scrollTo(0, 0);
@@ -304,6 +206,20 @@ angular.module('sreizaoApp').controller('NewEquipmentListCtrl', NewEquipmentList
       $scope.equipmentSearchFilter = $stateParams;
       vm.currentPage  = parseInt($stateParams.currentPage) || 1;
       $scope.equipmentSearchFilter.currentPage = vm.currentPage + "";
+  }
+  
+  function getTechSpec(){
+      var filter = {};
+      //filter['mName'] = filterData.modelId;
+      TechSpecMasterSvc.getFieldData(filter)
+        .then(function(result){
+            $scope.techSpecification = result;
+            console.log($scope.techSpecification);
+      });
+  }
+  
+  function creatSpecification(){
+      return;
   }
   
    init();
