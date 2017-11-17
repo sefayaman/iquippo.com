@@ -46,7 +46,7 @@
                   <option value="location">Location</option>
                 </select>
                 <input type="text" class="tableFilter" ng-if="newequipmentListingVm.searchType != ''" name="searchTxt" ng-model="newequipmentListingVm.coulmnSearchStr" ng-change="newequipmentListingVm.fireCommand(true)" ng-model-options="{debounce:500}" placeholder="Search text..."/>
-                <button class="btn btn-primary btn-xs" ng-click="newequipmentListingVm.bulkUpdate('priceonrequest')">Price on request</button>
+<!--                <button class="btn btn-primary btn-xs" ng-click="newequipmentListingVm.bulkUpdate('priceonrequest')">Price on request</button>-->
                 <button class="btn btn-primary btn-xs" ng-click="newequipmentListingVm.bulkUpdate('active')" ng-if="isAdmin()">Activate</button>
                 <button class="btn btn-primary btn-xs" ng-click="newequipmentListingVm.bulkUpdate('deactive')" ng-if="isAdmin()">Deactivate</button>
                 <button class="btn btn-primary btn-xs" ng-click="newequipmentListingVm.bulkUpdate('delete')">Delete</button>
