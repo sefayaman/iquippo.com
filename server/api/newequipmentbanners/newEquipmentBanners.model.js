@@ -4,13 +4,13 @@ var mongoose = require('mongoose'),
 
 var NewEquipmentBannerSchema = new Schema({
   brand:{
-    data:{type:Schema.Types.ObjectId,ref:'Brand'},
+    _id:{type:String},
     name:String
   },
   position:String,
   order:String,
   promotion:{
-      data:{type:Schema.Types.ObjectId,ref:'Promotion'},
+      pro_id:{type:String},
       name:String
   },
   newEquipBannerImg: String,
