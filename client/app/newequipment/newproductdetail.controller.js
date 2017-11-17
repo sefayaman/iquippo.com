@@ -22,113 +22,117 @@
     $scope.lchangeQuantityPlus = lchangeQuantityPlus;
     $scope.changeTenure = changeTenure;
     $scope.lchangeTenure = lchangeTenure;
+    $scope.proceed = proceed;
     
     
     ///for financer
-    $scope.financer = [];
-    $scope.fnumber = [];
-     $scope.fnumber[0] =1;
-    $scope.ftenure = [];
-    $scope.fAmount = [];
+    $scope.financeinfo = [];
+    $scope.financeinfo.financer = [];
+    $scope.financeinfo.fnumber = [];
+     $scope.financeinfo.fnumber[0] =1;
+    $scope.financeinfo.ftenure = [];
+    $scope.financeinfo.fAmount = [];
 
-    $scope.fAmount = [];
-    $scope.fDownPayment = [];
-    $scope.fProcessingFee = [];
-    $scope.fTotalAmount = [];
-    $scope.fDownAmount = [];
-    $scope.fTotalFee = [];
+    $scope.financeinfo.fAmount = [];
+    $scope.financeinfo.fDownPayment = [];
+    $scope.financeinfo.fProcessingFee = [];
+    $scope.financeinfo.fTotalAmount = [];
+    $scope.financeinfo.fDownAmount = [];
+    $scope.financeinfo.fTotalFee = [];
     $scope.fTotalInstallment = [];
-    $scope.fTotalDownAndProcessing = [];
-    $scope.fTotalDownAmount = [];
-    $scope.fRate = [];
+    $scope.financeinfo.fTotalDownAndProcessing = [];
+    $scope.financeinfo.fTotalDownAmount = [];
+    $scope.financeinfo.fRate = [];
     // for leaser
-    $scope.leaser = [];
-    $scope.lnumber = [];
-     $scope.lnumber[0] =1;
-    $scope.ltenure = [];
-    $scope.lAmount = [];
+    $scope.leaseinfo = [];
+    $scope.leaseinfo.leaser = [];
+    $scope.leaseinfo.lnumber = [];
+     $scope.leaseinfo.lnumber[0] =1;
+    $scope.leaseinfo.ltenure = [];
+    $scope.leaseinfo.lAmount = [];
 
    // $scope.lAmount = [];
-    $scope.lDownPayment = [];
-    $scope.lProcessingFee = [];
-    $scope.lTotalAmount = [];
-    $scope.lDownAmount = [];
-    $scope.lTotalFee = [];
-    $scope.lTotalInstallment = [];
-    $scope.lTotalDownAndProcessing = [];
-    $scope.lTotalDownAmount = [];
-    $scope.lRate = [];
+    $scope.leaseinfo.lDownPayment = [];
+    $scope.leaseinfo.lProcessingFee = [];
+    $scope.leaseinfo.lTotalAmount = [];
+    $scope.leaseinfo.lDownAmount = [];
+    $scope.leaseinfo.lTotalFee = [];
+    $scope.leaseinfo.lTotalInstallment = [];
+    $scope.leaseinfo.lTotalDownAndProcessing = [];
+    $scope.leaseinfo.lTotalDownAmount = [];
+    $scope.leaseinfo.lRate = [];
     function changeFinancer(index){
       console.log("index===",index);
       $scope.financer[10]='12345';
        $scope.number[index]=5;
     }
     function changeQuantityPlus(index,data){
-      var newQuantity = $scope.fnumber[index] + 1;
-      $scope.fnumber[index] = newQuantity;
-      $scope.fTotalFee[index] = newQuantity * data.processingfee;
-      $scope.fTotalInstallment[index] = newQuantity * data.installment;
-      $scope.fTotalAmount[index] = newQuantity * data.amount;
-      $scope.fTotalDownAmount[index] = newQuantity * data.margin;
-      $scope.fTotalDownAndProcessing[index] = $scope.fTotalDownAmount[index] + $scope.fTotalFee[index];
+      var newQuantity = $scope.financeinfo.fnumber[index] + 1;
+      $scope.financeinfo.fnumber[index] = newQuantity;
+      $scope.financeinfo.fTotalFee[index] = newQuantity * data.processingfee;
+      $scope.financeinfo.fTotalInstallment[index] = newQuantity * data.installment;
+      $scope.financeinfo.fTotalAmount[index] = newQuantity * data.amount;
+      $scope.financeinfo.fTotalDownAmount[index] = newQuantity * data.margin;
+      $scope.financeinfo.fTotalDownAndProcessing[index] = $scope.financeinfo.fTotalDownAmount[index] + $scope.financeinfo.fTotalFee[index];
     }
     function changeQuantityMinus(index,data){
    
-      if($scope.fnumber[index] >1){
-        var newQuantity = $scope.fnumber[index] - 1;
-        $scope.fnumber[index] = newQuantity;
-        $scope.fTotalFee[index] = newQuantity * data.processingfee;
-        $scope.fTotalInstallment[index] = newQuantity * data.installment;
-        $scope.fTotalAmount[index] = newQuantity * data.amount;
-        $scope.fTotalDownAmount[index] = newQuantity * data.margin;
-        $scope.fTotalDownAndProcessing[index] = $scope.fTotalDownAmount[index] + $scope.fTotalFee[index];
+      if($scope.financeinfo.fnumber[index] >1){
+        var newQuantity = $scope.financeinfo.fnumber[index] - 1;
+        $scope.financeinfo.fnumber[index] = newQuantity;
+        $scope.financeinfo.fTotalFee[index] = newQuantity * data.processingfee;
+        $scope.financeinfo.fTotalInstallment[index] = newQuantity * data.installment;
+        $scope.financeinfo.fTotalAmount[index] = newQuantity * data.amount;
+        $scope.financeinfo.fTotalDownAmount[index] = newQuantity * data.margin;
+        $scope.financeinfo.fTotalDownAndProcessing[index] = $scope.financeinfo.fTotalDownAmount[index] + $scope.financeinfo.fTotalFee[index];
       }
     }
     function lchangeQuantityPlus(index,data){
-      var newQuantity = $scope.lnumber[index] + 1;
-      $scope.lnumber[index] = newQuantity;
-      $scope.lTotalFee[index] = newQuantity * data.processingfee;
-      $scope.lTotalInstallment[index] = newQuantity * data.installment;
-      $scope.lTotalAmount[index] = newQuantity * data.amount;
-      $scope.lTotalDownAmount[index] = newQuantity * data.margin;
-      $scope.lTotalDownAndProcessing[index] = $scope.lTotalDownAmount[index] + $scope.lTotalFee[index];
+      var newQuantity = $scope.leaseinfo.lnumber[index] + 1;
+      $scope.leaseinfo.lnumber[index] = newQuantity;
+      $scope.leaseinfo.lTotalFee[index] = newQuantity * data.processingfee;
+      $scope.leaseinfo.lTotalInstallment[index] = newQuantity * data.installment;
+      $scope.leaseinfo.lTotalAmount[index] = newQuantity * data.amount;
+      $scope.leaseinfo.lTotalDownAmount[index] = newQuantity * data.margin;
+      $scope.leaseinfo.lTotalDownAndProcessing[index] = $scope.leaseinfo.lTotalDownAmount[index] + $scope.leaseinfo.lTotalFee[index];
     }
     function lchangeQuantityMinus(index,data){
    
-      if($scope.lnumber[index] >1){
+      if($scope.leaseinfo.lnumber[index] >1){
         var newQuantity = $scope.lnumber[index] - 1;
-        $scope.lnumber[index] = newQuantity;
-        $scope.lTotalFee[index] = newQuantity * data.processingfee;
-        $scope.lTotalInstallment[index] = newQuantity * data.installment;
-        $scope.lTotalAmount[index] = newQuantity * data.amount;
-        $scope.lTotalDownAmount[index] = newQuantity * data.margin;
-        $scope.lTotalDownAndProcessing[index] = $scope.lTotalDownAmount[index] + $scope.lTotalFee[index];
+        $scope.leaseinfo.lnumber[index] = newQuantity;
+        $scope.leaseinfo.lTotalFee[index] = newQuantity * data.processingfee;
+        $scope.leaseinfo.lTotalInstallment[index] = newQuantity * data.installment;
+        $scope.leaseinfo.lTotalAmount[index] = newQuantity * data.amount;
+        $scope.leaseinfo.lTotalDownAmount[index] = newQuantity * data.margin;
+        $scope.leaseinfo.lTotalDownAndProcessing[index] = $scope.leaseinfo.lTotalDownAmount[index] + $scope.leaseinfo.lTotalFee[index];
       }
     }
-    function changeTenure(index,tenure){console.log("tenure=",tenure);
-      $scope.fnumber[index] =1;
-      $scope.ftenure[index] = tenure.tenure;
-      $scope.fAmount[index] = tenure.amount;;
-      $scope.fDownPayment[index] = tenure.margin;
-      $scope.fProcessingFee[index] = tenure.processingfee;
-      $scope.fTotalFee[index] = tenure.processingfee;
-      $scope.fTotalInstallment[index] = tenure.installment;
-      $scope.fTotalAmount[index] = tenure.amount;
-      $scope.fTotalDownAmount[index] = tenure.margin;
-      $scope.fTotalDownAndProcessing[index] = $scope.fTotalDownAmount[index] + $scope.fTotalFee[index];
+    function changeTenure(index,tenure){
+    var jsonArr = JSON.parse(tenure);
+      $scope.financeinfo.fnumber[index] =1;
+      $scope.financeinfo.ftenure[index] = jsonArr.tenure;
+      $scope.financeinfo.fAmount[index] = jsonArr.amount;;
+      $scope.financeinfo.fDownPayment[index] = jsonArr.margin;
+      $scope.financeinfo.fProcessingFee[index] = jsonArr.processingfee;
+      $scope.financeinfo.fTotalFee[index] = jsonArr.processingfee;
+      $scope.financeinfo.fTotalInstallment[index] = jsonArr.installment;
+      $scope.financeinfo.fTotalAmount[index] = jsonArr.amount;
+      $scope.financeinfo.fTotalDownAmount[index] = jsonArr.margin;
+      $scope.financeinfo.fTotalDownAndProcessing[index] = $scope.financeinfo.fTotalDownAmount[index] + $scope.financeinfo.fTotalFee[index];
     }
     function lchangeTenure(index,tenure){
-      console.log("tenure",tenure);
-      $scope.lnumber[index] =1;
-      $scope.ltenure[index] = tenure.tenure;
-      $scope.lAmount[index] = tenure.amount;;
-      $scope.lDownPayment[index] = tenure.margin;
-      $scope.lProcessingFee[index] = tenure.processingfee;
-      $scope.lTotalFee[index] = tenure.processingfee;
-      $scope.lTotalInstallment[index] = tenure.installment;
-      $scope.lTotalAmount[index] = tenure.amount;
-      $scope.lTotalDownAmount[index] = tenure.margin;
-      $scope.lTotalDownAndProcessing[index] = $scope.lTotalDownAmount[index] + $scope.lTotalFee[index];
+      var jsonArr = JSON.parse(tenure);
+      $scope.leaseinfo.lnumber[index] =1;
+      $scope.leaseinfo.ltenure[index] = jsonArr.tenure;
+      $scope.leaseinfo.lAmount[index] = jsonArr.amount;;
+      $scope.leaseinfo.lDownPayment[index] = jsonArr.margin;
+      $scope.leaseinfo.lProcessingFee[index] = jsonArr.processingfee;
+      $scope.leaseinfo.lTotalFee[index] = jsonArr.processingfee;
+      $scope.leaseinfo.lTotalInstallment[index] = jsonArr.installment;
+      $scope.leaseinfo.lTotalAmount[index] = jsonArr.amount;
+      $scope.leaseinfo.lTotalDownAmount[index] = jsonArr.margin;
+      $scope.leaseinfo.lTotalDownAndProcessing[index] = $scope.leaseinfo.lTotalDownAmount[index] + $scope.leaseinfo.lTotalFee[index];
     }
 
     function loadUserDetail() {
@@ -148,7 +152,7 @@
     }
 
 
-    function init() {console.log("ok==");
+    function init() {
     getLocation();
       
       if ($stateParams.id) {
@@ -195,7 +199,6 @@
       OfferSvc.getFilterData(filter).then(function(result){
         if(result.length>0){
           vm.offer = result;
-          console.log("loc===",result);
             for(var k in  vm.offer) {
               var locationArr = vm.offer[k].location;
               var i =0;
@@ -220,23 +223,34 @@
       .catch(function(res){
       });
     }
-    function getOffer(){console.log("hiiiii");
+    function getOffer(){
       var filter = {};
       filter.status = true;
      // if(data.location)
       //filter.model = 5768f67ff39c920418fe5d89;//data.location;
-      OfferSvc.getFilterData(filter).then(function(result){console.log("result==",result);
+      OfferSvc.getFilterData(filter).then(function(result){
         if(result.length>0){
           $scope.offer = result;
             for(var k in  $scope.offer) {
              console.log("offer==",$scope.offer[k]);
-             console.log("case==",$scope.offer[k].caseInfo);
             }
         }
       })
       .catch(function(res){
       });
     }
+    ////send offer
+    function proceed(form){console.log("form proceed",form);
+      /*if(form.$invalid){
+           console.log("form proceed12222");
+             $scope.submitted = true;
+             return;
+      }*/
+          console.log("financeinfo",$scope.financeinfo);
+         // console.log("financeinfo====",$scope.financer);
+          console.log("leaseinfo====",$scope.leaseinfo);
+    }
+
     function changeLocation(id){
       var data = {};
       data.location = id;
