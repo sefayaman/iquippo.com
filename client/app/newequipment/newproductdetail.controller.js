@@ -225,7 +225,7 @@
     }
     function getOffer(){
       var filter = {};
-      filter.status = true;
+      filter.status = true;console.log("hi offer");
      // if(data.location)
       //filter.model = 5768f67ff39c920418fe5d89;//data.location;
       OfferSvc.getFilterData(filter).then(function(result){
