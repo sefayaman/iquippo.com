@@ -498,7 +498,7 @@ var informationMessage = {};
 informationMessage['unknownError'] = "There is some issue.Please contact our support team.";
 
 /*callback message*/
-informationMessage['callbackSuccess'] = "Your request has been successfully received. We will contact you soon. Thank you.";
+informationMessage['callbackSuccess'] = "We have received your Call Back request. One of our executives will contact you soon. Thank you.";
 
 /*quote request message*/
 informationMessage['quoteSuccess'] = "Your quote request successfully submitted.";

@@ -7,16 +7,16 @@
               <form class="form" name="form" novalidate>
               
                 <div class="row">
-                  <div class="form-group col-sm-4" ng-class="{'has-error': form.fname.$invalid && form.submitted }">
+                  <div class="form-group col-sm-6" ng-class="{'has-error': form.fname.$invalid && form.submitted }">
                     <input type="text" class="form-control" name="fname" ng-model="callbackVm.callback.fname" placeholder="* First Name" required>
                    <!-- <p class="help-block" ng-show="form.fname.$error.required && form.submitted">
                   First name is required
                   </p> -->
                   </div>
-                  <div class="form-group col-sm-4">
+                  <!-- <div class="form-group col-sm-4">
                     <input type="text" class="form-control" name="mname" ng-model="callbackVm.callback.mname" value="" placeholder="Middle Name">
-                  </div>
-                  <div class="form-group col-sm-4" ng-class="{'has-error': form.lname.$invalid && form.submitted }">
+                  </div> -->
+                  <div class="form-group col-sm-6" ng-class="{'has-error': form.lname.$invalid && form.submitted }">
                     <input type="text" class="form-control" name="lname" ng-model="callbackVm.callback.lname" value="" placeholder="* Last Name" required>
                     <!-- <p class="help-block" ng-show="form.fname.$error.required && form.submitted">
                   Last name is required
@@ -31,15 +31,14 @@
                   <div class="form-group col-sm-6" ng-class="{'has-error': form.mobile.$invalid &&
                    form.submitted }">
                     <div class="row">
-                      <div class="col-sm-4 padd-right search-field">
+                      <div class="col-xs-4 col-sm-4 padd-right search-field">
                         <select class="form-control" ng-model="callbackVm.callback.countryCode" ng-change="onCodeChange(callbackVm.callback.countryCode)" required>
                           <option value="" disabled>*Code</option>
                           <option  ng-repeat ="country in allCountries | orderBy:'name'" value="{{country.countryCode}}">+{{country.countryCode}}</option>
                         </select>
-                        <i class="caret"></i>
                       </div>                      
-                      <div class="col-sm-8 padd-left">
-                        <input type="text" class="form-control" name="mobile" ng-model="callbackVm.callback.mobile"  placeholder="* Mobile No." uib-tooltip="98-XXXX-XXXX" tooltip-trigger="focus" tooltip-placement="top" required>
+                      <div class="col-xs-8 col-sm-8 padd-left">
+                        <input type="text" class="form-control" name="mobile" ng-model="callbackVm.callback.mobile"  placeholder="* Mobile No." uib-tooltip="+91-98-XXXX-XXXX" tooltip-trigger="focus" tooltip-placement="top" required>
                       </div>                      
                     </div>
                     

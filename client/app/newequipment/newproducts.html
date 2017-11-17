@@ -12,7 +12,8 @@
 </div>
 <section class="category-block">
   <div class="container-fluid">
-    <div class="col-sm-3" ng-class="{hidefilter: !filterbutton.value1}">
+    <div class="row">
+      <div class="col-sm-3" ng-class="{hidefilter: !filterbutton.value1}">
       <button class="btn btn-danger visible-xs filter-display" ng-click="filterbutton.value1 = !filterbutton.value1"><i class="fa fa-times"></i> Close</button>
       <h4 class="filter-heading">Filter By:</h4>
       <uib-accordion close-others="oneAtATime" class="information">
@@ -128,7 +129,7 @@
                     {{product.technicalInfo.bucketCapacity}}                  
                   </div>
                 </div> 
-<!--                <div class="row">
+        <!--    <div class="row">
                   <div class="col-xs-12 form-group">
                     <h5 class="text-warning">
                       <i class="fa fa-star"></i>
@@ -155,6 +156,7 @@
         </div>
       </div>
     </div>
-    <!--Grid Mode End-->  
+    <!--Grid Mode End-->
+    </div>  
   </div>
 </section>
