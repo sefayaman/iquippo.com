@@ -255,7 +255,6 @@
     }
 
     function getLotsInAuction(filter) {
-      console.log("getLotsInAuction",filter);
       // if(Auth.getCurrentUser()._id)
       //   filter.userId = Auth.getCurrentUser()._id;
       LotSvc.getLotsInAuction(filter)

@@ -1972,7 +1972,6 @@ function importAuctionMaster(req, res, data) {
 /* end of auctionmaster */
 var FIELDS = ['auction_id','lot_id',"lot_status"];
 exports.validateUpdateLotStatus = function(req,res,next){
-  
   var bodyData = req.body;
   var result = {};
   result.err = "";
@@ -2000,10 +1999,12 @@ exports.validateUpdateLotStatus = function(req,res,next){
       return sendResponse();
     };
     var idArr = [];
-    req.assets.forEach(function(item){
-      if(!item.external && item.product && item.product._id)
-        idArr.push(item.product._id);
-    });
+    if(req.assets) {
+      req.assets.forEach(function(item){
+        if(!item.external && item.product && item.product._id)
+          idArr.push(item.product._id);
+      });
+    }
 
     Product.find({_id:{$in:idArr},deleted:false},function(prErr,products){
       if(err){
