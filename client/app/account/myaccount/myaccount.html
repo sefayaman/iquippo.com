@@ -73,7 +73,7 @@
                   <div class="col-sm-6 form-group">
                     <div class="floating-label-wrapper" ng-class="{'has-error':basicForm.country.$invalid && submitted}">
                       <label>Country</label>
-                      <select class="form-control" name="country" ng-model="myAccountVm.userInfo.country" ng-disabled="!myAccountVm.editBasicInfo" required>
+					<select class="form-control" name="country" ng-model="myAccountVm.userInfo.country" ng-change="myAccountVm.onCountryChange(myAccountVm.userInfo.country)" ng-disabled="!myAccountVm.editBasicInfo" required>
                         <option value="">Country</option>
                         <option value="{{country.name}}" ng-repeat ="country in allCountries | orderBy:'name'">{{country.name}}</option>
                       </select>
@@ -81,8 +81,8 @@
                   </div>                
                   <div class="col-sm-6 form-group">
                      <div class="floating-label-wrapper" ng-class="{'has-error':basicForm.state.$invalid && submitted}">
-                      <label>State</label>
-                      <select class="form-control" name="state" ng-model="myAccountVm.userInfo.state" ng-disabled="!myAccountVm.editBasicInfo" required>
+                    <label>State</label>
+					<select class="form-control" name="state" ng-model="myAccountVm.userInfo.state" ng-change="myAccountVm.onStateChange(myAccountVm.userInfo.state)" ng-disabled="!myAccountVm.editBasicInfo" required>
                         <option value="">State</option>
                         <option value="{{state.name}}" ng-repeat="state in stateList">{{state.name}}</option>
                       </select>

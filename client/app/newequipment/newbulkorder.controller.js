@@ -1,163 +1,155 @@
 (function() {
   'use strict';
-  angular.module('sreizaoApp').controller('NewBulkorderCtrl', NewBulkorderCtrl);
+  angular.module('sreizaoApp').controller('BulkOrderCtrl',BulkOrderCtrl);
 
-  function NewBulkorderCtrl($scope, categorySvc, brandSvc, modelSvc, LocationSvc, Modal, $location ) {
+  function BulkOrderCtrl($scope,$rootScope,Auth,NewEquipmentSvc,categorySvc,brandSvc,modelSvc, Modal,LocationSvc) {
         var vm = this;
-        //var filter = {};
-        $scope.newEquipBrand = [];
-        $scope.onStateChange = onStateChange;
-        $scope.onCategoryChange = onCategoryChange;
-        $scope.onBrandChange = onBrandChange;
-        $scope.quantity = 1;
-        $scope.incrementQty = incrementQty;
-        $scope.decrementQty = decrementQty;
-        $scope.getQuoteSubmit = getQuoteSubmit;
-        vm.fieldInfo = [{}];
-        vm.fireCommand = fireCommand;
-        var bulkorder = null;
-        //pagination variables
+        vm.dataModel = {orders:[{quantity:1}]};
+        vm.dataModel.forSelf = true;
+        vm.save = save;
+        vm.onCategoryChange = onCategoryChange;
+        vm.onBrandChange = onBrandChange;
+        vm.onCountryChange = onCountryChange;
+        vm.onStateChange = onStateChange;
+        vm.setUserData = setUserData;
+        vm.setQuantity = setQuantity;
 
-        function productInit() {
-            bulkorder = $scope.bulkorder = {};
-            bulkorder.category = {};
-            bulkorder.brand = {};
-            bulkorder.model = {};
-        }
-    
-        productInit();
-        function init() {
-            
+        function init(){
             categorySvc.getCategoryOnFilter({isForNew:true})
-                .then(function (result) {
-                    $scope.allCategory = result;
-                });
-            brandSvc.getBrandOnFilter({isForNew:true})
-            .then(function(result) {
-              $scope.brandList = result;
-            });
-
-            modelSvc.getModelOnFilter({isForNew:true})
-            .then(function(result) {
-              $scope.modelList = result;
-            });
-
-            LocationSvc.getAllState().
-            then(function(result) {
-              $scope.stateList = result;
-            });
-            
-            
-            $scope.bulkorder.selectedCategoryId = $scope.bulkorder.category._id;
-            $scope.bulkorder.selectedBrandId = $scope.bulkorder.brand._id;
-            $scope.bulkorder.selectedModelId = $scope.bulkorder.model._id;
-            $scope.onCategoryChange($scope.bulkorder.category._id, true);
-            $scope.onBrandChange($scope.bulkorder.brand._id, true);
-            
-        }
-                
-        init();
-        
-        function onStateChange(noReset) {
-          $scope.locationList = [];
-          if (!noReset)
-            bulkorder.city = "";
-          if (!$scope.bulkorder.state)
-            return;
-          LocationSvc.getAllLocation().
-          then(function(result) {
-            $scope.locationList = result.filter(function(item) {
-                return item.state.name == $scope.bulkorder.state;
-              });
-          });
-        }
-        
-        
-        function onCategoryChange(categoryId, noChange) {
-            if (!noChange) {
-              bulkorder.brand = {};
-              bulkorder.model = {};
-              if (categoryId) {
-                var ct = categorySvc.getCategoryOnId(categoryId);
-                bulkorder.category._id = ct._id;
-                bulkorder.category.name = ct.name;
-              } else {
-                bulkorder.category = {};
-              }
-
-              $scope.bulkorder.selectedBrandId = "";
-              $scope.bulkorder.selectedModelId = "";
+            .then(function(catList){
+                 $scope.categoryList = catList;
+             });
+            if(vm.dataModel.forSelf && Auth.getCurrentUser()._id){
+                setUserData();
             }
 
-            $scope.brandList = [];
-            $scope.modelList = [];
-            //$scope.product.technicalInfo = {};
-            if (!categoryId)
-              return;
-            var otherBrand = null;
-            brandSvc.getBrandOnFilter({categoryId:categoryId,isForNew:true})
-              .then(function(result) {
-                $scope.brandList = result;
-                });
         }
 
-        function onBrandChange(brandId, noChange) {
-            if (!noChange) {
-                bulkorder.model = {};
-
-                if (brandId) {
-                    var brd = [];
-                    brd = $scope.brandList.filter(function (item) {
-                        return item._id == brandId;
-                    });
-                    if (brd.length == 0)
-                        return;
-                    bulkorder.brand._id = brd[0]._id;
-                    bulkorder.brand.name = brd[0].name;
-                } else {
-                    bulkorder.brand = {};
-                }
-                $scope.bulkorder.selectedModelId = "";
+        function setQuantity(order,type){
+            if( type == 'inc')
+                order.quantity += 1;
+            if(type == 'dec'){
+                if(order.quantity <= 1)
+                    return;
+                order.quantity -= 1;
             }
+        }
 
-            $scope.modelList = [];
-            if (!brandId)
+        function setUserData(){
+
+            vm.dataModel.name = "";
+            vm.dataModel.mobile = "";
+            vm.dataModel.email = "";
+            vm.dataModel.country = "";
+            vm.dataModel.city = "";
+            vm.dataModel.state = "";
+            vm.dataModel.state = "";
+            vm.dataModel.city = "";
+            if(!vm.dataModel.forSelf)
                 return;
-            var otherModel = null;
+            vm.dataModel.name = Auth.getCurrentUser().fname + " " + Auth.getCurrentUser().lname;
+            vm.dataModel.mobile = Auth.getCurrentUser().mobile;
+            vm.dataModel.email = Auth.getCurrentUser().email;
+            vm.dataModel.country = Auth.getCurrentUser().country;
+            vm.dataModel.state = Auth.getCurrentUser().state;
+            vm.dataModel.city = Auth.getCurrentUser().city;
+            onCountryChange(vm.dataModel.country,true);
+            onStateChange(vm.dataModel.state,true);
+        }
+
+        function onCountryChange(country,noReset){
+            if(!noReset){
+                vm.dataModel.state = "";
+                vm.dataModel.city = "";
+            }
             
-            modelSvc.getModelOnFilter({brandId:brandId,isForNew:true})
-                .then(function (result) {
-                    $scope.modelList = result;
-                });
-
-        }
-        
-        function incrementQty(){
-            $scope.quantity++;
-        }
-        function decrementQty(){
-            if($scope.quantity<=1){
-                Modal.alert("Quantity Can't be less then 1");
-                return ;
-            }
-            $scope.quantity--;
-        }
-        
-        function getQuoteSubmit(res, req){
-            console.log('form submit');
-        }
-        
-        function fireCommand(reset, filterObj, requestFor) {
+            $scope.cityList = [];
+            $scope.stateList = [];
             var filter = {};
-            if (vm.searchStr)
-                filter['searchStr'] = vm.searchStr;
-
-            switch (requestFor) {
-                case "leadmaster":
-                    getLeadMaster(filter);
-                    break;
-            }
+            filter.country = country;
+            if(!country)
+                return;
+            LocationSvc.getStateHelp(filter).then(function(result) {
+                $scope.stateList = result;
+            });
+            vm.dataModel.countryCode = LocationSvc.getCountryCode(country);
         }
 
-  } 
+        function onStateChange(state,noReset){
+            if(!noReset)
+               vm.dataModel.city = "";
+            var filter = {};
+            $scope.cityList = [];
+            filter.stateName = state;
+            if(!state)
+                return;
+            LocationSvc.getLocationOnFilter(filter).then(function(result) {
+                $scope.cityList = result;
+            });
+        }
+
+        function onCategoryChange(order){
+            order.brand = "";
+            order.model = "";
+            order.brandList = [];
+            order.modelList = [];
+            if(!order.category)
+                return;
+            var filter = {isForNew:true};
+            filter['categoryName'] = order.category;
+            brandSvc.getBrandOnFilter(filter)
+            .then(function(result) {
+                order.brandList = result;
+            })
+        }
+
+         function onBrandChange(order){
+            order.model = "";
+            order.modelList = [];
+           var filter = {isForNew:true};
+           if(!order.brand)
+            return;
+          filter['brandName'] = order.brand;
+          modelSvc.getModelOnFilter(filter)
+            .then(function(result) {
+              order.modelList = result;
+            })
+        }
+
+        function save(form){
+            if(form.$invalid){
+                $scope.submitted = true;
+                return;
+            }
+            
+            $rootScope.loading = true;
+            vm.dataModel.user = {
+                name:Auth.getCurrentUser().fname + " " + Auth.getCurrentUser().lname,
+                mobile:Auth.getCurrentUser().mobile,
+                email:Auth.getCurrentUser().email,
+                role:Auth.getCurrentUser().role,
+            };
+            
+            NewEquipmentSvc.saveNewBulkOrder(vm.dataModel)
+            .then(function(res){
+                $scope.submitted = false;
+                $rootScope.loading = false;
+                vm.dataModel.orders =[{quantity:1}];
+                Modal.alert("Your order submiited successfully.")
+            })
+            .catch(function(err){
+                $rootScope.loading = false;
+                Modal.alert()
+            })
+        }
+
+        //Entry point
+        Auth.isLoggedInAsync(function(isLoggedIn){
+            if(isLoggedIn)
+                init();
+            else
+                $state.go('newequipment');
+        });
+
+    } 
 })();

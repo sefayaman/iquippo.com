@@ -2,12 +2,13 @@
   'use strict';
   angular.module('sreizaoApp').controller('NewEquipmentCtrl', NewEquipmentCtrl);
 
-  function NewEquipmentCtrl($scope, NewEquipmentSvc, NewEquipmentBannersSvc, categorySvc, brandSvc, Modal, $location ) {
+  function NewEquipmentCtrl($scope,Auth,NewEquipmentSvc,$state,NewEquipmentBannersSvc, categorySvc, brandSvc, Modal, $location ) {
     var vm = this;
     //var filter = {};
     $scope.newEquipBrand = [];
    
     vm.fireCommand = fireCommand;
+    $scope.goBulkOrders = goBulkOrders;
     //pagination variables
         var prevPage = 0;
         vm.itemsPerPage = 50;
@@ -108,8 +109,15 @@
         }); 
     }
     
-    $scope.goBulkOrders = function() {
-        $location.url('/new/bulkorder');
+    function goBulkOrders() {
+        Auth.isLoggedInAsync(function(loggedIn){
+            if(loggedIn)
+                $state.go("newbulkorder");
+            else
+                Modal.alert("Please login/register before bulk order");
+
+        });
+        //$location.url('/new/bulkorder');
     };
     
     function getNewEquipmentBrand(res){

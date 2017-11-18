@@ -12,9 +12,20 @@
         
         var svc = {};
         var path = '/api/newequipment';
+        var newBulkOrderPath = "/api/equipmentorder/newbulkorder"
         var data = {};
         //var promoFilter = 'promotion';
-        
+        svc.saveNewBulkOrder = saveNewBulkOrder;
+
+        function saveNewBulkOrder(data){
+        	return $http.post(newBulkOrderPath,data)
+        			.then(function(res){
+        				return res.data
+        			})
+        			.catch(function(err){
+        				throw err;
+        			});
+        }
         return svc;
     }
     

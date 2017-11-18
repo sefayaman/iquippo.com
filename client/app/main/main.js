@@ -735,12 +735,6 @@ angular.module('sreizaoApp')
           });
         }
       })
-      .state('newbulkorder', {
-        url:"/new/bulkorder",
-        templateUrl: "app/newequipment/bulkorder.html",
-        controller:"NewBulkorderCtrl as newbulkorderVm",
-        layout:"client"
-      })
        .state('uploadnewequipment', {
         url: '/uploadnewequipment',
         templateUrl: 'app/newequipment/product-new.html',
@@ -767,6 +761,12 @@ angular.module('sreizaoApp')
         url: '/new',
         templateUrl: 'app/group/grouplisting.html',
         controller: 'GroupListingCtrl as groupListingVm',
+        layout:'client'
+      })
+      .state('newbulkorder', {
+        url: '/new/bulkorder',
+        templateUrl: 'app/newequipment/bulkorder.html',
+        controller: 'BulkOrderCtrl as bulkOrderVm',
         layout:'client'
       })
       .state('newcategorylisting', {
