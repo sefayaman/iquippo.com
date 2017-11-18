@@ -7,7 +7,7 @@
     var vm = this;
     var dbAuctionId = $stateParams.dbAuctionId;
     $scope.equipmentSearchFilter = {};
-    $scope.pager = PagerSvc.getPager(null,1,1);
+    $scope.pager = PagerSvc.getPager(null,1,24);
     vm.onGroupChange = onGroupChange;
     vm.onCategoryChange= onCategoryChange;
     vm.onBrandChange= onBrandChange;

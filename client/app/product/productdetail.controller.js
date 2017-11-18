@@ -62,6 +62,7 @@
     vm.checkServiceInfo = checkServiceInfo;
     $scope.redirectToAuction = redirectToAuction;
     vm.withdrawBid = withdrawBid;
+    vm.getMiscDoc = getMiscDoc;
     
     // bid summary
     function openBidModal(bidAmounts, bid, form) {
@@ -129,73 +130,19 @@
       });
     }
 
-    //Submit Valuation Request
-
-    /*function negotiate(form, flag) {
-      if (!Auth.getCurrentUser()._id) {
-        Modal.alert("Please Login/Register for submitting your request!", true);
-        return;
+    function getMiscDoc(docs,type){
+      var docName = "";
+      if(!docs || !docs.length || !type)
+        return docName;
+      for(var i=0;i< docs.length;i++){
+        if(docs[i].type == type && docs[i].name){
+          docName = docs[i].name;
+          break;
+        }
       }
-
-      if (Auth.getCurrentUser().profileStatus == "incomplete") {
-        return $state.go("myaccount");
-      }
-      if (form.$invalid) {
-        $scope.negotiationSubmitted = true;
-        return;
-      }
-      Modal.confirm("Do you want to submit?", function(ret) {
-        if (ret == "yes")
-          return negotiateConfirm(form, flag);
-      });
+      return docName;
     }
 
-    var dataNegotiate = {};
-
-    function negotiateConfirm(form, flag) {
-
-      if (flag == "true") {
-        dataNegotiate = {};
-        dataNegotiate = {
-          user: Auth.getCurrentUser(),
-          product: $scope.currentProduct,
-          type: "BUY_NEGOTIATE",
-          offer: vm.negotiateAmt,
-          negotiation: true
-        };
-
-      } else if (flag == "false") {
-        dataNegotiate = {};
-        dataNegotiate = {
-          user: Auth.getCurrentUser(),
-          product: $scope.currentProduct,
-          type: "BUY",
-          offer: $scope.currentProduct.grossPrice,
-          negotiation: false
-        };
-      } else {
-        dataNegotiate = {};
-        dataNegotiate = {
-          user: Auth.getCurrentUser(),
-          product: $scope.currentProduct,
-          type: "FOR_RENT",
-          offer: $scope.currentProduct.grossPrice,
-          negotiation: false
-        };
-      }
-
-      NegotiationSvc.negotiation(dataNegotiate, flag)
-        .then(function(res) {
-          if (res && res.data && res.data.errorCode !== 0) {
-            $state.go('main');
-            return;
-          }
-          vm.negotiateAmt = "";
-          if (res && res.data && res.data.message)
-            Modal.alert(res.data.message, true);
-        });
-    }
-*/
 
 
     $scope.changedCertified = function(mytime) {
@@ -214,9 +161,6 @@
       $scope.isShow = !$scope.isShow;
     };
 
-    /*$scope.changedCertified = function (mytime) {
-      changed(mytime, 'certified');
-    };*/
 
     //date picker
     $scope.today = function() {
@@ -546,34 +490,6 @@
               img.displaySrc = $rootScope.uploadImagePrefix + $scope.currentProduct.assetDir + "/" + img.src;
             });
 
-            /*$scope.currentProduct.gAImages = [];
-            $scope.currentProduct.engineImages = [];
-            $scope.currentProduct.hydraulicImages = [];
-            $scope.currentProduct.cabinImages = [];
-            $scope.currentProduct.underCarrageImages = [];
-            $scope.currentProduct.otherImages = [];
-            $scope.currentProduct.images.forEach(function(item, index) {
-              if (item.catImgType) {
-                switch (item.catImgType) {
-                  case 'eP':
-                    $scope.currentProduct.engineImages.push(item);
-                    break;
-                  case 'hP':
-                    $scope.currentProduct.hydraulicImages.push(item);
-                    break;
-                  case 'cP':
-                    $scope.currentProduct.cabinImages.push(item);
-                    break;
-                  case 'uC':
-                    $scope.currentProduct.underCarrageImages.push(item);
-                    break;
-                  case 'oP':
-                    $scope.currentProduct.otherImages.push(item);
-                    break;
-                }
-              } else
-                $scope.currentProduct.gAImages.push(item);
-            });*/
           }
         });
       }
@@ -777,18 +693,6 @@
       };
 
     }
-
-    //valuation request method
-
-   /* function openValuationModal() {
-      if (!Auth.isLoggedIn()) {
-        Modal.alert("Please login/register before send valuation request");
-        return;
-      }
-      var valuationScope = $rootScope.$new();
-      valuationScope.product = $scope.currentProduct;
-      Modal.openDialog('valuationReq', valuationScope);
-    }*/
 
     function openPriceTrendSurveyModal(agree) {
 

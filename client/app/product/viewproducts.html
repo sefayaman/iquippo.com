@@ -4,7 +4,7 @@
       <a href="/main"> Home </a>
     </li>
     <li><a href="/used"> Used Equipments </a></li>
-    <li class="active"> {{displayText || equipmentSearchFilter.group || equipmentSearchFilter.category || equipmentSearchFilter.brand || equipmentSearchFilter.location || equipmentSearchFilter.assetId || "XXXXX"}} </li>
+    <li class="active"> {{displayText || equipmentSearchFilter.group || equipmentSearchFilter.category || equipmentSearchFilter.brand || equipmentSearchFilter.location || equipmentSearchFilter.assetId || "Used Products"}} </li>
   </ol>
 </div>
 
@@ -95,7 +95,7 @@
       <div class="col-sm-9">
         <div>
           <div class="col-sm-10 form-group">
-            <h4 class="filter-heading">{{ displayText || equipmentSearchFilter.group || equipmentSearchFilter.category || equipmentSearchFilter.brand || equipmentSearchFilter.tradeType || equipmentSearchFilter.location || equipmentSearchFilter.tradeType || equipmentSearchFilter.assetId ||"XXXXX"}} ({{count || 0}} Results Found)</h4>
+            <h4 class="filter-heading">{{ displayText || equipmentSearchFilter.group || equipmentSearchFilter.category || equipmentSearchFilter.brand || equipmentSearchFilter.tradeType || equipmentSearchFilter.location || equipmentSearchFilter.tradeType || equipmentSearchFilter.assetId ||"Used Products"}} ({{count || 0}} Results Found)</h4>
           </div>
           <div class="col-xs-6 visible-xs">
             <button class="btn btn-danger visible-xs" ng-click="filterbutton.value1 = !filterbutton.value1">

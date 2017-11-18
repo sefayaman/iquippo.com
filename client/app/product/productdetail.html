@@ -25,8 +25,8 @@
                 <img alt="" title="" ng-src="{{thumbnailImage.displaySrc}}" class="img-responsive" ng-click="productDetailVm.previewProduct(currentProduct.images, $index)">
               </div>
             </div>
-            <div class="stamp-image">
-              <img src="/assets/images/certified.png" class="img-responsive">
+            <div class="stamp-image" ng-if="currentProduct.certificationName && currentProduct.certificationLogo">
+              <img ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{currentProduct.certificationLogo}}" class="img-responsive">
             </div>
             <!-- Indicators -->
             <ol class="carousel-indicators">
@@ -128,27 +128,35 @@
               </div>
             </form>
           </div>
-          <div class="row text-center">
-            <div class="col-xs-4" ng-repeat="doc in currentProduct.miscDocuments">
+          <div class="row text-center" ng-if="currentProduct._id">
+            <div class="col-xs-4">
               <h1>
-              <a href="{{uploadImagePrefix}}{{currentProduct.assetDir}}/{{doc.name}}" target="_blank" ng-disabled="doc.type !== 'Rcupload' || !doc.name">
+              <a href="{{uploadImagePrefix}}{{currentProduct.assetDir}}/{{productDetailVm.getMiscDoc(currentProduct.miscDocuments,'Rcupload')}}" ng-if="productDetailVm.getMiscDoc(currentProduct.miscDocuments,'Rcupload')" target="_blank">
+                <i class="fa fa-file-text-o fa-2x"></i>
+              </a>
+              <a href="javascript:void(0)" ng-if="!productDetailVm.getMiscDoc(currentProduct.miscDocuments,'Rcupload')" target="_blank">
                 <i class="fa fa-file-text-o fa-2x"></i>
               </a>
               </h1>
               Registration Certificate
             </div>
-            <div class="col-xs-4" ng-repeat="doc in currentProduct.miscDocuments" ng-if="doc.type == 'Invoice' && doc.name">
+            <div class="col-xs-4">
               <h1>
-
-              <a href="{{uploadImagePrefix}}{{currentProduct.assetDir}}/{{doc.name}}" target="_blank">
+              <a href="{{uploadImagePrefix}}{{currentProduct.assetDir}}/{{productDetailVm.getMiscDoc(currentProduct.miscDocuments,'Invoice')}}" ng-if="productDetailVm.getMiscDoc(currentProduct.miscDocuments,'Invoice')" target="_blank">
+                <i class="fa fa-file-text-o fa-2x"></i>
+              </a>
+              <a href="javascript:void(0)" ng-if="!productDetailVm.getMiscDoc(currentProduct.miscDocuments,'Invoice')" target="_blank">
                 <i class="fa fa-file-text-o fa-2x"></i>
               </a>
               </h1>
               Original Invoice
             </div>
-            <div class="col-xs-4" ng-repeat="doc in currentProduct.miscDocuments" ng-if="doc.type == 'Taxchallan' && doc.name">
+            <div class="col-xs-4">
               <h1>
-              <a href="{{uploadImagePrefix}}{{currentProduct.assetDir}}/{{doc.name}}" target="_blank">
+               <a href="{{uploadImagePrefix}}{{currentProduct.assetDir}}/{{productDetailVm.getMiscDoc(currentProduct.miscDocuments,'Taxchallan')}}" ng-if="productDetailVm.getMiscDoc(currentProduct.miscDocuments,'Taxchallan')" target="_blank">
+                <i class="fa fa-file-text-o fa-2x"></i>
+              </a>
+              <a href="javascript:void(0)" ng-if="!productDetailVm.getMiscDoc(currentProduct.miscDocuments,'Taxchallan')" target="_blank">
                 <i class="fa fa-file-text-o fa-2x"></i>
               </a>
               </h1>

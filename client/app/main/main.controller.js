@@ -321,7 +321,7 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
       if(!isNew)
         $state.go('viewproduct',filter);
       else
-        $state.go('newequipmentproduct',filter);
+        $state.go('newviewproduct',filter);
     }
 
     function getAuctionCount(){

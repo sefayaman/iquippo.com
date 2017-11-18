@@ -75,22 +75,22 @@
       <a href="/new/brands" ng-if="mainVm.newBrand">View All ({{mainVm.brandCountForNew || 0}})</a>
     </div>
     <uib-tabset justified="false">
-      <uib-tab heading="New Equipment" select="mainVm.toggleTab(0,true)">
+      <uib-tab heading="Used Equipment" select="mainVm.toggleTab(0,false)">
         <div class="row">
-          <div class="col-xs-6 col-sm-4 form-group text-center" ng-repeat="brand in mainVm.brandsForNew" ng-if="$index < 3">   
+          <div class="col-xs-6 col-sm-4 form-group text-center" ng-repeat="brand in mainVm.brands" ng-if="$index < 3">   
             <div class="brand-logo">
-              <a href="/new/brands/{{brand.name}}?currentPage=1" class="brand-name">
+              <a href="/used/brands/{{brand.name}}?currentPage=1" class="brand-name">
                 <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{brand.imgSrc}}">
               </a>
             </div>
           </div>
         </div>
       </uib-tab>
-      <uib-tab heading="Used Equipment" select="mainVm.toggleTab(0,false)">
+      <uib-tab heading="New Equipment" select="mainVm.toggleTab(0,true)">
         <div class="row">
-          <div class="col-xs-6 col-sm-4 form-group text-center" ng-repeat="brand in mainVm.brands" ng-if="$index < 3">   
+          <div class="col-xs-6 col-sm-4 form-group text-center" ng-repeat="brand in mainVm.brandsForNew" ng-if="$index < 3">   
             <div class="brand-logo">
-              <a href="/used/brands/{{brand.name}}?currentPage=1" class="brand-name">
+              <a href="/new/brands/{{brand.name}}?currentPage=1" class="brand-name">
                 <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{brand.imgSrc}}">
               </a>
             </div>
@@ -119,7 +119,9 @@
           <div class="media-body">
             <h4 class="media-heading text-ellips">{{auction.name}}</h4>
             <p><small>({{auction.total_products}} Assets  |  {{auction.state}})</small></p>
-            <span>{{auction.startTimer | date :'hh:mma'}} to {{auction.endTimer | date :'hh:mma'}}</span>
+            <!-- <span>{{auction.startTimer | date :'hh:mma'}} to {{auction.endTimer | date :'hh:mma'}}</span> -->
+            <span ng-if="auction.auctionType === 'online'">Online</span>
+            <span ng-if="auction.auctionType === 'live'">Live Auction</span>
           </div>
         </a>
       </div>
@@ -135,20 +137,20 @@
       <a href="/new/allcategories" ng-if="mainVm.newCategory">View All ({{mainVm.categoryCountForNew || 0}})</a>
     </div>
     <uib-tabset justified="false">
-      <uib-tab heading="New Equipment" select="mainVm.toggleTab(1,true)">
+      <uib-tab heading="Used Equipment" select="mainVm.toggleTab(1,false)">
         <div class="row">
-          <div class="col-sm-4 form-group text-center" ng-repeat="category in mainVm.categoryListForNew" ng-if="$index < 6">   
-            <a href="/new/{{category.group.name}}/{{category.name}}?currentPage=1" class="cat-rectangle">
+          <div class="col-sm-4 form-group text-center" ng-repeat="category in mainVm.categoryList" ng-if="$index < 6">   
+            <a href="/used/{{category.group.name}}/{{category.name}}?currentPage=1" class="cat-rectangle">
               <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{category.imgSrc}}" class="category-item">
             </a>
             <h5 class="category-name">{{category.name}} ({{category.count}})</h5>
           </div>
         </div>
       </uib-tab>
-      <uib-tab heading="Used Equipment" select="mainVm.toggleTab(1,false)">
+      <uib-tab heading="New Equipment" select="mainVm.toggleTab(1,true)">
         <div class="row">
-          <div class="col-sm-4 form-group text-center" ng-repeat="category in mainVm.categoryList" ng-if="$index < 6">   
-            <a href="/used/{{category.group.name}}/{{category.name}}?currentPage=1" class="cat-rectangle">
+          <div class="col-sm-4 form-group text-center" ng-repeat="category in mainVm.categoryListForNew" ng-if="$index < 6">   
+            <a href="/new/{{category.group.name}}/{{category.name}}?currentPage=1" class="cat-rectangle">
               <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{category.imgSrc}}" class="category-item">
             </a>
             <h5 class="category-name">{{category.name}} ({{category.count}})</h5>
@@ -183,10 +185,10 @@
       <h4>[ Browse By Industry ]</h4>
     </div>
     <uib-tabset justified="false">
-      <uib-tab heading="New Equipment" select="mainVm.toggleTab(2,true)">
+       <uib-tab heading="Used Equipment" select="mainVm.toggleTab(2,true)">
         <div class="row">
-          <div class="col-sm-4 form-group text-center" ng-repeat="group in mainVm.groupsForNew" ng-if="$index < 6">   
-            <a href="/new/{{group.name}}?currentPage=1" class="industy-rectangle">
+          <div class="col-sm-4 form-group text-center" ng-repeat="group in mainVm.groups" ng-if="$index < 6">   
+            <a href="/used/{{group.name}}?currentPage=1" class="industy-rectangle">
               <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{group.imgSrc}}" class="category-item">
             </a>
             <div class="category-name">
@@ -196,10 +198,10 @@
           </div>
         </div>
       </uib-tab>
-      <uib-tab heading="Used Equipment" select="mainVm.toggleTab(2,true)">
+      <uib-tab heading="New Equipment" select="mainVm.toggleTab(2,true)">
         <div class="row">
-          <div class="col-sm-4 form-group text-center" ng-repeat="group in mainVm.groups" ng-if="$index < 6">   
-            <a href="/used/{{group.name}}?currentPage=1" class="industy-rectangle">
+          <div class="col-sm-4 form-group text-center" ng-repeat="group in mainVm.groupsForNew" ng-if="$index < 6">   
+            <a href="/new/{{group.name}}?currentPage=1" class="industy-rectangle">
               <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{group.imgSrc}}" class="category-item">
             </a>
             <div class="category-name">
