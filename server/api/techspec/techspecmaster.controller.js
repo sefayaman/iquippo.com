@@ -43,14 +43,24 @@ exports.get = function(req, res) {
 exports.getFieldData = function(req, res) {
   var queryParam = req.query;
   var filter = {};
+  if (queryParam.searchStr) {
+    filter['$text'] = {
+      '$search': "\""+queryParam.searchStr+"\""
+    }
+  }
+
   if (queryParam.categoryId)
-    filter.categoryId = queryParam.categoryId;
+    filter['category.categoryId'] = queryParam.categoryId;
   if (queryParam.brandId)
-    filter.brandId = queryParam.brandId;
+    filter['brand.brandId'] = queryParam.brandId;
   if (queryParam.modelId)
-    filter.modelId = queryParam.modelId;
+    filter['model.modelId'] = queryParam.modelId;
   
-  //console.log("modelfilter===",filter);
+  if (queryParam.pagination) {
+    Utility.paginatedResult(req, res, TechSpecValMaster, filter, {});
+    return;
+  }
+
   var query = TechSpecValMaster.find(filter);
   
   query.exec(function(err, result) {
