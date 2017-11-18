@@ -109,15 +109,15 @@
             <a href="{{uploadImagePrefix}}{{auctionDir}}/{{auctionData.docName}}" class="text-info" ng-if="auctionData.docType == 'bidProxy'" target="_blank" ng-disabled="!auctionData.docName">
               <img src="/assets/images/icon-proxy.png" alt="" height="20"> Proxy Bid Form
             </a>
-            <a href="{{uploadImagePrefix}}{{auctionDir}}/{{docNameProxy}}" class="text-info" ng-if="!docType && docNameProxy" target="_blank" ng-disabled="!auctionData.docNameProxy">
+            <a href="{{uploadImagePrefix}}{{auctionDir}}/{{auctionData.docNameProxy}}" class="text-info" ng-if="!auctionData.docType && auctionData.docNameProxy" target="_blank" ng-disabled="!auctionData.docNameProxy">
               <img src="/assets/images/icon-proxy.png" alt="" height="20"> Proxy Bid Form
             </a>
           </div>
           <div class="col-sm-3 col-md-3 form-group">
-            <a href="{{uploadImagePrefix}}{{auctionDir}}/{{docName}}" class="text-info" ng-if="docType == 'tc'" target="_blank">
+            <a href="{{uploadImagePrefix}}{{auctionDir}}/{{auctionData.docName}}" class="text-info" ng-if="auctionData.docType == 'tc'" target="_blank">
               <img src="/assets/images/icon-catalog.png" alt="" height="20"> Download Catalogue
             </a>
-             <a href="{{uploadImagePrefix}}{{auctionDir}}/{{docName}}" class="text-info" ng-if="!docType&&docName" target="_blank">
+             <a href="{{uploadImagePrefix}}{{auctionDir}}/{{auctionData.docName}}" class="text-info" ng-if="!auctionData.docType&&auctionData.docName" target="_blank">
               <img src="/assets/images/icon-catalog.png" alt="" height="20"> Download Catalogue
             </a>
           </div>
@@ -166,7 +166,7 @@
                     </tbody>
                   </table>
                 </div>  
-              <a href="/used/{{auctionProduct.product.category}}/{{auctionProduct.product.brand}}/{{auctionProduct.product.assetId}}" class="btn btn-primary btn-block" >
+              <a href="/used/{{auctionProduct.product.category}}/{{auctionProduct.product.brand}}/{{auctionProduct.product.assetId}}" class="btn btn-primary btn-block" ng-disabled="!auctionProduct.product._id">
                 View Details
               </a>     
             </div>

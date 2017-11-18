@@ -449,7 +449,7 @@
                 }
               });
           }
-          if ($scope.currentProduct.auctionListing) {
+          if ($scope.currentProduct.auctionListing && $scope.currentProduct.auction) {
             var filter = {};
             filter._id = $scope.currentProduct.auction._id;
             AuctionSvc.getOnFilter(filter)
