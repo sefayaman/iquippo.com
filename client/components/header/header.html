@@ -1,10 +1,10 @@
-<div class="container-fluid" ng-controller="HeaderCtrl">    
-  <ul class="top-menu visible-xs">            
-    <li><a href="javascript:void(0);" ng-click="sendCallback()" class="text-danger"><i class="fa fa-phone"></i></a></li>
-    <li ng-hide="isLoggedIn()"><a href="/signin"><i class="fa fa-sign-in"></i> <span class="hidden-xs">Login</span></a></li>
-  </ul>  
+<div class="container-fluid" ng-controller="HeaderCtrl">  
   <nav class="navbar navbar-client navbar-fixed-top" role="navigation">
-    <div class="container-fluid">  
+    <div class="container-fluid"> 
+      <ul class="top-menu visible-xs">            
+        <li><a href="javascript:void(0);" ng-click="sendCallback()" class="text-danger"><i class="fa fa-phone"></i></a></li>
+        <li ng-hide="isLoggedIn()"><a href="/signin"><i class="fa fa-sign-in"></i> <span class="hidden-xs">Login</span></a></li>
+      </ul> 
     <!-- Brand and toggle get grouped for better mobile display -->
       <div class="navbar-header">
         <button type="button" class="navbar-toggle" ng-init="navCollapsed = true" ng-click="navCollapsed = !navCollapsed" data-target=".navbar-ex1-collapse">
