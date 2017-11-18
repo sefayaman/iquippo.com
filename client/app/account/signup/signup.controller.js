@@ -4,7 +4,7 @@
   angular.module('account').controller('SignupCtrl', SignupCtrl);
 
   //controller function
-  function SignupCtrl($scope,$state,commonSvc, $rootScope, Auth, $location, UtilSvc, $window, InvitationSvc, Modal, LocationSvc, notificationSvc, MarketingSvc) {
+  function SignupCtrl($scope,$state,$stateParams,commonSvc, $rootScope, Auth, $location, UtilSvc, $window, InvitationSvc, Modal, LocationSvc, notificationSvc, MarketingSvc) {
     var vm = this;
     var facebookConversionSent = false;
 
@@ -78,8 +78,14 @@
               if (success) {
                   if($location.search().ref_id && $location.search().code)
                     createCoupon();
-                  sendRegistartionNotification();
-                  $state.go('main');
+                    sendRegistartionNotification();
+                  if($stateParams.state){
+                    var state = $stateParams.state;
+                    delete $stateParams.state;
+                    $state.go(state,$stateParams);
+                  }else
+                    $state.go("main");
+                  //$state.go('main');
               }else
                 console.log("error in auto login");
             });

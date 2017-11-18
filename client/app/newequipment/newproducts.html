@@ -17,7 +17,7 @@
       <button class="btn btn-danger visible-xs filter-display" ng-click="filterbutton.value1 = !filterbutton.value1"><i class="fa fa-times"></i> Close</button>
       <h4 class="filter-heading">
         Filter By:
-        <small><a href="javascript:void(0);" class="pull-right">Clear All</a></small>
+        <small><a href="javascript:void(0);" class="pull-right" ng-click="clearAll()">Clear All</a></small>
       </h4>
       <uib-accordion close-others="oneAtATime" class="information">
         <uib-accordion-group is-open="status.group">

@@ -30,6 +30,7 @@ angular.module('sreizaoApp').controller('NewEquipmentListCtrl', NewEquipmentList
     vm.sortBy = sortBy;
     vm.onPageChange = onPageChange;
     vm.creatSpecification = creatSpecification;
+    $scope.clearAll = clearAll;
     
     var allCategory = [];
     var allBrand = [];
@@ -66,6 +67,17 @@ angular.module('sreizaoApp').controller('NewEquipmentListCtrl', NewEquipmentList
       fireCommand(true,true);
     
     }
+
+    function clearAll(){
+    for(var key in $scope.equipmentSearchFilter){
+      $scope.equipmentSearchFilter[key] = "";
+    }
+
+    $scope.categoryList = allCategory;
+    $scope.brandList = allBrand;
+    saveState();
+    fireCommand();
+  }
     
     function onGroupChange(group,noAction){
     if(!noAction){

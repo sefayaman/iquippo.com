@@ -26,13 +26,13 @@ angular.module('sreizaoApp')
         }
       })
       .state('signin', {
-        url: '/signin',
+        url: '/signin?state&brand&category&id',
         templateUrl: 'app/account/login/login-new.html',
         controller: 'LoginCtrl as loginVm',
         layout:'client'
       })
        .state('signup', {
-        url: '/signup',
+        url: '/signup?state&brand&category&id',
         templateUrl: 'app/account/signup/signup-new.html',
         controller: 'SignupCtrl as signupVm',
         layout:'client'

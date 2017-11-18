@@ -35,6 +35,7 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
   vm.compare = compare;
   vm.removeProductFromCompList = removeProductFromCompList;
   vm.onPageChange = onPageChange;
+  $scope.clearAll = clearAll;
 
   var allCategory = [];
   var allBrand = [];
@@ -68,6 +69,17 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
       restoreState();
       fireCommand(true,true);
       
+  }
+
+  function clearAll(){
+    for(var key in $scope.equipmentSearchFilter){
+      $scope.equipmentSearchFilter[key] = "";
+    }
+
+    $scope.categoryList = allCategory;
+    $scope.brandList = allBrand;
+    saveState();
+    fireCommand();
   }
 
   function onGroupChange(group,noAction){

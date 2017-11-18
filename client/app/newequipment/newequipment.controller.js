@@ -110,13 +110,14 @@
     }
     
     function goBulkOrders() {
-        Auth.isLoggedInAsync(function(loggedIn){
+        $state.go("newbulkorder");
+       /* Auth.isLoggedInAsync(function(loggedIn){
             if(loggedIn)
                 $state.go("newbulkorder");
             else
-                Modal.alert("Please login/register before bulk order");
+                Auth.goToLogin();//Modal.alert("Please login/register before bulk order");
 
-        });
+        });*/
         //$location.url('/new/bulkorder');
     };
     

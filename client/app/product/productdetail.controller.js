@@ -72,7 +72,8 @@
       }
       
       if (!Auth.getCurrentUser()._id) {
-        Modal.alert("Please Login/Register for submitting your request!", true);
+         Auth.goToLogin();
+        //Modal.alert("Please Login/Register for submitting your request!", true);
         return;
       }
         
@@ -212,7 +213,8 @@
 
 
       if (!Auth.getCurrentUser()._id) {
-        Modal.alert("Please Login/Register for submitting your request!", true);
+        Auth.goToLogin();
+        //Modal.alert("Please Login/Register for submitting your request!", true);
         return;
       }
 
@@ -437,7 +439,7 @@
 
             ProductTechInfoSvc.fetchInfo(techFilter)
               .then(function(techInfo) {
-                console.log(techInfo);
+                //console.log(techInfo);
                 if (techInfo.length) {
                   $scope.currentProduct.technicalInfo = {
                     grossWeight: techInfo[0].information.grossWeight,
@@ -505,7 +507,8 @@
     function requestForFinance(form) {
 
       if (!Auth.getCurrentUser()._id) {
-        Modal.alert("Please Login/Register for submitting your request!", true);
+        Auth.goToLogin();
+        //Modal.alert("Please Login/Register for submitting your request!", true);
         return;
       }
       if (Auth.getCurrentUser().profileStatus == "incomplete") {
@@ -560,7 +563,7 @@
 
     }
 
-    function serviceRequest(form, type) {
+    /*function serviceRequest(form, type) {
       Auth.isLoggedInAsync(function(loggedIn) {
         if (!loggedIn) {
           Modal.openDialog('login');
@@ -571,7 +574,7 @@
 
       var serviceReq = {};
       serviceReq.user = $scope.currentProduct.user;
-    }
+    }*/
 
     function getPriceTrendData() {
       if ($scope.currentProduct.tradeType == 'RENT')

@@ -148,7 +148,7 @@
             if(isLoggedIn)
                 init();
             else
-                $state.go('newequipment');
+                Auth.goToLogin();
         });
 
     } 

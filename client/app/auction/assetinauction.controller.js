@@ -14,6 +14,7 @@
     vm.openBidModal = openBidModal;
     vm.onPageChange = onPageChange;
     vm.fireCommand = fireCommand;
+    $scope.clearAll = clearAll;
     //vm.productSearchOnMfg = productSearchOnMfg;
 
     var allCategory = [];
@@ -61,6 +62,17 @@
       restoreState();
       fireCommand(false,true);
     }
+
+   function clearAll(){
+    for(var key in $scope.equipmentSearchFilter){
+      $scope.equipmentSearchFilter[key] = "";
+    }
+
+    $scope.categoryList = allCategory;
+    $scope.brandList = allBrand;
+    saveState();
+    fireCommand();
+  }
 
      function onGroupChange(group,noAction){
         if(!noAction){

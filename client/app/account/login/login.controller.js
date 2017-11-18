@@ -3,7 +3,7 @@
 
 angular.module('account').controller('LoginCtrl', LoginCtrl);
 
-  function LoginCtrl($scope, Auth, $location, CartSvc,$window,$rootScope, $state,MarketingSvc) {
+  function LoginCtrl($scope, Auth, $location,$stateParams, CartSvc,$window,$rootScope, $state,MarketingSvc) {
     var vm = this;
     var facebookConversionSent = false;
     vm.user = {};
@@ -44,11 +44,12 @@ angular.module('account').controller('LoginCtrl', LoginCtrl);
               if(Auth.isAdmin()){
                   return $state.go('productlisting');
               }
-              $state.go("main");
-             /* if(Auth.postLoginCallback)
-                  Auth.postLoginCallback();*/
-             /* if($state.current.name === "valuation")
-                $rootScope.$broadcast('callValuationRequest');*/
+              if($stateParams.state){
+                var state = $stateParams.state;
+                delete $stateParams.state;
+                $state.go(state,$stateParams);
+              }else
+                $state.go("main");
            }
          });
 
