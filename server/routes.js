@@ -20,7 +20,7 @@ module.exports = function(app) {
   app.use('/api/group', require('./api/group'));
   app.use('/api/vendor', require('./api/vendor'));
   app.use('/api/quote', require('./api/quote'));
-  app.use('/api/buyer', require('./api/buyer'));
+  //app.use('/api/buyer', require('./api/buyer'));
   app.use('/auth', require('./auth'));
   app.use('/api/common', require('./api/common'));
   app.use('/api/classifiedad', require('./api/classifiedad'));
@@ -50,6 +50,12 @@ module.exports = function(app) {
   app.use('/api/assetsale', require('./api/assetsale'));
   //app.use('/api/producthistory', require('./api/producthistory'));
    app.use('/api/lead', require('./api/lead'));
+   app.use('/api/dealer', require('./api/dealer'));
+   app.use('/api/certificate', require('./api/certificate'));
+  // app.use('/api/newequipment', require('./api/newequipment'));
+   app.use('/api/techspec', require('./api/techspec'));
+   app.use('/api/newequipmentbanners', require('./api/newequipmentbanners'));
+   app.use('/api/equipmentorder', require('./api/equipmentorder'));
   
   
   // All undefined asset or api routes should return a 404

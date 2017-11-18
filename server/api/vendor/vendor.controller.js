@@ -180,7 +180,7 @@ exports.destroy = function(req, res) {
 };
 
 //search based on service type
-exports.getFilteredUser = function(req, res) {
+exports.getFilteredUser = function(req, res) {console.log("req.body==",req.body);
   var filter = {};
   filter["status"] = true;
   filter["deleted"] = false;

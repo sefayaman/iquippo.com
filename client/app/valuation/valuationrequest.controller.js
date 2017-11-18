@@ -79,7 +79,8 @@
 		function submitValuationReq(form) {
 
 			if (!Auth.getCurrentUser()._id) {
-				Modal.alert("Please Login/Register for submitting your request!", true);
+				//Modal.alert("Please Login/Register for submitting your request!", true);
+				Auth.goToLogin();
 				return;
 			}
 

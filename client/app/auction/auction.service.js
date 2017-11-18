@@ -16,7 +16,7 @@ function AuctionSvc($http,$q,notificationSvc,Auth){
   svc.export = exportAuction;
   svc.sendNotification = sendNotification;
   svc.updateStatus = updateStatus;
-  svc.getTotalItemsCount=getTotalItemsCount;
+  svc.getAuctionCount = getAuctionCount;
   svc.getAuctionData=getAuctionData;
   svc.getLatLong=getLatLong;
   svc.getTotalAuctionItemsCount=getTotalAuctionItemsCount;
@@ -140,11 +140,11 @@ function AuctionSvc($http,$q,notificationSvc,Auth){
       }
     }
 
-    function getTotalItemsCount(auctionType) {
+    function getAuctionCount() {
      
-      return $http.get(path + "/auctionmaster/getAuctionCount?auctionType=" + auctionType)
+      return $http.get(path + "/auctionmaster/count")
         .then(function(result) {
-          return result
+          return result.data
         })
         .catch(function(err) {
           throw err;

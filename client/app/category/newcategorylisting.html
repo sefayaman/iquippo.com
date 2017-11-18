@@ -1,0 +1,38 @@
+<div class="container-fluid">
+  <ol class="breadcrumb">
+    <li>
+      <a href="/main">Home</a>
+    </li>
+    <li class="active">New Equipments</li>
+  </ol>
+</div>
+
+<!-- Upcoming Auction -->
+<section class="category-block upcoming-auction">
+  <div class="container">
+    <div class="heading-titles text-center">
+      <h4>[ ALL CATEGORIES ]</h4>
+      <p>Improve productivity and efficiency with equipment you can rely on. With our extensive inventory of new, used, and rental equipment, we can deliver the right solution to meet your unique needs. Check out our latest promotions and find equipment, parts, and power systems that will help you and your customers reach new levels of success.</p>
+    </div>
+    <div class="row">      
+      <div class="col-sm-6 col-md-4 form-group" ng-repeat="category in newcategoryListingVm.allCategoryList" ng-if="$index < newcategoryListingVm.showedItems">
+        <div class="media text-center">
+          <a href="/new/{{category.group.name}}/{{category.name}}">
+             <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{category.imgSrc}}" ng-if="category.imgSrc">
+             <img src="/assets/images/watermark.png" ng-if="!category.imgSrc">              
+          </a>          
+          <div class="media-body"> 
+            <h4>{{category.name}}</h4>                      
+                                
+          </div> 
+          <div class="text-center">
+            <a href="/new/{{category.group.name}}/{{category.name}}" class="btn btn-primary">Explore</a>
+          </div>         
+        </div>
+      </div>
+    </div>
+  <div class="heading-titles text-center">
+    <a href="javascript:void(0);" title="" ng-click="newcategoryListingVm.showMore()" ng-if="newcategoryListingVm.showedItems < newcategoryListingVm.allCategoryList.length">Show More</a>
+  </div>
+  </div>
+</section>

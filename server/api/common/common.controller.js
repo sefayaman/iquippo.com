@@ -50,74 +50,77 @@ var async = require('async');
 //
 
 exports.sendOtp = function(req, res) {
-	var isOnMobile = req.body.otpOn == 'mobile' ? true : false;
+
 	var otp = Math.round(Math.random() * 1000000) + "";
-	var data = {};
-	data.subject = 'OTP Message';
-	data.content = req.body.content + otp;
 	req.otp = otp;
-	//var fn = null; 
-	if (isOnMobile) {
-		data.to = req.body.mobile;
-		data.countryCode = req.body.countryCode;
-		postOtpRequest(sms.sendSMS, data, req, res);
-		//fn = sms.sendSMS;
-	} else {
-		data.to = req.body.email;
-		//req.body.templateName = "userRgeOTP";
-		//req.body.data = {};
-		//req.body.data.otp = otp;
-		//req.body.data.serverPath = config.serverPath;
+	var errorList = [];
+	async.parallel([sendOtpOnMobile,sendOtpOnEmail],function(err){
+		if(err)
+			return handleError(res, "Unable to send otp.Please contact suppport team.");
+		var sendOtpToClient = req.body.sendToClient == 'y' ? true : false;
+		if(sendOtpToClient)
+			return res.status(200).send("" + req.otp);
+
+		var otpObj = {};
+		otpObj['otp'] = req.otp;
+		otpObj.createdAt = new Date();
+		User.update({
+			_id: req.body.userId
+		}, {
+			$set: {
+				otp: otpObj
+			}
+		}, function(err, userObj) {
+			if (err) {
+				return handleError(res, err);
+			}
+			return res.status(200).send("");
+		});
+	});
+
+	function sendOtpOnMobile(cb){
+		if(!req.body.mobile)
+			return cb();
+
+		var smsData = {};
+		smsData.subject = 'OTP Message';
+		smsData.content = req.body.content + otp;
+		smsData.to = req.body.mobile;
+		smsData.countryCode = req.body.countryCode;
+		sms.sendSMS(smsData,null,null,function(param1,param2,isSent){
+			if(!isSent)
+				console.log("Error in sending sms otp for mobile >> " + smsData.to);
+		});
+		return cb();
+	}
+
+	function sendOtpOnEmail(cb){
+		if(!req.body.email)
+			return cb();
+
+		var emailData = {};
+		emailData.to = req.body.email;
+		emailData.subject = 'OTP Message';
 		exports.compileTemplate({
 				otp: otp
 			}, config.serverPath, "userRgeOTP", function(isSuccess, text) {
 				if (isSuccess) {
-					data.content = text;
-					postOtpRequest(email.sendMail, data, req, res);
-				} else
-					handleError(res, {});
-
-			})
-			//fn = email.sendMail;
-	}
-
-
-}
-
-function postOtpRequest(fn, data, req, res) {
-	var sendOtpToClient = req.body.sendToClient == 'y' ? true : false;
-	if (data.to) {
-		fn(data, req, res, function(req1, res1, isSent) {
-			//console.log(otp);
-			if (isSent) {
-				if (sendOtpToClient)
-					return res.status(200).send("" + req.otp);
-				else {
-					var otpObj = {};
-					otpObj['otp'] = req.otp;
-					otpObj.createdAt = new Date();
-					User.update({
-						_id: req.body.userId
-					}, {
-						$set: {
-							otp: otpObj
-						}
-					}, function(err, userObj) {
-						if (err) {
-							return handleError(res, err);
-						}
-						return res.status(200).send("");
+					emailData.content = text;
+					email.sendMail(emailData,null,null,function(param1,param2,issent){
+						if(!issent)
+							console.log("Error in sending email otp for email >> " + emailData.to);
 					});
-
+					return cb();
+				} else{
+					errorList.push({
+						emailError : "Error in compile template"
+					});
+					return cb();
 				}
 
-			} else {
-				return res.status(400).send("There is some issue.Please try again.");
-			}
-		});
-	} else {
-		return res.status(400).send("Insufficient data");
+			});
 	}
+
 }
 
 exports.compileHtml = function(req, res) {
@@ -243,6 +246,33 @@ exports.getSettingByKey = function(req, res) {
 		}
 
 	});
+}
+
+exports.updateMasterDataStatus = function(req,res){
+
+	var UpdatableField = ['visibleOnUsed','visibleOnNew','imgSrc'];
+	var type = req.body.type;
+	var modelRef = null;
+	if(type === 'Group')
+		modelRef = Group;
+	else if(type === 'Category')
+		modelRef = Category;
+	else if(type === 'Brand')
+		modelRef = Brand;
+	else if(type === 'Model')
+		modelRef = Model;
+	else
+		return res.status(400).send("Invalid update");
+	var updateObj = {};
+	UpdatableField.forEach(function(key){
+			updateObj[key] = req.body[key];
+	});
+	modelRef.update({_id:req.body._id},{$set:updateObj},function(err,result){
+		if(err) return handleError(res, err);
+		return res.status(200).send(type + " updated successfully.");
+
+	})
+
 }
 
 exports.updateMasterData = function(req, res) {
@@ -377,9 +407,9 @@ exports.updateMasterData = function(req, res) {
 					filter["name"] = {
 						$regex: new RegExp("^" + reqData.name + "$", 'i')
 					};
-					filter["group.name"] = {
+					/*filter["group.name"] = {
 						$regex: new RegExp("^" + reqData.group.name + "$", 'i')
-					};
+					};*/
 					var query = Category.find(filter);
 					query.exec(function(err, gps) {
 						if (err) {
@@ -1053,10 +1083,9 @@ function upsertCategory(req, res, data) {
 	seq(function() {
 			var self = this;
 			var term = new RegExp("^" + categoryName + "$", 'i');
-			var gpTerm = new RegExp("^" + req.data.group.name + "$", 'i');
+			//var gpTerm = new RegExp("^" + req.data.group.name + "$", 'i');
 			Category.find({
-				name: term,
-				"group.name": gpTerm
+				name: term
 			}, function(err, categories) {
 				if (err) return handleError(res, err);
 				if (categories.length > 0) {
