@@ -102,21 +102,21 @@
               <div class="media-body text-left"> 
                 <div class="row">
                   <div class="col-xs-6 form-group">
-                    <h4 class="text-ellips">{{product.name}} {{product}}</h4>                  
+                    <h4 class="text-ellips">{{product.brand.name}} {{product.category.name}}</h4>                  
                   </div>
                   <div class="col-xs-6 form-group text-right padd-left">
                     <h5 class="text-info">Model: {{product.model.name}}</h5>                    
                   </div>
                 </div> 
-                <div class="row">
+                <div class="row" ng-repeat="techspec in product.techSpec">
                   <div class="col-xs-6 form-group">
-                    Engine Power                                  
+                    {{techspec.name}}
                   </div>
                   <div class="col-xs-6 form-group text-right padd-left">
-                     {{product.technicalInfo.enginePower}}              
+                     {{techspec.value}}
                   </div>
                 </div> 
-                <div class="row">
+                <!-- <div class="row">
                   <div class="col-xs-6 form-group">                    
                     Operating Weight               
                   </div>
@@ -131,7 +131,7 @@
                   <div class="col-xs-6 form-group text-right padd-left">                   
                     {{product.technicalInfo.bucketCapacity}}                  
                   </div>
-                </div> 
+                </div>  -->
         <!--    <div class="row">
                   <div class="col-xs-12 form-group">
                     <h5 class="text-warning">

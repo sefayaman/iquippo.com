@@ -86,7 +86,6 @@ function TechSpecMasterCtrl($scope,$rootScope,$state,uploadSvc,categorySvc,brand
       TechSpecMasterSvc.get(filter)
       .then(function(result){
           vm.fieldList = result;
-          console.log("fieldList",vm.fieldList);
       });
 	 }
 	
@@ -133,7 +132,7 @@ function TechSpecMasterCtrl($scope,$rootScope,$state,uploadSvc,categorySvc,brand
       filter = {};
       filter['categoryId'] = categoryId;
       brandSvc.getBrandOnFilter(filter)
-        .then(function(result) {console.log("result==",result);
+        .then(function(result) {
           $scope.brandList = result;
         })
         .catch(function(res) {
@@ -283,8 +282,7 @@ function TechSpecMasterCtrl($scope,$rootScope,$state,uploadSvc,categorySvc,brand
               })
               .catch(function(err){
               if(err.data)
-              console.log(err);
-                      //Modal.alert(err.data); 
+                console.log(err);
               });
             }
             vm.dataModel = {};
