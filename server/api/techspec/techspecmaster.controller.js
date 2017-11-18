@@ -10,7 +10,6 @@ var Utility = require('./../../components/utility.js');
 exports.get = function(req, res) {
   var queryParam = req.query;
   var filter = {};
-  console.log("queryparam==",queryParam);
   if (queryParam.searchStr) {
        filter['$text'] = {
         '$search': "\""+queryParam.searchStr+"\""
