@@ -39,31 +39,21 @@ exports.get = function(req, res) {
     return res.status(200).json(result);
   });
 };
+
 // Get list of all field data
 exports.getFieldData = function(req, res) {
   var queryParam = req.query;
   var filter = {};
-  /*if (queryParam.searchStr) {
-       filter['$text'] = {
-        '$search': "\""+queryParam.searchStr+"\""
-      }
-  }*/
-
- if (queryParam.categoryId)
+  if (queryParam.categoryId)
     filter.categoryId = queryParam.categoryId;
   if (queryParam.brandId)
     filter.brandId = queryParam.brandId;
   if (queryParam.modelId)
     filter.modelId = queryParam.modelId;
   
-console.log("modelfilter",filter);
-  /*if (queryParam.pagination) {
-    Utility.paginatedResult(req, res, InputFormReq, filter, {});
-    return;
-  }*/
-
+  //console.log("modelfilter===",filter);
   var query = TechSpecValMaster.find(filter);
-
+  
   query.exec(function(err, result) {
     if (err) {
       return handleError(res, err);
@@ -72,6 +62,7 @@ console.log("modelfilter",filter);
   });
 };
 // Get list of all field data
+/*
 exports.getFieldData = function(req, res) {
   var queryParam = req.query;
   var filter = {};
@@ -83,16 +74,16 @@ exports.getFieldData = function(req, res) {
     }
     return res.status(200).json(result);
   });
-};
-exports.create = function(req, res) {console.log("req.body=",req.body);
+};*/
+exports.create = function(req, res) {//console.log("req.body=",req.body);
   TechSpecMaster.create(req.body, function(err, respo) {
-    if(err) { return handleError(res, err); }console.log("res=",res);
+    if(err) { return handleError(res, err); }
      return res.status(200).json({errorCode:0, message:"Data saved sucessfully", data:respo});
   });
 };
-exports.createfield = function(req, res) {console.log("req.body=",req.body);
+exports.createfield = function(req, res) {//console.log("req.body=",req.body);
   TechSpecValMaster.create(req.body, function(err, respo) {
-    if(err) { return handleError(res, err); }console.log("res=",res);
+    if(err) { return handleError(res, err); }
      return res.status(200).json({errorCode:0, message:"Data saved sucessfully", data:respo});
   });
 };
