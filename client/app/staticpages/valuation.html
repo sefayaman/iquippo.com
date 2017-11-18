@@ -1,185 +1,48 @@
-<div class="container-fluid">
-  <ol class="breadcrumb">
-    <li>
-      <a href="/main">Home</a>
-    </li>
-    <li class="active">Valuation</li>
-  </ol>
-</div>
+<section class="banner">
+	<img src="http://placehold.it/1920x550" class="img-responsive" alt="">
+</section>
 <section class="category-block">
 	<div class="container">
-		<div class="row" ng-if="!isEnterpriseUser() &&!isEnterprise()" ng-controller="ValuationCtrl">
-			<div class="col-sm-6 text-justify">
-				<h3>Valuation</h3>
-				<legend></legend>
+		<div class="heading-titles text-center">
+	      <h4>[  EQUIPMENT VALUATION MADE EASY  ]</h4>
+	      <p>
+	      	In today’s competitive and unpredictable business world, it is essential for companies to have accurate, timely and cost-effective valuations of their machinery and equipment. At iQuippo, our experienced team of equipment valuation experts is dedicated to providing our clients with an objective &amp; supportable valuation conclusions, which are provided in timely, well-organized appraisal reports.
+	      </p>
+	    </div>
+	    <div class="row form-group">
+	    	<div class="col-sm-3 form-group">
+	    		<img src="http://placehold.it/100x70" alt="">
+	    		<h5><strong>FILL FORM</strong></h5>
+	    		<p>Fill in the form and select the asset details, location and your concerns.</p>
+	    	</div>
+	    	<div class="col-sm-3 form-group">
+	    		<img src="http://placehold.it/100x70" alt="">
+	    		<h5><strong>MAKE PAYMENT</strong></h5>
+	    		<p>Confirm your payment after filling the form.</p>
+	    	</div>
+	    	<div class="col-sm-3 form-group">
+	    		<img src="http://placehold.it/100x70" alt="">
+	    		<h5><strong>WE INSPECT</strong></h5>
+	    		<p>Once we recieve the payment our team member goes and inspects the product.</p>
+	    	</div>
+	    	<div class="col-sm-3 form-group">
+	    		<img src="http://placehold.it/100x70" alt="">
+	    		<h5><strong>LIVE STREAM</strong></h5>
+	    		<p>Watch our team member do the inspection of the asset by streaming it live.</p>
+	    	</div>
+	    </div>
 
-				<ul>
-					<li>
-						In today’s competitive and unpredictable business world, it is essential for companies to have accurate, timely and cost-effective valuations of their machinery and equipment.
-					</li>
-					<li>
-						At iQuippo, our experienced team of equipment valuation experts is dedicated to providing our clients with an objective &amp; supportable valuation conclusions, which are provided in timely, well-organized appraisal reports.
-					</li>
-					<li>
-						There are a wide variety of reasons in which an organization may require equipment valuation services, including the desire or need to sell, wanting to purchase additional equipment etc. 
-						This service can be availed from both Buyer’s and Seller’s side.
-
-					</li>		
-				</ul>
-
-				<p>
-					Our team of experts have developed a comprehensive checklist of all major and minor components and conduct a detailed check-up of each of these, including:
-				</p>
-				<ul>
-					<li>
-						<strong>Cabin</strong> : Dashboard, Meters &amp; Gauges, Steering Wheel, Cabin Canopy, etc.
-					</li>
-					<li>
-						<strong>Engine</strong> : Main Engine, Fuel Pump, Alternator, Radiator, Battery, Self-Starter, etc.
-					</li>
-					<li>
-						<strong>Undercarriage</strong> : Track Motors, Track Pads, Track Rollers, Sprocket, etc.
-					</li>
-					<li>
-						<strong>Bucket</strong> : Basic Bucket, Bucket Teeth, Grease Points, Pins &amp; Bushes.
-					</li>
-					<li>
-						<strong>Hydraulic System</strong> : Oil Tank, Hydraulic Pump, Control Valve, Boom Cylinder, Pipe Lines, etc.
-					</li>
-					<li>
-						<strong>Trolley</strong> : Trolley Walls, Axles, Floors, Tires.
-					</li>
-					<li>
-						<strong>Chassis</strong> : Chassis Frame, Leaf Springs, Shock Absorbers, etc.
-					</li>
-				</ul>
-				<p>Depending on the nature of machinery, a host of other components are also checked and evaluated.</p>
-				<div class="form-group"></div>
-				<div class="row">
-					<div class="col-sm-6">
-						<a href="/download/report/Valuation_Report_Sample.pdf" target="_blank"><img src="assets/images/valuation.jpg" class="img-responsive"></a>
-					</div>
-					<div class="col-sm-6 padd-left">
-						<table class="table table-bordered table-stable table-hover">
-					        <thead>
-					            <tr class="active">
-					                <th>Transaction</th>
-					                <th>Charges</th>
-					            </tr>
-					        </thead>
-					        <tbody>            
-					            <tr>
-					                <td>Machinery Valuation</td>
-					                <td>5000 INR</td>
-					            </tr>           
-					            <tr>
-					                <td>Asset Inspection</td>
-					                <td>3000 INR</td>
-					            </tr>            
-					        </tbody>
-					    </table>
-					</div>
+	    <div class="panel panel-primary information-tabs" ng-if="!isEnterpriseUser() &&!isEnterprise()" ng-controller="ValuationCtrl">
+				<div class="panel-heading">
+					<h3 class="panel-title">Valuation / Asset Inspection</h3>
 				</div>
-				
-			<div class="form-group clearfix form-group"></div>
-			<!-- <input ng-model="date4" datetime-picker hour="23" minute='59' > -->
-			<!-- <div class="serve text-center">
-				<a class="btn btn-block btn-md btn-warning quote-btn" ng-click="openDialog('valuationquote')">Request a Quote</a>
-			</div> -->
-			</div>
-				<div class="col-sm-6">
-			      <div class="form-group"></div>
-					
-					<div class="panel panel-default">
-						<div class="panel-heading">
-							<h3 class="panel-title">Valuation / Asset Inspection</h3>
-						</div>
-						<form class="" name="form" novalidate>
-							<div class="panel-body">
-								<div class="">
-									<!-- <div class="row">
-										<div class="col-xs-4">
-											<div class="form-group" ng-class="{'has-error': form.fname.$invalid && submitted }">
-												<input type="text" name="fname" class="form-control" placeholder="* First Name" ng-model="valuationQuote.fname" required>
-											</div>
-										</div>
-										<div class="col-xs-4">
-											<div class="form-group">
-												<input type="text" name="mname" class="form-control" placeholder="Middle Name" ng-model="valuationQuote.mname">
-											</div>
-										</div>
-										<div class="col-xs-4">
-											<div class="form-group" ng-class="{'has-error': form.lname.$invalid && submitted }">
-												<input type="text" name="lname" class="form-control" placeholder="* Last Name" ng-model="valuationQuote.lname" required>
-											</div>
-										</div>
-									</div>
-									<div class="row">								
-										<div class="col-xs-4">
-											<div class="form-group" ng-class="{'has-error': form.country.$invalid && submitted }">
-												<select class="form-control" ng-model="valuationQuote.country" name="country" ng-change="onCountryChange(valuationQuote.country)" required>
-													<option value="">*Select Country</option>
-													<option ng-repeat="country in allCountries | orderBy:'name'" value="{{country.name}}">{{country.name}}</option>
-												</select>
-												<i class="caret"></i>
-											</div>
-										</div>
-										<div class="col-xs-4" ng-class="{'has-error': form.state.$invalid && submitted }">
-						                    <select class="form-control" name="state" ng-model="valuationQuote.state" ng-change="onStateChange(valuationQuote.state)" required>
-						                      <option value="">*Select State</option>
-						                        <option ng-repeat="state in stateList | orderBy:'name'" value="{{state.name}}">{{state.name}}</option>
-						                    </select>
-						                    <i class="caret"></i>
-						            	</div>
-										<div class="col-xs-4" ng-class="{'has-error': form.location.$invalid && submitted }">
-						                    <select class="form-control" name="location" ng-model="valuationQuote.city" required>
-						                      <option value="">*Select Location</option>
-						                        <option ng-repeat="location in locationList | orderBy:'name'" value="{{location.name}}">{{location.name}}</option>
-						                    </select>
-						                    <i class="caret"></i>
-						            	</div>
-									</div>
-									<div class="row">								
-										<div class="col-xs-6">
-											<div class="form-group">
-												<input type="text" name="" class="form-control" placeholder="Company Name" ng-model="valuationQuote.companyname">
-											</div>
-										</div>								
-									
-										<div class="col-xs-6">
-											<div class="form-group">
-												<input type="text" name="" class="form-control" placeholder="Designation" ng-model="valuationQuote.designation">
-											</div>
-										</div>
-									</div>
-									<div class="row">
-										<div class="col-xs-6">
-											<div class="form-group">
-												<input type="text" name="" class="form-control" placeholder="Phone No." ng-model="valuationQuote.phone">
-											</div>
-										</div>								
-									
-										<div class="col-xs-6">
-											<div class="form-group" ng-class="{'has-error': form.mobile.$invalid && submitted }">
-												<input type="text" name="mobile" class="form-control" placeholder="* Mobile No." ng-model="valuationQuote.mobile" uib-tooltip="98-XXXX-XXXX" tooltip-trigger="focus" tooltip-placement="top" required>
-											</div>
-										</div>
-									</div>							
-									<div class="row">
-										<div class="col-xs-6">
-											<div class="form-group" ng-class="{'has-error': form.email.$invalid && submitted }">
-												<input type="email" name="email" class="form-control" placeholder="Email Address" ng-model="valuationQuote.email">
-												<p class="help-block" ng-show="(form.email.$error.email || form.email.$error.pattern) && submitted">
-													Please enter a valid email.
-												</p>
-											</div>
-										</div>
-									</div> -->
-									
-									<div class="row">
-										<div class="col-xs-12">
-											<label>Request Type:</label>
-										</div>								
+				<form class="" name="form" novalidate>
+					<div class="panel-body">
+						<div class="">						
+							<div class="row form-group">
+								<div class="col-sm-6">
+									<div class="floating-label-wrapper">
+										<label>Request Type:</label>
 									</div>
 									<div class="row">
 										<div class="col-xs-6 col-sm-6">
@@ -195,397 +58,471 @@
 					                        </div>
 					                    </div>
 									</div>
-									<hr>
-									<div class="row">
-										<div class="col-xs-12">
-											<div class="form-group">
-												<label>Product Detail:</label>
-											</div>
-										</div>
+								</div>								
+							</div>						
+							<div class="row">
+								<div class="col-xs-12 col-sm-3">
+									<div class="floating-label-wrapper form-group">
+										<label>Category</label>
+										<select class="form-control" ng-model="valuationQuote.product.category" ng-change="onCategoryChange(valuationQuote.product.category)">
+											<option value="">Select Category</option>
+											<option value="{{cat.name}}" ng-repeat="cat in allCategory | orderBy:'name'">{{cat.name}}</option>
+										</select>
 										
 									</div>
+								</div>
+								<div class="col-xs-12 col-sm-3">
+									<div class="form-group floating-label-wrapper">
+											<label>Brand</label>
+										<select class="form-control" ng-model="valuationQuote.product.brand" ng-change="onBrandChange(valuationQuote.product.brand)">
+											<option value="">Select Brand</option>
+											<option value="{{br.name}}" ng-repeat="br in brandList | orderBy:'name'">{{br.name}}</option>
+										</select>
+										
+									</div>
+								</div>
+								<div class="col-xs-12 col-sm-3">
+									<div class="form-group floating-label-wrapper">
+											<label>Model</label>
+										<select class="form-control" ng-model="valuationQuote.product.model">
+											<option value="">Select Model</option>
+											<option value="{{md.name}}" ng-repeat="md in modelList | orderBy:'name'">{{md.name}}</option>
+										</select>
+										
+									</div>
+								</div>
+								<div class="col-xs-12 col-sm-3">
+									<div class="form-group floating-label-wrapper" ng-class="{'has-error': form.mfgYear.$invalid && submitted}">
+										<label>Manufacturing Year</label>
+										<input type="number" name="prdMfg" class="form-control" placeholder="Enter Manufacturing Year" ng-model="valuationQuote.product.mfgYear" ng-minlength="4" ng-maxlength="4" min="1900" max="currentYear" string-to-number>
+									</div>
+								</div>
+								<div class="col-xs-12 col-sm-3">
+									<div class="form-group floating-label-wrapper">
+										<label>Asset Description</label>
+										<input type="text" name="prddescription" class="form-control" placeholder="Enter Asset Description" ng-model="valuationQuote.product.description">
+									</div>
+								</div>																
+								<div class="col-xs-12 col-sm-3">
+									<div class="form-group floating-label-wrapper" ng-class="{'has-error': form.prdCountry.$invalid && submitted }">
+										<label>Country*</label>
+										<select class="form-control" ng-model="valuationQuote.product.country" name="prdCountry" ng-change="onPrdCountryChange(valuationQuote.product.country)" required>
+											<option value="">Select Country</option>
+											<option ng-repeat="country in allCountries | orderBy:'name'" value="{{country.name}}">{{country.name}}</option>
+										</select>
+										
+									</div>
+								</div>
+								<div class="col-xs-12 col-sm-3" ng-class="{'has-error': form.prdState.$invalid && submitted }">
+									<div class="floating-label-wrapper form-group">
+										<label>State*</label>
+					                    <select class="form-control" name="prdState" ng-model="valuationQuote.product.state" ng-change="onPrdStateChange(valuationQuote.product.state)" required>
+					                      <option value="">Select State</option>
+					                        <option ng-repeat="state in prdStateList | orderBy:'name'" value="{{state.name}}">{{state.name}}</option>
+					                    </select>
+					                </div>
+				                    
+				            	</div>
+								<div class="col-xs-12 col-sm-3">
+									<div class="form-group floating-label-wrapper" ng-class="{'has-error': form.prdLocation.$invalid && submitted }">
+										<label>Location*</label>
+										<select class="form-control" name="prdLocation"  ng-model="valuationQuote.product.city" required>
+											<option value="">Select Location</option>
+											<option ng-repeat="location in prdLocationList | orderBy:'name'" value="{{location.name}}">{{location.name}}</option>
+										</select>
+									</div>
+								</div>
 
-									<div class="row">
-										<div class="col-xs-4">
-											<div class="form-group">
-												<select class="form-control" ng-model="valuationQuote.product.category" ng-change="onCategoryChange(valuationQuote.product.category)">
-													<option value="">Select Category</option>
-													<option value="{{cat.name}}" ng-repeat="cat in allCategory | orderBy:'name'">{{cat.name}}</option>
-												</select>
-												<i class="caret"></i>
-											</div>
-										</div>
-										<div class="col-xs-4">
-											<div class="form-group">
-												<select class="form-control" ng-model="valuationQuote.product.brand" ng-change="onBrandChange(valuationQuote.product.brand)">
-													<option value="">Select Brand</option>
-													<option value="{{br.name}}" ng-repeat="br in brandList | orderBy:'name'">{{br.name}}</option>
-												</select>
-												<i class="caret"></i>
-											</div>
-										</div>
-										<div class="col-xs-4">
-											<div class="form-group">
-												<select class="form-control" ng-model="valuationQuote.product.model">
-													<option value="">Select Model</option>
-													<option value="{{md.name}}" ng-repeat="md in modelList | orderBy:'name'">{{md.name}}</option>
-												</select>
-												<i class="caret"></i>
-											</div>
-										</div>
-										
-									</div>						
-									<div class="row">
-										<div class="col-xs-6">
-											<div class="form-group" ng-class="{'has-error': form.mfgYear.$invalid && submitted}">
-												<input type="number" name="prdMfg" class="form-control" placeholder="Manufacturing Year" ng-model="valuationQuote.product.mfgYear" ng-minlength="4" ng-maxlength="4" min="1900" max="currentYear" string-to-number>
-											</div>
-										</div>
-										<div class="col-xs-6">
-											<div class="form-group">
-												<input type="text" name="prddescription" class="form-control" placeholder="Asset Description" ng-model="valuationQuote.product.description">
-											</div>
-										</div>								
+								<div class="col-xs-12 col-sm-3">
+									<div class="form-group floating-label-wrapper" ng-class="{'has-error': form.contactPerson.$invalid && submitted }">
+										<label>Contact Person*</label>
+										<input type="text" name="contactPerson" class="form-control" placeholder="Contact Person"  ng-model="valuationQuote.product.contactPerson" ng-required="!valuationQuote.product.contactPersonAsAbove">
+									</div>							
+								</div>
+								<div class="col-xs-offset-1 col-xs-10 col-sm-3">
+									<div class="checkbox checkbox-info floating-label-wrapper">
+				                        <input id="checkbox1" type="checkbox" ng-model="valuationQuote.product.contactPersonAsAbove" name="" ng-change="onChange('contactPerson')">
+				                        <label for="checkbox1">
+				                            same as above
+				                        </label>
+				                    </div>							
+								</div>
+								<div class="col-xs-12 col-sm-3">
+									<div class="form-group floating-label-wrapper" ng-class="{'has-error': form.contactNumber.$invalid && submitted }">
+										<label>Contact Number*</label>
+										<input type="text" name="contactNumber" class="form-control" ng-model="valuationQuote.product.contactNumber" placeholder="Contact Number" ng-required="!valuationQuote.product.contactNumberAsAbove">
+									</div>							
+								</div>
+								<div class="col-xs-offset-1 col-xs-10 col-sm-3">
+									<div class="checkbox checkbox-info floating-label-wrapper">
+				                        <input id="checkbox2" type="checkbox"  ng-model="valuationQuote.product.contactNumberAsAbove" name="" ng-change="onChange('contactNumber')">
+				                        <label for="checkbox2">
+				                            same as above
+				                        </label>
+				                    </div>							
+								</div>						
+							</div>
+							<hr>
+							<div class="row">
+								<div class="col-xs-12 col-sm-3">
+									<div class="form-group floating-label-wrapper">
+										<label>Partner</label>
+										<select class="form-control" ng-model="valuationQuote.partnerId">
+						                    <option value="">Select Partner</option>
+						                    <option ng-repeat="vendor in vendorList" value="{{vendor._id}}">{{vendor.name}}</option>
+					                    </select>
 									</div>
-									<div class="row">								
-										<div class="col-xs-4">
-											<div class="form-group" ng-class="{'has-error': form.prdCountry.$invalid && submitted }">
-												<select class="form-control" ng-model="valuationQuote.product.country" name="prdCountry" ng-change="onPrdCountryChange(valuationQuote.product.country)" required>
-													<option value="">*Select Country</option>
-													<option ng-repeat="country in allCountries | orderBy:'name'" value="{{country.name}}">{{country.name}}</option>
-												</select>
-												<i class="caret"></i>
-											</div>
-										</div>
-										<div class="col-xs-4" ng-class="{'has-error': form.prdState.$invalid && submitted }">
-						                    <select class="form-control" name="prdState" ng-model="valuationQuote.product.state" ng-change="onPrdStateChange(valuationQuote.product.state)" required>
-						                      <option value="">*Select State</option>
-						                        <option ng-repeat="state in prdStateList | orderBy:'name'" value="{{state.name}}">{{state.name}}</option>
-						                    </select>
-						                    <i class="caret"></i>
-						            	</div>
-										<div class="col-xs-4">
-											<div class="form-group" ng-class="{'has-error': form.prdLocation.$invalid && submitted }">
-												<select class="form-control" name="prdLocation"  ng-model="valuationQuote.product.city" required>
-													<option value="">*Select Location</option>
-													<option ng-repeat="location in prdLocationList | orderBy:'name'" value="{{location.name}}">{{location.name}}</option>
-												</select>
-												<i class="caret"></i>
-											</div>
-										</div>
-										
+								</div>
+								<div class="col-xs-6 col-sm-3" ng-class="{'has-error': form.valuation.$invalid && submitted }">
+									<div class="floating-label-wrapper form-group">
+										<label>Purpose of valuation</label>
+										<select class="form-control" ng-model="valuationQuote.valuation" name="valuation" required>
+					                      <option value="Financing">Financing</option>
+					                      <option ng-repeat="valuation in valuationList | orderBy:'name'" value="{{valuation.name}}">{{valuation.name}}</option>
+					                    </select>
+					                  </div>
+								</div>
+								
+								
+								<div class="col-xs-6 col-sm-3" ng-class="{'has-error': form.otherName.$invalid && submitted }">
+									<div class="floating-label-wrapper form-group">
+										<label>Other*</label>
+										<input class="form-control" type="text" name="otherName" ng-model="valuationQuote.otherName" ng-disabled ="valuationQuote.valuation != 'Other'" placeholder="Other" ng-required= "valuationQuote.valuation == 'Other'">
 									</div>
+								</div>
+							</div>
+							<div class="row">
+				              <div class="col-xs-12 col-sm-3">
+				              	<div class="floating-label-wrapper">
+				              		<label>Schedule a call</label>
+				              	</div>
+				              	<div class="col-xs-6 col-sm-6 form-group">
+					              	<div class="radio radio-info">
+			                            <input type="radio" id="inlineRadio1" name="schedule" ng-model="valuationQuote.schedule" value="yes">
+			                            <label for="inlineRadio1"> Yes </label>
+			                        </div>		               
+					              </div>
+					              <div class="col-xs-6 col-sm-6 form-group">
+					              	<div class="radio radio-info">
+			                            <input type="radio" id="inlineRadio2" name="schedule" ng-model="valuationQuote.schedule" value="no">
+			                            <label for="inlineRadio2"> No </label>
+			                        </div>     
+					              </div>
+				              </div>                                  
+				              <div class="col-xs-6 col-sm-3 form-group" ng-if="valuationQuote.schedule == 'yes'" >
+				              	
+				                <div class="input-group floating-label-wrapper" ng-class="{'has-error': form.scheduleDate.$invalid && submitted }">
+				                	<label>Pick Date</label>
+				                  <input type="text" class="form-control" ng-model="valuationQuote.scheduleDate" uib-datepicker-popup="{{format}}" name="scheduleDate" ng-value="" is-open="popup1.opened" min-date="minDate" max-date="maxDate" datepicker-options="datepickerOptions" date-disabled="disabled(date, mode)" ng-required="valuationQuote.schedule == 'yes'" close-text="Close" alt-input-formats="altInputFormats" placeholder="dd/mm/yyyy" />
+				                  <span class="input-group-addon">
+				                    <a href ng-click="open1()"><i class="fa fa-calendar-o fa-2x"></i></a>
+				                  </span>
+				                </div>                                       
+				              </div>
+				              
+				              <div class="col-xs-6 col-sm-3 form-group " ng-if="valuationQuote.schedule == 'yes'">
+				              	
+				              	<div class="input-group floating-label-wrapper">
+				              		<label>Set Time</label>
+				              		<input type="text" class="form-control" name="otherName" placeholder="HH:MM" ng-model="valuationQuote.scheduledTime" is-open=""  ng-value="{{valuationQuote.scheduledTime | date:'shortTime' }}" timepicker-options="timepickerOptions">
+				              		<span class="input-group-addon">
+				              			<a href ng-click="toggleMode()"><i class="fa fa-clock-o fa-2x"></i></a>
+				              		</span>
+				              	</div>
+				              	<uib-timepicker ng-if="isShow" ng-model="mytime" ng-change="changed(mytime)" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></uib-timepicker>
+				              </div>
+				            </div>
+							<div class="form-group floating-label-wrapper">
+								<label>Comment</label>
+								<textarea class="form-control" name="comment" ng-model="valuationQuote.comment" placeholder="Write Comments (if any)"></textarea>
+							</div>
+						</div>
 
-									<div class="row">
-										<div class="col-xs-6">
-											<div class="form-group" ng-class="{'has-error': form.contactPerson.$invalid && submitted }">
-												<input type="text" name="contactPerson" class="form-control" placeholder="*Contact Person"  ng-model="valuationQuote.product.contactPerson"ng-required="!valuationQuote.product.contactPersonAsAbove">
-											</div>							
-										</div>
-										<div class="col-xs-6">
-											<div class="checkbox checkbox-info checkbox-circle">
-						                        <input id="checkbox1" type="checkbox" ng-model="valuationQuote.product.contactPersonAsAbove" name="" ng-change="onChange('contactPerson')">
-						                        <label for="checkbox1">
-						                            same as above
-						                        </label>
-						                    </div>							
-										</div>						
-									</div>
-									<div class="row">
-										<div class="col-xs-6">
-											<div class="form-group" ng-class="{'has-error': form.contactNumber.$invalid && submitted }">
-												<input type="text" name="contactNumber" class="form-control" ng-model="valuationQuote.product.contactNumber" placeholder="*Contact Number" ng-required="!valuationQuote.product.contactNumberAsAbove">
-											</div>							
-										</div>
-										<div class="col-xs-6">
-											<div class="checkbox checkbox-info checkbox-circle">
-						                        <input id="checkbox2" type="checkbox"  ng-model="valuationQuote.product.contactNumberAsAbove" name="" ng-change="onChange('contactNumber')">
-						                        <label for="checkbox2">
-						                            same as above
-						                        </label>
-						                    </div>							
-										</div>						
-									</div>
-									<hr>
-									<div class="row text-left">
-									<div class="col-xs-12 col-sm-4 form-group">
-									<select class="form-control" ng-model="valuationQuote.partnerId">
-		                            <option value="">Select Partner</option>
-		                            <option ng-repeat="vendor in vendorList" value="{{vendor._id}}">{{vendor.name}}</option>
-		                            </select>
-									</div>
-										<div class="col-xs-12 col-sm-4 form-group">Purpose of valuation</div>
-										<div class="col-xs-6 col-sm-4 form-group" ng-class="{'has-error': form.valuation.$invalid && submitted }">
-											<select class="form-control" ng-model="valuationQuote.valuation" name="valuation" required>
-						                      <option value="Financing">Financing</option>
-						                      <option ng-repeat="valuation in valuationList | orderBy:'name'" value="{{valuation.name}}">{{valuation.name}}</option>
-						                    </select>
-										</div>
-										
-										
-										<div class="col-xs-6 col-sm-4 form-group" ng-class="{'has-error': form.otherName.$invalid && submitted }">
-											<input class="form-control" type="text" name="otherName" ng-model="valuationQuote.otherName" ng-disabled ="valuationQuote.valuation != 'Other'" placeholder="*Other" ng-required= "valuationQuote.valuation == 'Other'">
-										</div>
-									</div>
-									<div class="row text-left">
-						              <div class="col-xs-12 col-sm-4 form-group">Schedule a call</div>
-						              <div class="col-xs-6 col-sm-4 form-group">
-						              	<div class="radio radio-info">
-				                            <input type="radio" id="inlineRadio1" name="schedule" ng-model="valuationQuote.schedule" value="yes">
-				                            <label for="inlineRadio1"> Yes </label>
-				                        </div>		               
-						              </div>
-						              <div class="col-xs-6 col-sm-4 form-group">
-						              	<div class="radio radio-info">
-				                            <input type="radio" id="inlineRadio2" name="schedule" ng-model="valuationQuote.schedule" value="no">
-				                            <label for="inlineRadio2"> No </label>
-				                        </div>     
-						              </div>
-						              
-						              <div class="clerafix"></div>                                   
-						              <div class="col-xs-6 col-sm-offset-4 col-sm-4 form-group" ng-if="valuationQuote.schedule == 'yes'" >
-						              	<small>Pick Date</small>
-						                <div class="input-group" ng-class="{'has-error': form.scheduleDate.$invalid && submitted }">
-						                  <input type="text" class="form-control" ng-model="valuationQuote.scheduleDate" uib-datepicker-popup="{{format}}" name="scheduleDate" ng-value="" is-open="popup1.opened" min-date="minDate" max-date="maxDate" datepicker-options="datepickerOptions" date-disabled="disabled(date, mode)" ng-required="valuationQuote.schedule == 'yes'" close-text="Close" alt-input-formats="altInputFormats" placeholder="dd/mm/yyyy" />
-						                  <span class="input-group-addon">
-						                    <a href class="btn btn-default" ng-click="open1()"><i class="fa fa-calendar-o fa-1x"></i></a>
-						                  </span>
-						                </div>                                       
-						              </div>
-						              
-						              <div class="col-xs-6 col-sm-4 form-group " ng-if="valuationQuote.schedule == 'yes'">
-						              	<small>Set Time</small>
-						              	<div class="input-group">
-						              		<input type="text" class="form-control" name="otherName" placeholder="HH:MM" ng-model="valuationQuote.scheduledTime" is-open=""  ng-value="{{valuationQuote.scheduledTime | date:'shortTime' }}" timepicker-options="timepickerOptions">
-						              		<span class="input-group-addon">
-						              			<button class="btn btn-default" ng-click="toggleMode()"><i class="fa fa-clock-o fa-1x"></i></button>
-						              		</span>
-						              	</div>
-						              	<uib-timepicker ng-if="isShow" ng-model="mytime" ng-change="changed(mytime)" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></uib-timepicker>
-										<!-- <pre class="alert alert-info">Time is: {{mytime | date:'shortTime' }}</pre> -->
-										</div>
-						            </div>
-									<div class="form-group">
-										<textarea class="form-control" name="comment" ng-model="valuationQuote.comment" placeholder="Comments if any"></textarea>
-									</div>
-								</div>												
-							</div>
-							<div class="modal-footer">
-								<button type="button" ng-click="resetClick()" class="btn btn-default">Reset</button>
-								<button type="button" class="btn btn-danger" ng-click="addValuationQuote(form)" >Submit</button>
-							</div>
-						</form>
+						<div class="text-right">
+							<button type="button" ng-click="resetClick()" class="btn btn-default">Reset</button>
+							<button type="button" class="btn btn-primary" ng-click="addValuationQuote(form)" >Submit</button>
+						</div>												
 					</div>
+					
+				</form>
+			</div>
+	</div>
+</section>
+
+<section class="category-block how-works vluation-details">
+ 	<div class="container">
+ 		<div class="row">
+ 			<div class="col-sm-6">
+ 				<p>Our team of experts have developed a comprehensive checklist of all major and minor components and conduct a detailed check-up of each of these, including:</p>
+
+ 				<ul>
+ 					<li>Cabin : Dashboard, Meters &amp; Gauges, Steering Wheel, Cabin Canopy, etc.</li>
+ 					<li>Engine : Main Engine, Fuel Pump, Alternator, Radiator, Battery, Self-Starter, etc.</li>
+ 					<li>Undercarriage : Track Motors, Track Pads, Track Rollers, Sprocket, etc.</li>
+ 					<li>Bucket : Basic Bucket, Bucket Teeth, Grease Points, Pins &amp; Bushes.</li>
+ 					<li>Hydraulic System : Oil Tank, Hydraulic Pump, Control Valve, Boom Cylinder, Pipe Lines, etc.</li>
+ 					<li>Trolley : Trolley Walls, Axles, Floors, Tires.</li>
+ 					<li>Chassis : Chassis Frame, Leaf Springs, Shock Absorbers, etc.</li>
+ 				</ul>
+ 			</div>
+ 			<div class="col-sm-offset-1 col-sm-5">
+ 				<div class="text-right">
+			      <h4>LEAVE YOUR WORRY TO US! </h4> 
+			      <small>Now  watch live stream of the  inspection.</small>    
+			    </div>
+			    <div class="framwork-background">
+				    <img src="http://placehold.it/450x390" class="img-responsive" alt="" >
 				</div>
-		</div>
+ 			</div>
+ 		</div>
 
-		<div class="form-group"></div>
+   </div>
+</section>
 
+<section class="category-block">
+	<div class="container">
 		<!-- new form -->
-		<div class="panel panel-default" ng-if="isEnterprise() || isEnterpriseUser()" ng-controller="AddTransactionCtrl as addTransactionVm">
+		<div class="panel panel-primary information-tabs" ng-if="isEnterprise() || isEnterpriseUser()" ng-controller="AddTransactionCtrl as addTransactionVm">
 			<div class="panel-heading">
 				<h3 class="panel-title">Valuation / Asset Inspection</h3>
 			</div>
 			<div class="panel-body">
 			<form name="form">
 				<div class="row">
-					<div class="col-xs-12">
-						<label>Request Type:</label>
+					<div class="col-xs-12 col-sm-6">
+						<div class="floating-label-wrapper">
+							<label>Request Type</label>
+						</div>
+						<div class="row form-group">
+							<div class="col-xs-6 col-sm-4">
+				              	<div class="radio radio-info" ng-if="isServiceAvailed('Valuation')">
+			                        <input type="radio" name="requestType" id="requestValuationEnterprise" value="Valuation" ng-model="addTransactionVm.enterpriseValuation.requestType" ng-click="addTransactionVm.getPartners('Valuation')" >
+			                        <label for="requestValuationEnterprise"> Valuation </label>
+			                    </div>		               
+				            </div>
+				            <div class="col-xs-6 col-sm-4">
+				              	<div class="radio radio-info" ng-if="isServiceAvailed('Inspection')">
+			                        <input type="radio" id="requestInspectionEnterprise" name="requestType" value="Inspection" ng-click="addTransactionVm.getPartners('Inspection')" ng-model="addTransactionVm.enterpriseValuation.requestType">
+			                        <label for="requestInspectionEnterprise"> Inspection </label>
+			                    </div>
+			                </div>
+						</div>
 					</div>								
 				</div>
-				<div class="row form-group">
-					<div class="col-xs-6 col-sm-3">
-		              	<div class="radio radio-info" ng-if="isServiceAvailed('Valuation')">
-	                        <input type="radio" name="requestType" id="requestValuationEnterprise" value="Valuation" ng-model="addTransactionVm.enterpriseValuation.requestType" ng-click="addTransactionVm.getPartners('Valuation')" >
-	                        <label for="requestValuationEnterprise"> Valuation </label>
-	                    </div>		               
-		            </div>
-		            <div class="col-xs-6 col-sm-3">
-		              	<div class="radio radio-info" ng-if="isServiceAvailed('Inspection')">
-	                        <input type="radio" id="requestInspectionEnterprise" name="requestType" value="Inspection" ng-click="addTransactionVm.getPartners('Inspection')" ng-model="addTransactionVm.enterpriseValuation.requestType">
-	                        <label for="requestInspectionEnterprise"> Inspection </label>
-	                    </div>
-	                </div>
-				</div>
+				
 				<div class="row">
 					<div class="col-sm-3 form-group">
-						<label>Select Purpose</label>
-						<select class="form-control">
-							  <option value="Financing">Financing</option>
-							  <option ng-repeat="valuation in valuationList" value="{{valuation.name}}">{{valuation.name}}</option>
-						</select>
-					</div>
-					<div class="col-sm-3 form-group">
-						<label>Name of Original Owner</label>
-						<input type="text" name="originalOwner" class="form-control" ng-model="addTransactionVm.enterpriseValuation.originalOwner" placeholder="Name of Original Owner" ng-disabled="!editEnterpriseField('originalOwner')">
-					</div>
-					<div class="col-sm-3 form-group">
-						<label>Name of Customer seeking Finance</label>
-						<input type="text" class="form-control" ng-model="addTransactionVm.enterpriseValuation.nameOfCustomerSeeking" placeholder="Name of Customer seeking Finance">
-
-						<!-- <input type="text" class="form-control" name="" value="" placeholder="Other" disabled> -->
-					</div>
-					<div class="col-sm-3 form-group">
-						<label>Reference / FI Number</label>
-						<input type="text" class="form-control" name="" value="" min="0" placeholder="Reference / FI Number" ng-model="addTransactionVm.enterpriseValuation.customerTransactionId">
-					</div>
-				</div>
-				<!-- <div class="row">
-					<div class="col-xs-12">
-						<label>Product Details:</label>
-					</div>								
-				</div> -->
-				<div class="row">
-					<div class="col-sm-3 form-group">
-						<label>Asset No.</label>
-						<input type="text" class="form-control" name="" value="" placeholder="Asset No." ng-model="addTransactionVm.enterpriseValuation.assetId">
-					</div>
-					<div class="col-sm-3 form-group">	
-						<label>Repo Date</label>
-						<div class="input-group">
-							<input class="form-control" name="requestDate" id="requestDate" ng-model="addTransactionVm.enterpriseValuation.repoDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="Repo Date"/>
-		             		 <label for="requestDate" class="input-group-addon"><i class="fa fa-calendar"></i></label>
+						<div class="floating-label-wrapper">
+							<label>Select Purpose</label>
+							<select class="form-control">
+								  <option value="Financing">Financing</option>
+								  <option ng-repeat="valuation in valuationList" value="{{valuation.name}}">{{valuation.name}}</option>
+							</select>
 						</div>
 					</div>
-					<div class="col-sm-3 form-group" ng-class="{'has-error': form.customerInvoiceDate.$invalid && form.submitted}">
-						<label>Invoice Date</label>
-						<div class="input-group">
+					<div class="col-sm-3 form-group">
+						<div class="floating-label-wrapper">
+							<label>Name of Original Owner</label>
+							<input type="text" name="originalOwner" class="form-control" ng-model="addTransactionVm.enterpriseValuation.originalOwner" placeholder="Name of Original Owner" ng-disabled="!editEnterpriseField('originalOwner')">
+						</div>
+					</div>
+					<div class="col-sm-3 form-group">
+						<div class="floating-label-wrapper">
+							<label>Name of Customer seeking Finance</label>
+							<input type="text" class="form-control" ng-model="addTransactionVm.enterpriseValuation.nameOfCustomerSeeking" placeholder="Name of Customer seeking Finance">
+						</div>
+					</div>
+					<div class="col-sm-3 form-group">
+						<div class="floating-label-wrapper">
+							<label>Reference / FI Number</label>
+							<input type="text" class="form-control" name="" value="" min="0" placeholder="Reference / FI Number" ng-model="addTransactionVm.enterpriseValuation.customerTransactionId">
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-3 form-group">
+						<div class="floating-label-wrapper">
+							<label>Asset No.</label>
+							<input type="text" class="form-control" name="" value="" placeholder="Asset No." ng-model="addTransactionVm.enterpriseValuation.assetId">
+						</div>
+					</div>
+					<div class="col-sm-3 form-group">						
+						<div class="input-group floating-label-wrapper">
+							<label>Repo Date</label>
+							<input class="form-control" name="requestDate" id="requestDate" ng-model="addTransactionVm.enterpriseValuation.repoDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="Repo Date"/>
+		             		 <label for="requestDate" class="input-group-addon"><i class="fa fa-calendar-o fa-2x"></i></label>
+						</div>
+					</div>
+					<div class="col-sm-3 form-group" ng-class="{'has-error': form.customerInvoiceDate.$invalid && form.submitted}">						
+						<div class="input-group floating-label-wrapper">
+							<label>Invoice Date</label>
 							<input  class="form-control" id="customerInvoiceDate" name="customerInvoiceDate" ng-model="addTransactionVm.enterpriseValuation.customerInvoiceDate" placeholder="Invoice Date" datetime-picker readonly date-format="MM/dd/yyyy" date-only>
-							<label for="customerInvoiceDate" class="input-group-addon"><i class="fa fa-calendar"></i></label>
+							<label for="customerInvoiceDate" class="input-group-addon"><i class="fa fa-calendar-o fa-2x"></i></label>
 						</div>
 					</div>
 					<div class="col-sm-3 form-group" ng-class="{'has-error': form.customerInvoiceValue.$invalid && form.submitted}">
-						<label>Invoice Value</label>
-						<input type="number" class="form-control" name="customerInvoiceValue" min="0" ng-model="addTransactionVm.enterpriseValuation.customerInvoiceValue" placeholder="Invoice Value">
+						<div class="floating-label-wrapper">
+							<label>Invoice Value</label>
+							<input type="number" class="form-control" name="customerInvoiceValue" min="0" ng-model="addTransactionVm.enterpriseValuation.customerInvoiceValue" placeholder="Invoice Value">
+						</div>
 					</div>								
 				</div>
 				<div class="row">
 					<div class="col-sm-3 form-group" ng-class="{'has-error': form.assetCategory.$invalid && form.submitted}">
-						<label>Select Category</label>
-						<select class="form-control" name="assetCategory" ng-model="addTransactionVm.enterpriseValuation.assetCategory" ng-disabled="(!addTransactionVm.enterpriseValuation.enterprise.enterpriseId || !addTransactionVm.enterpriseValuation.agency.partnerId)" required>
-			              <option value="">*Select Category</option>
-			              <option value="{{ast.assetCategory}}" ng-repeat="ast in addTransactionVm.assetCategoryList">{{ast.assetCategory}}</option>
-			            </select>
+						<div class="floating-label-wrapper">
+							<label>Select Category</label>
+							<select class="form-control" name="assetCategory" ng-model="addTransactionVm.enterpriseValuation.assetCategory" ng-disabled="(!addTransactionVm.enterpriseValuation.enterprise.enterpriseId || !addTransactionVm.enterpriseValuation.agency.partnerId)" required>
+				              <option value="">*Select Category</option>
+				              <option value="{{ast.assetCategory}}" ng-repeat="ast in addTransactionVm.assetCategoryList">{{ast.assetCategory}}</option>
+				            </select>
+				        </div>
 					</div>
 					<div class="col-sm-3" ng-class="{'has-error': (form.brand.$invalid || form.otherBrand.$invalid) && form.submitted}">
-						<label>Select Brand</label>
-						<select class="form-control form-group" name="brand" ng-model="addTransactionVm.enterpriseValuation.brand" ng-change="addTransactionVm.onBrandChange(addTransactionVm.enterpriseValuation.brand)">
-							<option value="">Select Brand</option>
-	              			<option ng-repeat="br in addTransactionVm.brandList" value="{{br.name}}">{{br.name}}</option>
-						</select>
-						<input type="text" ng-if="addTransactionVm.enterpriseValuation.brand == 'Other'" ng-model="addTransactionVm.enterpriseValuation.otherBrand" class="form-control form-group" name="otherBrand" placeholder="*Other Brand Name" ng-required = "addTransactionVm.enterpriseValuation.brand == 'Other'">
+						<div class="floating-label-wrapper">
+							<label>Select Brand</label>
+							<select class="form-control form-group" name="brand" ng-model="addTransactionVm.enterpriseValuation.brand" ng-change="addTransactionVm.onBrandChange(addTransactionVm.enterpriseValuation.brand)">
+								<option value="">Select Brand</option>
+		              			<option ng-repeat="br in addTransactionVm.brandList" value="{{br.name}}">{{br.name}}</option>
+							</select>
+
+							<input type="text" ng-if="addTransactionVm.enterpriseValuation.brand == 'Other'" ng-model="addTransactionVm.enterpriseValuation.otherBrand" class="form-control form-group" name="otherBrand" placeholder="*Other Brand Name" ng-required = "addTransactionVm.enterpriseValuation.brand == 'Other'">
+						</div>
 					</div>
 					<div class="col-sm-3" ng-class="{'has-error': (form.model.$invalid || form.otherModel.$invalid) && form.submitted}">
-						<label>Select Model</label>
-						<select class="form-control form-group" ng-model="addTransactionVm.enterpriseValuation.model">
-							 <option value="">Select Model</option>
-	              			 <option ng-repeat="md in addTransactionVm.modelList" value="{{md.name}}">{{md.name}}</option>
-						</select>
-						  <input type="text" ng-if="addTransactionVm.enterpriseValuation.model == 'Other'" ng-model="addTransactionVm.enterpriseValuation.otherModel" class="form-control form-group" name="otherModel" placeholder="*Other Model Name" ng-required = "addTransactionVm.enterpriseValuation.model == 'Other'">
+						<div class="floating-label-wrapper">
+							<label>Select Model</label>
+							<select class="form-control form-group" ng-model="addTransactionVm.enterpriseValuation.model">
+								 <option value="">Select Model</option>
+		              			 <option ng-repeat="md in addTransactionVm.modelList" value="{{md.name}}">{{md.name}}</option>
+							</select>
+							  <input type="text" ng-if="addTransactionVm.enterpriseValuation.model == 'Other'" ng-model="addTransactionVm.enterpriseValuation.otherModel" class="form-control form-group" name="otherModel" placeholder="*Other Model Name" ng-required = "addTransactionVm.enterpriseValuation.model == 'Other'">
+						</div>
 					</div>
 					<div class="col-sm-3 form-group" ng-class="{'has-error': form.assetDescription.$invalid && form.submitted}">
-						<label>Asset Name</label>
-						<!-- <textarea class="form-control" placeholder="Asset Description" ng-model="addTransactionVm.enterpriseValuation.assetDescription"></textarea> -->
-						<input type="text" name="assetDescription" ng-model="addTransactionVm.enterpriseValuation.assetDescription" ng-disabled="!editEnterpriseField()" placeholder="*Asset Name" class="form-control" required/>
+						<div class="floating-label-wrapper">
+							<label>Asset Name</label>
+							<input type="text" name="assetDescription" ng-model="addTransactionVm.enterpriseValuation.assetDescription" ng-disabled="!editEnterpriseField()" placeholder="*Asset Name" class="form-control" required/>
+						</div>
 					</div>
 				</div>
 				<div class="row">
 					<div class="col-sm-3 form-group">
-						<label>Engine No.</label>
-						<input type="text" class="form-control" name="enginNo" placeholder="Engine No." ng-model="addTransactionVm.enterpriseValuation.engineNo">
+						<div class="floating-label-wrapper">
+							<label>Engine No.</label>
+							<input type="text" class="form-control" name="enginNo" placeholder="Engine No." ng-model="addTransactionVm.enterpriseValuation.engineNo">
+						</div>
 					</div>
 					<div class="col-sm-3 form-group" ng-class="{'has-error': (form.chassisNo.$invalid || form.registrationNo.$invalid) && form.submitted}">
-						<label>Chassis No.</label>
-						<input type="text" class="form-control" name="chassisNo" ng-required="!( addTransactionVm.enterpriseValuation.chassisNo || addTransactionVm.enterpriseValuation.registrationNo)" placeholder="Chassis No." ng-model="addTransactionVm.enterpriseValuation.chassisNo">
+						<div class="floating-label-wrapper">
+							<label>Chassis No.</label>
+							<input type="text" class="form-control" name="chassisNo" ng-required="!( addTransactionVm.enterpriseValuation.chassisNo || addTransactionVm.enterpriseValuation.registrationNo)" placeholder="Chassis No." ng-model="addTransactionVm.enterpriseValuation.chassisNo">
+						</div>
 					</div>
 					<div class="col-sm-3 form-group" ng-class="{'has-error': (form.chassisNo.$invalid || form.registrationNo.$invalid) && form.submitted}">
-						<label>Registration No.</label>
-						<input type="text" class="form-control" name="registrationNo" ng-required="!(addTransactionVm.enterpriseValuation.chassisNo || addTransactionVm.enterpriseValuation.registrationNo)" placeholder="Registration No." ng-model="addTransactionVm.enterpriseValuation.registrationNo">
+						<div class="floating-label-wrapper">
+							<label>Registration No.</label>
+							<input type="text" class="form-control" name="registrationNo" ng-required="!(addTransactionVm.enterpriseValuation.chassisNo || addTransactionVm.enterpriseValuation.registrationNo)" placeholder="Registration No." ng-model="addTransactionVm.enterpriseValuation.registrationNo">
+						</div>
 					</div>
 					<div class="col-sm-3 form-group">
-						<label>Serial No.</label>
-						<input type="text" class="form-control" name="serialNo" ng-model="addTransactionVm.enterpriseValuation.serialNo" placeholder="Serial No.">
+						<div class="floating-label-wrapper">
+							<label>Serial No.</label>
+							<input type="text" class="form-control" name="serialNo" ng-model="addTransactionVm.enterpriseValuation.serialNo" placeholder="Serial No.">
+						</div>
 					</div>
 				</div>
 				<div class="row">
 					<div class="col-sm-3 form-group"  ng-class="{'has-error': form.yearOfManufacturing.$invalid && form.submitted}">
-						<label>Year of Manufacture</label>
-						<input type="number" class="form-control" name="yearOfManufacturing" ng-model="addTransactionVm.enterpriseValuation.yearOfManufacturing" placeholder="Year of Manufacture" ng-maxlength="4" ng-minlength="4" max="currentYear" min="1900" string-to-number/>
+						<div class="floating-label-wrapper">
+							<label>Year of Manufacture</label>
+							<input type="number" class="form-control" name="yearOfManufacturing" ng-model="addTransactionVm.enterpriseValuation.yearOfManufacturing" placeholder="Year of Manufacture" ng-maxlength="4" ng-minlength="4" max="currentYear" min="1900" string-to-number/>
+						</div>
 					</div>
 					<div class="col-sm-3 form-group" ng-class="{'has-error': form.yardParked.$invalid && form.submitted}">
-						<label>Yard Information/Asset Address</label>
-						<input type="text" class="form-control" name="yardParked"  placeholder="*Yard Information/Asset Address" ng-model="addTransactionVm.enterpriseValuation.yardParked" required>
+						<div class="floating-label-wrapper">
+							<label>Yard Information/Asset Address</label>
+							<input type="text" class="form-control" name="yardParked"  placeholder="*Yard Information/Asset Address" ng-model="addTransactionVm.enterpriseValuation.yardParked" required>
+						</div>
 					</div>
 					<div class="col-sm-3 form-group" ng-class="{'has-error': form.country.$invalid && form.submitted}">
-						<label>Select Country</label>
-			            <select class="form-control" ng-model="addTransactionVm.enterpriseValuation.country" name="country"  ng-change="addTransactionVm.onCountryChange(addTransactionVm.enterpriseValuation.country)" required>
-			              <option value="">*Select Country</option>
-			              <option ng-repeat="country in allCountries | orderBy:'name'" value="{{country.name}}">{{country.name}}</option>
-			            </select>
-			            <i class="caret"></i>
+						<div class="floating-label-wrapper">
+							<label>Country*</label>
+				            <select class="form-control" ng-model="addTransactionVm.enterpriseValuation.country" name="country"  ng-change="addTransactionVm.onCountryChange(addTransactionVm.enterpriseValuation.country)" required>
+				              <option value="">Select Country</option>
+				              <option ng-repeat="country in allCountries | orderBy:'name'" value="{{country.name}}">{{country.name}}</option>
+				            </select>
+				        </div>
 			          </div>
 			          <div class="col-sm-3 form-group" ng-class="{'has-error': form.state.$invalid && form.submitted}">
-			          	<label>Select State</label>
-			            <select class="form-control" name="state" ng-model="addTransactionVm.enterpriseValuation.state" ng-disabled="!editEnterpriseField()" ng-change="addTransactionVm.onStateChange(addTransactionVm.enterpriseValuation.state)" required>
-			              <option value="">*Select State</option>
-			                <option ng-repeat="state in stateList | orderBy:'name'" value="{{state.name}}">{{state.name}}</option>
-			            </select>
-			            <i class="caret"></i>
+			          	<div class="floating-label-wrapper">
+				          	<label>State*</label>
+				            <select class="form-control" name="state" ng-model="addTransactionVm.enterpriseValuation.state" ng-disabled="!editEnterpriseField()" ng-change="addTransactionVm.onStateChange(addTransactionVm.enterpriseValuation.state)" required>
+				              <option value="">Select State</option>
+				                <option ng-repeat="state in stateList | orderBy:'name'" value="{{state.name}}">{{state.name}}</option>
+				            </select>
+				        </div>
 			          </div> 				
 					</div>
-				<!-- <div class="row">
-					<div class="col-xs-12">
-						<label>Location of Asset :</label>
-					</div>								
-				</div> -->
-				<div class="row">		
-					<div class="col-sm-3" ng-class="{'has-error': form.location.$invalid && form.submitted}">
-			          	<label>Select Location</label>
-			            <select class="form-control" name="location" ng-model="addTransactionVm.enterpriseValuation.city" required>
-			              <option value="">*Select Location</option>
-			                <option ng-repeat="location in locationList | orderBy:'name'" value="{{location.name}}">{{location.name}}</option>
-			            </select>
-			         </div>		
-			         <div class="col-sm-3 form-group" ng-class="{'has-error': form.contactPerson.$invalid && form.submitted}">
-						<label>Contact Person</label>
-						<input type="text" class="form-control" name="contactPerson"  placeholder="*Contact Person" ng-model="addTransactionVm.enterpriseValuation.contactPerson" required>
+					<div class="row">		
+						<div class="col-sm-3" ng-class="{'has-error': form.location.$invalid && form.submitted}">
+							<div class="floating-label-wrapper">
+					          	<label>Location*</label>
+					            <select class="form-control" name="location" ng-model="addTransactionVm.enterpriseValuation.city" required>
+					              <option value="">Select Location</option>
+					                <option ng-repeat="location in locationList | orderBy:'name'" value="{{location.name}}">{{location.name}}</option>
+					            </select>
+					        </div>
+				         </div>		
+				         <div class="col-sm-3 form-group" ng-class="{'has-error': form.contactPerson.$invalid && form.submitted}">
+				         	<div class="floating-label-wrapper">
+								<label>Contact Person*</label>
+								<input type="text" class="form-control" name="contactPerson"  placeholder="Contact Person" ng-model="addTransactionVm.enterpriseValuation.contactPerson" required>
+							</div>
+						</div>
+						<div class="col-sm-3 form-group" ng-class="{'has-error': form.contactNumber.$invalid && form.submitted}">
+							<div class="floating-label-wrapper">
+								<label>Contact Person Tel No*.</label>
+								<input type="text" class="form-control" name="contactNumber" placeholder="Contact Person Tel No." ng-model="addTransactionVm.enterpriseValuation.contactPersonTelNo" required>
+							</div>
+						</div>
+						<div class="col-sm-3 form-group">
+							<div class="floating-label-wrapper">
+								<label>Distance to be Travelled(Kms)</label>
+								<input type="text" class="form-control" name="disFromCustomerOffice" placeholder="Distance to be Travelled" ng-model="addTransactionVm.enterpriseValuation.disFromCustomerOffice">
+							</div>
+						</div>
+						
 					</div>
-					<div class="col-sm-3 form-group" ng-class="{'has-error': form.contactNumber.$invalid && form.submitted}">
-						<label>Contact Person Tel No.</label>
-						<input type="text" class="form-control" name="contactNumber" placeholder="*Contact Person Tel No." ng-model="addTransactionVm.enterpriseValuation.contactPersonTelNo" required>
-					</div>
-					<div class="col-sm-3 form-group">
-						<label>Distance to be Travelled(Kms)</label>
-						<input type="text" class="form-control" name="disFromCustomerOffice" placeholder="Distance to be Travelled" ng-model="addTransactionVm.enterpriseValuation.disFromCustomerOffice">
-					</div>
-					
-				</div>
-				<div class="row">
-					 <div class="col-sm-3">
-						<label>Invoice Upload</label>
-			            <span class="btn btn-default fileinput-button">
-			             <input type="file" id="upload" name="upload" onchange="angular.element(this).scope().upload(this.files,'invoiceDoc')" >
-			              <span><i class="fa fa-upload"></i> Invoice Upload</span>
-			            </span>
-			            <span>{{addTransactionVm.enterpriseValuation.invoiceDoc.filename}}</span>  
-		          </div>
-		          <div class="col-sm-3">
-		          	<label>RC Upload</label>
-		            <span class="btn btn-default fileinput-button">
-		             <input type="file" id="upload" name="upload" data-filetype="doc" onchange="angular.element(this).scope().upload(this.files,'rcDoc')">
-		              <span><i class="fa fa-upload"></i> RC Upload</span>
-		            </span>
-		            <span>{{addTransactionVm.enterpriseValuation.rcDoc.filename}}</span>
-		          </div>
+					<div class="row">
+						<div class="col-sm-3">
+							<div class="floating-label-wrapper">
+								<label>Invoice Upload</label>
+					            <span class="btn btn-default fileinput-button">
+					             <input type="file" id="upload" name="upload" onchange="angular.element(this).scope().upload(this.files,'invoiceDoc')" >
+					              <span><i class="fa fa-upload"></i> Invoice Upload</span>
+					            </span>
+					            <span>{{addTransactionVm.enterpriseValuation.invoiceDoc.filename}}</span> 
+				            </div> 
+			          	</div>
+						<div class="col-sm-3">
+							<div class="floating-label-wrapper">
+								<label>RC Upload</label>
+								<span class="btn btn-default fileinput-button">
+								 <input type="file" id="upload" name="upload" data-filetype="doc" onchange="angular.element(this).scope().upload(this.files,'rcDoc')">
+								  <span><i class="fa fa-upload"></i> RC Upload</span>
+								</span>
+								<span>{{addTransactionVm.enterpriseValuation.rcDoc.filename}}</span>
+							</div>
+						</div>
 			          
-				</div>
-				<hr>
-				<div class="row">
-					<div class="col-sm-12 text-right">
-						<button type="button" class="btn btn-default" ng-click="addTransactionVm.reset()">Reset</button>
-						<button type="button" class="btn btn-danger" ng-click="addTransactionVm.addOrUpdateRequest(form,'enterpriseform')">Submit</button>
 					</div>
-				</div>
+					<hr>
+					<div class="row">
+						<div class="col-sm-12 text-right">
+							<button type="button" class="btn btn-default" ng-click="addTransactionVm.reset()">Reset</button>
+							<button type="button" class="btn btn-primary" ng-click="addTransactionVm.addOrUpdateRequest(form,'enterpriseform')">Submit</button>
+						</div>
+					</div>
 				</form>
 			</div>
 		</div>
