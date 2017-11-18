@@ -122,24 +122,76 @@ function MasterDataCtrl($scope, $rootScope,MasterDataService, groupSvc, modelSvc
 		switch(type){
 			case "group":
 				$scope.filteredGroup = $filter('filter')($scope.allGroup,vm.gSearch);
+				if(vm.isForNew || vm.isForUsed){
+					$scope.filteredGroup = $scope.filteredGroup.filter(function(item){
+						if(vm.isForNew && vm.isForUsed)
+							return item.isForUsed && item.isForNew;
+						else if(vm.isForNew)
+							return item.isForNew;
+						else if(vm.isForUsed)
+							return item.isForUsed;
+						else
+							return false;
+
+					});
+				}
 				vm.gCurrentPage = 1;
 				vm.gTotalItems = $scope.filteredGroup.length;
 			break;
 
 			case "category":
 				$scope.filteredCategory = $filter('filter')($scope.allCategory,vm.cSearch);
+				if(vm.isForNew || vm.isForUsed){
+					$scope.filteredCategory = $scope.filteredCategory.filter(function(item){
+						if(vm.isForNew && vm.isForUsed)
+							return item.isForUsed && item.isForNew;
+						else if(vm.isForNew)
+							return item.isForNew;
+						else if(vm.isForUsed)
+							return item.isForUsed;
+						else
+							return false;
+
+					});
+				}
 				vm.cCurrentPage = 1;
 				vm.cTotalItems = $scope.filteredCategory.length;
 			break;
 			
 			case "brand":
 				$scope.filteredBrand = $filter('filter')($scope.allBrand,vm.bSearch);
+				if(vm.isForNew || vm.isForUsed){
+					$scope.filteredBrand = $scope.filteredBrand.filter(function(item){
+						if(vm.isForNew && vm.isForUsed)
+							return item.isForUsed && item.isForNew;
+						else if(vm.isForNew)
+							return item.isForNew;
+						else if(vm.isForUsed)
+							return item.isForUsed;
+						else
+							return false;
+
+					});
+				}
 				vm.bCurrentPage = 1;
 				vm.bTotalItems = $scope.filteredBrand.length;
 			break;
 			
 			case "model":
 				$scope.filteredModel = $filter('filter')($scope.allModel,vm.mSearch);
+				if(vm.isForNew || vm.isForUsed){
+					$scope.filteredModel = $scope.filteredModel.filter(function(item){
+						if(vm.isForNew && vm.isForUsed)
+							return item.isForUsed && item.isForNew;
+						else if(vm.isForNew)
+							return item.isForNew;
+						else if(vm.isForUsed)
+							return item.isForUsed;
+						else
+							return false;
+
+					});
+				}
 				vm.mCurrentPage = 1;
 				vm.mTotalItems = $scope.filteredModel.length;
 			break;
@@ -372,6 +424,8 @@ function MasterDataCtrl($scope, $rootScope,MasterDataService, groupSvc, modelSvc
 		$scope.categoryEdit = false;
 		$scope.brandEdit = false;
 		$scope.modelEdit = false;
+		vm.isForNew = false;
+		vm.isForUsed = false;
 	}
 
 	$scope.$watch("[g,c,b,m]", function(){

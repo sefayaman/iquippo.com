@@ -62,7 +62,15 @@
                           </div>
                      	</form>	
                      	<div ng-if="refresh">
-                     		<div class="row">					           
+                     		<div class="row">
+                     			<div class="col-sm-3">
+					              <div class="checkbox"><input type="checkbox"  id="newequips" placeholder="" ng-model="masterDataVm.isForNew" ng-change="masterDataVm.searchFn('group')"> <label for="newequips"> New Equipment </label>
+				    	  		</div>
+					            </div>	
+					            <div class="col-sm-3">
+					              <div class="checkbox"><input type="checkbox" id="usedequips" placeholder="" ng-model="masterDataVm.isForUsed" ng-change="masterDataVm.searchFn('group')"> <label for="usedequips">Used Equipment </label>
+				    	  		</div>
+					            </div>					           
 					            <div class="col-sm-3 pull-right">
 					              <div class="tablesearch text-right form-group">
 					                 Search: <input type="text" placeholder="Search..." ng-model="masterDataVm.gSearch" ng-change="masterDataVm.searchFn('group')" ng-model-options="{debounce:500}">
@@ -158,7 +166,15 @@
                           </div>
                      	</form>	
 
-                     	<div class="row">					           
+                     	<div class="row">
+                     		<div class="col-sm-3">
+					              <div class="checkbox"><input type="checkbox"  id="newequipsc" placeholder="" ng-model="masterDataVm.isForNew" ng-change="masterDataVm.searchFn('category')"> <label for="newequipsc"> New Equipment </label>
+				    	  		</div>
+					            </div>	
+					            <div class="col-sm-3">
+					              <div class="checkbox"><input type="checkbox" id="usedequipsc" placeholder="" ng-model="masterDataVm.isForUsed" ng-change="masterDataVm.searchFn('category')"> <label for="usedequipsc">Used Equipment </label>
+				    	  		</div>
+					            </div>					           
 				            <div class="col-sm-3 pull-right">
 				              <div class="tablesearch text-right form-group">
 				                 Search: <input type="text" placeholder="Search..." ng-model="masterDataVm.cSearch" ng-change="masterDataVm.searchFn('category')" ng-model-options="{debounce:500}">
@@ -186,7 +202,11 @@
 										</span>
 									</td>									
 									<td>{{category.name}}</td>
-									<td></td>
+									<td>
+										<span ng-if="category.isForUsed">For Used</span>
+										<span ng-if="category.isForNew && category.isForUsed">&</span>
+										<span ng-if="category.isForNew">For New</span>
+									</td>
 									<td>{{category.group.name}}</td>
 									<td>{{getStatus(category.visibleOnUsed)}}</td>
 									<td>
@@ -222,7 +242,7 @@
 	                            <div class="form-group col-sm-3" ng-class="{'has-error': form.errorCategory && submitted}">
 	                                <select class="form-control" ng-model="b.category" name="categoryList" ng-options="category.name for category in categoryList track by category._id" required ng-disabled="brandEdit">
                                             <option value="" disabled>Select Category</option>
-                                            <!-- <option ng-repeat="category in categoryList" ng-selected="b.category._id == category._id" value="{{category._id}}">{{category.name}}</option> -->
+                                            <option ng-repeat="category in categoryList" ng-selected="b.category._id == category._id" value="{{category._id}}">{{category.name}}</option>
                                         </select> 
 	                            </div>	                            
 	                            <div class="col-sm-3 form-group text-center">
@@ -251,7 +271,7 @@
 				                    <span>{{b.imgSrc}}</span>
 	                            </div>
                                     
-                                    <div class="form-group col-sm-3">
+                                   <!--  <div class="form-group col-sm-3">
                                         <select class="form-control" ng-model="b.position" name="bannerPosition">
 >                                            <option value="" disabled>Select Placing</option>
                                             <option value="noPosition">None</option>
@@ -259,7 +279,7 @@
                                             <option value="topRight">Top Right</option>
                                             <option value="bottomRight">Bottom Right</option>
                                         </select>
-                                    </div>
+                                    </div> -->
                                     <div class="form-group col-sm-2">
 	                            	<span class="btn btn-warning fileinput-button">
 		                                <span>Browse image...</span>
@@ -276,7 +296,15 @@
 	                          </div>
 	                     	</form>					      
 					    	
-					    	<div class="row">					           
+					    	<div class="row">
+					    		<div class="col-sm-3">
+					              <div class="checkbox"><input type="checkbox"  id="newequipsb" placeholder="" ng-model="masterDataVm.isForNew" ng-change="masterDataVm.searchFn('brand')"> <label for="newequipsb"> New Equipment </label>
+				    	  		</div>
+					            </div>	
+					            <div class="col-sm-3">
+					              <div class="checkbox"><input type="checkbox" id="usedequipsb" placeholder="" ng-model="masterDataVm.isForUsed" ng-change="masterDataVm.searchFn('group')"> <label for="usedequipsb">Used Equipment </label>
+				    	  		</div>
+					            </div>					           
 					            <div class="col-sm-3 pull-right">
 					              <div class="tablesearch text-right form-group">
 					                 Search: <input type="text" placeholder="Search..." ng-model="masterDataVm.bSearch" ng-change="masterDataVm.searchFn('brand')" ng-model-options="{debounce:500}">
@@ -305,7 +333,10 @@
                          		  	</td>                         		  	
 									<td>{{brand.name}}</td>
 									<td>{{brand.category.name}}</td>
-									<td></td>
+									<td>
+									<span ng-if="brand.isForUsed">For Used</span>
+										<span ng-if="brand.isForNew && brand.isForUsed">&</span>
+										<span ng-if="brand.isForNew">For New</span></td>
 									<td>{{brand.group.name}}</td>
 									<td>{{getStatus(brand.visibleOnUsed)}}</td>
 									 <td>
@@ -375,7 +406,15 @@
                               </div>
                          	</form>
 
-                         	<div class="row">					           
+                         	<div class="row">
+                         		<div class="col-sm-3">
+					              <div class="checkbox"><input type="checkbox"  id="newequipsm" placeholder="" ng-model="masterDataVm.isForNew" ng-change="masterDataVm.searchFn('model')"> <label for="newequipsm"> New Equipment </label>
+				    	  		</div>
+					            </div>	
+					            <div class="col-sm-3">
+					              <div class="checkbox"><input type="checkbox" id="usedequipsm" placeholder="" ng-model="masterDataVm.isForUsed" ng-change="masterDataVm.searchFn('model')"> <label for="usedequipsm">Used Equipment </label>
+				    	  		</div>
+					            </div>					           
 					            <div class="col-sm-3 pull-right">
 					              <div class="tablesearch text-right form-group">
 					                 Search: <input type="text" placeholder="Search..." ng-model="masterDataVm.mSearch" ng-change="masterDataVm.searchFn('model')" ng-model-options="{debounce:500}">
@@ -398,7 +437,11 @@
                                   	<td>{{model.name}}</td>
 									<td>{{model.brand.name}}</td>
 									<td>{{model.category.name}}</td>
-									<td></td>
+									<td>
+										<span ng-if="model.isForUsed">For Used</span>
+										<span ng-if="model.isForNew && model.isForUsed">&</span>
+										<span ng-if="model.isForNew">For New</span></td>
+									</td>
 									<td>{{model.group.name}}</td>
 									<td>
 										 <a class="btn btn-primary btn-sm" href="javascript:void(0);" ng-click="masterDataVm.editClick('Model',model)" ><i class="fa fa-pencil"></i> </a>

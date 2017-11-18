@@ -782,6 +782,7 @@ function updateProduct(req,res){
   Product.findById(req.params.id, function (err, product) {
     if (err) { return handleError(res, err); }
     if(!product) { return res.status(404).send('Not Found'); }
+    req.body.featured = false;
     if(req.body.featured){
       var imgPath = config.uploadPath + req.body.assetDir + "/" + req.body.primaryImg;
       var featureFilePath=config.uploadPath+"featured/"+req.body.primaryImg;
@@ -868,6 +869,8 @@ function addProduct(req,res){
   req.body.createdAt = new Date();
   req.body.relistingDate = new Date();
   req.body.updatedAt = new Date();
+  req.body.featured = false;
+  
   if(req.body.featured){
     var imgPath = config.uploadPath + req.body.assetDir + "/" + req.body.primaryImg;
     var featureFilePath=config.uploadPath+"featured/"+req.body.primaryImg;
