@@ -242,7 +242,6 @@ header{background:#fff;}
 .dashboard-left a.list-group-item:hover{border:transparent;background-color:#E01F1F;color:#fff;}
 .dashboard-left a.list-group-item.active,.dashboard-left a.list-group-item.active:hover,.dashboard-left a.list-group-item.active:focus{background-color:#E01F1F;border:transparent;color:#fff;}
 .dashboard-nav{background-color:#ccc;height:570px;min-height:500px;position:absolute;width:100%;}
-.tab-content hr{margin:0;}
 .view-content{margin-top:15px;}
 img.sheduleImg{width:50px;height:50px;border-radius:50%;margin:0 auto}
 .table-responsive {
@@ -449,7 +448,7 @@ table.table{width:100% !important;}
 .label.label-danger{background:#e3000f;}
 .label.label-primary{background:#104095;}
 .form-input-width{width: 90%; height:21px;}
-.panel-title,.text-ellips{white-space: nowrap;overflow: hidden;text-overflow: ellipsis; text-align:left;}
+.text-ellips{white-space: nowrap;overflow: hidden;text-overflow: ellipsis; text-align:left;}
 .text-ellips{font-size: 13px;}
 .description-ellips{max-width: 200px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis; text-align:left;}
 .manpower-lists .text-ellips{white-space: nowrap;overflow: hidden;text-overflow: ellipsis; text-align:center;}
@@ -1276,7 +1275,7 @@ footer .subscribe{height: 40px;}
 .medianame ul li{display: inline-block;list-style: none;padding: 0 5px 0 3px;line-height: 13px;border-right: 1px solid #ccc;}
 .medianame ul li a{color: #999;}
 .medianame ul li:last-child{border-right: 0;}
-.breadcrumb{border-radius:0;margin-bottom:0; margin-top: 3em; background: transparent;}
+.breadcrumb{border-radius:0;margin-bottom:0; margin-top: 3em; background: transparent; padding: 10px 0;}
 .breadcrumb li{color:#666; font-weight: bold; font-size: 13px;}
 .breadcrumb li a{text-decoration: none; color:#333; font-weight: bold; font-size: 13px;}
 .breadcrumb li a.active{color:#666; cursor: text; font-weight: bold;}
