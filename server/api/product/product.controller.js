@@ -977,6 +977,8 @@ function postRequest(req, res){
           proResult.reqSubmitStatus = ReqSubmitStatuses[1];
           //options.dataToSend.status = false;
           update(options.dataToSend);
+          if(req.body.auction && req.body.auction._id)
+            AuctionReq.update({_id: req.body.auction._id}, {$set: {"reqSubmitStatus":options.dataToSend.reqSubmitStatus}}).exec();
           // if(result && result.err) {}
           //     return res.status(412).send(result.err);
           //return res.status(412).json("Unable to post asset request. Please contact support team.");
@@ -987,6 +989,8 @@ function postRequest(req, res){
           proResult.reqSubmitStatus = ReqSubmitStatuses[0];
           //options.dataToSend.status = true;
           update(options.dataToSend);
+          if(req.body.auction && req.body.auction._id)
+            AuctionReq.update({_id: req.body.auction._id}, {$set: {"reqSubmitStatus":options.dataToSend.reqSubmitStatus}}).exec();
           return res.status(201).json({errorCode: 0,message: "Product request submitted successfully !!!", product:proResult});
         }
       });

@@ -360,75 +360,14 @@
                       $scope.lot = {};
                     } else {
                       $scope.isExpire = false;
-                      onAuctionSelection($scope.auctionReq.dbAuctionId);
-                      checkForLot($scope.auctionReq.lot_id);
-                      //assetfilter.isDeleted = false;
-                      /*if ($scope.assetMapCreationPossibility) {
-                        productSvc.getAssetMapData(assetfilter)
-                          .then(function(res) {
-                            console.log("lot data edit", res);
-                            if (res.asset && res.asset._id) {
-                              $scope.assetMapId = "";
-                              $scope.assetMapId = res.asset._id;
-                              $scope.assetMapCreation = false;
-                            }
-                            if (!isEmpty(res) && !res.message && res.lot && res.asset) {
-                              //console.log("LOT info",res[0]);
-                              $scope.lot = {};
-                              $scope.assetMapCreation = false;
-                              if (res.lot.hasOwnProperty('_id')) {
-                                $scope.lot.lot_id = res.lot._id;
-                                console.log($scope.lot.lot_id);
-                              }
-
-                              if (res.lot.hasOwnProperty('lastMintBid')) {
-                                $scope.lot.lastMintBid = res.lot.lastMintBid;
-                              }
-
-                              if (res.lot.hasOwnProperty('extendedTo')) {
-                                $scope.lot.extendedTo = res.lot.extendedTo;
-                              }
-
-                              if (res.lot.hasOwnProperty('startingPrice'))
-                                $scope.lot.startingPrice = Number(res.lot.startingPrice);
-                              if (res.lot.hasOwnProperty('reservePrice'))
-                                $scope.lot.reservePrice = Number(res.lot.reservePrice);
-                              if (res.lot.startDate && res.lot.endDate) {
-                                $scope.lot.startDate = moment(res.lot.startDate).format('MM/DD/YYYY hh:mm A');
-                                $scope.lot.endDate = moment(res.lot.endDate).format('MM/DD/YYYY hh:mm A');;
-                              }
-                              if (res.lot.hasOwnProperty('static_increment')) {
-                                $scope.lot.static_increment = res.lot.static_increment;
-                                $scope.lot.staticIncrement = true;
-                              }
-                              if (res.lot.hasOwnProperty('bidIncrement')) {
-                                $scope.lot.rangeIncrement = true;
-                                $scope.lot.bidInfo = [];
-                                var range = Object.keys(res.lot.bidIncrement);
-                                Object.keys(res.lot.bidIncrement).forEach(function(item, index) {
-                                  var arr = item.split('-');
-                                  $scope.lot.bidInfo[index] = {
-                                    bidFrom: arr[0],
-                                    bidTo: arr[1],
-                                    bidIncrement: res.lot.bidIncrement[item]
-                                  };
-                                });
-                              } else {
-                                $scope.lot.bidInfo = [{}];
-                              }
-                            } else {
-                              $scope.assetMapCreation = true;
-                              console.log("creation");
-                            }
-                            console.log("$scope.lot", $scope.lot);
-                          })
-                          .catch(function(err) {
-                            throw err;
-                          });
-                      } else {
-                        console.log("possible not");
-                        $scope.assetMapCreationPossibility = false;
-                      }*/
+                      if(product.auction.auction_id)
+                        onAuctionSelection(product.auction.auction_id);
+                      else  
+                        onAuctionSelection($scope.auctionReq.dbAuctionId);
+                      if(product.auction.lot_id)
+                        checkForLot(product.auction.lot_id);
+                      else
+                        checkForLot($scope.auctionReq.lot_id);
                     }
                   });
                 } else {
