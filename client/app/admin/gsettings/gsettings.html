@@ -3143,9 +3143,10 @@
 								</select>
 								</div>
 								
-								<div ng-if="!isEdit" class="col-sm-3 form-group ">
-									<button type="button" class="btn btn-default" ng-click="techspecVm.fieldInfo.push({})" ng-if="$last">Add More</button>
-									<button type="button" class="btn btn-default" ng-click="techspecVm.fieldInfo.splice($index,1)" ng-if="!$last">Delete</button>
+								<div ng-if="!isEdit" class="col-sm-2 form-group ">
+									<label class="invisible">Action</label>
+									<button type="button" class="btn btn-default btn-block" ng-click="techspecVm.fieldInfo.push({})" ng-if="$last">Add More</button>
+									<button type="button" class="btn btn-default btn-block" ng-click="techspecVm.fieldInfo.splice($index,1)" ng-if="!$last">Delete</button>
 								</div>
 								
 							</div>
@@ -3245,6 +3246,7 @@
 							<div class="row form-group">
 							
 								<div class="col-sm-2 pull-right">
+									<label class="invisible">Action</label>
 									<button type="button" class="btn btn-block btn-primary" ng-if="isFieldEdit" ng-click="techspecVm.fieldUpdate(techfieldform)">Update</button>
 									<button type="button" class="btn btn-block btn-primary" ng-if="!isFieldEdit && !isView" ng-click="techspecVm.fieldSave(techfieldform)">Save</button>
 									<button type="button" class="btn btn-block btn-primary" ng-if="isView" ng-click="techspecVm.closeView()">Exit View</button> 
@@ -3260,7 +3262,10 @@
 										<input ng-if="field.fieldType == 'text'" type="text" class="form-control" name="" ng-model="techspecVm.fields[$index]">
 									</div>
 									<div class="col-sm-2">
-										<input  type="checkbox" class="form-control" name="" ng-change="techspecVm.checkCount(techspec.checks[$index])" ng-model="techspecVm.checks[$index]">
+										<div class="checkbox">
+											<input  type="checkbox" name="" ng-change="techspecVm.checkCount(techspec.checks[$index])" ng-model="techspecVm.checks[$index]" id="{{field.fieldName}}">
+											<label for="{{field.fieldName}}">Select {{field.fieldName}}</label>
+										</div>
 									</div>
 								</div>
 							</div>
