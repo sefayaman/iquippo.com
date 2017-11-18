@@ -5,11 +5,11 @@
 	<div class="container">
 		<div class="heading-titles text-center">
 	      <h4>[  EQUIPMENT VALUATION MADE EASY  ]</h4>
-	      <p>
+	      <p ng-if="!isEnterpriseUser() &&!isEnterprise()">
 	      	In today’s competitive and unpredictable business world, it is essential for companies to have accurate, timely and cost-effective valuations of their machinery and equipment. At iQuippo, our experienced team of equipment valuation experts is dedicated to providing our clients with an objective &amp; supportable valuation conclusions, which are provided in timely, well-organized appraisal reports.
 	      </p>
 	    </div>
-	    <div class="row form-group">
+	    <div class="row form-group" ng-if="!isEnterpriseUser() &&!isEnterprise()">
 	    	<div class="col-sm-3 form-group">
 	    		<img src="http://placehold.it/100x70" alt="">
 	    		<h5><strong>FILL FORM</strong></h5>
@@ -139,30 +139,29 @@
 										<input type="text" name="contactPerson" class="form-control" placeholder="Contact Person"  ng-model="valuationQuote.product.contactPerson" ng-required="!valuationQuote.product.contactPersonAsAbove">
 									</div>							
 								</div>
-								<div class="col-xs-offset-1 col-xs-10 col-sm-3">
+								<!-- <div class="col-xs-offset-1 col-xs-10 col-sm-offset-0 col-sm-3">
 									<div class="checkbox checkbox-info floating-label-wrapper">
 				                        <input id="checkbox1" type="checkbox" ng-model="valuationQuote.product.contactPersonAsAbove" name="" ng-change="onChange('contactPerson')">
 				                        <label for="checkbox1">
 				                            same as above
 				                        </label>
 				                    </div>							
-								</div>
+								</div> -->
 								<div class="col-xs-12 col-sm-3">
 									<div class="form-group floating-label-wrapper" ng-class="{'has-error': form.contactNumber.$invalid && submitted }">
 										<label>Contact Number*</label>
 										<input type="text" name="contactNumber" class="form-control" ng-model="valuationQuote.product.contactNumber" placeholder="Contact Number" ng-required="!valuationQuote.product.contactNumberAsAbove">
 									</div>							
 								</div>
-								<div class="col-xs-offset-1 col-xs-10 col-sm-3">
+								<!-- <div class="col-xs-offset-1 col-xs-10 col-sm-offset-0 col-sm-3">
 									<div class="checkbox checkbox-info floating-label-wrapper">
 				                        <input id="checkbox2" type="checkbox"  ng-model="valuationQuote.product.contactNumberAsAbove" name="" ng-change="onChange('contactNumber')">
 				                        <label for="checkbox2">
 				                            same as above
 				                        </label>
 				                    </div>							
-								</div>						
+								</div> -->						
 							</div>
-							<hr>
 							<div class="row">
 								<div class="col-xs-12 col-sm-3">
 									<div class="form-group floating-label-wrapper">
@@ -234,7 +233,7 @@
 				            </div>
 							<div class="form-group floating-label-wrapper">
 								<label>Comment</label>
-								<textarea class="form-control" name="comment" ng-model="valuationQuote.comment" placeholder="Write Comments (if any)"></textarea>
+								<input type="text" class="form-control" name="comment" ng-model="valuationQuote.comment" placeholder="Write Comments (if any)">
 							</div>
 						</div>
 
@@ -249,7 +248,7 @@
 	</div>
 </section>
 
-<section class="category-block how-works vluation-details">
+<section class="category-block how-works vluation-details" ng-if="!isEnterpriseUser() &&!isEnterprise()">
  	<div class="container">
  		<div class="row">
  			<div class="col-sm-6">
@@ -294,14 +293,14 @@
 							<label>Request Type</label>
 						</div>
 						<div class="row form-group">
-							<div class="col-xs-6 col-sm-4">
-				              	<div class="radio radio-info" ng-if="isServiceAvailed('Valuation')">
+							<div class="col-xs-6 col-sm-4" ng-if="isServiceAvailed('Valuation')">
+				              	<div class="radio radio-info">
 			                        <input type="radio" name="requestType" id="requestValuationEnterprise" value="Valuation" ng-model="addTransactionVm.enterpriseValuation.requestType" ng-click="addTransactionVm.getPartners('Valuation')" >
 			                        <label for="requestValuationEnterprise"> Valuation </label>
 			                    </div>		               
 				            </div>
-				            <div class="col-xs-6 col-sm-4">
-				              	<div class="radio radio-info" ng-if="isServiceAvailed('Inspection')">
+				            <div class="col-xs-6 col-sm-4" ng-if="isServiceAvailed('Inspection')">
+				              	<div class="radio radio-info">
 			                        <input type="radio" id="requestInspectionEnterprise" name="requestType" value="Inspection" ng-click="addTransactionVm.getPartners('Inspection')" ng-model="addTransactionVm.enterpriseValuation.requestType">
 			                        <label for="requestInspectionEnterprise"> Inspection </label>
 			                    </div>
