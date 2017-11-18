@@ -94,6 +94,7 @@ function TechSpecMasterCtrl($scope,$rootScope,$state,uploadSvc,categorySvc,brand
       if (!noChange) {
         vm.dataModel.brand = {};
         vm.dataModel.model = {};
+        vm.dataModel.category = {};
         if (categoryId) {
           var ct = categorySvc.getCategoryOnId(categoryId);
           vm.dataModel.category.categoryId = ct._id;

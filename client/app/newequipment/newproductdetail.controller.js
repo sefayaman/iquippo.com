@@ -2,7 +2,7 @@
   'use strict';
   angular.module('sreizaoApp').controller('NewProductDetailCtrl', NewProductDetailCtrl);
 
-  function NewProductDetailCtrl($scope,AssetSaleSvc, AuctionSvc,OfferSvc, LocationSvc, AuctionMasterSvc, vendorSvc, NegotiationSvc, $stateParams, $rootScope, PaymentMasterSvc, $uibModal, $http, Auth, productSvc, notificationSvc, Modal, CartSvc, ProductTechInfoSvc, BuyContactSvc, userSvc, PriceTrendSvc, ValuationSvc, $state) {
+  function NewProductDetailCtrl($scope,AssetSaleSvc, AuctionSvc,OfferSvc, LocationSvc, TechSpecMasterSvc, AuctionMasterSvc, vendorSvc, NegotiationSvc, $stateParams, $rootScope, PaymentMasterSvc, $uibModal, $http, Auth, productSvc, notificationSvc, Modal, CartSvc, ProductTechInfoSvc, BuyContactSvc, userSvc, PriceTrendSvc, ValuationSvc, $state) {
     
     var vm = this;
     $scope.currentProduct = {};
@@ -182,8 +182,14 @@
 
           $rootScope.currentProduct = $scope.currentProduct;
 
-          console.log("$rootScope.currentProduct",$rootScope.currentProduct);
           
+            if($rootScope.currentProduct.model._id){
+                var filter = {};
+                filter['modelId'] = $rootScope.currentProduct.model._id;
+                TechSpecMasterSvc.getFieldData(filter).then(function(result){
+                  $scope.techSpecFields = result[0].fields;
+                });
+            }
          
         });
       }

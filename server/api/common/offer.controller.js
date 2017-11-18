@@ -29,7 +29,7 @@ var ApiError = require('../../components/_error');
         });
     };
     // Get list of all field data
-exports.getFilterData = function(req, res) {console.log("req==",req);
+exports.getFilterData = function(req, res) {
     var queryParam = req.query;
     var filter = {};
     if (queryParam.searchStr) {
