@@ -783,6 +783,7 @@ function updateProduct(req,res){
     if (err) { return handleError(res, err); }
     if(!product) { return res.status(404).send('Not Found'); }
     req.body.featured = false;
+    delete req.body.featured;
     if(req.body.featured){
       var imgPath = config.uploadPath + req.body.assetDir + "/" + req.body.primaryImg;
       var featureFilePath=config.uploadPath+"featured/"+req.body.primaryImg;
