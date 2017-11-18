@@ -27,7 +27,7 @@
             <!-- Wrapper for slides -->
             <div class="carousel-inner cont-slider">
               <div class="item" ng-repeat="thumbnailImage in currentProduct.images" ng-class="{'active':thumbnailImage.isPrimary && !thumbnailImage.catImgType}">
-                <img alt="" title="" ng-src="{{thumbnailImage.displaySrc}}" class="img-responsive" ng-click="productDetailVm.previewProduct(currentProduct.images, $index)">
+                <img alt="" title="" ng-src="{{thumbnailImage.displaySrc}}" class="img-responsive" ng-click="newproductDetailVm.previewProduct(currentProduct.images, $index)">
               </div>
             </div>            
           </div>
@@ -81,14 +81,8 @@
           </div>
         </div>
       </div>
-    <p>
-      The JCB JS370 sits in the middle of our range of heavy tracked excavators. Weighing in at around 36 ton, it’s engineered with exceptional strength, productivity, efficiency, comfort, safety and ease of maintenance.
-    </p>
-    <p>
-
-      A closed box section revolving frame increases strength and reduces stress. It also makes these tracked excavators highly resistant to impact damage. We’ve used strong parts too – premium industry standards in fact. Meanwhile, this tracked excavator’s engine is a highly efficient Isuzu  285hp (212kW) 6HK unit, compliant with Stage 3b and Tier 4i. The benefits of the JS370 series of tracked excavators don’t end there either.
-    </p>
-      <uib-tabset justified="true" class="information-tabs" ng-if="false">
+    
+<!--      <uib-tabset justified="true" class="information-tabs" ng-if="false">
         <uib-tab heading="STRENGTH">
           <p>
             We’ve designed JCB JS360 tracked excavators to be low maintenance and easily serviceable. Which makes them affordable, efficient and highly productive.
@@ -142,7 +136,7 @@
             Because they’re mounted side by side, the JS360 tracked excavator’s engine radiator, hydraulic cooler and intercooler can be serviced individually and cleaned easily.
           </p>
         </uib-tab>
-      </uib-tabset>
+      </uib-tabset>-->
 
       <div>
         <h4 class="form-group">
@@ -409,3 +403,120 @@
     </div>
   </section>
 </div>
+<script type="text/javascript">
+$(document).ready(function() {
+$('.collapse').on('shown.bs.collapse', function(){
+$(this).parent().find("i").removeClass("fa-plus").addClass("fa-minus");
+}).on('hidden.bs.collapse', function(){
+$(this).parent().find("i").removeClass("fa-minus").addClass("fa-plus");
+});
+});
+function goTo(dir){
+$('#article-photo').carousel(dir);
+}
+</script>
+<script type="text/ng-template" id="magnifier.html">
+<div id="magnifier-modal">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="close()" aria-hidden="true">&times;</button>
+  </div>
+  <div class="modal-body">
+    <div class="carousel slide article-slide" id="article-photo">
+      <!-- Wrapper for slides -->
+      <div class="carousel-inner cont-slider">
+        <div class="item" ng-repeat="thumbnailImage in images" ng-class="{'active':$index == idx}" >
+          <img alt="" title="" ng-src="{{thumbnailImage.displaySrc}}" class="img-responsive">
+        </div>
+      </div>
+      <!-- Indicators -->
+      <ol class="carousel-indicators">
+        <li class="" data-slide-to="{{$index}}" ng-class="{'active':$index == idx}" data-target="#article-photo" ng-repeat="thumbnailImage in images">
+          <img alt="" ng-src="{{uploadImagePrefix}}{{currentProduct.assetDir}}/{{thumbnailImage.src}}" class="img-responsive img-thumbnail">
+        </li>
+      </ol>
+      <!-- Controls -->
+      <a class="left carousel-control" href="javascript:goTo('prev');"  role="button" ng-non-bindable>
+        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+      </a>
+      <a class="right carousel-control" href="javascript:goTo('next');"  role="button" ng-non-bindable>
+        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+      </a>
+    </div>
+  </div>
+</div>
+</script>
+<!-- popup after click agree button -->
+<script type="text/ng-template" id="price_trend_survey.html">
+<div>
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="priceTrendSurveyVm.close()" aria-hidden="true">&times;</button>
+    <h4 class="modal-title">Leave your Comment</h4>
+  </div>
+  <div class="modal-body">
+    <form class="form-signin" name="surveyForm" novalidate>
+      <div class="row">
+        <div class="form-group col-sm-6" ng-class="{'has-error': surveyForm.fname.$invalid && submitted}">
+          <input type="text" class="form-control" name="fname" ng-model="priceTrendSurveyVm.priceTrendSurvey.user.fname" placeholder="First Name" required>
+        </div>
+        
+        <div class="form-group col-sm-6" ng-class="{'has-error': surveyForm.lname.$invalid && submitted}">
+          <input type="text" class="form-control" name="lname" ng-model="priceTrendSurveyVm.priceTrendSurvey.user.lname" placeholder="Last Name" required>
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="form-group col-sm-6" ng-class="{'has-error': surveyForm.mobile.$invalid && submitted}">
+          <div class="row">
+            <div class="col-sm-4 padd-right search-field">
+              <select class="form-control" ng-model="priceTrendSurveyVm.priceTrendSurvey.user.countryCode" ng-change="priceTrendSurveyVm.onCodeChange(priceTrendSurveyVm.priceTrendSurvey.user.countryCode)" required>
+                <option value="" disabled>*Code</option>
+                <option  ng-repeat ="country in allCountries | orderBy:'name'" value="{{country.countryCode}}">+{{country.countryCode}}</option>
+              </select>
+              <i class="caret"></i>
+            </div>
+            <div class="col-sm-8 padd-left">
+              <input type="text" class="form-control" name="mobile" placeholder="Mobile No." uib-tooltip="98-XXXX-XXXX" tooltip-trigger="focus" tooltip-placement="top" ng-model="priceTrendSurveyVm.priceTrendSurvey.user.mobile"  required>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 form-group">
+          <input type="email" class="form-control" name="email" placeholder="Email Address" ng-model="priceTrendSurveyVm.priceTrendSurvey.user.email" >
+          
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12 form-group" ng-class="{'has-error': surveyForm.comment.$invalid && agree == 'No' && submitted}">
+          <textarea class="form-control" name="comment" placeholder="Comments" ng-model="priceTrendSurveyVm.priceTrendSurvey.comment" ng-required="agree == 'No'"></textarea>
+        </div>
+      </div>
+      
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-md btn-default" ng-click="priceTrendSurveyVm.save(surveyForm)">Ok</button>
+    <button type="submit" class="btn btn-md btn-danger" ng-click="priceTrendSurveyVm.close()">Cancel</button>
+  </div>
+</div>
+</script>
+<!-- end poup -->
+<!-- user detail popup -->
+<script type="text/ng-template" id="price_trend_survey_detail.html">
+<div>
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="close()" aria-hidden="true">&times;</button>
+    <h4 class="modal-title">User Details</h4>
+  </div>
+  <div class="modal-body">
+    <div class="row text-center">
+      <div class="col-sm-12" ng-repeat="survey in surveys">
+        <p class="text-ellips"><strong>{{survey.user.fname}} {{survey.user.lname}}</strong></p>
+        <p class="text-ellips">{{survey.comment}}</p>
+        <hr>
+      </div>
+    </div>
+  </div>
+</div>
+</script>
+<!-- end -->

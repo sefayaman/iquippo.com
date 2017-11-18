@@ -15,6 +15,7 @@
     //$scope.negotiate = negotiate;
     $scope.states = [];
     vm.getOffer = getOffer;
+    vm.previewProduct = previewProduct;
     $scope.changeFinancer = changeFinancer;
     $scope.changeQuantityMinus = changeQuantityMinus;
     $scope.changeQuantityPlus = changeQuantityPlus;
@@ -47,7 +48,7 @@
     //$scope.leaseinfo = [];
     $scope.leaser = [];
     $scope.lnumber = [];
-     $scope.lnumber[0] =1;
+    $scope.lnumber[0] =1;
     $scope.ltenure = [];
     $scope.lAmount = [];
 
@@ -64,7 +65,7 @@
     function changeFinancer(index){
       console.log("index===",index);
       $scope.financer[10]='12345';
-       $scope.number[index]=5;
+      $scope.number[index]=5;
     }
     function changeQuantityPlus(index,data){
       var newQuantity = $scope.fnumber[index] + 1;
@@ -190,7 +191,12 @@
                   $scope.techSpecFields = result[0].fields;
                 });
             }
-         
+            if ($scope.currentProduct.images.length > 0) {
+               $scope.currentProduct.images.forEach(function(img, index, arr) {
+                 img.displaySrc = $rootScope.uploadImagePrefix + $scope.currentProduct.assetDir + "/" + img.src;
+               });
+
+             }
         });
       }
       //var data = {};
@@ -201,6 +207,23 @@
     
     init();
     
+    
+    function previewProduct(currentProductImages, idx) {
+      var prevScope = $rootScope.$new();
+      prevScope.images = currentProductImages;
+      prevScope.idx = idx;
+      var prvProductModal = $uibModal.open({
+        templateUrl: "magnifier.html",
+        scope: prevScope,
+        windowTopClass: 'product-gallery',
+        size: 'lg'
+      });
+
+      prevScope.close = function() {
+        prvProductModal.close();
+      };
+
+    }
     
     function getLocation(){
        var filter = {};
