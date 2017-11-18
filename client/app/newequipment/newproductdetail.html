@@ -55,13 +55,17 @@
           <div class="row text-center form-group download-brochure">            
             
             <div class="col-xs-4">
-              <a href="javascript:void(0);">
+              <a href="javascript:void(0);" disabled>
                 <img src="/assets/images/icon-book-demo.png" alt="">
                 BOOK A DEMO
               </a>
             </div>
-            <div class="col-xs-4">
-              <a href="javascript:void(0);">
+            <div class="col-xs-4" ng-if="currentProduct._id">
+              <a href="{{uploadImagePrefix}}{{currentProduct.assetDir}}/{{getDocByName(currentProduct.miscDocuments,'Brochure')}}" ng-if="getDocByName(currentProduct.miscDocuments,'Brochure')" target="_blank">
+                <img src="/assets/images/icon-download.png" alt="">
+                DOWNLOAD BROCHURE
+              </a>
+              <a href="javascript:void(0)" ng-if="!getDocByName(currentProduct.miscDocuments,'Brochure')">
                 <img src="/assets/images/icon-download.png" alt="">
                 DOWNLOAD BROCHURE
               </a>
@@ -82,25 +86,25 @@
         </div>
       </div>
     
-      <uib-tabset justified="true" class="information-tabs" ng-if="false">
+      <uib-tabset justified="true" class="information-tabs">
         <uib-tab heading="TECHNICAL INFORMATION">
           <div class="row">
-            <div class="col-xs-6 col-sm-4 col-md-3 form-group">
-              <label>{{}}</label>
-              <h4>{{}}</h4>
+            <div class="col-xs-6 col-sm-4 col-md-3 form-group" ng-repeat="field in techSpecFields">
+              <label>{{field.name}}</label>
+              <h4>{{field.value}}</h4>
             </div>
           </div>
         </uib-tab>
         <uib-tab heading="EQUIPMENT VIDEO">
           <div class="row">
-            <div class="col-xs-6 col-sm-4 col-md-3 form-group">
-              <iframe src="{{}}" width="100%" height="200" frameborder="0" allowfullscreen></iframe>
+            <div class="col-xs-6 col-sm-4 col-md-3 form-group" ng-repeat="link in videoLinks" ng-if="link">
+              <iframe ng-src="{{link}}" width="100%" height="200" frameborder="0" allowfullscreen></iframe>
             </div>
           </div>
         </uib-tab>
       </uib-tabset>
 
-      <div>
+      <div ng-if="false">
         <h4 class="form-group">
             <strong>ALL AVAILABLE OFFERS</strong> <br>
             <small>You can choose multiple offers and submit your querry</small>

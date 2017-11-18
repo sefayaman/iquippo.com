@@ -50,11 +50,11 @@ exports.getFieldData = function(req, res) {
   }
 
   if (queryParam.categoryId)
-    filter['category.categoryId'] = queryParam.categoryId;
+    filter['category.categoryId'] = queryParam.categoryId + "";
   if (queryParam.brandId)
-    filter['brand.brandId'] = queryParam.brandId;
+    filter['brand.brandId'] = queryParam.brandId + "";
   if (queryParam.modelId)
-    filter['model.modelId'] = queryParam.modelId;
+    filter['model.modelId'] = queryParam.modelId + "";
   
   if (queryParam.pagination) {
     Utility.paginatedResult(req, res, TechSpecValMaster, filter, {});
@@ -65,6 +65,7 @@ exports.getFieldData = function(req, res) {
   
   query.exec(function(err, result) {
     if (err) {
+      console.log("######",err);
       return handleError(res, err);
     }
     return res.status(200).json(result);

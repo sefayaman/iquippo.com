@@ -78,7 +78,7 @@
     $scope.makePrimary = makePrimary;
     $scope.deleteImg = deleteImg;
     $scope.previewProduct = previewProduct;
-    $scope.openCropModal = openCropModal;
+    //$scope.openCropModal = openCropModal;
     $scope.rotate = rotate;
     $scope.playVideo = playVideo;
     $scope.firstStep = firstStep;
@@ -1492,7 +1492,7 @@
         })
     }
 
-    function openCropModal(idx) {
+    /*function openCropModal(idx) {
 
       if ($scope.images[idx].waterMarked)
         return;
@@ -1511,7 +1511,7 @@
         $scope.timestamp = new Date().getTime();
       })
 
-    };
+    };*/
 
     function playVideo(idx) {
       var videoScope = $rootScope.$new();

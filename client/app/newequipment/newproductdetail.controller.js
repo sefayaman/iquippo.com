@@ -2,7 +2,7 @@
   'use strict';
   angular.module('sreizaoApp').controller('NewProductDetailCtrl', NewProductDetailCtrl);
 
-  function NewProductDetailCtrl($scope,AssetSaleSvc, AuctionSvc,OfferSvc, LocationSvc, TechSpecMasterSvc, AuctionMasterSvc, vendorSvc, NegotiationSvc, $stateParams, $rootScope, PaymentMasterSvc, $uibModal, $http, Auth, productSvc, notificationSvc, Modal, CartSvc, ProductTechInfoSvc, BuyContactSvc, userSvc, PriceTrendSvc, ValuationSvc, $state) {
+  function NewProductDetailCtrl($scope,AssetSaleSvc, AuctionSvc,OfferSvc, LocationSvc, TechSpecMasterSvc, AuctionMasterSvc, vendorSvc, NegotiationSvc, $stateParams, $rootScope, PaymentMasterSvc, $uibModal, $http, Auth, productSvc, notificationSvc, Modal, CartSvc, ProductTechInfoSvc, BuyContactSvc, userSvc, PriceTrendSvc, ValuationSvc, $state,$sce) {
     
     var vm = this;
     $scope.currentProduct = {};
@@ -24,6 +24,7 @@
     $scope.changeTenure = changeTenure;
     $scope.lchangeTenure = lchangeTenure;
     $scope.proceed = proceed;
+    $scope.getDocByName = getDocByName;
     
     
     ///for financer
@@ -62,6 +63,20 @@
     $scope.lTotalDownAndProcessing = [];
     $scope.lTotalDownAmount = [];
     $scope.lRate = [];
+
+    function getDocByName(docs,type){
+       var docName = "";
+      if(!docs || !docs.length || !type)
+        return docName;
+      for(var i=0;i< docs.length;i++){
+        if(docs[i].type == type && docs[i].name){
+          docName = docs[i].name;
+          break;
+        }
+      }
+      return docName;
+    }
+
     function changeFinancer(index){
       console.log("index===",index);
       $scope.financer[10]='12345';
@@ -182,11 +197,18 @@
           }
 
           $rootScope.currentProduct = $scope.currentProduct;
-
-          
+          if($scope.currentProduct.videoLinks && $scope.currentProduct.videoLinks.length){
+            $scope.videoLinks = [];
+            $scope.currentProduct.videoLinks.forEach(function(item){
+              $scope.videoLinks[$scope.videoLinks.length] =  $sce.trustAsResourceUrl("https://www.youtube.com/embed/" + youtube_parser(item.uri));//$sce.trustAsResourceUrl(item.uri);
+            });
+          }
             if($rootScope.currentProduct.model._id){
                 var filter = {};
                 filter['modelId'] = $rootScope.currentProduct.model._id;
+                filter['brandId'] = $rootScope.currentProduct.brand._id;
+                filter['categoryId'] = $rootScope.currentProduct.category._id;
+
                 TechSpecMasterSvc.getFieldData(filter).then(function(result){
                   //$scope.techSpecFields = result[0].fields;
                   $scope.techSpecFields = result[0].fields.filter(function(item, idx) {
@@ -195,6 +217,7 @@
                     else
                       return false;
                   });
+                  console.log("#####",$scope.techSpecFields);
                 });
             }
             if ($scope.currentProduct.images.length > 0) {
@@ -261,6 +284,7 @@
       .catch(function(res){
       });
     }
+
     function getOffer(){
       var filter = {};
       filter.status = true;console.log("hi offer");
