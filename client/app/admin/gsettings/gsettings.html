@@ -3218,7 +3218,7 @@
 							
 								<div class="col-sm-3" ng-class="{'has-error':techspecVm.categoryId.$invalid && submitted}">
 									<label>Select Category</label>
-									<select ng-disabled="isView || isFieldEdit" class="form-control form-group" name="category" ng-model="techspecVm.dataModel.categoryId" ng-change="techspecVm.onCategoryChange(techspecVm.dataModel.categoryId)" required> 
+									<select ng-disabled="isView || isFieldEdit" class="form-control form-group" name="categoryId" ng-model="techspecVm.container.categoryId" ng-change="techspecVm.onCategoryChange(techspecVm.container.categoryId)" required> 
 										<option value=""> Select Category </option> 
 										<option value="{{category._id}}" ng-repeat="category in allCategory">{{category.name}}</option>
 									</select>
@@ -3226,7 +3226,7 @@
 
 								<div class="col-sm-3" ng-class="{'has-error':techspecVm.brandId.$invalid && submitted}">
 									<label>Select Brand</label>
-									<select ng-disabled="isView || isFieldEdit" class="form-control form-group" name="brand" ng-model="techspecVm.dataModel.brandId" ng-change="techspecVm.onBrandChange(techspecVm.dataModel.brandId)" required> 
+									<select ng-disabled="isView || isFieldEdit" class="form-control form-group" name="brandId" ng-model="techspecVm.container.brandId" ng-change="techspecVm.onBrandChange(techspecVm.container.brandId)" required> 
 										<option value=""> Select Brand </option> 
 										<option value="{{brand._id}}" ng-repeat="brand in brandList| orderBy:'name'">{{brand.name}}</option>
 									</select>
@@ -3235,7 +3235,7 @@
 
 								<div class="col-sm-3" ng-class="{'has-error':techspecVm.modelId.$invalid && submitted}">
 									<label>Select Model</label>
-									<select ng-disabled="isView || isFieldEdit" class="form-control form-group" name="model" ng-model="techspecVm.dataModel.modelId" ng-change="techspecVm.onModelChange(techspecVm.dataModel.modelId)"required > 
+									<select ng-disabled="isView || isFieldEdit" class="form-control form-group" name="modelId" ng-model="techspecVm.container.modelId" ng-change="techspecVm.onModelChange(techspecVm.container.modelId)"required > 
 										<option value=""> Select Model </option> 
 										<option value="{{model._id}}" ng-repeat="model in modelList| orderBy:'name'">{{model.name}}</option>
 									</select>
@@ -3256,8 +3256,7 @@
 										<label>{{field.fieldName}}:</label>
 									</div>
 									<div class="col-sm-4">
-										<input ng-if="field.fieldType == 'file'" type="file" name=""  id="{{$index}}" accept="image/*" params="['files','$index']" on-file-select-tech="techspecVm.uploadTechFile"ng-model="techspecVm.fields[$index]">
-										<!--<input type="file"  id="{{field._id}}" accept="image/*" params="['files','$index']" on-file-select-tech="techspecVm.uploadImage1" ng-model="techspecVm.fields[$index]">-->
+										<input ng-if="field.fieldType == 'file'" type="file" name=""  id="{{$index}}" accept="image/*" params="['files','$index']" on-file-select-tech="techspecVm.uploadTechFile" ng-model="techspecVm.fields[$index]">
 										<input ng-if="field.fieldType == 'text'" type="text" class="form-control" name="" ng-model="techspecVm.fields[$index]">
 									</div>
 									<div class="col-sm-2">
@@ -3265,7 +3264,7 @@
 									</div>
 								</div>
 							</div>
-							<div ng-if="isFieldEdit" class="row">
+							<!-- <div ng-if="isFieldEdit" class="row">
 							<div class="col-sm-12 form-group" ng-repeat="field in techspecVm.viewFieldList">
 								<div class="col-sm-4">
 									<label>{{field.fieldName}}:</label>
@@ -3273,7 +3272,6 @@
 								<div class="col-sm-4">
 									<input ng-if="field.fieldType == 'file'" type="file" name=""  id="{{$index}}" accept="image/*" params="['files','$index']" on-file-select-tech="techspecVm.uploadTechFile"ng-model="techspecVm.fields[$index]">
 									<span ng-if="field.fieldType == 'file'"> {{techspecVm.fields[$index]}}</span>
-									<!--<input type="file"  id="{{field._id}}" accept="image/*" params="['files','$index']" on-file-select-tech="techspecVm.uploadImage1" ng-model="techspecVm.fields[$index]">-->
 									<input ng-if="field.fieldType == 'text'" type="text" class="form-control" value="{{techspecVm.listFieldData[field._id].fieldValue}}" name="" ng-model="techspecVm.fields[$index]">
 								</div>
 								<div class="col-sm-2">
@@ -3281,7 +3279,7 @@
 									<input ng-if="!techspecVm.checks[$index]"  type="checkbox" class="form-control" name="" ng-change="techspecVm.checkCount(techspec.checks[$index])" ng-model="techspecVm.checks[$index]">
 								</div>
 							</div>
-						</div>
+						</div> -->
 						</form>
 						<!--view data -->
 						<div class="row" ng-if="isView">
@@ -3296,9 +3294,9 @@
 											</tr>
 										</thead>
 										<tbody>
-											<tr ng-repeat="field in techspecVm.viewFieldList">
+											<tr ng-repeat="field in techspecVm.fieldList">
 												<td>{{field.fieldName}}</td>
-												<td>{{techspecVm.listFieldData[field._id].fieldValue}}</td>
+												<td>{{techspecVm.listFieldData[field._id].value}}</td>
 												<!--<td>
 												    <a href="javascript:void(0);" class="btn btn-primary btn-sm" uib-popover="Edit" popover-trigger="mouseenter" ng-click="techspecVm.editClicked(fielddata)">
 														<i class="fa fa-pencil"></i>
@@ -3325,12 +3323,12 @@
 											</tr>
 										</thead>
 										<tbody>
-											<tr ng-repeat="fielddata in techspecVm.listFieldData ">
-												<td>{{fielddata.categoryName}}</td>
-												<td>{{fielddata.brandName}}</td>
-												<td>{{fielddata.mName}}</td>
+											<tr ng-repeat="fielddata in techspecVm.listFieldDataShow">
+												<td>{{fielddata.category.name}}</td>
+												<td>{{fielddata.brand.name}}</td>
+												<td>{{fielddata.model.name}}</td>
 												<td>
-												<a href="javascript:void(0);" class="btn btn-primary " uib-popover="View" popover-trigger="mouseenter" ng-click="techspecVm.viewClicked(fielddata.categoryId,fielddata.brandId,fielddata.modelId)">
+												<a href="javascript:void(0);" class="btn btn-primary " uib-popover="View" popover-trigger="mouseenter" ng-click="techspecVm.viewClicked(fielddata)">
 													View Data	
 												</a>
 												<a href="javascript:void(0);" class="btn btn-primary btn-sm" uib-popover="Edit" popover-trigger="mouseenter" ng-click="techspecVm.fieldEditClicked(fielddata)">
