@@ -82,61 +82,23 @@
         </div>
       </div>
     
-<!--      <uib-tabset justified="true" class="information-tabs" ng-if="false">
-        <uib-tab heading="STRENGTH">
-          <p>
-            We’ve designed JCB JS360 tracked excavators to be low maintenance and easily serviceable. Which makes them affordable, efficient and highly productive.
-          </p>
-
-          <p>
-            Hoods open and close easily with gas-assisted cylinders, and the service bays are large and wide for good access. 1000-hour boom and dipper greasing intervals and a 5000-hour oil life provide maximum uptime on these 360 excavators. Grease points are centralized on JS360 tracked excavators too, for safe and easy access to high level pivots. Likewise filters (engine oil, hydraulic oil and fuel).
-          </p>
-
-          <p>
-            Because they’re mounted side by side, the JS360 tracked excavator’s engine radiator, hydraulic cooler and intercooler can be serviced individually and cleaned easily.
-          </p>
+      <uib-tabset justified="true" class="information-tabs" ng-if="false">
+        <uib-tab heading="TECHNICAL INFORMATION">
+          <div class="row">
+            <div class="col-xs-6 col-sm-4 col-md-3 form-group">
+              <label>{{}}</label>
+              <h4>{{}}</h4>
+            </div>
+          </div>
         </uib-tab>
-        <uib-tab heading="PRODUCTIVITY">
-          <p>
-            We’ve designed JCB JS360 tracked excavators to be low maintenance and easily serviceable. Which makes them affordable, efficient and highly productive.
-          </p>
-
-          <p>
-            Hoods open and close easily with gas-assisted cylinders, and the service bays are large and wide for good access. 1000-hour boom and dipper greasing intervals and a 5000-hour oil life provide maximum uptime on these 360 excavators. Grease points are centralized on JS360 tracked excavators too, for safe and easy access to high level pivots. Likewise filters (engine oil, hydraulic oil and fuel).
-          </p>
-
-          <p>
-            Because they’re mounted side by side, the JS360 tracked excavator’s engine radiator, hydraulic cooler and intercooler can be serviced individually and cleaned easily.
-          </p>
+        <uib-tab heading="EQUIPMENT VIDEO">
+          <div class="row">
+            <div class="col-xs-6 col-sm-4 col-md-3 form-group">
+              <iframe src="{{}}" width="100%" height="200" frameborder="0" allowfullscreen></iframe>
+            </div>
+          </div>
         </uib-tab>
-        <uib-tab heading="OPERATOR COMFORT & SAFETY">
-          <p>
-            We’ve designed JCB JS360 tracked excavators to be low maintenance and easily serviceable. Which makes them affordable, efficient and highly productive.
-          </p>
-
-          <p>
-            Hoods open and close easily with gas-assisted cylinders, and the service bays are large and wide for good access. 1000-hour boom and dipper greasing intervals and a 5000-hour oil life provide maximum uptime on these 360 excavators. Grease points are centralized on JS360 tracked excavators too, for safe and easy access to high level pivots. Likewise filters (engine oil, hydraulic oil and fuel).
-          </p>
-
-          <p>
-            Because they’re mounted side by side, the JS360 tracked excavator’s engine radiator, hydraulic cooler and intercooler can be serviced individually and cleaned easily.
-          </p>
-        
-        </uib-tab>
-        <uib-tab heading="SERVICEABILITY">
-          <p>
-            We’ve designed JCB JS360 tracked excavators to be low maintenance and easily serviceable. Which makes them affordable, efficient and highly productive.
-          </p>
-
-          <p>
-            Hoods open and close easily with gas-assisted cylinders, and the service bays are large and wide for good access. 1000-hour boom and dipper greasing intervals and a 5000-hour oil life provide maximum uptime on these 360 excavators. Grease points are centralized on JS360 tracked excavators too, for safe and easy access to high level pivots. Likewise filters (engine oil, hydraulic oil and fuel).
-          </p>
-
-          <p>
-            Because they’re mounted side by side, the JS360 tracked excavator’s engine radiator, hydraulic cooler and intercooler can be serviced individually and cleaned easily.
-          </p>
-        </uib-tab>
-      </uib-tabset>-->
+      </uib-tabset>
 
       <div>
         <h4 class="form-group">
@@ -145,7 +107,7 @@
         </h4>
         
             <div class="form-group"></div>
-            <uib-accordion close-others="oneAtATime" ng-repeat="offerdata in offer"class="view-offer">
+            <uib-accordion close-others="oneAtATime" ng-repeat="offerdata in offer" class="view-offer">
               <uib-accordion-group is-open="status.cash">
                 <uib-accordion-heading>
                   CASH OFFERS (2 Available)

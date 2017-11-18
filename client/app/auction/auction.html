@@ -52,9 +52,7 @@
               <strong ng-if="auction.auctionType === 'live'">Live Auction</strong>
             </p>
             <p><i class="fa fa-clock-o"></i> <strong class="text-success"><timer end-time="auction.endTimer">{{days}} days, {{hours}} hours, {{minutes}} minutes, {{seconds}} seconds.</timer></strong></p>
-            <p><a href="{{uploadImagePrefix}}{{auctionDir}}/{{auction.docName}}" ng-if="auction.docType && auction.docType == 'tc'"><i class="fa fa-file-text-o"></i> <strong class="text-info">Download Catalog</strong></a>
-            <a href="{{uploadImagePrefix}}{{auctionDir}}/{{auction.docName}}" ng-if="!auction.docType&&auction.docName"><i class="fa fa-file-text-o"></i> <strong class="text-info">Download Catalog</strong></a>
-            </p>
+            <p><a href="{{uploadImagePrefix}}{{auctionDir}}/{{auction.docName}}" ng-if="auction.docType == 'tc'"><i class="fa fa-file-text-o"></i> <strong class="text-info">Download Catalog</strong></a></p>
             
             <div class="auctions-register-buttons">
               <div class="row">
@@ -108,9 +106,7 @@
               <i class="fa fa-gavel"></i> <strong ng-if="auction.auctionType === 'online'">Online</strong>
             <strong ng-if="auction.auctionType === 'live'">Live Auction</strong></p>
             <p><i class="fa fa-clock-o"></i> <strong>{{auction.startTimer | date :'hh:mma'}} to {{auction.endTimer | date :'hh:mma'}}</strong></p>
-             <p><a href="{{uploadImagePrefix}}{{auctionDir}}/{{auction.docName}}" ng-if="auction.docType && auction.docType == 'tc'"><i class="fa fa-file-text-o"></i> <strong class="text-info">Download Catalog</strong></a>
-            <a href="{{uploadImagePrefix}}{{auctionDir}}/{{auction.docName}}" ng-if="!auction.docType&&auction.docName"><i class="fa fa-file-text-o"></i> <strong class="text-info">Download Catalog</strong></a>
-            </p>
+            <p><a href="{{uploadImagePrefix}}{{auctionDir}}/{{auction.docName}}" ng-if="auction.docType == 'tc'"><i class="fa fa-file-text-o"></i> <strong class="text-info">Download Catalog</strong></a></p>
 
             <div class="auctions-register-buttons">
               <div class="row">
@@ -132,7 +128,7 @@
 </div>
 <div  ng-if="auctionType === 'closed'">
   <div class="container form-group">
-    <h4><strong>Closed</strong></h4>
+    <h4><strong>CLOSED</strong></h4>
     <legend></legend>
     <div class="row">
       <div class="col-sm-6 col-md-6 form-group" ng-repeat="auction in auctionDateVm.auctionListing" ng-if="auction.auctionValue == 'closedAuctions'">
