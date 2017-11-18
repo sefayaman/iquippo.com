@@ -115,10 +115,10 @@
           </div>
           <div class="col-sm-3 col-md-3 form-group">
             <a href="{{uploadImagePrefix}}{{auctionDir}}/{{auctionData.docName}}" class="text-info" ng-if="auctionData.docType == 'tc'" target="_blank">
-              <img src="/assets/images/icon-catalog.png" alt="" height="20"> Download Catalogue
+              <img src="/assets/images/icon-catalog.png" alt="" height="20"> Auction Catalogue
             </a>
              <a href="{{uploadImagePrefix}}{{auctionDir}}/{{auctionData.docName}}" class="text-info" ng-if="!auctionData.docType&&auctionData.docName" target="_blank">
-              <img src="/assets/images/icon-catalog.png" alt="" height="20"> Download Catalogue
+              <img src="/assets/images/icon-catalog.png" alt="" height="20"> Auction Catalogue
             </a>
           </div>
         </div>
@@ -127,11 +127,11 @@
             <div class="media text-center form-group">
               <a href="/used/{{auctionProduct.product.category}}/{{auctionProduct.product.brand}}/{{auctionProduct.product.assetId}}" ng-if="auctionProduct.product._id">
                  <img src="http://placehold.it/300x200" class="img-responsive" ng-if="!auctionProduct.product.primaryImg">              
-                 <img src="{{uploadImagePrefix}}{{auctionProduct.product.assetDir}}/{{auctionProduct.product.primaryImg}} class="img-responsive" ng-if="auctionProduct.product.primaryImg">              
+                 <img src="{{uploadImagePrefix}}{{auctionProduct.product.assetDir}}/{{auctionProduct.product.primaryImg}}" class="img-responsive" ng-if="auctionProduct.product.primaryImg">              
               </a> 
                <a href="javascript:void(0)" ng-if="!auctionProduct.product._id">
                  <img src="http://placehold.it/300x200" class="img-responsive" ng-if="!auctionProduct.product.primaryImg">              
-                 <img src="{{uploadImagePrefix}}{{auctionProduct.product.assetDir}}/{{auctionProduct.product.primaryImg}} class="img-responsive" ng-if="auctionProduct.product.primaryImg">              
+                 <img src="{{uploadImagePrefix}}{{auctionProduct.product.assetDir}}/{{auctionProduct.product.primaryImg}}" class="img-responsive" ng-if="auctionProduct.product.primaryImg">              
               </a>          
               <div class="media-body text-left"> 
                 <div class="row">

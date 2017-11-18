@@ -131,37 +131,37 @@
           </div>
           <div class="row text-center" ng-if="currentProduct._id">
             <div class="col-xs-4">
-              <h1>
+              <h4>
               <a href="{{uploadImagePrefix}}{{currentProduct.assetDir}}/{{productDetailVm.getMiscDoc(currentProduct.miscDocuments,'Rcupload')}}" ng-if="productDetailVm.getMiscDoc(currentProduct.miscDocuments,'Rcupload')" target="_blank">
-                <i class="fa fa-file-text-o fa-2x"></i>
+                <img src="/assets/images/icon-registration-certificate.png" alt="">
               </a>
               <a href="javascript:void(0)" ng-if="!productDetailVm.getMiscDoc(currentProduct.miscDocuments,'Rcupload')" target="_blank">
-                <i class="fa fa-file-text-o fa-2x"></i>
+                <img src="/assets/images/icon-registration-certificate.png" alt="">
               </a>
-              </h1>
+              </h4>
               Registration Certificate
             </div>
             <div class="col-xs-4">
-              <h1>
+              <h4>
               <a href="{{uploadImagePrefix}}{{currentProduct.assetDir}}/{{productDetailVm.getMiscDoc(currentProduct.miscDocuments,'Invoice')}}" ng-if="productDetailVm.getMiscDoc(currentProduct.miscDocuments,'Invoice')" target="_blank">
-                <i class="fa fa-file-text-o fa-2x"></i>
+                <img src="/assets/images/icon-orig-invoice.png" alt="">
               </a>
               <a href="javascript:void(0)" ng-if="!productDetailVm.getMiscDoc(currentProduct.miscDocuments,'Invoice')" target="_blank">
-                <i class="fa fa-file-text-o fa-2x"></i>
+                <img src="/assets/images/icon-orig-invoice.png" alt="">
               </a>
-              </h1>
+              </h4>
               Original Invoice
             </div>
             <div class="col-xs-4">
-              <h1>
+              <h4>
                <a href="{{uploadImagePrefix}}{{currentProduct.assetDir}}/{{productDetailVm.getMiscDoc(currentProduct.miscDocuments,'Taxchallan')}}" ng-if="productDetailVm.getMiscDoc(currentProduct.miscDocuments,'Taxchallan')" target="_blank">
-                <i class="fa fa-file-text-o fa-2x"></i>
+                <img src="/assets/images/icon-tax-recipts.png" alt="">
               </a>
               <a href="javascript:void(0)" ng-if="!productDetailVm.getMiscDoc(currentProduct.miscDocuments,'Taxchallan')" target="_blank">
-                <i class="fa fa-file-text-o fa-2x"></i>
+                <img src="/assets/images/icon-tax-recipts.png" alt="">
               </a>
-              </h1>
-              Tax Recipts
+              </h4>
+              Tax Receipts
             </div>
           </div>
         </div>
@@ -213,50 +213,20 @@
             <div>
               <form novalidate name="">
                 <div class="row">
-                  <div class="col-xs-6 col-sm-4">
-                    <div class="form-group">
-                      Name
-                    </div>
+                  <div class="col-xs-6 col-sm-4 col-md-3">
+                    <label>Name</label>
+                    <h4>{{currentProduct.seller.fname + ' ' + currentProduct.seller.mname + ' ' + currentProduct.seller.lname}}</h4>
                   </div>
-                  <div class="col-xs-6 col-sm-4">
-                    <div class="form-group">
-                      {{currentProduct.seller.fname + ' ' + currentProduct.seller.mname + ' ' + currentProduct.seller.lname}}
-                    </div>
+                  <div class="col-xs-6 col-sm-4 col-md-3" ng-if="currentProduct.dispSellerContact == 'true' ">
+                    <label>Contact Number</label>
+                    <h4>{{currentProduct.seller.mobile}}</h4>
+                  </div>
+                  <div class="col-xs-6 col-sm-4 col-md-3" ng-if="currentProduct.dispSellerAlternateContact == 'true'">
+                    <label>Alternate Contact Number</label>
+                    <h4>{{currentProduct.alternateMobile}}</h4>
                   </div>
                 </div>
-              </form>
-              <div class="row" ng-if="currentProduct.dispSellerContact == 'true' ">
-                <form novalidate name="">
-                  <div class="col-xs-6 col-sm-4">
-                    <div class="form-group" >
-                      Contact Number
-                    </div>
-                  </div>
-                  <div class="col-xs-6 col-sm-4">
-                    <div class="form-group">
-                      {{currentProduct.seller.mobile}}
-                    </div>
-                  </div>
-                  
-                </form>
-              </div>
-              <div class="row" ng-if="currentProduct.dispSellerAlternateContact == 'true' ">
-                <form novalidate name="">
-                  <div class="col-xs-6 col-sm-4">
-                    <div class="form-group" >
-                      Contact Number
-                    </div>
-                  </div>
-                  <div class="col-xs-6 col-sm-4">
-                    <div class="form-group">
-                      {{currentProduct.alternateMobile}}
-                    </div>
-                  </div>
-                  
-                </form>
-              </div>
-              
-              
+              </form>              
             </div>
           </div>
         </div>
@@ -316,14 +286,6 @@
             <div class="col-xs-6 col-sm-4 col-md-3 form-group" ng-if="currentProduct.productCondition">
               <label>Product Condition</label>
               <h4>{{currentProduct.productCondition}}</h4>
-            </div>
-            <div class="col-xs-6 col-sm-4 col-md-3 form-group" ng-if="currentProduct.documentName">
-              <label>Documents</label>
-              <h4>
-              <span ng-repeat="miscDoc in currentProduct.miscDocuments" class="document-space">
-                <a href="{{uploadImagePrefix}}{{currentProduct.assetDir}}/{{currentProduct.documentName}}" class="" target="_blank" uib-popover="{{miscDoc.type}}" popover-trigger="mouseenter" ><span><i class="fa fa-file-pdf-o"></i></span></a>
-              </span>
-              </h4>
             </div>
             <div class="col-xs-12 form-group" ng-if="currentProduct.comment">
               <label>Comments</label>
@@ -409,25 +371,25 @@
         </uib-tab>
         <uib-tab heading="Service information" ng-if="!productDetailVm.checkServiceInfo(currentProduct.serviceInfo)">
           <div class="row">
-            <div class="col-xs-6 col-sm-4 col-md-3">
+            <div class="col-xs-6 col-sm-4 col-md-3 form-group">
               <div ng-repeat="serviceInfo in currentProduct.serviceInfo">
                 <label>Service Date</label>
                 <h4>{{serviceInfo.servicedate}}</h4>
               </div>
             </div>
-            <div class="col-xs-6 col-sm-4 col-md-3">
+            <div class="col-xs-6 col-sm-4 col-md-3 form-group">
               <div ng-repeat="serviceInfo in currentProduct.serviceInfo">
                 <label>Operating hrs(km/m.hrs)</label>
                 <h4>{{serviceInfo.operatingHour}}</h4>
               </div>
             </div>
-            <div class="col-xs-6 col-sm-4 col-md-3">
+            <div class="col-xs-6 col-sm-4 col-md-3 form-group">
               <div ng-repeat="serviceInfo in currentProduct.serviceInfo">
                 <label>Service At</label>
                 <h4>{{serviceInfo.serviceAt}}</h4>
               </div>
             </div>
-            <div class="col-xs-6 col-sm-4 col-md-3">
+            <div class="col-xs-6 col-sm-4 col-md-3 form-group">
               <div ng-repeat="serviceInfo in currentProduct.serviceInfo">
                 <label>Authorized Service Station</label>
                 <h4>{{serviceInfo.authServiceStation}}</h4>

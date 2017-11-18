@@ -1078,9 +1078,10 @@ align-items: center; justify-content: center;
    color: #fff;
 }
 #search-result_wrapper .media{background-color:#fff;}
+#search-result_wrapper .media{background-color:#fff;}
 #search-result_wrapper .media .media-body{padding:10px ;}
 #search-result_wrapper .media .media-body h3{font-size: 18px;}
-#search-result_wrapper .media a img.img-responsive{height: 200px; width: 100%;}
+#search-result_wrapper .media a img{height: 200px; width: 100%;}
 #search-result_wrapper .media .table{margin: 0;}
 #search-result_wrapper .media .table small{font-size: 1rem;}
 #search-result_wrapper .media .table > tbody > tr > td{padding: 5px;}
@@ -1422,6 +1423,7 @@ footer .subscribe{height: 40px;}
 .floating-label-wrapper label{margin: 0; font-size: 13px; text-transform: uppercase; color: #333 !important;}
 .floating-label-wrapper input:-webkit-autofill, .floating-label-wrapper input{background: transparent;}
 .floating-label-wrapper .input-group .input-group-addon{border:0; background: transparent;}
+.floating-label-wrapper .input-group.quantity input{text-align: center;}
 .form-control{border-radius:0;box-shadow:none;width:100%;}
 .floating-label-wrapper .form-control{border: 0; border-bottom: 1px solid #ccc; padding: 0; box-shadow: none;}
 .form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control{background: transparent;}

@@ -14,7 +14,7 @@
   <div class="container padd-left padd-right">
     <div class="heading-titles text-center form-group">
       <h4>[ FOR BULK ORDERS ]</h4>
-      <p>Need large quantities of equipments with amazing quality and attractive prices? iQuippo has the solution for you. </p>
+      <p><strong>Need large quantities of equipments with amazing quality and attractive prices? iQuippo has the solution for you.</strong> </p>
     </div>
 
     <div class="information-tabs">
@@ -125,8 +125,8 @@
               
               <div class="floating-label-wrapper" ng-class="{'has-error':form.name.quantity_{{$index}} && submitted}">
                 <label>Quantity</label>              
-                <div class="input-group ">
-                   <a href="javascript:void(0);" class="input-group-addon" ng-click="bulkOrderVm.setQuantity(order,'dec')"><i class="fa fa-minus"></i></a>
+                <div class="input-group quantity">
+                  <a href="javascript:void(0);" class="input-group-addon" ng-click="bulkOrderVm.setQuantity(order,'dec')"><i class="fa fa-minus"></i></a>
                   <input type="number" class="form-control" name="quantity_{{$index}}" ng-model="order.quantity" placeholder="1" min="1" disabled>
                   <a href="javascript:void(0);" ng-click="bulkOrderVm.setQuantity(order,'inc')" class="input-group-addon"><i class="fa fa-plus"></i></a>
                 </div>
