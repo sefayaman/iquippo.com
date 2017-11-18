@@ -188,7 +188,13 @@
                 var filter = {};
                 filter['modelId'] = $rootScope.currentProduct.model._id;
                 TechSpecMasterSvc.getFieldData(filter).then(function(result){
-                  $scope.techSpecFields = result[0].fields;
+                  //$scope.techSpecFields = result[0].fields;
+                  $scope.techSpecFields = result[0].fields.filter(function(item, idx) {
+                    if (item && (item.isFront))
+                      return true;
+                    else
+                      return false;
+                  });
                 });
             }
             if ($scope.currentProduct.images.length > 0) {
