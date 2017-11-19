@@ -19,6 +19,7 @@ var Brand = require('./../brand/brand.model');
 var Model = require('./../model/model.model');
 var CityModel = require('../common/location.model');
 var AssetSaleModel = require('./../assetsale/assetsalebid.model');
+var TechSpecValMaster = require('./../techspec/techspecvalmaster.model.js');
 
 var PaymentTransaction = require('./../payment/payment.model');
 var PaymentMaster = require('../common/paymentmaster.model');
@@ -634,6 +635,40 @@ exports.validateUpdate = function(req,res,next){
 }
 
 //pre creation process
+
+exports.getTechSpec = function(req,res,next){
+  var queryParam = req.body;
+  if(queryParam.productCondition === "used")
+    return next();
+  
+  var filter = {};
+  if (queryParam.category._id)
+    filter['category.categoryId'] = queryParam.category._id;
+  if (queryParam.brand._id)
+    filter['brand.brandId'] = queryParam.brand._id;
+  if (queryParam.model._id)
+    filter['model.modelId'] = queryParam.model._id;
+
+  var query = TechSpecValMaster.find(filter);
+  
+  query.exec(function(err, result) {
+    if (err)
+      return res.status(500).send(err);
+    req.body.techSpec = [];    
+    if(result.length === 1){
+      result[0].fields.forEach(function(item){
+        if(item && item.isFront && req.body.techSpec.length < 3) {
+          var dataObj = {};
+          dataObj.name = item.name;
+          dataObj.value = item.value;
+          req.body.techSpec[req.body.techSpec.length] = dataObj;
+        }
+      });
+      return next();
+    }
+    return next();
+  });
+}
 
 exports.calculatePrice = function(req,res,next){
   if(req.body.tradeType === 'RENT')

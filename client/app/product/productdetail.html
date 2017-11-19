@@ -208,8 +208,12 @@
       </div>
       <div ng-if="isLoggedIn()">
         <div class="information-tabs" ng-if="currentProduct.dispSellerInfo == 'yes'">
+          <ul class="nav nav-tabs">
+              <li class="active">
+                <a href="javascript:void(0);">Contact Seller</a>
+              </li>
+          </ul>
           <div class="tab-content">
-            <h4>Contact Seller</h4>
             <div>
               <form novalidate name="">
                 <div class="row">
@@ -511,7 +515,7 @@
             </div>
             <div class="floating-label-wrapper form-group">
               <label>Comments</label>
-              <textarea class="form-control" name="message" ng-model="reqFinance.message" placeholder="Enter Comments"></textarea>
+              <input type="text" class="form-control" name="message" ng-model="reqFinance.message" placeholder="Enter Comments">
             </div>
             <button type="submit"  ng-if="currentProduct.assetStatus == 'listed'" ng-disabled="currentProduct.tradeType == 'NOT_AVAILABLE'" ng-click="productDetailVm.requestForFinance(financeReq)" class="btn btn-primary pull-right">Submit</button>
           </form>
@@ -639,7 +643,7 @@
             </div>
             <div class="form-group floating-label-wrapper">
               <label>Comments</label>
-              <textarea class="form-control" placeholder="Enter Comments" ng-model="productQuote.certifiedByIQuippoQuote.comment"></textarea>
+              <input type="text" class="form-control" placeholder="Enter Comments" ng-model="productQuote.certifiedByIQuippoQuote.comment">
             </div>
             <button type="submit" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE'" class="btn btn-primary pull-right" ng-click="productDetailVm.addProductQuote(reqForCertify)">Submit</button>
             <small><strong>Note:</strong> Inspection Charges - <i class="fa fa-inr"></i> 3,000</small>
