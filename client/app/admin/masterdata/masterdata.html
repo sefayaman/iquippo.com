@@ -132,7 +132,7 @@
 
 				    	  <div class="row">
 				    	  	<div class="form-group col-sm-3" ng-class="{'has-error': form.errorGroup && submitted}">
-                                 <select class="form-control" ng-model="c.group" name="groupList" ng-options="group.name for group in allGroup track by group._id" required  ng-disabled="categoryEdit">
+                                 <select class="form-control" ng-model="c.group" name="groupList" ng-options="group.name for group in allGroup track by group._id" required>
 	                                <option value="" disabled>Select Group</option>
 					             </select> 
                             </div>
@@ -235,12 +235,12 @@
                                     <legend></legend>
 	                          <div class="row">
 	                         	<div class="form-group col-sm-3" ng-class="{'has-error': form.errorGroup && submitted}">
-	                                <select class="form-control" ng-model="b.group" ng-change="masterDataVm.onGroupChange(b.group)" ng-options="group.name for group in allGroup track by group._id" name="groupList" required ng-disabled="brandEdit">
+	                                <select class="form-control" ng-model="b.group" ng-change="masterDataVm.onGroupChange(b.group)" ng-options="group.name for group in allGroup track by group._id" name="groupList" required>
 		                            <option value="" disabled>Select Group</option>
 					                </select> 
 	                            </div> 
 	                            <div class="form-group col-sm-3" ng-class="{'has-error': form.errorCategory && submitted}">
-	                                <select class="form-control" ng-model="b.category" name="categoryList" ng-options="category.name for category in categoryList track by category._id" required ng-disabled="brandEdit">
+	                                <select class="form-control" ng-model="b.category" name="categoryList" ng-options="category.name for category in categoryList track by category._id" required>
                                             <option value="" disabled>Select Category</option>
                                             <option ng-repeat="category in categoryList" ng-selected="b.category._id == category._id" value="{{category._id}}">{{category.name}}</option>
                                         </select> 
@@ -372,12 +372,12 @@
 					    		<legend></legend>
                               <div class="row">
                               	<div class="form-group col-sm-3" ng-class="{'has-error': form.errorGroup && submitted}">
-	                                <select class="form-control" ng-model="m.group" ng-change="masterDataVm.onGroupChange(m.group)" name="groupList" ng-options="group.name for group in allGroup track by group._id" required ng-disabled="modelEdit">
+	                                <select class="form-control" ng-model="m.group" ng-change="masterDataVm.onGroupChange(m.group)" name="groupList" ng-options="group.name for group in allGroup track by group._id" required>
 		                            	<option value="" disabled>Select Group</option>
 					                </select> 
 	                            </div>
                               	<div class="form-group col-sm-3" ng-class="{'has-error': form.errorCategory && submitted}">
-	                                <select class="form-control" ng-model="m.category" ng-change="masterDataVm.onCategoryChange(m.category)" name="categoryList" ng-options="category.name for category in categoryList track by category._id" required ng-disabled="modelEdit">
+	                                <select class="form-control" ng-model="m.category" ng-change="masterDataVm.onCategoryChange(m.category)" name="categoryList" ng-options="category.name for category in categoryList track by category._id" required>
 		                                <option value="" disabled>Select Category</option>
 					                </select>
 	                            </div>                             	
@@ -391,7 +391,7 @@
 					    	  		</div>
 					    	  	</div>
 					    	  	<div class="form-group col-sm-3" ng-class="{'has-error': form.errorBrand && submitted}">
-                                    <select class="form-control" ng-model="m.brand" name="brandList" ng-options="brand.name for brand in brandList track by brand._id" required ng-disabled="modelEdit">
+                                    <select class="form-control" ng-model="m.brand" name="brandList" ng-options="brand.name for brand in brandList track by brand._id" required>
                                         <option value= "" disabled>Select Brand</option>           
                                     </select>
                                 </div>
