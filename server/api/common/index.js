@@ -19,6 +19,7 @@ var apiCtrl = require('./api.controller');
 var bulkUploadCtrl = require('./uploadrequest/uploadrequest.controller');
 var valuationCancellationCtrl = require('./valuationcancellationfee.controller');
 var inputFormCtrl = require('./inputformmaster.controller');
+var bookADemoCtrl = require('./bookademo.controller');
 var json2xls = require('json2xls');
 var router = express.Router();
 
@@ -166,5 +167,8 @@ router.get('/offer/get',auth.hasRole('admin'), offerCtrl.get);
 router.put('/offer/:id', auth.hasRole('admin'),offerCtrl.update);
 router.delete('/offer/:id',auth.hasRole('admin'), offerCtrl.destroy);
 router.get('/offer/getfilterdata', offerCtrl.getFilterData);
+
+router.post('/bookademo',bookADemoCtrl.create);
+router.get('/bookademo', bookADemoCtrl.get);
 
 module.exports = router;

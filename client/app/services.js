@@ -246,6 +246,24 @@
             throw err;
         });
     };
+    commonSvc.saveBookADemo = function(data){
+      return $http.post(path + "/bookademo",data)
+        .then(function(res){
+            return res.data;
+        })
+        .catch(function(err){
+            throw err;
+        });
+    }
+    commonSvc.getBookADemo = function(filter){
+      return $http.get(path + "/bookademo")
+        .then(function(res){
+            return res.data;
+        })
+        .catch(function(err){
+            throw err;
+        });
+    }
     return commonSvc;
 }])
 .factory("InvitationSvc",['$http','$q','$rootScope',function($http,$q,$rootScope){

@@ -2,7 +2,7 @@
   'use strict';
   angular.module('sreizaoApp').controller('NewProductDetailCtrl', NewProductDetailCtrl);
 
-  function NewProductDetailCtrl($scope,AssetSaleSvc, AuctionSvc,OfferSvc, LocationSvc, TechSpecMasterSvc, AuctionMasterSvc, vendorSvc, NegotiationSvc, $stateParams, $rootScope, PaymentMasterSvc, $uibModal, $http, Auth, productSvc, notificationSvc, Modal, CartSvc, ProductTechInfoSvc, BuyContactSvc, userSvc, PriceTrendSvc, ValuationSvc, $state,$sce) {
+  function NewProductDetailCtrl($scope,AssetSaleSvc, AuctionSvc,OfferSvc, LocationSvc, TechSpecMasterSvc, AuctionMasterSvc, vendorSvc, NegotiationSvc, $stateParams, $rootScope, PaymentMasterSvc, $uibModal, $http, Auth, productSvc, notificationSvc, Modal, CartSvc, ProductTechInfoSvc, BuyContactSvc, userSvc, PriceTrendSvc, ValuationSvc, $state,$sce,commonSvc) {
     
     var vm = this;
     $scope.currentProduct = {};
@@ -24,6 +24,7 @@
     $scope.changeTenure = changeTenure;
     $scope.lchangeTenure = lchangeTenure;
     $scope.proceed = proceed;
+    $scope.startBookADemo = startBookADemo;
     $scope.getDocByName = getDocByName;
     
     
@@ -327,6 +328,65 @@
 
       }
     }
+
+    function onCountryChange(scope,country){
+            scope.dataModel.state = "";
+            scope.dataModel.city = "";
+            scope.cityList = [];
+            scope.stateList = [];
+            var filter = {};
+            filter.country = country;
+            if(!country)
+                return;
+            LocationSvc.getStateHelp(filter).then(function(result) {
+                scope.stateList = result;
+            });
+            scope.dataModel.countryCode = LocationSvc.getCountryCode(country);
+      }
+
+      function onStateChange(scope,state){
+            scope.dataModel.city = "";
+            var filter = {};
+            scope.cityList = [];
+            filter.stateName = state;
+            if(!state)
+                return;
+            LocationSvc.getLocationOnFilter(filter).then(function(result) {
+                scope.cityList = result;
+            });
+      }
+
+    function startBookADemo(){
+      var bookADemoScope = $rootScope.$new();
+      bookADemoScope.onCountryChange = onCountryChange;
+      bookADemoScope.onStateChange = onStateChange;
+      bookADemoScope.dataModel = {};
+      var bookADemoModal = $uibModal.open({
+        templateUrl: "app/newequipment/bookademo.html",
+        scope: bookADemoScope,
+        size: 'lg'
+      });
+
+      bookADemoScope.close = function() {
+        bookADemoModal.close();
+      };
+
+      bookADemoScope.saveDemo = function(form){
+        if(form.$invalid){
+          bookADemoScope.submitted = true;
+          return;
+        }
+        commonSvc.saveBookADemo(bookADemoScope.dataModel)
+        .then(function(res){
+          bookADemoScope.close();
+          Modal.alert("Your request for demo submmitted successfully.");
+        })
+        .catch(function(err){
+          Modal.alert("Unable to submit your request.Please try later.");
+        })
+      }
+    }
+
     loadUserDetail();
     
   }

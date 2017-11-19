@@ -1,0 +1,34 @@
+'use strict';
+var seqGenerator = require('../../components/seqgenerator');
+var mongoose = require('mongoose'),
+    Schema = mongoose.Schema;
+
+
+var BookADemoSchema = new Schema({
+  demoId:String,
+  fname: String,
+  lname: String,
+  phone:String,
+  mobile:String,
+  email:String,
+  country:String,
+  countryCode:String,
+  state: String,
+  city: String,
+  createdAt: {type:Date,default:Date.now},
+  updatedAt: {type:Date,default:Date.now}
+  
+});
+
+BookADemoSchema.pre('save',function(next){
+  var self = this;
+  var prefix = 'DR';
+  var sequence = seqGenerator.sequence();
+  sequence.next(function(seqnum){
+    self.groupId = prefix + seqnum;
+    return next();
+  },'BookADemo',"100002");
+
+});
+
+module.exports = mongoose.model('BookADemo', BookADemoSchema);
