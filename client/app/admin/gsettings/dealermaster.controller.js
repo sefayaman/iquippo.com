@@ -47,10 +47,19 @@ function DealerMasterCtrl($scope,$rootScope,$state,categorySvc,vendorSvc, modelS
     }
   
     function loadAllBrand() {
-        brandSvc.getAllBrand()
+        filter = {};
+        filter.isForNew = true;
+        brandSvc.getBrandOnFilter(filter)
         .then(function(result) {
-            vm.brandList = result;
-        });
+          vm.brandList = result;
+        })
+        .catch(function(res) {
+          console.log("error in fetching brand", res);
+        })
+        // brandSvc.getAllBrand()
+        // .then(function(result) {
+        //     vm.brandList = result;
+        // });
     }
     
 

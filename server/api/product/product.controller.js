@@ -1157,6 +1157,8 @@ exports.exportProducts = function(req, res) {
   var filter = {};
   //filter["status"] = true;
   filter["deleted"] = false;
+  if(req.body.productCondition)
+    filter.productCondition = req.body.productCondition;
   if (req.body.userid && req.body.role !== 'admin') {
     if (req.body.role == "channelpartner") {
       var usersArr = [req.body.userid];

@@ -384,8 +384,8 @@
           uploadSvc.upload(args.files[0], $scope.assetDir, resizeParam).then(function(result) {
             $rootScope.loading = false;
             $scope.assetDir = result.data.assetDir;
-            if (!$scope.product.assetId)
-              $scope.product.assetId = $scope.assetDir;
+            // if (!$scope.product.assetId)
+            //   $scope.product.assetId = $scope.assetDir;
             if (args.id) {
               //console.log(args);
               switch (args.id) {
@@ -1250,7 +1250,7 @@
       stObj.status = assetStatuses[0].code;
       stObj.createdAt = new Date();
       $scope.product.assetStatuses[$scope.product.assetStatuses.length] = stObj;
-      $scope.product.assetId = $scope.assetDir;
+      //$scope.product.assetId = $scope.assetDir;
 
       $rootScope.loading = true;
       productSvc.addProduct(product).then(function(result) {
@@ -1328,8 +1328,8 @@
         }
       }
 
-      if (!$scope.product.assetId)
-        $scope.product.assetId = $scope.assetDir;
+      // if (!$scope.product.assetId)
+      //   $scope.product.assetId = $scope.assetDir;
       $rootScope.loading = true;
       productSvc.updateProduct(product).then(function(result) {
         $rootScope.loading = false;
