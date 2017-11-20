@@ -30,12 +30,12 @@
                 <img alt="" title="" ng-src="{{thumbnailImage.displaySrc}}" class="img-responsive" ng-click="newproductDetailVm.previewProduct(currentProduct.images, $index)">
               </div>
             </div>            
-          </div>
           <ol class="carousel-indicators">
             <li class="" data-slide-to="{{$index}}" ng-class="{'active':thumbnailImage.isPrimary && !thumbnailImage.catImgType}" data-target="#article-photo-carousel" ng-repeat="thumbnailImage in currentProduct.images | limitTo:5">
                 <img alt="" ng-src="{{uploadImagePrefix}}{{currentProduct.assetDir}}/{{thumbnailImage.src}}" class="img-responsive img-thumbnail" ng-click = "imageClick()">
             </li>
           </ol>
+          </div>
         </div>
         <div class="col-sm-5 form-group">
           <div class="currentproduct-info">

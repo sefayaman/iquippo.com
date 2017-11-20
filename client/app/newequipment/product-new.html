@@ -179,9 +179,9 @@
                       </div>
                     </div>
                     <div class="row">
-                      <div class="form-group col-sm-5">Manufacturing Year<span class="text-warning">*</span></div>
-                      <div class="form-group col-xs-9 col-sm-6" ng-class="{'has-error': form.mfgyear.$invalid && submitted}">
-                        <input type="text" name="mfgyear" ng-value="container.mfgYear" ng-model="container.mfgYear" class="form-control" placeholder="yyyy" uib-datepicker-popup="{{format}}" datepicker-options="{{datepickerOptions}}" is-open="container.opened" max-date="maxDate" min-date="minDate" date-disabled="disabled(date, mode)" close-text="Close" required disabled ngMinlength="4" ngMaxlength="4"/>
+                      <div class="form-group col-sm-5">Manufacturing Year</div>
+                      <div class="form-group col-xs-9 col-sm-6">
+                        <input type="text" name="mfgyear" ng-value="container.mfgYear" ng-model="container.mfgYear" class="form-control" placeholder="yyyy" uib-datepicker-popup="{{format}}" datepicker-options="{{datepickerOptions}}" is-open="container.opened" date-disabled="disabled(date, mode)" close-text="Close" disabled/>
                       </div>
                       <div class="form-group col-xs-3 col-sm-1 text-center padd">
                         <a href class="form-control btn btn-default" ng-click="open($event, 'mfgYear')">
@@ -190,7 +190,7 @@
                       </div>
                     </div>                    
                     <div class="row" ng-if="product.tradeType != 'RENT'">
-                      <div class="form-group col-sm-5">Sale Price (Excl. Tax).<span class="text-warning">*</span></div>
+                      <div class="form-group col-sm-5">Sale Price (Excl. Tax)</div>
                       <div class="form-group col-sm-4">
                         <div class="input-group">
                           <span class="input-group-addon">

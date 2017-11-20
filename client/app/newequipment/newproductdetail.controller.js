@@ -212,13 +212,15 @@
 
                 TechSpecMasterSvc.getFieldData(filter).then(function(result){
                   //$scope.techSpecFields = result[0].fields;
+                  if(!result || !result.length || !result[0].fields || !result[0].fields.length)
+                    return;
                   $scope.techSpecFields = result[0].fields.filter(function(item, idx) {
                     if (item && (item.isFront))
                       return true;
                     else
                       return false;
                   });
-                  console.log("#####",$scope.techSpecFields);
+                  //console.log("#####",$scope.techSpecFields);
                 });
             }
             if ($scope.currentProduct.images.length > 0) {
