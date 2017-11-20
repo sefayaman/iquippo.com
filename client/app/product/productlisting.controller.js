@@ -280,7 +280,7 @@ function ProductListingCtrl($scope, $location, $rootScope, $http, productSvc, cl
         var dataToSend ={};
         dataToSend["userid"] = Auth.getCurrentUser()._id;
         dataToSend["role"] = Auth.getCurrentUser().role;
-        
+        dataToSend['productCondition'] = "used";
         productSvc.exportProduct(dataToSend)
         .then(function(buffData){
           saveAs(new Blob([s2ab(buffData)],{type:"application/octet-stream"}), "productlist_"+ new Date().getTime() +".xlsx")
