@@ -429,15 +429,18 @@ function TechSpecMasterCtrl($scope,$rootScope,$state,uploadSvc,categorySvc,brand
         return;
       }
       vm.dataModel.fields = [];
-      if(vm.fields){
-        for(var k in  vm.fields) {
-          var createData = {};
-          createData.fieldId = vm.fieldList[k]._id;
-          createData.name = vm.fieldList[k].fieldName;
-          createData.type = vm.fieldList[k].fieldType;
-          createData.value = vm.fields[k];
-          createData.isFront = vm.checks[k] || false;
-          vm.dataModel.fields[vm.dataModel.fields.length] = createData;
+      //angular.copy(filterData.fields, vm.fieldsArr);
+      if(vm.fieldsArr){
+        for(var k in  vm.fieldsArr) {
+          if( k < vm.fieldList.length) {
+            var createData = {};
+            createData.fieldId = vm.fieldList[k]._id;
+            createData.name = vm.fieldList[k].fieldName;
+            createData.type = vm.fieldList[k].fieldType;
+            createData.value = vm.fields[k];
+            createData.isFront = vm.checks[k] || false;
+            vm.dataModel.fields[vm.dataModel.fields.length] = createData;
+          }
         }
       }
       vm.dataModel.fields = vm.dataModel.fields.filter(function(item, idx) {

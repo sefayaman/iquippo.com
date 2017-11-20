@@ -31,7 +31,6 @@
         vm.dataModel.category = {};
         vm.dataModel.brand = {};
         vm.dataModel.model = {};
-        vm.container = {};
 
         $scope.purchase = false; 
         $scope.finance = false;
@@ -144,8 +143,8 @@
         } else {
           vm.dataModel.category = {};
         }
-        vm.container.selectedBrandId = "";
-        vm.container.selectedModelId = "";
+        $scope.container.selectedBrandId = "";
+        $scope.container.selectedModelId = "";
       }
 
       $scope.brandList = [];
@@ -181,7 +180,7 @@
         } else {
           vm.dataModel.brand = {};
         }
-        vm.container.selectedModelId = "";
+        $scope.container.selectedModelId = "";
       }
 
       $scope.modelList = [];

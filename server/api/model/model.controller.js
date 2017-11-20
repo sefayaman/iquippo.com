@@ -54,6 +54,10 @@ exports.getModelOnFilter = function(req,res){
   var data = req.body;
  var tempFilter = {};
   var filter = {};
+  if(data.isForUsed)
+      filter['isForUsed'] = true;
+  if(data.isForNew)
+      filter['isForNew'] = true;
   filter['$or'] = [{name:'Other'}];
   if(data.modelId)
     tempFilter['_id'] = data.modelId;
