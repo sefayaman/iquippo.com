@@ -463,7 +463,8 @@
                 }
               })
               .then(function(result) {
-                console.log(result);
+                if(!result || !result.length)
+                  return;
                 vm.auctionName = result[0].name;
                 vm.auctionId = result[0].auctionId;
               })
