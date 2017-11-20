@@ -25,19 +25,19 @@ angular.module('sreizaoApp').controller('BrandListingCtrl',BrandListingCtrl);
         return sortedBrand;
 
       var brandCache = {};
-      //var brLength = brandList.length;
       for(var i = 0;i < brandList.length;i++){
-        if(brandList[i].imgSrc && !brandCache[brandList[i]._id]){
+        if(brandList[i].imgSrc && !brandCache[brandList[i].name]){
           sortedBrand.push(brandList[i]);
-          brandCache[brandList[i]._id] = 1;
+          brandCache[brandList[i].name] = 1;
           //brandList.splice(0,i);
         }
       }
 
       brandList.forEach(function(item){
-        if(!brandCache[item._id])
+        if(!brandCache[item.name]){
           sortedBrand.push(item);
-        brandCache[item._id] = 1;
+          brandCache[item.name] = 1;
+        }
       });
 
       return sortedBrand;

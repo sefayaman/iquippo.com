@@ -17,7 +17,7 @@
       <p>Improve productivity and efficiency with equipment you can rely on. With our extensive inventory of new, used, and rental equipment, we can deliver the right solution to meet your unique needs. Check out our latest promotions and find equipment, parts, and power systems that will help you and your customers reach new levels of success.</p>
     </div>
     <div class="row">      
-      <div class="col-sm-6 col-md-4 form-group" ng-repeat="category in categoryListingVm.allCategoryList" ng-if="$index < categoryListingVm.showedItems">
+      <div class="col-sm-6 col-md-4 form-group" ng-repeat="category in categoryListingVm.allCategoryList" ng-if="$index < categoryListingVm.showedItems && category.name !== 'Other'">
         <div class="media text-center">
           <a href="/used/{{category.group.name}}/{{category.name}}" class="media-picture">
              <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{category.imgSrc}}" ng-if="category.imgSrc">

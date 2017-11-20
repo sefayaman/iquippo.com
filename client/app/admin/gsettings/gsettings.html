@@ -2984,7 +2984,7 @@
 				<div class="col-sm-3" ng-class="{'has-error':dealerForm.brand.$invalid && submitted}">
 					<select class="form-control" name="brand" ng-model="dealerVm.dataModel.brand.data" required>
 						<option value="">Select Brand</option>
-						<option ng-repeat="brand in dealerVm.brandList" value="{{brand._id}}">{{brand.name}}</option>
+						<option ng-repeat="brand in dealerVm.brandList | unique: 'name'" value="{{brand._id}}">{{brand.name}}</option>
 					</select>
 				</div>
 				<div class="col-sm-3" ng-class="{'has-error':dealerForm.dealer.$invalid && submitted}">
@@ -3366,7 +3366,7 @@
                <label> Brand</label>
                <select class="form-control" name="brand" ng-model="newBannerVm.dataModel.brand.name">
                    <option value="">Select Brand</option>
-                   <option ng-repeat="brand in newBannerVm.brandList" value="{{brand.name}}">{{brand.name}}</option>
+                   <option ng-repeat="brand in newBannerVm.brandList | unique: 'name'" value="{{brand.name}}">{{brand.name}}</option>
                </select>
            </div>
            <div class="col-sm-3">
