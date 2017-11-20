@@ -9,8 +9,11 @@ var ModelSchema = new Schema({
   group:{},
   category:{},
   brand:{},
+  isForNew:{type:Boolean,default:false},
+  isForUsed:{type:Boolean,default:false},
   createdAt:Date,
-  updatedAt:Date
+  updatedAt:Date,
+  useFor:String
 });
 
 module.exports = mongoose.model('Model', ModelSchema);

@@ -26,7 +26,7 @@ module.exports = {
 	'Motor_Operating_Hours': 'motorOperatingHour',
 	'Mileage': 'mileage',
 	'Machine_Serial_No': 'serialNo',
-	'Product_Condition': 'productCondition',
+	//'Product_Condition': 'productCondition',
 	//technical information column start
 	'Gross_Weight': 'grossWeight',
 	'Operating_Weight': 'operatingWeight',

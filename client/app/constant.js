@@ -19,10 +19,6 @@ var Modals = {
     tplUrl:"app/quote/quote.html",
     Ctrl:'QuoteRequestCtrl'
   },
-  getquote:{
-    tplUrl:"app/product/getquote.html",
-    Ctrl:'ProductQuoteCtrl'
-  },
   forgotpassword:{
     tplUrl:"app/account/forgotpassword/forgotpassword.html",
     Ctrl:'ForgotPasswordCtrl as forgetPassVm'
@@ -337,18 +333,18 @@ var StatusChangeConfirmationMsg = {
 }
 
 var tradeType = [
-{
+/*{
   "name" : "Rent",
   "code" : "RENT"
-},
+},*/
 {
   "name" : "Sell",
   "code" : "SELL"
-},
+}/*,
 {
   "name" : "Both",
   "code" : "BOTH"
-}
+}*/
 ];
 
 var rateMyEquipmentOpt = [
@@ -502,7 +498,7 @@ var informationMessage = {};
 informationMessage['unknownError'] = "There is some issue.Please contact our support team.";
 
 /*callback message*/
-informationMessage['callbackSuccess'] = "Your request has been successfully received. We will contact you soon. Thank you.";
+informationMessage['callbackSuccess'] = "We have received your Call Back request. One of our executives will contact you soon. Thank you.";
 
 /*quote request message*/
 informationMessage['quoteSuccess'] = "Your quote request successfully submitted.";

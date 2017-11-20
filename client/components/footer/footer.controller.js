@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('sreizaoApp')
-  .controller('FooterCtrl', function ($scope, $http, $location, Auth,Modal, notificationSvc, subscribeSvc,MarketingSvc) {
+  .controller('FooterCtrl', function ($scope, $rootScope, $http, $location, $uibModal, Auth,Modal, notificationSvc, subscribeSvc,MarketingSvc) {
     $scope.menu = [{
       'title': 'Home',
       'link': '/'
@@ -11,6 +11,7 @@ angular.module('sreizaoApp')
     $scope.isLoggedIn = Auth.isLoggedIn;
     $scope.isAdmin = Auth.isAdmin;
     $scope.getCurrentUser = Auth.getCurrentUser;
+    $scope.openPrintMedia = openPrintMedia;
     $scope.contact = {};
     $scope.subscribe ={};
     var path = '/api/common';
@@ -20,6 +21,18 @@ angular.module('sreizaoApp')
       $location.path('/login');
     };
 
+     function openPrintMedia(imageName) {
+      var prMediaScope = $rootScope.$new();
+      prMediaScope.url = $rootScope.uploadImagePrefix + $rootScope.newsEventsDir  + "/" + imageName;
+      var printMediaModal = $uibModal.open({
+          templateUrl: "printmedia.html",
+          scope: prMediaScope
+      });
+
+      prMediaScope.close = function(){
+        printMediaModal.close();
+      }
+    }
     $scope.isActive = function(route) {
       return route === $location.path();
     };

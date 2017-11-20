@@ -1,67 +1,95 @@
-<div class="foot" ng-controller="FooterCtrl">
-  <div class="container">
-    <div class="row">
-            <div class="col-xs-5 col-sm-2 col-md-2">
-              
+<div ng-controller="FooterCtrl">
+ <section class="category-block">
+  <div class="foot">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-3">
+          <div class="footer-logos">
+            <ul class="form-group">
+              <li><a href="javascript:void(0);"><img src="/assets/images/srei-logo-img.png"></a></li>
+              <!-- <li><a href="javascript:void(0);"><img src="/assets/images/iquippo-market.png"></a></li> -->
+            </ul>
+            <div class="copy">© 2017 iQuippo, All Rights Reserved.</div>
+          </div>
+        </div>        
+        <div class="col-sm-9">
+          <div class="row">
+            <div class="col-xs-4 col-sm-4 col-md-4 form-group">
+              <h4>About Us</h4>
               <ul class="nav">
-                <li><a href="/aboutus">About Us</a></li>
-                <!-- <li><a href="javascript:;">Quick Links</a></li>                -->
-                <!-- <li><a href="/termscondition">Terms &amp; Conditions</a></li> -->
-                <li><a href="/privacy">Privacy Policy</a></li>
-                <!-- <li><a href="javascript:;">My account</a></li>  -->               
-
+                <li><a href="/aboutus">About Us</a></li>  
               </ul>
             </div>
-            
-            <div class="col-xs-7 col-sm-3 col-md-3">
-                <!-- JK commented  -->
-              <!--
-              <h5>Available Android App on</h5>
-              <a href="https://play.google.com/store/apps/details?id=com.ionicframework.iquippo374922&hl=en" target="_blank">
-                <img src="assets/images/iquippo-market.png" width="150">  
-              </a>
-              -->
-              
-            </div>
-            <div class="col-xs-12 col-sm-2 col-md-3">
-              <h5>Connect with us</h5>
+
+            <div class="col-xs-4 col-sm-4 col-md-4 form-group">
+              <h4>Help</h4>
+              <ul class="nav">
+                <li><a href="/contactus">Contact Us</a></li>  
+              </ul>
+            </div>  
+            <div class="col-xs-4 col-sm-4 col-md-4 form-group">
+              <h4>Our Policies</h4>
+              <ul class="nav">
+                <li><a href="/privacy">Privacy Policy</a></li> 
+              </ul>
+            </div>        
+            <div class="col-xs-12">
+              <h4>Follow us on:</h4>
               <ul class="footer-icon">
                 <li><a href="https://www.facebook.com/iquippo/" target="_blank" ><i class="fa fa-facebook"></i></a></li>
                 <li><a href="https://twitter.com/iquippo" target="_blank"><i class="fa fa-twitter"></i></a></li>
                 <li><a href="https://www.linkedin.com/company/iquippo" target="_blank"><i class="fa fa-linkedin"></i></a></li>
-                <!-- <li><a href="https://plus.google.com/101135031948073538825" target="_blank"><i class="fa fa-google-plus"></i></a></li> -->
               </ul>
             </div>
-            <div class="col-xs-12 col-sm-4 col-md-4">
-              <h5>Subscribe</h5>
-              <form class="form" name="form" novalidate>
-                <div class="form-group row">
-                  <div class="col-xs-9" ng-class="{'has-error': form.email.$invalid && form.submitted }">
-                    <input type="email" class="form-control" name="email" ng-model="subscribe.email" placeholder="* Enter email" required>
-                  </div>
-                  
-                  <div class="col-xs-3 padd">
-                    <button class="btn btn-primary btn-block subscribe" ng-click="createSubscribe(subscribe)">Go</button>
-                  </div>
-                </div>                
-              </form>
-            </div>
           </div>
-          <div class="form-group"></div>
-        </div>
-        <div class="foot-bottom">
-          <div class="text-center">
-            <div class="copy">Copyrights © 2016. All Rights Reserved. - iQuippo</div>
-          </div>
-          
-          <!-- BEGIN JIVOSITE CODE {literal} -->
-           <!--  <script type='text/javascript'>
-              (function(){ var widget_id = '1Vmz683Pjd';
-              var s = document.createElement('script'); s.type = 'text/javascript'; s.async = true; s.src = '//code.jivosite.com/script/widget/'+widget_id; var ss = document.getElementsByTagName('script')[0]; ss.parentNode.insertBefore(s, ss);})();</script> -->
-            <!-- {/literal} END JIVOSITE CODE -->
-  </div>           
-
+        </div>        
+      </div>
+        <div class="form-group"></div>
+      </div>         
+  </div>
+</section>
+<section>
+  <div class="container text-justify">
+    <div class="heading-titles text-center">
+      <h4>[ ABOUT <span>iQUIPPO</span> ]</h4>
+    </div>
+    <p>
+      iQuippo is India’s first and largest digital marketplace for construction equipment, machinery, commercial vehicles and services. Our platform allows buyers and sellers to interact, negotiate and close transactions in a timely, transparent and cost-effective manner. 
+    </p>
+    <p>
+      iQuippo is the preferred mode of transacting for stakeholders across the industry including infrastructure and real estate companies, contractors, financial institutions, rental agencies, brokers as well as individual .
+    </p>
+    </p>
+  </div>
+</section>
+<!-- <section>
+  <div class="container">
+    <div class="heading-titles text-center">
+      <h4>[ PRINT MEDIA ]</h4>
+    </div>
+    <div class="medianame">
+     <ul>
+        <li data-ng-repeat="nwEvt in newsEvents"><a href="javascript:void(0);" data-ng-click="openPrintMedia(nwEvt.image)"> {{nwEvt.name}} </a></li>
+      
+      </ul>
+     </div>
+  </div>
+</section> -->
 </div>
+
+<script type="text/ng-template" id="printmedia.html">
+  <div>
+    <div class="modal-header">
+    <button type="button" class="close"  data-ng-click="close()" aria-hidden="true"><i class="fa fa-times"></i></button>
+    </div>
+    <div class="modal-body text-center">
+       <img data-ng-src="{{url}}" width="100%">
+    </div>
+     <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-ng-click="close()">Close</button>
+      </div>
+  </div>
+</script>
 <!-- <div id="back-top" style="display: block;">
   <a href="#top" class="btn btn-info page-scroll"><i class=" fa fa-chevron-up"></i></a>
 </div> -->
