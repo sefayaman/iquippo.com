@@ -115,12 +115,12 @@
                 </div>
               </div>
               <div class="row price-offer">
-                <div class="col-sm-6 form-group">
+                <!-- <div class="col-sm-6 form-group">
                   <label>To Negotiate</label>
                   <div ng-class="{'has-error': assetSale.bidAmount.$invalid && bidSubmitted}">
                         <input type="number" class="form-control" min="0" name="bidAmount" ng-model="productDetailVm.bidAmount" placeholder="Enter Bid Amount" required>
                   </div>
-                </div>
+                </div> -->
                 <div class="col-sm-6 form-group padd-left text-right">
                   <label class="invisible">To Negotiate</label> <br>
                    <button type="button" ng-if="isLoggedIn() && userBids >= 1 && (allowBid != 'No')" class="btn btn-primary" ng-click="productDetailVm.openBidModal(productDetailVm.bidAmount,'placebid',assetSale)" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE'">Change Bid</button>
