@@ -211,7 +211,6 @@
                 filter['categoryId'] = $rootScope.currentProduct.category._id;
 
                 TechSpecMasterSvc.getFieldData(filter).then(function(result){
-                  //$scope.techSpecFields = result[0].fields;
                   if(!result || !result.length || !result[0].fields || !result[0].fields.length)
                     return;
                   $scope.techSpecFields = result[0].fields.filter(function(item, idx) {
@@ -220,7 +219,7 @@
                     else
                       return false;
                   });
-                  //console.log("#####",$scope.techSpecFields);
+                  $scope.allTechSpecFields = result[0].fields;
                 });
             }
             if ($scope.currentProduct.images.length > 0) {

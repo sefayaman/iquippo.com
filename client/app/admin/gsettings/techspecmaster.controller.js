@@ -394,7 +394,7 @@ function TechSpecMasterCtrl($scope,$rootScope,$state,uploadSvc,categorySvc,brand
         vm.fieldsArr =[];
         angular.copy(filterData.fields, vm.fieldsArr);
           if(vm.fieldsArr){
-            for(var k in  vm.fieldsArr) {
+            for(var k =0; k < vm.fieldsArr.length; k++) {
               vm.fields[k] = vm.fieldsArr[k].value;
               vm.checks[k] = vm.fieldsArr[k].isFront;
             }

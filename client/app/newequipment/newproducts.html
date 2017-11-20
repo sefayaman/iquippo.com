@@ -104,16 +104,16 @@
                   <div class="col-xs-6 form-group">
                     <h4 class="text-ellips">{{product.brand.name}} {{product.category.name}}</h4>                  
                   </div>
-                  <div class="col-xs-6 form-group text-right padd-left">
-                    <h6 class="text-info text-ellips">Model: {{product.model.name}}</h6>                    
+                  <div class="col-xs-6 form-group text-ellips padd-left">
+                    <h6 class="text-info text-right">Model: {{product.model.name}}</h6>                    
                   </div>
                 </div> 
                 <div class="row" ng-repeat="techspec in product.techSpec">
-                  <div class="col-xs-6 form-group">
-                    {{techspec.name}}
+                  <div class="col-xs-6 text-ellips">
+                    <p><span>{{techspec.name}} akHSDBHA</span></p>
                   </div>
-                  <div class="col-xs-6 form-group text-right padd-left">
-                     {{techspec.value}}
+                  <div class="col-xs-6 text-right padd-left text-ellips">
+                     <p><span>{{techspec.value}} skhdbgshdf</span></p>
                   </div>
                 </div> 
                 <!-- <div class="row">
