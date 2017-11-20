@@ -99,7 +99,7 @@
                 </div>
               </div>
               
-              <div class="row price-offer" ng-if="(!isLoggedIn() || userBids == 0) && allowBid != 'No'">
+              <div class="row price-offer">
                 <div class="col-sm-8 form-group">
                   <label>To Negotiate</label>
                   <div ng-class="{'has-error': assetSale.bidAmount.$invalid && bidSubmitted}">
@@ -108,13 +108,13 @@
                 </div>
                 <div class="col-sm-4 form-group">
                   <label class="invisible">To Negotiate</label> <br>
-                  <button type="button" class="btn btn-primary btn-block" ng-click="productDetailVm.openBidModal(productDetailVm.bidAmount,'placebid',assetSale)" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE'">
+                  <button type="button" ng-if="(!isLoggedIn() || userBids == 0) && allowBid != 'No'" class="btn btn-primary btn-block" ng-click="productDetailVm.openBidModal(productDetailVm.bidAmount,'placebid',assetSale)" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE'">
                   Place Bid
                   </button>
                   <button type="button" ng-if="allowBid == 'No'" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE' || auctionsData.visibleBuyNow == false" class="btn btn-primary btn-block" ng-click="productDetailVm.openBidModal(productDetailVm.bidAmount,'proxybid',assetSale)">Proxy Bid</button>
                 </div>
               </div>
-              <div class="row price-offer" ng-if="isLoggedIn() && userBids >= 1 && (allowBid != 'No')">
+              <div class="row price-offer">
                 <div class="col-sm-6 form-group">
                   <label>To Negotiate</label>
                   <div ng-class="{'has-error': assetSale.bidAmount.$invalid && bidSubmitted}">
@@ -123,7 +123,7 @@
                 </div>
                 <div class="col-sm-6 form-group padd-left text-right">
                   <label class="invisible">To Negotiate</label> <br>
-                   <button type="button" class="btn btn-primary" ng-click="productDetailVm.openBidModal(productDetailVm.bidAmount,'placebid',assetSale)" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE'">Change Bid</button>
+                   <button type="button" ng-if="isLoggedIn() && userBids >= 1 && (allowBid != 'No')" class="btn btn-primary" ng-click="productDetailVm.openBidModal(productDetailVm.bidAmount,'placebid',assetSale)" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE'">Change Bid</button>
                   <button type="button" ng-if="isLoggedIn() && userBids >= 1 && (allowBid != 'No')" class="btn btn-danger" ng-click="productDetailVm.withdrawBid()" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE'">Withdraw</button>
                 </div>
               </div>
