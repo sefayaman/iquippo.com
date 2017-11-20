@@ -135,8 +135,8 @@
                 <a ng-href="/used/{{product.category.name}}/{{product.brand.name}}/{{product.assetId}}">
                    <img ng-src="{{uploadImagePrefix}}{{product.assetDir}}/{{product.primaryImg}}" class="img-responsive">              
                 </a>  
-                <div class="stamp-image">
-                  <img src="http://placehold.it/100x50" class="img-responsive">
+                <div class="stamp-image" ng-if="product.certificationName && product.certificationLogo">
+                  <img ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{product.certificationLogo}}" class="img-responsive">
                 </div>        
                 <div class="media-body text-left"> 
                   <div class="row">
