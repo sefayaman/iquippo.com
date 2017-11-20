@@ -34,7 +34,6 @@ function TechSpecMasterCtrl($scope,$rootScope,$state,uploadSvc,categorySvc,brand
     vm.onModelChange = onModelChange;
     vm.viewClicked = viewClicked;
     vm.fieldEditClicked = fieldEditClicked;
-    vm.onGetCategory = onGetCategory;
     vm.fieldUpdate = fieldUpdate;
     $scope.isFieldEdit = false;
     vm.checkCount = checkCount;
@@ -66,7 +65,7 @@ function TechSpecMasterCtrl($scope,$rootScope,$state,uploadSvc,categorySvc,brand
         loadViewData(filter);
     }
     
-    function getBrandOnFilter(){
+    /*function getBrandOnFilter(){
         var filter = {};
         filter['isForNew'] = true;
         brandSvc.getBrandOnFilter(filter)
@@ -77,8 +76,8 @@ function TechSpecMasterCtrl($scope,$rootScope,$state,uploadSvc,categorySvc,brand
 			vm.cTotalItems = result.length;
 			
 		})
+    }*/
 
-    }
     function getAllField(filter){
       if($scope.isView)
         return;
@@ -112,6 +111,7 @@ function TechSpecMasterCtrl($scope,$rootScope,$state,uploadSvc,categorySvc,brand
       
       filter = {};
       filter.categoryId = categoryId;
+      filter.isForNew = true;
       brandSvc.getBrandOnFilter(filter)
         .then(function(result) {
           $scope.brandList = result;
@@ -122,23 +122,7 @@ function TechSpecMasterCtrl($scope,$rootScope,$state,uploadSvc,categorySvc,brand
           console.log("error in fetching brand", res);
         })
     }
-    function onGetCategory(categoryId, noChange) {
-      $scope.brandList = [];
-      $scope.modelList = [];
-      $scope.fieldShow = false;
-      if (!categoryId)
-        return;
-      var otherBrand = null;
-      filter = {};
-      filter['categoryId'] = categoryId;
-      brandSvc.getBrandOnFilter(filter)
-        .then(function(result) {
-          $scope.brandList = result;
-        })
-        .catch(function(res) {
-          console.log("error in fetching brand", res);
-        })
-    }
+
     function onBrandChange(brandId, noChange) {
       if (!noChange) {
         vm.dataModel.model = {};
@@ -164,6 +148,7 @@ function TechSpecMasterCtrl($scope,$rootScope,$state,uploadSvc,categorySvc,brand
       
       filter = {};
       filter.brandId = brandId;
+      filter.isForNew = true;
       modelSvc.getModelOnFilter(filter)
         .then(function(result) {
           $scope.modelList = result;
@@ -212,16 +197,12 @@ function TechSpecMasterCtrl($scope,$rootScope,$state,uploadSvc,categorySvc,brand
       }
     }
     function getCategoryOnFilter(){
-        var filter = {};
-        filter['isForNew'] = true;
-        categorySvc.getCategoryOnFilter(filter)
-		.then(function(result){
-			$scope.allCategory = result;
-			$scope.filteredCategory = result;
-			vm.cSearch = "";
-			vm.cCurrentPage = 1;
-			vm.cTotalItems = result.length;
-		})
+      var filter = {};
+      filter.isForNew = true;
+      categorySvc.getCategoryOnFilter(filter)
+  		.then(function(result){
+  			$scope.allCategory = result;
+  		})
     }
     function loadViewData(filter){
         $scope.pager.copy(filter);
@@ -249,15 +230,23 @@ function TechSpecMasterCtrl($scope,$rootScope,$state,uploadSvc,categorySvc,brand
            
         });
     }
-    function fireCommand(reset){
+    function fireCommand(reset,requestFor){
         if (reset)
             $scope.pager.reset();
         filter = {};
         angular.copy(initFilter, filter);
         if (vm.searchStr)
             filter.searchStr = vm.searchStr;
-        loadViewData(filter);
-        loadViewFieldData(filter);
+        switch (requestFor) {
+          case "techSpec":
+              loadViewData(filter);
+              break;
+          case "techSpecValue":
+              loadViewFieldData(filter);
+              break;
+        }
+        // loadViewData(filter);
+        // loadViewFieldData(filter);
     }
 
     function save(form){
@@ -288,7 +277,7 @@ function TechSpecMasterCtrl($scope,$rootScope,$state,uploadSvc,categorySvc,brand
             vm.dataModel = {};
             vm.fieldInfo = [{}];
             resetValue();
-            fireCommand(true);
+            fireCommand(true,'techSpec');
             Modal.alert('Data saved successfully!');
          }
     }
@@ -330,7 +319,7 @@ function TechSpecMasterCtrl($scope,$rootScope,$state,uploadSvc,categorySvc,brand
       TechSpecMasterSvc.saveField(vm.dataModel)
         .then(function(){
           resetTechValue();
-          fireCommand(true);
+          fireCommand(true,'techSpecValue');
           Modal.alert('Data saved successfully!');
         })
         .catch(function(err){
@@ -425,7 +414,7 @@ function TechSpecMasterCtrl($scope,$rootScope,$state,uploadSvc,categorySvc,brand
             vm.dataModel = {};
             resetValue();
             $scope.isEdit = false;
-            fireCommand(true);
+            fireCommand(true, 'techSpec');
             Modal.alert('Data updated successfully!');
         })
         .catch(function(err){
@@ -440,15 +429,18 @@ function TechSpecMasterCtrl($scope,$rootScope,$state,uploadSvc,categorySvc,brand
         return;
       }
       vm.dataModel.fields = [];
-      if(vm.fields){
-        for(var k in  vm.fields) {
-          var createData = {};
-          createData.fieldId = vm.fieldList[k]._id;
-          createData.name = vm.fieldList[k].fieldName;
-          createData.type = vm.fieldList[k].fieldType;
-          createData.value = vm.fields[k];
-          createData.isFront = vm.checks[k] || false;
-          vm.dataModel.fields[vm.dataModel.fields.length] = createData;
+      //angular.copy(filterData.fields, vm.fieldsArr);
+      if(vm.fieldsArr){
+        for(var k in  vm.fieldsArr) {
+          if( k < vm.fieldList.length) {
+            var createData = {};
+            createData.fieldId = vm.fieldList[k]._id;
+            createData.name = vm.fieldList[k].fieldName;
+            createData.type = vm.fieldList[k].fieldType;
+            createData.value = vm.fields[k];
+            createData.isFront = vm.checks[k] || false;
+            vm.dataModel.fields[vm.dataModel.fields.length] = createData;
+          }
         }
       }
       vm.dataModel.fields = vm.dataModel.fields.filter(function(item, idx) {
@@ -461,7 +453,7 @@ function TechSpecMasterCtrl($scope,$rootScope,$state,uploadSvc,categorySvc,brand
       TechSpecMasterSvc.fieldUpdate(vm.dataModel)
         .then(function(){
           resetTechValue();
-          fireCommand(true);
+          fireCommand(true,'techSpecValue');
           Modal.alert('Data updated successfully!');
         })
         .catch(function(err){
@@ -473,7 +465,7 @@ function TechSpecMasterCtrl($scope,$rootScope,$state,uploadSvc,categorySvc,brand
 
     function closeView(){
         resetTechValue();
-        fireCommand(true);
+        fireCommand(true,'techSpecValue');
     }
     function resetTechValue() {
       filter = {};
@@ -492,10 +484,10 @@ function TechSpecMasterCtrl($scope,$rootScope,$state,uploadSvc,categorySvc,brand
       vm.dataModel.fields = [{}];
     }
 
-    function destroy(id){
+    function destroy(id, value){
       Modal.confirm("Are you sure want to delete?",function(ret){
         if(ret == "yes")
-            confirmDestory(id);
+            confirmDestory(id, value);
         });
     }
 
@@ -517,14 +509,24 @@ function TechSpecMasterCtrl($scope,$rootScope,$state,uploadSvc,categorySvc,brand
             vm.totalChecked = vm.totalChecked - 1;
         }
     }
-    function confirmDestory(id){
+    function confirmDestory(id, value){
+      if(value === 'techSpec') {
         TechSpecMasterSvc.destroy(id)
         .then(function(){
-            fireCommand(true);
+            fireCommand(true, "'techSpec");
         })
          .catch(function(err){
             console.log("purpose err",err);
         });
+      } else {
+        TechSpecMasterSvc.destroyFieldValue(id)
+        .then(function(){
+            fireCommand(true, 'techSpecValue');
+        })
+         .catch(function(err){
+            console.log("purpose err",err);
+        });
+      }
     }
      //starting point
     Auth.isLoggedInAsync(function(loggedIn){

@@ -4,6 +4,24 @@
       <ul class="top-menu visible-xs">            
         <li><a href="javascript:void(0);" ng-click="sendCallback()" class="text-danger"><i class="fa fa-phone"></i></a></li>
         <li ng-hide="isLoggedIn()"><a href="/signin"><i class="fa fa-sign-in"></i> <span class="hidden-xs">Login</span></a></li>
+        <li ng-if="isLoggedIn()" class="dropdown" >
+          <a href class="dropdown-toggle" data-toggle="dropdown">
+             <i class="fa fa-user" style="background-color:#ccc;color:#fff; padding:3px 5px; border-radius:50%;height:25px;width:25px;" ng-if="!getCurrentUser().imgsrc"></i>
+            <img src="{{uploadImagePrefix}}{{avatarDir}}/{{getCurrentUser().imgsrc}}" ng-if="getCurrentUser().imgsrc"> 
+             <span class="hidden-xs"> {{ getCurrentUser().fname }}</span>
+          </a>
+          
+          <ul ng-click="navCollapsed = true" class="dropdown-menu">
+              <li>
+                <a href="/productlisting">
+                  <i class="fa fa-dashboard"></i> Dashboard
+                </a>
+              </li>
+               <li><a href="/myaccount"><span class="fa fa-user"></span> My Account</a></li>                        
+              <li><a href="javascript:void(0);" ng-click="openDialog('settings')"><span class="fa fa-key"></span> Change Password</a></li>                      
+              <li><a href="javascript:void(0);" ng-click="logout()"><i class="fa fa-sign-out"></i> Logout</a></li>
+          </ul>
+        </li>
       </ul> 
     <!-- Brand and toggle get grouped for better mobile display -->
       <div class="navbar-header">
@@ -20,7 +38,7 @@
       <div class="collapse navbar-collapse navbar-ex1-collapse" ng-class="!navCollapsed && 'in'">
         <ul class="nav navbar-nav navbar-right">
             <li class="submenu dropdown">
-              <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">Equipment <i class="fa fa-caret"></i></a>
+              <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">Equipment <i class="fa fa-caret-down"></i></a>
                 <ul class="dropdown-menu" role="menu" ng-click="navCollapsed = true">
                   <li role="menuitem"><a href="/used"> Used Equipment</a></li>
                   <li role="menuitem"><a href="/new"> New Equipment</a></li>
@@ -32,7 +50,7 @@
              <li ng-click="navCollapsed = true" ng-class="{active: isActive(['valuation'])}"><a href="/valuation">Valuation</a></li>
              <li ng-click="navCollapsed = true"><a href="https://sarv.iquippo.com/" target="_blank">Sarv</a></li>
              <li class="submenu dropdown">
-                <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" id="single-button" >Other Services</a>
+                <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" id="single-button" >Other Services <i class="fa fa-caret-down"></i></a>
                 <ul ng-click="navCollapsed = true" class="dropdown-menu" role="menu" aria-labelledby="single-button">
                   <li role="menuitem"><a href="/shipping"> Shipping</a></li>
                   <li role="menuitem"><a href="/insurance">Insurance</a></li>
@@ -42,24 +60,24 @@
              <li ng-click="navCollapsed = true" ng-hide="isLoggedIn()"><a href="/signin">Login</a></li>
              <li ng-click="navCollapsed = true" ng-hide="isLoggedIn()"><a href="/signup">Signup</a></li>
              <li class="hidden-xs" ng-click="navCollapsed = true"><a href="javascript:void(0);" ng-click="sendCallback()" class="text-danger"><i class="fa fa-phone"></i></a></li>
-             <li ng-if="isLoggedIn()" class="dropdown" >
-              <a href class="dropdown-toggle" data-toggle="dropdown">
-                 <i class="fa fa-user" style="background-color:#ccc;color:#fff; padding:3px 5px; border-radius:50%;height:20px;width:20px;" ng-if="!getCurrentUser().imgsrc"></i>
-                <img src="{{uploadImagePrefix}}{{avatarDir}}/{{getCurrentUser().imgsrc}}" ng-if="getCurrentUser().imgsrc"> 
-                 <span> {{ getCurrentUser().fname }}</span>
-              </a>
-              
-              <ul ng-click="navCollapsed = true" class="dropdown-menu">
-                  <li>
-                    <a href="/productlisting">
-                      <i class="fa fa-dashboard"></i> Dashboard
-                    </a>
-                  </li>
-                   <li><a href="/myaccount"><span class="fa fa-user"></span> My Account</a></li>                        
-                  <li><a href="javascript:void(0);" ng-click="openDialog('settings')"><span class="fa fa-key"></span> Change Password</a></li>                      
-                  <li><a href="javascript:void(0);" ng-click="logout()"><i class="fa fa-sign-out"></i> Logout</a></li>
-              </ul>
-            </li>
+             <li ng-if="isLoggedIn()" class="dropdown hidden-xs" >
+                <a href class="dropdown-toggle" data-toggle="dropdown">
+                   <i class="fa fa-user" style="background-color:#ccc;color:#fff; padding:4px 5px; border-radius:50%;height:25px;width:25px;" ng-if="!getCurrentUser().imgsrc"></i>
+                  <img src="{{uploadImagePrefix}}{{avatarDir}}/{{getCurrentUser().imgsrc}}" ng-if="getCurrentUser().imgsrc"> 
+                   <span> {{ getCurrentUser().fname }}</span>
+                </a>
+                
+                <ul ng-click="navCollapsed = true" class="dropdown-menu">
+                    <li>
+                      <a href="/productlisting">
+                        <i class="fa fa-dashboard"></i> Dashboard
+                      </a>
+                    </li>
+                     <li><a href="/myaccount"><span class="fa fa-user"></span> My Account</a></li>                        
+                    <li><a href="javascript:void(0);" ng-click="openDialog('settings')"><span class="fa fa-key"></span> Change Password</a></li>                      
+                    <li><a href="javascript:void(0);" ng-click="logout()"><i class="fa fa-sign-out"></i> Logout</a></li>
+                </ul>
+              </li>
                <!-- <li ng-class="{active: isActive(['finance'])}"><a href="/finance">Financing</a></li> -->
              <!-- <li ng-class="{active: isActive(['insurance'])}"><a href="/insurance">Insurance</a></li> -->
              <!-- <li ng-class="{active: isActive(['manpower'])}" ><a href="/manpower">Manpower</a></li> -->

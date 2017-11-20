@@ -41,7 +41,7 @@
                 </div>
               </div>
               <div class="col-sm-3 padd-left padd-right select-text">
-                <input type="text" placeholder="Industry Name" ng-model="filter.groupSearchText" class="form-control" uib-typeahead="address for address in getGroupHelp($viewValue)" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
+                <input type="text" placeholder="Industry" ng-model="filter.groupSearchText" class="form-control" uib-typeahead="address for address in getGroupHelp($viewValue)" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
               </div>
               <div class="col-sm-3 padd-left padd-right select-text">
                 <input type="text" ng-model="filter.categorySearchText" placeholder="Category" uib-typeahead="address for address in getCategoryHelp($viewValue)"  class="form-control" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
@@ -50,7 +50,7 @@
                 <input type="text" class="form-control" placeholder="Brand" ng-model="filter.brandSearchText" class="form-control" uib-typeahead="address for address in getBrandHelp($viewValue)" typeahead-wait-ms="200"/>
               </div>
               <div class="col-sm-3 padd-left padd-right select-text">
-                <input type="text" class="form-control" ng-model="filter.locationSearchText" placeholder="Seller Location" uib-typeahead="address for address in getLocationHelp($viewValue)"  class="form-control" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
+                <input type="text" class="form-control" ng-model="filter.locationSearchText" placeholder="Asset Location" uib-typeahead="address for address in getLocationHelp($viewValue)"  class="form-control" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
               </div> 
               
             </div>
@@ -66,41 +66,7 @@
   </div>
 </section>
 
-<!-- Browse Brand -->
-<section class="category-block">
-  <div class="container text-center">
-    <div class="heading-titles">
-      <h4>[ Browse By Brands ]</h4>
-      <a href="/used/brands" ng-if="!mainVm.newBrand">View All ({{mainVm.brandCount || 0}})</a>
-      <a href="/new/brands" ng-if="mainVm.newBrand">View All ({{mainVm.brandCountForNew || 0}})</a>
-    </div>
-    <uib-tabset justified="false">
-      <uib-tab heading="Used Equipment" select="mainVm.toggleTab(0,false)">
-        <div class="row">
-          <div class="col-xs-6 col-sm-4 form-group text-center" ng-repeat="brand in mainVm.brands" ng-if="$index < 3">   
-            <div class="brand-logo">
-              <a href="/used/brands/{{brand.name}}?currentPage=1" class="brand-name">
-                <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{brand.imgSrc}}">
-              </a>
-            </div>
-          </div>
-        </div>
-      </uib-tab>
-      <uib-tab heading="New Equipment" select="mainVm.toggleTab(0,true)">
-        <div class="row">
-          <div class="col-xs-6 col-sm-4 form-group text-center" ng-repeat="brand in mainVm.brandsForNew" ng-if="$index < 3">   
-            <div class="brand-logo">
-              <a href="/new/brands/{{brand.name}}?currentPage=1" class="brand-name">
-                <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{brand.imgSrc}}">
-              </a>
-            </div>
-          </div>
-        </div>
-      </uib-tab>
-    </uib-tabset>
-  </div>
-      
-</section>
+
 <!-- Upcoming Auction -->
 <section class="category-block upcoming-auction">
   <div class="heading-titles text-center">
@@ -128,6 +94,43 @@
     </div>
   </div>
 </section>
+
+<!-- Browse Brand -->
+<section class="category-block">
+  <div class="container text-center">
+    <div class="heading-titles">
+      <h4>[ Browse By Brands ]</h4>
+      <a href="/used/brands" ng-if="!mainVm.newBrand">View All ({{mainVm.brandCount || 0}})</a>
+      <a href="/new/brands" ng-if="mainVm.newBrand">View All ({{mainVm.brandCountForNew || 0}})</a>
+    </div>
+    <uib-tabset justified="false">
+      <uib-tab heading="Used Equipment" select="mainVm.toggleTab(0,false)">
+        <div class="row">
+          <div class="col-xs-4 col-sm-4 form-group text-center" ng-repeat="brand in mainVm.brands" ng-if="$index < 3">   
+            <div class="brand-logo">
+              <a href="/used/brands/{{brand.name}}?currentPage=1" class="brand-name">
+                <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{brand.imgSrc}}">
+              </a>
+            </div>
+          </div>
+        </div>
+      </uib-tab>
+      <uib-tab heading="New Equipment" select="mainVm.toggleTab(0,true)">
+        <div class="row">
+          <div class="col-xs-4 col-sm-4 form-group text-center" ng-repeat="brand in mainVm.brandsForNew" ng-if="$index < 3">   
+            <div class="brand-logo">
+              <a href="/new/brands/{{brand.name}}?currentPage=1" class="brand-name">
+                <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{brand.imgSrc}}">
+              </a>
+            </div>
+          </div>
+        </div>
+      </uib-tab>
+    </uib-tabset>
+  </div>
+      
+</section>
+
 <!-- Browse Category -->
 <section class="category-block">
   <div class="container text-center">
@@ -369,7 +372,7 @@
           <div class="filter">
             <div class="row">
               <div class="col-sm-3 form-group">
-                <input type="text" placeholder="Industry Name" ng-model="filter.groupSearchText" class="form-control" uib-typeahead="address for address in getGroupHelp($viewValue)" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
+                <input type="text" placeholder="Industry" ng-model="filter.groupSearchText" class="form-control" uib-typeahead="address for address in getGroupHelp($viewValue)" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
               </div>
               <div class="col-sm-3 form-group">
                 <input type="text" ng-model="filter.categorySearchText" placeholder="Category" uib-typeahead="address for address in getCategoryHelp($viewValue)"  class="form-control" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
@@ -378,7 +381,7 @@
                 <input type="text" class="form-control" placeholder="Brand" ng-model="filter.brandSearchText" class="form-control" uib-typeahead="address for address in getBrandHelp($viewValue)" typeahead-wait-ms="200"/>
               </div>
               <div class="col-sm-3 form-group">
-                <input type="text" class="form-control" ng-model="filter.locationSearchText" placeholder="Seller Location" uib-typeahead="address for address in getLocationHelp($viewValue)"  class="form-control" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
+                <input type="text" class="form-control" ng-model="filter.locationSearchText" placeholder="Asset Location" uib-typeahead="address for address in getLocationHelp($viewValue)"  class="form-control" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
               </div> 
               
             </div>

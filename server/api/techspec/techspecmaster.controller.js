@@ -55,37 +55,23 @@ exports.getFieldData = function(req, res) {
     filter['brand.brandId'] = queryParam.brandId + "";
   if (queryParam.modelId)
     filter['model.modelId'] = queryParam.modelId + "";
-  
+
   if (queryParam.pagination) {
     Utility.paginatedResult(req, res, TechSpecValMaster, filter, {});
     return;
   }
 
-  var query = TechSpecValMaster.find(filter);
+  var query = TechSpecValMaster.find(filter).sort({createdAt: -1});
   
   query.exec(function(err, result) {
     if (err) {
-      console.log("######",err);
       return handleError(res, err);
     }
     return res.status(200).json(result);
   });
 };
-// Get list of all field data
-/*
-exports.getFieldData = function(req, res) {
-  var queryParam = req.query;
-  var filter = {};
-  var query = TechSpecValMaster.find(filter);
 
-  query.exec(function(err, result) {
-    if (err) {
-      return handleError(res, err);
-    }
-    return res.status(200).json(result);
-  });
-};*/
-exports.create = function(req, res) {//console.log("req.body=",req.body);
+exports.create = function(req, res) {
   TechSpecMaster.create(req.body, function(err, respo) {
     if(err) { return handleError(res, err); }
      return res.status(200).json({errorCode:0, message:"Data saved sucessfully", data:respo});
@@ -133,9 +119,9 @@ exports.getOnFilter = function(req, res) {
   })
   .par(function(){
     var self = this;
-    query.exec(function (err, inputReq) {
+    query.exec(function (err, fieldValue) {
         if(err) { return handleError(res, err); }
-        result.inputReqs = inputReq;
+        result.inputReqs = fieldValue;
         self();
        }
     );
@@ -150,9 +136,9 @@ exports.getOnFilter = function(req, res) {
 exports.update = function(req, res) {
   if(req.body._id) { delete req.body._id; }
   req.body.updatedAt = new Date();
-  TechSpecMaster.findById(req.params.id, function (err, inputReq) {
+  TechSpecMaster.findById(req.params.id, function (err, field) {
     if (err) { return handleError(res, err); }
-    if(!inputReq) { return res.status(404).send('Not Found'); }
+    if(!field) { return res.status(404).send('Not Found'); }
     TechSpecMaster.update({_id:req.params.id},{$set:req.body},function(err){
         if (err) { return handleError(res, err); }
         return res.status(200).json({errorCode:0, message:"Request updated sucessfully"});
@@ -162,9 +148,9 @@ exports.update = function(req, res) {
 exports.fieldUpdate = function(req, res) {
   if(req.body._id) { delete req.body._id; }
   req.body.updatedAt = new Date();
-  TechSpecValMaster.findById(req.params.id, function (err, inputReq) {
+  TechSpecValMaster.findById(req.params.id, function (err, fieldValue) {
     if (err) { return handleError(res, err); }
-    if(!inputReq) { return res.status(404).send('Not Found'); }
+    if(!fieldValue) { return res.status(404).send('Not Found'); }
     TechSpecValMaster.update({_id:req.params.id},{$set:req.body},function(err){
         if (err) { return handleError(res, err); }
         return res.status(200).json({errorCode:0, message:"Request updated sucessfully"});
@@ -173,10 +159,21 @@ exports.fieldUpdate = function(req, res) {
 };
 // Deletes a input req from the DB.
 exports.delete = function(req, res) {
-  TechSpecMaster.findById(req.params.id, function (err, inputReq) {
+  TechSpecMaster.findById(req.params.id, function (err, field) {
     if(err) { return handleError(res, err); }
-    if(!inputReq) { return res.status(404).send('Not Found'); }
-    inputReq.remove(function(err) {
+    if(!field) { return res.status(404).send('Not Found'); }
+    field.remove(function(err) {
+      if(err) { return handleError(res, err); }
+      return res.status(204).send('No Content');
+    });
+  });
+};
+
+exports.fieldDelete = function(req, res) {
+  TechSpecValMaster.findById(req.params.id, function (err, fieldValue) {
+    if(err) { return handleError(res, err); }
+    if(!fieldValue) { return res.status(404).send('Not Found'); }
+    fieldValue.remove(function(err) {
       if(err) { return handleError(res, err); }
       return res.status(204).send('No Content');
     });

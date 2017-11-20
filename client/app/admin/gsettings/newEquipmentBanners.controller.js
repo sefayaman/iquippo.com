@@ -85,7 +85,7 @@ function NewEquipmentBannersCtrl($scope, $rootScope, $state, vendorSvc, brandSvc
                         return;
                     }
                     
-                    if (vm.dataModel.brand.data) {
+                    if (vm.dataModel.brand) {
                         for (var k in  vm.brandList) {
                             if (vm.brandList[k]._id == vm.dataModel.brand._id)
                                 vm.dataModel.brand.name = vm.brandList[k].name;

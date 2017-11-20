@@ -15,7 +15,8 @@ angular.module('admin').factory("TechSpecMasterSvc",TechSpecMasterSvc);
     svc.getFieldData = getFieldData;
     svc.fieldUpdate = fieldUpdate;
     svc.getGroupByData = getGroupByData;
-     
+    svc.destroyFieldValue = destroyFieldValue;
+    
    function get(filter){
       var path = svcPath; 
       var queryParam = "";
@@ -118,6 +119,17 @@ angular.module('admin').factory("TechSpecMasterSvc",TechSpecMasterSvc);
           throw err;
         });
      }
+
+     function destroyFieldValue(id){
+        return $http.delete(svcPath + "/fieldvalue/" + id)
+        .then(function(res){
+          return res.data;
+        })
+        .catch(function(err){
+          throw err;
+        });
+     }
+
     return svc;
   }
 

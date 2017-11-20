@@ -65,7 +65,8 @@
 
    function clearAll(){
     for(var key in $scope.equipmentSearchFilter){
-      $scope.equipmentSearchFilter[key] = "";
+      if(key !== 'mfgYearMax' && key !== 'mfgYearMin' && key !== 'dbAuctionId')
+        $scope.equipmentSearchFilter[key] = "";
     }
 
     $scope.categoryList = allCategory;

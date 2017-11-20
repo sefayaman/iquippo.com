@@ -11,7 +11,7 @@ var TechSpecFieldMasterSchema = new Schema({
   categoryId:{type:Schema.Types.ObjectId,ref:'Category'},
   categoryName:String,
   fieldName:String,
-  fieldType:String,
+  fieldType:{type:String, default:'text'},
   createdAt: {type:Date,default:Date.now},
   updatedAt: {type:Date,default:Date.now}
 });

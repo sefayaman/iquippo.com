@@ -25,7 +25,7 @@ angular.module('sreizaoApp').controller('CategoryListingCtrl',CategoryListingCtr
     }
 
     function showMore(){
-      vm.showedItems += 3;
+      vm.showedItems += 6;
     }
 
     //Entry point

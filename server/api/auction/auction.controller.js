@@ -592,19 +592,17 @@ exports.getOnFilter = function(req, res) {
  if(req.body.mfgYearMax || req.body.mfgYearMin){
     var mfgFilter = {};
     if(req.body.mfgYearMin){
-      mfgFilter['$gte'] = req.body.mfgYearMin;
+      mfgFilter['$gte'] = parseInt(req.body.mfgYearMin);
     }
     if(req.body.mfgYearMax){
-      mfgFilter['$lte'] = req.body.mfgYearMax;
+      mfgFilter['$lte'] = parseInt(req.body.mfgYearMax);
     }
     filter["product.mfgYear"] = mfgFilter;
  }
-
   if (req.body.status)
     filter["status"] = req.body.status;
   if (req.body.external)
     filter["external"] = req.body.external == 'y' ? true : false;
-
   if (req.body.pagination) {
     Utility.paginatedResult(req, res, AuctionRequest, filter, {});
     return;

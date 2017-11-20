@@ -16,13 +16,15 @@
     <div>
       <ul class="new-equipment-brand">
         <li ng-repeat="newBrand in allBanner | orderBy:'order' | limitTo:newEquipmentVm.bnrLimit">
-          <a href="/new/brands/{{newBrand.brand.name}}?currentPage=1" title="" ng-if="newBrand.brand">
+          <a href="/new/brands/{{newBrand.brand.name}}?currentPage=1" title="" ng-if="newBrand.brand.name">
             <img src="{{uploadImagePrefix}}{{bannerDir}}/{{newBrand.newEquipBannerImg}}" alt="">
           </a>
-          <a href="/new/spl/{{newBrand.promotion.name}}?currentPage=1" title="" ng-if="newBrand.promotion">
+          <a href="/new/spl/{{newBrand.promotion.name}}?currentPage=1" title="" ng-if="newBrand.promotion.name">
             <img src="{{uploadImagePrefix}}{{bannerDir}}/{{newBrand.newEquipBannerImg
             }}" alt="{{newBrand.position}}">
             </a>
+          <img ng-if="!newBrand.promotion.name && !newBrand.brand.name" src="{{uploadImagePrefix}}{{bannerDir}}/{{newBrand.newEquipBannerImg
+            }}" alt="{{newBrand.position}}">
         </li>
       </ul>
     </div>

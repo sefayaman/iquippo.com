@@ -11,6 +11,7 @@ var NewEquipmentBulkOrderSchema = new Schema({
 	mobile:String,
 	email:String,
 	country:String,
+	countryCode:String,
 	state: String,
 	city: String,
 	orders:[{}],
@@ -26,7 +27,7 @@ NewEquipmentBulkOrderSchema.pre('save',function(next){
   var prefix = 'BR';
   var sequence = seqGenerator.sequence();
   sequence.next(function(seqnum){
-  	self.groupId = prefix + seqnum;
+  	self.orderId = prefix + seqnum;
     return next();
   },'BulkRequest',"100002");
 

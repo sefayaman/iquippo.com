@@ -4,7 +4,7 @@
       <a href="/main"> Home </a>
     </li>
     <li><a href="/viewauctions?type={{equipmentSearchFilter.type}}"> Auctions </a></li>
-    <li class="active"> {{displayText || equipmentSearchFilter.group || equipmentSearchFilter.category || equipmentSearchFilter.brand || equipmentSearchFilter.location || equipmentSearchFilter.assetId || "Auctions"}} </li>
+    <li class="active"> {{auctionData.name}} </li>
   </ol>
 </div>
 
@@ -74,7 +74,7 @@
                 </year-only-picker>
               </div>
               <div class="col-xs-6 col-sm-6 col-md-6">
-                 <year-only-picker ng-model="mfgyr.max" year="equipmentSearchFilter.mfgYearMax" myid="max" placeholder="Min" on-change="auctionDetailsVm.fireCommand()">
+                 <year-only-picker ng-model="mfgyr.max" year="equipmentSearchFilter.mfgYearMax" myid="max" placeholder="Max" on-change="auctionDetailsVm.fireCommand()">
                   
                 </year-only-picker>
               </div>
@@ -102,8 +102,10 @@
       </div>
       <div id="search-result_wrapper" ng-if="!searching && !noResult">
         <div class="row">
-          <div class="col-sm-6 col-md-6 form-group padd-right" ng-if="auctionData.contactName || auctionData.contactNumber">
-            <h4 class="text-danger"><i class="fa fa-phone"></i> {{auctionData.contactName}}({{auctionData.contactNumber}})</h4>
+          <div class="col-sm-6 col-md-6 form-group padd-right">
+            <div ng-if="auctionData.contactName || auctionData.contactNumber">
+              <h4 class="text-danger"><i class="fa fa-phone"></i> {{auctionData.contactName}}({{auctionData.contactNumber}})</h4>
+            </div>
           </div>
           <div class="col-sm-3 col-md-3 form-group text-right">
             <a href="{{uploadImagePrefix}}{{auctionDir}}/{{auctionData.docName}}" class="text-info" ng-if="auctionData.docType == 'bidProxy'" target="_blank" ng-disabled="!auctionData.docName">
@@ -139,9 +141,9 @@
                     <h4 class="text-ellips">  {{auctionProduct.product.category}} {{auctionProduct.product.brand}} {{auctionProduct.product.model}}</h4>     
                     <h6 class="text-info">Asset Id : {{auctionProduct.product.assetId}}</h6>
                   </div>
-                  <div class="col-xs-4 form-group text-right padd-left">
+                 <!--  <div class="col-xs-4 form-group text-right padd-left">
                     <h4 class="text-success">Ongoing</h4>
-                  </div>
+                  </div> -->
                 </div> 
                 <!-- <p><i class="fa fa-clock-o"></i> <strong class="text-success">2 days, 5 hours, 19 minutes, 57 seconds</strong></p> -->
                  <p><i class="fa fa-check-circle-o"></i> Available for Sale</p>

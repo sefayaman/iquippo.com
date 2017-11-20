@@ -73,7 +73,8 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
 
   function clearAll(){
     for(var key in $scope.equipmentSearchFilter){
-      $scope.equipmentSearchFilter[key] = "";
+      if(key !== 'mfgYearMax' && key !== 'mfgYearMin')
+        $scope.equipmentSearchFilter[key] = "";
     }
 
     $scope.categoryList = allCategory;
@@ -191,11 +192,11 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
               return !n.priceOnRequest;
         });
       break;
-      case 'exos':
+      /*case 'exos':
         $scope.productList = _.filter(productList, function(obj) {
               return obj.assetStatus == 'listed';
         });
-      break;
+      break;*/
       default:
         $scope.productList = productList;
     }

@@ -132,13 +132,16 @@
                 </div>
               </div>
             </div>
+            <div class="col-sm-1 form-group text-center padd-left bulk-more">
+              <a href="javascript:void(0);" ng-click="bulkOrderVm.dataModel.orders.splice($index,1)" ng-if="bulkOrderVm.dataModel.orders.length > 1">
+                <i class="fa fa-minus"></i> Delete
+              </a>
+              <a href="javascript:void(0);" ng-click="bulkOrderVm.dataModel.orders.push({quantity:1})">
+                <i class="fa fa-plus"></i> ADD MORE
+              </a>
+            </div>
           </div>
           
-          <div class="form-group">
-            <a href="javascript:void(0);" ng-click="bulkOrderVm.dataModel.orders.push({quantity:1})">
-              <i class="fa fa-plus"></i> ADD MORE
-            </a>
-          </div>
           <hr>
 
           <div class="row">

@@ -6,9 +6,9 @@ angular.module('sreizaoApp').controller('NewBrandListingCtrl',NewBrandListingCtr
   function NewBrandListingCtrl($scope,brandSvc) {
     
     var vm  = this;
-    //vm.showedItems = 9;
+    vm.showedItems = 12;
     vm.brandList = [];
-    //vm.showMore = showMore;
+    vm.showMore = showMore;
 
     function init(){
       brandSvc.getBrandOnFilter({isForNew:true})
@@ -20,9 +20,9 @@ angular.module('sreizaoApp').controller('NewBrandListingCtrl',NewBrandListingCtr
       });
     }
 
-    /*function showMore(){
-      vm.showedItems += 3;
-    }*/
+    function showMore(){
+      vm.showedItems += 12;
+    }
 
     //Entry point
     init();

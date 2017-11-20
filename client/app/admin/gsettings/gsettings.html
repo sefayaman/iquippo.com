@@ -2754,7 +2754,7 @@
 
 					<div class="col-sm-3" ng-class="{'has-error':offerVm.model.$invalid && submitted}">
 			        	<label>Select Model</label>
-		 		       	<select class="form-control form-group" name="model" ng-model="container.selectedModelId" required > 
+		 		       	<select class="form-control form-group" name="model" ng-model="container.selectedModelId" ng-change="onModelChange(container.selectedModelId)" required > 
 							 <option value=""> Select Model </option> 
 							 <option value="{{model._id}}" ng-repeat="model in modelList| orderBy:'name'">{{model.name}}</option>
 						</select>
@@ -3133,7 +3133,7 @@
 									<label>Field Name : </label>
 									<input type="text" class="form-control"  ng-model="techspecVm.fieldArr[$index].name" name="" value="" placeholder="Field Name" required>
 								</div>
-								<div class="col-sm-3 form-group">
+								<!-- <div class="col-sm-3 form-group">
 								<label>Select Field Type</label>	
 								<select class="form-control form-group" name="type" ng-model="techspecVm.fieldArr[$index].type"  required> 
 										<option value=""> Select Field Type</option> 
@@ -3141,7 +3141,7 @@
 										<option value="text">Text</option>
 										
 								</select>
-								</div>
+								</div> -->
 								
 								<div ng-if="!isEdit" class="col-sm-2 form-group ">
 									<label class="invisible">Action</label>
@@ -3155,7 +3155,7 @@
 									<label>Field Name : </label>
 									<input type="text" class="form-control"  ng-model="techspecVm.dataModel.fieldName" name="" value="" placeholder="Field Name" required>
 								</div>
-								<div class="col-sm-3 form-group">
+								<!-- <div class="col-sm-3 form-group">
 								<label>Select Field Type</label>	
 								<select class="form-control form-group" name="type" ng-model="techspecVm.dataModel.fieldType"  required> 
 										<option value=""> Select Field Type</option> 
@@ -3163,7 +3163,7 @@
 										<option value="text">Text</option>
 										
 								</select>
-								</div>
+								</div> -->
 								
 							</div>
 							<div class="row form-group">
@@ -3173,6 +3173,13 @@
 							</div>
 							</div>
 						</form>
+						<div class="row">
+			               <div class="col-sm-3 pull-right">
+			                   <div class="tablesearch text-right form-group">
+			                       Search: <input type="text" placeholder="Search..." ng-model="techspecVm.searchStr" ng-change="techspecVm.fireCommand(true, 'techSpec')" ng-model-options="{debounce:500}">
+			                   </div>
+			               </div>
+			           </div>
 						<div class="row">
 							<div class="col-sm-12">
 								<div class=" table-responsive ">
@@ -3196,13 +3203,13 @@
 												<a href="javascript:void(0);" class="btn btn-primary btn-sm" uib-popover="Edit" popover-trigger="mouseenter" ng-click="techspecVm.editClicked(fielddata)">
 														<i class="fa fa-pencil"></i>
 													</a>
-													<a href="javascript:void(0);" class="btn btn-danger btn-sm" uib-popover="Edit" popover-trigger="mouseenter" ng-click="techspecVm.destroy(fielddata._id)"><i class="fa fa-trash" ></i></a>
+													<a href="javascript:void(0);" class="btn btn-danger btn-sm" uib-popover="Edit" popover-trigger="mouseenter" ng-click="techspecVm.destroy(fielddata._id, 'techSpec')"><i class="fa fa-trash" ></i></a>
 												</td>
 											</tr>
 										</tbody>
 									</table>
 								</div>
-								<uib-pagination total-items="techspecVm.totalProductTechInfoCount" ng-model="techspecVm.currentPage" items-per-page="techspecVm.itemsPerPage" max-size="techspecVm.maxSize" ng-change="techspecVm.fireCommand(false,null,'technical')" class="pagination-sm" rotate="false">  </uib-pagination>
+								<uib-pagination total-items="techspecVm.totalProductTechInfoCount" ng-model="techspecVm.currentPage" items-per-page="techspecVm.itemsPerPage" max-size="techspecVm.maxSize" ng-change="techspecVm.fireCommand(false,'techSpec')" class="pagination-sm" rotate="false">  </uib-pagination>
 							</div>
 						</div>
 			
@@ -3269,22 +3276,6 @@
 									</div>
 								</div>
 							</div>
-							<!-- <div ng-if="isFieldEdit" class="row">
-							<div class="col-sm-12 form-group" ng-repeat="field in techspecVm.viewFieldList">
-								<div class="col-sm-4">
-									<label>{{field.fieldName}}:</label>
-								</div>
-								<div class="col-sm-4">
-									<input ng-if="field.fieldType == 'file'" type="file" name=""  id="{{$index}}" accept="image/*" params="['files','$index']" on-file-select-tech="techspecVm.uploadTechFile"ng-model="techspecVm.fields[$index]">
-									<span ng-if="field.fieldType == 'file'"> {{techspecVm.fields[$index]}}</span>
-									<input ng-if="field.fieldType == 'text'" type="text" class="form-control" value="{{techspecVm.listFieldData[field._id].fieldValue}}" name="" ng-model="techspecVm.fields[$index]">
-								</div>
-								<div class="col-sm-2">
-									<input ng-if="techspecVm.checks[$index]" ng-checked="true" type="checkbox" class="form-control" name="" ng-change="techspecVm.checkCount(techspec.checks[$index])" ng-model="techspecVm.checks[$index]">
-									<input ng-if="!techspecVm.checks[$index]"  type="checkbox" class="form-control" name="" ng-change="techspecVm.checkCount(techspec.checks[$index])" ng-model="techspecVm.checks[$index]">
-								</div>
-							</div>
-						</div> -->
 						</form>
 						<!--view data -->
 						<div class="row" ng-if="isView">
@@ -3316,6 +3307,13 @@
 						</div>
 						<!-- end view data -->
 						<div class="row">
+			               <div class="col-sm-3 pull-right">
+			                   <div class="tablesearch text-right form-group">
+			                       Search: <input type="text" placeholder="Search..." ng-model="techspecVm.searchStr" ng-change="techspecVm.fireCommand(true, 'techSpecValue')" ng-model-options="{debounce:500}">
+			                   </div>
+			               </div>
+			            </div>
+						<div class="row">
 							<div class="col-sm-12">
 								<div class=" table-responsive ">
 									<table class="table table-bordered table-striped">
@@ -3339,13 +3337,13 @@
 												<a href="javascript:void(0);" class="btn btn-primary btn-sm" uib-popover="Edit" popover-trigger="mouseenter" ng-click="techspecVm.fieldEditClicked(fielddata)">
 														<i class="fa fa-pencil"></i>
 													</a>
-													<!--<a href="javascript:void(0);" class="btn btn-danger btn-sm" uib-popover="Edit" popover-trigger="mouseenter" ng-click="techspecVm.destroy(fielddata._id)"><i class="fa fa-trash" ></i></a>-->
+													<a href="javascript:void(0);" class="btn btn-danger btn-sm" uib-popover="Edit" popover-trigger="mouseenter" ng-click="techspecVm.destroy(fielddata._id, 'techSpecValue')"><i class="fa fa-trash" ></i></a>
 												</td>
 											</tr>
 										</tbody>
 									</table>
 								</div>
-								<uib-pagination total-items="techspecVm.totalProductTechInfoCount" ng-model="techspecVm.currentPage" items-per-page="techspecVm.itemsPerPage" max-size="techspecVm.maxSize" ng-change="techspecVm.fireCommand(false,null,'technical')" class="pagination-sm" rotate="false">  </uib-pagination>
+								<uib-pagination total-items="techspecVm.totalProductTechInfoCount" ng-model="techspecVm.currentPage" items-per-page="techspecVm.itemsPerPage" max-size="techspecVm.maxSize" ng-change="techspecVm.fireCommand(false,'techSpecValue')" class="pagination-sm" rotate="false">  </uib-pagination>
 							</div>
 						</div>
 						
