@@ -52,8 +52,8 @@
               <strong ng-if="auction.auctionType === 'live'">Live Auction</strong>
             </p>
             <p><i class="fa fa-clock-o"></i> <strong class="text-success"><timer end-time="auction.endTimer">{{days}} days, {{hours}} hours, {{minutes}} minutes, {{seconds}} seconds.</timer></strong></p>
-            <p><a href="{{uploadImagePrefix}}{{auctionDir}}/{{auction.docName}}" ng-if="auction.docType == 'tc'"><i class="fa fa-file-text-o"></i> <strong class="text-info">Download Catalog</strong></a>
-            <a href="{{uploadImagePrefix}}{{auctionDir}}/{{auction.docName}}" ng-if="!auction.docType&&auction.docName"><i class="fa fa-file-text-o"></i> <strong class="text-info">Download Catalog</strong></a>
+            <p><a href="{{uploadImagePrefix}}{{auctionDir}}/{{auction.docName}}" ng-if="auction.docType == 'tc'" target="_blank"><i class="fa fa-file-text-o"></i> <strong class="text-info">Download Catalog</strong></a>
+            <a href="{{uploadImagePrefix}}{{auctionDir}}/{{auction.docName}}" ng-if="!auction.docType&&auction.docName" target="_blank"><i class="fa fa-file-text-o"></i> <strong class="text-info">Download Catalog</strong></a>
             </p>
             
             <div class="auctions-register-buttons">
@@ -108,8 +108,8 @@
               <i class="fa fa-gavel"></i> <strong ng-if="auction.auctionType === 'online'">Online</strong>
             <strong ng-if="auction.auctionType === 'live'">Live Auction</strong></p>
             <p><i class="fa fa-clock-o"></i> <strong>{{auction.startTimer | date :'hh:mma'}} to {{auction.endTimer | date :'hh:mma'}}</strong></p>
-            <p><a href="{{uploadImagePrefix}}{{auctionDir}}/{{auction.docName}}" ng-if="auction.docType == 'tc'&&auction.docName"><i class="fa fa-file-text-o"></i> <strong class="text-info">Download Catalog</strong></a>
-               <a href="{{uploadImagePrefix}}{{auctionDir}}/{{auction.docName}}" ng-if="!auction.docType&&auction.docName"><i class="fa fa-file-text-o"></i> <strong class="text-info">Download Catalog</strong></a>
+            <p><a href="{{uploadImagePrefix}}{{auctionDir}}/{{auction.docName}}" ng-if="auction.docType == 'tc'&&auction.docName" target="_blank"><i class="fa fa-file-text-o"></i> <strong class="text-info">Download Catalog</strong></a>
+               <a href="{{uploadImagePrefix}}{{auctionDir}}/{{auction.docName}}" ng-if="!auction.docType&&auction.docName" target="_blank"><i class="fa fa-file-text-o"></i> <strong class="text-info">Download Catalog</strong></a>
             </p>
 
             <div class="auctions-register-buttons">

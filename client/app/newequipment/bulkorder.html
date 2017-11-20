@@ -132,6 +132,11 @@
                 </div>
               </div>
             </div>
+            <div class="col-sm-1 form-group text-center">
+               <a href="javascript:void(0);" ng-click="bulkOrderVm.dataModel.orders.splice($index,1)" ng-if="bulkOrderVm.dataModel.orders.length > 1">
+              <i class="fa fa-minus"></i> Delete
+            </a>
+            </div>
           </div>
           
           <div class="form-group">

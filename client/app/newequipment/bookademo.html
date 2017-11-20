@@ -17,33 +17,44 @@
                 </div>
                 
                 <div class="row">
-                  <div class="form-group col-sm-6">
+                  <!-- <div class="form-group col-sm-6">
                     <input type="text" class="form-control" name="phone" ng-model="dataModel.phone" value="" placeholder="Phone No.">
-                  </div>
+                  </div> -->
                   <div class="form-group col-sm-6" ng-class="{'has-error': form.mobile.$invalid &&
                    submitted }">
                     <input type="number" class="form-control" name="mobile" ng-model="dataModel.mobile"  placeholder="* Mobile No." uib-tooltip="+91-98-XXXX-XXXX" tooltip-trigger="focus" tooltip-placement="top" required>
                     
                   </div>
-                </div>
-                <div class="row">
                   <div class="form-group col-sm-6" ng-class="{'has-error': form.email.$invalid && submitted }">
                   <input class="form-control" name="email" ng-model="dataModel.email" placeholder="Email" type="email" value="">
                   </div>
+
+                </div>
+                <div class="row">
+                  <!-- <div class="form-group col-sm-6" ng-class="{'has-error': form.email.$invalid && submitted }">
+                  <input class="form-control" name="email" ng-model="dataModel.email" placeholder="Email" type="email" value="">
+                  </div> -->
                   <div class="form-group col-sm-6" ng-class="{'has-error': form.country.$invalid && submitted }">
                     <select class="form-control" name="country" ng-model="dataModel.country" ng-change="onCountryChange(this,dataModel.country)" required>
                       <option value="">*Select Country</option>
                       <option value="{{country.name}}" ng-repeat="country in allCountries | orderBy:'name'">{{country.name}}</option>              
                     </select>
                   </div>
-                </div>
-                 <div class="row">
                   <div class="form-group col-sm-6" ng-class="{'has-error': form.state.$invalid && submitted }">
                       <select class="form-control" name="state" ng-model="dataModel.state" ng-change="onStateChange(this,dataModel.state)" required>
                         <option value="">Select State</option>
                         <option value="{{state.name}}" ng-repeat="state in stateList">{{state.name}}</option>              
                     </select>
                   </div>
+
+                </div>
+                 <div class="row">
+                  <!-- <div class="form-group col-sm-6" ng-class="{'has-error': form.state.$invalid && submitted }">
+                      <select class="form-control" name="state" ng-model="dataModel.state" ng-change="onStateChange(this,dataModel.state)" required>
+                        <option value="">Select State</option>
+                        <option value="{{state.name}}" ng-repeat="state in stateList">{{state.name}}</option>              
+                    </select>
+                  </div> -->
                   <div class="form-group col-sm-6" ng-class="{'has-error': form.city.$invalid && submitted }">
                     <select class="form-control" name="city" ng-model="dataModel.city" required>
                       <option value="">Select City</option>

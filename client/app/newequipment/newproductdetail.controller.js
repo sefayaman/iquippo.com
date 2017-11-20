@@ -376,13 +376,17 @@
           bookADemoScope.submitted = true;
           return;
         }
+        bookADemoScope.dataModel.product = $scope.currentProduct._id;
+        bookADemoScope.dataModel.category = $scope.currentProduct.category.name;
+        bookADemoScope.dataModel.brand = $scope.currentProduct.brand.name;
+        bookADemoScope.dataModel.model = $scope.currentProduct.model.name;
         commonSvc.saveBookADemo(bookADemoScope.dataModel)
         .then(function(res){
           bookADemoScope.close();
-          Modal.alert("Your request for demo submmitted successfully.");
+          Modal.alert("Your request for demo is submitted successfully.");
         })
         .catch(function(err){
-          Modal.alert("Unable to submit your request.Please try later.");
+          Modal.alert("Unable to submit your request. Please try later.");
         })
       }
     }

@@ -122,7 +122,6 @@
                 return;
             }
             
-            $rootScope.loading = true;
             vm.dataModel.user = {
                 name:Auth.getCurrentUser().fname + " " + Auth.getCurrentUser().lname,
                 mobile:Auth.getCurrentUser().mobile,
@@ -130,6 +129,16 @@
                 role:Auth.getCurrentUser().role,
             };
             
+            vm.dataModel.orders.forEach(function(item,index){
+                delete item.brandList;
+                delete item.modelList;
+                if(!item.category || !item.brand || !item.model)
+                    vm.dataModel.orders.splice(index,1);
+            });
+
+            if(!vm.dataModel.orders.length)
+                return;
+             $rootScope.loading = true;
             NewEquipmentSvc.saveNewBulkOrder(vm.dataModel)
             .then(function(res){
                 $scope.submitted = false;

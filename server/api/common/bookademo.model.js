@@ -15,6 +15,10 @@ var BookADemoSchema = new Schema({
   countryCode:String,
   state: String,
   city: String,
+  product:{type:Schema.Types.ObjectId,ref:'Product'},
+  category:String,
+  brand:String,
+  model:String,
   createdAt: {type:Date,default:Date.now},
   updatedAt: {type:Date,default:Date.now}
   
