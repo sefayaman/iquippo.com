@@ -100,8 +100,6 @@
                 <p>({{auction.total_products}} Assets  |  {{auction.city}})</p>
               </div>
               <div class="col-xs-4 col-sm-3 form-group text-center">
-                Starts
-                <p><strong class="text-danger">{{auction.startDate | date :'dd'}} {{auction.startDate | date :'MMM'}}</strong></p>
               </div>
             </div>
             <p ng-if="auction.auctionType === 'online' || auction.auctionType === 'live'">
