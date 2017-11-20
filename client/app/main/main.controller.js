@@ -176,7 +176,7 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
         vm.groups = groups;
       })
       .catch(function(err){
-        Modal.alert("Error in fetching group");
+        //Modal.alert("Error in fetching group");
       });
     }
 
@@ -188,7 +188,7 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
         vm.groupsForNew = groups;
       })
       .catch(function(err){
-        Modal.alert("Error in fetching group");
+       // Modal.alert("Error in fetching group");
       });
     }
 
@@ -198,7 +198,7 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
         vm.certificationList = certList;
       })
       .catch(function(err){
-        Modal.alert("Error in fetching group");
+        //Modal.alert("Error in fetching group");
       });
     }
 
@@ -208,7 +208,7 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
         vm.brands = brands;
       })
       .catch(function(err){
-        Modal.alert("Error in fetching brands");
+        //Modal.alert("Error in fetching brands");
       });
     }
 
@@ -218,7 +218,7 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
         vm.brandsForNew = newBrands;
       })
       .catch(function(err){
-        Modal.alert("Error in fetching brands");
+        //Modal.alert("Error in fetching brands");
       });
     }
 
