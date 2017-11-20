@@ -143,9 +143,11 @@
       <uib-tab heading="Used Equipment" select="mainVm.toggleTab(1,false)">
         <div class="row">
           <div class="col-sm-4 form-group text-center" ng-repeat="category in mainVm.categoryList" ng-if="$index < 6">   
-            <a href="/used/{{category.group.name}}/{{category.name}}?currentPage=1" class="cat-rectangle">
-              <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{category.imgSrc}}" class="category-item">
-            </a>
+            <div class="cat-rectangle">
+              <a href="/used/{{category.group.name}}/{{category.name}}?currentPage=1">
+                <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{category.imgSrc}}" class="category-item">
+              </a>
+            </div>
             <h5 class="category-name">{{category.name}} ({{category.count}})</h5>
           </div>
         </div>
@@ -153,9 +155,11 @@
       <uib-tab heading="New Equipment" select="mainVm.toggleTab(1,true)">
         <div class="row">
           <div class="col-sm-4 form-group text-center" ng-repeat="category in mainVm.categoryListForNew" ng-if="$index < 6">   
-            <a href="/new/{{category.group.name}}/{{category.name}}?currentPage=1" class="cat-rectangle">
-              <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{category.imgSrc}}" class="category-item">
-            </a>
+            <div class="cat-rectangle">
+              <a href="/new/{{category.group.name}}/{{category.name}}?currentPage=1">
+                <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{category.imgSrc}}" class="category-item">
+              </a>
+            </div>
             <h5 class="category-name">{{category.name}} ({{category.count}})</h5>
           </div>
         </div>

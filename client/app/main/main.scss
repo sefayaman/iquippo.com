@@ -1050,16 +1050,17 @@ body{font-family: Lato-Regular ,sans-serif;}
 .heading-titles a{margin: 0.5em 1em;  text-transform: uppercase; font-size: 12px; font-weight: bold; letter-spacing: 1px}
 .heading-titles .active{color: #666;}
 .cat-rectangle{
-  height: 246px; margin: 0 auto; display: block;
-  background: url('../assets/images/back-border.png'); background-position: center; background-repeat: no-repeat;
-  display: flex; align-items: center; justify-content: center;
+  height: 300px; margin: 0 auto; display: block;
+  background: url('../assets/images/back-border.png'); background-size: 100% 100%; background-repeat: no-repeat;
   
 }
 .category-name{text-transform: uppercase; font-weight: bold; margin: 0.5em 0 2em;}
 .category-name h5{margin-bottom: 2px; font-weight: bold;}
 .category-name span{font-size: 13px; text-transform: capitalize;}
 .category-item{
-  max-width: 100%;
+  width: 100%;
+  height: 100%;
+  padding: 8px;
 }
 .brand-logo{
   height: 200px; display: flex; display: -webkit-flex; -webkit-align-items: center;
@@ -1076,8 +1077,7 @@ align-items: center; justify-content: center;
    border-radius: 4px;
    color: #fff;
 }
-#search-result_wrapper .media{background-color:#fff;}
-#search-result_wrapper .media{background-color:#fff;}
+#search-result_wrapper .media{background-color:#fff; position: relative;}
 #search-result_wrapper .media .media-body{padding:10px ;}
 #search-result_wrapper .media .media-body h3{font-size: 18px;}
 #search-result_wrapper .media a img{height: 200px; width: 100%;}
@@ -1493,8 +1493,8 @@ footer .subscribe{height: 40px;}
 .maximum-capacity:last-of-type{border-bottom:0; margin-bottom: 25px;}
 .new-equipment-brand{padding: 0; margin: 0 -15px; box-sizing: border-box;}
 .new-equipment-brand li{display: inline-block; float: left; width: 50%; height:270px; padding: 0 15px;}
-.new-equipment-brand li:first-child{height: 545px;}
-.new-equipment-brand li:nth-child(2){margin-bottom: 15px;}
+.new-equipment-brand li:first-child{height: 630px;}
+.new-equipment-brand li:nth-child(2){margin-bottom: 30px;}
 .new-equipment-brand li img{width: 100%; height: 100%;}
 
 @media (max-width:640px){
