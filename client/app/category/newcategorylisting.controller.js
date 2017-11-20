@@ -16,11 +16,34 @@ angular.module('sreizaoApp').controller('NewCategoryListingCtrl',NewCategoryList
         filter.group = $stateParams.group;
       categorySvc.getCategoryOnFilter(filter)
       .then(function(catList){
-        vm.allCategoryList = catList;
+        vm.allCategoryList = sortArr(catList);
       })
       .catch(function(err){
         Modal.alert("Error in fetching categories");
       });
+    }
+
+    function sortArr(arrList){
+      var sortedArr = [];
+      if(!arrList.length)
+        return sortedArr;
+
+      var appCache = {};
+      for(var i = 0;i < arrList.length;i++){
+        if(arrList[i].imgSrc && !appCache[arrList[i].name]){
+          sortedArr.push(arrList[i]);
+          appCache[arrList[i].name] = 1;
+        }
+      }
+
+      arrList.forEach(function(item){
+        if(!appCache[item.name]){
+          sortedArr.push(item);
+          appCache[item.name] = 1;
+        }
+      });
+
+      return sortedArr;
     }
 
     function showMore(){

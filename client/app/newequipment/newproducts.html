@@ -46,7 +46,7 @@
             Product Brand <i class="pull-right fa" ng-class="{'fa-minus': status.brand, 'fa-plus': !status.brand}"></i>
           </uib-accordion-heading>
             <div>
-              <div class="radio" ng-repeat="br in brandList">
+              <div class="radio" ng-repeat="br in brandList | unique: 'name'">
                 <input type="radio" ng-model="equipmentSearchFilter.brand" name="brand" value="{{br.name}}" id="brand_{{$index}}" ng-change="newequipmentlistVm.fireCommand()"> <label for="brand_{{$index}}">{{br.name}}</label>
               </div>
               
