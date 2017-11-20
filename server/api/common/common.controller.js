@@ -366,11 +366,13 @@ exports.updateMasterData = function(req, res) {
 						if (err) {
 							return handleError(res, err);
 						}
+						Product.update({"group._id": _id},{$set:{"group.name":reqData.name}},{multi:true}).exec();
 						res.status(200).send(type + " updated successfully");
 					});
-				})
+				});
 
-			Product.find({
+
+			/*Product.find({
 				"group._id": _id
 			}, function(err, res) {
 				if (err) {
@@ -382,7 +384,6 @@ exports.updateMasterData = function(req, res) {
 						"_id": _id,
 						name: reqData.name
 					};
-					//x.name=x.category.name + x.brand.name + reqData.name + ((x.variant && x.variant.name) || " ");
 					Product.update({
 						"_id": x._id
 					}, {
@@ -397,7 +398,7 @@ exports.updateMasterData = function(req, res) {
 					})
 				})
 
-			});
+			});*/
 			break;
 		case "Category":
 			Seq()
@@ -468,13 +469,32 @@ exports.updateMasterData = function(req, res) {
 						if (err) {
 							return handleError(res, err);
 						}
-						res.status(200).send(type + " updated successfully");
+
+						Product.find({'category._id':_id},function(err,products){
+							if(err)return handleError(res,err);
+							async.eachLimit(products,4,updateProductOnCategoryChange);
+							res.status(200).send(type + " updated successfully");
+						});
+						
 					});
 
-				})
+				});
+
+				function updateProductOnCategoryChange(x,cb){
+					var updateObj = {};
+					updateObj.name = reqData.name + " "+ x.brand.name + " " + x.model.name + ((x.variant && x.variant.name) || " ");
+					updateObj.group = reqData.group;
+					updateObj['category.name'] =  reqData.name;
+					Product.update({_id:x._id},{$set:updateObj},function(err){
+						if(err) console.log("err in product update for product",x._id);
+						cb();
+					});
+				}
 
 
-			Product.find({
+
+
+			/*Product.find({
 				"category._id": _id
 			}, function(err, res) {
 				if (err) {
@@ -502,7 +522,7 @@ exports.updateMasterData = function(req, res) {
 					})
 				})
 
-			});
+			});*/
 
 			break;
 		case "Brand":
@@ -559,12 +579,30 @@ exports.updateMasterData = function(req, res) {
 						if (err) {
 							return handleError(res, err);
 						}
-						res.status(200).send(type + " updated successfully");
+						Product.find({'brand._id':_id},function(err,products){
+							if(err)return handleError(res,err);
+							async.eachLimit(products,4,updateProductOnBrandChange);
+							res.status(200).send(type + " updated successfully");
+						});
+						//res.status(200).send(type + " updated successfully");
 					});
 
-				})
+				});
 
-			Product.find({
+				function updateProductOnBrandChange(x,cb){
+					var updateObj = {};
+					updateObj.name = x.category.name+ " " +  reqData.name + " "  +x.model.name + ((x.variant && x.variant.name) || " ");
+					updateObj.group = reqData.group;
+					updateObj.category = reqData.category;
+					updateObj['brand.name'] =  reqData.name;
+					Product.update({_id:x._id},{$set:updateObj},function(err){
+						if(err) console.log("err in product update on brand update",x._id);
+						cb();
+					});
+				}
+
+
+			/*Product.find({
 				"brand._id": _id
 			}, function(err, res) {
 				if (err) {
@@ -593,7 +631,7 @@ exports.updateMasterData = function(req, res) {
 					})
 				})
 
-			});
+			});*/
 
 			break;
 		case "Model":
@@ -633,11 +671,28 @@ exports.updateMasterData = function(req, res) {
 						if (err) {
 							return handleError(res, err);
 						}
-						res.status(200).send(type + " updated successfully");
+						Product.find({'model._id':_id},function(err,products){
+							if(err)return handleError(res,err);
+							async.eachLimit(products,4,updateProductOnModelChange);
+							res.status(200).send(type + " updated successfully");
+						});
+						//res.status(200).send(type + " updated successfully");
 					});
 				});
 
-			Product.find({
+				function updateProductOnModelChange(x,cb){
+					var updateObj = {};
+					updateObj.name = x.category.name + " " +  x.brand.name + " "  + reqData.name + ((x.variant && x.variant.name) || " ");
+					updateObj.group = reqData.group;
+					updateObj.category = reqData.category;
+					updateObj.brand = reqData.brand;
+					updateObj['model.name'] =  reqData.name;
+					Product.update({_id:x._id},{$set:updateObj},function(err){
+						if(err) console.log("err in product update on brand update",x._id);
+						cb();
+					});
+				}
+			/*Product.find({
 				"model._id": _id
 			}, function(err, res) {
 				if (err) {
@@ -665,7 +720,7 @@ exports.updateMasterData = function(req, res) {
 					})
 				})
 
-			});
+			});*/
 
 			break;
 		default:
