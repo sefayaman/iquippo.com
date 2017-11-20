@@ -31,7 +31,7 @@
             </div>
             <!-- Indicators -->
             <ol class="carousel-indicators">
-              <li class="" data-slide-to="{{$index}}" ng-class="{'active':thumbnailImage.isPrimary && !thumbnailImage.catImgType}" data-target="#article-photo-carousel" ng-repeat="thumbnailImage in currentProduct.images | limitTo:5">
+              <li class="" data-slide-to="{{$index}}" ng-class="{'active':thumbnailImage.isPrimary && !thumbnailImage.catImgType}" data-target="#article-photo-carousel" ng-repeat="thumbnailImage in currentProduct.images | limitTo:4">
                 <img alt="" ng-src="{{uploadImagePrefix}}{{currentProduct.assetDir}}/{{thumbnailImage.src}}" class="img-responsive img-thumbnail" ng-click = "imageClick()">
               </li>
             </ol>
@@ -375,26 +375,26 @@
         </uib-tab>
         <uib-tab heading="Service information" ng-if="!productDetailVm.checkServiceInfo(currentProduct.serviceInfo)">
           <div class="row">
-            <div class="col-xs-6 col-sm-4 col-md-3 form-group">
-              <div ng-repeat="serviceInfo in currentProduct.serviceInfo">
+            <div class="col-xs-6 col-sm-4 col-md-3">
+              <div class="form-group" ng-repeat="serviceInfo in currentProduct.serviceInfo">
                 <label>Service Date</label>
                 <h4>{{serviceInfo.servicedate}}</h4>
               </div>
             </div>
-            <div class="col-xs-6 col-sm-4 col-md-3 form-group">
-              <div ng-repeat="serviceInfo in currentProduct.serviceInfo">
+            <div class="col-xs-6 col-sm-4 col-md-3">
+              <div class="form-group" ng-repeat="serviceInfo in currentProduct.serviceInfo">
                 <label>Operating hrs(km/m.hrs)</label>
                 <h4>{{serviceInfo.operatingHour}}</h4>
               </div>
             </div>
-            <div class="col-xs-6 col-sm-4 col-md-3 form-group">
-              <div ng-repeat="serviceInfo in currentProduct.serviceInfo">
+            <div class="col-xs-6 col-sm-4 col-md-3">
+              <div class="form-group" ng-repeat="serviceInfo in currentProduct.serviceInfo">
                 <label>Service At</label>
                 <h4>{{serviceInfo.serviceAt}}</h4>
               </div>
             </div>
-            <div class="col-xs-6 col-sm-4 col-md-3 form-group">
-              <div ng-repeat="serviceInfo in currentProduct.serviceInfo">
+            <div class="col-xs-6 col-sm-4 col-md-3">
+              <div class="form-group" ng-repeat="serviceInfo in currentProduct.serviceInfo">
                 <label>Authorized Service Station</label>
                 <h4>{{serviceInfo.authServiceStation}}</h4>
               </div>

@@ -102,8 +102,10 @@
       </div>
       <div id="search-result_wrapper" ng-if="!searching && !noResult">
         <div class="row">
-          <div class="col-sm-6 col-md-6 form-group padd-right" ng-if="auctionData.contactName || auctionData.contactNumber">
-            <h4 class="text-danger"><i class="fa fa-phone"></i> {{auctionData.contactName}}({{auctionData.contactNumber}})</h4>
+          <div class="col-sm-6 col-md-6 form-group padd-right">
+            <div ng-if="auctionData.contactName || auctionData.contactNumber">
+              <h4 class="text-danger"><i class="fa fa-phone"></i> {{auctionData.contactName}}({{auctionData.contactNumber}})</h4>
+            </div>
           </div>
           <div class="col-sm-3 col-md-3 form-group text-right">
             <a href="{{uploadImagePrefix}}{{auctionDir}}/{{auctionData.docName}}" class="text-info" ng-if="auctionData.docType == 'bidProxy'" target="_blank" ng-disabled="!auctionData.docName">
