@@ -774,13 +774,13 @@
 
       var ret = false;
 
-      if ($scope.container.mfgYear) {
+      /*if ($scope.container.mfgYear) {
         if ($scope.container.mfgYear.getFullYear)
           $scope.product.mfgYear = $scope.container.mfgYear.getFullYear();
       } else {
         form.mfgyear.$invalid = true;
         ret = true;
-      }
+      }*/
       
       if($scope.product.tradeType && $scope.product.tradeType == 'RENT' && $scope.product.auctionListing){
         Modal.alert("Auction is not allowed for rent assets.");
