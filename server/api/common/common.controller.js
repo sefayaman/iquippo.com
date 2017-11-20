@@ -371,34 +371,6 @@ exports.updateMasterData = function(req, res) {
 					});
 				});
 
-
-			/*Product.find({
-				"group._id": _id
-			}, function(err, res) {
-				if (err) {
-					return handleError(res, err);
-				}
-				res.forEach(function(x) {
-
-					x.group = {
-						"_id": _id,
-						name: reqData.name
-					};
-					Product.update({
-						"_id": x._id
-					}, {
-						$set: {
-							"group": x.group
-						}
-					}, function(err, updt) {
-						if (err) {
-							return handleError(res, err);
-						}
-						console.log(updt);
-					})
-				})
-
-			});*/
 			break;
 		case "Category":
 			Seq()
@@ -480,49 +452,6 @@ exports.updateMasterData = function(req, res) {
 
 				});
 
-				function updateProductOnCategoryChange(x,cb){
-					var updateObj = {};
-					updateObj.name = reqData.name + " "+ x.brand.name + " " + x.model.name + ((x.variant && x.variant.name) || " ");
-					updateObj.group = reqData.group;
-					updateObj['category.name'] =  reqData.name;
-					Product.update({_id:x._id},{$set:updateObj},function(err){
-						if(err) console.log("err in product update for product",x._id);
-						cb();
-					});
-				}
-
-
-
-
-			/*Product.find({
-				"category._id": _id
-			}, function(err, res) {
-				if (err) {
-					return handleError(res, err);
-				}
-				res.forEach(function(x) {
-
-					x.category = {
-						"_id": _id,
-						name: reqData.name
-					};
-					x.name = reqData.name + x.brand.name + x.model.name + ((x.variant && x.variant.name) || " ");
-					Product.update({
-						"_id": x._id
-					}, {
-						$set: {
-							"category": x.category,
-							"name": x.name
-						}
-					}, function(err, updt) {
-						if (err) {
-							return handleError(res, err);
-						}
-						console.log(updt);
-					})
-				})
-
-			});*/
 
 			break;
 		case "Brand":
@@ -589,49 +518,6 @@ exports.updateMasterData = function(req, res) {
 
 				});
 
-				function updateProductOnBrandChange(x,cb){
-					var updateObj = {};
-					updateObj.name = x.category.name+ " " +  reqData.name + " "  +x.model.name + ((x.variant && x.variant.name) || " ");
-					updateObj.group = reqData.group;
-					updateObj.category = reqData.category;
-					updateObj['brand.name'] =  reqData.name;
-					Product.update({_id:x._id},{$set:updateObj},function(err){
-						if(err) console.log("err in product update on brand update",x._id);
-						cb();
-					});
-				}
-
-
-			/*Product.find({
-				"brand._id": _id
-			}, function(err, res) {
-				if (err) {
-					return handleError(res, err);
-				}
-				console.log(res);
-				res.forEach(function(x) {
-
-					x.brand = {
-						"_id": _id,
-						name: reqData.name
-					};
-					x.name = x.category.name + reqData.name + x.model.name + ((x.variant && x.variant.name) || " ");
-					Product.update({
-						"_id": x._id
-					}, {
-						$set: {
-							"brand": x.brand,
-							"name": x.name
-						}
-					}, function(err, updt) {
-						if (err) {
-							return handleError(res, err);
-						}
-						console.log(updt);
-					})
-				})
-
-			});*/
 
 			break;
 		case "Model":
@@ -676,55 +562,47 @@ exports.updateMasterData = function(req, res) {
 							async.eachLimit(products,4,updateProductOnModelChange);
 							res.status(200).send(type + " updated successfully");
 						});
-						//res.status(200).send(type + " updated successfully");
 					});
 				});
-
-				function updateProductOnModelChange(x,cb){
-					var updateObj = {};
-					updateObj.name = x.category.name + " " +  x.brand.name + " "  + reqData.name + ((x.variant && x.variant.name) || " ");
-					updateObj.group = reqData.group;
-					updateObj.category = reqData.category;
-					updateObj.brand = reqData.brand;
-					updateObj['model.name'] =  reqData.name;
-					Product.update({_id:x._id},{$set:updateObj},function(err){
-						if(err) console.log("err in product update on brand update",x._id);
-						cb();
-					});
-				}
-			/*Product.find({
-				"model._id": _id
-			}, function(err, res) {
-				if (err) {
-					return handleError(res, err);
-				}
-				res.forEach(function(x) {
-
-					x.model = {
-						"_id": _id,
-						name: reqData.name
-					};
-					x.name = x.category.name + x.brand.name + reqData.name + ((x.variant && x.variant.name) || " ");
-					Product.update({
-						"_id": x._id
-					}, {
-						$set: {
-							"model": x.model,
-							"name": x.name
-						}
-					}, function(err, updt) {
-						if (err) {
-							return handleError(res, err);
-						}
-						console.log(updt);
-					})
-				})
-
-			});*/
 
 			break;
 		default:
 			return res.status(400).send("Invalid request");
+	}
+	function updateProductOnCategoryChange(x,cb){
+		var updateObj = {};
+		updateObj.name = reqData.name + " "+ x.brand.name + " " + x.model.name + ((x.variant && x.variant.name) || " ");
+		updateObj.group = reqData.group;
+		updateObj['category.name'] =  reqData.name;
+		Product.update({_id:x._id},{$set:updateObj},function(err){
+			if(err) console.log("err in product update for product",x._id);
+			cb();
+		});
+	}
+
+	function updateProductOnModelChange(x,cb){
+		var updateObj = {};
+		updateObj.name = x.category.name + " " +  x.brand.name + " "  + reqData.name + ((x.variant && x.variant.name) || " ");
+		updateObj.group = reqData.group;
+		updateObj.category = reqData.category;
+		updateObj.brand = reqData.brand;
+		updateObj['model.name'] =  reqData.name;
+		Product.update({_id:x._id},{$set:updateObj},function(err){
+			if(err) console.log("err in product update on brand update",x._id);
+			cb();
+		});
+	}
+
+	function updateProductOnBrandChange(x,cb){
+		var updateObj = {};
+		updateObj.name = x.category.name+ " " +  reqData.name + " "  +x.model.name + ((x.variant && x.variant.name) || " ");
+		updateObj.group = reqData.group;
+		updateObj.category = reqData.category;
+		updateObj['brand.name'] =  reqData.name;
+		Product.update({_id:x._id},{$set:updateObj},function(err){
+			if(err) console.log("err in product update on brand update",x._id);
+			cb();
+		});
 	}
 
 }

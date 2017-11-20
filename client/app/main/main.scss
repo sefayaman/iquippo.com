@@ -1077,7 +1077,7 @@ align-items: center; justify-content: center;
    border-radius: 4px;
    color: #fff;
 }
-#search-result_wrapper .media{background-color:#fff; position: relative;}
+#search-result_wrapper .media{background-color:#fff; position: relative; max-height: 460px;}
 #search-result_wrapper .media .media-body{padding:10px ;}
 #search-result_wrapper .media .media-body h3{font-size: 18px;}
 #search-result_wrapper .media a img{height: 200px; width: 100%;}
@@ -1086,12 +1086,12 @@ align-items: center; justify-content: center;
 #search-result_wrapper .media .table > tbody > tr > td{padding: 5px;}
 #search-result_wrapper .media .btn-primary, .asset-sale .btn-primary, .asset-sale .btn-danger, .information-tabs .btn-primary, {border-radius: 4px; text-transform: uppercase; padding-top: 0.9em; padding-bottom: 0.9em; font-size: 12px; letter-spacing: 2px;}
 #search-result_wrapper .media h4{font-size: 14px; font-weight: bold;}
-#search-result_wrapper .media h3{font-size: 16px; font-weight: bold; margin:7px 0;}
+#search-result_wrapper .media h3{font-size: 14px; font-weight: bold; margin:10px 0;}
 #search-result_wrapper .media span{font-size: 12px;}
 #search-result_wrapper .media a img.img-responsive{height: 200px; width: 100%;}
 #search-result_wrapper .media .table{margin: 0;}
-#search-result_wrapper .media .table small{font-size: 10px; color: #ccc;}
-#search-result_wrapper .media .table > tbody > tr > td{padding: 5px; text-align: center; vertical-align: top;}
+#search-result_wrapper .media .table small{font-size: 9px; color: #ccc;}
+#search-result_wrapper .media .table > tbody > tr > td{padding: 0px; text-align: center; vertical-align: top;}
 #search-result_wrapper .media .btn-primary, .asset-sale .btn-primary, .asset-sale .btn-danger, .information-tabs .btn-primary,.panel.panel-primary .btn-default {border-radius: 4px; text-transform: uppercase; padding-top: 1em; padding-bottom: 1em; font-size: 12px; letter-spacing: 1px; font-weight: bold;}
 .information .panel-group .panel.panel-default{box-shadow: 0 1px 3px #eee; border: #efefef;}
 .information .panel-group .panel.panel-default .panel-heading{background: transparent; border:0; padding: 0;}
