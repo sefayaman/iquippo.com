@@ -1,196 +1,202 @@
+<div class="container-fluid">
+  <ol class="breadcrumb">
+    <li>
+      <a href="/main"> Home </a>
+    </li>
+    <li><a href="/used"> Used Equipments </a></li>
+    <li class="active"> {{displayText || equipmentSearchFilter.group || equipmentSearchFilter.category || equipmentSearchFilter.brand || equipmentSearchFilter.location || equipmentSearchFilter.assetId || "Used Products"}} </li>
+  </ol>
+</div>
 
-  <div class="view-content">
-  <section class="wrapper">
-      <div class="container">        
-        <div class="row">
-        
-          <div class="col-sm-4 col-md-3 form-group" ng-class="{hidefilter: !filterbutton.value1}">
-            <button class="btn btn-danger visible-xs filter-display" ng-click="filterbutton.value1 = !filterbutton.value1">Close</button>
-            <div class="well">
-              <h4>Equipment search</h4>
-                <form role="form">
-                <!-- <label for="" class="text-muted">Keyword</label>
-                <div class="form-group input-group">
-                  <input type="text" class="form-control" ng-model="equipmentSearchFilter.searchstr" placeholder="Enter Keywords">
-                  <a href="javascript:void(0);" class="input-group-addon"><i class="fa fa-angle-right"></i></a>
-                </div>   -->
-                <label for="" class="text-muted">Trading Type </label>
-                <div class="form-group">
-                  <select class="form-control col-md-2" name="type" ng-model="type" ng-change="viewproductVm.onTypeChange(type,true)">
-                  <option value="">Select Trade Type</option>
-                    <option value="BOTH">Both</option>
-                    <option value="SELL">Buy</option>
-                    <option value="RENT">Rent</option>
-                  </select>
+<section class="category-block">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-3" ng-class="{hidefilter: !filterbutton.value1}">
+        <button class="btn btn-danger visible-xs filter-display" ng-click="filterbutton.value1 = !filterbutton.value1"><i class="fa fa-times"></i> Close</button>
+        <h4 class="filter-heading">
+          Filter By:
+          <small><a href="javascript:void(0);" class="pull-right" ng-click="clearAll()">Clear All</a></small>
+        </h4>
+        <legend></legend>
+        <uib-accordion close-others="oneAtATime" class="information">
+          <uib-accordion-group is-open="status.group">
+            <uib-accordion-heading>
+              Industry<i class="pull-right fa" ng-class="{'fa-minus': status.group, 'fa-plus': !status.group}"></i>
+            </uib-accordion-heading>
+              <div class="radio" ng-repeat="group in allGroup">
+                <input type="radio" ng-model="equipmentSearchFilter.group" ng-change="viewproductVm.onGroupChange(equipmentSearchFilter.group)" name="group" value="{{group.name}}" id="gp_{{$index}}"> <label for="gp_{{$index}}">{{group.name}}</label>
+              </div>
+          </uib-accordion-group>
 
-                  <i class="caret"></i>
+         <!--  <uib-accordion-group is-open="status.tradeType">
+            <uib-accordion-heading>
+              Available For (2)<i class="pull-right fa" ng-class="{'fa-minus': status.tradeType, 'fa-plus': !status.tradeType}"></i>
+            </uib-accordion-heading>
+              <div class="radio">
+                <input type="radio" ng-model="equipmentSearchFilter.tradeType" name="tradetype" value="SELL" id="buying"> <label for="buying">Buying</label>
+              </div>
+              <div class="radio">
+                <input type="radio" ng-model="equipmentSearchFilter.tradeType" name="tradetype" value="RENT" id="renting"> <label for="renting">Renting</label>
+              </div>
+          </uib-accordion-group> -->
+
+          <uib-accordion-group is-open="status.category">
+            <uib-accordion-heading>
+              Category  <i class="pull-right fa" ng-class="{'fa-minus': status.category, 'fa-plus': !status.category}"></i>
+            </uib-accordion-heading>
+              <div>
+                <div class="radio" ng-repeat="cat in categoryList">
+                  <input type="radio" ng-model="equipmentSearchFilter.category" ng-change="viewproductVm.onCategoryChange(equipmentSearchFilter.category)" name="category" value="{{cat.name}}" id="cat_{{$index}}"> <label for="cat_{{$index}}">{{cat.name}}</label>
                 </div>
+                
+              </div>
+          </uib-accordion-group>
 
-                <label for="" class="text-muted">Category</label>
-                <div class="form-group">
-                <select class="form-control col-md-2" name="category"  ng-model="equipmentSearchFilter.category" ng-change="viewproductVm.onCategoryChange(equipmentSearchFilter.category)">
-                        <option value="">Select Category</option>
-                        <option value="{{cat.name}}" ng-repeat="cat in allCategory">{{cat.name}}</option>
-                </select>
-                <i class="caret"></i>
-
+          <uib-accordion-group is-open="status.brand">
+            <uib-accordion-heading>
+              Product Brand <i class="pull-right fa" ng-class="{'fa-minus': status.brand, 'fa-plus': !status.brand}"></i>
+            </uib-accordion-heading>
+              <div>
+                <div class="radio" ng-repeat="br in brandList">
+                  <input type="radio" ng-model="equipmentSearchFilter.brand" name="brand" value="{{br.name}}" id="brand_{{$index}}" ng-change="viewproductVm.fireCommand()"> <label for="brand_{{$index}}">{{br.name}}</label>
                 </div>
-
-                <label for="" class="text-muted">Product Brand</label>
-                <div class="form-group">
-                  <select class="form-control col-md-2" name="brand" ng-model="equipmentSearchFilter.brand" ng-change="viewproductVm.onBrandChange(equipmentSearchFilter.brand)">
-                        <option value="" >Select Brand</option>
-                        <option value="{{br.name}}" ng-repeat="br in brandList">{{br.name}}</option>
-                  </select>
-
-                  <i class="caret"></i>
-
-                </div>
-
-                <label for="" class="text-muted">Location</label>
-                <div class="form-group">
-                  <input type="text" class="form-control" ng-model="equipmentSearchFilter.locationName" placeholder="Enter Country/State/Location" uib-typeahead="address for address in getLocationHelp($viewValue)"  class="form-control" typeahead-focus-first = "false" typeahead-wait-ms="200"
-                   ng-change="viewproductVm.fireCommand()" typeahead-on-select="viewproductVm.fireCommand()"  ng-model-options="{debounce:1000}" autocomplete="off"/>
-                </div>
-
-                <label for="" class="text-muted">Asset Id</label>
-                <div class="form-group">
-
-                  <input type="text" class="form-control" placeholder="Asset Id"  ng-model="equipmentSearchFilter.assetId" class="form-control" ng-change="viewproductVm.fireCommand()">
-
-                </div> 
-              </form>
-            </div>
-
+                
+              </div>
+          </uib-accordion-group>
+           <uib-accordion-group is-open="status.location">
+            <uib-accordion-heading>
+              Location <i class="pull-right fa" ng-class="{'fa-minus': status.location, 'fa-plus': !status.location}"></i>
+            </uib-accordion-heading>
+            <input type="text" class="form-control form-group" ng-model="equipmentSearchFilter.location" placeholder="Enter Country/State/Location" uib-typeahead="address for address in getLocationHelp($viewValue)"  class="form-control" typeahead-focus-first = "false" typeahead-wait-ms="200" ng-change="viewproductVm.fireCommand()" typeahead-on-select="viewproductVm.fireCommand()"  ng-model-options="{debounce:1000}" autocomplete="off"/>
+          </uib-accordion-group>
+          <uib-accordion-group is-open="Infostatus.open">
+            <uib-accordion-heading>
+              Asset Id  <i class="pull-right fa" ng-class="{'fa-minus': Infostatus.open, 'fa-plus': !Infostatus.open}"></i>
+            </uib-accordion-heading>
+            <input type="text" class="form-control form-group" placeholder="Asset Id"  ng-model="equipmentSearchFilter.assetId" class="form-control" ng-change="viewproductVm.fireCommand()">
+          </uib-accordion-group>
+        </uib-accordion>
+        <div class="panel" class="information">
+          <div class="panel-heading">
+            <h3 class="panel-title">Manufacturing Year</h3>
           </div>
-          <div class="col-sm-8 col-md-9">
-
-            <div class="row text-center">
-                <div class="col-sm-8 text-right hidden-xs">
-                  <div class="compare-cart">
-                    <ul>
-                      <li ng-repeat="prd in viewproductVm.productListToCompare" ng-if="prd._id">
-                        <img ng-src="{{uploadImagePrefix}}{{prd.assetDir}}/{{prd.primaryImg}}" width="24" height="24"><a href="javascript:void(0);" ng-click="viewproductVm.removeProductFromCompList($index)"><i class="fa fa-times" aria-hidden="true"></i></a>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-                <div class="col-xs-1 col-sm-1 hidden-xs">
-                  <a href="javascript:void(0);" uib-tooltip="Compare Products" tooltip-placement="top" tooltip-trigger="mouseenter" ng-click="viewproductVm.compare()">
-                     <span class="count-compare" ng-if="viewproductVm.compareCount != 0">{{viewproductVm.compareCount}}</span>
-                     <img src="assets/images/campare-icon.png" width="20">
-                   </a>
-                </div>
-                <div class="col-xs-4 visible-xs filter-btn">
-                  <button class="btn-block btn-danger " ng-click="filterbutton.value1 = !filterbutton.value1">
-                    <i class="fa fa-filter"></i> Filter
-                  </button>
-                </div>
-                <div class="col-xs-8 col-sm-3">
-                  <span>Sort by:</span>
-                   <select ng-change="viewproductVm.sortBy()" ng-model="viewproductVm.sortByFlag">
-                    <option value="">Relevance</option>
-                    <option value="lh">Price : Low to High</option>
-                    <option value="hl">Price : High to Low</option>
-                    <option value="por">Price on Request</option>
-                    <option value="exos">Exclude Out of Stock</option>
-                  </select>
-                <div>
+          <div class="panel-body">
+            <div class="row">
+              <div class="col-xs-6 col-sm-6 col-md-6">
+                <year-only-picker ng-model="mfgyr.min" year="equipmentSearchFilter.mfgYearMin" myid="min" placeholder="Min" on-change="viewproductVm.fireCommand()">
+                  
+                </year-only-picker>
+              </div>
+              <div class="col-xs-6 col-sm-6 col-md-6">
+                 <year-only-picker ng-model="mfgyr.max" year="equipmentSearchFilter.mfgYearMax" myid="max" placeholder="Max" on-change="viewproductVm.fireCommand()">
+                  
+                </year-only-picker>
               </div>
             </div>
-          </div>          
-            <!-- <ul >
-              <li ng-repeat="comp in viewproductVm.productListToCompare">
-               <a href="javascript:void(0);"><i class="fa fa-times" aria-hidden="true"></i></a>
-              </li>
-            </ul> -->
-
-             <div ng-if="!searching && !noResult">
-                 <div class="row no-list ">
-                   <div class="col-sm-8 text-left hidden-xs padd-left">
-                      <uib-pagination total-items="viewproductVm.totalItems" ng-click="viewproductVm.onPageChange()" ng-model="viewproductVm.currentPage" items-per-page="viewproductVm.itemsPerPage" max-size="viewproductVm.maxSize" boundary-links="true" rotate="false"></uib-pagination>
-                   </div>
-                   <div class="col-sm-4 text-right padd-right">
-                     <span>Showing <b>{{((viewproductVm.currentPage - 1)*viewproductVm.itemsPerPage) + 1}}-<span ng-if="viewproductVm.currentPage*viewproductVm.itemsPerPage < viewproductVm.totalItems">{{viewproductVm.currentPage*viewproductVm.itemsPerPage}}</span><span ng-if="viewproductVm.currentPage*viewproductVm.itemsPerPage >= viewproductVm.totalItems">{{viewproductVm.totalItems}}</span></b> of <b> {{viewproductVm.totalItems}}</b></span>
-                   </div>
-                 </div>
-                 
-                <div id="search-result_wrapper" class="search-result">
-                  <div ng-repeat="product in productList | startFrom:(viewproductVm.currentPage -1 )*viewproductVm.itemsPerPage | limitTo:viewproductVm.itemsPerPage" class="sorts">
-                      <div class="media">
-                        <div  class="pull-left result-products">
-                          <a ng-href="/productdetail/{{product._id}}?{{filterType}}" uib-popover-template="dynamicPopover.templateUrl" popover-trigger="mouseenter" popover-placement="right" >
-                            <img ng-src="{{uploadImagePrefix}}{{product.assetDir}}/{{product.primaryImg}}">
-                            <span class="sold-tag" ng-if="product.assetStatus == 'sold'"><span>Sold</span></span>
-                            <span class="rent-tag" ng-if="product.assetStatus == 'rented'"><span>Rented</span></span>
-                            <span class="vailablity-tag" ng-if="product.tradeType == 'NOT_AVAILABLE'"><span>Not Available</span></span>
-                          </a>
-
-                        </div>
-                        <div class="media-body">
-                          <h4 class="media-heading">
-                            <span class="text-ellips productname">{{product.name}}</span>
-                            <div class="sell-featured">
-                              <span ng-if="product.tradeType == 'RENT' || product.tradeType == 'BOTH'"><img src="assets/images/rent.png" width="30"></span>
-                              <span ng-if="product.tradeType == 'SELL' || product.tradeType == 'BOTH' || product.tradeType == 'NOT_AVAILABLE'"><img src="assets/images/sale.png" width="30"></span>
-                              <span ng-if="product.featured"><img src="assets/images/featured1.png" width="100"></span>
-                            </div>
-                            <span class="pull-right text-danger" ng-if="product.priceOnRequest && product.tradeType != 'RENT'">Price On Request</span>
-                            <span class="pull-right text-danger" ng-if="!product.priceOnRequest && product.tradeType != 'RENT'">
-                            <!-- <b ng-if="product.currencyType == 'AED'" class="pull-left">&#1583;.&#1573; &nbsp;</b>
-                            <i class="fa fa-eur" ng-if="product.currencyType == 'EUR'"></i>
-                            <i class="fa fa-gbp" ng-if="product.currencyType == 'GBP'"></i>
-                            <i class="fa fa-usd" ng-if="product.currencyType == 'USD'"></i> -->
-                            <i class="fa fa-inr" ng-if="product.currencyType == 'INR'"></i> {{product.grossPrice | number:0}}</span>
-                          </h4>
-                          <p>
-                            <span ng-if="product.brand.name != 'Other'">{{product.brand.name}}</span>
-                            <span ng-if="product.brand.name == 'Other'">{{product.brand.otherName}}</span>
-                          </p>
-                          <p>
-                            <span ng-if="product.model.name != 'Other'">{{product.model.name}}</span>
-                            <span ng-if="product.model.name == 'Other'">{{product.model.otherName}}</span>
-                          </p>
-                          <p>
-                            <span ng-if="product.category.name != 'Other'">{{product.category.name}}</span>
-                            <span ng-if="product.category.name == 'Other'">{{product.category.otherName}}</span>
-                          </p>
-                          <p>{{product.city}}
-
-                            <div class="pull-right">
-                              <label class="btn btn-success text-ellips" ng-if="product.specialOffers">
-                               <i class="fa fa-tags"></i> <span class="hidden-xs">Special Offers</span>
-                              </label>
-                              <a herf="javascript:void(0)" class="btn btn-default hidden-xs" ng-click="viewproductVm.addToCompare(product)">
-                                <img src="assets/images/campare-icon.png" class="visible-xs" width="15">  <span class="hidden-xs">Add to Compare</span>
-                              </a>
-                              <a href="javascript:void(0);" ng-click="viewproductVm.addProductToCart(product)" class="btn btn-primary" >
-                                <i class="fa fa-shopping-cart visible-xs"></i> <span class="hidden-xs">Add to Cart</span>
-                              </a>
-                              <a ng-href="/productdetail/{{product._id}}" class="btn btn-warning hvr-icon-wobble-horizontal" >
-                                <i class="fa fa-eye visible-xs"></i> <span class="hidden-xs">View Details</span>
-                              </a>
-
-
-                            </div>
-                          </p>
-                        </div>
-                      </div>
-
-              </div>
-           </div>
-           <uib-pagination total-items="viewproductVm.totalItems" ng-click="viewproductVm.onPageChange()" ng-model="viewproductVm.currentPage" items-per-page="viewproductVm.itemsPerPage" max-size="viewproductVm.maxSize" boundary-links="true" rotate="false"></uib-pagination>
           </div>
-          <div class="no-result" ng-if="searching && !noResult">
-            <img src="assets/images/assets-loading.gif" class="form-group">
-            <p>Loading...</p>
-          </div>
-          <div class="no-result" ng-if="noResult && !searching">No results found</div>
         </div>
       </div>
-    </section>
+      <div class="col-sm-9">
+        <div>
+          <div class="col-sm-10 form-group">
+            <h4 class="filter-heading">{{ displayText || equipmentSearchFilter.group || equipmentSearchFilter.category || equipmentSearchFilter.brand || equipmentSearchFilter.tradeType || equipmentSearchFilter.location || equipmentSearchFilter.tradeType || equipmentSearchFilter.assetId ||"Used Products"}} ({{count || 0}} Results Found)</h4>
+          </div>
+          <div class="col-xs-6 visible-xs">
+            <button class="btn btn-danger visible-xs" ng-click="filterbutton.value1 = !filterbutton.value1">
+              <i class="fa fa-filter"></i> Filter
+            </button>
+          </div>
+          <div class="col-xs-6 col-sm-2 form-group">
+            <select class="form-control" ng-change="viewproductVm.sortBy()" ng-model="viewproductVm.sortByFlag">
+              <option value="">Sort By</option>
+              <option value="lh">Price : Low to High</option>
+              <option value="hl">Price : High to Low</option>
+              <option value="por">Price on Request</option>
+             <!--  <option value="exos">Exclude Out of Stock</option> -->
+            </select>
+          </div>
+        </div>
+        <div class="clearfix"></div>
+        <div id="search-result_wrapper" ng-if="!searching && !noResult">
+          <div class="row">
+            <div class="col-sm-7 col-md-6 form-group padd-right">
+              <!-- <div class="btn-group btn-equipment">
+                <button type="button" class="btn btn-default active">Used Equipments(520)</button>
+                <button type="button" class="btn btn-default">Auctioned Equipments(70)</button>
+              </div> -->
+            </div>
+            <div class="col-sm-5 col-md-offset-3 col-md-3 form-group text-right">
+              <uib-pagination total-items="viewproductVm.totalItems" ng-click="viewproductVm.onPageChange()" ng-model="viewproductVm.currentPage" items-per-page="viewproductVm.itemsPerPage" max-size="0" boundary-links="false" rotate="false" next-text="Next >>" previous-text="<< Previous"></uib-pagination>
+            </div>
+          </div>
+          <div class="row">      
+            <div class="col-sm-6 col-md-4 form-group" ng-repeat="product in productList | startFrom:(viewproductVm.currentPage -1 )*viewproductVm.itemsPerPage | limitTo:viewproductVm.itemsPerPage">
+              <div class="media text-center form-group">
+                <a ng-href="/used/{{product.category.name}}/{{product.brand.name}}/{{product.assetId}}">
+                   <img ng-src="{{uploadImagePrefix}}{{product.assetDir}}/{{product.primaryImg}}" class="img-responsive">              
+                </a>  
+                <div class="stamp-image" ng-if="product.certificationName && product.certificationLogo">
+                  <img ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{product.certificationLogo}}" class="img-responsive">
+                </div>        
+                <div class="media-body text-left"> 
+                  <div class="row">
+                    <div class="col-xs-6 form-group padd-right">
+                      <h4 class="text-ellips">{{product.brand.name}} {{product.category.name}}</h4>     
+                      <h6 class="text-info">Model : {{product.model.name}}</h6>
+                    </div>
+                    <div class="col-xs-6 form-group text-right padd-left">
+                      <h3 ng-if="!product.priceOnRequest"><i class="fa fa-inr"></i> {{product.grossPrice}}</h3>
+                      <h4 ng-if="product.priceOnRequest">Price On Request</h4>
+                    </div>
+                  </div> 
+                   <div class="row">
+                    <div class="col-xs-6 form-group padd-right">
+                      <i class="fa fa-check-circle-o"></i> <span>Available for {{product.tradeType === 'RENT'?'Rent' : 'Sale'}}</span>
+                    </div>
+                    <!-- <div class="col-xs-6 form-group text-right padd-left">
+                      <a href="javascript:void(0);" class="text-danger"> <img src="/assets/images/compare.png" width="16" height="18" alt=""> <span>Add to Compare</span></a>
+                    </div> -->
+                  </div>  
+                </div> 
+                 <div class="table-responsive">
+                    <table class="table">                
+                      <tbody>
+                        <tr>
+                          <td>
+                            <small>Manufactured in</small>
+                            <h3>{{product.mfgYear}}</h3>
+                          </td>
+                          <td>
+                            <small>Runtime (Hours)</small>
+                            <h3><span ng-if="product.operatingHour">{{product.operatingHour}} Hrs</span></h3>
+                          </td>
+                          <td>
+                            <small>Current Location</small>
+                            <h3>{{product.city}}</h3>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>  
+                <a ng-href="/used/{{product.category.name}}/{{product.brand.name}}/{{product.assetId}}" class="btn btn-primary btn-block" >
+                  View Details
+                </a>     
+              </div>
+            </div>
+            
+          </div>
+
+          <div class="text-center form-group">
+            <uib-pagination total-items="viewproductVm.totalItems" ng-click="viewproductVm.onPageChange()" ng-model="viewproductVm.currentPage" items-per-page="viewproductVm.itemsPerPage" max-size="viewproductVm.maxSize" boundary-links="false" rotate="false" next-text=">" previous-text="<"></uib-pagination>
+          </div>
+        </div>
+
+        <div class="no-result" ng-if="searching && !noResult">
+          <img src="assets/images/assets-loading.gif" class="form-group">
+          <p>Loading...</p>
+        </div>
+        <div class="no-result" ng-if="noResult && !searching">No results found</div>
+      </div>
     </div>
-<script type="text/ng-template" id="myPopoverTemplate.html">
-        <h4>{{product.name}}</h4>
-        <div>{{product.category.name}}</div>
-</script>
+  </div>
+</section>

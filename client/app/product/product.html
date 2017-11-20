@@ -125,8 +125,9 @@
                     <div class="form-group col-xs-6 col-sm-5">Asset Id</div>
                     <div class="form-group col-xs-6  col-sm-4">
                       <span ng-if="product.assetId">{{product.assetId}}</span>
-                      <span ng-if="!product.assetId">{{product.assetDir}}</span></div>
+                      <!-- <span ng-if="!product.assetId">{{product.assetDir}}</span></div> -->
                     </div>
+                  </div>
                     <div class="row">
                       <div class="form-group col-xs-6  col-sm-5">List for Auction</div>
                       <div class="form-group col-xs-6  col-sm-7">
@@ -341,7 +342,7 @@
                         <i class="caret"></i>
                       </div>
                     </div>
-                    <div class="row">
+                   <!--  <div class="row">
                       <div class="form-group col-sm-5">Product Condition</div>
                       <div class="form-group col-sm-7">
                         <div class="row">
@@ -353,7 +354,7 @@
                           </div>
                         </div>
                       </div>
-                    </div>
+                    </div> -->
                     <div class="rental-info" ng-if="product.tradeType != 'SELL' && product.tradeType != 'NOT_AVAILABLE'">
                       <div class="row form-group">
                         <div class="col-sm-5">
@@ -885,6 +886,9 @@
                 <option value="Policy">Insurance Policy</option>
                 <option value="Certification">Inspection Certificate</option>
                 <option value="Valuation">Valuation Report</option>
+                <option value="Rcupload">RC Upload</option>
+                <option value="Invoice">Invoice</option>
+                <option value="Taxchallan">Tax Challan</option>
                 <option value="Other">Other</option>
               </select>
               <i class="caret"></i>
@@ -901,6 +905,22 @@
             <div class="col-xs-12 col-sm-3 col-md-2 pull-right">
               <button class="active btn btn-default btn-block" ng-click="product.miscDocuments.push({})" ng-if="$last">Add More</button>
               <button class="active btn btn-default btn-block" ng-click="product.miscDocuments.splice($index,1)" ng-if="!$last">Delete</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Certificate</h3>
+        </div>
+        <div class="panel-body">
+          <div class="form-group row">
+            <div class="col-sm-3 form-group">Certificate</div>
+            <div class="col-sm-5 form-group">
+              <select class="form-control" ng-model="product.certificationName">
+                <option value="">Select Certification</option>
+                <option value="{{cert.name}}" ng-repeat="cert in certificationList">{{cert.name}}</option>
+              </select>
             </div>
           </div>
         </div>
@@ -953,7 +973,7 @@
       <div class="col-xs-6 col-sm-6">
         <div class="row">
           <div class="col-xs-1 col-sm-1">
-            <input type="checkbox" id="" name="featured" ng-model="product.featured" ng-value="product.featured">
+            <input type="checkbox" id="" name="featured" ng-model="product.featured" ng-value="product.featured" disabled>
           </div>
           <div class="col-xs-5 col-sm-5">
             Featured

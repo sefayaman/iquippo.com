@@ -31,11 +31,16 @@
 						<option value="markup">Markup Price Master</option>
 						<option value="emdmaster">EMD Master</option>
 						<option value="assetcount">Asset Count</option>
+						<option value="offer_status">Offer Master</option>
 						<!-- <option value="promotion">Promotions</option>
 						<option value="leaddata">Lead Data</option> -->
 						<!-- <option  value="asset-type" ui-sref= "yardassettype" >Asset Type</option>
 						<option value="yard-services">Yard Management - Services</option>
 						<option value="yard-amenities">Yard Management – Amenities </option> -->
+						<option value="dealermaster">Dealer Location Master</option>
+						<option value="certificate">Certificate Master</option>
+						<option value="techspec">Technical Specification Master</option>
+						<option value="newEquipmentBanners">New Equipment Banners</option>
 					</select>
 					<i class="caret"></i>
 				</div>
@@ -2722,5 +2727,718 @@
 		</div>
 		<uib-pagination total-items="gsettingVm.totalItems" ng-model="gsettingVm.currentPage" items-per-page="gsettingVm.itemsPerPage" max-size="gsettingVm.maxSize" ng-change="gsettingVm.fireCommand(false,null,'leadmaster')" class="pagination-sm" rotate="false">  </uib-pagination>
 	</div>
+
+	<!--- Listing offer master  -->
+  <div ng-if="gsettingVm.tabValue =='offer_status'" ng-controller="OfferCtrl as offerVm">
+		<h4>Offer Master</h4>
+		<legend></legend>
+		<div class="form-group">
+			<form class="techInformationForm" name="offerform" novalidate>
+				 <div class="row form-group">
+
+					<div class="col-sm-3" ng-class="{'has-error':offerVm.category.$invalid && submitted}">
+			        	<label>Select Category</label>
+		 		       	<select class="form-control form-group" name="category" ng-model="container.selectedCategoryId" ng-change="onCategoryChange(container.selectedCategoryId)" required> 
+							 <option value=""> Select Category </option> 
+							 <option value="{{category._id}}" ng-repeat="category in allCategory">{{category.name}}</option>
+						</select>
+					</div>
+
+					<div class="col-sm-3" ng-class="{'has-error':offerVm.brand.$invalid && submitted}">
+			        	<label>Select Brand</label>
+		 		       	<select class="form-control form-group" name="brand" ng-model="container.selectedBrandId" ng-change="onBrandChange(container.selectedBrandId)" required> 
+							 <option value=""> Select Brand </option> 
+							 <option value="{{brand._id}}" ng-repeat="brand in brandList| orderBy:'name'">{{brand.name}}</option>
+						</select>
+					</div>
+
+					<div class="col-sm-3" ng-class="{'has-error':offerVm.model.$invalid && submitted}">
+			        	<label>Select Model</label>
+		 		       	<select class="form-control form-group" name="model" ng-model="container.selectedModelId" ng-change="onModelChange(container.selectedModelId)" required > 
+							 <option value=""> Select Model </option> 
+							 <option value="{{model._id}}" ng-repeat="model in modelList| orderBy:'name'">{{model.name}}</option>
+						</select>
+					</div>
+
+                   <div class="col-sm-3" ng-class="{'has-error':offerVm.location.$invalid && submitted}">
+			        	<label>Select Location</label>
+		 		       	<select multiple="true" class="form-control" name="location"  ng-model="container.locationArr" style="height:70px;" required> 
+							 <option value=""> Select Location </option> 
+							 <option ng-repeat="state in stateList" value="{{state._id}}">{{state.name}}</option>
+						</select>
+						
+					</div>
+
+				</div>
+				 
+				<div class="row">
+					<div class="col-sm-2">
+							<div class="checkbox">
+								<input type="checkbox" id="cash_purchase" name="purchase" ng-model="purchase" value="checked" ng-change ="checkPurchase(purchase)">
+								<label for="cash_purchase">Cash Purchase</label>
+							</div>
+							
+					</div>
+					<!-- start purchase-->
+					<div class="col-sm-10" ng-if="purchase">
+						<div  class="row" ng-repeat="purchaseField in offerVm.purchaseFields">
+								<div class="col-sm-4 form-group">
+									<label>Price : </label>
+									<input type="text" class="form-control form-group" name="price" ng-model="offerVm.purchaseArr[$index].price" ng-value="{{container.price}}"  placeholder="Price">
+								</div>
+								<div class="col-sm-4 form-group">
+									<label>Free Of Cost</label>	
+									<input type="text" class="form-control form-group" name="freeofcost" ng-model="offerVm.purchaseArr[$index].freeofcost" ng-value="{{container.freeofcost}}" placeholder="Free Of Cost"> 
+								</div>
+								<div class="col-sm-2 form-group">
+									<label class="invisible">Cash Purchase</label>
+									<button type="button" class="btn btn-default btn-block" ng-click="offerVm.purchaseFields.push({})" ng-if="$last">Add More</button>
+									<button type="button" class="btn btn-default btn-block" ng-click="offerVm.purchaseFields.splice($index,1)" ng-if="!$last">Delete</button>
+								</div>
+									
+						</div>
+					  </div>
+					</div>
+					<!-- end purchase-->
+					<div class="row">
+						<!-- start finance-->
+							<div class="col-sm-2">
+								<div class="checkbox">
+									<input type="checkbox" id="list_finance" name="finance" ng-model="finance" value="checked" ng-change ="checkFinance(finance)">
+									<label for="list_finance">List In Finance</label>
+								</div>
+							</div>
+							<div class="col-sm-10" ng-if="finance">
+								<div ng-repeat="financeField in offerVm.financeFields">
+										<div class="row" ng-repeat="financerField in offerVm.financerFields" ng-init="f1Index = $index">
+											<div class="col-sm-4 form-group">
+												<select class="form-control form-group" name="financer" ng-model="offerVm.financer[f1Index]"> 
+													<option value="">Select Financer</option> 
+													<option value="{{al._id}}" ng-repeat="al in agency| orderBy:'entityName'">{{al.entityName}}</option>
+												</select>
+											</div>
+											<div class="col-sm-offset-6 col-sm-2 form-group">
+												<button type="button" class="btn btn-default btn-block" ng-click="offerVm.financerFields.push({});offerVm.financerInfoFields.push([{}])" ng-if="$last">Add More</button>
+												<button type="button" class="btn btn-default btn-block" ng-click="offerVm.financerFields.splice($index,1);offerVm.financerInfoFields.splice($index,0)" ng-if="!$last">Delete</button>
+											</div>
+											<div class="col-sm-12 form-group">
+												<div  class="row" ng-repeat="financerinfoField in offerVm.financerInfoFields[f1Index]" ng-init="f2Index = $index">
+													<div class="col-sm-3">
+														<input type="text" class="form-control form-group" name="tenure" ng-model="offerVm.financerinfo[f1Index][f2Index].tenure" ng-value="" placeholder="Tenure">  
+													</div>
+													<div class="col-sm-3">
+														<input type="text" class="form-control form-group" name="amount" ng-model="offerVm.financerinfo[f1Index][f2Index].amount" ng-value="" placeholder="amount">  
+													</div>
+													<div class="col-sm-3">
+														<input type="text" class="form-control form-group" name="rate" ng-model="offerVm.financerinfo[f1Index][f2Index].rate" ng-value="" placeholder="Rate">  
+													</div>
+													<div class="col-sm-3">
+														<input type="text" class="form-control form-group" name="margin" ng-model="offerVm.financerinfo[f1Index][f2Index].margin" ng-value="" placeholder="Margin">  
+													</div>
+													<div class="col-sm-3">
+														<input type="text" class="form-control form-group" name="processingfee" ng-model="offerVm.financerinfo[f1Index][f2Index].processingfee" ng-value="" placeholder="Processingfee">  
+													</div>
+													<div class="col-sm-3">
+														<input type="text" class="form-control form-group" name="installment" ng-model="offerVm.financerinfo[f1Index][f2Index].installment" ng-value="" placeholder="Installment">  
+													</div>
+													<div class="col-sm-3">
+														<input type="text" class="form-control form-group" name="freecost" ng-model="offerVm.financerinfo[f1Index][f2Index].freecost" ng-value="" placeholder="Freecost">  
+													</div>
+													<div class="col-sm-2 pull-right">
+														<button type="button" class="btn btn-default btn-block" ng-click="offerVm.financerInfoFields[f1Index].push({})" ng-if="$last">Add More</button>
+														<button type="button" class="btn btn-default btn-block" ng-click="offerVm.financerInfoFields[f1Index].splice($index,1)" ng-if="!$last">Delete</button>
+													</div>
+												</div> 
+												<legend></legend>
+											</div>
+											
+										</div>
+								    </div>
+								 </div> 
+						</div>
+						<!-- end finance-->
+						<!-- start lease-->
+						<div class="row">
+							<div class="col-sm-2">
+								<div class="checkbox">
+									<input type="checkbox" id="list_lease" name="lease" ng-model="lease" value="checked" ng-change ="checkLease(lease)">
+									<label for="list_lease">List In Lease</label>
+								</div>
+							</div>
+							<div class="col-sm-10" ng-if="lease">
+								<div ng-repeat="leaseField in offerVm.leaseFields">
+										<div class="row" ng-repeat="leaserField in offerVm.leaserFields" ng-init="l1Index = $index">
+											<div class="col-sm-4 form-group">
+												<select class="form-control form-group" name="leaser" ng-model="offerVm.leaser[l1Index]"> 
+													<option value="">Select Financer</option> 
+													<option value="{{al._id}}" ng-repeat="al in agency| orderBy:'entityName'">{{al.entityName}}</option>
+												</select>
+											</div>
+											<div class="col-sm-offset-6 col-sm-2 form-group">
+												<button type="button" class="btn btn-default btn-block" ng-click="offerVm.leaserFields.push({});offerVm.leaserInfoFields.push([{}])" ng-if="$last">Add More</button>
+												<button type="button" class="btn btn-default btn-block" ng-click="offerVm.leaserFields.splice($index,1);offerVm.leaserInfoFields.splice($index,0)" ng-if="!$last">Delete</button>
+											</div>
+											<div class="col-sm-12 form-group">
+												<div  class="row" ng-repeat="leaserinfoField in offerVm.leaserInfoFields[l1Index]" ng-init="l2Index = $index"> 
+													<div class="col-sm-3">
+														<input type="text" class="form-control form-group" name="tenure" ng-model="offerVm.leaserinfo[l1Index][l2Index].tenure" ng-value="" placeholder="Tenure">  
+													</div>
+													<div class="col-sm-3">
+														<input type="text" class="form-control form-group" name="amount" ng-model="offerVm.leaserinfo[l1Index][l2Index].amount" ng-value="" placeholder="amount">  
+													</div>
+													<div class="col-sm-3">
+														<input type="text" class="form-control form-group" name="downpayment" ng-model="offerVm.leaserinfo[l1Index][l2Index].downpayment" ng-value="" placeholder="Rate">  
+													</div>
+													<div class="col-sm-3">
+														<input type="text" class="form-control form-group" name="margin" ng-model="offerVm.leaserinfo[l1Index][l2Index].margin" ng-value="" placeholder="Margin">  
+													</div>
+													<div class="col-sm-3">
+														<input type="text" class="form-control form-group" name="processingfee" ng-model="offerVm.leaserinfo[l1Index][l2Index].processingfee" ng-value="" placeholder="Processingfee">  
+													</div>
+													<div class="col-sm-3">
+														<input type="text" class="form-control form-group" name="installment" ng-model="offerVm.leaserinfo[l1Index][l2Index].installment" ng-value="" placeholder="Installment">  
+													</div>
+													<div class="col-sm-3">
+														<input type="text" class="form-control form-group" name="freecost" ng-model="offerVm.leaserinfo[l1Index][l2Index].freecost" ng-value="" placeholder="Freecost">  
+													</div>
+													<div class="col-sm-2 pull-right">
+														<button type="button" class="btn btn-default btn-block" ng-click="offerVm.leaserInfoFields[l1Index].push({})" ng-if="$last">Add More</button>
+														<button type="button" class="btn btn-default btn-block" ng-click="offerVm.leaserInfoFields[l1Index].splice($index,1)" ng-if="!$last">Delete</button>
+													</div>
+												</div> 
+												<legend></legend>
+											</div>
+											
+										</div>
+								    </div>
+								 </div> 
+							</div>
+						<!-- end lease-->
+
+				<div class="row">
+				   <div class="col-sm-2 pull-right">
+				       <button type="button" class="btn btn-block btn-primary"   ng-if="isEdit" ng-click="offerVm.update(offerform)">Update</button>
+				       <button type="button" class="btn btn-block btn-primary"   ng-if="!isEdit" ng-click="offerVm.save(offerform)">Save</button> 
+				    </div>
+				</div>
+			</form>
+
+			<div class="row">
+				<div class="col-sm-12">
+					<div class=" table-responsive ">
+						<table class="table table-bordered table-striped">
+							<thead>
+								<tr>
+									<th>Category Id</th>
+									<th>Sub Category Id</th>
+									<th>Model Id</th>
+									<th>Location</th>
+									<th>Cash On Purcahe</th>
+									<th>List in Finance</th>
+									<th>Lease</th>
+									<th>Status</th>
+									<th>Actions</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="offer in offerVm.offer">
+									<td>{{offer.category.name}}
+                                   </td>
+									<td>{{offer.brand.name}}</td>
+									<td>{{offer.model.name}}</td>
+									<td ng-if="stateList.length === offer.location.length">All</td>
+									<td ng-if="stateList.length != offer.location.length"><span ng-repeat="state in offer.location">{{state.name}}</span></td>
+									<td>{{offer.cash_purchase}}</td>
+				 					<td>{{offer.finance}}</td>
+									<td>{{offer.lease}}</td>
+									<td ng-if="offer.status === true">Active</td>
+									<td ng-if="offer.status != true">Inactive</td>
+									<td>
+								      <a href="javascript:void(0);" class="btn btn-primary btn-sm" uib-popover="Edit" popover-trigger="mouseenter" ng-click="offerVm.editClicked(offer)">
+											<i class="fa fa-pencil"></i>
+										</a>
+										<a href="javascript:void(0);" class="btn btn-danger btn-sm" uib-popover="Delete" popover-trigger="mouseenter" ng-click="offerVm.destroy(offer._id)"><i class="fa fa-trash" ></i></a>
+										
+										<button class="btn btn-success" ng-model="offer.status" uib-btn-checkbox ng-click="changeStatus(offer._id,offer.status)">
+										<span ng-if="offer.status" uib-popover="Activate" popover-trigger="mouseenter">
+										<i class="fa fa-toggle-off"></i>							
+										</span> <span ng-if="!offer.status" uib-popover="Deactivate" popover-trigger="mouseenter">
+										<i class="fa fa-toggle-on"></i>							
+										</span></button>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<uib-pagination total-items="gsettingVm.totalProductTechInfoCount" ng-model="offerVm.currentPage" items-per-page="offerVm.itemsPerPage" max-size="offerVm.maxSize" ng-change="offerVm.fireCommand(false,null,'technical')" class="pagination-sm" rotate="false">  </uib-pagination>
+				</div>
+			</div>
+		</div>
+		<legend></legend>	
+     </div>
+	 <!-- dealer tab value-->
+	<div ng-if="gsettingVm.tabValue == 'dealermaster'" ng-controller="DealerMasterCtrl as dealerVm">
+    	<h4>Listing Dealer Data</h4>
+		<form class="" name="dealerForm" >			
+			<div class="row form-group">
+				<div class="col-sm-3" ng-class="{'has-error':dealerForm.brand.$invalid && submitted}">
+					<select class="form-control" name="brand" ng-model="dealerVm.dataModel.brand.data" required>
+						<option value="">Select Brand</option>
+						<option ng-repeat="brand in dealerVm.brandList" value="{{brand._id}}">{{brand.name}}</option>
+					</select>
+				</div>
+				<div class="col-sm-3" ng-class="{'has-error':dealerForm.dealer.$invalid && submitted}">
+					<select class="form-control" name="dealer" ng-model="dealerVm.dataModel.dealer.data"  required>
+						<option value="">*Select Dealer</option>
+						<option ng-repeat="dealer in dealerVm.dealerList" value="{{dealer._id}}">{{dealer.entityName}}</option>
+					</select>
+				</div>
+				<div class="col-sm-3" ng-class="{'has-error':dealerForm.state.$invalid && submitted}">
+					<select multiple="true" class="form-control" name="state" ng-model="dealerVm.stateIdArr" style="height:70px;" required>
+						<option value="">*Select State</option>
+						<option ng-repeat="state in dealerVm.stateList" value="{{state._id}}">{{state.name}}</option>
+					</select>
+				</div>
+				<div class="col-sm-2 pull-right">
+					<button type="button" class="btn btn-block btn-primary" ng-if="isEdit" ng-click="dealerVm.update(dealerForm)">Update</button>
+					<button type="button" class="btn btn-block btn-primary" ng-if="!isEdit" ng-click="dealerVm.save(dealerForm)">Save</button>
+				</div>
+			</div>
+		</form>
+		<div class="row">
+			<div class="col-sm-3 pull-right">
+				<div class="tablesearch text-right form-group">
+					Search: <input type="text" placeholder="Search..." ng-model="dealerVm.searchStr" ng-change="gsettingVm.fireCommand(true,null,'leadmaster')" ng-model-options="{debounce:500}">
+				</div>
+			</div>
+		</div>		
+		<div class="table-responsive">
+			<table class="table table-bordered">
+				<thead>
+					<tr>
+						<th>Brand</th>
+						<th>Dealer Name</th>
+						<th>Location</th>
+						<th>Status</th>
+						<th>Action</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr  ng-repeat="dealer in dealerVm.filteredList">
+						<td>{{dealer.brand.name}}</td>
+						<td>{{dealer.dealer.name}}</td>
+						<td><span ng-repeat="state in dealer.state">{{state.name}},</span></td>
+						<td ng-if="dealer.status=='true'"><a href="javascript:void(0);" ng-click="dealerVm.changeStatus(dealer,'false')">Active</a></td>
+						<td ng-if="dealer.status=='false'"><a href="javascript:void(0);" ng-click="dealerVm.changeStatus(dealer,'true')">Deactive</a></td>
+						<td>
+							<button type="button" class="btn btn-sm btn-primary" ng-click="dealerVm.editClicked(dealer)"><i class="fa fa-pencil"></i></button>
+							<button type="button" class="btn btn-sm btn-danger" ng-click="dealerVm.destroy(dealer._id)"><i class="fa fa-trash"></i></button>
+							</td>
+						
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<!--<uib-pagination total-items="dealerVm.totalItems" ng-model="dealerVm.currentPage" items-per-page="dealerVm.itemsPerPage" max-size="dealerVm.maxSize" ng-change="dealerVm.fireCommand(false,null,'dealermaster')" class="pagination-sm" rotate="false">  </uib-pagination>-->
+	</div>
+	<!-- Certificate tab value-->
+	<div ng-if="gsettingVm.tabValue == 'certificate'" ng-controller="CertificateMasterCtrl as certificateVm">
+    	<h4>Add Certificate </h4>
+		<div class="row">
+		<form name="certificateForm" >			
+				<div class="col-sm-3" ng-class="{'has-error':certificateForm.certName.$invalid && submitted}">
+					<input type="text" placeholder="Add Certificate value..."class="form-control" name="cerName" ng-model="certificateVm.dataModel.name"  required>
+				</div>
+				<div class="col-sm-3" ng-class="{'has-error':certificateForm.certDesc.$invalid && submitted}">
+					<input type="text" placeholder="Add Certificate Desc..."class="form-control" name="certDesc" ng-model="certificateVm.dataModel.description">
+				</div>
+				<div class="form-group col-sm-2">
+                    <span class="btn btn-warning fileinput-button">
+	                    <span>Upload logo image</span>
+	                        <input type="file" name="image1" accept="image/*" ng-model ="files" ng-change="certificateVm.uploadImage(files,'logoImg')" file>
+			         </span>
+			         <div>
+							{{certificateVm.dataModel.logoImg}}
+						</div>
+                </div>
+                <div class="form-group col-sm-2">
+                    <span class="btn btn-warning fileinput-button">
+	                    <span>Upload primary image</span>
+	                       <input type="file" name="image2" accept="image/*" ng-model ="files" ng-change="certificateVm.uploadImage(files,'primaryImg')" file>
+			         </span>
+			         <div>
+							{{certificateVm.dataModel.primaryImg}}
+						</div>
+                </div>
+				<div class="col-sm-2 pull-right">
+					<button type="button" class="btn btn-block btn-primary" ng-if="isEdit" ng-click="certificateVm.update(certificateForm)">Update</button>
+					<button type="button" class="btn btn-block btn-primary" ng-if="!isEdit" ng-click="certificateVm.save(certificateForm)">Save</button>
+				</div>
+			
+		</form>
+		</div>
+		<div class="row">
+			<div class="col-sm-3 pull-right">
+				<div class="tablesearch text-right form-group">
+					Search: <input type="text" placeholder="Search..." ng-model="certificateVm.searchStr" ng-change="certificateVm.searchFn()" ng-model-options="{debounce:500}">
+			
+				</div>
+			</div>
+		</div>		
+		<div class="table-responsive">
+			<table class="table table-bordered">
+				<thead>
+					<tr>
+						<th>S.N.</th>
+						<th>Certificate</th>
+						<th>Action</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr  ng-repeat="certificate in certificateVm.filteredList">
+						<td>{{$index + 1}}</td>
+						<td>{{certificate.name}}</td>
+						<td>
+							<button type="button" class="btn btn-sm btn-primary" ng-click="certificateVm.editClicked(certificate)"><i class="fa fa-pencil"></i></button>
+							<button type="button" class="btn btn-sm btn-danger" ng-click="certificateVm.destroy(certificate._id)"><i class="fa fa-trash"></i></button>
+							</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<uib-pagination total-items="certificateVm.pager.totalItems" ng-model="certificateVm.pager.currentPage" items-per-page="certificateVm.pager.itemsPerPage" max-size="6"  class="pagination-sm" rotate="false">  </uib-pagination>
+	</div>
+	
+	 <!--- Technical Specification master ng-controller="TechSpecMasterCtrl as techspecVm -->
+  	<div ng-if="gsettingVm.tabValue =='techspec'" ng-controller="TechSpecMasterCtrl as techspecVm">
+		<div class="col-sm-12">
+			<uib-tabset justified="true">
+				<uib-tab heading="Category Technical Specification">
+					<h4>Technical Specification Master</h4>
+					
+					<div class="form-group">
+						<form class="techInformationForm" name="techform" novalidate>
+							<div class="row form-group">
+								<div class="col-sm-3" ng-class="{'has-error':techspecVm.categoryId.$invalid && submitted}" >
+									<label>Select Category</label>
+									<select class="form-control form-group" ng-change="techspecVm.getTechSpecData(techspecVm.dataModel.categoryId);" name="category" ng-model="techspecVm.dataModel.categoryId"  required> 
+										<option value=""> Select Category </option> 
+										<option value="{{category._id}}" ng-repeat="category in allCategory">{{category.name}}</option>
+										
+									</select>
+								</div>
+							</div>
+							<div ng-if="!isEdit" class="row" ng-repeat="fieldinfo in techspecVm.fieldInfo">
+								<div class="col-sm-3 form-group">
+									<label>Field Name : </label>
+									<input type="text" class="form-control"  ng-model="techspecVm.fieldArr[$index].name" name="" value="" placeholder="Field Name" required>
+								</div>
+								<!-- <div class="col-sm-3 form-group">
+								<label>Select Field Type</label>	
+								<select class="form-control form-group" name="type" ng-model="techspecVm.fieldArr[$index].type"  required> 
+										<option value=""> Select Field Type</option> 
+										<option value="file">File</option>
+										<option value="text">Text</option>
+										
+								</select>
+								</div> -->
+								
+								<div ng-if="!isEdit" class="col-sm-2 form-group ">
+									<label class="invisible">Action</label>
+									<button type="button" class="btn btn-default btn-block" ng-click="techspecVm.fieldInfo.push({})" ng-if="$last">Add More</button>
+									<button type="button" class="btn btn-default btn-block" ng-click="techspecVm.fieldInfo.splice($index,1)" ng-if="!$last">Delete</button>
+								</div>
+								
+							</div>
+							<div ng-if="isEdit" class="row" ng-repeat="fieldinfo in techspecVm.fieldInfo">
+								<div class="col-sm-3 form-group">
+									<label>Field Name : </label>
+									<input type="text" class="form-control"  ng-model="techspecVm.dataModel.fieldName" name="" value="" placeholder="Field Name" required>
+								</div>
+								<!-- <div class="col-sm-3 form-group">
+								<label>Select Field Type</label>	
+								<select class="form-control form-group" name="type" ng-model="techspecVm.dataModel.fieldType"  required> 
+										<option value=""> Select Field Type</option> 
+										<option value="file">File</option>
+										<option value="text">Text</option>
+										
+								</select>
+								</div> -->
+								
+							</div>
+							<div class="row form-group">
+							<div class="col-sm-2 pull-right">
+								<button type="button" class="btn btn-block btn-primary"   ng-if="isEdit" ng-click="techspecVm.update(techform)">Update</button>
+								<button type="button" class="btn btn-block btn-primary"   ng-if="!isEdit" ng-click="techspecVm.save(techform)">Save</button> 
+							</div>
+							</div>
+						</form>
+						<div class="row">
+			               <div class="col-sm-3 pull-right">
+			                   <div class="tablesearch text-right form-group">
+			                       Search: <input type="text" placeholder="Search..." ng-model="techspecVm.searchStr" ng-change="techspecVm.fireCommand(true, 'techSpec')" ng-model-options="{debounce:500}">
+			                   </div>
+			               </div>
+			           </div>
+						<div class="row">
+							<div class="col-sm-12">
+								<div class=" table-responsive ">
+									<table class="table table-bordered table-striped">
+										<thead>
+											<tr>
+												<th>Category Name</th>
+												<th>Field Name</th>
+												<th>Field Type</th>
+												<th>Actions</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr ng-repeat="fielddata in techspecVm.listData">
+												<td>{{fielddata.categoryName}}
+											</td>
+												<td>{{fielddata.fieldName}}</td>
+												<td>{{fielddata.fieldType}}</td>
+												
+												<td>
+												<a href="javascript:void(0);" class="btn btn-primary btn-sm" uib-popover="Edit" popover-trigger="mouseenter" ng-click="techspecVm.editClicked(fielddata)">
+														<i class="fa fa-pencil"></i>
+													</a>
+													<a href="javascript:void(0);" class="btn btn-danger btn-sm" uib-popover="Edit" popover-trigger="mouseenter" ng-click="techspecVm.destroy(fielddata._id, 'techSpec')"><i class="fa fa-trash" ></i></a>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+								<uib-pagination total-items="techspecVm.totalProductTechInfoCount" ng-model="techspecVm.currentPage" items-per-page="techspecVm.itemsPerPage" max-size="techspecVm.maxSize" ng-change="techspecVm.fireCommand(false,'techSpec')" class="pagination-sm" rotate="false">  </uib-pagination>
+							</div>
+						</div>
+			
+					</div>
+					
+				</uib-tab>
+
+				<uib-tab heading="Brand Technical Specification">
+					<h4>Technical Specification Master</h4>
+					<legend></legend>
+					<div class="form-group">
+						<form class="techInformationForm" name="techfieldform" novalidate>
+							<div class="row form-group">
+							
+								<div class="col-sm-3" ng-class="{'has-error':techspecVm.categoryId.$invalid && submitted}">
+									<label>Select Category</label>
+									<select ng-disabled="isView || isFieldEdit" class="form-control form-group" name="categoryId" ng-model="techspecVm.container.categoryId" ng-change="techspecVm.onCategoryChange(techspecVm.container.categoryId)" required> 
+										<option value=""> Select Category </option> 
+										<option value="{{category._id}}" ng-repeat="category in allCategory">{{category.name}}</option>
+									</select>
+								</div>
+
+								<div class="col-sm-3" ng-class="{'has-error':techspecVm.brandId.$invalid && submitted}">
+									<label>Select Brand</label>
+									<select ng-disabled="isView || isFieldEdit" class="form-control form-group" name="brandId" ng-model="techspecVm.container.brandId" ng-change="techspecVm.onBrandChange(techspecVm.container.brandId)" required> 
+										<option value=""> Select Brand </option> 
+										<option value="{{brand._id}}" ng-repeat="brand in brandList| orderBy:'name'">{{brand.name}}</option>
+									</select>
+									
+								</div>
+
+								<div class="col-sm-3" ng-class="{'has-error':techspecVm.modelId.$invalid && submitted}">
+									<label>Select Model</label>
+									<select ng-disabled="isView || isFieldEdit" class="form-control form-group" name="modelId" ng-model="techspecVm.container.modelId" ng-change="techspecVm.onModelChange(techspecVm.container.modelId)"required > 
+										<option value=""> Select Model </option> 
+										<option value="{{model._id}}" ng-repeat="model in modelList| orderBy:'name'">{{model.name}}</option>
+									</select>
+
+								</div>
+
+							<div class="row form-group">
+							
+								<div class="col-sm-2 pull-right">
+									<label class="invisible">Action</label>
+									<button type="button" class="btn btn-block btn-primary" ng-if="isFieldEdit" ng-click="techspecVm.fieldUpdate(techfieldform)">Update</button>
+									<button type="button" class="btn btn-block btn-primary" ng-if="!isFieldEdit && !isView" ng-click="techspecVm.fieldSave(techfieldform)">Save</button>
+									<button type="button" class="btn btn-block btn-primary" ng-if="isView" ng-click="techspecVm.closeView()">Exit View</button> 
+								</div>
+							</div>
+							<div ng-if="fieldShow">
+								<div class="row form-group" ng-repeat="field in techspecVm.fieldList">
+									<div class="col-sm-4">
+										<label>{{field.fieldName}}:</label>
+									</div>
+									<div class="col-sm-4">
+										<input ng-if="field.fieldType == 'file'" type="file" name=""  id="{{$index}}" accept="image/*" params="['files','$index']" on-file-select-tech="techspecVm.uploadTechFile" ng-model="techspecVm.fields[$index]">
+										<input ng-if="field.fieldType == 'text'" type="text" class="form-control" name="" ng-model="techspecVm.fields[$index]">
+									</div>
+									<div class="col-sm-2">
+										<div class="checkbox">
+											<input  type="checkbox" name="" ng-change="techspecVm.checkCount(techspec.checks[$index])" ng-model="techspecVm.checks[$index]" id="{{field.fieldName}}">
+											<label for="{{field.fieldName}}">Select {{field.fieldName}}</label>
+										</div>
+									</div>
+								</div>
+							</div>
+						</form>
+						<!--view data -->
+						<div class="row" ng-if="isView">
+							<div class="col-sm-12">
+								<div class=" table-responsive ">
+									<table class="table table-bordered table-striped">
+										<thead>
+											<tr>
+												<th>Field Name</th>
+												<th>Field Value</th>
+												<!--<th>Actions</th>-->
+											</tr>
+										</thead>
+										<tbody>
+											<tr ng-repeat="field in techspecVm.fieldList">
+												<td>{{field.fieldName}}</td>
+												<td>{{techspecVm.listFieldData[field._id].value}}</td>
+												<!--<td>
+												    <a href="javascript:void(0);" class="btn btn-primary btn-sm" uib-popover="Edit" popover-trigger="mouseenter" ng-click="techspecVm.editClicked(fielddata)">
+														<i class="fa fa-pencil"></i>
+													</a>
+													<a href="javascript:void(0);" class="btn btn-danger btn-sm" uib-popover="Edit" popover-trigger="mouseenter" ng-click="techspecVm.destroy(fielddata._id)"><i class="fa fa-trash" ></i></a>
+												</td>-->
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+						<!-- end view data -->
+						<div class="row">
+			               <div class="col-sm-3 pull-right">
+			                   <div class="tablesearch text-right form-group">
+			                       Search: <input type="text" placeholder="Search..." ng-model="techspecVm.searchStr" ng-change="techspecVm.fireCommand(true, 'techSpecValue')" ng-model-options="{debounce:500}">
+			                   </div>
+			               </div>
+			            </div>
+						<div class="row">
+							<div class="col-sm-12">
+								<div class=" table-responsive ">
+									<table class="table table-bordered table-striped">
+										<thead>
+											<tr>
+												<th>Category Name</th>
+												<th>Brand Name</th>
+												<th>Model Name</th>
+												<th>Actions</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr ng-repeat="fielddata in techspecVm.listFieldDataShow">
+												<td>{{fielddata.category.name}}</td>
+												<td>{{fielddata.brand.name}}</td>
+												<td>{{fielddata.model.name}}</td>
+												<td>
+												<a href="javascript:void(0);" class="btn btn-primary " uib-popover="View" popover-trigger="mouseenter" ng-click="techspecVm.viewClicked(fielddata)">
+													View Data	
+												</a>
+												<a href="javascript:void(0);" class="btn btn-primary btn-sm" uib-popover="Edit" popover-trigger="mouseenter" ng-click="techspecVm.fieldEditClicked(fielddata)">
+														<i class="fa fa-pencil"></i>
+													</a>
+													<a href="javascript:void(0);" class="btn btn-danger btn-sm" uib-popover="Edit" popover-trigger="mouseenter" ng-click="techspecVm.destroy(fielddata._id, 'techSpecValue')"><i class="fa fa-trash" ></i></a>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+								<uib-pagination total-items="techspecVm.totalProductTechInfoCount" ng-model="techspecVm.currentPage" items-per-page="techspecVm.itemsPerPage" max-size="techspecVm.maxSize" ng-change="techspecVm.fireCommand(false,'techSpecValue')" class="pagination-sm" rotate="false">  </uib-pagination>
+							</div>
+						</div>
+						
+					</div>
+					<legend></legend>
+				</uib-tab>
+			</uib-tabset>
+		</div>
+			
+    </div>
+
 </div>
+         
+    <!-- New Equipment Banner tab value-->
+   <div ng-if="gsettingVm.tabValue == 'newEquipmentBanners'" ng-controller="NewEquipmentBannersCtrl as newBannerVm">
+   <h4>Listing New Equipment Banner Data</h4>
+   <form class="" name="newEquipBannerForm">			
+       <div class="row form-group">
+           <div class="col-sm-3">
+               <label> Brand</label>
+               <select class="form-control" name="brand" ng-model="newBannerVm.dataModel.brand.name">
+                   <option value="">Select Brand</option>
+                   <option ng-repeat="brand in newBannerVm.brandList" value="{{brand.name}}">{{brand.name}}</option>
+               </select>
+           </div>
+           <div class="col-sm-3">
+                <label> Promotion/Certificate</label>
+                <select class="form-control" name="promotion" ng-model="newBannerVm.dataModel.promotion.name">
+                    <option value="">Select Promotion</option>
+                   <option ng-repeat="promo in newBannerVm.promoList" value="{{promo.name}}">{{promo.name}} {{promo.certificate}}</option>
+                </select>
+           </div>
+           <div class="col-sm-3" ng-class="{'has-error':newEquipBannerForm.position.$invalid && submitted}">
+               <label> Position</label>
+               <select class="form-control" name="position" ng-model="newBannerVm.dataModel.position" required>
+                   <option value="">*Select Position</option>
+                   <option value="left"> Left </option>
+                   <option value="topRight"> Top Right </option>
+                   <option value="bottomRight"> Bottom Right </option>
+                   <option value="none"> None </option>
+               </select>
+           </div>
+           
+           <div class="form-group col-sm-2">
+               <label> Banner Image</label>
+               <span class="btn btn-warning fileinput-button">
+                   <span>Browse image...</span>
+                   <input type="file" name="file" onchange="angular.element(this).scope().updateBannerImage(this.files,this)" accept="image/*" class="ng-scope">
+               </span>
+               <div class="col-sm-2">
+                   {{newBannerVm.dataModel.newEquipBannerImg}}
+               </div>
+           </div>
+           
+           <div class="col-sm-2 pull-right">
+               <button type="button" class="btn btn-block btn-primary" ng-if="isEdit" ng-click="newBannerVm.update(newEquipBannerForm)">Update</button>
+               <button type="button" class="btn btn-block btn-primary" ng-if="!isEdit" ng-click="newBannerVm.save(newEquipBannerForm)">Save</button>
+           </div>
+       </div>
+       <form>
+           <div class="row">
+               <div class="col-sm-3 pull-right">
+                   <div class="tablesearch text-right form-group">
+                       Search: <input type="text" placeholder="Search..." ng-model="newBannerVm.searchStr" ng-change="gsettingVm.fireCommand(true,null,'leadmaster')" ng-model-options="{debounce:500}">
+                   </div>
+               </div>
+           </div>		
+           <div class="table-responsive">
+               <table class="table table-bordered">
+                   <thead>
+                       <tr>
+                           <th>Image</th>
+                           <th>Brand</th>
+                           <th>Promotions</th>
+                           <th>Position</th>
+                           <th>Status</th>
+                           <th>Action</th>
+                       </tr>
+                   </thead>
+                   <tbody>
+                       <tr ng-repeat="banner in newBannerVm.filteredList">
+                           <td><img class="sheduleImg img-circle" ng-src="{{uploadImagePrefix}}{{bannerDir}}/{{banner.newEquipBannerImg}}" alt="Image"></td>
+                           <td>{{banner.brand.name}}</td>
+                           <td>{{banner.promotion.name}}{{banner.promotion.certificate}}</td>
+                           <td>{{banner.position}}</td>
+                           <td>{{banner.status}}</td>
+                           <td>
+                               <button type="button" class="btn btn-sm btn-primary" ng-click="newBannerVm.editClicked(banner)"><i class="fa fa-pencil"></i></button>
+                               <button type="button" class="btn btn-sm btn-danger" ng-click="newBannerVm.destroy(banner._id)"><i class="fa fa-trash"></i></button>
+                           </td>
+
+                       </tr>
+                   </tbody>
+               </table>
+           </div>
+           
+   </div>
 </div>

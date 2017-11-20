@@ -1,0 +1,192 @@
+<div class="container-fluid">
+  <ol class="breadcrumb">
+    <li>
+      <a href="/main">Home</a>
+    </li>
+    <li>
+      <a href="/newequipments">New Equipments</a>
+    </li>
+    <li class="active">Bulk Orders</li>
+  </ol>
+</div>
+<!-- New Equipment -->
+<section class="category-block">
+  <div class="container padd-left padd-right">
+    <div class="heading-titles text-center form-group">
+      <h4>[ FOR BULK ORDERS ]</h4>
+      <p><strong>Need large quantities of equipments with amazing quality and attractive prices? iQuippo has the solution for you.</strong> </p>
+    </div>
+
+    <div class="information-tabs">
+      <div class="tab-content">
+        <form name="form" novalidate>
+          <div class="information-padd">
+          <h4 class="text-center">BULK INQUIRY FORM</h4>
+          <hr>
+          <div class="row">
+            <div class="col-sm-3 form-group">
+              <div class="floating-label-wrapper">
+                <div class="radio">
+                  <input type="radio" ng-model="bulkOrderVm.dataModel.forSelf" ng-value="true" name="reqType" id="self" ng-change="bulkOrderVm.setUserData()">
+                  <label for="self">For Self</label>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-3 form-group">
+              <div class="floating-label-wrapper">
+                <div class="radio">
+                  <input type="radio" name="reqType" ng-model="bulkOrderVm.dataModel.forSelf" ng-value="false" id="others" ng-change="bulkOrderVm.setUserData()"><label for="others">For Others</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-4 form-group">
+              <div class="floating-label-wrapper" ng-class="{'has-error':form.name.$invalid && submitted}">
+                <label for="name">Name*</label>
+                <input type="text" class="form-control" id="name" name="name" ng-model="bulkOrderVm.dataModel.name" placeholder="Name*" with-floating-label ng-disabled="bulkOrderVm.dataModel.forSelf" required>
+              </div>
+            </div>
+            <div class="col-sm-4 form-group">
+              <div class="floating-label-wrapper" ng-class="{'has-error':form.mobile.$invalid && submitted}">
+                <label for="mobile">Mobile*</label>
+                <input type="number" class="form-control" id="mobile" name="mobile" ng-model="bulkOrderVm.dataModel.mobile" placeholder="Mobile*" with-floating-label required ng-disabled="bulkOrderVm.dataModel.forSelf" string-to-number>
+              </div>
+            </div>
+            <div class="col-sm-4 form-group">
+              <div class="floating-label-wrapper" ng-class="{'has-error':form.email.$invalid && submitted}">
+                <label for="email">Email</label>
+                <input type="email" class="form-control" id="email" name="email" placeholder="Email*" ng-model="bulkOrderVm.dataModel.email" with-floating-label required ng-disabled="bulkOrderVm.dataModel.forSelf">
+              </div>
+            </div>
+            <div class="col-sm-4 form-group">
+              <div class="floating-label-wrapper" ng-class="{'has-error':form.country.$invalid && submitted}">
+                <label>Country*</label>
+                <select class="form-control" name="country" ng-model="bulkOrderVm.dataModel.country" ng-change="bulkOrderVm.onCountryChange(bulkOrderVm.dataModel.country)" required ng-disabled="bulkOrderVm.dataModel.forSelf">
+                  <option value="">*Select Country</option>
+                  <option value="{{country.name}}" ng-repeat="country in allCountries | orderBy:'name'">{{country.name}}</option>              
+                </select>
+              </div>
+            </div>
+            <div class="col-sm-4 form-group">              
+              <div class="floating-label-wrapper" ng-class="{'has-error':form.state.$invalid && submitted}">
+                <label>State*</label>
+                <select class="form-control" name="state" ng-model="bulkOrderVm.dataModel.state" ng-change="bulkOrderVm.onStateChange(bulkOrderVm.dataModel.state)" required ng-disabled="bulkOrderVm.dataModel.forSelf">
+                  <option value="">Select State</option>
+                  <option value="{{state.name}}" ng-repeat="state in stateList">{{state.name}}</option>              
+                </select>
+              </div>
+            </div>
+             <div class="col-sm-4 form-group">
+              
+              <div class="floating-label-wrapper" ng-class="{'has-error':form.city.$invalid && submitted}">
+                <label>City*</label>
+                <select class="form-control" name="city" ng-model="bulkOrderVm.dataModel.city" required ng-disabled="bulkOrderVm.dataModel.forSelf">
+                  <option value="">Select City</option>
+                  <option value="{{city.name}}" ng-repeat="city in cityList">{{city.name}}</option>              
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <h5>
+            <strong>ADD YOUR REQUIREMENTS</strong>
+          </h5>
+
+          <div class="row" ng-repeat="order in bulkOrderVm.dataModel.orders">
+            <div class="col-sm-3 form-group">
+              <div class="floating-label-wrapper" ng-class="{'has-error':form.category_{{$index}}.$invalid && submitted}">
+                <label for="category">Category</label>
+                <select class="form-control" name="category_{{$index}}" ng-model="order.category" ng-change="bulkOrderVm.onCategoryChange(order)" required>
+                  <option value="">Select Category</option>
+                  <option value="{{category.name}}" ng-repeat="category in categoryList">{{category.name}}</option>              
+                </select>
+              </div>
+            </div>
+            <div class="col-sm-3 form-group">
+              <div class="floating-label-wrapper" ng-class="{'has-error':form.brand_{{$index}}.$invalid && submitted}">
+                <label for="brand">Brand</label>
+                <select class="form-control" id="brand" name="brand_{{$index}}" ng-model="order.brand" ng-change="bulkOrderVm.onBrandChange(order)" required>
+                  <option value="">Select Brand</option>
+                  <option value="{{brand.name}}" ng-repeat="brand in order.brandList">{{brand.name}}</option>              
+                </select>
+              </div>
+            </div>
+            <div class="col-sm-3 form-group">
+              <div class="floating-label-wrapper" ng-class="{'has-error':form.model_{{$index}}.$invalid && submitted}">
+                <label for="model">Model</label>
+                <select class="form-control" id="model" name="model_{{$index}}" ng-model="order.model" required>
+                  <option value="">Select Model</option>
+                  <option value="{{model.name}}" ng-repeat="model in order.modelList">{{model.name}}</option>              
+                </select>
+              </div>
+            </div>
+            <div class="col-sm-2 form-group text-center">
+              
+              <div class="floating-label-wrapper" ng-class="{'has-error':form.name.quantity_{{$index}} && submitted}">
+                <label>Quantity</label>              
+                <div class="input-group quantity">
+                  <a href="javascript:void(0);" class="input-group-addon" ng-click="bulkOrderVm.setQuantity(order,'dec')"><i class="fa fa-minus"></i></a>
+                  <input type="number" class="form-control" name="quantity_{{$index}}" ng-model="order.quantity" placeholder="1" min="1" disabled>
+                  <a href="javascript:void(0);" ng-click="bulkOrderVm.setQuantity(order,'inc')" class="input-group-addon"><i class="fa fa-plus"></i></a>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-1 form-group text-center bulk-more">
+               <a href="javascript:void(0);" ng-click="bulkOrderVm.dataModel.orders.splice($index,1)" ng-if="bulkOrderVm.dataModel.orders.length > 1">
+              <i class="fa fa-minus"></i> Delete
+            </a>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <a href="javascript:void(0);" ng-click="bulkOrderVm.dataModel.orders.push({quantity:1})">
+              <i class="fa fa-plus"></i> ADD MORE
+            </a>
+          </div>
+          <hr>
+
+          <div class="row">
+            <div class="col-sm-8">
+              <p><em class="text-danger">*Required Fields</em></p>
+              You need not worry about anything, our customer care executive will contact you shortly with the quotations.
+            </div>
+            <div class="col-sm-2">
+              <button type="button" class="btn btn-primary btn-block" ng-click="bulkOrderVm.save(form)">Get a Quote</button>
+            </div>
+          </div>
+        </div>
+       </form>
+      </div>
+    </div>
+
+    <!-- <div class="information-tabs">
+      <div class="information-padd">
+        <h4 class="text-center">BULK INQUIRY FORM</h4>
+        <legend></legend>
+
+        <div class="row form-group">
+          <div class="col-sm-3 form-group">
+            <label>Your Requirements</label>
+            <p>Excavators, JCB, JS140 (9 Required)</p>
+          </div>
+          <div class="col-sm-3 form-group">
+            <label>Status</label>
+            <p>In Progress</p>
+          </div>
+          <div class="col-sm-offset-3 col-sm-2 form-group">
+            <button type="button" class="btn btn-primary btn-block">Track Application</button>
+          </div>
+        </div>
+
+        <div class="text-center">
+          <i class="fa fa-check-circle-o fa-5x"></i>
+          <h4>SUCCESS</h4>
+          <p>
+            Congratulations! You have successfully requested for a quote. Our customer care executive will get back to you shortly with the quotations.
+          </p>
+        </div>
+      </div>
+    </div> -->
+  </div>
+</section>

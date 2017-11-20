@@ -2,15 +2,83 @@
 
 var _ = require('lodash');
 var Group = require('./group.model');
+var Category = require('./../category/category.model');
 
 // Get list of group
-exports.getAll = function(req, res) {
-  Group.find().sort({name:1}).exec(function (err, group) {
+exports.get = function(req, res,next) {
+  
+  var filter = {};
+  var queryData = req.query;
+  if(queryData.isForUsed)
+      filter['isForUsed'] = true;
+  if(queryData.isForNew)
+      filter['isForNew'] = true;
+  if(queryData.visibleOnUsed)
+      filter['visibleOnUsed'] = true;
+   if(queryData.visibleOnNew)
+    filter['visibleOnNew'] = true;
+  if(queryData.searchStr){
+     var term = new RegExp(queryData.searchStr, 'i');
+      filter['name'] = { $regex: term };
+  }
+  var sortObj = {name:1};
+  if(queryData.sortBy){
+     sortObj = {};
+     sortObj[queryData.sortBy] = 1;
+  }
+  console.log("sort in group",sortObj);
+  Group.find(filter).sort(sortObj).exec(function (err, group) {
     if(err) { return handleError(res, err); }
     res.setHeader('Cache-Control', 'private, max-age=2592000');
-    return res.status(200).json(group);
+    if(queryData.categoryCount){
+      req.groups = group;
+      return next();
+    }else
+      return res.status(200).json(group);
   });
+
 };
+
+exports.categoryCount = function(req,res){
+    if(!req.groups.length)
+      return res.status(200).json(req.groups);
+    var groupIds = [];
+    var filter = {};
+    var queryData = req.query;
+    req.groups.forEach(function(item){
+      groupIds.push(item._id + "");      
+    });
+    filter['group._id'] = {$in:groupIds};
+    if(queryData.isForUsed)
+        filter['isForUsed'] = true;
+    if(queryData.isForNew)
+      filter['isForNew'] = true;
+    Category.aggregate(
+    { $match:filter},
+    { $group: 
+      { _id: '$group._id', count: { $sum: 1 } } 
+    },
+    {$sort:{count:-1}},
+    function (err, result) {
+      if (err) return handleError(err);
+      var resultArr = [];
+      req.groups.forEach(function(group){
+        group = group.toObject();
+        resultArr.push(group);
+        result.forEach(function(item){
+          if(group._id + "" === item._id)
+              group.count = item.count;
+        });
+        if(!group.count)
+          group.count = 0;
+      });
+      /*resultArr.sort(function(a,b){
+          return b.count - a.count;
+      });*/
+      return res.status(200).json(resultArr);
+    }
+  );
+}
 
 // Get a single group
 exports.getOnId = function(req, res) {
@@ -25,7 +93,6 @@ exports.getOnId = function(req, res) {
 exports.create = function(req, res) {
   req.body.createdAt = new Date();
   req.body.updatedAt = req.body.createdAt;
-  //var Result=Group.findOne({name:req.body.name});
   var filter = {};
   filter["name"] ={$regex:new RegExp("^"+ req.body.name + "$", 'i')};
   Group.find(filter,function (err, groups) {
@@ -39,7 +106,6 @@ exports.create = function(req, res) {
         else{
         	Group.create(req.body, function(err, group) {
               if(err) { return handleError(res, err); }
-              console.log(group._id);
                return res.status(200).json({message:"Group save sucessfully"});
              });
         }  
@@ -49,51 +115,7 @@ exports.create = function(req, res) {
   });
   
 };
-// Updates an existing Group in the DB.
-exports.update = function(req, res) {
-  //if(req.body._id) { delete req.body._id; }
-  //if(req.body.userInfo) { delete req.body.userInfo; }
 
-    var filter = {};
-  filter["name"] =req.body.name;
-  Group.find(filter,function (err, groups) {
-    if(err) { return handleError(res, err); }
-    else
-    {
-    	if(groups.length>0)
-    	{
-    		return res.status(201).json({message:"Group already exits!!!"});
-    	}
-        else{
-        	req.body.updatedAt = new Date();
-  				Group.findById(req.body._id, function (err, group) {
-    				if (err) { return handleError(res, err); }
-    			if(!group) { return res.status(404).send('Group Not Found'); }
-    			Group.update({_id:req.body._id},{$set:{name:req.body.name}},function(err){
-        			if (err) { return handleError(res, err); }
-        			return res.status(200).json({message:"Group update sucessfully!!!"});
-    			});
-  			});
-        }  
-    
-    }
-    
-  });
-
-  
-};
-
-// Deletes a Group from the DB.
-exports.destroy = function(req, res) {
-  Product.findById(req.body._id, function (err, group) {
-    if(err) { return handleError(res, err); }
-    if(!group) { return res.status(404).send('Group Not Found'); }
-    group.remove(function(err) {
-      if(err) { return handleError(res, err); }
-      return res.status(204).send({message:"Group deleted sucessfully!!!"});
-    });
-  });
-};
 function handleError(res, err) {
   return res.status(500).send(err);
 }

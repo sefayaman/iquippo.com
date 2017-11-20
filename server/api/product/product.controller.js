@@ -19,6 +19,7 @@ var Brand = require('./../brand/brand.model');
 var Model = require('./../model/model.model');
 var CityModel = require('../common/location.model');
 var AssetSaleModel = require('./../assetsale/assetsalebid.model');
+var TechSpecValMaster = require('./../techspec/techspecvalmaster.model.js');
 
 var PaymentTransaction = require('./../payment/payment.model');
 var PaymentMaster = require('../common/paymentmaster.model');
@@ -180,12 +181,15 @@ exports.search = function(req, res) {
 
   if(req.body.sellerName)
    filter["seller.fname"] = {$regex:new RegExp(req.body.sellerName,'i')};
+   if(req.body.productCondition)
+   filter["productCondition"] = {$regex:new RegExp(req.body.productCondition,'i')};
 
+  var locationArr = [];
   if(req.body.location){
     var locRegEx = new RegExp(req.body.location, 'i');
-    arr[arr.length] = {city:{$regex:locRegEx}};
-    arr[arr.length] = {state:{$regex:locRegEx}};
-    arr[arr.length] = {country:{$regex:locRegEx}};
+    locationArr[locationArr.length] = {city:{$regex:locRegEx}};
+    locationArr[locationArr.length] = {state:{$regex:locRegEx}};
+    locationArr[locationArr.length] = {country:{$regex:locRegEx}};
   }
 
   if(req.body.productDescription){
@@ -239,6 +243,8 @@ exports.search = function(req, res) {
     filter["mileage"] = req.body.mileage;
   if(req.body.country)
     filter["country"] = req.body.country;
+  if(req.body.certificationName)
+    filter["certificationName"] = req.body.certificationName;
    var currencyFilter = {};
    var isCFilter = false;
   if(req.body.currency && req.body.currency.type){
@@ -271,6 +277,17 @@ exports.search = function(req, res) {
       filter["mfgYear"] = mfgFilter;
  }
 
+ if(req.body.mfgYearMax || req.body.mfgYearMin){
+    var mfgFilter = {};
+    if(req.body.mfgYearMin){
+      mfgFilter['$gte'] = req.body.mfgYearMin;
+    }
+    if(req.body.mfgYearMax){
+      mfgFilter['$lte'] = req.body.mfgYearMax;
+    }
+    filter["mfgYear"] = mfgFilter;
+ }
+
   if(req.body.categoryId)
     filter["category._id"] = req.body.categoryId;
   
@@ -282,6 +299,8 @@ exports.search = function(req, res) {
     filter.bidRequestApproved = false;
   if(req.body.bidReceived)
     filter.bidReceived = true;
+  if(req.body.productCondition)
+    filter.productCondition = req.body.productCondition;
   if(req.body.role && req.body.userid) {
     var usersArr = [req.body.userid];
     fetchUsers(req.body.userid,function(data){
@@ -301,8 +320,13 @@ exports.search = function(req, res) {
   }
  
   function fetchResults(){
-    if(arr.length > 0)
+    if(arr.length > 0 && locationArr.length >0 )
+       filter['$and'] = [{$or:arr},{$or:locationArr}];
+    else if(arr.length>0)
       filter['$or'] = arr;
+    else if(locationArr.length >0)
+       filter['$or'] = locationArr;
+
     var result = {};
     if(req.body.pagination){
       paginatedProducts(req,res,filter,result);
@@ -321,6 +345,8 @@ exports.search = function(req, res) {
     Seq()
     .par(function(){
       var self = this;
+      if(!req.query.count)
+        return self();
       Product.count(filter,function(err,counts){
         result.totalItems = counts;
         self(err);
@@ -328,6 +354,9 @@ exports.search = function(req, res) {
     })
     .par(function(){
       var self = this;
+      if(req.query.count)
+        return self();
+
       var assetIdCache ={};
       query.exec(function (err, products) {
           if(err) { return handleError(res, err); }
@@ -450,6 +479,8 @@ exports.search = function(req, res) {
       }
     })
     .seq(function(){
+      if(req.query.count)
+        return res.status(200).json(result.totalItems);
       res.setHeader('Cache-Control','private,max-age=2592000');
       return res.status(200).json(result.products);
     })
@@ -513,7 +544,6 @@ function paginatedProducts(req,res,filter,result){
   })
  
 }
-
 
 //bulk product update
 exports.bulkUpdate = function(req,res){
@@ -605,6 +635,40 @@ exports.validateUpdate = function(req,res,next){
 }
 
 //pre creation process
+
+exports.getTechSpec = function(req,res,next){
+  var queryParam = req.body;
+  if(queryParam.productCondition === "used")
+    return next();
+  
+  var filter = {};
+  if (queryParam.category._id)
+    filter['category.categoryId'] = queryParam.category._id;
+  if (queryParam.brand._id)
+    filter['brand.brandId'] = queryParam.brand._id;
+  if (queryParam.model._id)
+    filter['model.modelId'] = queryParam.model._id;
+
+  var query = TechSpecValMaster.find(filter);
+  
+  query.exec(function(err, result) {
+    if (err)
+      return res.status(500).send(err);
+    req.body.techSpec = [];    
+    if(result.length === 1){
+      result[0].fields.forEach(function(item){
+        if(item && item.isFront && req.body.techSpec.length < 3) {
+          var dataObj = {};
+          dataObj.name = item.name;
+          dataObj.value = item.value;
+          req.body.techSpec[req.body.techSpec.length] = dataObj;
+        }
+      });
+      return next();
+    }
+    return next();
+  });
+}
 
 exports.calculatePrice = function(req,res,next){
   if(req.body.tradeType === 'RENT')
@@ -753,6 +817,8 @@ function updateProduct(req,res){
   Product.findById(req.params.id, function (err, product) {
     if (err) { return handleError(res, err); }
     if(!product) { return res.status(404).send('Not Found'); }
+    req.body.featured = false;
+    delete req.body.featured;
     if(req.body.featured){
       var imgPath = config.uploadPath + req.body.assetDir + "/" + req.body.primaryImg;
       var featureFilePath=config.uploadPath+"featured/"+req.body.primaryImg;
@@ -839,6 +905,8 @@ function addProduct(req,res){
   req.body.createdAt = new Date();
   req.body.relistingDate = new Date();
   req.body.updatedAt = new Date();
+  req.body.featured = false;
+  
   if(req.body.featured){
     var imgPath = config.uploadPath + req.body.assetDir + "/" + req.body.primaryImg;
     var featureFilePath=config.uploadPath+"featured/"+req.body.primaryImg;
@@ -1089,6 +1157,8 @@ exports.exportProducts = function(req, res) {
   var filter = {};
   //filter["status"] = true;
   filter["deleted"] = false;
+  if(req.body.productCondition)
+    filter.productCondition = req.body.productCondition;
   if (req.body.userid && req.body.role !== 'admin') {
     if (req.body.role == "channelpartner") {
       var usersArr = [req.body.userid];

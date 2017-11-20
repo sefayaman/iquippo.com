@@ -3,19 +3,20 @@
 
 angular.module('account').controller('LoginCtrl', LoginCtrl);
 
-  function LoginCtrl($scope, Auth, $location, CartSvc,$window,$rootScope,$uibModal,$uibModalInstance, $state,MarketingSvc) {
+  function LoginCtrl($scope, Auth, $location,$stateParams, CartSvc,$window,$rootScope, $state,MarketingSvc) {
     var vm = this;
     var facebookConversionSent = false;
     vm.user = {};
     vm.login = login;
     vm.loginOauth = loginOauth;
-    vm.openRegister = openRegister;
-    vm.forgotPassword = forgotPassword;
-    vm.closeDialog = closeDialog;
+    //vm.openRegister = openRegister;
+    //vm.forgotPassword = forgotPassword;
+    //vm.closeDialog = closeDialog;
 
     $scope.errors = {};
 
     function login(form) {
+
       $scope.submitted = true;
       var dataToSend = {};
       dataToSend['userId'] = vm.user.userId;
@@ -24,8 +25,9 @@ angular.module('account').controller('LoginCtrl', LoginCtrl);
       if(form.$valid) {
         Auth.login(dataToSend)
         .then( function() {
-          closeDialog();
+          //closeDialog();
           vm.user = {};
+
           //Google and Facbook conversion start
             MarketingSvc.googleConversion();
             if(!facebookConversionSent){
@@ -39,20 +41,15 @@ angular.module('account').controller('LoginCtrl', LoginCtrl);
          Auth.isLoggedInAsync(function(loggedIn){
            $rootScope.loading = false;
            if(loggedIn){
-               if(Auth.getCurrentUser()._id){
-                 //NJ: set currentUser id in sessionStorage and pass into GTM
-                  $window.sessionStorage.currentUser = Auth.getCurrentUser()._id;
-                  dataLayer.push({'userID': $window.sessionStorage.currentUser});
-                 CartSvc.loadCart();
-              }
               if(Auth.isAdmin()){
-                if(!Auth.doNotRedirect)
-                    $state.go('productlisting');
+                  return $state.go('productlisting');
               }
-              if(Auth.postLoginCallback)
-                  Auth.postLoginCallback();
-              if($state.current.name === "valuation")
-                $rootScope.$broadcast('callValuationRequest');
+              if($stateParams.state){
+                var state = $stateParams.state;
+                delete $stateParams.state;
+                $state.go(state,$stateParams);
+              }else
+                $state.go("main");
            }
          });
 
@@ -67,19 +64,28 @@ angular.module('account').controller('LoginCtrl', LoginCtrl);
       $window.location.href = '/auth/' + provider;
     };
 
-     function openRegister(){
+   /*  function openRegister(){
           closeDialog();
           $scope.openDialog('signup');
     };
-
-    function forgotPassword(){
+*/
+    /*function forgotPassword(){
         closeDialog();
         $scope.openDialog('forgotpassword');
-    };
+    };*/
 
-    function closeDialog() {
+   /* function closeDialog() {
      $uibModalInstance.dismiss('cancel');
-    };
+    };*/
+
+    function init(){
+        Auth.isLoggedInAsync(function(loggedIn){
+         if(loggedIn)
+           $state.go("main");
+       });
+    }
+
+    init();
 
   }
 
