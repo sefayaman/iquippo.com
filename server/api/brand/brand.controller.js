@@ -95,12 +95,13 @@ exports.count = function(req,res){
       filter['isForUsed'] = true;
   if(data.isForNew)
       filter['isForNew'] = true;
-  var query = Brand.find(filter).count();
+  var query = Brand.distinct('name',filter)//.count();
   query.exec(
-       function (err, brandCount) {
+       function (err, brands) {
           if(err) { return handleError(res, err); }
+          console.log("count",brands.length);
           res.setHeader('Cache-Control', 'private, max-age=2592000');
-          return res.status(200).json(brandCount);
+          return res.status(200).json(brands.length);
        }
   );
 }
