@@ -1002,7 +1002,8 @@ body{font-family: Lato-Regular ,sans-serif;}
 }
 .upcoming-auction .media .media-body{
   padding: 8px;
-  min-height: 70px;
+  min-height: 75px;
+  max-height: 75px;
 }
 .upcoming-auction .media .media-body .media-heading{font-weight: bold; font-size: 16px;}
 .upcoming-auction .media .calendar-date{
