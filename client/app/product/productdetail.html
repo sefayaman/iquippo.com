@@ -497,7 +497,7 @@
       <uib-tabset justified="true" class="information-tabs">
         <uib-tab heading="Easy Financing">
           <form  novalidate class="financeReq" name="financeReq">
-            <div>
+            <!-- <div>
               <div class="row">
                 <div class="col-sm-3">
                   <div class="floating-label-wrapper form-group">
@@ -532,10 +532,15 @@
             <div class="floating-label-wrapper form-group">
               <label>Comments</label>
               <input type="text" class="form-control" name="message" ng-model="reqFinance.message" placeholder="Enter Comments">
+            </div> -->
+            <div class="form-group">
+              iQuippo's 'Quick Equipment Loans' help you get instant financing approvals at the best possible rates. Click on 'Apply Now' to check your eligibility in 4 easy steps.
             </div>
-            <button type="submit"  ng-if="currentProduct.assetStatus == 'listed'" ng-disabled="currentProduct.tradeType == 'NOT_AVAILABLE'" ng-click="productDetailVm.requestForFinance(financeReq)" class="btn btn-primary pull-right">Submit</button>
+            <!-- <button type="submit"  ng-if="currentProduct.assetStatus == 'listed'" ng-disabled="currentProduct.tradeType == 'NOT_AVAILABLE'" ng-click="productDetailVm.requestForFinance(financeReq)" class="btn btn-primary pull-right">Submit</button> -->
+            <button ng-click="productDetailVm.requestForFinance(financeReq)" class="btn btn-primary pull-right">Apply Now</button>
           </form>
           <small><strong>Note:</strong> Financing at the sole discretion of the financier.</small>
+          <div class="form-group"></div>
         </uib-tab>
         <uib-tab heading="Valuation Report">
           <div ng-controller="ValuationRequestCtrl as valuationVm">
@@ -576,9 +581,9 @@
                 </div>
                 <div class="col-sm-3 form-group" ng-class="{'has-error': valReqForm.purpose.$invalid && valSubmitted}">
                   <div class="floating-label-wrapper">
-                      <label>Financing</label>
+                      <label>Purpose of Valuation</label>
                     <select class="form-control" name="purpose" ng-model="valuationVm.valuationReq.purpose" required>
-                      <option value="Financing">Select Financing</option>
+                      <option value="Financing">Select Purpose</option>
                       <option ng-repeat="valuation in valuationList" value="{{valuation.name}}">{{valuation.name}}</option>
                     </select>
                   </div>
@@ -589,6 +594,7 @@
                 <strong>Note:</strong> Valuation Charges - <i class="fa fa-inr"></i> 5,000
               </small>
             </form>
+            <div class="form-group"></div>
           </div>
         </uib-tab>
         <uib-tab heading="Inspection Request">
@@ -664,6 +670,7 @@
             <button type="submit" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE'" class="btn btn-primary pull-right" ng-click="productDetailVm.addProductQuote(reqForCertify)">Submit</button>
             <small><strong>Note:</strong> Inspection Charges - <i class="fa fa-inr"></i> 3,000</small>
           </form>
+          <div class="form-group"></div>
         </uib-tab>
       </uib-tabset>
       <div class="row">

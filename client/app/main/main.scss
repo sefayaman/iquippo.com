@@ -449,8 +449,6 @@ table.table{width:100% !important;}
 .label.label-danger{background:#e3000f;}
 .label.label-primary{background:#104095;}
 .form-input-width{width: 90%; height:21px;}
-.text-ellips{white-space: nowrap;overflow: hidden;text-overflow: ellipsis; text-align:left;}
-.text-ellips{font-size: 13px;}
 .description-ellips{max-width: 200px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis; text-align:left;}
 .manpower-lists .text-ellips{white-space: nowrap;overflow: hidden;text-overflow: ellipsis; text-align:center;}
 /* my account css */
@@ -968,6 +966,8 @@ body{font-family: Lato-Regular ,sans-serif;}
 /* .navbar .navbar-nav i{border-radius:50%;background:#1C2437;color:#fff;width:30px;height:30px;padding:8px;text-align:center;} */
 #view-container{min-height:400px;margin-bottom:15px; margin-top: 5em;}
 #view-container .banner .carousel-indicators{top:50%;}
+#view-container .banner .carousel-inner .item img{width: 100vw;}
+.banner.valuation-banner img{height: 400px; width: 100vw;}
 .search-banner{position: absolute;top:60%;z-index: 99; color: #fff;}
 .search-banner.search-banner-modal{position: inherit;top:auto;z-index: 99; color: #333;}
 .search-banner p{text-shadow: 1px 2px 3px #666; font-weight: bold;}
@@ -991,6 +991,9 @@ body{font-family: Lato-Regular ,sans-serif;}
 
 .or-devided{padding: 15px; color: #fff;}
 
+.upcoming-auction .main-auction{
+  display: -webkit-box; display: -moz-box; display: -ms-flexbox; display: -webkit-flex; display: flex; align-items: center; justify-content: center; 
+}
 .upcoming-auction .media{
   display: block;
   box-shadow: 0px 0px 3px #ccc;
@@ -1056,6 +1059,7 @@ body{font-family: Lato-Regular ,sans-serif;}
   background: url('../assets/images/back-border.png'); background-size: 100% 100%; background-repeat: no-repeat;
   
 }
+.text-ellips{white-space: nowrap;overflow: hidden;text-overflow: ellipsis; font-size: 13px;} 
 .category-name{text-transform: uppercase; font-weight: bold; margin: 0.5em 0 2em;}
 .category-name h5{margin-bottom: 2px; font-weight: bold;}
 .category-name span{font-size: 13px; text-transform: capitalize;}
@@ -1167,7 +1171,7 @@ align-items: center; justify-content: center;
   -webkit-background: -webkit-linear-gradient(top, #e6bdcb 0%, #b6c9e3 100%);
   background: linear-gradient(to bottom, #e6bdcb 0%, #b6c9e3 100%);
   border-radius: 10px;
-  padding: 7px;
+  padding: 0px;
   display: block;
   margin: 1em;
 }
@@ -1499,7 +1503,7 @@ footer .subscribe{height: 40px;}
 .new-equipment-brand li:nth-child(2){margin-bottom: 30px;}
 .new-equipment-brand li img{width: 100%; height: 100%;}
 
-@media (max-width:640px){
+@media (max-width:760px){
 .category-block{padding: 1em 0;}
 .navbar-toggle{float: left;margin-left: 0px; top: 5px; left: 0.5em; z-index: 99;}
 .navbar-toggle .icon-bar {background-color: #666; width: 18px;}
@@ -1566,5 +1570,5 @@ footer .subscribe{height: 40px;}
 .valuation-process .process-icons img{width: 100%; padding: 0 1.5em;}
 .valuation-process .col-sm-3{clear: both;}
 .new-equipment-brand li{width: 100%; float: none; margin-bottom: 15px;}
-
+.upcoming-auction .main-auction{display: block;}
 }

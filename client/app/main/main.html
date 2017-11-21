@@ -75,7 +75,7 @@
   </div>
 
   <div class="container">
-    <div class="row">
+    <div class="row main-auction">
       <div class="col-sm-4 form-group" ng-repeat="auction in mainVm.auctionListing">
         <a href="/assetinauction/{{auction._id}}?type=upcoming" class="media">
           <div class="calendar-date pull-left" href="#">
@@ -239,11 +239,11 @@
     <div class="row">
       <div class="col-sm-offset-3 col-sm-6">
         <div class="framwork-background">
-          <iframe data-ng-if="!toggle1" style="width:100%;height:100%;" src="https://www.youtube.com/embed/6fWE5bmpu9g?autoplay=1" frameborder="0" allowfullscreen>
+          <iframe data-ng-if="!toggle1" style="width:100%;height:100%;" src="https://www.youtube.com/embed/ej3D4DmgHQs" frameborder="0" allowfullscreen>
                </iframe>
-               <object data-ng-if="toggle1" style="width:100%;height:100%;" data="https://img.youtube.com/vi/6fWE5bmpu9g/0.jpg" frameborder="0" >
+               <object data-ng-if="toggle1" style="width:100%;height:100%;" data="https://www.youtube.com/embed/ej3D4DmgHQs/0.jpg" frameborder="0" >
                </object>
-              <a href="#" class="utube-icon" data-ng-if="toggle1" data-ng-click="toggling('vid1')"><img src="assets/images/utube.png"></a>
+              <!-- <a href="#" class="utube-icon" data-ng-if="toggle1" data-ng-click="toggling('vid1')"><img src="assets/images/utube.png"></a> -->
         </div>
       </div>
     </div>
