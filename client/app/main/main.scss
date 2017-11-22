@@ -966,7 +966,7 @@ body{font-family: Lato-Regular ,sans-serif;}
 #view-container{min-height:400px;margin-bottom:15px; margin-top: 5em;}
 #view-container .banner .carousel-indicators{top:50%;}
 #view-container .banner .carousel-inner .item img{width: 100vw;}
-.banner.valuation-banner img{height: 400px; width: 100vw;}
+.valuation-banner img{height: 300px; width: 100vw; margin-bottom: 1.5em;}
 .search-banner{position: absolute;top:60%;z-index: 99; color: #fff;}
 .search-banner.search-banner-modal{position: inherit;top:auto;z-index: 99; color: #333;}
 .search-banner p{text-shadow: 1px 2px 3px #666; font-weight: bold;}
@@ -978,7 +978,7 @@ body{font-family: Lato-Regular ,sans-serif;}
 .filter .select-text .back-tohome a{line-height: 46px; text-shadow: none; color: #666; display: block;}
 .filter .select-text:nth-of-type(1) .form-control{border-radius: 4px 0 0 4px;}
 .filter .select-text:nth-of-type(5) .form-control{border-radius: 0 4px 4px 0;}
-.banner{min-height:400px; position: relative; margin-bottom: 3em;}
+.banner{min-height:400px; position: relative; margin-bottom: 2em;}
 .search-banner .input-group .input-group-addon{padding-left: 15px; padding-right: 15px; background: #fff; position: absolute;
     z-index: 9;
     font-size: 13px;
@@ -1045,9 +1045,9 @@ body{font-family: Lato-Regular ,sans-serif;}
 .upcoming-auction .media a img{height: 200px; max-width: 100%;}
 .upcoming-auction .media .btn{padding: 1em 3em; border-radius: 4px; font-size: 1em; text-transform: uppercase;}
 .upcoming-auction .media .media-body h4{text-transform: uppercase; font-size: 1.2em; font-weight: bold;}
-.category-block{padding: 1em 0 3em;}
-.heading-titles{margin: 2.5em auto;}
-.heading-titles h4{letter-spacing: 1px; margin: 1.2em 0; text-transform: uppercase; font-size: 24px; font-weight: bold; color: #333;}
+.category-block{padding: 1em 0 2em;}
+.heading-titles{margin: 1.5em auto;}
+.heading-titles h4{letter-spacing: 1px; margin:0 0 1em; text-transform: uppercase; font-size: 24px; font-weight: bold; color: #333;}
 .how-works .heading-titles h4{color: #fff;}
 .heading-titles span{display: inline-block;}
 .heading-titles span:first-letter{text-transform: lowercase;}
@@ -1237,12 +1237,11 @@ background-image:         linear-gradient(170.11deg, hsla(354,100%,98%,.8), hsla
     background-repeat: no-repeat;
     background-position: left center;
     box-sizing: border-box;
-    clear: both;
-    margin: 2.5em 0;
+    margin: 1em 0;
 }
 .media-news li a{ text-decoration: none; color: #666; font-size: 18px; display: block; }
 .media-news li em{ float: left; font-size: 12px; color: #999;}
-.media-news li em.news-date{ float: right;}
+.media-news li em.news-date{ float: right; margin-right:2em;}
 
 /*footer*/
 footer{color: #999;}
