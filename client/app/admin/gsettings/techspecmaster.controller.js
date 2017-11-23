@@ -64,19 +64,6 @@ function TechSpecMasterCtrl($scope,$rootScope,$state,uploadSvc,categorySvc,brand
         filter['categoryId'] = categoryId;
         loadViewData(filter);
     }
-    
-    /*function getBrandOnFilter(){
-        var filter = {};
-        filter['isForNew'] = true;
-        brandSvc.getBrandOnFilter(filter)
-		.then(function(result){
-			$scope.allBrand = result;
-			vm.cSearch = "";
-			vm.cCurrentPage = 1;
-			vm.cTotalItems = result.length;
-			
-		})
-    }*/
 
     function getAllField(filter){
       if($scope.isView)
@@ -245,8 +232,6 @@ function TechSpecMasterCtrl($scope,$rootScope,$state,uploadSvc,categorySvc,brand
               loadViewFieldData(filter);
               break;
         }
-        // loadViewData(filter);
-        // loadViewFieldData(filter);
     }
 
     function save(form){
@@ -383,7 +368,6 @@ function TechSpecMasterCtrl($scope,$rootScope,$state,uploadSvc,categorySvc,brand
       onCategoryChange(vm.dataModel.category.categoryId, true);
       onBrandChange(vm.dataModel.brand.brandId, true);
       vm.container.brandId = vm.dataModel.brand.brandId;
-      //onModelChange(vm.dataModel.model.modelId, true);
       vm.container.modelId = vm.dataModel.model.modelId;
       var filter = {};
       filter.categoryId = vm.dataModel.category.categoryId;
@@ -392,12 +376,17 @@ function TechSpecMasterCtrl($scope,$rootScope,$state,uploadSvc,categorySvc,brand
         vm.fieldList =[];
         vm.fieldList = result;
         vm.fieldsArr =[];
+        vm.fields = [];
+        vm.checks = [];
         angular.copy(filterData.fields, vm.fieldsArr);
-          if(vm.fieldsArr){
-            for(var k =0; k < vm.fieldsArr.length; k++) {
-              vm.fields[k] = vm.fieldsArr[k].value;
-              vm.checks[k] = vm.fieldsArr[k].isFront;
+        for(var k =0; k < vm.fieldsArr.length; k++) {
+          for(var i =0; i < vm.fieldList.length; i++) {
+            if(vm.fieldList[i]._id === vm.fieldsArr[k].fieldId) {
+              vm.fields[i] = vm.fieldsArr[k].value;
+              vm.checks[i] = vm.fieldsArr[k].isFront;
+              break;
             }
+          }
         }
       });
     }
@@ -430,9 +419,9 @@ function TechSpecMasterCtrl($scope,$rootScope,$state,uploadSvc,categorySvc,brand
       }
       vm.dataModel.fields = [];
       //angular.copy(filterData.fields, vm.fieldsArr);
-      if(vm.fieldsArr){
-        for(var k in  vm.fieldsArr) {
-          if( k < vm.fieldList.length) {
+      if(vm.fields){
+        for(var k =0; k < vm.fields.length; k++) {
+          if(k < vm.fieldList.length) {
             var createData = {};
             createData.fieldId = vm.fieldList[k]._id;
             createData.name = vm.fieldList[k].fieldName;
@@ -513,7 +502,7 @@ function TechSpecMasterCtrl($scope,$rootScope,$state,uploadSvc,categorySvc,brand
       if(value === 'techSpec') {
         TechSpecMasterSvc.destroy(id)
         .then(function(){
-            fireCommand(true, "'techSpec");
+            fireCommand(true, "techSpec");
         })
          .catch(function(err){
             console.log("purpose err",err);
