@@ -223,7 +223,6 @@
         email : Auth.getCurrentUser().email,
         mobile : Auth.getCurrentUser().mobile,
         country:Auth.getCurrentUser().country,
-        country:Auth.getCurrentUser().country,
         state:Auth.getCurrentUser().state,
         city:Auth.getCurrentUser().city
 
