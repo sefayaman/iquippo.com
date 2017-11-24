@@ -130,7 +130,7 @@
                   </div>
                   <div class="col-sm-5 form-group">
                     <ul>
-                      <li>
+                      <li class="freecost">
                         {{caseinfo.freeofcost}}
                       </li>
                       <!--<li>
@@ -160,7 +160,7 @@
                     </div>
                     <div class="col-sm-5 form-group">
                       <ul>
-                        <li>
+                        <li class="freecost">
                            {{financeinfo.selected.freecost}}
                         </li>
                       </ul>
@@ -272,7 +272,7 @@
                     </div>
                     <div class="col-sm-5 form-group">
                       <ul>
-                        <li>
+                        <li class="freecost">
                            {{leaseinfo.selected.freecost}}
                         </li>
                        
@@ -421,56 +421,48 @@ $('#article-photo').carousel(dir);
 </div>
 </script>
 <!-- popup after click agree button -->
-<script type="text/ng-template" id="price_trend_survey.html">
+<script type="text/ng-template" id="details-user.html">
 <div>
   <div class="modal-header">
-    <button type="button" class="close" ng-click="priceTrendSurveyVm.close()" aria-hidden="true">&times;</button>
-    <h4 class="modal-title">Leave your Comment</h4>
+    <button type="button" class="close" ng-click="" aria-hidden="true">&times;</button>
+    <h4 class="modal-title">Fill your details</h4>
   </div>
-  <div class="modal-body">
-    <form class="form-signin" name="surveyForm" novalidate>
-      <div class="row">
-        <div class="form-group col-sm-6" ng-class="{'has-error': surveyForm.fname.$invalid && submitted}">
-          <input type="text" class="form-control" name="fname" ng-model="priceTrendSurveyVm.priceTrendSurvey.user.fname" placeholder="First Name" required>
-        </div>
-        
-        <div class="form-group col-sm-6" ng-class="{'has-error': surveyForm.lname.$invalid && submitted}">
-          <input type="text" class="form-control" name="lname" ng-model="priceTrendSurveyVm.priceTrendSurvey.user.lname" placeholder="Last Name" required>
-        </div>
-      </div>
-      
-      <div class="row">
-        <div class="form-group col-sm-6" ng-class="{'has-error': surveyForm.mobile.$invalid && submitted}">
-          <div class="row">
-            <div class="col-sm-4 padd-right search-field">
-              <select class="form-control" ng-model="priceTrendSurveyVm.priceTrendSurvey.user.countryCode" ng-change="priceTrendSurveyVm.onCodeChange(priceTrendSurveyVm.priceTrendSurvey.user.countryCode)" required>
-                <option value="" disabled>*Code</option>
-                <option  ng-repeat ="country in allCountries | orderBy:'name'" value="{{country.countryCode}}">+{{country.countryCode}}</option>
-              </select>
-              <i class="caret"></i>
+  <form name="">
+    <div class="modal-body">
+      <div class="floating-lable-form">
+        <div class="row">
+          <div class="col-sm-6 form-group has-error">
+            <div class="floating-label-wrapper">
+              <label for="fname">First Name</label>
+              <input type="text" class="form-control" id="fname" placeholder="First Name" ng-model="user.fname" required with-floating-label>
             </div>
-            <div class="col-sm-8 padd-left">
-              <input type="text" class="form-control" name="mobile" placeholder="Mobile No." uib-tooltip="98-XXXX-XXXX" tooltip-trigger="focus" tooltip-placement="top" ng-model="priceTrendSurveyVm.priceTrendSurvey.user.mobile"  required>
+          </div>
+          <div class="col-sm-6 form-group has-error">
+            <div class="floating-label-wrapper">
+              <label for="lname">Last Name</label>
+              <input type="text" class="form-control" id="lname" placeholder="Last Name" ng-model="user.lname" required with-floating-label>
+            </div>
+          </div>
+          <div class="col-sm-6 form-group has-error">
+            <div class="floating-label-wrapper">
+              <label for="mobile">Mobile No.</label>
+              <input type="number" class="form-control" id="mobile" placeholder="Mobile No." ng-model="user.mobile" required with-floating-label>
+            </div>
+          </div>
+          <div class="col-sm-6 form-group has-error">
+            <div class="floating-label-wrapper">
+              <label for="email">Email</label>
+              <input type="email" class="form-control" id="email" placeholder="Email" ng-model="user.email" required with-floating-label>
             </div>
           </div>
         </div>
-        <div class="col-sm-6 form-group">
-          <input type="email" class="form-control" name="email" placeholder="Email Address" ng-model="priceTrendSurveyVm.priceTrendSurvey.user.email" >
-          
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-sm-12 form-group" ng-class="{'has-error': surveyForm.comment.$invalid && agree == 'No' && submitted}">
-          <textarea class="form-control" name="comment" placeholder="Comments" ng-model="priceTrendSurveyVm.priceTrendSurvey.comment" ng-required="agree == 'No'"></textarea>
-        </div>
-      </div>
-      
-    </form>
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-md btn-default" ng-click="priceTrendSurveyVm.save(surveyForm)">Ok</button>
-    <button type="submit" class="btn btn-md btn-danger" ng-click="priceTrendSurveyVm.close()">Cancel</button>
-  </div>
+      </div>      
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-md btn-default">Submit</button>
+      <button type="submit" class="btn btn-md btn-danger">Cancel</button>
+    </div>
+  </form>
 </div>
 </script>
 <!-- end poup -->

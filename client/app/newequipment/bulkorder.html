@@ -11,7 +11,7 @@
 </div>
 <!-- New Equipment -->
 <section class="category-block">
-  <div class="container padd-left padd-right">
+  <div class="container">
     <div class="heading-titles text-center form-group">
       <h4>[ FOR BULK ORDERS ]</h4>
       <p><strong>Need large quantities of equipments with amazing quality and attractive prices? iQuippo has the solution for you.</strong> </p>
@@ -24,17 +24,17 @@
           <h4 class="text-center">BULK INQUIRY FORM</h4>
           <hr>
           <div class="row">
-            <div class="col-sm-3 form-group">
+            <div class="col-xs-6 col-sm-3 form-group">
               <div class="floating-label-wrapper">
-                <div class="radio">
+                <div class="radio radio-info">
                   <input type="radio" ng-model="bulkOrderVm.dataModel.forSelf" ng-value="true" name="reqType" id="self" ng-change="bulkOrderVm.setUserData()">
                   <label for="self">For Self</label>
                 </div>
               </div>
             </div>
-            <div class="col-sm-3 form-group">
+            <div class="col-xs-6 col-sm-3 form-group">
               <div class="floating-label-wrapper">
-                <div class="radio">
+                <div class="radio radio-info">
                   <input type="radio" name="reqType" ng-model="bulkOrderVm.dataModel.forSelf" ng-value="false" id="others" ng-change="bulkOrderVm.setUserData()"><label for="others">For Others</label>
                 </div>
               </div>
