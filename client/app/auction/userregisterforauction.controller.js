@@ -20,6 +20,8 @@
     $scope.getStateWiseLocation = getStateWiseLocation;
     vm.Verify = Verify;
     vm.sendOTP = sendOTP;
+    $scope.OverAll = "overall";
+    $scope.LotWist = "lotwise";
 
     function init() {
       LotSvc.getData({auction_id: $scope.currentAuction._id}).then(function(res) {
@@ -31,7 +33,6 @@
     init();
 
     function getCountryWiseState(country) {
-      //console.log("sqsqq",country);
       $scope.isDisabled = false;
       vm.user.state = "";
       vm.user.city = "";
@@ -67,7 +68,7 @@
     function onCodeChange(code) {
       $scope.country = LocationSvc.getCountryNameByCode(code);
     }
-
+    $scope.lotsArr = [];
     function validateRegisterUser(auctionData, userData) {
       Auth.isLoggedInAsync(function(loggedIn) {
         if (loggedIn) {  
@@ -82,29 +83,34 @@
             dataObj.user._id = userData._id;
             dataObj.user.mobile = userData.mobile;
           }
-          if($scope.currentAuction.emdTax === 'lotWise') {
-            //dataObj.selectedLots =  vm.dataToSend.selectedLots;
-            return;
-          }
-          else {
+          if($scope.currentAuction.emdTax === $scope.OverAll) {
             dataObj.selectedLots = [];
             vm.lotList.forEach(function(item){
               dataObj.selectedLots[dataObj.selectedLots.length] = item.lotNumber;
             });
+          } else {
+            dataObj.emdTax = $scope.LotWist;
           }
           userRegForAuctionSvc.checkUserRegis(dataObj)
           .then(function(result){
             console.log("the registration",result);
             closeDialog();
             if(result.data){
-              if(result.data =="done"){
+              if(result.data =="done" && auctionData.emdTax === $scope.OverAll){
                  Modal.alert("You have already registered for this auction with lotnumbers" +" "+ result.selectedLots); 
                  return;
                }
-              if(result.data =="undone"){
+              if(result.data =="undone" && auctionData.emdTax === $scope.OverAll){
                 Modal.alert("Your EMD payment is still pending. Please pay the EMD amount and inform our customer care team.",true);
                 return;
               }
+            }
+            if(result && result.length > 0 && auctionData.emdTax === $scope.LotWist)
+            { $scope.lotsArr = [];
+                result.forEach(function(item){
+                  for (var i=0; i < item.selectedLots.length;i++)
+                    $scope.lotsArr.push(item.selectedLots[i]);
+                });
             }
             openActionDialog(auctionData, userData);
           }); 
@@ -132,7 +138,6 @@
         if (vm.userId)
           data.userId = vm.userId;
         data.forAuction = true;
-        console.log("user", vm.userId);
         Auth.validateUser(data).
         success(function(res) {
           if (res && res.errorCode === 0)
@@ -150,7 +155,6 @@
 
     function login(auctionData, userData) {
       if(Auth.isAdmin()) {
-        //openActionDialog(auctionData, userData);
         userData.batonNo = vm.user.batonNo;
         validateRegisterUser(auctionData, userData);
       } else {
@@ -161,7 +165,6 @@
         Auth.login(dataToSend)
           .then(function() {
             validateRegisterUser(auctionData, userData);
-            //openActionDialog(auctionData, userData);
           })
           .catch(function(err) {
             if(err && err.message)
@@ -175,6 +178,8 @@
       var auctionRegislogin = $rootScope.$new();
       auctionRegislogin.currentAuction = auctionData;
       auctionRegislogin.registrationPage = true;
+      if($scope.lotsArr.length > 0 && auctionData.emdTax === $scope.LotWist)
+        auctionRegislogin.regLots = $scope.lotsArr;
       if(Auth.isAdmin())
         auctionRegislogin.registerUser = userData;
       Modal.openDialog('auctionRegislogin',auctionRegislogin);   
@@ -314,6 +319,8 @@
       closeDialog();
       var auctionRegislogin = $rootScope.$new();
       auctionRegislogin.currentAuction = auctionData;
+      if($scope.lotsArr.length > 0 && auctionData.emdTax === $scope.LotWist)
+        auctionRegislogin.regLots = $scope.lotsArr;
       if(Auth.isAdmin())
         auctionRegislogin.registerUser = userData;
       Modal.openDialog('auctionRegislogin',auctionRegislogin);

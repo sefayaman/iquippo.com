@@ -185,7 +185,7 @@ function EmdCtrl($scope,$rootScope,$state,Modal,Auth,PagerSvc,$filter,LotSvc,Auc
   function getAuctions() {
     var filter = {};
     filter.auctionType = "upcoming";
-    filter.emdTax = "lotWise";
+    filter.emdTax = "lotwise";
     AuctionSvc.getAuctionDateData(filter).then(function(result) {
       vm.auctionListing = result.items;
     }).catch(function(err) {

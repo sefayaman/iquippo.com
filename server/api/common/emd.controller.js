@@ -5,6 +5,7 @@ var Emd = require('./emd.model');
 var ApiError = require('../../components/_error');
 var async = require('async');
 var Util=require('../../components/utility');
+var Lot = require('../common/lot.model');
 var ReqSubmitStatuses = ['Request Submitted', 'Request Failed'];
 
   exports.create = function(req, res, next) {
@@ -143,85 +144,39 @@ exports.getEmdData = function(req, res) {
   });
 };
 
-exports.getEmdAmountData = function(req, res, callback){
+exports.getEmdAmountData = function(req, res) {
   var arr=[]
-  if(req.query.selectedLots)
-    arr=req.query.selectedLots;
   var filter = {};
+  filter.isDeleted = false;
   if (req.query.auction_id) {
     filter.auction_id = req.query.auction_id;
   }
   if (req.query.selectedLots) {
+    if(req.query.selectedLots instanceof Array)
+      arr = req.query.selectedLots;
+    else
+      arr.push(req.query.selectedLots);
+
     filter["selectedLots.lotNumber"] = {
-      $eq: arr
+      $in: arr
     }
   }
 
-  var data = req.query.selectedLots;
-  if (data instanceof Array) {
-    var lots = data;
-  } else {
-    var lots = [data];
-  }
- async.series([function(next){
-  fetchEmdAmount(filter,res,next);
-},function(next){
-    calculateEmdAmount(lots,filter,next);
-  }],function(err,results){
-  if(err)
-    res.status(err.status || 500).send(err);
-  return res.json(results[1]); 
- });
-}
-
-function fetchEmdAmount(filter,res,callback){
-filter.isDeleted=false;
-var query = Emd.find(filter);
-  query.exec(function(err, result) {
-    if (err) {
-      callback(err);
+  Emd.find(filter).exec(function(err, emd){
+    if(err) {
+      return res.status(500).send(err);
     }
-    if(result.length > 0){
-      return res.json(result);
-    }
-    else{
-    return callback(null,result);
-  }
-  });
-}
-
-function calculateEmdAmount(lots,filter,callback){
-  var emdamount = []; 
-  async.each(lots, function(item, cb) {
-      //filter.auctionId = req.query.auctionId;
-      filter["selectedLots.lotNumber"] = [];
-      filter["selectedLots.lotNumber"].push(item);
-      filter.isDeleted=false;
-      Emd.find(filter, function(err, result){
-        if (result.length > 0) {
-          emdamount.push(result[0].amount);
-        }
-        cb(null);
-      });
-    },
-    function(err) {
-      if(err)
-        callback(err);
-      return callback(null,arraySum(emdamount));
+    if(emd.length == 0)
+      return res.status(404).send("EMD not found for this lot!");
+    var emdResult = {};
+    emdResult.emdAmount = 0;
+    emd.forEach(function(item){
+      if(item.emdAmount) {
+        emdResult.emdAmount = Number(emdResult.emdAmount) + Number(item.emdAmount);
+      }
     });
-}
-
-
-
-function arraySum(array) {
-  var total = 0,
-    len = array.length;
-
-  for (var i = 0; i < len; i++) {
-    total += parseInt(array[i]);
-
-  }
-  return total;
+    return res.json(emdResult); 
+  });
 };
 
 exports.destroy = function(req, res) {

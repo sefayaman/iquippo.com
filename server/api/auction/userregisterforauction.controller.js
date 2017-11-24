@@ -115,12 +115,13 @@ exports.checkUserRegis = function(req, res) {
     }
 
   }
-  console.log("filter checkUserRegis###", filter);
   var query = Model.find(filter);
 
   query.exec(
     function(err, data) {
       if (data && data.length > 0) {
+        if(req.body.emdTax === 'lotwise')
+          return res.status(200).json(data);
         var filter = {};
         if(data[0].transactionId)
           filter._id = data[0].transactionId;
