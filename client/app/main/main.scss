@@ -1359,9 +1359,10 @@ footer .subscribe{height: 40px;}
   border-color: #5bc0de; }
 .checkbox-info input[type="checkbox"]:checked + label::after {
   color: #fff; }
-.view-offer .checkbox label {font-size: 24px; font-weight: bold; }
+.view-offer .checkbox{padding-left: 5em;}
+.view-offer .checkbox label {font-size: 24px; font-weight: bold; padding-left: 10px;}
 .view-offer .checkbox label::before ,.view-offer .checkbox label::after {top: 10px; }
-.view-offer .checkbox small {display: block; color: #ccc; }
+.view-offer .checkbox small {display: block; color: #ccc; padding-left: 10px; }
 
 
 .radio {

@@ -119,7 +119,7 @@
                   <i class="pull-right fa" ng-class="{'fa-angle-up': status.cash, 'fa-angle-down': !status.cash}"></i>
                 </uib-accordion-heading>
                 <div class="row" ng-repeat="caseinfo in offer.caseInfo">
-                  <div class="col-sm-offset-1 col-sm-5 form-group">
+                  <div class="col-sm-5 form-group">
                     <div class="checkbox">
                       <input type="checkbox" ng-model="caseinfo.checked" id = "cashoffer_{{$index}}" name="cashoffer_{{$index}}">
                       <label for="cashoffer_{{$index}}">
@@ -150,7 +150,7 @@
                 </uib-accordion-heading>
                 <div ng-repeat="financeinfo in offer.financeInfo">
                   <div class="row">
-                    <div class="col-sm-offset-1 col-sm-5 form-group">
+                    <div class="col-sm-5 form-group">
                       <div class="checkbox">
                         <input type="checkbox" ng-model="financeinfo.checked" id="finance_{{$index}}" name="">
                         <label for="finance_{{$index}}">
@@ -171,19 +171,21 @@
                     <div class="col-sm-2">
                       <h5 class="text-center"><small>Select Quantity &amp; Tenure</small></h5> 
 
-                      <div class="floating-label-wrapper">
-                        <label>TENURE*(In Months)</label>
-                        <select class="form-control" ng-model="financeinfo.selected" ng-options="fidata.tenure for fidata in financeinfo.data">
-                         <!--  <option value="{{fiData.tenure}}" ng-repeat="fiData in financeinfo.data">{{fiData.tenure}}</option>   -->            
-                        </select>
-                      </div>
+                      <div class="col-sm-12">
+                        <div class="floating-label-wrapper text-center">
+                          <label>TENURE*<small>(In Months)</small></label>
+                          <select class="form-control" ng-model="financeinfo.selected" ng-options="fidata.tenure for fidata in financeinfo.data">
+                           <!--  <option value="{{fiData.tenure}}" ng-repeat="fiData in financeinfo.data">{{fiData.tenure}}</option>   -->            
+                          </select>
+                        </div>
 
-                      <div class="floating-label-wrapper form-group">
-                        <label>Quantity</label>              
-                        <div class="input-group">
-                          <a href="javascript:void(0);" ng-click="decreaseQuantity(financeinfo.selected)" class="input-group-addon"><i class="fa fa-minus"></i></a>
-                          <input type="number" class="form-control"  ng-model="financeinfo.selected.quantity" min="1" disabled>
-                          <a href="javascript:void(0);" ng-click="increaseQuantity(financeinfo.selected)" class="input-group-addon"><i class="fa fa-plus"></i></a>
+                        <div class="floating-label-wrapper form-group text-center">
+                          <label>Quantity</label>              
+                          <div class="input-group">
+                            <a href="javascript:void(0);" ng-click="decreaseQuantity(financeinfo.selected)" class="input-group-addon"><i class="fa fa-minus"></i></a>
+                            <input type="number" class="form-control text-center"  ng-model="financeinfo.selected.quantity" min="1" disabled>
+                            <a href="javascript:void(0);" ng-click="increaseQuantity(financeinfo.selected)" class="input-group-addon"><i class="fa fa-plus"></i></a>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -262,7 +264,7 @@
                 </uib-accordion-heading>
                 <div ng-repeat="leaseinfo in offer.leaseInfo"><!--start repeat div-->
                   <div class="row">
-                    <div class="col-sm-offset-1 col-sm-5 form-group">
+                    <div class="col-sm-5 form-group">
                       <div class="checkbox">
                         <input type="checkbox" ng-model="leaseinfo.checked" id="leaserid_{{$index}}">
                         <label for="leaserid_{{$index}}">
@@ -283,21 +285,23 @@
                   <div class="row">
                     <div class="col-sm-2">
                       <h5 class="text-center"><small>Select Quantity &amp; Tenure</small></h5>                
-                       <div class="floating-label-wrapper">
-                        <label>TENURE*(In Months)</label>
-                        <select class="form-control"  ng-model="leaseinfo.selected" ng-options="liData.tenure for liData in leaseinfo.data">
-                         <!--  <option value="{{tenure}}" ng-selected ng-repeat="tenure in leaseinfo.data">{{tenure.tenure}}</option>   -->            
-                        </select>
-                      </div>
-
-                      <div class="floating-label-wrapper form-group">
-                        <label>Quantity</label>              
-                        <div class="input-group">
-                          <a href="javascript:void(0);" ng-click="decreaseQuantity(leaseinfo.selected)" class="input-group-addon"><i class="fa fa-minus"></i></a>
-                          <input type="number" class="form-control"  ng-model="leaseinfo.selected.quantity" placeholder="1" min="1" disabled>
-                          <a href="javascript:void(0);" ng-click="increaseQuantity(leaseinfo.selected)" class="input-group-addon"><i class="fa fa-plus"></i></a>
+                       <div class="col-sm-12">
+                         <div class="floating-label-wrapper text-center">
+                          <label>TENURE*<small>(In Months)</small></label>
+                          <select class="form-control"  ng-model="leaseinfo.selected" ng-options="liData.tenure for liData in leaseinfo.data">
+                           <!--  <option value="{{tenure}}" ng-selected ng-repeat="tenure in leaseinfo.data">{{tenure.tenure}}</option>   -->            
+                          </select>
                         </div>
-                      </div>
+
+                        <div class="floating-label-wrapper form-group text-center">
+                          <label>Quantity</label>              
+                          <div class="input-group">
+                            <a href="javascript:void(0);" ng-click="decreaseQuantity(leaseinfo.selected)" class="input-group-addon"><i class="fa fa-minus"></i></a>
+                            <input type="number" class="form-control text-center"  ng-model="leaseinfo.selected.quantity" placeholder="1" min="1" disabled>
+                            <a href="javascript:void(0);" ng-click="increaseQuantity(leaseinfo.selected)" class="input-group-addon"><i class="fa fa-plus"></i></a>
+                          </div>
+                        </div>
+                       </div>
                     </div>
                     <div class="col-sm-7">
                       <h5 class="text-center"><small>Check per unit and total cost</small></h5>
