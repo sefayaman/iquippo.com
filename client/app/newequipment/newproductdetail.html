@@ -114,8 +114,8 @@
             <uib-accordion close-others="oneAtATime" class="view-offer">
               <uib-accordion-group is-open="status.cash" ng-if="offer.cash_purchase">
                 <uib-accordion-heading>
-                  CASH OFFERS ({{offer.cashInfo.length}} Available)
-                  <p><small>Get additional 2 years service free from iQuippo.</small></p>
+                  CASH OFFERS ({{offer.caseInfo.length}} Available)
+                  <p><!-- <small>Get additional 2 years service free from iQuippo.</small> --></p>
                   <i class="pull-right fa" ng-class="{'fa-angle-up': status.cash, 'fa-angle-down': !status.cash}"></i>
                 </uib-accordion-heading>
                 <div class="row" ng-repeat="caseinfo in offer.caseInfo">
@@ -144,8 +144,8 @@
 
               <uib-accordion-group is-open="status.finance" ng-if="offer.finance">
                 <uib-accordion-heading>
-                  FINANCING OFFERS ({{offer.financeInfo.length}} Available)
-                  <p><small>Get additional 2 years service free from iQuippo.</small></p>
+                  FINANCING OFFERS ({{offer.finannceCounter}} Available)
+                  <p><!-- <small>Get additional 2 years service free from iQuippo.</small> --></p>
                   <i class="pull-right fa" ng-class="{'fa-angle-up': status.finance, 'fa-angle-down': !status.finance}"></i>
                 </uib-accordion-heading>
                 <div ng-repeat="financeinfo in offer.financeInfo">
@@ -256,8 +256,8 @@
 
               <uib-accordion-group is-open="status.leasing" ng-if="offer.lease">
                 <uib-accordion-heading>
-                  LEASING OFFERS ({{offer.leaseInfo.length}} Available)
-                  <p><small>Get additional 2 years service free from iQuippo.</small></p>
+                  LEASING OFFERS ({{offer.leaseCounter}} Available)
+                  <p><!-- <small>Get additional 2 years service free from iQuippo.</small> --></p>
                   <i class="pull-right fa" ng-class="{'fa-angle-up': status.leasing, 'fa-angle-down': !status.leasing}"></i>
                 </uib-accordion-heading>
                 <div ng-repeat="leaseinfo in offer.leaseInfo"><!--start repeat div-->

@@ -161,6 +161,7 @@
         $scope.offer = result[0];
         $scope.offerCliced = true;
         if($scope.offer.finance && $scope.offer.financeInfo.length){
+          $scope.offer.finannceCounter = 0;
           $scope.offer.financeInfo.forEach(function(item,index){
             if( item && item.data){
               item.selected = item.data[0];
@@ -169,14 +170,17 @@
                 return;
               keys.forEach(function(key){
                 item.data[key].quantity = 1;
+                $scope.offer.finannceCounter ++;
+                calcalateOffer(item.data[key]);
               });
-              calcalateOffer(item.selected);
+              //calcalateOffer(item.selected);
             }
           });
         }
 
 
          if($scope.offer.lease && $scope.offer.leaseInfo.length){
+          $scope.offer.leaseCounter = 0;
           $scope.offer.leaseInfo.forEach(function(item,index){
             if( item && item.data){
               item.selected = item.data[0];
@@ -185,8 +189,10 @@
                   return;
                 keys.forEach(function(key){
                   item.data[key].quantity = 1;
+                  $scope.offer.leaseCounter ++;
+                  calcalateOffer(item.data[key]);
                 });
-                calcalateOffer(item.selected);
+                //calcalateOffer(item.selected);
             }
           });
         }
@@ -262,7 +268,7 @@
         Modal.alert("Please select offer atleast one offer.");
         return;
       }
-      
+
       OfferSvc.saveOfferRequest(offerReq)
       .then(function(res){
         $scope.offerCliced = false;
