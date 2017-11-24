@@ -12,10 +12,10 @@ var OfferSchema = new Schema({
             name:String
         }],
         cash_purchase: {type:Boolean,default:false},  
-        caseInfo: {},
+        caseInfo: [],
         finance: {type:Boolean,default:false},
         financeInfo:[],
-        leaseInfo:{},
+        leaseInfo:[],
         lease: {type:Boolean,default:false},
         createdBy:{},  
         status: {type:Boolean,default:true},  

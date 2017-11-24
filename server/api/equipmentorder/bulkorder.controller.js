@@ -24,7 +24,7 @@ exports.save = function(req,res){
   var bodyData = req.body;
   NewEquipmentBulkOrder.create(bodyData,function(err,result){
     if(err) return handleError(res,err);
-      return res.status(200).send("Request submitted successfully.");
+      return res.status(200).json(result);
   });
 }
 

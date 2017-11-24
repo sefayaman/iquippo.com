@@ -6,64 +6,32 @@
     
     var vm = this;
     $scope.currentProduct = {};
-    $rootScope.currntUserInfo = {};
+    $scope.offerCliced = false;
     var filter = {};
-    $scope.test = 'test12345678';
     $scope.states={};
-    //$scope.financeContact.interestedIn="finance";
     $scope.buycontact ={};
-    //$scope.negotiate = negotiate;
     $scope.states = [];
-    vm.getOffer = getOffer;
+
     vm.previewProduct = previewProduct;
-    $scope.changeFinancer = changeFinancer;
-    $scope.changeQuantityMinus = changeQuantityMinus;
-    $scope.changeQuantityPlus = changeQuantityPlus;
-    $scope.lchangeQuantityMinus = lchangeQuantityMinus;
-    $scope.lchangeQuantityPlus = lchangeQuantityPlus;
-    $scope.changeTenure = changeTenure;
-    $scope.lchangeTenure = lchangeTenure;
     $scope.proceed = proceed;
     $scope.startBookADemo = startBookADemo;
     $scope.getDocByName = getDocByName;
+    $scope.viewOffer = viewOffer;
+    $scope.increaseQuantity = increaseQuantity;
+    $scope.decreaseQuantity = decreaseQuantity;
     
-    
-    ///for financer
-    //$scope.financeinfo = [];
-    $scope.financer = [];
-    $scope.fnumber = [];
-     $scope.fnumber[0] =1;
-    $scope.ftenure = [];
-    $scope.fAmount = [];
+    function viewOffer(location){
+      if (!Auth.getCurrentUser()._id) {
+          Auth.goToLogin();
+          return;
+      }
 
-    $scope.fAmount = [];
-    $scope.fDownPayment = [];
-    $scope.fProcessingFee = [];
-    $scope.fTotalAmount = [];
-    $scope.fDownAmount = [];
-    $scope.fTotalFee = [];
-    $scope.fTotalInstallment = [];
-    $scope.fTotalDownAndProcessing = [];
-    $scope.fTotalDownAmount = [];
-    $scope.fRate = [];
-    // for leaser
-    //$scope.leaseinfo = [];
-    $scope.leaser = [];
-    $scope.lnumber = [];
-    $scope.lnumber[0] =1;
-    $scope.ltenure = [];
-    $scope.lAmount = [];
-
-   // $scope.lAmount = [];
-    $scope.lDownPayment = [];
-    $scope.lProcessingFee = [];
-    $scope.lTotalAmount = [];
-    $scope.lDownAmount = [];
-    $scope.lTotalFee = [];
-    $scope.lTotalInstallment = [];
-    $scope.lTotalDownAndProcessing = [];
-    $scope.lTotalDownAmount = [];
-    $scope.lRate = [];
+      if(!location){
+        Modal.alert('Please select location.');
+        return;
+      }
+      loadOfffer($scope.location);
+    }
 
     function getDocByName(docs,type){
        var docName = "";
@@ -78,99 +46,19 @@
       return docName;
     }
 
-    function changeFinancer(index){
-      console.log("index===",index);
-      $scope.financer[10]='12345';
-      $scope.number[index]=5;
-    }
-    function changeQuantityPlus(index,data){
-      var newQuantity = $scope.fnumber[index] + 1;
-      $scope.fnumber[index] = newQuantity;
-      $scope.fTotalFee[index] = newQuantity * data.processingfee;
-      $scope.fTotalInstallment[index] = newQuantity * data.installment;
-      $scope.fTotalAmount[index] = newQuantity * data.amount;
-      $scope.fTotalDownAmount[index] = newQuantity * data.margin;
-      $scope.fTotalDownAndProcessing[index] = $scope.fTotalDownAmount[index] + $scope.fTotalFee[index];
-    }
-    function changeQuantityMinus(index,data){
-   
-      if($scope.fnumber[index] >1){
-        var newQuantity = $scope.fnumber[index] - 1;
-        $scope.fnumber[index] = newQuantity;
-        $scope.fTotalFee[index] = newQuantity * data.processingfee;
-        $scope.fTotalInstallment[index] = newQuantity * data.installment;
-        $scope.fTotalAmount[index] = newQuantity * data.amount;
-        $scope.fTotalDownAmount[index] = newQuantity * data.margin;
-        $scope.fTotalDownAndProcessing[index] = $scope.fTotalDownAmount[index] + $scope.fTotalFee[index];
-      }
-    }
-    function lchangeQuantityPlus(index,data){
-      var newQuantity = $scope.lnumber[index] + 1;
-      $scope.lnumber[index] = newQuantity;
-      $scope.lTotalFee[index] = newQuantity * data.processingfee;
-      $scope.lTotalInstallment[index] = newQuantity * data.installment;
-      $scope.lTotalAmount[index] = newQuantity * data.amount;
-      $scope.lTotalDownAmount[index] = newQuantity * data.margin;
-      $scope.lTotalDownAndProcessing[index] = $scope.lTotalDownAmount[index] + $scope.lTotalFee[index];
-    }
-    function lchangeQuantityMinus(index,data){
-   
-      if($scope.lnumber[index] >1){
-        var newQuantity = $scope.lnumber[index] - 1;
-        $scope.lnumber[index] = newQuantity;
-        $scope.lTotalFee[index] = newQuantity * data.processingfee;
-        $scope.lTotalInstallment[index] = newQuantity * data.installment;
-        $scope.lTotalAmount[index] = newQuantity * data.amount;
-        $scope.lTotalDownAmount[index] = newQuantity * data.margin;
-        $scope.lTotalDownAndProcessing[index] = $scope.lTotalDownAmount[index] + $scope.lTotalFee[index];
-      }
-    }
-    function changeTenure(index,tenure){
-    var jsonArr = JSON.parse(tenure);
-      $scope.fnumber[index] =1;
-      $scope.ftenure[index] = jsonArr.tenure;
-      $scope.fAmount[index] = jsonArr.amount;;
-      $scope.fDownPayment[index] = jsonArr.margin;
-      $scope.fProcessingFee[index] = jsonArr.processingfee;
-      $scope.fTotalFee[index] = jsonArr.processingfee;
-      $scope.fTotalInstallment[index] = jsonArr.installment;
-      $scope.fTotalAmount[index] = jsonArr.amount;
-      $scope.fTotalDownAmount[index] = jsonArr.margin;
-      $scope.fTotalDownAndProcessing[index] = $scope.fTotalDownAmount[index] + $scope.fTotalFee[index];
-    }
-    function lchangeTenure(index,tenure){
-      var jsonArr = JSON.parse(tenure);
-      $scope.lnumber[index] =1;
-      $scope.ltenure[index] = jsonArr.tenure;
-      $scope.lAmount[index] = jsonArr.amount;;
-      $scope.lDownPayment[index] = jsonArr.margin;
-      $scope.lProcessingFee[index] = jsonArr.processingfee;
-      $scope.lTotalFee[index] = jsonArr.processingfee;
-      $scope.lTotalInstallment[index] = jsonArr.installment;
-      $scope.lTotalAmount[index] = jsonArr.amount;
-      $scope.lTotalDownAmount[index] = jsonArr.margin;
-      $scope.lTotalDownAndProcessing[index] = $scope.lTotalDownAmount[index] + $scope.lTotalFee[index];
+    function increaseQuantity(seletedItem){
+      seletedItem.quantity += 1;
+      calcalateOffer(seletedItem);
     }
 
-    function loadUserDetail() {
-
-      if ($rootScope.getCurrentUser()._id) {
-        $scope.buycontact.fname = Auth.getCurrentUser().fname;
-        $scope.buycontact.mname = Auth.getCurrentUser().mname;
-        $scope.buycontact.lname = Auth.getCurrentUser().lname;
-        $scope.buycontact.phone = Auth.getCurrentUser().phone;
-        $scope.buycontact.mobile = Auth.getCurrentUser().mobile;
-        $scope.buycontact.email = Auth.getCurrentUser().email;
-        $scope.buycontact.country = Auth.getCurrentUser().country;
-      } else {
-        $scope.quote = {};
-      }
-     
+    function decreaseQuantity(seletedItem){
+      if(seletedItem.quantity < 2)
+        return;
+      seletedItem.quantity -= 1;
+      calcalateOffer(seletedItem);
     }
-
 
     function init() {
-        getLocation();
       
       if ($stateParams.id) {
         filter = {};
@@ -178,37 +66,24 @@
         filter.assetId = $stateParams.id;
         filter.status = true;
         productSvc.getProductOnFilter(filter).then(function(result) {
-          if (result && result.length < 1) {
-            //$state.go('main');
+          if (!result || !result.length || result[0].productCondition !== 'new') {
+            $state.go('main');
             return;
           }
 
           $scope.currentProduct = result[0];
-          
-          if($scope.currentProduct.state) {
-            var stateFilter = {};
-            stateFilter.stateName = $scope.currentProduct.state;
-            LocationSvc.getStateHelp(stateFilter).then(function(result){
-              $scope.state = result[0];
-            });
-          }
-          if ($scope.currentProduct.specialOffers) {
-            $scope.status.basicInformation = false;
-            $scope.status.specialOffers = true;
-          }
-
-          $rootScope.currentProduct = $scope.currentProduct;
+          loadAllState($scope.currentProduct.country);
           if($scope.currentProduct.videoLinks && $scope.currentProduct.videoLinks.length){
             $scope.videoLinks = [];
             $scope.currentProduct.videoLinks.forEach(function(item){
               $scope.videoLinks[$scope.videoLinks.length] =  $sce.trustAsResourceUrl("https://www.youtube.com/embed/" + youtube_parser(item.uri));//$sce.trustAsResourceUrl(item.uri);
             });
           }
-            if($rootScope.currentProduct.model._id){
+            if($scope.currentProduct.model._id){
                 var filter = {};
-                filter['modelId'] = $rootScope.currentProduct.model._id;
-                filter['brandId'] = $rootScope.currentProduct.brand._id;
-                filter['categoryId'] = $rootScope.currentProduct.category._id;
+                filter['modelId'] = $scope.currentProduct.model._id;
+                filter['brandId'] = $scope.currentProduct.brand._id;
+                filter['categoryId'] =$scope.currentProduct.category._id;
 
                 TechSpecMasterSvc.getFieldData(filter).then(function(result){
                   if(!result || !result.length || !result[0].fields || !result[0].fields.length)
@@ -222,6 +97,7 @@
                   $scope.allTechSpecFields = result[0].fields;
                 });
             }
+
             if ($scope.currentProduct.images.length > 0) {
                $scope.currentProduct.images.forEach(function(img, index, arr) {
                  img.displaySrc = $rootScope.uploadImagePrefix + $scope.currentProduct.assetDir + "/" + img.src;
@@ -229,10 +105,10 @@
 
              }
         });
+      }else{
+        $state.go('main');
+        return;
       }
-      //var data = {};
-      //data.location ='56789';
-        getOffer();
       
     }
     
@@ -255,79 +131,196 @@
       };
 
     }
-    
-    function getLocation(){
-       var filter = {};
-      filter.status = true;
-      OfferSvc.getFilterData(filter).then(function(result){
-        if(result.length>0){
-          vm.offer = result;
-            for(var k in  vm.offer) {
-              var locationArr = vm.offer[k].location;
-              var i =0;
-              for(var j in locationArr){
-                if(locationArr[j]){
-                    var id = locationArr[j].id;
-                    $scope.stateData = {};
-                   if(checkLocation(id) && $scope.states.length>0){
-                    $scope.stateData.name = locationArr[j].name;
-                    $scope.stateData.id = locationArr[j].id;
-                   }else{
-                    $scope.stateData.name = locationArr[j].name;
-                    $scope.stateData.id = locationArr[j].id;
-                   }
-                   $scope.states[i] = $scope.stateData;
-                }
-                i++;
-              }
-            }
-        }
-      })
-      .catch(function(res){
-      });
+
+    function loadAllState(country){
+        var filter = {};
+        filter.country = country;
+        if(!country)
+            return;
+        LocationSvc.getStateHelp(filter)
+        .then(function(result) {
+            $scope.stateList = result;
+        });
     }
 
-    function getOffer(){
+    function loadOfffer(location){
+      
       var filter = {};
-      filter.status = true;console.log("hi offer");
-     // if(data.location)
-      //filter.model = 5768f67ff39c920418fe5d89;//data.location;
-      OfferSvc.getFilterData(filter).then(function(result){
-        if(result.length>0){
-          $scope.offer = result;
-            for(var k in  $scope.offer) {
-             console.log("offer==",$scope.offer[k]);
+      filter.status = true;
+      filter.categoryId = $scope.currentProduct.category._id;
+      filter.brandId = $scope.currentProduct.brand._id;
+      filter.modelId = $scope.currentProduct.model._id;
+      filter.stateName = location;
+      OfferSvc.get(filter)
+      .then(function(result){
+        if(!result || !result.length){
+          Modal.alert("There is currently no offer available for " + location);
+          $scope.offerCliced = false;
+          return;
+        }
+        $scope.offer = result[0];
+        $scope.offerCliced = true;
+        if($scope.offer.finance && $scope.offer.financeInfo.length){
+          $scope.offer.finannceCounter = 0;
+          $scope.offer.financeInfo.forEach(function(item,index){
+            if( item && item.data){
+              item.selected = item.data[0];
+              var keys = Object.keys(item.data);
+              if(!keys.length)
+                return;
+              keys.forEach(function(key){
+                item.data[key].quantity = 1;
+                $scope.offer.finannceCounter ++;
+                calcalateOffer(item.data[key]);
+              });
+              //calcalateOffer(item.selected);
             }
+          });
+        }
+
+
+         if($scope.offer.lease && $scope.offer.leaseInfo.length){
+          $scope.offer.leaseCounter = 0;
+          $scope.offer.leaseInfo.forEach(function(item,index){
+            if( item && item.data){
+              item.selected = item.data[0];
+               var keys = Object.keys(item.data);
+                if(!keys.length)
+                  return;
+                keys.forEach(function(key){
+                  item.data[key].quantity = 1;
+                  $scope.offer.leaseCounter ++;
+                  calcalateOffer(item.data[key]);
+                });
+                //calcalateOffer(item.selected);
+            }
+          });
         }
       })
       .catch(function(res){
+
       });
     }
-    ////send offer
-    function proceed(form){console.log("form proceed",form);
-      /*if(form.$invalid){
-           console.log("form proceed12222");
-             $scope.submitted = true;
-             return;
-      }*/
-          console.log("financeinfo",$scope.financeinfo);
-         // console.log("financeinfo====",$scope.financer);
-          console.log("leaseinfo====",$scope.leaseinfo);
+
+    function calcalateOffer(seletedItem){
+      seletedItem.totalAmount = (seletedItem.amount || 0) * (seletedItem.quantity || 0);
+      seletedItem.totalDownPayment = (seletedItem.margin || 0) * (seletedItem.quantity || 0);
+      seletedItem.totalProcessingFee = (seletedItem.processingfee || 0) * (seletedItem.quantity || 0);
+      seletedItem.totalPayment = (seletedItem.totalDownPayment || 0) + (seletedItem.totalProcessingFee || 0);
+      seletedItem.totalInstallment = (seletedItem.installment || 0) * (seletedItem.quantity || 0);
+
     }
 
-    function changeLocation(id){
-      var data = {};
-      data.location = id;
-    }
-    function checkLocation(id){
-      for(var k in  $scope.states) {
-        if(id == $scope.states[k].id){
-          return true;
-        }else{
-          return false;
-        }
+    function proceed(){
+      var offerReq = {};
+      offerReq.category = $scope.currentProduct.category;
+      offerReq.brand = $scope.currentProduct.brand;
+      offerReq.model = $scope.currentProduct.model;
+      offerReq.state = $scope.location;
+      offerReq.user = {
+        _id: Auth.getCurrentUser()._id,
+        name : Auth.getCurrentUser().fname + " " + Auth.getCurrentUser().lname,
+        email : Auth.getCurrentUser().email,
+        mobile : Auth.getCurrentUser().mobile,
+        country:Auth.getCurrentUser().country,
+        state:Auth.getCurrentUser().state,
+        city:Auth.getCurrentUser().city
 
+      };
+      offerReq.cashOffer = [];
+      offerReq.financeOffer = [];
+      offerReq.leaseOffer = [];
+
+      if($scope.offer.cash_purchase && $scope.offer.caseInfo && $scope.offer.caseInfo.length){
+        $scope.offer.caseInfo.forEach(function(item){
+          if(item.checked)
+            offerReq.cashOffer.push(item);
+        });
       }
+
+      if($scope.offer.finance && $scope.offer.financeInfo && $scope.offer.financeInfo.length){
+        $scope.offer.financeInfo.forEach(function(item){
+          if(item.checked){
+            var selected =  item.selected;
+            if(selected){
+              selected.financerId = item.id;
+              selected.financerName = item.name;
+              offerReq.financeOffer.push(selected);
+            }
+          }
+        });
+      }
+
+      if($scope.offer.lease && $scope.offer.leaseInfo && $scope.offer.leaseInfo.length){
+        $scope.offer.leaseInfo.forEach(function(item){
+           if(item.checked){
+            var selected =  item.selected;
+            if(selected){
+              selected.financerId = item.id;
+              selected.financerName= item.name;
+              offerReq.leaseOffer.push(selected);
+            }
+          }
+        });
+      }
+      if(!offerReq.leaseOffer.length && !offerReq.financeOffer.length && !offerReq.cashOffer.length){
+        Modal.alert("Please select atleast one offer to proceed.");
+        return;
+      }
+      if(Auth.isEnterprise() || Auth.isEnterpriseUser()){
+        Modal.confirm("Do you want to submit this request on behalf of a customer?",function(ret){
+          if(ret === "yes")
+            openCustomerDetailPopup(offerReq);
+          else{
+            setCustomerDetail(offerReq);
+            saveOfferReq(offerReq);
+          }
+        });
+      }
+      else{
+        setCustomerDetail(offerReq)
+        saveOfferReq(offerReq);
+      }
+
+    }
+
+    function openCustomerDetailPopup(offerReq){
+      var customerDetailScope = $rootScope.$new();
+      customerDetailScope.offerReq = offerReq;
+      var customerDetailModal = $uibModal.open({
+        templateUrl: "details-user.html",
+        scope: customerDetailScope,
+        size: 'lg'
+      });
+      customerDetailScope.close = function() {
+        customerDetailModal.close();
+      };
+
+      customerDetailScope.save = function(form){
+        if(form.$invalid){
+          customerDetailScope.submitted = true;
+          return;
+        }
+        customerDetailScope.offerReq.isForSelf = false;
+        saveOfferReq(customerDetailScope.offerReq,customerDetailModal);
+      }
+    }
+
+    function setCustomerDetail(offerReq){
+      offerReq.fname = Auth.getCurrentUser().fname;
+      offerReq.lname = Auth.getCurrentUser().lname;
+      offerReq.email = Auth.getCurrentUser().email;
+      offerReq.mobile = Auth.getCurrentUser().mobile;
+    }
+
+    function saveOfferReq(offerReq,customerDetailModal){
+       OfferSvc.saveOfferRequest(offerReq)
+      .then(function(res){
+        if(customerDetailModal)
+          customerDetailModal.close();
+        $scope.offerCliced = false;
+        Modal.alert("Your request ID - "+ res.orderId +" is submitted successfully. One of our executives will get in touch with you.");
+      });
     }
 
     function onCountryChange(scope,country){
@@ -391,8 +384,6 @@
         })
       }
     }
-
-    loadUserDetail();
     
   }
   

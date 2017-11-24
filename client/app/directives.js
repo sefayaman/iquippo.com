@@ -218,4 +218,34 @@ angular.module('sreizaoApp')
     input = input || '';
     return input.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
   };
+})
+.directive('importExcel',function($rootScope,Modal){
+  return {
+    require:"ngModel",
+    restrict:'A',
+    scope:{
+    },
+    link:function(scope,el,attrs,ngModel){
+      el.on('change', function (changeEvent) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+          /* read workbook */
+          var bstr = e.target.result;
+          try{
+            var workbook = XLSX.read(bstr, {type:'binary'});
+            var worksheet = workbook.Sheets[workbook.SheetNames[0]];
+            var data = XLSX.utils.sheet_to_json(worksheet);
+             ngModel.$setViewValue(data);
+            //scope.onChange(data); 
+
+          }catch(e){
+            console.log("Error in reading ",e);
+          } 
+        };
+
+        reader.readAsBinaryString(changeEvent.target.files[0]);
+      });
+    }
+  }
 });

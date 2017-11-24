@@ -12,6 +12,7 @@ angular.module('sreizaoApp').controller('NewCategoryListingCtrl',NewCategoryList
 
     function init(){
       var filter = {isForNew:true};
+      filter.productCount = true;
       if($stateParams.group)
         filter.group = $stateParams.group;
       categorySvc.getCategoryOnFilter(filter)

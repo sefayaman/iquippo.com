@@ -13,6 +13,7 @@ angular.module('sreizaoApp').controller('CategoryListingCtrl',CategoryListingCtr
 
     function init(){
       var filter = {isForUsed:true};
+      filter.productCount = true;
       if($stateParams.group)
         filter.group = $stateParams.group;
       categorySvc.getCategoryOnFilter(filter)
