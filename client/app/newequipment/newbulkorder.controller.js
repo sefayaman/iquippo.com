@@ -144,7 +144,8 @@
                 $scope.submitted = false;
                 $rootScope.loading = false;
                 vm.dataModel.orders =[{quantity:1}];
-                Modal.alert("Your order submiited successfully.")
+
+                Modal.alert("Your bulk request ID - "+ res.orderId +" is submitted successfully. One of our executives will get in touch with you");
             })
             .catch(function(err){
                 $rootScope.loading = false;

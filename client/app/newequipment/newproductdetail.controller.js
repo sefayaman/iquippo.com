@@ -154,7 +154,7 @@
       OfferSvc.get(filter)
       .then(function(result){
         if(!result || !result.length){
-          Modal.alert("No offer found for " + location);
+          Modal.alert("There is currently no offer available for " + location);
           $scope.offerCliced = false;
           return;
         }
@@ -265,16 +265,63 @@
         });
       }
       if(!offerReq.leaseOffer.length && !offerReq.financeOffer.length && !offerReq.cashOffer.length){
-        Modal.alert("Please select offer atleast one offer.");
+        Modal.alert("Please select atleast one offer to proceed.");
         return;
       }
+      if(Auth.isEnterprise() || Auth.isEnterpriseUser()){
+        Modal.confirm("Do you want to submit this request on behalf of a customer?",function(ret){
+          if(ret === "yes")
+            openCustomerDetailPopup(offerReq);
+          else{
+            setCustomerDetail(offerReq);
+            saveOfferReq(offerReq);
+          }
+        });
+      }
+      else{
+        setCustomerDetail(offerReq)
+        saveOfferReq(offerReq);
+      }
 
-      OfferSvc.saveOfferRequest(offerReq)
-      .then(function(res){
-        $scope.offerCliced = false;
-        Modal.alert("Your request submitted successfullly.");
+    }
+
+    function openCustomerDetailPopup(offerReq){
+      var customerDetailScope = $rootScope.$new();
+      customerDetailScope.offerReq = offerReq;
+      var customerDetailModal = $uibModal.open({
+        templateUrl: "details-user.html",
+        scope: customerDetailScope,
+        size: 'lg'
       });
+      customerDetailScope.close = function() {
+        customerDetailModal.close();
+      };
 
+      customerDetailScope.save = function(form){
+        if(form.$invalid){
+          customerDetailScope.submitted = true;
+          return;
+        }
+        customerDetailScope.offerReq.isForSelf = false;
+        saveOfferReq(customerDetailScope.offerReq,customerDetailModal);
+      }
+    }
+
+    function setCustomerDetail(offerReq){
+      offerReq.fname = Auth.getCurrentUser().fname;
+      offerReq.lname = Auth.getCurrentUser().lname;
+      offerReq.email = Auth.getCurrentUser().email;
+      offerReq.mobile = Auth.getCurrentUser().mobile;
+    }
+
+    function saveOfferReq(offerReq,customerDetailModal){
+       OfferSvc.saveOfferRequest(offerReq)
+      .then(function(res){
+        if(customerDetailModal)
+          customerDetailModal.close();
+        $scope.offerCliced = false;
+        Modal.alert("Your request ID - "+ res.orderId +" is submitted successfully. One of our executives will get in touch with you.");
+      });
     }
 
     function onCountryChange(scope,country){

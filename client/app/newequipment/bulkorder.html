@@ -73,7 +73,7 @@
                 <label>State*</label>
                 <select class="form-control" name="state" ng-model="bulkOrderVm.dataModel.state" ng-change="bulkOrderVm.onStateChange(bulkOrderVm.dataModel.state)" required ng-disabled="bulkOrderVm.dataModel.forSelf">
                   <option value="">Select State</option>
-                  <option value="{{state.name}}" ng-repeat="state in stateList">{{state.name}}</option>              
+                  <option value="{{state.name}}" ng-repeat="state in stateList | orderBy :'name'">{{state.name}}</option>              
                 </select>
               </div>
             </div>
@@ -83,7 +83,7 @@
                 <label>City*</label>
                 <select class="form-control" name="city" ng-model="bulkOrderVm.dataModel.city" required ng-disabled="bulkOrderVm.dataModel.forSelf">
                   <option value="">Select City</option>
-                  <option value="{{city.name}}" ng-repeat="city in cityList">{{city.name}}</option>              
+                  <option value="{{city.name}}" ng-repeat="city in cityList | orderBy :'name'">{{city.name}}</option>              
                 </select>
               </div>
             </div>
@@ -99,7 +99,7 @@
                 <label for="category">Category</label>
                 <select class="form-control" name="category_{{$index}}" ng-model="order.category" ng-change="bulkOrderVm.onCategoryChange(order)" required>
                   <option value="">Select Category</option>
-                  <option value="{{category.name}}" ng-repeat="category in categoryList">{{category.name}}</option>              
+                  <option value="{{category.name}}" ng-repeat="category in categoryList | orderBy :'name'">{{category.name}}</option>              
                 </select>
               </div>
             </div>
@@ -108,7 +108,7 @@
                 <label for="brand">Brand</label>
                 <select class="form-control" id="brand" name="brand_{{$index}}" ng-model="order.brand" ng-change="bulkOrderVm.onBrandChange(order)" required>
                   <option value="">Select Brand</option>
-                  <option value="{{brand.name}}" ng-repeat="brand in order.brandList">{{brand.name}}</option>              
+                  <option value="{{brand.name}}" ng-repeat="brand in order.brandList | orderBy :'name'">{{brand.name}}</option>              
                 </select>
               </div>
             </div>
@@ -117,7 +117,7 @@
                 <label for="model">Model</label>
                 <select class="form-control" id="model" name="model_{{$index}}" ng-model="order.model" required>
                   <option value="">Select Model</option>
-                  <option value="{{model.name}}" ng-repeat="model in order.modelList">{{model.name}}</option>              
+                  <option value="{{model.name}}" ng-repeat="model in order.modelList | orderBy :'name'">{{model.name}}</option>              
                 </select>
               </div>
             </div>

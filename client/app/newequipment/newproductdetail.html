@@ -76,7 +76,7 @@
             <label>Location</label>
             <select class="form-control" name="location"  ng-model="location"> 
                 <option value=""> Select State </option> 
-                <option ng-repeat="state in stateList" value="{{state.name}}">{{state.name}}</option>
+                <option ng-repeat="state in stateList | orderBy :'name'" value="{{state.name}}">{{state.name}}</option>
             </select>
             <small>Select a location to view all applicable offers.</small>
           </div>
@@ -428,43 +428,43 @@ $('#article-photo').carousel(dir);
 <script type="text/ng-template" id="details-user.html">
 <div>
   <div class="modal-header">
-    <button type="button" class="close" ng-click="" aria-hidden="true">&times;</button>
+    <button type="button" class="close" ng-click="close()" aria-hidden="true">&times;</button>
     <h4 class="modal-title">Fill your details</h4>
   </div>
-  <form name="">
+  <form name="customerDetailForm" novalidate>
     <div class="modal-body">
       <div class="floating-lable-form">
         <div class="row">
           <div class="col-sm-6 form-group has-error">
-            <div class="floating-label-wrapper">
+            <div class="floating-label-wrapper" ng-class="{'has-error' : customerDetailForm.fname.$invalid && submitted}">
               <label for="fname">First Name</label>
-              <input type="text" class="form-control" id="fname" placeholder="First Name" ng-model="user.fname" required with-floating-label>
+              <input type="text" class="form-control" id="fname" name="fname" placeholder="First Name" ng-model="offerReq.fname" required with-floating-label>
             </div>
           </div>
           <div class="col-sm-6 form-group has-error">
-            <div class="floating-label-wrapper">
+            <div class="floating-label-wrapper" ng-class="{'has-error' : customerDetailForm.fname.$invalid && submitted}">
               <label for="lname">Last Name</label>
-              <input type="text" class="form-control" id="lname" placeholder="Last Name" ng-model="user.lname" required with-floating-label>
+              <input type="text" class="form-control" id="lname" name="lname" placeholder="Last Name" ng-model="offerReq.lname" required with-floating-label>
             </div>
           </div>
           <div class="col-sm-6 form-group has-error">
-            <div class="floating-label-wrapper">
+            <div class="floating-label-wrapper" ng-class="{'has-error' : customerDetailForm.fname.$invalid && submitted}">
               <label for="mobile">Mobile No.</label>
-              <input type="number" class="form-control" id="mobile" placeholder="Mobile No." ng-model="user.mobile" required with-floating-label>
+              <input type="number" class="form-control" id="mobile" name="mobile" placeholder="Mobile No." ng-model="offerReq.mobile" required with-floating-label>
             </div>
           </div>
           <div class="col-sm-6 form-group has-error">
             <div class="floating-label-wrapper">
               <label for="email">Email</label>
-              <input type="email" class="form-control" id="email" placeholder="Email" ng-model="user.email" required with-floating-label>
+              <input type="email" class="form-control" id="email" name="email" placeholder="Email" ng-model="offerReq.email" with-floating-label>
             </div>
           </div>
         </div>
       </div>      
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-md btn-default">Submit</button>
-      <button type="submit" class="btn btn-md btn-danger">Cancel</button>
+      <button type="button" class="btn btn-md btn-default" ng-click="save(customerDetailForm)">Submit</button>
+      <button type="submit" class="btn btn-md btn-danger" ng-click="close()">Cancel</button>
     </div>
   </form>
 </div>

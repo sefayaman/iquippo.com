@@ -84,9 +84,9 @@ var ApiError = require('../../components/_error');
 
  exports.createOfferRequest = function(req, res,next) {
       var model = new OfferRequest(req.body);
-      model.save(function(err, st) {
+      model.save(function(err, result) {
       if(err) { return res.status(500).send(err); }
-          return res.status(200).send("Your request submitted successfully");
+          return res.status(200).json(result);
       });
   };
 
