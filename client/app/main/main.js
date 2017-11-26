@@ -484,6 +484,13 @@ angular.module('sreizaoApp')
         authenticate:true,
         layout:'admin'
       })
+      .state('auctionpaymenthistory', {
+        url: '/auctionpaymenthistory',
+        templateUrl: 'app/payment/auctionpaymentlisting.html',
+        controller: 'AuctionPaymentListingCtrl as auctionPaymentListingVm',
+        authenticate:true,
+        layout:'admin'
+      })
       .state('payment', {
         url: '/payment/:tid',
         templateUrl: 'app/payment/payment.html',
@@ -491,6 +498,13 @@ angular.module('sreizaoApp')
         authenticate:true,
         layout:'admin'
       })
+      // .state('offlinepayment', {
+      //   url: '/offlinepayment/:tid',
+      //   templateUrl: 'app/payment/offlinepayment.html',
+      //   controller: 'offlinePaymentCtrl as offlinePaymentVm',
+      //   authenticate:true,
+      //   layout:' '
+      // })
        .state('paymentresponse', {
         url: '/paymentresponse/:tid',
         templateUrl: 'app/payment/paymentresponse.html',

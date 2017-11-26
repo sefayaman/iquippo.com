@@ -36,6 +36,6 @@ module.exports = {
   awsAccessKeyId: 'AKIAIEW6UDFVW7GEQAGQ',
   awsSecretAccessKey: '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',
   awsBucket: 'iquippo-image-upload',
-  awsUrl: 'https://s3.ap-south-1.amazonaws.com/'
-  
+  awsUrl: 'https://s3.ap-south-1.amazonaws.com/',
+  auctionURL:"https://auctionsoftwaremarketplace.com:3007/api_call/"
 };

@@ -15,11 +15,13 @@ function PaymentSvc($http,$q,Auth,notificationSvc){
   svc.export = exportValuation;
   svc.encrypt = encrypt;
   svc.sendNotification = sendNotification;
+  svc.saveoffline = saveoffline;
+  svc.sendReqToCreateUser = sendReqToCreateUser;
 
   function getAll(){
         return $http.get(path)
         .then(function(res){
-          return res.data
+          return res.data;
         })
         .catch(function(err){
           throw err
@@ -29,7 +31,17 @@ function PaymentSvc($http,$q,Auth,notificationSvc){
     function getOnFilter(data){
         return $http.post(path + "/onfilter",data)
         .then(function(res){
-          return res.data
+          return res.data;
+        })
+        .catch(function(err){
+          throw err
+        })
+    }
+
+    function sendReqToCreateUser(data){
+        return $http.post(path + "/sendreqtocreateuser",data)
+        .then(function(res){
+          return res.data;
         })
         .catch(function(err){
           throw err
@@ -39,7 +51,7 @@ function PaymentSvc($http,$q,Auth,notificationSvc){
     function exportValuation(data){
      return $http.post(path + "/export",data)
         .then(function(res){
-          return res.data
+          return res.data;
         })
         .catch(function(err){
           throw err
@@ -49,7 +61,7 @@ function PaymentSvc($http,$q,Auth,notificationSvc){
     function encrypt(dataStr){
      return $http.post(path + "/encrypt",dataStr)
         .then(function(res){
-          return res.data
+          return res.data;
         })
         .catch(function(err){
           throw err
@@ -59,6 +71,17 @@ function PaymentSvc($http,$q,Auth,notificationSvc){
 
     function save(data){
       return $http.post(path,data)
+        .then(function(res){
+          return res.data;
+        })
+        .catch(function(err){
+          throw err
+        })
+    }
+
+    function saveoffline(data){
+      var offpath = "/api/payment/offline";
+      return $http.post(offpath,data)
         .then(function(res){
           return res.data;
         })
@@ -87,7 +110,7 @@ function PaymentSvc($http,$q,Auth,notificationSvc){
       payTrans.status = toStatus;
       update(payTrans)
       .then(function(result){
-        deferred.resolve(result)
+        deferred.resolve(result);
       })
       .catch(function(err){
         deferred.reject(err);

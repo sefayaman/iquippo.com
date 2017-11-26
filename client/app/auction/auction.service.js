@@ -2,7 +2,7 @@
 'use strict';
 
 angular.module('sreizaoApp').factory("AuctionSvc",AuctionSvc);
-function AuctionSvc($http,$q,notificationSvc,Auth){
+function AuctionSvc($http,$q,notificationSvc,Auth,$httpParamSerializer){
   var auctionId="";
   var svc = {};
   //svc.auctionData = null;
@@ -16,6 +16,7 @@ function AuctionSvc($http,$q,notificationSvc,Auth){
   svc.export = exportAuction;
   svc.sendNotification = sendNotification;
   svc.updateStatus = updateStatus;
+  svc.getTotalItemsCount=getTotalItemsCount;
   svc.getAuctionCount = getAuctionCount;
   svc.getAuctionData=getAuctionData;
   svc.getLatLong=getLatLong;
@@ -25,28 +26,52 @@ function AuctionSvc($http,$q,notificationSvc,Auth){
   svc.getAuctionDateData=getAuctionDateData;  
   svc.getAuctionWiseProductData = getAuctionWiseProductData;
   svc.getOnId = getOnId;
+  svc.getAuctionExpire = getAuctionExpire;
+  svc.checkForAsset=checkForAsset; 
   svc.getAuctionInfoForProduct = getAuctionInfoForProduct;
+  svc.reSendReqToCreateAsset = reSendReqToCreateAsset;
 
   function getAll(){
         return $http.get(path)
         .then(function(res){
           return res.data
         })
+        .catch(function(err) {
+          throw err
+        })
+    }
+
+	function checkForAsset(dbAuctionId,assetId){
+	   return $http.get(path+"/checkforasset/asset?dbAuctionId="+dbAuctionId+"&assetId="+assetId)
+	   .then(function(res){
+		console.log("checkForAsset",res);
+		return res.data;
+	   })
+	   .catch(function(err){
+		 throw err;
+	   });
+	 }
+
+    function getOnFilter(data) {
+      return $http.post(path + "/onfilter", data)
+        .then(function(res) {
+          return res.data
+        })
+        .catch(function(err) {
+          throw err
+        });
+    }
+    
+	function reSendReqToCreateAsset(data){
+        return $http.post(path + "/sendreqtocreateasset",data)
+        .then(function(res){
+          return res.data;
+        })
         .catch(function(err){
           throw err
         })
     }
 
-    function getOnFilter(data){
-     return $http.post(path + "/onfilter",data)
-        .then(function(res){
-          return res.data
-        })
-        .catch(function(err){
-          throw err
-        }) 
-    }
-    
     function getOnId(auctionId){
      return $http.get(path + "/"+auctionId)
         .then(function(res){
@@ -140,16 +165,24 @@ function AuctionSvc($http,$q,notificationSvc,Auth){
       }
     }
 
-    function getAuctionCount() {
-     
-      return $http.get(path + "/auctionmaster/count")
+	function getTotalItemsCount(auctionType) {
+      return $http.get(path + "/auctionmaster/getAuctionCount?auctionType=" + auctionType)
         .then(function(result) {
-          return result.data
+          return result;
         })
         .catch(function(err) {
           throw err;
-        })
+        });
+    }
 
+    function getAuctionCount() {
+      return $http.get(path + "/auctionmaster/count")
+        .then(function(result) {
+          return result.data;
+        })
+        .catch(function(err) {
+          throw err;
+        });
     }
 
     function getAuctionData(data){
@@ -177,10 +210,8 @@ function AuctionSvc($http,$q,notificationSvc,Auth){
         })
     }
 
-    
-
-    function getTotalAuctionItemsCount(){
-       return $http.get(path + "/auctionmaster/getAuctionItemsCount")
+    function getTotalAuctionItemsCount() {
+      return $http.get(path + "/auctionmaster/getAuctionItemsCount")
         .then(function(result) {
           return result
         })
@@ -212,14 +243,22 @@ function AuctionSvc($http,$q,notificationSvc,Auth){
         });
     }
 
+	function getAuctionExpire(data) {
+      //console.log("the filter",filter);
+      return $http.get(path + "/auctionmaster/auctiondetail?auctionId=" + data._id + '&auctiontype=' + data.auctionType)
+        .then(function(res) {
+          return res.data;
+        });
+      }
+
    function getAuctionInfoForProduct(filter) {
       return $http.post(path + "/getauctiondata", filter)
         .then(function(res) {
-          return res.data
+          return res.data;
         })
         .catch(function(err) {
           throw err
-        })
+        });
     }
 
     function getAuctionWiseProductData(filter){

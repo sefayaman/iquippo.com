@@ -1,0 +1,83 @@
+<div>
+	<div class="modal-header">
+	  <button type="button" class="close" ng-click="offlinePaymentVm.closeDialog()" aria-hidden="true">&times;</button>
+	  <h4 class="modal-title">Offline Payment Information</h4>
+	</div>
+	<div class="modal-body">
+		<form class="techInformationForm" name="offlineform" ng-if="viewMode === 'paymentAdd'" novalidate>
+			<div class="row">
+				<div class="col-sm-6 form-group text-left" ng-class="{'has-error': offlineform.paymentModeType.$invalid && submitted}">
+					<label>*Mode of Payment</label>
+					<select class="form-control" ng-model="offlinePaymentVm.dataModel.paymentModeType" name="paymentModeType" required>
+		              <option value="">Mode of Payment</option>
+		              <option ng-repeat="mode in modeOfPayment" value="{{mode.name}}">{{mode.name}}</option>
+		            </select>
+				</div>
+				<div class="col-sm-6 form-group text-left">
+					<label>Payment Reference No.</label>
+					<input type="text" class="form-control" name="" ng-model="offlinePaymentVm.dataModel.refNo" placeholder="Payment Reference No.">
+				</div>
+			</div>
+			<div class="row">
+				<!-- <div class="col-sm-6 form-group text-left">
+					<label>Transaction Id</label>
+					<input type="text" class="form-control" name="transactionId" value="" placeholder="offlinePaymentVm.dataModel.transactionId" ng-model="offlinePaymentVm.dataModel.transactionId" disabled>
+				</div> -->
+				<div class="col-sm-6 form-group text-left">
+					<label>Amount</label>
+					<input type="text" class="form-control" name="amount" value="" placeholder="offlinePaymentVm.dataModel.amount" ng-model="offlinePaymentVm.dataModel.amount">
+				</div>
+				<div class="col-sm-6 form-group text-left" ng-class="{'has-error': offlineform.paymentDate.$invalid && submitted}">
+					<label>*Date of Payment</label>
+					<input class="form-control" name="paymentDate" ng-model="offlinePaymentVm.dataModel.paymentDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="Date of Payment" required />
+				</div>
+			</div>
+			<div class="row">				
+				<div class="col-sm-6 form-group text-left" ng-class="{'has-error': offlineform.bankname.$invalid && submitted}">
+					<label>*Bank Name</label>
+					<input type="text" class="form-control" name="bankname" value="" placeholder="Bank Name" ng-model="offlinePaymentVm.dataModel.bankname" required>
+				</div>
+				<div class="col-sm-6 form-group text-left" ng-class="{'has-error': offlineform.branch.$invalid && submitted}">
+					<label>*Branch Name</label>
+					<input type="text" class="form-control" name="branch" value="" placeholder="Branch Name" ng-model="offlinePaymentVm.dataModel.branch" required>
+				</div>
+			</div>
+			
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary"  ng-click="offlinePaymentVm.save(offlineform)">Save</button>	
+			</div>
+		</form>
+		<div ng-if="viewMode === 'paymentView'">
+			<div class="row">				
+				<div class="col-sm-6 form-group text-left">
+					<label>Payment Mode</label>
+					<h4>{{offlinePayment.payments[0].paymentModeType}}</h4>
+				</div>
+				<div class="col-sm-6 form-group text-left">
+					<label>Payment Reference No.</label>
+					<h4>{{offlinePayment.payments[0].refNo}}</h4>
+				</div>
+			</div>
+			<div class="row">				
+				<div class="col-sm-6 form-group text-left">
+					<label>Amount</label>
+					<h4>{{offlinePayment.totalAmount}}</h4>
+				</div>
+				<div class="col-sm-6 form-group text-left">
+					<label>Date of Payment</label>
+					<h4>{{offlinePayment.payments[0].paymentDate | date:'MM/dd/yyyy'}}</h4>
+				</div>
+			</div>
+			<div class="row">				
+				<div class="col-sm-6 form-group text-left">
+					<label>Bank Name</label>
+					<h4>{{offlinePayment.payments[0].bankname}}</h4>
+				</div>
+				<div class="col-sm-6 form-group text-left">
+					<label>Branch Name</label>
+					<h4>{{offlinePayment.payments[0].branch}}</h4>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

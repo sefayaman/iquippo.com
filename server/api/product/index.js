@@ -4,7 +4,6 @@ var express = require('express');
 var auth = require('../../auth/auth.service');
 var controller = require('./product.controller');
 var scriptController=require('./scripts');
-
 var router = express.Router();
 
 router.get('/', controller.getAll);
@@ -34,12 +33,11 @@ router.post('/deleteincomingproduct', controller.deleteIncomingProduct);
 //router.post('/unlockincomingproduct', controller.unIncomingProduct);
 router.post('/statuswisecount', controller.statusWiseCount);
 router.post('/createauction', controller.createOrUpdateAuction);
-
+router.post('/sendreqtocreateasset', controller.sendReqToCreateAsset);
 router.post('/bulkeditproduct',controller.parseExcel,controller.validateExcelData,controller.updateExcelData);
 router.get('/script/featured',scriptController.script);
 //v1 version of bulk create product
 router.post('/v1/import',auth.isAuthenticated(),controller.parseImportExcel,controller.validateExcelData,controller.createProductReq);
-
 router.get('/script/modifyproducttype',scriptController.modifyProductTypeId);
 
 

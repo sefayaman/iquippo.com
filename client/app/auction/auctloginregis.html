@@ -1,0 +1,54 @@
+<div>
+  <div class="modal-body">
+      <button type="button" class="close" ng-click="auctionRegisVm.closeDialog()" aria-hidden="true">&times;</button>
+    <div ng-if="currentAuction.emdTax === 'lotwise' && !showAlertMsg">
+      <p class="form-group">Kindly Select Lot Number</p>
+      <p ng-if="regLot">You are register for lots {{regLot}}</p>
+      <div>
+        <form class="form" name="form" novalidate>
+          <div class="row">
+            <div class="col-xs-offset-1 col-xs-4"></div>
+            <div class="col-xs-offset-1 col-xs-4"></div>
+          </div>
+          <div class="row">
+            <div class="col-sm-offset-2 col-sm-8 form-group" ng-class="{'has-error': form.userId.$invalid && form.submitted }">
+                <select class="form-control form-group" name="selectedLots" id="selectedLots" style="height: 80px;" ng-options="lots.lotNumber as lots.lotNumber for lots in auctionRegisVm.lotList" ng-model="auctionRegisVm.dataToSend.selectedLots" multiple>
+              </select>
+              <!-- </div> -->
+              <div class="text-right">
+                <button type="button" class="btn btn-danger" ng-click="auctionRegisVm.submit(form, false)">Submit</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div ng-if="currentAuction.emdTax === 'overall' || showAlertMsg">
+      <p ng-if="currentAuction.emdTax === 'overall'">You need to pay an EMD of Rs {{currentAuction.emdAmount}}. Please select your preferred payment method</p>
+      <p ng-if="currentAuction.emdTax === 'lotwise'">You need to pay an EMD of Rs {{emdAmount}}. Please select your preferred payment method</p>
+      <div class="modal-body">
+        <form novalidate class="" name="paymentForm">
+          <div class="row">
+            <div class="col-xs-6 col-sm-6 form-group">
+              <div class="radio radio-info">
+                      <input type="radio" id="offline" name="payment" ng-model="option.select" value="offline">
+                      <label for="offline"> Offline Payment </label>
+                  </div>
+            </div>
+            <div class="col-xs-6 col-sm-6 form-group">
+              <div class="radio radio-info">
+                      <input type="radio" id="online" name="payment" ng-model="option.select" value="online" ng-disabled="true">
+                      <label for="online"> Online Payment</label>
+                  </div>
+            </div>
+          </div>
+        <div class="modal-footer asset-sale">
+          <div>
+            <button type="button" class="btn btn-danger" ng-click="auctionRegisVm.submit(paymentForm, true)">Proceed</button>                
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+</div>

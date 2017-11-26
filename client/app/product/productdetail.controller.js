@@ -5,8 +5,21 @@
 
 
   function ProductDetailCtrl($scope,AssetSaleSvc, AuctionSvc, LocationSvc, AuctionMasterSvc, vendorSvc, NegotiationSvc, $stateParams, $rootScope, PaymentMasterSvc, $uibModal, $http, Auth, productSvc, notificationSvc, Modal, CartSvc, ProductTechInfoSvc, BuyContactSvc, userSvc, PriceTrendSvc, ValuationSvc, $state) {
+   var vm = this;
+   var query=$location.search();
 
-    var vm = this;
+    if(query.assetListedInAuction){
+      $scope.assetListedInAuction=query.assetListedInAuction;
+      console.log("assetListedInAuction",$scope.assetListedInAuction);
+    }
+    var aswidgetUrl = auctionURL + "/bidwidget/"+query.id+"/"+query.lotId+"/"+ Auth.getCurrentUser()._id;
+    $scope.asWidgetURLSCE = $sce.trustAsResourceUrl(aswidgetUrl);
+   //console.log("url",$scope.asWidgetURLSCE);
+
+   $scope.displayBid=query.displayBid;
+   $scope.asAuctionId=query.auctionId;
+   $scope.asLotId=query.lotId;
+   $scope.asUserId=query.userId;
     $scope.currentProduct = {};
     $scope.priceTrendData = null;
     $rootScope.currntUserInfo = {};
@@ -21,7 +34,8 @@
     $scope.mstep = 1;
     $scope.ismeridian = true;
     var filter = {};
-
+    $scope.assetListedInAuction = '';
+    $scope.assetListedInAuction = query.assetListedInAuction;
     //certification request
     $scope.productQuote = {};
     if (Auth.getCurrentUser()._id) {

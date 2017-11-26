@@ -11,13 +11,11 @@ var CountryModel = require('../country.model');
 var LocationModel = require('../location.model');
 var UserModel = require('../../user/user.model');
 var ManufacturerModel = require('../manufacturer.model');
-
-
+var LotModel = require('../lot.model');
 
 function fetchManufacturer(options, cb) {
 	ManufacturerModel.find(options).exec(cb);
 }
-
 
 function fetchCountry(options, cb) {
 	CountryModel.find(options).exec(cb);
@@ -75,6 +73,17 @@ function fetchAuctionMaster(auctionId, cb) {
 		return cb(null, auction);
 	});
 }
+
+function fetchLotMaster(options,cb){
+	LotModel.find(options).exec(function(err, lot) {
+		if (err) {
+			return cb(err);
+		}
+
+		return cb(null, lot);
+	});
+}
+
 
 function fetchCategory(category, cb) {
 	CategoryModel.find({
@@ -153,7 +162,8 @@ var commonFunc = {
 	fetchCities: fetchCities,
 	fetchStates: fetchStates,
 	fetchUser: fetchUser,
-	fetchManufacturer: fetchManufacturer
+	fetchManufacturer: fetchManufacturer,
+	fetchLotMaster: fetchLotMaster
 };
 
 module.exports = commonFunc;

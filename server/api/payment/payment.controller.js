@@ -5,16 +5,20 @@ var crypto = require('crypto');
 var Payment = require('./payment.model');
 var  xlsx = require('xlsx');
 var config = require('./../../config/environment');
+var async=require('async');
+var Util = require('./../../components/utility.js');
 
 var trasactionStatuses = ['failed','pending','completed'];
+var ReqSubmitStatuses = ['Request Submitted', 'Request Failed'];
 
 // Get list of payment transaction
-exports.getAll = function(req, res) {
+exports.getAll = function(req,res){
 
   Payment.find({status:{$eq:'listed'}},function (err, payments) {
     if(err) { return handleError(res, err); }
     return res.status(200).json(payments);
   });
+  
 };
 
 // Get a single Payment
@@ -35,17 +39,40 @@ exports.create = function(req, res) {
   });
 };
 
+function paymentUpdate(options,cb){
+   var filter={};
+   filter._id=options.transactionId;
+   Payment.update(filter,{$set:{'status':options.status}},function(err,update){
+         if (err) cb(err);
+         return cb(null);
+   });
+}
+
 //search based on filter
 exports.getOnFilter = function(req, res) {
   var filter = {};
   if(req.body._id)
-    filter["_id"] = req.body._id;
-  console.log("filters",filter);
+    filter._id = req.body._id;
+
+  if(req.body.auction_id)
+    filter.auction_id = req.body.auction_id;
+
+  if(req.body.auctionId)
+    filter.auctionId = req.body.auctionId;
 
   if(req.body.userId)
     filter["user._id"] = req.body.userId;
 
-  var query = Payment.find(filter);
+  if(req.body.auctionPaymentReq)
+    filter.requestType = req.body.auctionPaymentReq;
+
+  if(req.body.auction){
+    var typeFilter = {};
+    typeFilter.$ne = req.body.auction;
+    filter.requestType= typeFilter;
+  }
+
+  var query = Payment.find(filter).sort({createdAt: -1});
   query.exec(
                function (err, payments) {
                       if(err) { return handleError(res, err); }
@@ -62,11 +89,66 @@ exports.update = function(req, res) {
     if(!payment) { return res.status(404).send('Not Found'); }
      Payment.update({_id:req.params.id},{$set:req.body},function(err){
         if (err) { return handleError(res, err); }
-        return res.status(200).json(req.body);
+        if(req.body && req.body.userDataSendToAuction) {
+          req.body._id = req.params.id;
+          postRequest(req, res);
+        } else
+        return res.status(201).json({errorCode: 0,message: "Payment request submitted successfully !!!"});
     });
   });
 };
 
+  exports.sendReqToCreateUser=function(req,res){
+    postRequest(req, res);
+  };
+
+  function postRequest(req, res){
+    var options = {};
+    Payment.find({
+        "transactionId": req.body.transactionId,
+      }, function(err, paymentResult) {
+        options.dataToSend = {};
+        options.dataToSend.user = {};
+        options.dataToSend.user.user_id = paymentResult[0].user._id;
+        options.dataToSend.user.iq_id = paymentResult[0].user.customerId;
+        if(paymentResult[0].user.batonNo)
+          options.dataToSend.user.iq_id = paymentResult[0].user.batonNo;
+        options.dataToSend.user.fname = paymentResult[0].user.fname;
+        options.dataToSend.user.lname = paymentResult[0].user.lname;
+        options.dataToSend.user.email = paymentResult[0].user.email;
+        options.dataToSend.user.mobile = paymentResult[0].user.mobile;
+        options.dataToSend.amountPaid = paymentResult[0].totalAmount;
+        options.dataToSend.auction_id = paymentResult[0].auction_id + "";
+        options.dataToSend.selectedLots = paymentResult[0].selectedLots;
+        options.dataType = "userInfo";
+        Util.sendCompiledData(options, function(err, result) {
+          options.dataToSend._id = paymentResult[0]._id;
+          if (err || (result && result.err)) {
+            options.dataToSend.reqSubmitStatus = ReqSubmitStatuses[1];
+            update(options.dataToSend);
+            if(result && result.err)
+              return res.status(412).send(result.err);
+            return res.status(412).send("Payment details saved successfully. Details not passed to AS portal. Use Retry button");
+          }
+          if(result){
+            options.dataToSend.reqSubmitStatus =  ReqSubmitStatuses[0];
+            update(options.dataToSend);
+            return res.status(201).json({errorCode: 0,message: "Payment request submitted successfully !!!"});
+          }
+        });
+      });
+  }
+
+  function update(userReq){
+    var id = userReq._id;
+    delete userReq._id;
+    Payment.update({_id:id},{$set:{"reqSubmitStatus":userReq.reqSubmitStatus}},function(err,retVal){
+      if (err) {
+      console.log("Error with updating Payment request");
+    }
+    console.log("Payment Updated");
+    }); 
+  }
 // Deletes a payment from the DB.
 exports.destroy = function(req, res) {
 
@@ -256,8 +338,6 @@ exports.paymentResponse = function(req,res){
         json = request.query;
     }
 
-    //console.log("#########",json);
-
     var m = crypto.createHash('md5');
     m.update(config.ccAvenueWorkingKey)
     var key = m.digest('binary');
@@ -306,7 +386,6 @@ exports.paymentResponse = function(req,res){
 
 function sendPaymentRes(req,res,resPayment){
   var status = resPayment.order_status.toString().toLowerCase().trim();
-  console.log("########param1", resPayment.merchant_param1);
   if(resPayment.merchant_param3 == "mobapp"){
     if (status != 'success')
       res.redirect('http://mobile?payment=failed');
