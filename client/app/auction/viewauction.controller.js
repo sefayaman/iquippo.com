@@ -12,11 +12,78 @@
     vm.fireCommandType = fireCommandType;
     $scope.auctionType = $stateParams.type || "upcoming";
     
-     vm.openBidModal = openBidModal;
+     //vm.openBidModal = openBidModal;
+     vm.openRegisterNow = openRegisterNow
 
+    $scope.lotsArr = [];
+    $scope.OverAll = "overall";
+    $scope.LotWist = "lotwise";
+
+    function openRegisterNow(auction){
+      Auth.isLoggedInAsync(function(loggedIn) {
+        if (loggedIn && !Auth.isAdmin()) {
+          var dataObj = {};
+          dataObj.auction = {};
+          dataObj.user = {};
+          dataObj.auction.dbAuctionId = auction._id;
+          if(!Auth.isAdmin()) {
+            dataObj.user._id = Auth.getCurrentUser()._id;
+            dataObj.user.mobile = Auth.getCurrentUser().mobile;
+          } else {
+            dataObj.user._id = $scope.registerUser._id;
+            dataObj.user.mobile = $scope.registerUser.mobile;
+          }
+          if(auction.emdTax === $scope.OverAll) {
+            dataObj.selectedLots = [];
+            vm.lotList.forEach(function(item){
+              dataObj.selectedLots[dataObj.selectedLots.length] = item.lotNumber;
+            });
+          } else {
+            dataObj.emdTax = $scope.LotWist;
+          }
+          userRegForAuctionSvc.checkUserRegis(dataObj)
+          .then(function(result){
+            if(result.data){
+              if(result.data =="done" && auction.emdTax === $scope.OverAll){
+                 Modal.alert("You have already registered for this auction with lotnumbers" +" "+ result.selectedLots); 
+                 return;
+               }
+              if(result.data =="undone" && auction.emdTax === $scope.OverAll){
+                Modal.alert("Your EMD payment is still pending. Please pay the EMD amount and inform our customer care team.",true);
+                return;
+              }
+            }
+            if(result && result.length > 0 && auction.emdTax === $scope.LotWist)
+            { $scope.lotsArr = [];
+                result.forEach(function(item){
+                  for (var i=0; i < item.selectedLots.length;i++)
+                    $scope.lotsArr.push(item.selectedLots[i]);
+                });
+            }
+            if(!Auth.isAdmin()) {
+              var auctionRegislogin = $rootScope.$new();
+              auctionRegislogin.currentAuction = auction;
+              if($scope.lotsArr.length > 0 && auction.emdTax === $scope.LotWist)
+                auctionRegislogin.regLots = $scope.lotsArr;
+              Modal.openDialog('auctionRegislogin',auctionRegislogin);
+            } else {
+              var regUserAuctionScope = $rootScope.$new();
+              regUserAuctionScope.currentAuction = auction;
+              if($scope.lotsArr.length > 0 && auction.emdTax === $scope.LotWist)
+                auctionRegislogin.regLots = $scope.lotsArr;
+              Modal.openDialog('auctionRegistration', regUserAuctionScope);
+            }
+          }); 
+        } else {
+          var regUserAuctionScope = $rootScope.$new();
+          regUserAuctionScope.currentAuction = auction;
+          Modal.openDialog('auctionRegistration', regUserAuctionScope);
+        }
+      });
+    }
 
     // bid summary
-    function openBidModal(auction){
+    /*function openBidModal(auction){
       Auth.isLoggedInAsync(function(loggedIn) {
           if (loggedIn) {
             var dataObj = {};
@@ -41,9 +108,9 @@
             Modal.openDialog('auctionRegistration', regUserAuctionScope);
           }
         });
-    }
+    }*/
     
-    function save(dataObj){
+    /*function save(dataObj){
       userRegForAuctionSvc.save(dataObj)
       .then(function(){
           Modal.alert('Your request has been successfully submitted!');
@@ -52,7 +119,7 @@
          if(err.data)
               Modal.alert(err.data); 
       });
-    }
+    }*/
 
     function getAuctions() {
       vm.auctionListing =[];

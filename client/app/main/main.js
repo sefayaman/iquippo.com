@@ -470,6 +470,12 @@ angular.module('sreizaoApp')
         controller: 'AssetInAuctionCtrl as auctionDetailsVm',
         layout:'client'
       })
+       .state('viewlot', {
+        url: '/auctionlot/:dbAuctionId?type&group&category&brand&location&assetId&mfgYearMax&mfgYearMin&currentPage',
+        templateUrl: 'app/auction/viewlot.html',
+        controller: 'ViewLotCtrl as viewLotVm',
+        layout:'client'
+      })
       .state('valuationrequests', {
         url: '/valuationrequests/:mode',
         templateUrl: 'app/valuation/valuationlisting.html',

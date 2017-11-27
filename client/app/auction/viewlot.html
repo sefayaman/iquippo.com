@@ -1,0 +1,256 @@
+<div class="container-fluid">
+  <ol class="breadcrumb">
+    <li>
+      <a href="/main"> Home </a>
+    </li>
+    <li><a href="/viewauctions?type={{equipmentSearchFilter.type}}"> Auctions </a></li>
+    <li class="active"> {{auctionData.name}} </li>
+  </ol>
+</div>
+
+<section class="category-block">
+  <div class="container-fluid">
+    <div class="col-sm-3" ng-class="{hidefilter: !filterbutton.value1}">
+      <button class="btn btn-danger visible-xs filter-display" ng-click="filterbutton.value1 = !filterbutton.value1"><i class="fa fa-times"></i> Close</button>
+      <h4 class="filter-heading">
+        Filter By:
+        <small><a href="javascript:void(0);" class="pull-right" ng-click="clearAll()">Clear All</a></small>
+      </h4>
+      <uib-accordion close-others="oneAtATime" class="information">
+        <!-- <uib-accordion-group is-open="status.group">
+          <uib-accordion-heading>
+            Industry ({{allGroup.length || 0}})<i class="pull-right fa" ng-class="{'fa-minus': status.group, 'fa-plus': !status.group}"></i>
+          </uib-accordion-heading>
+            <div class="radio" ng-repeat="group in allGroup">
+              <input type="radio" ng-model="equipmentSearchFilter.group" ng-change="viewLotVm.onGroupChange(equipmentSearchFilter.group)" name="group" value="{{group.name}}" id="gp_{{$index}}"> <label for="gp_{{$index}}">{{group.name}}</label>
+            </div>
+        </uib-accordion-group> -->
+
+        <uib-accordion-group is-open="status.category">
+          <uib-accordion-heading>
+            Category  <i class="pull-right fa" ng-class="{'fa-minus': status.category, 'fa-plus': !status.category}"></i>
+          </uib-accordion-heading>
+            <div>
+              <div class="radio" ng-repeat="cat in categoryList">
+                <input type="radio" ng-model="equipmentSearchFilter.category" ng-change="viewLotVm.onCategoryChange(equipmentSearchFilter.category)" name="category" value="{{cat.name}}" id="cat_{{$index}}"> <label for="cat_{{$index}}">{{cat.name}}</label>
+              </div>
+              
+            </div>
+        </uib-accordion-group>
+
+        <uib-accordion-group is-open="status.brand">
+          <uib-accordion-heading>
+            Product Brand <i class="pull-right fa" ng-class="{'fa-minus': status.brand, 'fa-plus': !status.brand}"></i>
+          </uib-accordion-heading>
+            <div>
+              <div class="radio" ng-repeat="br in brandList">
+                <input type="radio" ng-model="equipmentSearchFilter.brand" ng-change="viewLotVm.fireCommand()" name="brand" value="{{br.name}}"  id="brand_{{$index}}"> <label for="brand_{{$index}}">{{br.name}}</label>
+              </div>
+              
+            </div>
+        </uib-accordion-group>
+         <uib-accordion-group is-open="status.location">
+          <uib-accordion-heading>
+            Location <i class="pull-right fa" ng-class="{'fa-minus': status.location, 'fa-plus': !status.location}"></i>
+          </uib-accordion-heading>
+          <input type="text" class="form-control form-group" ng-model="equipmentSearchFilter.location" placeholder="Enter Country/State/Location" uib-typeahead="address for address in getLocationHelp($viewValue)"  class="form-control" typeahead-focus-first = "false" typeahead-wait-ms="200" ng-change="viewLotVm.fireCommand()" typeahead-on-select="viewLotVm.fireCommand()"  ng-model-options="{debounce:1000}" autocomplete="off"/>
+        </uib-accordion-group>
+        <uib-accordion-group is-open="Infostatus.open">
+          <uib-accordion-heading>
+            Asset Id  <i class="pull-right fa" ng-class="{'fa-minus': Infostatus.open, 'fa-plus': !Infostatus.open}"></i>
+          </uib-accordion-heading>
+          <input type="text" class="form-control form-group" placeholder="Asset Id"  ng-model="equipmentSearchFilter.assetId" class="form-control" ng-change="viewLotVm.fireCommand()">
+        </uib-accordion-group>        
+      </uib-accordion>
+      <div class="panel" class="information">
+          <div class="panel-heading">
+            <h4 class="panel-title">Manufacturing Year</h4>
+          </div>
+          <div class="panel-body">
+            <div class="row">
+              <div class="col-xs-6 col-sm-6 col-md-6">
+                <year-only-picker ng-model="mfgyr.min" year="equipmentSearchFilter.mfgYearMin" myid="min" placeholder="Min" on-change="viewLotVm.fireCommand()">
+                  
+                </year-only-picker>
+              </div>
+              <div class="col-xs-6 col-sm-6 col-md-6">
+                 <year-only-picker ng-model="mfgyr.max" year="equipmentSearchFilter.mfgYearMax" myid="max" placeholder="Max" on-change="viewLotVm.fireCommand()">
+                  
+                </year-only-picker>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+    <div class="col-sm-9">
+      <div class="row">
+        <div class="col-sm-7 form-group">
+          <h4 class="filter-heading">{{auctionData.auctionTypeValue | titleCase}} {{auctionData.name}} - {{auctionData.city}}
+            <small class="text-success" ng-if="auctionData.auctionValue =='ongoingAuctions'">( <i class="fa fa-circle"></i> Ongoing)</small>
+            <small class="text-success" ng-if="auctionData.auctionValue =='upcomingAuctions'">( <i class="fa fa-circle"></i> Upcoming)</small>
+            <small class="text-success" ng-if="auctionData.auctionValue =='closedAuctions'">( <i class="fa fa-circle"></i> Closed)</small>
+          </h4>
+        </div>
+        <div class="col-xs-6 visible-xs">
+          <button class="btn btn-danger visible-xs" ng-click="filterbutton.value1 = !filterbutton.value1">
+            <i class="fa fa-filter"></i> Filter
+          </button>
+        </div>
+        <div class="col-sm-3 col-md-3 form-group text-right">
+            <a href="{{uploadImagePrefix}}{{auctionDir}}/{{auctionData.docName}}" class="text-info" ng-if="auctionData.docType == 'bidProxy'" target="_blank" ng-disabled="!auctionData.docName">
+              <img src="/assets/images/icon-proxy.png" alt="" height="20"> Proxy Bid Form
+            </a>
+            <a href="{{uploadImagePrefix}}{{auctionDir}}/{{auctionData.docNameProxy}}" class="text-info" ng-if="!auctionData.docType && auctionData.docNameProxy" target="_blank" ng-disabled="!auctionData.docNameProxy">
+              <img src="/assets/images/icon-proxy.png" alt="" height="20"> Proxy Bid Form
+            </a>
+        </div>
+        <div class="col-xs-6 col-sm-2 form-group asset-sale">
+          <button type="button" class="btn btn-primary btn-block" ng-if="auctionData.auctionValue !='closedAuctions'" ng-click="viewLotVm.openBidModal()" class="btn btn-default btn-sm active">Register</button>
+        </div>
+      </div>
+      <div>
+      <div class="row">
+        <div class="col-sm-6">
+          <h5><strong>On behalf of our client:</strong></h5>
+          Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
+        </div>
+        <div class="col-sm-3">
+          <h5><strong>Lot Description:</strong></h5>
+          <p>JCB Exclavators</p>
+        </div>
+        <div class="col-sm-3">
+          <h5><strong>Location:</strong></h5>
+          <p>Delhi/NCR</p>
+        </div>
+      </div>
+      <uib-accordion close-others="oneAtATime" class="view-offer auction-offer">
+        <uib-accordion-group is-open="status.buyer">
+          <uib-accordion-heading>
+            Important Points for Buyers
+            <i class="pull-right fa" ng-class="{'fa-angle-up': status.buyer, 'fa-angle-down': !status.buyer}"></i>
+          </uib-accordion-heading>
+          <p><strong>Buyers Premium:</strong> 3% plus applicable GST</p>
+          <p><strong>TAX:</strong> GST as applicable</p>
+          <p><strong>Payment date:</strong> Payment deadline is strictly within 5 working days</p>
+          <p><strong>Asset Removal Date:</strong> Payment deadline is strictly within 5 working days</p>
+          <p><strong>EMD:</strong> Payment deadline is strictly within 5 working days</p>
+          <p><strong>Additional Information:</strong> Payment deadline is strictly within 5 working days</p>
+        </uib-accordion-group>
+        <uib-accordion-group is-open="status.details">
+          <uib-accordion-heading>
+            Contact Details
+            <i class="pull-right fa" ng-class="{'fa-angle-up': status.details, 'fa-angle-down': !status.details}"></i>
+          </uib-accordion-heading>
+          <div class="row">
+            <div class="col-sm-3 form-group">
+              <p><i class="fa fa-phone"></i> Saharsh Baid (9876543210)</p>
+              <p><i class="fa fa-map-marker"></i> Gurgoan</p>
+              <p><i class="fa fa-envelope"></i> Saharsh@iquippo.com</p>
+            </div>
+            <div class="col-sm-3 form-group">
+              <p><i class="fa fa-phone"></i> Saharsh Baid (9876543210)</p>
+              <p><i class="fa fa-map-marker"></i> Gurgoan</p>
+              <p><i class="fa fa-envelope"></i> Saharsh@iquippo.com</p>
+            </div>
+            <div class="col-sm-3 form-group">
+              <p><i class="fa fa-phone"></i> Saharsh Baid (9876543210)</p>
+              <p><i class="fa fa-map-marker"></i> Gurgoan</p>
+              <p><i class="fa fa-envelope"></i> Saharsh@iquippo.com</p>
+            </div>
+            <div class="col-sm-3 form-group">
+              <p><i class="fa fa-phone"></i> Saharsh Baid (9876543210)</p>
+              <p><i class="fa fa-map-marker"></i> Gurgoan</p>
+              <p><i class="fa fa-envelope"></i> Saharsh@iquippo.com</p>
+            </div>
+          </div>
+        </uib-accordion-group>
+      </uib-accordion>
+      <p>
+        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+      </p>
+      <div id="search-result_wrapper">
+        <div class="row">
+          <div class="col-sm-6 col-md-6 form-group padd-right">
+            <div ng-if="auctionData.contactName || auctionData.contactNumber">
+              <h4 class="text-danger"><i class="fa fa-phone"></i> {{auctionData.contactName}}({{auctionData.contactNumber}})</h4>
+            </div>
+          </div>
+          
+          <div class="col-sm-3 col-md-3 form-group">
+            <a href="{{uploadImagePrefix}}{{auctionDir}}/{{auctionData.docName}}" class="text-info" ng-if="auctionData.docType == 'tc'" target="_blank">
+              <img src="/assets/images/icon-catalog.png" alt="" height="20"> Auction Catalogue
+            </a>
+             <a href="{{uploadImagePrefix}}{{auctionDir}}/{{auctionData.docName}}" class="text-info" ng-if="!auctionData.docType&&auctionData.docName" target="_blank">
+              <img src="/assets/images/icon-catalog.png" alt="" height="20"> Auction Catalogue
+            </a>
+          </div>
+        </div>
+        
+        <div ng-if="!searching && !noResult">
+          <div class="row">      
+            <div class="col-sm-6 col-md-4 form-group" ng-repeat="auctionProduct in viewLotVm.auctionDetailListing | startFrom:(pager.currentPage -1 )*pager.itemsPerPage | limitTo:pager.itemsPerPage">
+              <div class="media text-center form-group">
+                <a href="/used/{{auctionProduct.product.category}}/{{auctionProduct.product.brand}}/{{auctionProduct.product.assetId}}" ng-if="auctionProduct.product._id">
+                   <img src="http://placehold.it/300x200" class="img-responsive" ng-if="!auctionProduct.product.primaryImg">              
+                   <img src="{{uploadImagePrefix}}{{auctionProduct.product.assetDir}}/{{auctionProduct.product.primaryImg}}" class="img-responsive" ng-if="auctionProduct.product.primaryImg">              
+                </a> 
+                 <a href="javascript:void(0)" ng-if="!auctionProduct.product._id">
+                   <img src="http://placehold.it/300x200" class="img-responsive" ng-if="!auctionProduct.product.primaryImg">              
+                   <img src="{{uploadImagePrefix}}{{auctionProduct.product.assetDir}}/{{auctionProduct.product.primaryImg}}" class="img-responsive" ng-if="auctionProduct.product.primaryImg">              
+                </a>          
+                <div class="media-body text-left"> 
+                  <div class="row">
+                    <div class="col-xs-8 form-group padd-right">
+                      <h4 class="text-ellips">  {{auctionProduct.product.category}} {{auctionProduct.product.brand}} {{auctionProduct.product.model}}</h4>     
+                      <h6 class="text-info">Asset Id : {{auctionProduct.product.assetId}}</h6>
+                    </div>
+                   <!--  <div class="col-xs-4 form-group text-right padd-left">
+                      <h4 class="text-success">Ongoing</h4>
+                    </div> -->
+                  </div> 
+                  <!-- <p><i class="fa fa-clock-o"></i> <strong class="text-success">2 days, 5 hours, 19 minutes, 57 seconds</strong></p> -->
+                   <p><i class="fa fa-check-circle-o"></i> Available for Sale</p>
+                </div> 
+                 <div class="table-responsive">
+                    <table class="table">                
+                      <tbody>
+                        <tr>
+                          <td>
+                            <small>Manufactured in</small>
+                            <h3>{{auctionProduct.product.mfgYear}}</h3>
+                          </td>
+                          <td>
+                            <small>Runtime (Hours)</small>
+                            <h3></h3>
+                          </td>
+                          <td>
+                            <small>Current Location</small>
+                            <h3>{{auctionProduct.product.city}}</h3>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>  
+                <a href="/used/{{auctionProduct.product.category}}/{{auctionProduct.product.brand}}/{{auctionProduct.product.assetId}}" class="btn btn-primary btn-block" ng-disabled="!auctionProduct.product._id">
+                  View Details
+                </a>     
+              </div>
+            </div>
+
+            
+          </div>
+
+          <div class="text-center form-group">
+            <uib-pagination ng-change="viewLotVm.onPageChange()" total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" boundary-links="false" rotate="false" next-text=">" previous-text="<"></uib-pagination>
+          </div>
+        </div>
+      </div>
+
+      <div class="no-result" ng-if="searching && !noResult">
+        <img src="assets/images/assets-loading.gif" class="form-group">
+        <p>Loading...</p>
+      </div>
+      <div class="no-result" ng-if="noResult && !searching">No results found</div>
+    </div>
+  </div>
+</section>
