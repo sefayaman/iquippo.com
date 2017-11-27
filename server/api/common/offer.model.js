@@ -17,7 +17,8 @@ var OfferSchema = new Schema({
         financeInfo:[],
         leaseInfo:[],
         lease: {type:Boolean,default:false},
-        createdBy:{},  
+        createdBy:{},
+        forAll:{type:Boolean,default:false},  
         status: {type:Boolean,default:true},  
         createdAt: {type:Date,default:Date.now},
         updatedAt: {type:Date,default:Date.now}

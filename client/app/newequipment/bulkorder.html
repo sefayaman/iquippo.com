@@ -132,6 +132,24 @@
                 </div>
               </div>
             </div>
+              <div class="col-sm-3 form-group">
+              <div class="floating-label-wrapper">
+                <label for="idPrice">Indicative Price</label>
+                <input type="text" class="form-control" id="idPrice" name="idPrice" ng-model="order.indicativePrice" placeholder="Indicative Price" with-floating-label>
+              </div>
+            </div>
+              <div class="col-sm-3 form-group">
+              <div class="floating-label-wrapper">
+                <label for="idRate"> Indicative Rate</label>
+                <input type="text" class="form-control" id="idRate" name="idRate" ng-model="order.indicativeRate" placeholder=" Indicative Rate" with-floating-label>
+              </div>
+            </div>
+              <div class="col-sm-3 form-group">
+              <div class="floating-label-wrapper">
+                <label for="idDownPayment">Indicative Down Payment</label>
+                <input type="text" class="form-control" id="idDownPayment" name="idDownPayment" ng-model="order.indicativeDownpayment" placeholder="Indicative Down Payment" with-floating-label>
+              </div>
+            </div>
             <div class="col-sm-1 form-group text-center bulk-more">
                <a href="javascript:void(0);" ng-click="bulkOrderVm.dataModel.orders.splice($index,1)" ng-if="bulkOrderVm.dataModel.orders.length > 1">
               <i class="fa fa-minus"></i> Delete

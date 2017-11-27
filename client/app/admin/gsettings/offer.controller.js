@@ -288,7 +288,11 @@
          vm.dataModel.createdBy._id = Auth.getCurrentUser()._id;
          vm.dataModel.createdBy.name = Auth.getCurrentUser().fname + " " + Auth.getCurrentUser().lname;
 
-        //console.log("final data=============",vm.dataModel);
+         if(vm.dataModel.location.length === $scope.stateList.length)
+              vm.dataModel.forAll = true;
+          else
+            vm.dataModel.forAll = false;
+
          OfferSvc.save(vm.dataModel)
           .then(function(){
               vm.dataModel = {};
@@ -429,6 +433,12 @@
                   vm.leaseData[k] = vm.lInfo;
                 }
                vm.dataModel.leaseInfo =  vm.leaseData;
+
+            if(vm.dataModel.location.length === $scope.stateList.length)
+              vm.dataModel.forAll = true;
+            else
+              vm.dataModel.forAll = false;
+
            OfferSvc.update(vm.dataModel)
             .then(function(){
             vm.dataModel = {};
