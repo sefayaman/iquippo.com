@@ -13,6 +13,7 @@ var config = require('./../../config/environment');
 var importPath = config.uploadPath + config.importDir + "/";
 var Product = require('./../product/product.model');
 var PaymentMasterModel = require('../common/paymentmaster.model');
+var Lot = require('../common/lot.model');
 var vendorModel = require('../vendor/vendor.model');
 var LotModel = require('../common/lot.model');
 

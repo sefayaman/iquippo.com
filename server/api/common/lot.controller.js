@@ -268,12 +268,12 @@ exports.getLotData = function(req, res) {
 
 exports.getLotsInAuction = function(req, res) {
   var options = {};
-  var filter = {};
-  filter.isDeleted = false;
-  filter.auction_id = req.query._id;
+  //filter.isDeleted = false;
+  var queryParam = req.query;
+  //filter.auction_id = queryParam._id;
   async.series([
     function(next) {
-      fetchLots(filter, options, next);
+      fetchLots(options, next);
     },
     function(next) {
       fetchAssetsInLot(options, next);
@@ -288,25 +288,24 @@ exports.getLotsInAuction = function(req, res) {
     }
 
   });
-}
 
-var lotInfo = {};
-
-function fetchLots(filter, options, callback) {
-  filter.isDeleted = false;
-  Lot.find(filter, function(err, result) {
-    if (err) callback(err);
-    if (result.length > 0) {
-      options.lotData = result;
-      result.forEach(function(x) {
+  function fetchLots(options, callback) {
+    var filter = {};
+    filter.isDeleted = false;
+    filter.auction_id = queryParam._id;
+    Lot.find(filter, function(err, result) {
+      if (err) callback(err);
+      if (result.length > 0) {
+          options.lotData = result;
+     /* result.forEach(function(x) {
         lotInfo[x._id] = {};
         lotInfo[x._id].lotNumber = x.lotNumber;
         lotInfo[x._id].amount = x.startingPrice;
-      });
-      return callback(null, options);
-    } else {
-      return callback(new APIError(404, 'No Assets present in the auction'));
-    }
+      });*/
+        return callback(null, options);
+      } else {
+        return callback(new APIError(404, 'No Assets present in the auction'));
+      }
   });
 }
 
@@ -315,47 +314,86 @@ function fetchAssetsInLot(options, callback) {
   options.lotData.forEach(function(lot) {
     lotsIdArray.push(lot._id);
   });
-  AuctionRequest.find({
-    lot_id: {
-      '$in': lotsIdArray
-    },
-    isDeleted: false
-  }, function(err, results) {
-    if (err) callback(err);
-    if(results.length > 0){
-      options.assetData = results;
-    return callback(null, options);
+  var filter = {isDeleted:false};
+  filter['product.isSold'] = false;
+  filter['lot_id'] = {'$in': lotsIdArray};
+  if(queryParam.category)
+    filter['product.category'] = queryParam.category;
+  if(queryParam.brand)
+    filter['product.brand'] = queryParam.brand;
+  if (queryParam.assetId)
+    filter["product.assetId"] = queryParam.assetId;
+  if (queryParam.location) {
+    var cityRegex = new RegExp(queryParam.location, 'i');
+    filter['product.city'] = {$regex:cityRegex};
   }
-  else
-    return callback(new Error({message:"No assets in auction"}));
+  if(queryParam.mfgYearMax || queryParam.mfgYearMin){
+    var mfgFilter = {};
+    if(queryParam.mfgYearMin){
+      mfgFilter['$gte'] = parseInt(queryParam.mfgYearMin);
+    }
+    if(queryParam.mfgYearMax){
+      mfgFilter['$lte'] = parseInt(queryParam.mfgYearMax);
+    }
+    filter["product.mfgYear"] = mfgFilter;
+ }
+
+  AuctionRequest.find(filter, function(err, results) {
+    if (err) callback(err);
+    //if(results.length > 0){
+      options.assetData = results;
+      return callback(null, options);
+  //}
+  //else
+    //return callback(new Error({message:"No assets in auction"}));
   });
 }
 
 
 
 function viewData(options, callback) {
-  var lotObj = {};
-  var obj = [];
-  options.assetData.forEach(function(asset) {
-    asset.lotNumber = lotInfo[asset.lot_id].lotNumber;
-  });
+    //var lotObj = {};
+    //var obj = [];
+    var resultArr = [];
 
-  options.assetData.forEach(function(x) {
-    if (!lotObj[x.lotNumber]) {
-      lotObj[x.lotNumber] = {};
-      //lotObj['lotNumber'] = lotInfo[x.lot_id].lotNumber;
-      lotObj[x.lotNumber]['assetDescription'] = [];
-      lotObj[x.lotNumber].assetDir = x.product.assetDir;
-      if (x.primaryImg !== "")
-        lotObj[x.lotNumber].primaryImg = x.product.primaryImg;
-    }
-    lotObj[x.lotNumber].assetDescription.push(x.product.assetId);
-    lotObj[x.lotNumber].amount = lotInfo[x.lot_id].amount;
-    lotObj[x.lotNumber].id = x.lot_id;
-  });
+    /*options.assetData.forEach(function(asset) {
+      asset.lotNumber = lotInfo[asset.lot_id].lotNumber;
+    });*/
 
-  return callback(null, lotObj);
-};
+    options.lotData.forEach(function(lot){
+        lot = lot.toObject();
+        lot.assets = [];
+        options.assetData.forEach(function(x){
+          x = x.toObject();
+          if(x.lot_id === lot._id + "")
+            lot.assets.push(x);
+        });
+        if(lot.assets.length)
+          resultArr.push(lot);
+    });
+
+    //options.assetData.forEach(function(x) {
+      //x = x.toObject();
+
+      /*if (!lotObj[x.lotNumber]) {
+        lotObj[x.lotNumber] = {};
+        //lotObj['lotNumber'] = lotInfo[x.lot_id].lotNumber;
+        lotObj[x.lotNumber]['assetDescription'] = [];
+        lotObj[x.lotNumber].assetDir = x.product.assetDir;
+        if (x.primaryImg !== "")
+          lotObj[x.lotNumber].primaryImg = x.product.primaryImg;
+      }
+      lotObj[x.lotNumber].assetDescription.push(x.product.assetId);
+      lotObj[x.lotNumber].amount = lotInfo[x.lot_id].amount;
+      lotObj[x.lotNumber].id = x.lot_id;*/
+    //});
+
+    return callback(null, resultArr);
+  };
+
+}
+
+//var lotInfo = {};
 
 
 /*

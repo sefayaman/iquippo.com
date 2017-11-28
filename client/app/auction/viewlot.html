@@ -105,7 +105,7 @@
             </a>
         </div>
         <div class="col-xs-6 col-sm-2 form-group asset-sale">
-          <button type="button" class="btn btn-primary btn-block" ng-if="auctionData.auctionValue !='closedAuctions'" ng-click="viewLotVm.openBidModal()" class="btn btn-default btn-sm active">Register</button>
+          <button type="button" class="btn btn-primary btn-block" ng-if="auctionData.auctionValue !='closedAuctions'" ng-click="viewLotVm.openRegisterNow()" class="btn btn-default btn-sm active">Register</button>
         </div>
       </div>
       <div>
@@ -169,7 +169,7 @@
         Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
       </p>
       <div id="search-result_wrapper">
-        <div class="row">
+        <!-- <div class="row">
           <div class="col-sm-6 col-md-6 form-group padd-right">
             <div ng-if="auctionData.contactName || auctionData.contactNumber">
               <h4 class="text-danger"><i class="fa fa-phone"></i> {{auctionData.contactName}}({{auctionData.contactNumber}})</h4>
@@ -184,25 +184,29 @@
               <img src="/assets/images/icon-catalog.png" alt="" height="20"> Auction Catalogue
             </a>
           </div>
-        </div>
+        </div> -->
         
         <div ng-if="!searching && !noResult">
           <div class="row">      
-            <div class="col-sm-6 col-md-4 form-group" ng-repeat="auctionProduct in viewLotVm.auctionDetailListing | startFrom:(pager.currentPage -1 )*pager.itemsPerPage | limitTo:pager.itemsPerPage">
+            <div class="col-sm-6 col-md-4 form-group" ng-repeat="lot in viewLotVm.lotListing | startFrom:(pager.currentPage -1 )*pager.itemsPerPage | limitTo:pager.itemsPerPage">
               <div class="media text-center form-group">
-                <a href="/used/{{auctionProduct.product.category}}/{{auctionProduct.product.brand}}/{{auctionProduct.product.assetId}}" ng-if="auctionProduct.product._id">
+                <!-- <a href="/used/{{auctionProduct.product.category}}/{{auctionProduct.product.brand}}/{{auctionProduct.product.assetId}}" ng-if="auctionProduct.product._id">
                    <img src="http://placehold.it/300x200" class="img-responsive" ng-if="!auctionProduct.product.primaryImg">              
                    <img src="{{uploadImagePrefix}}{{auctionProduct.product.assetDir}}/{{auctionProduct.product.primaryImg}}" class="img-responsive" ng-if="auctionProduct.product.primaryImg">              
-                </a> 
-                 <a href="javascript:void(0)" ng-if="!auctionProduct.product._id">
-                   <img src="http://placehold.it/300x200" class="img-responsive" ng-if="!auctionProduct.product.primaryImg">              
-                   <img src="{{uploadImagePrefix}}{{auctionProduct.product.assetDir}}/{{auctionProduct.product.primaryImg}}" class="img-responsive" ng-if="auctionProduct.product.primaryImg">              
+                </a>  -->
+                 <a href="javascript:void(0)">
+                   <img src="http://placehold.it/300x200" class="img-responsive" ng-if="!lot.primaryImg">              
+                   <img ng-if="lot.primaryImg" ng-src="{{lot.primaryImg}}" class="img-responsive">              
                 </a>          
                 <div class="media-body text-left"> 
                   <div class="row">
                     <div class="col-xs-8 form-group padd-right">
-                      <h4 class="text-ellips">  {{auctionProduct.product.category}} {{auctionProduct.product.brand}} {{auctionProduct.product.model}}</h4>     
-                      <h6 class="text-info">Asset Id : {{auctionProduct.product.assetId}}</h6>
+                      <h4 class="text-ellips">Lot Number - {{lot.lotNumber}}</h4>     
+                      <h6 class="text-info">Asset Description : <span ng-if="lot.assets.length == 1">{{asset.product.category}} {{asset.product.brand}} {{asset.product.model}}</span>
+                          <span ng-repeat="asset in lot.assets track by $index" ng-if="lot.assets.length > 1">
+                            <a href="javascript:void(0)" ng-click="fetchAsset(asset.product.assetId,lot.lotNumber,false)"> {{asset.product.assetId}} </a> <span ng-if="!$last">, </span>
+                          </span>
+                      </h6>
                     </div>
                    <!--  <div class="col-xs-4 form-group text-right padd-left">
                       <h4 class="text-success">Ongoing</h4>
@@ -211,7 +215,7 @@
                   <!-- <p><i class="fa fa-clock-o"></i> <strong class="text-success">2 days, 5 hours, 19 minutes, 57 seconds</strong></p> -->
                    <p><i class="fa fa-check-circle-o"></i> Available for Sale</p>
                 </div> 
-                 <div class="table-responsive">
+                 <!-- <div class="table-responsive">
                     <table class="table">                
                       <tbody>
                         <tr>
@@ -230,7 +234,7 @@
                         </tr>
                       </tbody>
                     </table>
-                  </div>  
+                  </div>  --> 
                 <a href="/used/{{auctionProduct.product.category}}/{{auctionProduct.product.brand}}/{{auctionProduct.product.assetId}}" class="btn btn-primary btn-block" ng-disabled="!auctionProduct.product._id">
                   View Details
                 </a>     
