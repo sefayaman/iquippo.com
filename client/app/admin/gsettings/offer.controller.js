@@ -258,6 +258,7 @@
               }
               
         for(var k in  vm.purchaseArr) {
+          vm.pInfo = {};
           vm.pInfo.price = vm.purchaseArr[k].price;
           vm.pInfo.freeofcost = vm.purchaseArr[k].freeofcost;
           vm.purchaseData[k] = vm.pInfo;
@@ -408,6 +409,7 @@
           vm.dataModel.lease = $scope.lease;
           
           for(var k in  vm.purchaseArr) {
+            vm.pInfo = {};
             vm.pInfo.price = vm.purchaseArr[k].price;
             vm.pInfo.freeofcost = vm.purchaseArr[k].freeofcost;
             vm.purchaseData[k] = vm.pInfo;
