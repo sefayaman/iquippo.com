@@ -352,8 +352,9 @@
     function addValuationQuote(form) {
       
       if (!Auth.getCurrentUser()._id) {
-        Modal.alert("Please Login/Register for submitting your Valuation Request.", true);
+        //Modal.alert("Please Login/Register for submitting your Valuation Request.", true);
         $scope.submitted = false;
+        Auth.goToLogin();
         return;
       }
 

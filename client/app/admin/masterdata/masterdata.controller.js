@@ -46,7 +46,8 @@ function MasterDataCtrl($scope, $rootScope,MasterDataService, groupSvc, modelSvc
 	vm.onCategoryChange = onCategoryChange;
 	vm.Save = Save;
 	vm.reset = reset;
-	vm.updateCategoryStatus = updateCategoryStatus;
+	//vm.updateCategoryStatus = updateCategoryStatus;
+	vm.makeVisibleHome = makeVisibleHome;
 	vm.update = update;
 	vm.deleteClick = deleteClick;
 	vm.editClick = editClick;
@@ -54,21 +55,25 @@ function MasterDataCtrl($scope, $rootScope,MasterDataService, groupSvc, modelSvc
 	vm.searchFn = searchFn;
 
 	//methods in scope
-	$scope.updateCategoryImg = updateCategoryImg;
+	//$scope.updateCategoryImg = updateCategoryImg;
+	$scope.uploadImage = uploadImage;
+	//$scope.updateImage = updateImage;
 	$scope.importMasterData = importMasterData;
 	$scope.getStatus = getStatus;
+	$scope.checkCategoryFor = checkCategoryFor;
+	$scope.checkBrandFor = checkBrandFor;
 
 	function loadAllGroup(fromCache){
-		if(!fromCache)
-			groupSvc.clearCache();
-		groupSvc.getAllGroup()
-		.then(function(result){
-			$scope.allGroup = result;
-			$scope.filteredGroup = result;
-			vm.gCurrentPage = 1;
-			vm.gSearch = "";
-			vm.gTotalItems = result.length;
-		})
+            if(!fromCache)
+            groupSvc.clearCache();
+            groupSvc.getAllGroup()
+            .then(function(result){
+                    $scope.allGroup = result;
+                    $scope.filteredGroup = result;
+                    vm.gCurrentPage = 1;
+                    vm.gSearch = "";
+                    vm.gTotalItems = result.length;
+            });
 	}
 
 	function loadAllCategory(fromCache){
@@ -81,6 +86,7 @@ function MasterDataCtrl($scope, $rootScope,MasterDataService, groupSvc, modelSvc
 			vm.cSearch = "";
 			vm.cCurrentPage = 1;
 			vm.cTotalItems = result.length;
+			
 		})
 	}
 
@@ -116,24 +122,76 @@ function MasterDataCtrl($scope, $rootScope,MasterDataService, groupSvc, modelSvc
 		switch(type){
 			case "group":
 				$scope.filteredGroup = $filter('filter')($scope.allGroup,vm.gSearch);
+				if(vm.isForNew || vm.isForUsed){
+					$scope.filteredGroup = $scope.filteredGroup.filter(function(item){
+						if(vm.isForNew && vm.isForUsed)
+							return item.isForUsed && item.isForNew;
+						else if(vm.isForNew)
+							return item.isForNew;
+						else if(vm.isForUsed)
+							return item.isForUsed;
+						else
+							return false;
+
+					});
+				}
 				vm.gCurrentPage = 1;
 				vm.gTotalItems = $scope.filteredGroup.length;
 			break;
 
 			case "category":
 				$scope.filteredCategory = $filter('filter')($scope.allCategory,vm.cSearch);
+				if(vm.isForNew || vm.isForUsed){
+					$scope.filteredCategory = $scope.filteredCategory.filter(function(item){
+						if(vm.isForNew && vm.isForUsed)
+							return item.isForUsed && item.isForNew;
+						else if(vm.isForNew)
+							return item.isForNew;
+						else if(vm.isForUsed)
+							return item.isForUsed;
+						else
+							return false;
+
+					});
+				}
 				vm.cCurrentPage = 1;
 				vm.cTotalItems = $scope.filteredCategory.length;
 			break;
 			
 			case "brand":
 				$scope.filteredBrand = $filter('filter')($scope.allBrand,vm.bSearch);
+				if(vm.isForNew || vm.isForUsed){
+					$scope.filteredBrand = $scope.filteredBrand.filter(function(item){
+						if(vm.isForNew && vm.isForUsed)
+							return item.isForUsed && item.isForNew;
+						else if(vm.isForNew)
+							return item.isForNew;
+						else if(vm.isForUsed)
+							return item.isForUsed;
+						else
+							return false;
+
+					});
+				}
 				vm.bCurrentPage = 1;
 				vm.bTotalItems = $scope.filteredBrand.length;
 			break;
 			
 			case "model":
 				$scope.filteredModel = $filter('filter')($scope.allModel,vm.mSearch);
+				if(vm.isForNew || vm.isForUsed){
+					$scope.filteredModel = $scope.filteredModel.filter(function(item){
+						if(vm.isForNew && vm.isForUsed)
+							return item.isForUsed && item.isForNew;
+						else if(vm.isForNew)
+							return item.isForNew;
+						else if(vm.isForUsed)
+							return item.isForUsed;
+						else
+							return false;
+
+					});
+				}
 				vm.mCurrentPage = 1;
 				vm.mTotalItems = $scope.filteredModel.length;
 			break;
@@ -252,6 +310,10 @@ function MasterDataCtrl($scope, $rootScope,MasterDataService, groupSvc, modelSvc
 				$scope.form.errorGroup = true;
 				isValid = false;
 			}
+			if(!$scope.g.isForNew && !$scope.g.isForUsed){
+				isValid = false;
+				Modal.alert("Please select used equipment or new equipment checkbox",true);
+			}
 			break;
 			case "Category":
 				if(!$scope.c.name){
@@ -269,6 +331,10 @@ function MasterDataCtrl($scope, $rootScope,MasterDataService, groupSvc, modelSvc
 				if($scope.c.name.toLowerCase() == "other" && $scope.c.group.name.toLowerCase() != "other"){
 					isValid = false;
 					Modal.alert("Invaid combination",true);
+				}
+				if(!$scope.c.isForNew && !$scope.c.isForUsed){
+					isValid = false;
+					Modal.alert("Please select used equipment or new equipment checkbox",true);
 				}
 				break;
 			case "Brand":
@@ -291,6 +357,10 @@ function MasterDataCtrl($scope, $rootScope,MasterDataService, groupSvc, modelSvc
 				if($scope.b.name.toLowerCase() == "other" && ($scope.b.group.name.toLowerCase() != "other" || $scope.b.category.name.toLowerCase() != "other")){
 					isValid = false;
 					Modal.alert("Invaid combination",true);
+				}
+				if(!$scope.b.isForNew && !$scope.b.isForUsed){
+					isValid = false;
+					Modal.alert("Please select used equipment or new equipment checkbox",true);
 				}
 			break;
 			case "Model":
@@ -317,6 +387,10 @@ function MasterDataCtrl($scope, $rootScope,MasterDataService, groupSvc, modelSvc
 				if($scope.m.name.toLowerCase() == "other" && ($scope.m.group.name.toLowerCase() != "other" || $scope.m.category.name.toLowerCase() != "other" || $scope.m.brand.name.toLowerCase() != "other")){
 					isValid = false;
 					Modal.alert("Invaid combination",true);
+				}
+				if(!$scope.m.isForNew && !$scope.m.isForUsed){
+					isValid = false;
+					Modal.alert("Please select used equipment or new equipment checkbox",true);
 				}
 				break;                
 		}
@@ -350,6 +424,8 @@ function MasterDataCtrl($scope, $rootScope,MasterDataService, groupSvc, modelSvc
 		$scope.categoryEdit = false;
 		$scope.brandEdit = false;
 		$scope.modelEdit = false;
+		vm.isForNew = false;
+		vm.isForUsed = false;
 	}
 
 	$scope.$watch("[g,c,b,m]", function(){
@@ -357,39 +433,44 @@ function MasterDataCtrl($scope, $rootScope,MasterDataService, groupSvc, modelSvc
 	  $scope.form = {};
 	}, true);
 
-    function updateCategoryStatus(category) {
-      if(!category.imgSrc && category.status){
-      	  Modal.alert("Please upload category image to make it active.");
-      	  category.status = false;
+    function makeVisibleHome(modelRef,type,isNew) {
+      if(!modelRef.imgSrc && (modelRef.visibleOnUsed || modelRef.visibleOnNew)){
+      	  Modal.alert("Please upload image to make it visible on home page.");
+      	  if(!isNew)
+      	  	modelRef.visibleOnUsed = false;
+      	  else
+      	  	modelRef.visibleOnNew = false;
       	  return;
       }
-       updateCategory(category);
+      	modelRef.type = type;
+      	updateMasterdataStatus(modelRef);
+      	
   };
 
-  function updateCategory(category){
-      categorySvc.updateCategory(category).then(function(result){
-        $rootScope.loading = false;
-       if(result.errorCode){
-          Modal.alert(result.message);
-        }
-        else{
-        	loadAllCategory();
-           Modal.alert("Category Updated",true);
-        }
-      });
+  function updateMasterdataStatus(modelRef){
+  	MasterDataService.updateMasterDataStatus(modelRef)
+      	.then(function(res){
+      		Modal.alert( modelRef.type + " updated successfully.",true);
+      		switch(modelRef.type){
+				case "Group":
+					loadAllGroup();
+				break;
+				case "Category":
+					loadAllCategory();
+				break;
+				case "Brand":
+					loadAllBrand();
+				break;
+				case "Model":
+					loadAllModel();
+				break;
+			}
+      	})
+      	.catch(function(err){
+      		if(err.data)
+      			Modal.alert(res.data);
+      	});
   }
-
-  //listen for the file selected event
-    $scope.$on("fileSelected", function (event, args) {
-    	if(args.files.length == 0)
-        	return;
-        $scope.$apply(function () {            
-            $scope.fileObj.file = args.files[0];
-            $scope.fileObj.imgSrc = args.files[0].name;
-            $scope.c.imgSrc = args.files[0].name;
-        });
-    });
-
 
     function importMasterData(files,_this){
     	if(!files[0])
@@ -418,14 +499,25 @@ function MasterDataCtrl($scope, $rootScope,MasterDataService, groupSvc, modelSvc
 	     })
 	 }
 
-	 function updateCategoryImg(files,_this){
-	 	if(!files[0])
+	 function uploadImage(files,modelRef,type,autoUpdate,key){
+	 	if(!files.length)
 	 		return;
-	 	var index = parseInt($(_this).data('index'));
+	 	$rootScope.loading = true;
 	 	uploadSvc.upload(files[0],categoryDir).then(function(result){
-	 		$scope.filteredCategory[index].imgSrc = result.data.filename;
-	 		updateCategory($scope.filteredCategory[index]);
+	 		$rootScope.loading = false;
+	 		if(key)
+			 modelRef[key] = result.data.filename;
+			else
+			 modelRef.imgSrc = result.data.filename;
+	 		if(autoUpdate && type){
+	 			modelRef.type = type;
+	 			updateMasterdataStatus(modelRef);
+	 		}
+	 		
 	    })
+	    .catch(function(err){
+	    	$rootScope.loading = false;
+	    });
 	 }
 
 	 function deleteClick(type,val){
@@ -529,14 +621,7 @@ function MasterDataCtrl($scope, $rootScope,MasterDataService, groupSvc, modelSvc
 	 	}
 
 		dataToSend['type'] = type;
-		if(type == "Category" && $scope.fileObj.file){
-			uploadSvc.upload($scope.fileObj.file,categoryDir).then(function(result){
-				  $scope.fileObj = {};
-		          dataToSend.imgSrc = result.data.filename;
-		          updateMasterData(dataToSend);
-		    });
-		}else
-			updateMasterData(dataToSend);
+		updateMasterData(dataToSend);
  		
 	 }
 
@@ -572,7 +657,14 @@ function MasterDataCtrl($scope, $rootScope,MasterDataService, groupSvc, modelSvc
 		retObject.name = obj.name;
 		return retObject;
 	}
-
+	function checkCategoryFor(category){
+		$scope.b.useFor = category.useFor;
+		console.log("$scope.b.useFor==",$scope.b.useFor);
+	}
+	function checkBrandFor(brand){console.log("brand==",brand);
+		$scope.m.useFor = brand.useFor;
+		console.log("muserfor",$scope.m.useFor);
+	}
 }
 
 })();

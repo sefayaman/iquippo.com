@@ -25,6 +25,7 @@
       prdService.setExpiry = setExpiry;
       prdService.getProductOnCategoryId = getProductOnCategoryId;
       prdService.getProductOnFilter = getProductOnFilter;
+      prdService.getProductCount = getProductCount;
       prdService.getFeaturedProduct = getFeaturedProduct;
       prdService.getSearchResult = getSearchResult;
       prdService.setSearchResult = setSearchResult;
@@ -49,42 +50,30 @@
 
        function getFeaturedProduct(id){
           var deferred = $q.defer();
-          if(featuredProductCache && featuredProductCache.length > 0){
-            deferred.resolve(featuredProductCache);
-          }else{
             var filter = {};
             filter['status'] = true;
             filter["featured"] = true;
             filter["assetStatus"] = assetStatuses[0].code;
-            $http.post(path + "/search",filter)
+           return  $http.post(path + "/search",filter)
             .then(function(res){
-              featuredProductCache = res.data;
-              updateCache(res.data);
               deferred.resolve(res.data);
             })
             .catch(function(res){
               deferred.reject(res);
-            })
-          }
+            });
           return deferred.promise;
         };
 
       function getProductOnId(id,fromServer){
 
         var deferred = $q.defer();
-        if(productCache[id] && !fromServer){
-          deferred.resolve(productCache[id]);
-        }else{
-
-          $http.get(path + "/" + id)
-          .then(function(res){
-            addToCache(res.data);
-            deferred.resolve(res.data);
-          })
-          .catch(function(res){
-            deferred.reject(res);
-          })
-        }
+        return $http.get(path + "/" + id)
+        .then(function(res){
+          deferred.resolve(res.data);
+        })
+        .catch(function(res){
+          deferred.reject(res);
+        });
         return deferred.promise;
       };
 
@@ -97,7 +86,6 @@
         filter['sort'] = {featured:-1};
         $http.post(path + "/search",filter)
         .then(function(res){
-          updateCache(res.data);
           deferred.resolve(res.data);
         })
         .catch(function(res){
@@ -121,10 +109,6 @@
 
         return $http.post(path + "/search",filter)
           .then(function(res){
-            if(filter.pagination)
-                updateCache(res.data.products);
-              else
-              updateCache(res.data);
             return res.data;
           })
           .catch(function(res){
@@ -132,10 +116,19 @@
           })
       };
 
+      function getProductCount(filter){
+         return $http.post(path + "/search?count=y",filter)
+          .then(function(res){
+            return res.data;
+          })
+          .catch(function(res){
+            throw res;
+          })
+      }
+
       function addProduct(product){
         return $http.post(path,product)
         .then(function(res){
-          featuredProductCache = [];
           return res.data;
         })
         .catch(function(res){
@@ -210,8 +203,6 @@
 
         return $http.put(path + "/" + product._id,product).
                 then(function(res){
-                  featuredProductCache = [];
-                   deleteFromCache(product);
                    return res.data;
                 })
                 .catch(function(res){
@@ -226,7 +217,6 @@
       function deleteProduct(product){
         return $http.delete(path + "/" + product._id)
               .then(function(res){
-                  deleteFromCache(product);
                   return res.data;
               })
               .catch(function(res){
@@ -237,7 +227,6 @@
       function bulkProductStatusUpdate(fileName){
         return $http.post(path + "/bulkproductstatusupdate",{filename:fileName})
               .then(function(res){
-                featuredProductCache = [];
                 return res.data;
               })
               .catch(function(res){
@@ -268,7 +257,6 @@
         };
            return $http.post(path + "/bulkeditproduct",dataToSend)
               .then(function(res){
-                featuredProductCache = [];
                 return res.data;
               })
               .catch(function(res){
@@ -370,7 +358,6 @@
       function bulkProductUpdate(data){
         return $http.post('/api/products/bulkupdate', data)
             .then(function(res){
-              featuredProductCache = [];
               return res.data;
             })
             .catch(function(res){
@@ -416,11 +403,11 @@
                 })
       }
 
-      function addToCache(prd){
+      /*function addToCache(prd){
         productCache[prd._id] = prd;
-      }
+      }*/
 
-      function updateCache(dataArr){
+      /*function updateCache(dataArr){
         dataArr.forEach(function(item,index){
           productCache[item._id] = item;
         });
@@ -429,7 +416,7 @@
       function deleteFromCache(prd){
           if(productCache[prd._id])
             delete productCache[prd._id];
-      }
+      }*/
 
       function getSearchResult(){
         return searchResult;

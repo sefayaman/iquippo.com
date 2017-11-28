@@ -1,0 +1,77 @@
+<!-- Browse Brand -->
+<section class="category-block">
+  <div class="container">
+    <div class="information-tabs login-margin">
+      <div class="row registration-forms">
+        <div class="col-sm-6 hidden-xs">
+          <img src="/assets/images/loging-image.png" class="img-responsive" alt="">
+        </div>
+        <div class="col-xs-offset-1 col-xs-10 col-sm-offset-0 col-sm-5 form-group">
+            <div class="login-titles">
+              <h4>Signin with <span>iQuippo</span></h4>
+              <h5>Easily Using</h5>
+            </div>            
+            <div class="row">
+              <div class="col-xs-4 form-group">
+                <a class="btn btn-default btn-block social-facebook" href="javascript:void(0);" ng-click="loginVm.loginOauth('facebook')"><i class="fa fa-facebook-square"></i> Facebook</a>                  
+              </div>
+              <div class="col-xs-4 form-group">
+                <a class="btn btn-default btn-block social-twitter" href="javascript:void(0);" ng-click="loginVm.loginOauth('twitter')"><i class="fa fa-twitter-square"></i> Twitter</a>     
+                
+              </div>
+              <div class="col-xs-4 form-group">
+                <a class="btn btn-default btn-block social-linkedin" href="javascript:void(0)" ng-click="loginVm.loginOauth('linkedin')"><i class="fa fa-linkedin-square"></i> Linkedin</a>
+                
+              </div>
+            </div>
+            <div class="option-border text-center">
+              <span class="option">or</span>
+              <hr>
+            </div>
+            <form class="signin" name="form" ng-submit="loginVm.login(form,$event)" data-ember-action="2" novalidate>
+              <div class="floating-lable-form">
+                <div class="row">
+                  <div class="col-sm-6 form-group has-error">
+                    <div class="floating-label-wrapper">
+                      <label for="userID">Email/User ID/Mobile No.</label>
+                      <input type="text" class="form-control" id="userID" placeholder="Email/User ID/Mobile No." ng-model="loginVm.user.userId" required with-floating-label autocomplete="off">
+                    </div>
+                    <small class="help-block" ng-show="form.userId.$error.required && !form.password.$error.required && submitted">
+                         Please enter a valid user id.
+                      </small>
+                  </div>
+                  <div class="col-sm-6 form-group has-error">
+                     <div class="floating-label-wrapper">
+                      <label for="password">Password</label>
+                      <input type="password" class="form-control" id="password" placeholder="Password" ng-model="loginVm.user.password" required  with-floating-label autocomplete="off">
+                    </div>
+                    <small class="help-block" ng-show="!form.userId.$error.required && form.password.$error.required && submitted">
+                         Please enter a valid password.
+                      </small>
+                      <h5><a href="/forgotpassword" class="text-danger">Forgot Password?</a></h5>
+                  </div>
+                </div>
+                 <div class="has-error">
+                      <small class="help-block" ng-show="form.userId.$error.required && form.password.$error.required && submitted">
+                         Please enter your user id and password.
+                      </small>
+
+                      <small class="help-block">{{ errors.other }}</small>
+                  </div>
+              </div>
+
+              <div class="row">
+                <div class="col-sm-6">
+                  Don't have an account?
+                  <h5><a href="/signup" class="text-danger">Signup</a></h5>
+                </div>
+                <div class="col-sm-6">
+                  <button type="submit" class="btn btn-primary btn-block">Login</button>
+                </div>
+              </div> 
+            </form> 
+        </div>
+      </div>
+    </div>
+  </div>      
+</section>

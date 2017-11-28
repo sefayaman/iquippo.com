@@ -3,6 +3,7 @@
 angular.module("account",[]);
 angular.module("classifiedAd",[]);
 angular.module("product",[]);
+angular.module("newequipment",[]);
 angular.module("admin",[]);
 angular.module("manpower",[]);
 angular.module("spare",[]);
@@ -22,6 +23,7 @@ angular.module('sreizaoApp',[
   "account",
   'classifiedAd',
   'product',
+  'newequipment',
   'admin',
   'manpower',
   'spare',
@@ -104,12 +106,12 @@ angular.module('sreizaoApp',[
     $rootScope.allMadeInCountries = allMadeInCountries;
     $rootScope.KYCType = KYCType;
     
-    $rootScope.loadingCount = $rootScope.loadingCount + 2;
+    $rootScope.loadingCount = $rootScope.loadingCount + 1;
     
-    groupSvc.getAllGroup().then(function(response){
+    /*groupSvc.getAllGroup().then(function(response){
       $rootScope.loadingCount --;
       $rootScope.loading = $rootScope.loadingCount !=0;
-    });
+    });*/
 
    categorySvc.getAllCategory().then(function(response){
       $rootScope.loadingCount --;
@@ -203,6 +205,10 @@ angular.module('sreizaoApp',[
     $rootScope.validateCategory = UtilSvc.validateCategory;
     $rootScope.getCategoryHelp = UtilSvc.getCategoryHelp;
     $rootScope.getLocationHelp = UtilSvc.getLocationHelp;
+    $rootScope.getMonth = UtilSvc.getMonth;
+    $rootScope.getDate = UtilSvc.getDate;
+    $rootScope.getGroupHelp = groupSvc.getHelp;
+    $rootScope.getBrandHelp = brandSvc.getHelp;
     $rootScope.getLocations = UtilSvc.getLocations;
     $rootScope.isServiceAvailed = Auth.isServiceAvailed;
     $rootScope.isApprovalRequired = Auth.isApprovalRequired;

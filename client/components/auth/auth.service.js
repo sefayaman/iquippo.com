@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('sreizaoApp')
-  .factory('Auth', function Auth($location, $rootScope, $http, User, $cookieStore,$cookies,userSvc,$q) {
+  .factory('Auth', function Auth($location, $rootScope,$state,$stateParams,$http, User, $cookieStore,$cookies,userSvc,$q) {
     var currentUser = {};
     if($cookieStore.get('token')) {
       currentUser = User.get();
@@ -345,6 +345,13 @@ angular.module('sreizaoApp')
           $cookies.remove(param,{ domain: '.iquippo.com' });
         });
        
+      },
+      goToLogin:function(){
+        var params = angular.copy($stateParams);
+        params.state = $state.current.name;
+        $state.go('signin',params);
+        //console.log("######",$state.current);
+        //console.log("######",$stateParams);
       },
       doNotRedirect:false,
       postLoginCallback : null

@@ -8,16 +8,18 @@ var servicefeeCtrl = require('./servicefee.controller');
 var servicetaxCtrl = require('./servicetax.controller');
 var vattaxCtrl = require('./vattax.controller');
 var countCtrl = require('./count.controller');
+var offerCtrl = require('./offer.controller');
 var financeIntegrationCtrl = require('./financeintegration.controller');
 var kycCtrl = require('./kycmaster.controller');
 var saleProcessCtrl = require('./saleprocessmaster.controller');
 var markupPriceCtrl = require('./markupprice.controller');
 var assetSaleChargeCtrl = require('./assetsalecharge.controller');
 var emdChargeCtrl = require('./emdcharge.controller');
-var apiCtrl=require('./api.controller');	
+var apiCtrl = require('./api.controller');	
 var bulkUploadCtrl = require('./uploadrequest/uploadrequest.controller');
 var valuationCancellationCtrl = require('./valuationcancellationfee.controller');
 var inputFormCtrl = require('./inputformmaster.controller');
+var bookADemoCtrl = require('./bookademo.controller');
 var json2xls = require('json2xls');
 var router = express.Router();
 
@@ -27,10 +29,11 @@ router.post('/sendOtp', controller.sendOtp);
 router.post('/notificationTemplate', controller.compileHtml);
 router.post('/gethelp', controller.getHelp);
 router.post('/buildsuggestion', controller.buildSuggestion);
-router.post('/importMasterData', controller.importMasterData);
-router.post('/exportMasterData', controller.exportMasterData);
-router.post('/deleteMasterData', controller.deleteMasterData);
-router.post('/updateMasterData', controller.updateMasterData);
+router.post('/importMasterData',auth.hasRole('admin'),controller.importMasterData);
+router.post('/exportMasterData',auth.hasRole('admin'),controller.exportMasterData);
+router.post('/deleteMasterData',auth.hasRole('admin'),controller.deleteMasterData);
+router.post('/updateMasterData',auth.hasRole('admin'),controller.updateMasterData);
+router.post('/updateMasterDataStatus',auth.hasRole('admin'),controller.updateMasterDataStatus);
 router.post('/rotate', controller.downloadFromS3,controller.rotate,controller.uploadToS3);
 router.post('/saveasimage', controller.saveAsImage);
 router.post('/upsertsetting', controller.upsertSetting);
@@ -158,5 +161,16 @@ router.post('/inputform', auth.hasRole('admin'),inputFormCtrl.create);
 router.put('/inputform/:id', auth.hasRole('admin'),inputFormCtrl.update);
 router.delete('/inputform/:id',auth.hasRole('admin'), inputFormCtrl.destroy);
 router.post('/inputform/search',inputFormCtrl.search);
+
+router.post('/offer',auth.hasRole('admin'),offerCtrl.create);
+router.get('/offer/get', offerCtrl.get);
+router.put('/offer/:id', auth.hasRole('admin'),offerCtrl.update);
+router.delete('/offer/:id',auth.hasRole('admin'), offerCtrl.destroy);
+router.post('/offerrequest',auth.isAuthenticated(),offerCtrl.createOfferRequest);
+
+//router.get('/offer/getfilterdata', offerCtrl.getFilterData);
+
+router.post('/bookademo',bookADemoCtrl.create);
+router.get('/bookademo', bookADemoCtrl.get);
 
 module.exports = router;

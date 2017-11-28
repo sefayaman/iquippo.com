@@ -164,9 +164,12 @@ factory("uploadSvc",['$http','$rootScope',function($http,$rootScope){
       return ret;
     }
 
-    function getCategoryHelp(categorySearchText) {
+    function getCategoryHelp(categorySearchText,isForKey) {
       var serData = {};
       serData['searchStr'] = categorySearchText;
+      if(isForKey)
+        serData[isForKey] = true;
+                
       return categorySvc.getCategoryOnFilter(serData)
       .then(function(result){
          return result.map(function(item){
@@ -180,7 +183,16 @@ factory("uploadSvc",['$http','$rootScope',function($http,$rootScope){
       serData['searchStr'] = locationSearchText;
      return LocationSvc.getLocationHelp(serData)
       .then(function(result){
-         return result.map(function(item){
+         var locationCache = {};
+         var items = result.filter(function(item){
+          if(locationCache[item.name])
+            return false
+            else{
+              locationCache[item.name] = 1;
+              return true;
+            }
+         });
+         return items.map(function(item){
              return item.name;
         });
       });

@@ -1,0 +1,105 @@
+<div class="container-fluid">
+  <ol class="breadcrumb">
+    <li>
+      <a href="/main">Home</a>
+    </li>
+    <li class="active">New Equipments</li>
+  </ol>
+</div>
+<!-- New Equipment -->
+<section class="category-block">
+  <div class="container padd-left padd-right">
+    <div class="heading-titles text-center">
+      <h4>[ NEW EQUIPMENT ]</h4>
+      <strong>Choose from a wide range of original, world class equipment, power systems, work tools and technology solutions.</strong>
+    </div>
+    <div>
+      <ul class="new-equipment-brand">
+        <li ng-repeat="newBrand in allBanner | orderBy:'order' | limitTo:newEquipmentVm.bnrLimit">
+          <a href="/new/brands/{{newBrand.brand.name}}?currentPage=1" title="" ng-if="newBrand.brand.name">
+            <img src="{{uploadImagePrefix}}{{bannerDir}}/{{newBrand.newEquipBannerImg}}" alt="">
+          </a>
+          <a href="/new/spl/{{newBrand.promotion.name}}?currentPage=1" title="" ng-if="newBrand.promotion.name">
+            <img src="{{uploadImagePrefix}}{{bannerDir}}/{{newBrand.newEquipBannerImg
+            }}" alt="{{newBrand.position}}">
+            </a>
+          <img ng-if="!newBrand.promotion.name && !newBrand.brand.name" src="{{uploadImagePrefix}}{{bannerDir}}/{{newBrand.newEquipBannerImg
+            }}" alt="{{newBrand.position}}">
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- Browse Brand -->
+<section class="category-block">
+  <div class="container text-center">
+    <div class="heading-titles">
+      <h4>[ Browse By Brands ]</h4> 
+      <a href="/new/brands">View All ({{newEquipmentVm.bTotalItems}})</a>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-4 form-group text-center" ng-repeat="brand in allBrand | limitTo:newEquipmentVm.bLimit" >   
+        <div class="brand-logo">
+          <a href="/new/brands/{{brand.name}}?currentPage=1">
+            <img src="{{uploadImagePrefix}}{{categoryDir}}/{{brand.imgSrc}}" width="100%" height="100">
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+      
+</section>
+
+<section class="category-block bulk-order">
+  <div class="container">
+    <div class="col-sm-8">
+      <h3>FOR BULK ORDERS </h3>
+      <p>Wholesale is selling goods in tremendous quantities at a low unit price to retail merchants. Choose your desired equipments and get a quote.</p>
+    </div>
+    <div class="col-sm-offset-2 col-sm-2 text-right">
+      <button type="button" class="btn btn-primary btn-block" ng-click="goBulkOrders();">Select Items</button>
+    </div>
+  </div>
+</section>
+
+<!-- Browse Category -->
+<section class="category-block">
+  <div class="container text-center">
+    <div class="heading-titles">
+      <h4>[ Browse By Category ]</h4>
+      <a href="/new/allcategories">View All ({{newEquipmentVm.cTotalItems}})</a>
+    </div>
+    <div class="row">
+      <div class="col-sm-4 form-group text-center" ng-repeat="category in allCategory| limitTo:newEquipmentVm.cLimit">   
+        <div class="cat-rectangle">
+          <a href="/new/{{category.group.name}}/{{category.name}}?currentPage=1">
+            <img src="{{uploadImagePrefix}}{{categoryDir}}/{{category.imgSrc}}" class="category-item">
+          </a>
+        </div>
+        <h5 class="category-name">{{category.name}} ({{category.count}})</h5>
+      </div>
+      
+    </div>
+  </div>
+      
+</section>
+
+
+<div class="clearfix"></div>
+
+<script type="text/ng-template" id="primtmedia.html">
+  <div>
+    <div class="modal-header">
+    <button type="button" class="close"  data-ng-click="close()" aria-hidden="true"><i class="fa fa-times"></i></button>
+    </div>
+    <div class="modal-body text-center">
+       <img data-ng-src="{{url}}" width="100%">
+    </div>
+     <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-ng-click="close()">Close</button>
+      </div>
+  </div>
+</script>

@@ -818,7 +818,7 @@ function paginatedResult(req, res, modelRef, filter) {
 					items = items.slice(pageSize * (skipNumber - 1), items.length);
 				} else
 					items = [];
-				if (!isNext && result.items.length > 0)
+				if (!isNext && items.length > 0)
 					items.reverse();
 				cb(err,items);
 			});

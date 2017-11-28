@@ -27,7 +27,7 @@ exports.create = function(req, res) {
   //var Result=Group.findOne({name:req.body.name});
   var filter = {};
   filter["group.name"] = {$regex:new RegExp("^"+ req.body.group.name + "$", 'i')};
-  filter["category.name"] = {$regex:new RegExp("^"+ req.body.category.name + "$", 'i')}; 
+  filter["category.name"] = {$regex:new RegExp("^"+ req.body.category.name + "$", 'i')};
   filter["name"] = {$regex:new RegExp("^"+ req.body.name + "$", 'i')};
   Brand.find(filter,function (err, brands) {
     if(err) { return handleError(res, err); }
@@ -42,10 +42,10 @@ exports.create = function(req, res) {
               if(err) { return handleError(res, err); }
                return res.status(200).json({message:"Brand save sucessfully"});
              });
-        }  
-    
+        }
+
     }
-    
+
   });
 };
 
@@ -53,21 +53,57 @@ exports.getBrandOnFilter = function(req,res){
   var data = req.body;
   var tempFilter = {};
   var filter = {};
+  if(data.isForUsed)
+      filter['isForUsed'] = true;
+  if(data.isForNew)
+      filter['isForNew'] = true;
+  if(data.visibleOnUsed)
+      filter['visibleOnUsed'] = true;
+   if(data.visibleOnNew)
+    filter['visibleOnNew'] = true;
   filter['$or'] = [{name:'Other'}];
    if(data.brandId)
     tempFilter['_id'] = data.brandId;
-  
+
   if(data.categoryId)
     tempFilter['category._id'] = data.categoryId;
   if(data.categoryName)
     tempFilter['category.name'] = data.categoryName;
   filter['$or'].push(tempFilter);
 
-  Brand.find(filter).sort({name:1}).exec(function(err,result){
+  if(data.searchStr){
+     var term = new RegExp(data.searchStr, 'i');
+      filter['name'] = { $regex: term };
+  }
+   var sortObj = {name:1};
+  if(data.sortBy){
+     sortObj = {};
+     sortObj[data.sortBy] = 1;
+  }
+
+  Brand.find(filter).sort(sortObj).exec(function(err,result){
    if(err) { return handleError(res, err); }
     return res.status(200).json(result);
 
   })
+}
+
+exports.count = function(req,res){
+  var data = req.query;
+  var filter = {};
+  if(data.isForUsed)
+      filter['isForUsed'] = true;
+  if(data.isForNew)
+      filter['isForNew'] = true;
+  var query = Brand.distinct('name',filter)//.count();
+  query.exec(
+       function (err, brands) {
+          if(err) { return handleError(res, err); }
+          console.log("count",brands.length);
+          res.setHeader('Cache-Control', 'private, max-age=2592000');
+          return res.status(200).json(brands.length);
+       }
+  );
 }
 
 function handleError(res, err) {

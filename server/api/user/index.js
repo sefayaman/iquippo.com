@@ -14,7 +14,7 @@ router.get('/me', auth.isAuthenticated(), controller.me);
 //router.get('/getuser/:id', controller.getUser);
 router.post('/getuser', controller.getUser);
 router.put('/:id/password', auth.isAuthenticated(), controller.changePassword);
-router.put('/update/:id', auth.hasRole('admin'), controller.update);
+router.put('/update/:id', auth.isAuthenticated(), controller.update);
 router.get('/:id', auth.isAuthenticated(), controller.show);
 router.post('/register', controller.create);
 router.post('/external_register', controller.externalCreate);

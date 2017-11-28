@@ -152,150 +152,100 @@ angular.module('sreizaoApp')
         }
     };
 })
+.directive('file', function() {
+    return {
+        require:"ngModel",
+        restrict: 'A',
+        scope:{},
+        link: function($scope, el, attrs, ngModel){
+            el.bind('change', function(event){
+                var files = event.target.files;
+                var file = files[0];
+                ngModel.$setViewValue(files);
+            });
+        }
+    };
+})
+.directive('withFloatingLabel', function () {
+  return {
+    restrict: 'A',
+    scope:{},
+    link: function ($scope, $element, attrs) {
+      var template = '<div class="floating-label">' + attrs.placeholder +'</div>';
+      
+      //append floating label template
+      $element.after(template);
+      
+      //remove placeholder  
+      $element.removeAttr('placeholder');
+      
+      //hide label tag assotiated with given input
+      document.querySelector('label[for="' +  attrs.id +  '"]').style.display = 'none';
+     
+      $scope.$watch(function () {
+        if($element.val().toString().length < 1) {
+          $element.addClass('empty');
+        } else {
+          $element.removeClass('empty');
+        }
+      });
+    }
+  };
+})
+.directive('onFileSelectTech', function ($parse) {
+    return {
+         restrict: 'A',
+         scope:{
+          params:"="
+         },
+        link: function (scope, el, attrs) {
+            var onChangeHandler = scope.$parent.$eval(attrs.onFileSelectTech);
+            el.bind('change', function (event) {
+                var files = event.target.files;
+                if(!files || !files.length || !onChangeHandler)
+                  return;
+                if(!scope.params)
+                  scope.params = [];
+                scope.params[0] = files;
+               scope.params[1] = event.currentTarget.id;
+                onChangeHandler.apply(scope.$parent,scope.params);                              
+            });
+        }
+    };
+    })
 .filter('titleCase', function() {
   return function(input) {
     input = input || '';
     return input.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
   };
-});
-// .directive("owlCarousel", function() {
-//   return {
-//     restrict: 'E',
-//     transclude: false,
-//     link: function (scope) {
-//       scope.initCarousel = function(element) {
-//         // provide any default options you want
-//         var defaultOptions = {
-//         };
-//         var customOptions = scope.$eval($(element).attr('data-options'));
-//         // combine the two options objects
-//         for(var key in customOptions) {
-//           defaultOptions[key] = customOptions[key];
-//         }
-//         // init carousel
-//         $(element).owlCarousel(defaultOptions);
-//       };
-//     }
-//   };
-// })
-// .directive('owlCarouselItem', [function() {
-//       return {
-//         restrict: 'A',
-//         transclude: false,
-//         link: function(scope, element) {
-//           // wait for the last item in the ng-repeat then call init
-//           if(scope.$last) {
-//             scope.initCarousel(element.parent());
-//           }
-//         }
-//       };
-//     }]);
-/* .directive('zoom', function(){
-    function link(scope, element, attrs){
-      var $ = angular.element;
-      var original = $(element[0].querySelector('.original'));
-      var originalImg = original.find('img');
-      var zoomed = $(element[0].querySelector('.zoomed'));
-      var zoomedImg = zoomed.find('img');
+})
+.directive('importExcel',function($rootScope,Modal){
+  return {
+    require:"ngModel",
+    restrict:'A',
+    scope:{
+    },
+    link:function(scope,el,attrs,ngModel){
+      el.on('change', function (changeEvent) {
+        var reader = new FileReader();
 
-      var mark = $('<div></div>')
-        .addClass('mark')
-        .css('position', 'absolute')
-        .css('height', scope.markHeight +'px')
-        .css('width', scope.markWidth +'px')
+        reader.onload = function (e) {
+          /* read workbook */
+          var bstr = e.target.result;
+          try{
+            var workbook = XLSX.read(bstr, {type:'binary'});
+            var worksheet = workbook.Sheets[workbook.SheetNames[0]];
+            var data = XLSX.utils.sheet_to_json(worksheet);
+             ngModel.$setViewValue(data);
+            //scope.onChange(data); 
 
-      $(element).append(mark);
+          }catch(e){
+            console.log("Error in reading ",e);
+          } 
+        };
 
-      element
-        .on('mouseenter', function(evt){
-          mark.removeClass('hide');
-
-          var offset = calculateOffset(evt);
-          moveMark(offset.X, offset.Y);
-        })
-        .on('mouseleave', function(evt){
-          mark.addClass('hide');
-        })
-        .on('mousemove', function(evt){
-          var offset = calculateOffset(evt);
-          moveMark(offset.X, offset.Y);
-        });
-
-      scope.$on('mark:moved', function(event, data){
-        updateZoomed.apply(this, data);
+        reader.readAsBinaryString(changeEvent.target.files[0]);
       });
-
-      function moveMark(offsetX, offsetY){
-        var dx = scope.markWidth, 
-            dy = scope.markHeight, 
-            x = offsetX - dx/2, 
-            y = offsetY - dy/2;
-
-        mark
-          .css('left', x + 'px')
-          .css('top',  y + 'px');
-
-        scope.$broadcast('mark:moved', [
-          x, y, dx, dy, originalImg[0].height, originalImg[0].width
-        ]);
-      }
-
-      function updateZoomed(originalX, originalY, originalDx, originalDy, originalHeight, originalWidth){
-        var zoomLvl = scope.zoomLvl;
-        scope.$apply(function(){
-          zoomed
-            .css('height', zoomLvl*originalDy+'px')
-            .css('width', zoomLvl*originalDx+'px');
-          zoomedImg
-            .attr('src', scope.src)
-            .css('height', zoomLvl*originalHeight+'px')
-            .css('width', zoomLvl*originalWidth+'px')
-            .css('left',-zoomLvl*originalX +'px')
-            .css('top',-zoomLvl*originalY +'px');
-        });
-      }
-
-      var rect;
-      function calculateOffset(mouseEvent){
-        rect = rect || mouseEvent.target.getBoundingClientRect();
-        var offsetX = mouseEvent.clientX - rect.left;
-        var offsetY = mouseEvent.clientY - rect.top;  
-
-        return { 
-          X: offsetX, 
-          Y: offsetY
-        }
-      }
-
-      attrs.$observe('ngSrc', function(data) {
-        scope.src = attrs.ngSrc;
-      }, true);
-
-
-      attrs.$observe('zoomLvl', function(data) {
-        scope.zoomLvl =  data;;
-      }, true);
     }
-
-    return {
-      restrict: 'EA',
-      scope: {
-        markHeight: '@markHeight',
-        markWidth: '@markWidth',
-        src: '@src', 
-        zoomLvl: "@zoomLvl"
-      },
-      template: [
-        '<div class="original">',
-          '<img ng-src="{{src}}"/>',
-        '</div>',
-        '<div class="right-box">',
-        '<div class="zoomed">',
-          '<img/>',
-        '</div>',
-        '</div>'
-      ].join(''),
-      link: link
-    };
-  });
-  */
+  }
+});

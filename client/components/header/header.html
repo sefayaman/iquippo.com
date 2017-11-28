@@ -1,167 +1,137 @@
-<div class="container-fluid" ng-controller="HeaderCtrl">
-        <div class="header-top text-right">
-          <ul class="top-menu">
-            <li class="Instant-quote">
-              <a href="javascript:void(0);" ng-click="openDialog('quote')"><span class="fa fa-edit"></span> Get Instant Quote</a>
-            </li>           
-            <li class="addProduct">
-              <a href="javascript:void(0);" ng-click="redirectToSpare()"><span class="fa fa-wrench"></span> Add Spares</a>
-            </li>            
-            <li class="addProduct">
-              <a href="javascript:void(0);" ng-click="redirectToProduct()"><span class="fa fa-truck"></span> Add Product</a>
-            </li>
-            <li class="dropdown hidden-sm hidden-md hidden-lg">
-              <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" id="single-button" ng-mouseover="fetchAuctions()" ng-click="fetchAuctions()"><i class="fa fa-calendar-plus-o"></i></a>                
-                <ul class="dropdown-menu">
-                     <li role="menuitem" ng-repeat="auction in upcomingAuctions | orderBy :'startDate'">
-                        <a ng-if="getProductData(auction._id, 'total_products') != 0"
-                        ng-click="assetPage(auction.auctionId,auction._id);"> 
-                          <strong>
-                            {{auction.startDate | date:'d-MMM'}}
-                            </strong> {{auction.name}}</a>
-                          <a ng-if="getProductData(auction._id, 'total_products') == 0" ng-click="assetPage();"
-                        > 
-                          <strong>
-                            {{auction.startDate | date:'d-MMM'}}
-                            </strong> {{auction.name}}</a>    
+<div class="container-fluid" ng-controller="HeaderCtrl">  
+  <nav class="navbar navbar-client navbar-fixed-top" role="navigation">
+    <div class="container-fluid"> 
+      <ul class="top-menu visible-xs">            
+        <li ng-click="navCollapsed = true"><a href="javascript:void(0);" ng-click="sendCallback()" class="text-danger"><i class="fa fa-phone"></i></a></li>
+        <li ng-click="navCollapsed = true" ng-hide="isLoggedIn()"><a href="/signin"><i class="fa fa-sign-in"></i> <span class="hidden-xs">Login</span></a></li>
+        <li ng-click="navCollapsed = true" ng-if="isLoggedIn()" class="dropdown" >
+          <a href class="dropdown-toggle" data-toggle="dropdown">
+             <i class="fa fa-user" style="background-color:#ccc;color:#fff; padding:3px 5px; border-radius:50%;height:25px;width:25px;" ng-if="!getCurrentUser().imgsrc"></i>
+            <img src="{{uploadImagePrefix}}{{avatarDir}}/{{getCurrentUser().imgsrc}}" ng-if="getCurrentUser().imgsrc"> 
+             <span class="hidden-xs"> {{ getCurrentUser().fname }}</span>
+          </a>
+          
+          <ul ng-click="navCollapsed = true" class="dropdown-menu">
+              <li>
+                <a href="/productlisting">
+                  <i class="fa fa-dashboard"></i> Dashboard
+                </a>
+              </li>
+               <li><a href="/myaccount"><span class="fa fa-user"></span> My Account</a></li>                        
+              <li><a href="javascript:void(0);" ng-click="openDialog('settings')"><span class="fa fa-key"></span> Change Password</a></li>                      
+              <li><a href="javascript:void(0);" ng-click="logout()"><i class="fa fa-sign-out"></i> Logout</a></li>
+          </ul>
+        </li>
+      </ul> 
+    <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" ng-init="navCollapsed = true" ng-click="navCollapsed = !navCollapsed" data-target=".navbar-ex1-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>            
+        <a class="navbar-brand" href="index.html"><img src="assets/images/srei-logo-img.png"></a>      
+      </div>
 
-                        </li>
-                  <li><a href="javascript:void(0);" ng-click="redirectToAuction()" class="text-center"> View All</a></li>
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse navbar-collapse navbar-ex1-collapse" ng-class="!navCollapsed && 'in'">
+        <ul class="nav navbar-nav navbar-right">
+            <li class="submenu dropdown">
+              <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">Equipment <i class="fa fa-caret-down"></i></a>
+                <ul class="dropdown-menu" role="menu" ng-click="navCollapsed = true">
+                  <li role="menuitem"><a href="/used"> Used Equipment</a></li>
+                  <li role="menuitem"><a href="/new"> New Equipment</a></li>                  
                 </ul>
             </li>
+            <li ng-click="navCollapsed = true"><a href="/viewauctions?type=upcoming">Auctions</a></li>
+             <li class="submenu dropdown">
+                <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">Finance <i class="fa fa-caret-down"></i></a>
 
-            <li><a href="javascript:void(0);" ng-click="sendCallback()"><i class="fa fa-phone"></i> <span class="hidden-xs">Call Back</span></a></li>
-            <li ng-hide="isLoggedIn()"><a href="javascript:void(0);" ng-click="openLogin()"><i class="fa fa-user"></i> <span class="hidden-xs">Login</span></a></li>
-            
-            <li><a href="javascript:void(0)" ng-click="openCart()" ng-class="{cart_item:cartCounter > 0}"><i class="fa fa-shopping-cart"></i> <span class="hidden-xs">Cart </span></a></li>
+                <ul class="dropdown-menu" role="menu" ng-click="navCollapsed = true">
+                  <li role="menuitem"><a href="javascript:void(0);" ng-click="submitToRapid(createnewloan)">Equipment Finance</a></li>
+                  <li role="menuitem"><a href="https://sarv.iquippo.com/" target="_blank">SARV</a></li>
+                </ul>
 
-            <li class="hidden-sm hidden-md hidden-lg">
-              <a href="javascript:void(0);" ng-click="openDialog('quote')"><span class="fa fa-edit"></span></a>
-            </li>
+             </li>
 
-            <li class="dropdown hidden-sm hidden-md hidden-lg">
-              <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-upload"></i></a>
-              <ul class="dropdown-menu">                  
-                  <li>
-                    <a href="" ng-click="redirectToSpare()()">
-                      <i class="fa fa-wrench"></i> Add Spare
-                    </a>
-                  </li>
-                  <li>
-                    <a href="" ng-click="redirectToProduct()">
-                      <i class="fa fa-truck"></i> Add Product
-                    </a>
-                  </li>
-              </ul>
-            </li>
-            <li>
-              <a href="javascript:void(0);" ng-click="openDialog('classifiedad')"  class="hidden"><i class="fa fa-bullhorn" aria-hidden="true"></i><span class="hidden-xs">Place a Classified Ad</span></a>
-            </li>
-
-            <li ng-if="isLoggedIn()" class="dropdown" >
-              <a href class="dropdown-toggle" data-toggle="dropdown">
-                 <i class="fa fa-user" style="background-color:#ccc;color:#fff; padding:3px 5px; border-radius:50%;height:20px;width:20px;" ng-if="!getCurrentUser().imgsrc"></i>
-              <img src="{{uploadImagePrefix}}{{avatarDir}}/{{getCurrentUser().imgsrc}}" ng-if="getCurrentUser().imgsrc"> 
-                 <span class="hidden-xs"> {{ getCurrentUser().fname }}</span></a>
-              
-              <ul class="dropdown-menu">
-                  <li>
-                    <a href="/productlisting">
-                      <i class="fa fa-dashboard"></i> Dashboard
-                    </a>
-                  </li>
-                   <li><a href="/myaccount"><span class="fa fa-user"></span> My Account</a></li>                        
-                  <li><a href="javascript:void(0);" ng-click="openDialog('settings')"><span class="fa fa-key"></span> Change Password</a></li>                      
-                  <li><a href="javascript:void(0);" ng-click="logout()"><i class="fa fa-sign-out"></i> Logout</a></li>
-              </ul>
-            </li>
-            <!-- <li>
-              <div id="google_translate_element"></div>
-            </li> -->
-          </ul>
-        </div>
-        <!--<script type="text/javascript">
-          function googleTranslateElementInit() {
-            new google.translate.TranslateElement({pageLanguage: 'en', includedLanguages: 'en,ar,fa', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
-          }
-          </script><script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-        -->
-        <div class="navbar">
-          <a class="navbar-brand" href="index.html"><img src="assets/images/srei-logo-img.png"></a>
-           
-           <nav class="navbar navbar-inverse" role="navigation">
-              <!-- Brand and toggle get grouped for better mobile display -->
-                <div class="navbar-header">
-                  <button type="button" class="navbar-toggle" ng-init="navCollapsed = true" ng-click="navCollapsed = !navCollapsed" data-target=".navbar-ex1-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="mob-menu">Menu</span>
-                  </button>           
-                </div>
-
-                <!-- Collect the nav links, forms, and other content for toggling -->
-                <div class="collapse navbar-collapse navbar-ex1-collapse" ng-class="!navCollapsed && 'in'" ng-click="navCollapsed = true">
-                  <div class="text-center">
-                    <ul class="nav navbar-nav">
-                      <li ng-class="{active: isActive(['main'])}"><a href="index.html">Home</a></li>
-                      <li ng-class="{active: isActive(['aboutus'])}"><a href="/aboutus">About Us</a></li>
-                      <li ng-class="{active: isActive(['shipping'])}"><a href="/shipping">Shipping</a></li>
-                       <li ng-class="{active: isActive(['valuation'])}"><a href="/valuation">Valuation</a></li>
-                       <li ng-class="{active: isActive(['financing'])}"><a href="javascript:void(0);" ng-click="submitToRapid(createnewloan)">Financing</a></li>
-                         <!-- <li ng-class="{active: isActive(['finance'])}"><a href="/finance">Financing</a></li> -->
-                       <li ng-class="{active: isActive(['insurance'])}"><a href="/insurance">Insurance</a></li>
-                       <li ng-class="{active: isActive(['manpower'])}" ><a href="/manpower">Manpower</a></li>
-                       <li ng-class="{active: isActive(['sparehome','sparedetail','manufacturerspare','viewspares'])}"><a href="/sparehome">Spare Parts</a></li>
-                      <!-- <li class="submenu dropdown">
-                        <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" id="single-button"  uib-dropdown-toggle >Services</a>
-                        <ul class="uib-dropdown-menu" role="menu" aria-labelledby="single-button">
-                          <li role="menuitem"><a href="/shipping"> <img src="assets/images/transport.png" class="hidden-xs"> Shipping</a></li>
-                          <li role="menuitem"><a href="/valuation"> <img src="assets/images/valuation.png" class="hidden-xs"> Valuation</a></li>
-                          <li role="menuitem"><a href="/certifiedbyiquippo"> <img src="assets/images/certified.png" class="hidden-xs"> Certified by iQuippo</a></li>
-                          <li role="menuitem"><a href="/manpower"> <img src="assets/images/lease.png" class="hidden-xs"> Manpower</a></li>
-                        </ul>
-                      </li> -->
-                      
-                      <!-- <li ng-class="{active: isActive(['viewauctions'])}"><a href="/viewauctions?type=upcoming">Auctions</a></li> -->
-                      <li ng-class="{active: isActive(['viewauctions'])}"><a href="javascript:void(0);" ng-click="redirectToAuction()">Auctions</a></li>
-                      <li ng-class="{active: isActive(['contactus'])}"><a href="/contactus">Contact Us</a></li>
-                    </ul> 
-                  </div>
-                  <ul class="nav navbar-nav navbar-right hidden-xs">
-                    <li class="submenu dropdown">
-                      <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" id="single-button" ng-mouseover="fetchAuctions()" ng-click="fetchAuctions()" uib-dropdown-toggle ><i class="fa fa-calendar-plus-o"></i> Upcoming Auctions <i class="fa fa-chevron-down"></i></a>
-                      
-                      
-                      <ul class="uib-dropdown-menu" role="menu" aria-labelledby="single-button" >
-                        <li role="menuitem" ng-repeat="auction in upcomingAuctions | orderBy :'startDate'">
-                        <a href="javascript:void(0);" ng-if="getProductData(auction._id, 'total_products') != 0"
-                        ng-click="assetPage(auction.auctionId,auction._id);"> 
-                          <strong>{{auction.startDate | date:'d-MMM'}}</strong> 
-                          <span>{{auction.name}}</span>
-                        </a>
-                        <a  href="javascript:void(0);" ng-if="getProductData(auction._id, 'total_products') == 0" ng-click="assetPage();"> 
-                          <strong>{{auction.startDate | date:'d-MMM'}}</strong> 
-                          <span>{{auction.name}}</span>
-                        </a>    
-
-                        </li>
-                        <li role="menuitem"><a href="javascript:void(0);" ng-click="redirectToAuction()" class="text-center"> View All</a></li>
-                      </ul>
+             <li ng-click="navCollapsed = true" ng-class="{active: isActive(['valuation'])}"><a href="/valuation">Valuation</a></li>
+             <!-- <li ng-click="navCollapsed = true"><a href="https://sarv.iquippo.com/" target="_blank">Sarv</a></li> -->
+             <li class="submenu dropdown">
+                <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" id="single-button" >Other Services <i class="fa fa-caret-down"></i></a>
+                <ul ng-click="navCollapsed = true" class="dropdown-menu" role="menu" aria-labelledby="single-button">
+                  <li role="menuitem"><a href="/shipping"> Shipping</a></li>
+                  <li role="menuitem"><a href="/insurance">Insurance</a></li>
+                  <li role="menuitem"><a href="/manpower"> Manpower</a></li>
+                </ul>
+             </li>
+             <li ng-click="navCollapsed = true" ng-hide="isLoggedIn()" class="hidden-xs"><a href="/signin">Login</a></li>
+             <li ng-click="navCollapsed = true" ng-hide="isLoggedIn()" class="hidden-xs"><a href="/signup">Signup</a></li>
+             <li class="hidden-xs" ng-click="navCollapsed = true"><a href="javascript:void(0);" ng-click="sendCallback()" class="text-danger"><i class="fa fa-phone"></i></a></li>
+             <li ng-if="isLoggedIn()" class="dropdown hidden-xs" >
+                <a href class="dropdown-toggle" data-toggle="dropdown">
+                   <i class="fa fa-user" style="background-color:#ccc;color:#fff; padding:4px 5px; border-radius:50%;height:25px;width:25px;" ng-if="!getCurrentUser().imgsrc"></i>
+                  <img src="{{uploadImagePrefix}}{{avatarDir}}/{{getCurrentUser().imgsrc}}" ng-if="getCurrentUser().imgsrc"> 
+                   <span> {{ getCurrentUser().fname }}</span>
+                </a>
+                
+                <ul ng-click="navCollapsed = true" class="dropdown-menu">
+                    <li>
+                      <a href="/productlisting">
+                        <i class="fa fa-dashboard"></i> Dashboard
+                      </a>
                     </li>
-                  </ul>    
+                     <li><a href="/myaccount"><span class="fa fa-user"></span> My Account</a></li>                        
+                    <li><a href="javascript:void(0);" ng-click="openDialog('settings')"><span class="fa fa-key"></span> Change Password</a></li>                      
+                    <li><a href="javascript:void(0);" ng-click="logout()"><i class="fa fa-sign-out"></i> Logout</a></li>
+                </ul>
+              </li>
+               <!-- <li ng-class="{active: isActive(['finance'])}"><a href="/finance">Financing</a></li> -->
+             <!-- <li ng-class="{active: isActive(['insurance'])}"><a href="/insurance">Insurance</a></li> -->
+             <!-- <li ng-class="{active: isActive(['manpower'])}" ><a href="/manpower">Manpower</a></li> -->
+             <!-- <li ng-class="{active: isActive(['sparehome','sparedetail','manufacturerspare','viewspares'])}"><a href="/sparehome">Spare Parts</a></li> -->
+            <!-- <li class="submenu dropdown">
+              <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" id="single-button"  uib-dropdown-toggle >Other Services</a>
+              <ul class="uib-dropdown-menu" role="menu" aria-labelledby="single-button">
+                <li role="menuitem"><a href="/shipping"> <img src="assets/images/transport.png" class="hidden-xs"> Shipping</a></li>
+                <li role="menuitem"><a href="/valuation"> <img src="assets/images/valuation.png" class="hidden-xs"> Valuation</a></li>
+                <li role="menuitem"><a href="/certifiedbyiquippo"> <img src="assets/images/certified.png" class="hidden-xs"> Certified by iQuippo</a></li>
+                <li role="menuitem"><a href="/manpower"> <img src="assets/images/lease.png" class="hidden-xs"> Manpower</a></li>
+              </ul>
+            </li> -->
+            
+            <!-- <li ng-class="{active: isActive(['viewauctions'])}"><a href="/viewauctions?type=upcoming">Auctions</a></li> -->
+            <!-- <li ng-class="{active: isActive(['viewauctions'])}"><a href="javascript:void(0);" ng-click="redirectToAuction()">Auctions</a></li> -->
+            <!-- <li ng-class="{active: isActive(['contactus'])}"><a href="/contactus">Contact Us</a></li> -->
+          </ul> 
+        <!-- <ul class="nav navbar-nav navbar-right hidden-xs">
+          <li class="submenu dropdown">
+            <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" id="single-button" ng-mouseover="fetchAuctions()" ng-click="fetchAuctions()" uib-dropdown-toggle ><i class="fa fa-calendar-plus-o"></i> Upcoming Auctions <i class="fa fa-chevron-down"></i></a>
+            
+            
+            <ul class="uib-dropdown-menu" role="menu" aria-labelledby="single-button" >
+              <li role="menuitem" ng-repeat="auction in upcomingAuctions | orderBy :'startDate'">
+              <a href="javascript:void(0);" ng-if="getProductData(auction._id, 'total_products') != 0"
+              ng-click="assetPage(auction.auctionId,auction._id);"> 
+                <strong>{{auction.startDate | date:'d-MMM'}}</strong> 
+                <span>{{auction.name}}</span>
+              </a>
+              <a  href="javascript:void(0);" ng-if="getProductData(auction._id, 'total_products') == 0" ng-click="assetPage();"> 
+                <strong>{{auction.startDate | date:'d-MMM'}}</strong> 
+                <span>{{auction.name}}</span>
+              </a>    
 
-                   
-                </div><!-- /.navbar-collapse -->
-                <!--<script type="text/javascript">
-                  setTimeout(function(){convertSelectToUL();},100);
-                </script>-->
-            </nav>            
-       <!--  <finance-integration></finance-integration> -->
-        </div>
-        <!-- common modal container -->
-      </div>  
+              </li>
+              <li role="menuitem"><a href="javascript:void(0);" ng-click="redirectToAuction()" class="text-center"> View All</a></li>
+            </ul>
+          </li>
+        </ul> -->    
+
+         
+      </div>      
+    </div>
+  </nav>
+</div>
+
 
      
