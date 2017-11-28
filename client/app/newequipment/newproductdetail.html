@@ -31,7 +31,7 @@
               </div>
             </div>            
           <ol class="carousel-indicators">
-            <li class="" data-slide-to="{{$index}}" ng-class="{'active':thumbnailImage.isPrimary && !thumbnailImage.catImgType}" data-target="#article-photo-carousel" ng-repeat="thumbnailImage in currentProduct.images | limitTo:5">
+            <li class="" data-slide-to="{{$index}}" ng-class="{'active':thumbnailImage.isPrimary && !thumbnailImage.catImgType}" data-target="#article-photo-carousel" ng-repeat="thumbnailImage in currentProduct.images | limitTo:4">
                 <img alt="" ng-src="{{uploadImagePrefix}}{{currentProduct.assetDir}}/{{thumbnailImage.src}}" class="img-responsive img-thumbnail" ng-click = "imageClick()">
             </li>
           </ol>
@@ -232,7 +232,7 @@
                       </div>
                     </div>
                     <div class="col-sm-3">
-                      <h5  class="text-center"><small>Amount to be paid</small></h5>
+                      <h5  class="text-left"><small>Amount to be paid</small></h5>
                       <h2>{{financeinfo.selected.rate}}</h2>
                       <small>Rate Of Interest(%)</small>
                       <!-- <div class="form-group floating-label-wrapper">
@@ -346,7 +346,7 @@
                       </div>
                     </div>
                     <div class="col-sm-3">
-                      <h5  class="text-center invisible"><small>Amount to be paid</small></h5>
+                      <h5  class="text-left invisible"><small>Amount to be paid</small></h5>
                       <h2 class="invisible">{{leaseinfo.selected.rate}}</h2>
                       <small class="invisible">Rate Of Interest(%)</small>
                      <!--  <div class="form-group floating-label-wrapper">
