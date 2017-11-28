@@ -89,5 +89,6 @@ module.exports = {
 	'Parking_Charge_Payment_To(Yard/Seller)':'parkingPaymentTo',
 	'Parking_Charge_Per_Day' : 'parkingChargePerDay',
 	'Address_Of_Asset' : 'addressOfAsset',
-	'Reserve_Price' : 'reservePrice'
+  'Reserve_Price' : 'reservePrice',
+  'Row_Count':'rowCount'
 }

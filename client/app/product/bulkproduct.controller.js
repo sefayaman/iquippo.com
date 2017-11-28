@@ -8,7 +8,7 @@ angular.module('sreizaoApp')
 function BulkProductCtrl($state,$scope,$rootScope,$window,uploadSvc,productSvc,settingSvc,Modal,Auth,notificationSvc,$uibModal,suggestionSvc,commonSvc){
   var vm = this;
   var imageCounter = 0;
-  
+
   vm.showDataSection = true;
   vm.goToImageUpload = goToImageUpload;
   vm.products = [];
@@ -29,18 +29,18 @@ function BulkProductCtrl($state,$scope,$rootScope,$window,uploadSvc,productSvc,s
   $scope.$on("fileSelected", function (event, args) {
       if(args.files.length == 0)
         return;
-      $scope.$apply(function () { 
+      $scope.$apply(function () {
         if(args.type == "image")
            uploadProductImages(args.files);
         else
-          uploadExcel(args.files[0]);       
+          uploadExcel(args.files[0]);
       });
   });
 
   function loadIncomingProduct(){
     var obj = {
       userId:Auth.getCurrentUser()._id
-    }; 
+    };
     productSvc.loadIncomingProduct(obj)
     .then(function(result){
       vm.products = result;
@@ -59,18 +59,18 @@ function BulkProductCtrl($state,$scope,$rootScope,$window,uploadSvc,productSvc,s
   function goToImageUpload(productId){
     productSvc.getIncomingProduct(productId)
     .then(function(prd){
-      vm.currentProduct = prd; 
+      vm.currentProduct = prd;
       vm.images = [{isPrimary:true},{},{},{},{},{},{},{}];
-      vm.showDataSection = false; 
+      vm.showDataSection = false;
     })
     .catch(function(res){
       if(res.data.errorCode == 1)
           Modal.alert('This product is deleted or locked by the system');
     })
 
-    
+
   }
-   
+
   function updateTemplate(files){
     if(!files[0])
       return;
@@ -106,12 +106,12 @@ function BulkProductCtrl($state,$scope,$rootScope,$window,uploadSvc,productSvc,s
 
       })
       .catch(function(stRes){
-        
+
       })
   }
   getTemplateName();
 
-  function uploadExcel(file){ 
+  function uploadExcel(file){
     if(!file)
       return;
      if(file.name.indexOf('.xlsx') == -1){
@@ -127,18 +127,24 @@ function BulkProductCtrl($state,$scope,$rootScope,$window,uploadSvc,productSvc,s
           var workbook = xlsx.read(bstr, {type:'binary'});
           var worksheet = workbook.Sheets[workbook.SheetNames[0]];
           var data = xlsx.utils.sheet_to_json(worksheet);
-   
+
+          data.forEach(function(x){
+            x.Row_Count=x.__rowNum__;
+          });
+          console.log("The parsed Data",data);
+
           //alert(data);
 
-      
+
 //    uploadSvc.upload(file,importDir)
 //    .then(function(result){
 //      var fileName = result.data.filename;
 //      $rootScope.loading = true;
-//      
-      
+//
+
       productSvc.importData(data)
       .then(function(res){
+        console.log("the data",res);
           loadIncomingProduct();
           $rootScope.loading = false;
           var totalRecord = res.totalCount;
@@ -154,7 +160,7 @@ function BulkProductCtrl($state,$scope,$rootScope,$window,uploadSvc,productSvc,s
             message += "Error details have been sent on registered email id.";
           }
           $scope.successMessage = message;
-          $scope.autoSuccessMessage(20);          
+          $scope.autoSuccessMessage(20);
       })
       .catch(function(res){
         $rootScope.loading = false;
@@ -203,7 +209,7 @@ function BulkProductCtrl($state,$scope,$rootScope,$window,uploadSvc,productSvc,s
     var resizeParam = {};
     resizeParam.resize = true;
     resizeParam.width = imgDim.width;
-    resizeParam.height = imgDim.height; 
+    resizeParam.height = imgDim.height;
     if(files.length == 0)
       return;
     if(files.length > 8){
@@ -226,7 +232,7 @@ function BulkProductCtrl($state,$scope,$rootScope,$window,uploadSvc,productSvc,s
     .then(function(result){
        var fileRes = result.data.files;
        vm.currentProduct.assetDir = result.data.assetDir;
-       for(var i=0;i < fileRes.length; i++){   
+       for(var i=0;i < fileRes.length; i++){
           var emptyIndex = getEmptyImageIndex();
           if(emptyIndex != -1)
             vm.images[emptyIndex].src = fileRes[i].filename;
@@ -245,9 +251,9 @@ function BulkProductCtrl($state,$scope,$rootScope,$window,uploadSvc,productSvc,s
         if(!vm.images[i].src){
           index = i;
           break;
-        }  
+        }
       }
-      return index;  
+      return index;
   }
 
   function getEmptySellCount(){
@@ -300,7 +306,7 @@ function submitProduct(){
       vm.currentProduct.images[vm.currentProduct.images.length] = item;
       if(item.isPrimary)
         vm.currentProduct.primaryImg = item.src;
-    }  
+    }
 
   });
 
@@ -391,7 +397,7 @@ function mailToCustomerForApprovedAndFeatured(result, product) {
             size: 'lg'
         });
         localScope.close = function(){
-          prvModal.close();  
+          prvModal.close();
         }
   }
 
@@ -415,4 +421,4 @@ function mailToCustomerForApprovedAndFeatured(result, product) {
 
 
 
-  
+

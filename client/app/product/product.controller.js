@@ -193,7 +193,7 @@
           filter.userid = Auth.getCurrentUser()._id;
           if(Auth.isEnterprise()){
             delete filter.userid;
-            filter.enterpriseId = Auth.getCurrentUser().enterpriseId; 
+            filter.enterpriseId = Auth.getCurrentUser().enterpriseId;
           }
         }
         productSvc.getProductOnFilter(filter).then(function(response) {
@@ -209,7 +209,7 @@
           $scope.imagesUnderCarrage = [];
           $scope.imagesOther = [];
           $scope.images = [];
-          
+
           if (response[0].serviceInfo.length > 0) {
             for (var i = 0; i < response[0].serviceInfo.length; i++) {
               if (response[0].serviceInfo[i] && response[0].serviceInfo[i].servicedate)
@@ -320,7 +320,7 @@
           }
           $scope.onTradeTypeChange($scope.product.tradeType);
           prepareImgArr();
-         
+
         })
       } else {
         prepareImgArr();
@@ -513,15 +513,15 @@
     }
 
     function userSearch(userSearchText){
-      if (!$scope.product.seller.userType) 
+      if (!$scope.product.seller.userType)
         return;
-      
-      if(userSearchText && userSearchText.length < 4) 
+
+      if(userSearchText && userSearchText.length < 4)
         return;
 
       $scope.container.sellerName="";
       $scope.product.seller.email="";
-      
+
       var dataToSend = {};
       dataToSend["status"] = true;
       dataToSend["userType"] = $scope.product.seller.userType;
@@ -549,7 +549,7 @@
     })
 
    }
-  
+
 
     function onCategoryChange(categoryId, noChange) {
       if (!noChange) {
@@ -639,7 +639,7 @@
           break;
         }
       }
-      
+
       if (md) {
         product.model._id = md._id;
         product.model.name = md.name;
@@ -714,7 +714,7 @@
         Modal.alert('Please upload a valid file');
         return;
       }
-      
+
       //
       var reader = new FileReader();
 
@@ -725,9 +725,12 @@
           var worksheet = workbook.Sheets[workbook.SheetNames[0]];
           var data = xlsx.utils.sheet_to_json(worksheet);
 
+          data.forEach(function(x){
+            x.Row_Count=x.__rowNum__;
+          });
           console.log("data>>>>> ",data);
       //
-      
+
 //      uploadSvc.upload(files[0], importDir)
 //        .then(function(result) {
 //          var dataToSend = {};
@@ -739,9 +742,9 @@
 //            role : Auth.getCurrentUser().role
 //          };
 //
-//          dataToSend.type = args.name || 'template_update';          
+//          dataToSend.type = args.name || 'template_update';
 //          $rootScope.loading = true;
-          
+
           productSvc.bulkEditProduct(data)
             .then(function(res) {
               $rootScope.loading = false;
@@ -779,7 +782,7 @@
       else if (type == "months" && !val)
         delete $scope.product.rent.rateMonths;
     }
- 
+
 
     function firstStep(form, product) {
 
@@ -792,7 +795,7 @@
         form.mfgyear.$invalid = true;
         ret = true;
       }
-      
+
       if($scope.product.tradeType && $scope.product.tradeType == 'RENT' && $scope.product.auctionListing){
         Modal.alert("Auction is not allowed for rent assets.");
         return;
@@ -850,7 +853,7 @@
 
 
       });
-     
+
 
       if ($scope.product.images.length == 0) {
         Modal.alert("Please upload atleast one image in General Appearence section.", true);
@@ -1474,7 +1477,7 @@
           return "No";
       }
     }
-    
+
     $scope.getImageURL = function(assetDir,key){
         var uploadImagePrefix = $rootScope.uploadImagePrefix;
         //console.log(uploadImagePrefix + assetDir+'/'+key);

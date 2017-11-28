@@ -5,7 +5,7 @@
  function productSvc($http,$rootScope,$q,Auth){
       var prdService = {};
       var path = '/api/products';
-      
+
       var productCache = {};
       var featuredProductCache = [];
       var searchResult = [];
@@ -107,7 +107,7 @@
       };
 
       function getProductOnSellerId(filter){
-        
+
         return $http.post(path + "/search",filter)
           .then(function(res){
             return res.data;
@@ -118,7 +118,7 @@
       };
 
       function getProductOnFilter(filter){
-        
+
         return $http.post(path + "/search",filter)
           .then(function(res){
             if(filter.pagination)
@@ -156,7 +156,7 @@
       function addProductInHistory(product){
         return $http.post(path + "/createhistory",product)
         .then(function(res){
-          return res.data; 
+          return res.data;
         })
         .catch(function(res){
           throw res;
@@ -205,7 +205,7 @@
                   throw res;
                 })
       }
-      
+
       function updateProduct(product){
 
         return $http.put(path + "/" + product._id,product).
@@ -247,8 +247,26 @@
 
 
       //Bulk product update via excel
-      function bulkEditProduct(dataToSend){
-        return $http.post(path + "/bulkeditproduct",dataToSend)
+      function bulkEditProduct(data){
+        var dataToSend={};
+        var user = {};
+        user._id = Auth.getCurrentUser()._id;
+        user.fname = Auth.getCurrentUser().fname;
+        user.mname = Auth.getCurrentUser().mname;
+        user.lname = Auth.getCurrentUser().lname;
+        user.role = Auth.getCurrentUser().role;
+        user.userType = Auth.getCurrentUser().userType;
+        user.phone = Auth.getCurrentUser().phone;
+        user.mobile = Auth.getCurrentUser().mobile;
+        user.email = Auth.getCurrentUser().email;
+        user.country = Auth.getCurrentUser().country;
+        user.company = Auth.getCurrentUser().company;
+        dataToSend={
+          type:"template_update",
+          user:user,
+          data:data
+        };
+           return $http.post(path + "/bulkeditproduct",dataToSend)
               .then(function(res){
                 featuredProductCache = [];
                 return res.data;
