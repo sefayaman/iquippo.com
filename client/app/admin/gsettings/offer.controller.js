@@ -258,6 +258,7 @@
               }
               
         for(var k in  vm.purchaseArr) {
+          vm.pInfo = {};
           vm.pInfo.price = vm.purchaseArr[k].price;
           vm.pInfo.freeofcost = vm.purchaseArr[k].freeofcost;
           vm.purchaseData[k] = vm.pInfo;
@@ -288,7 +289,11 @@
          vm.dataModel.createdBy._id = Auth.getCurrentUser()._id;
          vm.dataModel.createdBy.name = Auth.getCurrentUser().fname + " " + Auth.getCurrentUser().lname;
 
-        //console.log("final data=============",vm.dataModel);
+         if(vm.dataModel.location.length === $scope.stateList.length)
+              vm.dataModel.forAll = true;
+          else
+            vm.dataModel.forAll = false;
+
          OfferSvc.save(vm.dataModel)
           .then(function(){
               vm.dataModel = {};
@@ -404,6 +409,7 @@
           vm.dataModel.lease = $scope.lease;
           
           for(var k in  vm.purchaseArr) {
+            vm.pInfo = {};
             vm.pInfo.price = vm.purchaseArr[k].price;
             vm.pInfo.freeofcost = vm.purchaseArr[k].freeofcost;
             vm.purchaseData[k] = vm.pInfo;
@@ -429,6 +435,12 @@
                   vm.leaseData[k] = vm.lInfo;
                 }
                vm.dataModel.leaseInfo =  vm.leaseData;
+
+            if(vm.dataModel.location.length === $scope.stateList.length)
+              vm.dataModel.forAll = true;
+            else
+              vm.dataModel.forAll = false;
+
            OfferSvc.update(vm.dataModel)
             .then(function(){
             vm.dataModel = {};

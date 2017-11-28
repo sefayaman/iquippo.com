@@ -30,12 +30,12 @@ var ApiError = require('../../components/_error');
         }
         if (queryParam.status)
           filter.status = queryParam.status;
-        if (queryParam.category)
-          filter.category.id = queryParam.category;
-        if (queryParam.brand)
-          filter.brand.id = queryParam.brand;
-        if (queryParam.model)
-          filter.model.id = queryParam.model;
+        if (queryParam.categoryId)
+          filter['category.id'] = queryParam.categoryId;
+        if (queryParam.brandId)
+          filter['brand.id'] = queryParam.brandId;
+        if (queryParam.modelId)
+          filter['model.id'] = queryParam.modelId;
         if (queryParam.stateName)
           filter['location.name'] = queryParam.stateName;
         var query = Offer.find(filter);

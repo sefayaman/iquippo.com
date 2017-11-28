@@ -158,7 +158,7 @@
           $scope.offerCliced = false;
           return;
         }
-        $scope.offer = result[0];
+        $scope.offer = findAndMergeOffer(result);
         $scope.offerCliced = true;
         if($scope.offer.finance && $scope.offer.financeInfo.length){
           $scope.offer.finannceCounter = 0;
@@ -202,12 +202,64 @@
       });
     }
 
+    function findAndMergeOffer(resultArr){
+
+      var offerObj = {caseInfo:[],financeInfo:[],leaseInfo:[]};
+      var allStateCashOffer = null;
+      var allStateFinannceOffer = null;
+      var allStateLeaseOffer = null;
+
+      resultArr.forEach(function(item){
+        if(item.forAll && item.cash_purchase)
+          allStateCashOffer = item;
+        if(item.forAll && item.finance)
+          allStateFinannceOffer = item;
+        if(item.forAll && item.lease)
+          allStateLeaseOffer = item;
+        if(item.forAll)
+          return;
+
+        if(item.cash_purchase && item.caseInfo && item.caseInfo.length)
+          offerObj.caseInfo = offerObj.caseInfo.concat(item.caseInfo);
+        if(item.finance && item.financeInfo && item.financeInfo.length)
+          offerObj.financeInfo = offerObj.financeInfo.concat(item.financeInfo);
+        if(item.lease && item.leaseInfo && item.leaseInfo.length)
+          offerObj.leaseInfo = offerObj.leaseInfo.concat(item.leaseInfo);
+      });
+
+      if(offerObj.caseInfo.length)
+        offerObj.cash_purchase = true;
+      else if(allStateCashOffer && allStateCashOffer.caseInfo.length){
+        offerObj.caseInfo = allStateCashOffer.caseInfo;
+         offerObj.cash_purchase = true;
+      }else
+        offerObj.cash_purchase = false;
+
+       if(offerObj.financeInfo.length)
+        offerObj.finance = true;
+      else if(allStateFinannceOffer && allStateFinannceOffer.financeInfo.length){
+        offerObj.financeInfo = allStateFinannceOffer.financeInfo;
+         offerObj.finance = true;
+      }else
+        offerObj.finance = false;
+
+       if(offerObj.leaseInfo.length)
+        offerObj.lease = true;
+      else if(allStateLeaseOffer && allStateLeaseOffer.leaseInfo.length){
+        offerObj.leaseInfo = allStateLeaseOffer.leaseInfo;
+         offerObj.lease = true;
+      }else
+        offerObj.lease = false;
+
+      return offerObj;
+    }
+
     function calcalateOffer(seletedItem){
       seletedItem.totalAmount = (seletedItem.amount || 0) * (seletedItem.quantity || 0);
       seletedItem.totalDownPayment = (seletedItem.margin || 0) * (seletedItem.quantity || 0);
       seletedItem.totalProcessingFee = (seletedItem.processingfee || 0) * (seletedItem.quantity || 0);
       seletedItem.totalPayment = (seletedItem.totalDownPayment || 0) + (seletedItem.totalProcessingFee || 0);
-      seletedItem.totalInstallment = (seletedItem.installment || 0) * (seletedItem.quantity || 0);
+      //seletedItem.totalInstallment = (seletedItem.installment || 0) * (seletedItem.quantity || 0) || 0;
 
     }
 

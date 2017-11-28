@@ -31,7 +31,7 @@
               </div>
             </div>            
           <ol class="carousel-indicators">
-            <li class="" data-slide-to="{{$index}}" ng-class="{'active':thumbnailImage.isPrimary && !thumbnailImage.catImgType}" data-target="#article-photo-carousel" ng-repeat="thumbnailImage in currentProduct.images | limitTo:5">
+            <li class="" data-slide-to="{{$index}}" ng-class="{'active':thumbnailImage.isPrimary && !thumbnailImage.catImgType}" data-target="#article-photo-carousel" ng-repeat="thumbnailImage in currentProduct.images | limitTo:4">
                 <img alt="" ng-src="{{uploadImagePrefix}}{{currentProduct.assetDir}}/{{thumbnailImage.src}}" class="img-responsive img-thumbnail" ng-click = "imageClick()">
             </li>
           </ol>
@@ -232,20 +232,20 @@
                       </div>
                     </div>
                     <div class="col-sm-3">
-                      <h5  class="text-center"><small>Amount to be paid</small></h5>
+                      <h5  class="text-left"><small>Amount to be paid</small></h5>
                       <h2>{{financeinfo.selected.rate}}</h2>
                       <small>Rate Of Interest(%)</small>
                       <!-- <div class="form-group floating-label-wrapper">
                         <input type="text" ng-model="financeinfo.selected.rate" class="form-control" placeholder="" disabled>
                         
                       </div> -->
-                      <h2><i class="fa fa-inr"></i> {{financeinfo.selected.totalInstallment}}</h2>
+                      <h2><i class="fa fa-inr"></i> {{financeinfo.selected.installment}}</h2>
                         <small>Total Monthly Repayment(E.M.I)</small>
                       <!-- <div class="form-group floating-label-wrapper">
                          <input type="text" ng-model="financeinfo.selected.installment" class="form-control" disabled>                         
                       </div> -->
-                       <h2><i class="fa fa-inr"></i>  {{financeinfo.selected.totalPayment}}</h2>
-                        <small>Down-Payment+Processing Fee</small>
+                       <h2 class="invisible"><i class="fa fa-inr"></i>  {{financeinfo.selected.totalPayment}}</h2>
+                        <small class="invisible">Down-Payment+Processing Fee</small>
                       <!-- <div class="form-group floating-label-wrapper">
                       <input type="text" ng-model="financeinfo.selected.totalPayment" class="form-control" placeholder="" disabled>
                        
@@ -346,15 +346,15 @@
                       </div>
                     </div>
                     <div class="col-sm-3">
-                      <h5  class="text-center"><small>Amount to be paid</small></h5>
-                      <h2>{{leaseinfo.selected.rate}}</h2>
-                      <small>Rate Of Interest(%)</small>
+                      <h5  class="text-left invisible"><small>Amount to be paid</small></h5>
+                      <h2 class="invisible">{{leaseinfo.selected.rate}}</h2>
+                      <small class="invisible">Rate Of Interest(%)</small>
                      <!--  <div class="form-group floating-label-wrapper">
                         <input type="text" ng-model="leaseinfo.selected.rate" class="form-control" disabled>
                         <small>Rate Of Interest(%)</small>
                       </div> -->
-                      <h2>{{leaseinfo.selected.totalInstallment}}</h2>
-                      <small>Total Monthly Repayment(E.M.I)</small>
+                      <h2>{{leaseinfo.selected.installment}}</h2>
+                      <small>Total Monthly Payment</small>
                       <!-- <div class="form-group floating-label-wrapper">
                         <i class="fa fa-inr"></i> <input type="text" ng-model="leaseinfo.selected.installment" class="form-control" disabled>
                         <small>Total Monthly Repayment(E.M.I)</small>
