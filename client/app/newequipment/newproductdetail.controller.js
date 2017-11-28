@@ -259,7 +259,7 @@
       seletedItem.totalDownPayment = (seletedItem.margin || 0) * (seletedItem.quantity || 0);
       seletedItem.totalProcessingFee = (seletedItem.processingfee || 0) * (seletedItem.quantity || 0);
       seletedItem.totalPayment = (seletedItem.totalDownPayment || 0) + (seletedItem.totalProcessingFee || 0);
-      seletedItem.totalInstallment = (seletedItem.installment || 0) * (seletedItem.quantity || 0) || 0;
+      //seletedItem.totalInstallment = (seletedItem.installment || 0) * (seletedItem.quantity || 0) || 0;
 
     }
 
