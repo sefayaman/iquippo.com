@@ -3,7 +3,7 @@
       <button type="button" class="close" ng-click="auctionRegisVm.closeDialog()" aria-hidden="true">&times;</button>
     <div ng-if="currentAuction.emdTax === 'lotwise' && !showAlertMsg">
       <p class="form-group">Kindly Select Lot Number</p>
-      <p ng-if="regLot">You are register for lots {{regLot}}</p>
+      <p ng-if="regLot">You have already registered for lots {{regLot}}</p>
       <div>
         <form class="form" name="form" novalidate>
           <div class="row">

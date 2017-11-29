@@ -131,8 +131,9 @@
       dataObj.user = {};
       dataObj.auction.dbAuctionId = dbAuctionId;
       dataObj.user._id = Auth.getCurrentUser()._id;
-      dataObj.reqSubmitted = true;
       dataObj.emdTax = $scope.auctionData.emdTax;
+      if($scope.aucionData.emdTax === $scope.LotWist)
+        dataObj.checkRegUser = true;
       userRegForAuctionSvc.checkUserRegis(dataObj)
         .then(function(result) {
           console.log("User regis",result);
@@ -243,9 +244,11 @@
           //else 
           if($scope.auctionData.emdTax === $scope.OverAll) {
             dataObj.selectedLots = [];
-            vm.lotList.forEach(function(item){
+            vm.lotListing.forEach(function(item){
               dataObj.selectedLots[dataObj.selectedLots.length] = item.lotNumber;
             });
+          } else {
+            dataObj.emdTax = $scope.LotWist;
           }
           userRegForAuctionSvc.checkUserRegis(dataObj)
           .then(function(result){

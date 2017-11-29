@@ -83,25 +83,18 @@ exports.checkUserRegis = function(req, res) {
   var arr = [];
   var filter = {};
 
-  if (req.body.auction.dbAuctionId) {
+  if (req.body.auction.dbAuctionId)
     filter['auction.dbAuctionId'] = req.body.auction.dbAuctionId;
-  }
 
-  if (req.body.user._id) {
+  if (req.body.user._id)
     filter['user._id'] = req.body.user._id;
-  }
   
-  if (req.body.user.mobile) {
+  if (req.body.user.mobile)
     filter['user.mobile'] = req.body.user.mobile;
-  }
   
-  if (req.body.paymentMode) {
+  if (req.body.paymentMode)
     filter['user.mobile'] = req.body.paymentMode;
-  }
 
-  // if(req.body.reqSubmitted)
-  //   filter.reqSubmitStatus = ReqSubmitStatuses[0];
-  
   if(req.body.emdTax)
     filter['auction.emdTax'] = req.body.emdTax;
 
@@ -114,44 +107,65 @@ exports.checkUserRegis = function(req, res) {
     filter['selectedLots'] = {
       $in: arr
     }
-
   }
+  
   var query = Model.find(filter);
-
   query.exec(
     function(err, data) {
+      var filter = {};
       if (data && data.length > 0) {
-        if(req.body.emdTax === 'lotwise')
-          return res.status(200).json(data);
-        var filter = {};
-        if(data[0].transactionId)
-          filter._id = data[0].transactionId;
-        // filter.status = "completed";
-        // filter.reqSubmitStatus = ReqSubmitStatuses[0];
+        if(req.body.emdTax === 'lotwise') {
+          if(req.body.checkRegUser) {
+            var ids = [];
+            data.forEach(function(item){
+              ids.push(item.transactionId);
+            });
+            filter._id = {$in: ids}
+          } else
+            return res.status(200).json(data);
+        } else {
+          if(data[0].transactionId)
+            filter._id = data[0].transactionId;
+        }
+        
         PaymentTransaction.find(filter, function(err, payment) {
-          if (err) {
-            return handleError(err, res);
-          }
+          if (err) {return handleError(res, err);}
           var message = {};
           if(!payment.length)
             return res.status(200).json({errorCode: 2, message: "No Data Found"});
-          if (payment[0].status === "completed") {
-            message.data = "done";
-            message.errorCode = 0;
+          if(req.body.emdTax === 'lotwise') {
+            var flag = false;
+            for(var i = 0; i < payment.length; i++) {
+              if (payment[i].status === "completed") {
+                message.data = "done";
+                message.errorCode = 0;
+                flag = true;
+                break;
+              }
+            }
+            if(!flag) {
+              message.data = "undone";
+              message.errorCode = 1;
+            }
+            return res.status(200).json(message);
           } else {
-            message.data = "undone";
-            message.errorCode = 1;
+            if (payment[0].status === "completed") {
+              message.data = "done";
+              message.errorCode = 0;
+            } else {
+              message.data = "undone";
+              message.errorCode = 1;
+            }
+            message.selectedLots = data[0].selectedLots;
+            message.transactionId = data[0].transactionId;
+            return res.status(200).json(message);
           }
-          message.selectedLots = data[0].selectedLots;
-          message.transactionId = data[0].transactionId;
-          return res.status(200).json(message);
         });
       } else {
         return res.status(200).json({errorCode: 2, message: "No Data Found"});
       }
     });
 };
-
 
 exports.saveOfflineRequest = function(req, res) {
   var trnId = req.body.transactionId;
@@ -222,7 +236,7 @@ exports.create = function(req, res, next) {
         //req.body.payment.totalAmount = req.body.totalAmount;
         PaymentTransaction.create(req.body, function(err, payment) {
           if (err) {
-            return handleError(err, res)
+            return handleError(res, err);
           } else {
             req.transactionId = payment._id;
             self();
