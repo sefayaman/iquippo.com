@@ -1016,6 +1016,8 @@ function addProduct(req, res){
     if(err) { return handleError(res, err); }
     if((product.tradeType === 'SELL' || product.tradeType === 'BOTH') && product.auctionListing) {
       req.body._id = product._id;
+      if(!req.body.assetId)
+        req.body.assetId = product.assetId;
       postRequest(req, res);
     }
     else
@@ -2101,7 +2103,8 @@ exports.validateExcelData = function(req, res, next) {
               serialNo : existingProduct.serialNo,
               grossPrice : existingProduct.grossPrice,
               assetDir : existingProduct.assetDir,
-              primaryImg : existingProduct.primaryImg
+              primaryImg : existingProduct.primaryImg,
+              isSold : existingProduct.isSold
             },
             startDate: auctionMaster[0].startDate,
             endDate: auctionMaster[0].endDate,

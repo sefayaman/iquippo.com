@@ -1268,6 +1268,7 @@
       $scope.auctionReq.product.grossPrice = productObj.grossPrice;
       $scope.auctionReq.product.assetDir = productObj.assetDir;
       $scope.auctionReq.product.primaryImg = productObj.primaryImg;
+      $scope.auctionReq.product.isSold = productObj.isSold;
       $scope.auctionReq.product.city = productObj.city;
       if(productObj.reqSubmitStatus === ReqSubmitStatuses[0])
         $scope.auctionReq.reqSubmitStatus = ReqSubmitStatuses[0];
@@ -1703,10 +1704,10 @@
       }
       $scope.setAssetMapData.lot_id = $scope.lot.lot_id;
       $scope.setAssetMapData.assetDir = $scope.product.assetDir;
-      $scope.setAssetMapData.primaryImg = $rootScope.uploadImagePrefix + $scope.product.assetId + "/" + $scope.product.primaryImg;
+      $scope.setAssetMapData.primaryImg = $rootScope.uploadImagePrefix + $scope.product.assetDir + "/" + $scope.product.primaryImg;
       $scope.setAssetMapData.static_increment = $scope.lot.static_increment;
       $scope.product.images.forEach(function(x) {
-        $scope.setAssetMapData.images[$scope.setAssetMapData.images.length] = $rootScope.uploadImagePrefix + $scope.product.assetId + "/" + x.src;
+        $scope.setAssetMapData.images[$scope.setAssetMapData.images.length] = $rootScope.uploadImagePrefix + $scope.product.assetDir + "/" + x.src;
       })
       
       $scope.setAssetMapData.seller = {};

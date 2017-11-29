@@ -707,8 +707,8 @@
 					</div>
 				</div>
 				<div class="row">
-					<div class="col-sm-3 form-group">
-						<input type="text" class="form-control" placeholder="Asset Desc" ng-model="gsettingVm.auctionProduct.product.description"/>
+					<div class="col-sm-3 form-group" ng-class="{'has-error' : assetAuctionForm.description.$invalid && submitted}">
+						<input type="text" class="form-control" name="description" placeholder="Asset Desc*" ng-model="gsettingVm.auctionProduct.product.description" required/>
 					</div>
 					<div class="col-sm-3 form-group">
 						<input type="text" class="form-control" placeholder="Invoice Date(mm/dd/yyyy)" ng-model="gsettingVm.auctionProduct.product.invoiceDate" datetime-picker date-format="MM/dd/yyyy" date-only readonly/>
