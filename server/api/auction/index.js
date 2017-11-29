@@ -29,7 +29,7 @@ router.put('/auctionmaster/delete/:id', controller.deleteAuctionMaster);
 router.post('/auctionmaster/onauctionmasterfilter', controller.getFilterOnAuctionMaster);
 router.get('/auctionmaster/count', controller.getAuctionMasterCount);
 router.get('/checkforasset/asset',controller.getAssetInfo);
-router.post('/sendreqtocreateauction', controller.sendReqToCreateAuction);
+router.post('/auctionmaster/sendreqtocreateauction', controller.sendReqToCreateAuction);
 //router.post('/sendusertoas/asset',controller.sendUserToAs);
 //router.get('/auctionmaster/getAuctionCount', auctionDateController.count);
 //router.get('/auctionmaster/fetchAuctionData',auctionDateController.fetch,auctionDateController.renderJson);
