@@ -211,6 +211,7 @@
           if (result.data) {
             if (result.data == "done") {
               lotObj.url = auctionURL+ "/bidwidget/" + dbAuctionId + "/" + lotObj._id + "/" + Auth.getCurrentUser()._id;
+              lotObj.url = $sce.trustAsResourceUrl(lotObj.url);
               lotObj.isVisible = true;
             }
             if (result.message == "No Data") {

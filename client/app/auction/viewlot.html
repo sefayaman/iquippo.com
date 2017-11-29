@@ -187,7 +187,53 @@
         </div> -->
         
         <div ng-if="!searching && !noResult">
-          <div class="row">      
+          <div class="row" ng-if="isLoggedIn()">      
+            <div class="col-sm-12 col-md-12 form-group" ng-repeat="lot in viewLotVm.lotListing | startFrom:(pager.currentPage -1 )*pager.itemsPerPage | limitTo:pager.itemsPerPage">
+              <div class="media text-center form-group">                
+                <div class="row">
+                  <div class="col-sm-7">
+                    <a href="javascript:void(0)" class="pull-left lot-image">
+                     <img src="http://placehold.it/300x200" class="img-responsive" ng-if="!lot.primaryImg">              
+                     <img ng-if="lot.primaryImg" ng-src="{{lot.primaryImg}}" class="img-responsive">              
+                    </a>          
+                    <div class="media-body lot-body text-left"> 
+                      <div class="row">
+                        <div class="col-xs-8 form-group padd-right">
+                          <h4 class="text-ellips">Lot Number - {{lot.lotNumber}}</h4>     
+                          <h6 class="text-info">Asset Description : <span ng-if="lot.assets.length == 1">{{lot.assets[0].product.category}} {{lot.assets[0].product.brand}} {{lot.assets[0].product.model}}</span>
+                              <span ng-repeat="asset in lot.assets track by $index" ng-if="lot.assets.length > 1">
+                                <a href="javascript:void(0)" ng-click="fetchAsset(asset.product.assetId,lot.lotNumber,false)"> {{asset.product.assetId}} </a> <span ng-if="!$last">, </span>
+                              </span>
+                          </h6>
+                        </div>                  
+                      </div> 
+                      <p><i class="fa fa-clock-o"></i> <strong class="text-success"><timer end-time="lot.endDate">{{days}} days, {{hours}} hours, {{minutes}} minutes, {{seconds}} seconds.</timer></strong></p>
+                       <p><i class="fa fa-check-circle-o"></i> Available for Sale</p>
+
+                       <a href="/used/{{lot.assets[0].product.category}}/{{lot.assets[0].product.brand}}/{{lot.assets[0].product.assetId}}" class="btn btn-primary btn-block" ng-if="lot.assets.length === 1 && lot.assets[0].product && lot.assets[0].product._id">
+                          View Details
+                        </a>
+                         <a href="javascript:void(0)" class="btn btn-primary btn-block" ng-if="lot.assets.length === 1 && lot.assets[0].product && !lot.assets[0].product._id" disabled>
+                          View Details
+                        </a>
+                         <a href="javascript:voiid(0)" class="btn btn-primary btn-block" ng-if="lot.assets.length > 1">
+                          View Details
+                        </a> 
+                    </div>                 
+                    <!-- {{lot.isVisible}} -->
+                    <!-- {{lot.url}} -->
+                    
+                  </div>
+                  <div class="col-sm-5 padd-left" ng-if="lot.isVisible">
+                    <iframe ng-src="{{lot.url}}" style="border:0; width: 100%; height: 200px;"></iframe>
+                  </div>
+                </div>    
+              </div>
+            </div>
+
+            
+          </div>
+          <div class="row" ng-if="!isLoggedIn()">      
             <div class="col-sm-6 col-md-4 form-group" ng-repeat="lot in viewLotVm.lotListing | startFrom:(pager.currentPage -1 )*pager.itemsPerPage | limitTo:pager.itemsPerPage">
               <div class="media text-center form-group">
                 <!-- <a href="/used/{{auctionProduct.product.category}}/{{auctionProduct.product.brand}}/{{auctionProduct.product.assetId}}" ng-if="auctionProduct.product._id">
@@ -235,6 +281,8 @@
                       </tbody>
                     </table>
                   </div>  --> 
+                  <!-- {{lot.isVisible}} -->
+                  <!-- {{lot.url}} -->
                 <a href="/used/{{lot.assets[0].product.category}}/{{lot.assets[0].product.brand}}/{{lot.assets[0].product.assetId}}" class="btn btn-primary btn-block" ng-if="lot.assets.length === 1 && lot.assets[0].product && lot.assets[0].product._id">
                   View Details
                 </a>
