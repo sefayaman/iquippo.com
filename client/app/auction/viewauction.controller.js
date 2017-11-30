@@ -3,7 +3,7 @@
 
   angular.module('sreizaoApp').controller('ViewAuctionCtrl', ViewAuctionCtrl);
 
-  function ViewAuctionCtrl($scope, $rootScope, $location, Modal, Auth,PagerSvc, AuctionSvc, UtilSvc, LocationSvc, $stateParams, $state,userRegForAuctionSvc) {
+  function ViewAuctionCtrl($scope, $rootScope, $location, Modal, Auth, PagerSvc, AuctionSvc, $stateParams, $state, userRegForAuctionSvc, LotSvc) {
     var vm = this;
     var listingCount = {};
     vm.show=false;
@@ -33,14 +33,11 @@
             dataObj.user._id = $scope.registerUser._id;
             dataObj.user.mobile = $scope.registerUser.mobile;
           }
-          if(auction.emdTax === $scope.OverAll) {
-            dataObj.selectedLots = [];
-            vm.lotList.forEach(function(item){
-              dataObj.selectedLots[dataObj.selectedLots.length] = item.lotNumber;
-            });
-          } else {
+          if(auction.emdTax === $scope.OverAll)
+            dataObj.emdTax = $scope.OverAll;
+          else
             dataObj.emdTax = $scope.LotWist;
-          }
+
           userRegForAuctionSvc.checkUserRegis(dataObj)
           .then(function(result){
             if(result.data){
@@ -143,7 +140,6 @@
 
 
     function fireCommandType(auctionType) {
-
       $scope.auctionType = auctionType;
       var filter = {};
       filter.auctionType = auctionType;
@@ -151,7 +147,6 @@
       getAuctions();
       getAuctionCount();
     }
-
     
     function getAuctionWiseProductData(result) {  
         var filter = {};      
@@ -189,10 +184,7 @@
             $scope.upcomingCount = result.upcomingCount;
         });
     }
-
     getAuctions();
     getAuctionCount();
-  
   }
-  
 })();

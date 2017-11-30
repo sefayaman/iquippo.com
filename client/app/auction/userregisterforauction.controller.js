@@ -92,7 +92,6 @@
           }
           userRegForAuctionSvc.checkUserRegis(dataObj)
           .then(function(result){
-            console.log("the registration",result);
             closeDialog();
             if(result.data){
               if(result.data =="done" && auctionData.emdTax === $scope.OverAll){

@@ -10,6 +10,7 @@ function AuctionRegisCtrl($scope, $rootScope, $location, Modal, Auth,PagerSvc,$u
   vm.auctionListing = [];
   vm.dataModel = {};
   vm.lotList=[];
+  vm.lotListEmd = [];
   var dataToSend = {};
   var filter = {};
   vm.submit =submit;
@@ -25,15 +26,23 @@ function AuctionRegisCtrl($scope, $rootScope, $location, Modal, Auth,PagerSvc,$u
       var lots = $scope.regLots.join();
       $scope.regLot = lots;
     }
+    filter = {};
+    filter._id = $scope.currentAuction._id;
+    EmdSvc.getData(filter).then(function(res){
+        if(!res)
+          return;
+        vm.lotListEmd = res; 
+        $scope.showAlertMsg = false;
+      }).catch(function(err){
+    });
     LotSvc.getData({auction_id:$scope.currentAuction._id}).then(function(res){
-      vm.lotList = res; 
-      $scope.showAlertMsg = false;
+      vm.lotList = res;
     });
   }
 
   function submit(lotData, paymentProcess){
     Auth.isLoggedInAsync(function(loggedIn) {
-      if (loggedIn) {  
+      if (loggedIn) {
         var dataObj = {};
         dataObj.auction = {};
         dataObj.user = {};
@@ -64,15 +73,6 @@ function AuctionRegisCtrl($scope, $rootScope, $location, Modal, Auth,PagerSvc,$u
           if($scope.registerUser.email)
             dataObj.user.email = $scope.registerUser.email;
         }
-        // if($scope.currentAuction.emdTax === $scope.LotWist) {
-        //   dataObj.selectedLots =  vm.dataToSend.selectedLots;
-        // }
-        // else {
-        //   dataObj.selectedLots = [];
-        //   vm.lotList.forEach(function(item){
-        //     dataObj.selectedLots[dataObj.selectedLots.length] = item.lotNumber;
-        //   });
-        // }
         if($scope.currentAuction.emdTax === $scope.OverAll){
           dataObj.selectedLots = [];
           vm.lotList.forEach(function(item){
@@ -82,12 +82,17 @@ function AuctionRegisCtrl($scope, $rootScope, $location, Modal, Auth,PagerSvc,$u
           closeDialog();
           save(dataObj,vm.emdamount);
         } else {
-          dataObj.selectedLots =  vm.dataToSend.selectedLots;
+          var lotsArr = [];
+          for (var i=0; i < vm.dataToSend.selectedLots.length; i++) {
+            for (var j=0; j < vm.dataToSend.selectedLots[i].length; j++)
+              lotsArr.push(vm.dataToSend.selectedLots[i][j]);
+          }
+          dataObj.selectedLots = lotsArr;
           var validateData = {};
           validateData.auction = {};
           validateData.user = {};
           validateData.auction.dbAuctionId = $scope.currentAuction._id;
-          validateData.selectedLots = vm.dataToSend.selectedLots;
+          validateData.selectedLots = lotsArr;
           if(!Auth.isAdmin()) {
             validateData.user._id = Auth.getCurrentUser()._id;
             validateData.user.mobile = Auth.getCurrentUser().mobile;
@@ -108,7 +113,7 @@ function AuctionRegisCtrl($scope, $rootScope, $location, Modal, Auth,PagerSvc,$u
                 }
             }
             vm.dataModel.auction_id = $scope.currentAuction._id;
-            vm.dataModel.selectedLots = vm.dataToSend.selectedLots;
+            vm.dataModel.selectedLots = lotsArr;
             EmdSvc.getAmount(vm.dataModel).then(function(result){
                   if(!result)
                     return;
@@ -121,7 +126,7 @@ function AuctionRegisCtrl($scope, $rootScope, $location, Modal, Auth,PagerSvc,$u
                }).catch(function(err){
              });
           });
-          }
+        }
       } else {
         closeDialog();
         var regUserAuctionScope = $rootScope.$new();
