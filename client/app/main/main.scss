@@ -6,7 +6,7 @@
   font-style: normal;
 }
 body{top:0 !important;}
-body #wrapper, .admin-navbar{font-family:'RobotoCondensed-Regular',sans-serif;}
+body #wrapper{font-family:'RobotoCondensed-Regular',sans-serif;}
 a:focus{outline: none; cursor:pointer;}
 a:focus,.btn{outline: none;}
 .btn .popover.in{color:#666;}
@@ -956,7 +956,7 @@ body{font-family: Lato-Regular ,sans-serif;}
 .navbar-nav li .uib-dropdown-menu li a:hover{background: #eee !important;}
 /*.navbar-nav li.dropdown:hover .dropdown-menu li a:hover{}*/
 .navbar .nav.navbar-nav.navbar-right{margin-right: 15px; margin-top: 15px;}
-.navbar .nav.navbar-nav.navbar-right li a{font-weight: bold; color: #00429A; letter-spacing: 1.5px;}
+.navbar .nav.navbar-nav.navbar-right li a{font-weight: bold; color: #00429A; letter-spacing: 1px; font-size: 16px;}
 .navbar .nav.navbar-nav.navbar-right li a.text-danger{font-size: 16px; color: #e31e24;}
 .navbar .nav.navbar-nav.navbar-right .submenu a{ color: #333; padding: 5px 10px;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;}
 /* .navbar .nav.navbar-nav.navbar-right a{font-size: 13px; padding:8px 10px;margin-right:5px;margin-top:5px;color: #FFF;background: #e3000f;line-height:15px;} */
@@ -969,7 +969,7 @@ body{font-family: Lato-Regular ,sans-serif;}
 .valuation-banner img{height: 300px; width: 100vw; margin-bottom: 1.5em;}
 .search-banner{position: absolute;top:60%;z-index: 99; color: #fff;}
 .search-banner.search-banner-modal{position: inherit;top:auto;z-index: 99; color: #333;}
-.search-banner p{text-shadow: 1px 2px 3px #666; font-weight: bold;}
+.search-banner p{text-shadow: 1px 2px 3px #666; font-weight: bold; letter-spacing: 2px;}
 .search-banner .input-group{width: 100%;}
 .search-banner .input-group .form-control{height: 50px; border-color: #eee; border-radius: 4px;}
 .filter{background: #fff; border-radius: 4px;}
@@ -985,7 +985,7 @@ body{font-family: Lato-Regular ,sans-serif;}
     border: 0;
     right: 2.5em;
     top: 1.4em; text-decoration: none; text-shadow: none; color: #00429A;}
-.search-banner .btn.btn-default{text-transform: uppercase; font-size: 1em; padding:15px 28px; color: #00429A; margin: 2.5em 0.3em 0; border-radius: 3px; box-shadow: 0px 2px 3px #ccc; font-weight: bold; letter-spacing: 2px;}
+.search-banner .btn.btn-default{text-transform: uppercase; font-size: 14px; padding:15px 28px; color: #00429A; margin: 2.5em 0.3em 0; border-radius: 3px; box-shadow: 0px 2px 3px #ccc; font-weight: bold; letter-spacing: 2px;}
 .search-banner.search-banner-modal .btn.btn-default{text-transform: uppercase; font-size: 0.8em; padding:10px; color: #00429A; margin-top: 25px; border-radius: 3px; box-shadow: 0px 2px 3px #ccc; font-weight: bold; word-spacing: 1px;}
 
 .or-devided{padding: 15px; color: #fff;}
@@ -1010,14 +1010,17 @@ body{font-family: Lato-Regular ,sans-serif;}
 .upcoming-auction .media.all-auctions .media-body,.upcoming-auction .main-auction .media .media-body{
   max-height: 100%;
 }
+.upcoming-auction .media.all-auctions .media-body small, .upcoming-auction .main-auction .media .media-body small{color: #818181;font-size: 14px;}
 .upcoming-auction .media .media-body .media-heading{
   display: block; /* Fallback for non-webkit */
   display: -webkit-box;
   max-width: 100%;
-  max-height: 30px; /* Fallback for non-webkit */
-  margin: 0 auto;
-  font-size: 1em;
-  line-height: 15px;
+  max-height: 35px; /* Fallback for non-webkit */
+  margin: 0 auto 5px;
+  font-size: 16px;
+  line-height: 18px;
+  color: #2F2F2F;
+  text-transform: capitalize;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
@@ -1050,7 +1053,8 @@ body{font-family: Lato-Regular ,sans-serif;}
   border-radius:3px 0 0 3px;
   text-transform: uppercase;
 }
-.upcoming-auction .media .calendar-date h4{margin: 0; font-size: 2.5em;}
+.upcoming-auction .media .calendar-date h4{margin: 0; font-size: 38px; font-weight: bold;}
+.upcoming-auction .media .calendar-date small{font-size: 14px; font-weight: bold; letter-spacing: 2px;}
 .upcoming-auction .media .upcoming-calendar{
   background: linear-gradient(170.11deg, #FB001A 0%, #00429A 100%);
   width: 170px;
@@ -1078,11 +1082,11 @@ body{font-family: Lato-Regular ,sans-serif;}
 .upcoming-auction .media .media-body h4{text-transform: uppercase; font-size: 1.2em; font-weight: bold;}
 .category-block{padding: 1em 0 2em;}
 .heading-titles{margin: 1.5em auto;}
-.heading-titles h4{letter-spacing: 1px; margin:0 0 1em; text-transform: uppercase; font-size: 24px; font-weight: bold; color: #333;}
+.heading-titles h4{letter-spacing: 0.5px; margin:0 0 1em; text-transform: uppercase; font-size: 24px; font-weight: bold; color: #2F2F2F;}
 .how-works .heading-titles h4{color: #fff;}
 .heading-titles span{display: inline-block;}
 .heading-titles span:first-letter{text-transform: lowercase;}
-.heading-titles a{margin: 0.5em 1em;  text-transform: uppercase; font-size: 12px; font-weight: bold; letter-spacing: 1px}
+.heading-titles a{margin: 0.5em 1em;  text-transform: uppercase; font-size: 12px; font-weight: bold; letter-spacing: 2px; color: #00429A;}
 .heading-titles .active{color: #666;}
 .cat-rectangle{
   height: 300px; margin: 0 auto; display: block;
@@ -1115,7 +1119,6 @@ align-items: center; justify-content: center;
 }
 #search-result_wrapper .media{background-color:#fff; position: relative; max-height: 480px;}
 #search-result_wrapper .media .media-body{padding:10px; min-height: 160px; max-height: 160px;}
-#search-result_wrapper .media .media-body.lot-body{max-height: 100%;}
 #search-result_wrapper .media .media-body h3{font-size: 18px;}
 #search-result_wrapper .media a img{height: 200px; width: 100%;}
 #search-result_wrapper .media .table{margin: 0; min-height: 61px; max-height: 61px;}
@@ -1126,7 +1129,6 @@ align-items: center; justify-content: center;
 #search-result_wrapper .media h3{font-size: 14px; font-weight: bold; margin:10px 0;}
 #search-result_wrapper .media span{font-size: 12px;}
 #search-result_wrapper .media a img.img-responsive{height: 200px; width: 100%;}
-#search-result_wrapper .media a.pull-left img.img-responsive{height: 200px; width: 250px;}
 #search-result_wrapper .media .table{margin: 0;}
 #search-result_wrapper .media .table small{font-size: 9px; color: #ccc;}
 #search-result_wrapper .media .table > tbody > tr > td{padding: 0px; text-align: center; vertical-align: top;}
