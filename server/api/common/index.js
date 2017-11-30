@@ -181,11 +181,13 @@ router.put('/inputform/:id', auth.hasRole('admin'),inputFormCtrl.update);
 router.delete('/inputform/:id',auth.hasRole('admin'), inputFormCtrl.destroy);
 router.post('/inputform/search',inputFormCtrl.search);
 
-router.post('/offer',offerCtrl.create);
-router.get('/offer/get',auth.hasRole('admin'), offerCtrl.get);
+router.post('/offer',auth.hasRole('admin'),offerCtrl.create);
+router.get('/offer/get', offerCtrl.get);
 router.put('/offer/:id', auth.hasRole('admin'),offerCtrl.update);
 router.delete('/offer/:id',auth.hasRole('admin'), offerCtrl.destroy);
-router.get('/offer/getfilterdata', offerCtrl.getFilterData);
+router.post('/offerrequest',auth.isAuthenticated(),offerCtrl.createOfferRequest);
+
+//router.get('/offer/getfilterdata', offerCtrl.getFilterData);
 
 router.post('/bookademo',bookADemoCtrl.create);
 router.get('/bookademo', bookADemoCtrl.get);

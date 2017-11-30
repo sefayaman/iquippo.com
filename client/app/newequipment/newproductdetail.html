@@ -31,7 +31,7 @@
               </div>
             </div>            
           <ol class="carousel-indicators">
-            <li class="" data-slide-to="{{$index}}" ng-class="{'active':thumbnailImage.isPrimary && !thumbnailImage.catImgType}" data-target="#article-photo-carousel" ng-repeat="thumbnailImage in currentProduct.images | limitTo:5">
+            <li class="" data-slide-to="{{$index}}" ng-class="{'active':thumbnailImage.isPrimary && !thumbnailImage.catImgType}" data-target="#article-photo-carousel" ng-repeat="thumbnailImage in currentProduct.images | limitTo:4">
                 <img alt="" ng-src="{{uploadImagePrefix}}{{currentProduct.assetDir}}/{{thumbnailImage.src}}" class="img-responsive img-thumbnail" ng-click = "imageClick()">
             </li>
           </ol>
@@ -74,19 +74,19 @@
 
           <div class="floating-label-wrapper form-group">
             <label>Location</label>
-            <select class="form-control" name="location"  ng-model="location"  required> 
-                <option value=""> Select City </option> 
-                <option ng-repeat="state in states" value="{{state.id}}">{{state.name}}</option>
+            <select class="form-control" name="location"  ng-model="location"> 
+                <option value=""> Select State </option> 
+                <option ng-repeat="state in stateList | orderBy :'name'" value="{{state.name}}">{{state.name}}</option>
             </select>
             <small>Select a location to view all applicable offers.</small>
           </div>
           <div class="asset-sale">
-            <button type="button" class="btn btn-primary btn-block">VIEW OFFERS</button>
+            <button type="button" class="btn btn-primary btn-block" ng-click="viewOffer(location)">VIEW OFFERS</button>
           </div>
         </div>
       </div>
     
-      <uib-tabset justified="true" class="information-tabs">
+      <uib-tabset justified="true" class="information-tabs" ng-if="!offerCliced">
         <uib-tab heading="TECHNICAL INFORMATION">
           <div class="row">
             <div class="col-xs-6 col-sm-4 col-md-3 form-group" ng-repeat="field in allTechSpecFields">
@@ -104,25 +104,25 @@
         </uib-tab>
       </uib-tabset>
 
-      <div ng-if="false">
+      <div ng-if="offerCliced">
         <h4 class="form-group">
             <strong>ALL AVAILABLE OFFERS</strong> <br>
             <small>You can choose multiple offers and submit your querry</small>
         </h4>
         
             <div class="form-group"></div>
-            <uib-accordion close-others="oneAtATime" ng-repeat="offerdata in offer" class="view-offer">
-              <uib-accordion-group is-open="status.cash">
+            <uib-accordion close-others="oneAtATime" class="view-offer">
+              <uib-accordion-group is-open="status.cash" ng-if="offer.cash_purchase">
                 <uib-accordion-heading>
-                  CASH OFFERS (2 Available)
-                  <p><small>Get additional 2 years service free from iQuippo.</small></p>
+                  CASH OFFERS ({{offer.caseInfo.length}} Available)
+                  <p><!-- <small>Get additional 2 years service free from iQuippo.</small> --></p>
                   <i class="pull-right fa" ng-class="{'fa-angle-up': status.cash, 'fa-angle-down': !status.cash}"></i>
                 </uib-accordion-heading>
-                <div class="row" ng-repeat="caseinfo in offerdata.caseInfo">
-                  <div class="col-sm-offset-1 col-sm-5 form-group">
+                <div class="row" ng-repeat="caseinfo in offer.caseInfo">
+                  <div class="col-sm-5 form-group">
                     <div class="checkbox">
-                      <input type="checkbox" id="" ng-model="case[$index]" name="" ng-value="{{caseinfo.price}}">
-                      <label for="amount1">
+                      <input type="checkbox" ng-model="caseinfo.checked" id = "cashoffer_{{$index}}" name="cashoffer_{{$index}}">
+                      <label for="cashoffer_{{$index}}">
                         <i class="fa fa-inr"></i>{{caseinfo.price}}/-
                       </label>
                       <small>Total Amount to be paid</small>
@@ -130,7 +130,7 @@
                   </div>
                   <div class="col-sm-5 form-group">
                     <ul>
-                      <li>
+                      <li class="freecost">
                         {{caseinfo.freeofcost}}
                       </li>
                       <!--<li>
@@ -142,29 +142,26 @@
                 
               </uib-accordion-group>
 
-              <uib-accordion-group is-open="status.finance">
+              <uib-accordion-group is-open="status.finance" ng-if="offer.finance">
                 <uib-accordion-heading>
-                  FINANCING OFFERS (3 Available)
-                  <p><small>Get additional 2 years service free from iQuippo.</small></p>
+                  FINANCING OFFERS ({{offer.finannceCounter}} Available)
+                  <p><!-- <small>Get additional 2 years service free from iQuippo.</small> --></p>
                   <i class="pull-right fa" ng-class="{'fa-angle-up': status.finance, 'fa-angle-down': !status.finance}"></i>
                 </uib-accordion-heading>
-                <div ng-repeat="financeinfo in offerdata.financeInfo" ng-init="f1Index = $index"><!--start repeat div-->
+                <div ng-repeat="financeinfo in offer.financeInfo">
                   <div class="row">
-                    <div class="col-sm-offset-1 col-sm-5 form-group">
+                    <div class="col-sm-5 form-group">
                       <div class="checkbox">
-                        <input type="checkbox" id="financer1"  ng-model="financeinfo.financer[f1Index]" name="" ng-value="{{financeinfo.name}}">
-                        <label for="financer1">
+                        <input type="checkbox" ng-model="financeinfo.checked" id="finance_{{$index}}" name="">
+                        <label for="finance_{{$index}}">
                           {{financeinfo.name}}
                         </label>
                       </div>
                     </div>
                     <div class="col-sm-5 form-group">
                       <ul>
-                        <li>
-                            Get first two services free
-                        </li>
-                        <li>
-                            Get first two services free
+                        <li class="freecost">
+                           {{financeinfo.selected.freecost}}
                         </li>
                       </ul>
                     </div>
@@ -172,21 +169,24 @@
 
                   <div class="row">
                     <div class="col-sm-2">
-                      <h5 class="text-center"><small>Select Quantity &amp; Tenure</small></h5>                
-                      <div class="floating-label-wrapper form-group">
-                        <label>Quantity</label>              
-                        <div class="input-group">
-                          <a href="javascript:void(0);" ng-click="changeQuantityMinus(f1Index,financeinfo.data[f1Index])" class="input-group-addon"><i class="fa fa-minus"></i></a>
-                          <input type="number" class="form-control"  ng-model="fnumber[f1Index]" name="" ng-value="1" placeholder="1" min="1">
-                          <a href="javascript:void(0);" ng-click="changeQuantityPlus(f1Index,financeinfo.data[f1Index])" class="input-group-addon"><i class="fa fa-plus"></i></a>
-                        </div>
-                      </div>
+                      <h5 class="text-center"><small>Select Quantity &amp; Tenure</small></h5> 
 
-                      <div class="floating-label-wrapper">
-                        <label>TENURE*(In Months)</label>
-                        <select class="form-control" ng-model="ftenure[f1Index]" ng-click="changeTenure(f1Index,ftenure[f1Index])">
-                          <option value="{{tenure}}" ng-selected ng-repeat="tenure in financeinfo.data">{{tenure.tenure}}</option>              
-                        </select>
+                      <div class="col-sm-12">
+                        <div class="floating-label-wrapper text-center">
+                          <label>TENURE*<small>(In Months)</small></label>
+                          <select class="form-control" ng-model="financeinfo.selected" ng-options="fidata.tenure for fidata in financeinfo.data">
+                           <!--  <option value="{{fiData.tenure}}" ng-repeat="fiData in financeinfo.data">{{fiData.tenure}}</option>   -->            
+                          </select>
+                        </div>
+
+                        <div class="floating-label-wrapper form-group text-center">
+                          <label>Quantity</label>              
+                          <div class="input-group">
+                            <a href="javascript:void(0);" ng-click="decreaseQuantity(financeinfo.selected)" class="input-group-addon"><i class="fa fa-minus"></i></a>
+                            <input type="number" class="form-control text-center"  ng-model="financeinfo.selected.quantity" min="1" disabled>
+                            <a href="javascript:void(0);" ng-click="increaseQuantity(financeinfo.selected)" class="input-group-addon"><i class="fa fa-plus"></i></a>
+                          </div>
+                        </div>
                       </div>
                     </div>
                     <div class="col-sm-7">
@@ -195,86 +195,89 @@
                         <div class="col-sm-4 form-group">
                           <label>Finance Amount per unit</label>
                           <div class="floating-label-wrapper">                      
-                            <input type="text" class="form-control"  ng-model="fAmount[f1Index]" name="" ng-value="{{financeinfo.data[0].amount}}" placeholder="" disabled>
+                            <input type="text" class="form-control"  ng-model="financeinfo.selected.amount" placeholder="" disabled>
                           </div>
                         </div>
                         <div class="col-sm-4 form-group">
                           <label>Down-payment per unit</label>
                           <div class="floating-label-wrapper">                      
-                            <input type="text" class="form-control" ng-model="fDownPayment[f1Index]" name="" ng-value="{{financeinfo.data[0].margin}}" placeholder="" disabled>
+                            <input type="text" class="form-control" ng-model="financeinfo.selected.margin" placeholder="" disabled>
                           </div>
                         </div>
                         <div class="col-sm-4 form-group">
                           <label>Processing Fee per unit</label>
                           <div class="floating-label-wrapper">                      
-                            <input type="text" class="form-control" ng-model="fProcessingFee[f1Index]" name="" ng-value="{{financeinfo.data[0].processingfee}}" placeholder="" disabled>
+                            <input type="text" class="form-control" ng-model="financeinfo.selected.processingfee" name="" disabled>
                           </div>
                         </div>
                         <div class="col-sm-4 form-group">
                           <label>Total Finance Amount</label>
                           <div class="floating-label-wrapper">                      
-                            <input type="text" ng-model="fTotalAmount[f1Index]" class="form-control" name="" ng-value="{{financeinfo.data[0].amount}}" placeholder="" disabled>
+                            <input type="text" ng-model="financeinfo.selected.totalAmount" class="form-control" name="" disabled>
                           </div>
                         </div>
                         <div class="col-sm-4 form-group">
                           <label>Total Down-payment</label>
                           <div class="floating-label-wrapper">                      
-                            <input type="text" ng-model="fTotalDownAmount[f1Index]" class="form-control" name="" ng-value="{{financeinfo.data[0].margin}}" placeholder="" disabled>
+                            <input type="text" ng-model="financeinfo.selected.totalDownPayment" class="form-control" disabled>
                           </div>
                         </div>
                         <div class="col-sm-4 form-group">
                           <label>Total Processing Fee</label>
                           <div class="floating-label-wrapper">                      
-                            <input type="text" ng-model="fTotalFee[f1Index]" class="form-control" name="" ng-value="{{financeinfo.data[0].processingfee}}" placeholder="" disabled>
+                            <input type="text" ng-model="financeinfo.selected.totalProcessingFee" class="form-control" disabled>
                           </div>
                         </div>
                         
                       </div>
                     </div>
                     <div class="col-sm-3">
-                      <h5  class="text-center"><small>Amount to be paid</small></h5>
-                      <div class="form-group floating-label-wrapper">
-                        <input type="text" ng-model="fRate[f1Index]" class="form-control" name="" ng-value="{{financeinfo.data[0].rate}}" placeholder="" disabled>
-                        <small>Rate Of Interest(%)</small>
-                      </div>
-                      <div class="form-group floating-label-wrapper">
-                        <i class="fa fa-inr"></i> <input type="text" ng-model="fTotalInstallment[f1Index]" class="form-control" name="" ng-value="{{financeinfo.data[0].installment}}" placeholder="" disabled>{{financeinfo.data[0].installment}}
+                      <h5  class="text-left"><small>Amount to be paid</small></h5>
+                      <h2>{{financeinfo.selected.rate}}</h2>
+                      <small>Rate Of Interest(%)</small>
+                      <!-- <div class="form-group floating-label-wrapper">
+                        <input type="text" ng-model="financeinfo.selected.rate" class="form-control" placeholder="" disabled>
+                        
+                      </div> -->
+                      <h2><i class="fa fa-inr"></i> {{financeinfo.selected.installment}}</h2>
                         <small>Total Monthly Repayment(E.M.I)</small>
-                      </div>
-                      <div class="form-group floating-label-wrapper">
-                      <i class="fa fa-inr"></i> <input type="text" ng-model="fTotalDownAndProcessing[f1Index]" class="form-control" name="" ng-value="{{financeinfo.data[0].processingfee}}+{{financeinfo.data[0].margin}}" placeholder="" disabled>
-                        <small>Down-Payment+Processing Fee</small>
-                      </div>
+                      <!-- <div class="form-group floating-label-wrapper">
+                         <input type="text" ng-model="financeinfo.selected.installment" class="form-control" disabled>                         
+                      </div> -->
+                       <h2 class="invisible"><i class="fa fa-inr"></i>  {{financeinfo.selected.totalPayment}}</h2>
+                        <small class="invisible">Down-Payment+Processing Fee</small>
+                      <!-- <div class="form-group floating-label-wrapper">
+                      <input type="text" ng-model="financeinfo.selected.totalPayment" class="form-control" placeholder="" disabled>
+                       
+                      </div> -->
                     </div>
                   </div>
                 </div><!--end repeat div-->
 
               </uib-accordion-group>
 
-              <uib-accordion-group is-open="status.leasing">
+              <uib-accordion-group is-open="status.leasing" ng-if="offer.lease">
                 <uib-accordion-heading>
-                  LEASING OFFERS (2 Available)
-                  <p><small>Get additional 2 years service free from iQuippo.</small></p>
+                  LEASING OFFERS ({{offer.leaseCounter}} Available)
+                  <p><!-- <small>Get additional 2 years service free from iQuippo.</small> --></p>
                   <i class="pull-right fa" ng-class="{'fa-angle-up': status.leasing, 'fa-angle-down': !status.leasing}"></i>
                 </uib-accordion-heading>
-                <div ng-repeat="leaseinfo in offerdata.leaseInfo" ng-init="l1Index = $index"><!--start repeat div-->
+                <div ng-repeat="leaseinfo in offer.leaseInfo"><!--start repeat div-->
                   <div class="row">
-                    <div class="col-sm-offset-1 col-sm-5 form-group">
+                    <div class="col-sm-5 form-group">
                       <div class="checkbox">
-                        <input type="checkbox" id="leaserid.l1Index"  ng-model="leaser[l1Index]" name="" ng-value="{{leaseinfo.name}}">
-                        <label for="leaserid.l1Index">
+                        <input type="checkbox" ng-model="leaseinfo.checked" id="leaserid_{{$index}}">
+                        <label for="leaserid_{{$index}}">
                           {{leaseinfo.name}}
                         </label>
                       </div>
                     </div>
                     <div class="col-sm-5 form-group">
                       <ul>
-                        <li>
-                            Get first two services free
+                        <li class="freecost">
+                           {{leaseinfo.selected.freecost}}
                         </li>
-                        <li>
-                            Get first two services free
-                        </li>
+                       
                       </ul>
                     </div>
                   </div>
@@ -282,78 +285,86 @@
                   <div class="row">
                     <div class="col-sm-2">
                       <h5 class="text-center"><small>Select Quantity &amp; Tenure</small></h5>                
-                      <div class="floating-label-wrapper form-group">
-                        <label>Quantity</label>              
-                        <div class="input-group">
-                          <a href="javascript:void(0);" ng-click="lchangeQuantityMinus(l1Index,leaseinfo.data[l1Index])" class="input-group-addon"><i class="fa fa-minus"></i></a>
-                          <input type="number" class="form-control"  ng-model="lnumber[l1Index]" name="" ng-value="1" placeholder="1" min="1">
-                          <a href="javascript:void(0);" ng-click="lchangeQuantityPlus(l1Index,leaseinfo.data[l1Index])" class="input-group-addon"><i class="fa fa-plus"></i></a>
+                       <div class="col-sm-12">
+                         <div class="floating-label-wrapper text-center">
+                          <label>TENURE*<small>(In Months)</small></label>
+                          <select class="form-control"  ng-model="leaseinfo.selected" ng-options="liData.tenure for liData in leaseinfo.data">
+                           <!--  <option value="{{tenure}}" ng-selected ng-repeat="tenure in leaseinfo.data">{{tenure.tenure}}</option>   -->            
+                          </select>
                         </div>
-                      </div>
 
-                      <div class="floating-label-wrapper">
-                        <label>TENURE*(In Months)</label>
-                        <select class="form-control" ng-model="ltenure[l1Index]" ng-click="lchangeTenure(l1Index,ltenure[l1Index])">
-                          <option value="{{tenure}}" ng-selected ng-repeat="tenure in leaseinfo.data">{{tenure.tenure}}</option>              
-                        </select>
-                      </div>
+                        <div class="floating-label-wrapper form-group text-center">
+                          <label>Quantity</label>              
+                          <div class="input-group">
+                            <a href="javascript:void(0);" ng-click="decreaseQuantity(leaseinfo.selected)" class="input-group-addon"><i class="fa fa-minus"></i></a>
+                            <input type="number" class="form-control text-center"  ng-model="leaseinfo.selected.quantity" placeholder="1" min="1" disabled>
+                            <a href="javascript:void(0);" ng-click="increaseQuantity(leaseinfo.selected)" class="input-group-addon"><i class="fa fa-plus"></i></a>
+                          </div>
+                        </div>
+                       </div>
                     </div>
                     <div class="col-sm-7">
                       <h5 class="text-center"><small>Check per unit and total cost</small></h5>
                       <div class="row">
-                        <div class="col-sm-4 form-group">
+                       <!--  <div class="col-sm-4 form-group">
                           <label>Finance Amount per unit</label>
                           <div class="floating-label-wrapper">                      
-                            <input type="text" class="form-control"  ng-model="lAmount[l1Index]" name="" ng-value="{{leaseinfo.data[0].amount}}" placeholder="" disabled>
+                            <input type="text" class="form-control"  ng-model="leaseinfo.selected.amount" disabled>
                           </div>
-                        </div>
-                        <div class="col-sm-4 form-group">
+                        </div> -->
+                        <div class="col-sm-6 form-group">
                           <label>Down-payment per unit</label>
                           <div class="floating-label-wrapper">                      
-                            <input type="text" class="form-control" ng-model="lDownPayment[l1Index]" name="" ng-value="{{leaseinfo.data[0].margin}}" placeholder="" disabled>
+                            <input type="text" class="form-control" ng-model="leaseinfo.selected.margin"  disabled>
                           </div>
                         </div>
-                        <div class="col-sm-4 form-group">
+                        <div class="col-sm-6 form-group">
                           <label>Processing Fee per unit</label>
                           <div class="floating-label-wrapper">                      
-                            <input type="text" class="form-control" ng-model="lProcessingFee[l1Index]" name="" ng-value="{{leaseinfo.data[0].processingfee}}" placeholder="" disabled>
+                            <input type="text" class="form-control" ng-model="leaseinfo.selected.processingfee" disabled>
                           </div>
                         </div>
-                        <div class="col-sm-4 form-group">
+                       <!--  <div class="col-sm-4 form-group">
                           <label>Total Finance Amount</label>
                           <div class="floating-label-wrapper">                      
-                            <input type="text" ng-model="lTotalAmount[l1Index]" class="form-control" name="" ng-value="{{leaseinfo.data[0].amount}}" placeholder="" disabled>
+                            <input type="text" ng-model="leaseinfo.selected.totalAmount" class="form-control" disabled>
                           </div>
-                        </div>
-                        <div class="col-sm-4 form-group">
+                        </div> -->
+                        <div class="col-sm-6 form-group">
                           <label>Total Down-payment</label>
                           <div class="floating-label-wrapper">                      
-                            <input type="text" ng-model="lTotalDownAmount[l1Index]" class="form-control" name="" ng-value="{{leaseinfo.data[0].margin}}" placeholder="" disabled>
+                            <input type="text" ng-model="leaseinfo.selected.totalDownPayment" class="form-control" disabled>
                           </div>
                         </div>
-                        <div class="col-sm-4 form-group">
+                        <div class="col-sm-6 form-group">
                           <label>Total Processing Fee</label>
                           <div class="floating-label-wrapper">                      
-                            <input type="text" ng-model="lTotalFee[l1Index]" class="form-control" name="" ng-value="{{leaseinfo.data[0].processingfee}}" placeholder="" disabled>
+                            <input type="text" ng-model="leaseinfo.selected.totalProcessingFee" class="form-control" disabled>
                           </div>
                         </div>
                         
                       </div>
                     </div>
                     <div class="col-sm-3">
-                      <h5  class="text-center"><small>Amount to be paid</small></h5>
-                      <div class="form-group floating-label-wrapper">
-                        <input type="text" ng-model="lRate[l1Index]" class="form-control" name="" ng-value="{{leaseinfo.data[0].rate}}" placeholder="" disabled>
+                      <h5  class="text-left invisible"><small>Amount to be paid</small></h5>
+                      <h2 class="invisible">{{leaseinfo.selected.rate}}</h2>
+                      <small class="invisible">Rate Of Interest(%)</small>
+                     <!--  <div class="form-group floating-label-wrapper">
+                        <input type="text" ng-model="leaseinfo.selected.rate" class="form-control" disabled>
                         <small>Rate Of Interest(%)</small>
-                      </div>
-                      <div class="form-group floating-label-wrapper">
-                        <i class="fa fa-inr"></i> <input type="text" ng-model="lTotalInstallment[l1Index]" class="form-control" name="" ng-value="{{leaseinfo.data[0].installment}}" placeholder="" disabled>
+                      </div> -->
+                      <h2>{{leaseinfo.selected.installment}}</h2>
+                      <small>Total Monthly Payment</small>
+                      <!-- <div class="form-group floating-label-wrapper">
+                        <i class="fa fa-inr"></i> <input type="text" ng-model="leaseinfo.selected.installment" class="form-control" disabled>
                         <small>Total Monthly Repayment(E.M.I)</small>
-                      </div>
-                      <div class="form-group floating-label-wrapper">
-                        <i class="fa fa-inr"></i> <input type="text" ng-model="lTotalDownAndProcessing[l1Index]" class="form-control" name="" ng-value="{{leaseinfo.data[0].processingfee}}+{{leaseinfo.data[0].margin}}" placeholder="" disabled>
+                      </div> -->
+                      <h2>{{leaseinfo.selected.totalPayment}}</h2>
+                      <small>Down-Payment+Processing Fee</small>
+                      <!-- <div class="form-group floating-label-wrapper">
+                        <i class="fa fa-inr"></i> <input type="text" ng-model="leaseinfo.selected.totalPayment" class="form-control" disabled>
                         <small>Down-Payment+Processing Fee</small>
-                      </div>
+                      </div> -->
                     </div>
                   </div>
                 </div><!--end repeat div-->
@@ -362,7 +373,7 @@
             </uib-accordion>
         <div class="asset-sale text-center">
           <h5><small>Choose at least one offer to proceed.</small></h5>
-          <button type="button" ng-click="proceed(offerform)" class="btn btn-primary">Proceed</button>
+          <button type="button" ng-click="proceed()" class="btn btn-primary">Proceed</button>
         </div>
       </div>
       </form>
@@ -414,56 +425,48 @@ $('#article-photo').carousel(dir);
 </div>
 </script>
 <!-- popup after click agree button -->
-<script type="text/ng-template" id="price_trend_survey.html">
+<script type="text/ng-template" id="details-user.html">
 <div>
   <div class="modal-header">
-    <button type="button" class="close" ng-click="priceTrendSurveyVm.close()" aria-hidden="true">&times;</button>
-    <h4 class="modal-title">Leave your Comment</h4>
+    <button type="button" class="close" ng-click="close()" aria-hidden="true">&times;</button>
+    <h4 class="modal-title">Fill your details</h4>
   </div>
-  <div class="modal-body">
-    <form class="form-signin" name="surveyForm" novalidate>
-      <div class="row">
-        <div class="form-group col-sm-6" ng-class="{'has-error': surveyForm.fname.$invalid && submitted}">
-          <input type="text" class="form-control" name="fname" ng-model="priceTrendSurveyVm.priceTrendSurvey.user.fname" placeholder="First Name" required>
-        </div>
-        
-        <div class="form-group col-sm-6" ng-class="{'has-error': surveyForm.lname.$invalid && submitted}">
-          <input type="text" class="form-control" name="lname" ng-model="priceTrendSurveyVm.priceTrendSurvey.user.lname" placeholder="Last Name" required>
-        </div>
-      </div>
-      
-      <div class="row">
-        <div class="form-group col-sm-6" ng-class="{'has-error': surveyForm.mobile.$invalid && submitted}">
-          <div class="row">
-            <div class="col-sm-4 padd-right search-field">
-              <select class="form-control" ng-model="priceTrendSurveyVm.priceTrendSurvey.user.countryCode" ng-change="priceTrendSurveyVm.onCodeChange(priceTrendSurveyVm.priceTrendSurvey.user.countryCode)" required>
-                <option value="" disabled>*Code</option>
-                <option  ng-repeat ="country in allCountries | orderBy:'name'" value="{{country.countryCode}}">+{{country.countryCode}}</option>
-              </select>
-              <i class="caret"></i>
+  <form name="customerDetailForm" novalidate>
+    <div class="modal-body">
+      <div class="floating-lable-form">
+        <div class="row">
+          <div class="col-sm-6 form-group has-error">
+            <div class="floating-label-wrapper" ng-class="{'has-error' : customerDetailForm.fname.$invalid && submitted}">
+              <label for="fname">First Name</label>
+              <input type="text" class="form-control" id="fname" name="fname" placeholder="First Name" ng-model="offerReq.fname" required with-floating-label>
             </div>
-            <div class="col-sm-8 padd-left">
-              <input type="text" class="form-control" name="mobile" placeholder="Mobile No." uib-tooltip="98-XXXX-XXXX" tooltip-trigger="focus" tooltip-placement="top" ng-model="priceTrendSurveyVm.priceTrendSurvey.user.mobile"  required>
+          </div>
+          <div class="col-sm-6 form-group has-error">
+            <div class="floating-label-wrapper" ng-class="{'has-error' : customerDetailForm.fname.$invalid && submitted}">
+              <label for="lname">Last Name</label>
+              <input type="text" class="form-control" id="lname" name="lname" placeholder="Last Name" ng-model="offerReq.lname" required with-floating-label>
+            </div>
+          </div>
+          <div class="col-sm-6 form-group has-error">
+            <div class="floating-label-wrapper" ng-class="{'has-error' : customerDetailForm.fname.$invalid && submitted}">
+              <label for="mobile">Mobile No.</label>
+              <input type="number" class="form-control" id="mobile" name="mobile" placeholder="Mobile No." ng-model="offerReq.mobile" required with-floating-label>
+            </div>
+          </div>
+          <div class="col-sm-6 form-group has-error">
+            <div class="floating-label-wrapper">
+              <label for="email">Email</label>
+              <input type="email" class="form-control" id="email" name="email" placeholder="Email" ng-model="offerReq.email" with-floating-label>
             </div>
           </div>
         </div>
-        <div class="col-sm-6 form-group">
-          <input type="email" class="form-control" name="email" placeholder="Email Address" ng-model="priceTrendSurveyVm.priceTrendSurvey.user.email" >
-          
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-sm-12 form-group" ng-class="{'has-error': surveyForm.comment.$invalid && agree == 'No' && submitted}">
-          <textarea class="form-control" name="comment" placeholder="Comments" ng-model="priceTrendSurveyVm.priceTrendSurvey.comment" ng-required="agree == 'No'"></textarea>
-        </div>
-      </div>
-      
-    </form>
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-md btn-default" ng-click="priceTrendSurveyVm.save(surveyForm)">Ok</button>
-    <button type="submit" class="btn btn-md btn-danger" ng-click="priceTrendSurveyVm.close()">Cancel</button>
-  </div>
+      </div>      
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-md btn-default" ng-click="save(customerDetailForm)">Submit</button>
+      <button type="submit" class="btn btn-md btn-danger" ng-click="close()">Cancel</button>
+    </div>
+  </form>
 </div>
 </script>
 <!-- end poup -->

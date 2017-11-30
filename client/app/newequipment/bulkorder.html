@@ -11,7 +11,7 @@
 </div>
 <!-- New Equipment -->
 <section class="category-block">
-  <div class="container padd-left padd-right">
+  <div class="container">
     <div class="heading-titles text-center form-group">
       <h4>[ FOR BULK ORDERS ]</h4>
       <p><strong>Need large quantities of equipments with amazing quality and attractive prices? iQuippo has the solution for you.</strong> </p>
@@ -24,17 +24,17 @@
           <h4 class="text-center">BULK INQUIRY FORM</h4>
           <hr>
           <div class="row">
-            <div class="col-sm-3 form-group">
+            <div class="col-xs-6 col-sm-3 form-group">
               <div class="floating-label-wrapper">
-                <div class="radio">
+                <div class="radio radio-info">
                   <input type="radio" ng-model="bulkOrderVm.dataModel.forSelf" ng-value="true" name="reqType" id="self" ng-change="bulkOrderVm.setUserData()">
                   <label for="self">For Self</label>
                 </div>
               </div>
             </div>
-            <div class="col-sm-3 form-group">
+            <div class="col-xs-6 col-sm-3 form-group">
               <div class="floating-label-wrapper">
-                <div class="radio">
+                <div class="radio radio-info">
                   <input type="radio" name="reqType" ng-model="bulkOrderVm.dataModel.forSelf" ng-value="false" id="others" ng-change="bulkOrderVm.setUserData()"><label for="others">For Others</label>
                 </div>
               </div>
@@ -73,7 +73,7 @@
                 <label>State*</label>
                 <select class="form-control" name="state" ng-model="bulkOrderVm.dataModel.state" ng-change="bulkOrderVm.onStateChange(bulkOrderVm.dataModel.state)" required ng-disabled="bulkOrderVm.dataModel.forSelf">
                   <option value="">Select State</option>
-                  <option value="{{state.name}}" ng-repeat="state in stateList">{{state.name}}</option>              
+                  <option value="{{state.name}}" ng-repeat="state in stateList | orderBy :'name'">{{state.name}}</option>              
                 </select>
               </div>
             </div>
@@ -83,7 +83,7 @@
                 <label>City*</label>
                 <select class="form-control" name="city" ng-model="bulkOrderVm.dataModel.city" required ng-disabled="bulkOrderVm.dataModel.forSelf">
                   <option value="">Select City</option>
-                  <option value="{{city.name}}" ng-repeat="city in cityList">{{city.name}}</option>              
+                  <option value="{{city.name}}" ng-repeat="city in cityList | orderBy :'name'">{{city.name}}</option>              
                 </select>
               </div>
             </div>
@@ -94,48 +94,70 @@
           </h5>
 
           <div class="row" ng-repeat="order in bulkOrderVm.dataModel.orders">
-            <div class="col-sm-3 form-group">
-              <div class="floating-label-wrapper" ng-class="{'has-error':form.category_{{$index}}.$invalid && submitted}">
-                <label for="category">Category</label>
-                <select class="form-control" name="category_{{$index}}" ng-model="order.category" ng-change="bulkOrderVm.onCategoryChange(order)" required>
-                  <option value="">Select Category</option>
-                  <option value="{{category.name}}" ng-repeat="category in categoryList">{{category.name}}</option>              
-                </select>
-              </div>
-            </div>
-            <div class="col-sm-3 form-group">
-              <div class="floating-label-wrapper" ng-class="{'has-error':form.brand_{{$index}}.$invalid && submitted}">
-                <label for="brand">Brand</label>
-                <select class="form-control" id="brand" name="brand_{{$index}}" ng-model="order.brand" ng-change="bulkOrderVm.onBrandChange(order)" required>
-                  <option value="">Select Brand</option>
-                  <option value="{{brand.name}}" ng-repeat="brand in order.brandList">{{brand.name}}</option>              
-                </select>
-              </div>
-            </div>
-            <div class="col-sm-3 form-group">
-              <div class="floating-label-wrapper" ng-class="{'has-error':form.model_{{$index}}.$invalid && submitted}">
-                <label for="model">Model</label>
-                <select class="form-control" id="model" name="model_{{$index}}" ng-model="order.model" required>
-                  <option value="">Select Model</option>
-                  <option value="{{model.name}}" ng-repeat="model in order.modelList">{{model.name}}</option>              
-                </select>
-              </div>
-            </div>
-            <div class="col-sm-2 form-group text-center">
-              
-              <div class="floating-label-wrapper" ng-class="{'has-error':form.name.quantity_{{$index}} && submitted}">
-                <label>Quantity</label>              
-                <div class="input-group quantity">
-                  <a href="javascript:void(0);" class="input-group-addon" ng-click="bulkOrderVm.setQuantity(order,'dec')"><i class="fa fa-minus"></i></a>
-                  <input type="number" class="form-control" name="quantity_{{$index}}" ng-model="order.quantity" placeholder="1" min="1" disabled>
-                  <a href="javascript:void(0);" ng-click="bulkOrderVm.setQuantity(order,'inc')" class="input-group-addon"><i class="fa fa-plus"></i></a>
+            <div class="col-sm-11">
+              <div class="row">
+                <div class="col-sm-3 form-group">
+                  <div class="floating-label-wrapper" ng-class="{'has-error':form.category_{{$index}}.$invalid && submitted}">
+                    <label for="category">Category</label>
+                    <select class="form-control" name="category_{{$index}}" ng-model="order.category" ng-change="bulkOrderVm.onCategoryChange(order)" required>
+                      <option value="">Select Category</option>
+                      <option value="{{category.name}}" ng-repeat="category in categoryList | orderBy :'name'">{{category.name}}</option>              
+                    </select>
+                  </div>
+                </div>
+                <div class="col-sm-3 form-group">
+                  <div class="floating-label-wrapper" ng-class="{'has-error':form.brand_{{$index}}.$invalid && submitted}">
+                    <label for="brand">Brand</label>
+                    <select class="form-control" id="brand" name="brand_{{$index}}" ng-model="order.brand" ng-change="bulkOrderVm.onBrandChange(order)" required>
+                      <option value="">Select Brand</option>
+                      <option value="{{brand.name}}" ng-repeat="brand in order.brandList | orderBy :'name'">{{brand.name}}</option>              
+                    </select>
+                  </div>
+                </div>
+                <div class="col-sm-3 form-group">
+                  <div class="floating-label-wrapper" ng-class="{'has-error':form.model_{{$index}}.$invalid && submitted}">
+                    <label for="model">Model</label>
+                    <select class="form-control" id="model" name="model_{{$index}}" ng-model="order.model" required>
+                      <option value="">Select Model</option>
+                      <option value="{{model.name}}" ng-repeat="model in order.modelList | orderBy :'name'">{{model.name}}</option>              
+                    </select>
+                  </div>
+                </div>
+                <div class="col-sm-2 form-group text-center">
+                  
+                  <div class="floating-label-wrapper" ng-class="{'has-error':form.name.quantity_{{$index}} && submitted}">
+                    <label>Quantity</label>              
+                    <div class="input-group quantity">
+                      <a href="javascript:void(0);" class="input-group-addon" ng-click="bulkOrderVm.setQuantity(order,'dec')"><i class="fa fa-minus"></i></a>
+                      <input type="number" class="form-control" name="quantity_{{$index}}" ng-model="order.quantity" placeholder="1" min="1" disabled>
+                      <a href="javascript:void(0);" ng-click="bulkOrderVm.setQuantity(order,'inc')" class="input-group-addon"><i class="fa fa-plus"></i></a>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-3 form-group">
+                  <div class="floating-label-wrapper">
+                    <label for="idPrice_{{$index}}">Indicative Price</label>
+                    <input type="text" class="form-control" id="idPrice_{{$index}}" name="idPrice_{{$index}}" ng-model="order.indicativePrice" placeholder="Indicative Price">
+                  </div>
+                </div>
+                <div class="col-sm-3 form-group">
+                  <div class="floating-label-wrapper">
+                    <label for="idRate_{{$index}}"> Indicative Rate</label>
+                    <input type="text" class="form-control" id="idRate_{{$index}}" name="idRate_{{$index}}" ng-model="order.indicativeRate" placeholder="Indicative Rate">
+                  </div>
+                </div>
+                <div class="col-sm-3 form-group">
+                  <div class="floating-label-wrapper">
+                    <label for="idDownPayment_{{$index}}">Indicative Down Payment</label>
+                    <input type="text" class="form-control" id="idDownPayment_{{$index}}" name="idDownPayment_{{$index}}" ng-model="order.indicativeDownpayment" placeholder="Indicative Down Payment">
+                  </div>
                 </div>
               </div>
             </div>
             <div class="col-sm-1 form-group text-center bulk-more">
                <a href="javascript:void(0);" ng-click="bulkOrderVm.dataModel.orders.splice($index,1)" ng-if="bulkOrderVm.dataModel.orders.length > 1">
-              <i class="fa fa-minus"></i> Delete
-            </a>
+                <i class="fa fa-minus"></i> Delete
+              </a>
             </div>
           </div>
           
