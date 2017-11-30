@@ -26,13 +26,13 @@ angular.module('sreizaoApp')
         }
       })
       .state('signin', {
-        url: '/signin?state&brand&category&id',
+        url: '/signin?state&brand&category&id&dbAuctionId&lot',
         templateUrl: 'app/account/login/login-new.html',
         controller: 'LoginCtrl as loginVm',
         layout:'client'
       })
        .state('signup', {
-        url: '/signup?state&brand&category&id',
+        url: '/signup?state&brand&category&id&dbAuctionId&lot',
         templateUrl: 'app/account/signup/signup-new.html',
         controller: 'SignupCtrl as signupVm',
         layout:'client'
@@ -221,7 +221,7 @@ angular.module('sreizaoApp')
         layout:'client'
       })
       .state('productdetail', {
-        url: '/used/:category/:brand/:id',
+        url: '/used/:category/:brand/:id?lot',
         templateUrl: 'app/product/productdetail.html',
         controller: 'ProductDetailCtrl as productDetailVm',
         layout:'client'

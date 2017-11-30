@@ -15,6 +15,8 @@
     vm.onPageChange = onPageChange;
     vm.fireCommand = fireCommand;
     $scope.clearAll = clearAll;
+    vm.viewLotDetail = viewLotDetail;
+    vm.openLiveAuctionURL = openLiveAuctionURL;
 
     var allCategory = [];
     var allBrand = [];
@@ -123,16 +125,17 @@
 
     function openLiveAuctionURL() {
       if(!Auth.getCurrentUser()._id) {
-        Modal.alert("Please Login/Register for uploading the products!", true);
+        //Modal.alert("Please Login/Register for uploading the products!", true);
+        Auth.goToLogin();
         return;
       }
-      dataObj = {};
+      var dataObj = {};
       dataObj.auction = {};
       dataObj.user = {};
       dataObj.auction.dbAuctionId = dbAuctionId;
       dataObj.user._id = Auth.getCurrentUser()._id;
       dataObj.emdTax = $scope.auctionData.emdTax;
-      if($scope.aucionData.emdTax === $scope.LotWist)
+      if($scope.auctionData.emdTax === $scope.LotWist)
         dataObj.checkRegUser = true;
       userRegForAuctionSvc.checkUserRegis(dataObj)
         .then(function(result) {
@@ -168,7 +171,7 @@
       getLotsInAuction(filter);
   }
   
-  //var loadCounter = 0;
+  var loadCounter = 0;
   function getLotsInAuction(filter) {
       $scope.searching = true;
       $scope.noResult = false;
@@ -185,6 +188,11 @@
                 lot.primaryImg= $rootScope.uploadImagePrefix + lot.assets[0].product.assetDir +"/" + lot.assets[0].product.primaryImg;
               if(!Auth.getCurrentUser()._id)
                 return;
+              lot.isVisible = false;
+              if($scope.auctionData.auctionType == 'L')
+                return;
+              var url = auctionURL+ "/bidwidget/" + dbAuctionId + "/" + lot._id + "/" + Auth.getCurrentUser()._id + "?random=" + Math.random();
+              lot.url = $sce.trustAsResourceUrl(url);
               checkWidgetAccessOnLot(lot);
             });
           }else{
@@ -210,8 +218,6 @@
         .then(function(result) {
           if (result.data) {
             if (result.data == "done") {
-              lotObj.url = auctionURL+ "/bidwidget/" + dbAuctionId + "/" + lotObj._id + "/" + Auth.getCurrentUser()._id;
-              lotObj.url = $sce.trustAsResourceUrl(lotObj.url);
               lotObj.isVisible = true;
             }
             if (result.message == "No Data") {
@@ -293,6 +299,32 @@
       });
     }
 
+
+    function viewLotDetail(lot){
+      var lotDetailScope = $rootScope.$new();
+      lotDetailScope.lot = lot;
+      lotDetailScope.uploadImagePrefix = $rootScope.uploadImagePrefix;
+      var lotDetailModal = $uibModal.open({
+        templateUrl: "multipleasset.html",
+        scope: lotDetailScope,
+        size: 'lg'
+      });
+
+      lotDetailScope.close = function() {
+        lotDetailModal.close();
+      };
+
+      lotDetailScope.goToProductDetail = function(asset){
+        lotDetailModal.close();
+        var statParam = {category:asset.category,
+          brand:asset.brand,
+          id:asset.assetId
+        };
+        if(Auth.isLoggedIn() && lot.isVisible)
+          statParam.lot = lot._id;
+        $state.go('productdetail',statParam);
+      }
+    }
 
   function onPageChange(){
     $window.scrollTo(0, 0);

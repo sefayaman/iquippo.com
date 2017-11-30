@@ -105,6 +105,7 @@
             </a>
         </div>
         <div class="col-xs-6 col-sm-2 form-group asset-sale">
+           <button type="button" class="btn btn-primary btn-block" ng-if="auctionData.auctionType === 'L'" ng-disabled="auctionData.auctionValue === 'upcomingAuctions'" ng-click="viewLotVm.openLiveAuctionURL()" class="btn btn-default btn-sm active">View Live Auction</button>
           <button type="button" class="btn btn-primary btn-block" ng-if="auctionData.auctionValue !='closedAuctions'" ng-click="viewLotVm.openRegisterNow()" class="btn btn-default btn-sm active">Register</button>
         </div>
       </div>
@@ -143,7 +144,7 @@
           </uib-accordion-heading>
           <div class="row">
             <div class="col-sm-3 form-group">
-              <p><i class="fa fa-phone"></i> Saharsh Baid (9876543210)</p>
+              <p><i class="fa fa-phone"></i> {{auctionData.contactName}} ({{auctionData.contactNumber}})</p>
               <p><i class="fa fa-map-marker"></i> Gurgoan</p>
               <p><i class="fa fa-envelope"></i> Saharsh@iquippo.com</p>
             </div>
@@ -210,22 +211,20 @@
                       <p><i class="fa fa-clock-o"></i> <strong class="text-success"><timer end-time="lot.endDate">{{days}} days, {{hours}} hours, {{minutes}} minutes, {{seconds}} seconds.</timer></strong></p>
                        <p><i class="fa fa-check-circle-o"></i> Available for Sale</p>
 
-                       <a href="/used/{{lot.assets[0].product.category}}/{{lot.assets[0].product.brand}}/{{lot.assets[0].product.assetId}}" class="btn btn-primary btn-block" ng-if="lot.assets.length === 1 && lot.assets[0].product && lot.assets[0].product._id">
+                       <a href="/used/{{lot.assets[0].product.category}}/{{lot.assets[0].product.brand}}/{{lot.assets[0].product.assetId}}?lot={{lot._id}}" class="btn btn-primary btn-block" ng-if="lot.assets.length === 1 && lot.assets[0].product && lot.assets[0].product._id">
                           View Details
                         </a>
                          <a href="javascript:void(0)" class="btn btn-primary btn-block" ng-if="lot.assets.length === 1 && lot.assets[0].product && !lot.assets[0].product._id" disabled>
                           View Details
                         </a>
-                         <a href="javascript:voiid(0)" class="btn btn-primary btn-block" ng-if="lot.assets.length > 1">
+                         <a href="javascript:void(0)" class="btn btn-primary btn-block" ng-if="lot.assets.length > 1" ng-click="viewLotVm.viewLotDetail(lot)">
                           View Details
                         </a> 
                     </div>                 
-                    <!-- {{lot.isVisible}} -->
-                    <!-- {{lot.url}} -->
                     
                   </div>
                   <div class="col-sm-5 padd-left" ng-if="lot.isVisible">
-                    <iframe ng-src="{{lot.url}}" style="border:0; width: 100%; height: 200px;"></iframe>
+                    <iframe ng-src="{{lot.url}}" name="frame_{{$index}}" id="frame_{{$index}}" style="border:0; width: 100%; height: 200px;"></iframe>
                   </div>
                 </div>    
               </div>
@@ -289,7 +288,7 @@
                  <a href="javascript:void(0)" class="btn btn-primary btn-block" ng-if="lot.assets.length === 1 && lot.assets[0].product && !lot.assets[0].product._id" disabled>
                   View Details
                 </a>
-                 <a href="javascript:voiid(0)" class="btn btn-primary btn-block" ng-if="lot.assets.length > 1">
+                 <a href="javascript:void(0)" class="btn btn-primary btn-block" ng-if="lot.assets.length > 1" ng-click="viewLotVm.viewLotDetail(lot)">
                   View Details
                 </a>     
               </div>
@@ -316,40 +315,40 @@
 <script type="text/ng-template" id="multipleasset.html">
   <div>
     <div class="modal-header">
-      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="close()">&times;</button>
       <h4 class="modal-title">Modal title</h4>
     </div>
     <div class="modal-body">
-      <div class="row">      
+      <div class="row" ng-repeat="auReq in lot.assets">      
         <div class="col-sm-12 col-md-12 form-group">
           <div class="media text-center form-group">                
             <a href="javascript:void(0)" class="pull-left lot-image">
-                 <img src="http://placehold.it/300x200" class="img-responsive" ng-if="!lot.primaryImg">              
-                 <!-- <img ng-if="lot.primaryImg" ng-src="{{lot.primaryImg}}" class="img-responsive">               -->
+                 <img src="http://placehold.it/300x200" class="img-responsive" ng-if="!auReq.product.primaryImg">              
+                 <img ng-if="auReq.product.primaryImg" ng-src="{{uploadImagePrefix}}{{auReq.product.assetDir}}/{{auReq.product.primaryImg}}" class="img-responsive" width="300" height="200">              
                 </a>          
                 <div class="media-body lot-body text-left"> 
                   <div class="row">
                     <div class="col-xs-8 form-group padd-right">
                       <h4 class="text-ellips">Lot Number - {{lot.lotNumber}}</h4>     
-                      <h6 class="text-info">Asset Description : <span ng-if="lot.assets.length == 1">{{lot.assets[0].product.category}} {{lot.assets[0].product.brand}} {{lot.assets[0].product.model}}</span>
-                          <span ng-repeat="asset in lot.assets track by $index" ng-if="lot.assets.length > 1">
+                      <h6 class="text-info">Asset Description : <span>{{auReq.product.category}} {{auReq.product.brand}} {{auReq.product.model}}</span>
+                          <!-- <span ng-repeat="asset in lot.assets track by $index" ng-if="lot.assets.length > 1">
                             <a href="javascript:void(0)" ng-click="fetchAsset(asset.product.assetId,lot.lotNumber,false)"> {{asset.product.assetId}} </a> <span ng-if="!$last">, </span>
-                          </span>
+                          </span> -->
                       </h6>
                     </div>                  
                   </div> 
                   <p><i class="fa fa-clock-o"></i> <strong class="text-success"><timer end-time="lot.endDate">{{days}} days, {{hours}} hours, {{minutes}} minutes, {{seconds}} seconds.</timer></strong></p>
                    <p><i class="fa fa-check-circle-o"></i> Available for Sale</p>
 
-                   <a href="/used/{{lot.assets[0].product.category}}/{{lot.assets[0].product.brand}}/{{lot.assets[0].product.assetId}}" class="btn btn-primary btn-block" ng-if="lot.assets.length === 1 && lot.assets[0].product && lot.assets[0].product._id">
+                   <a href="javascript:void(0)" class="btn btn-primary btn-block" ng-if="auReq.product && auReq.product._id" ng-click="goToProductDetail(auReq.product)">
                       View Details
                     </a>
-                     <a href="javascript:void(0)" class="btn btn-primary btn-block" ng-if="lot.assets.length === 1 && lot.assets[0].product && !lot.assets[0].product._id" disabled>
+                     <a href="javascript:void(0)" class="btn btn-primary btn-block" ng-if="auReq.product && !auReq.product._id" disabled>
                       View Details
                     </a>
-                     <a href="javascript:voiid(0)" class="btn btn-primary btn-block">
+                     <!-- <a href="javascript:void(0)" class="btn btn-primary btn-block">
                       View Details
-                    </a> 
+                    </a>  -->
                 </div>      
           </div>
         </div>           

@@ -1,25 +1,12 @@
 (function() {
   'use strict';
   angular.module('sreizaoApp').controller('ProductDetailCtrl', ProductDetailCtrl);
-  angular.module('sreizaoApp').controller('PriceTrendSurveyCtrl', PriceTrendSurveyCtrl);
 
-
-  function ProductDetailCtrl($scope, $sce, $location, AssetSaleSvc, AuctionSvc, LocationSvc, AuctionMasterSvc, vendorSvc, NegotiationSvc, $stateParams, $rootScope, PaymentMasterSvc, $uibModal, $http, Auth, productSvc, notificationSvc, Modal, CartSvc, ProductTechInfoSvc, BuyContactSvc, userSvc, PriceTrendSvc, ValuationSvc, $state) {
+  function ProductDetailCtrl($scope, $sce, $location, AssetSaleSvc, AuctionSvc, LocationSvc, AuctionMasterSvc, vendorSvc, NegotiationSvc, $stateParams, $rootScope, PaymentMasterSvc, $uibModal, $http, Auth, productSvc, notificationSvc, Modal, CartSvc, ProductTechInfoSvc, BuyContactSvc, userSvc, PriceTrendSvc, ValuationSvc, $state,LotSvc,userRegForAuctionSvc) {
    var vm = this;
-   var query=$location.search();
-
-    if(query.assetListedInAuction){
-      $scope.assetListedInAuction=query.assetListedInAuction;
-      console.log("assetListedInAuction",$scope.assetListedInAuction);
-    }
-    var aswidgetUrl = auctionURL + "/bidwidget/"+query.id+"/"+query.lotId+"/"+ Auth.getCurrentUser()._id;
-    $scope.asWidgetURLSCE = $sce.trustAsResourceUrl(aswidgetUrl);
-   //console.log("url",$scope.asWidgetURLSCE);
-
-   $scope.displayBid=query.displayBid;
-   $scope.asAuctionId=query.auctionId;
-   $scope.asLotId=query.lotId;
-   $scope.asUserId=query.userId;
+    $scope.lot = {};
+    $scope.showWidget = false;
+    $scope.showAssetsaleBid = false;
     $scope.currentProduct = {};
     $scope.priceTrendData = null;
     $rootScope.currntUserInfo = {};
@@ -34,8 +21,6 @@
     $scope.mstep = 1;
     $scope.ismeridian = true;
     var filter = {};
-    $scope.assetListedInAuction = '';
-    $scope.assetListedInAuction = query.assetListedInAuction;
     //certification request
     $scope.productQuote = {};
     if (Auth.getCurrentUser()._id) {
@@ -380,6 +365,60 @@
       });
     }
 
+    function getLot(){
+      if(!$stateParams.lot){
+        $scope.showWidget = false;
+        $scope.showAssetsaleBid = true;
+        return;
+      }
+      var lotFilter = {lotId:$stateParams.lot,assetId:$stateParams.id};
+      LotSvc.getLotsInAuction(lotFilter)
+      .then(function(lots){
+        if(lots && lots.length){
+          $scope.lot = lots[0];
+          checkWidgetAccessOnLot(lots[0]);
+        }else{
+           $scope.showWidget = false;
+            $scope.showAssetsaleBid = true;
+        }
+      })
+      .catch(function(err){
+         $scope.showWidget = false;
+          $scope.showAssetsaleBid = true;
+      });
+
+    }
+
+    function checkWidgetAccessOnLot(lot){
+        var dataObj = {};
+        dataObj.auction = {};
+        dataObj.user = {};
+        dataObj.auction.dbAuctionId = lot.auction_id;
+        dataObj.user._id = Auth.getCurrentUser()._id;
+        dataObj.lotNumber = lot.lotNumber;
+        userRegForAuctionSvc.checkUserRegis(dataObj)
+        .then(function(result) {
+          if (result.data) {
+            if (result.data == "done") {
+              lot.url = auctionURL+ "/bidwidget/" + lot.auction_id + "/" + lot._id + "/" + Auth.getCurrentUser()._id;
+              lot.url = $sce.trustAsResourceUrl(lot.url);
+              $scope.showWidget = true;
+              $scope.showAssetsaleBid = false;
+            }else{
+               $scope.showWidget = false;
+              $scope.showAssetsaleBid = true;
+            }
+          } else {
+            $scope.showWidget = false;
+            $scope.showAssetsaleBid = true;
+          }
+        })
+        .catch(function(err){
+          $scope.showWidget = false;
+          $scope.showAssetsaleBid = true;
+        });
+    }
+
     function init() {
       vendorSvc.getAllVendors()
         .then(function() {
@@ -421,6 +460,7 @@
           } else {
             $scope.allowBid = 'Yes';
           }
+
           if($scope.currentProduct.state) {
             var stateFilter = {};
             stateFilter.stateName = $scope.currentProduct.state;
@@ -436,13 +476,13 @@
           $scope.$broadcast('productloaded');
           $rootScope.currentProduct = $scope.currentProduct;
 
-          if ($scope.currentProduct.tradeType == "SELL" || $scope.currentProduct.tradeType == "NOT_AVAILABLE") {
+         /* if ($scope.currentProduct.tradeType == "SELL" || $scope.currentProduct.tradeType == "NOT_AVAILABLE") {
             $scope.trade = "To Buy";
           } else if ($scope.currentProduct.tradeType == "RENT") {
             $scope.trade = "For Rent";
           } else {
             $scope.trade = "Buy/Rent";
-          }
+          }*/
 
           if (isEmpty($scope.currentProduct.technicalInfo)) {
             var techFilter = {
@@ -465,6 +505,7 @@
                 }
               });
           }
+
           if ($scope.currentProduct.auctionListing && $scope.currentProduct.auction) {
             var filter = {};
             filter._id = $scope.currentProduct.auction._id;
@@ -490,12 +531,18 @@
           countBid();
           getLastBidForUser();
           getPriceTrendData();
-          if ($scope.currentProduct.tradeType == "SELL")
+          if(Auth.getCurrentUser()._id && $stateParams.lot)
+            getLot();
+          else{
+             $scope.showWidget = false;
+             $scope.showAssetsaleBid = true;
+          }
+         /* if ($scope.currentProduct.tradeType == "SELL")
             vm.showText = "To Buy"
           else if ($scope.currentProduct.tradeType == "RENT")
             vm.showText = "For Rent"
           else
-            vm.showText = "To Buy / For Rent"
+            vm.showText = "To Buy / For Rent"*/
           if ($rootScope.currentProduct.serviceInfo.length > 0) {
             for (var i = 0; i < $rootScope.currentProduct.serviceInfo.length; i++) {
               if ($rootScope.currentProduct.serviceInfo[i] && $rootScope.currentProduct.serviceInfo[i].servicedate)
@@ -626,7 +673,6 @@
     }
 
     //init();
-    loadUserDetail();
 
     function playVideo(idx) {
       var videoScope = $rootScope.$new();
@@ -755,97 +801,11 @@
           }
         });
     }
-  }
 
-
-
-  function PriceTrendSurveyCtrl($scope, Auth, $uibModalInstance, PriceTrendSvc, LocationSvc, UtilSvc) {
-    var vm = this;
-    vm.priceTrendSurvey = {};
-    vm.priceTrendSurvey.user = {};
-    vm.priceTrendSurvey.product = {};
-    vm.priceTrendSurvey.priceTrend = {};
-    
-    vm.save = save;
-    vm.close = close;
-    vm.onCodeChange = onCodeChange;
-
-    function init() {
-
-      vm.priceTrendSurvey.agree = $scope.agree;
-      if (Auth.getCurrentUser()._id) {
-        vm.priceTrendSurvey.user._id = Auth.getCurrentUser()._id;
-        vm.priceTrendSurvey.user.fname = Auth.getCurrentUser().fname;
-        vm.priceTrendSurvey.user.lname = Auth.getCurrentUser().lname;
-        vm.priceTrendSurvey.user.email = Auth.getCurrentUser().email;
-        vm.priceTrendSurvey.user.mobile = Auth.getCurrentUser().mobile;
-        vm.priceTrendSurvey.user.country = Auth.getCurrentUser().country;
-        if (Auth.getCurrentUser().country)
-          vm.priceTrendSurvey.user.countryCode = LocationSvc.getCountryCode(Auth.getCurrentUser().country);
-      }
-
-      vm.priceTrendSurvey.product._id = $scope.currentProduct._id;
-      vm.priceTrendSurvey.product.name = $scope.currentProduct.name;
-      vm.priceTrendSurvey.product.mfgYear = $scope.currentProduct.mfgYear;
-
-      if ($scope.currentProduct.category.name == "Other")
-        vm.priceTrendSurvey.product.category = $scope.currentProduct.category.otherName;
-      else
-        vm.priceTrendSurvey.product.category = $scope.currentProduct.category.name;
-
-      if ($scope.currentProduct.brand.name == "Other")
-        vm.priceTrendSurvey.product.brand = $scope.currentProduct.brand.otherName;
-      else
-        vm.priceTrendSurvey.product.brand = $scope.currentProduct.brand.name;
-
-      if ($scope.currentProduct.model.name == "Other")
-        vm.priceTrendSurvey.product.model = $scope.currentProduct.model.otherName;
-      else
-        vm.priceTrendSurvey.product.model = $scope.currentProduct.model.name;
-
-      vm.priceTrendSurvey.priceTrend._id = $scope.priceTrend._id;
-      vm.priceTrendSurvey.priceTrend.saleYear = $scope.priceTrend.saleYear;
-
-    }
-
-    function onCodeChange(code) {
-      vm.priceTrendSurvey.user.country = LocationSvc.getCountryNameByCode(code);
-    }
-
-    function save(form) {
-      var ret = false;
-      if (vm.priceTrendSurvey.user.country && vm.priceTrendSurvey.user.mobile) {
-        var value = UtilSvc.validateMobile(vm.priceTrendSurvey.user.country, vm.priceTrendSurvey.user.mobile);
-        if (!value) {
-          $scope.surveyForm.mobile.$invalid = true;
-          ret = true;
-        } else {
-          $scope.surveyForm.mobile.$invalid = false;
-          ret = false;
-        }
-      }
-      if (form.$invalid || ret) {
-        $scope.submitted = true;
-        return;
-      }
-
-      PriceTrendSvc.saveSurvey(vm.priceTrendSurvey)
-        .then(function(result) {
-          close("success");
-        })
-        .catch(function(err) {
-          //close("success");
-
-        });
-      //console.log("hiiiiiii",vm.priceTrendSurvey);
-    }
-
-    function close(param) {
-      $uibModalInstance.close(param);
-    }
-
-    init();
-
+    //Entry point
+     Auth.isLoggedInAsync(function(loggedIn){
+          loadUserDetail();
+      });
   }
 
 })();

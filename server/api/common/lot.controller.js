@@ -292,7 +292,11 @@ exports.getLotsInAuction = function(req, res) {
   function fetchLots(options, callback) {
     var filter = {};
     filter.isDeleted = false;
-    filter.auction_id = queryParam._id;
+    if(queryParam._id)
+      filter.auction_id = queryParam._id;
+    if(queryParam.lotId)
+      filter['_id'] = queryParam.lotId;
+    console.log("lot@@@@@",filter);
     Lot.find(filter, function(err, result) {
       if (err) callback(err);
       if (result.length > 0) {
@@ -304,7 +308,7 @@ exports.getLotsInAuction = function(req, res) {
       });*/
         return callback(null, options);
       } else {
-        return callback(new APIError(404, 'No Assets present in the auction'));
+        return callback(new APIError(404, 'Lot not found'));
       }
   });
 }
