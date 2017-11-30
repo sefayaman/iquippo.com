@@ -99,7 +99,7 @@
         <div class="col-xs-6 col-sm-2 padd-left form-group asset-sale">          
            <button type="button" class="btn btn-primary btn-block" ng-if="auctionData.auctionType === 'L'" ng-disabled="auctionData.auctionValue === 'upcomingAuctions'" ng-click="viewLotVm.openLiveAuctionURL()" class="btn btn-default btn-sm active">View Live Auction</button>
         </div>
-        <div class="col-xs-6 col-sm-2 padd-left form-group asset-sale">          
+        <div class="col-xs-6 col-sm-2 padd-left form-group asset-sale pull-right">          
           <button type="button" class="btn btn-primary btn-block" ng-if="auctionData.auctionValue !='closedAuctions'" ng-click="viewLotVm.openRegisterNow()" class="btn btn-default btn-sm active">Register</button>
         </div>
       </div>
@@ -112,7 +112,7 @@
               <img src="/assets/images/icon-proxy.png" alt="" height="20"> Proxy Bid Form
             </a>
         </div>
-        <div class="col-sm-3 col-md-3 form-group">
+        <div class="col-sm-3 col-md-3 form-group text-right pull-right">
             <a href="{{uploadImagePrefix}}{{auctionDir}}/{{auctionData.docName}}" class="text-info" ng-if="auctionData.docType == 'tc'" target="_blank">
               <img src="/assets/images/icon-catalog.png" alt="" height="20"> Auction Catalogue
             </a>
