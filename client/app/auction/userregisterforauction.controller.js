@@ -258,7 +258,10 @@
         
         Auth.createUser(vm.UserObj)
           .then(function(result) {
-            sendMailToUser($scope.currentAuction, result);
+            Auth.isLoggedInAsync(function(loggedIn){
+              if(loggedIn)
+                sendMailToUser($scope.currentAuction, Auth.getCurrentUser());
+            });
           })
           .catch(function(err) {
             err = err.data;
@@ -305,7 +308,6 @@
       dataToSend['password'] = vm.user.password;
       dataToSend['userId'] = userData.customerId;
       dataToSend['customerId'] = userData.customerId;
-
       if(Auth.isAdmin())
         dataToSend['password'] = "1234";
       dataToSend['existFlag'] = false;
