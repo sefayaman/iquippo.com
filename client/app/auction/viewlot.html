@@ -91,9 +91,9 @@
             <small class="text-success" ng-if="auctionData.auctionValue =='closedAuctions'">( <i class="fa fa-circle"></i> Closed)</small>
           </h4>
         </div>
-        <div class="col-xs-6 visible-xs">
-          <button class="btn btn-danger visible-xs" ng-click="filterbutton.value1 = !filterbutton.value1">
-            <i class="fa fa-filter"></i> Filter
+        <div class="visible-xs btn-group filter-group form-group">
+          <button class="btn btn-default visible-xs" ng-click="filterbutton.value1 = !filterbutton.value1">
+            Filter
           </button>
         </div>        
         <div class="col-xs-6 col-sm-2 padd-left form-group asset-sale">          
@@ -127,11 +127,11 @@
           <h5><strong>On behalf of our client:</strong></h5>
           Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
         </div>
-        <div class="col-sm-3">
+        <div class="col-xs-6 col-sm-3">
           <h5><strong>Lot Description:</strong></h5>
           <p>JCB Exclavators</p>
         </div>
-        <div class="col-sm-3">
+        <div class="col-xs-6 col-sm-3">
           <h5><strong>Location:</strong></h5>
           <p>Delhi/NCR</p>
         </div>
@@ -204,7 +204,7 @@
             <div class="col-sm-12 col-md-12 form-group" ng-repeat="lot in viewLotVm.lotListing | startFrom:(pager.currentPage -1 )*pager.itemsPerPage | limitTo:pager.itemsPerPage">
               <div class="media text-center form-group">                
                 <div class="row">
-                  <div class="col-sm-7">
+                  <div class="col-sm-7 padd-right">
                     <a href="javascript:void(0)" class="pull-left lot-image">
                      <img src="http://placehold.it/300x200" class="img-responsive" ng-if="!lot.primaryImg">              
                      <img ng-if="lot.primaryImg" ng-src="{{lot.primaryImg}}" class="img-responsive">              
@@ -220,7 +220,7 @@
                           </h6>
                         </div>                  
                       </div> 
-                      <p><i class="fa fa-clock-o"></i> <strong class="text-success"><timer end-time="lot.endDate">{{days}} days, {{hours}} hours, {{minutes}} minutes, {{seconds}} seconds.</timer></strong></p>
+                      <p class="text-ellips"><i class="fa fa-clock-o"></i> <strong class="text-success"><timer end-time="lot.endDate">{{days}} days, {{hours}} hours, {{minutes}} minutes, {{seconds}} seconds.</timer></strong></p>
                        <p><i class="fa fa-check-circle-o"></i> Available for Sale</p>
 
                        <a href="/used/{{lot.assets[0].product.category}}/{{lot.assets[0].product.brand}}/{{lot.assets[0].product.assetId}}?lot={{lot._id}}" class="btn btn-primary btn-block" ng-if="lot.assets.length === 1 && lot.assets[0].product && lot.assets[0].product._id">
