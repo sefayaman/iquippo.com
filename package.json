@@ -10,6 +10,7 @@
     "composable-middleware": "^0.3.0",
     "compression": "~1.0.1",
     "connect-mongo": "^0.8.1",
+    "connect-multiparty": "^2.0.0",
     "cookie-parser": "~1.0.1",
     "cors": "^2.7.1",
     "crypto": "0.0.3",
@@ -50,8 +51,7 @@
     "trim": "0.0.1",
     "util": "^0.10.3",
     "validator": "^6.2.0",
-    "xlsx": "^0.8.0",
-    "connect-multiparty": "^2.0.0"
+    "xlsx": "^0.8.8"
   },
   "devDependencies": {
     "grunt": "~0.4.4",

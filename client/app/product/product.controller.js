@@ -1,4 +1,4 @@
-(function() {
+(function(xlsx) {
   'use strict';
   angular.module('sreizaoApp').controller('ProductCtrl', ProductCtrl);
 
@@ -180,7 +180,7 @@
           filter.userid = Auth.getCurrentUser()._id;
           if(Auth.isEnterprise()){
             delete filter.userid;
-            filter.enterpriseId = Auth.getCurrentUser().enterpriseId; 
+            filter.enterpriseId = Auth.getCurrentUser().enterpriseId;
           }
         }
         filter.productCondition = "used";
@@ -197,7 +197,7 @@
           $scope.imagesUnderCarrage = [];
           $scope.imagesOther = [];
           $scope.images = [];
-          
+
           if (response[0].serviceInfo.length > 0) {
             for (var i = 0; i < response[0].serviceInfo.length; i++) {
               if (response[0].serviceInfo[i] && response[0].serviceInfo[i].servicedate)
@@ -308,7 +308,7 @@
           }
           $scope.onTradeTypeChange($scope.product.tradeType);
           prepareImgArr();
-         
+
         })
       } else {
         prepareImgArr();
@@ -501,15 +501,15 @@
     }
 
     function userSearch(userSearchText){
-      if (!$scope.product.seller.userType) 
+      if (!$scope.product.seller.userType)
         return;
-      
-      if(userSearchText && userSearchText.length < 4) 
+
+      if(userSearchText && userSearchText.length < 4)
         return;
 
       $scope.container.sellerName="";
       $scope.product.seller.email="";
-      
+
       var dataToSend = {};
       dataToSend["status"] = true;
       dataToSend["userType"] = $scope.product.seller.userType;
@@ -537,7 +537,7 @@
     })
 
    }
-  
+
 
     function onCategoryChange(categoryId, noChange) {
       if (!noChange) {
@@ -627,7 +627,7 @@
           break;
         }
       }
-      
+
       if (md) {
         product.model._id = md._id;
         product.model.name = md.name;
@@ -702,20 +702,38 @@
         Modal.alert('Please upload a valid file');
         return;
       }
-      uploadSvc.upload(files[0], importDir)
-        .then(function(result) {
-          var dataToSend = {};
-          dataToSend.fileName = result.data.filename;
-          dataToSend.user = {
-            _id  : Auth.getCurrentUser()._id,
-            email : Auth.getCurrentUser().email,
-            mobile : Auth.getCurrentUser().mobile,
-            role : Auth.getCurrentUser().role
-          };
 
-          dataToSend.type = args.name || 'template_update';          
-          $rootScope.loading = true;
-          productSvc.bulkEditProduct(dataToSend)
+      //
+      var reader = new FileReader();
+
+        reader.onload = function (e) {
+          /* read workbook */
+          var bstr = e.target.result;
+          var workbook = xlsx.read(bstr, {type:'binary'});
+          var worksheet = workbook.Sheets[workbook.SheetNames[0]];
+          var data = xlsx.utils.sheet_to_json(worksheet);
+
+          data.forEach(function(x){
+            x.Row_Count=x.__rowNum__;
+          });
+          console.log("data>>>>> ",data);
+      //
+
+//      uploadSvc.upload(files[0], importDir)
+//        .then(function(result) {
+//          var dataToSend = {};
+//          dataToSend.fileName = result.data.filename;
+//          dataToSend.user = {
+//            _id  : Auth.getCurrentUser()._id,
+//            email : Auth.getCurrentUser().email,
+//            mobile : Auth.getCurrentUser().mobile,
+//            role : Auth.getCurrentUser().role
+//          };
+//
+//          dataToSend.type = args.name || 'template_update';
+//          $rootScope.loading = true;
+
+          productSvc.bulkEditProduct(data)
             .then(function(res) {
               $rootScope.loading = false;
               var totalRecord = res.totalCount;
@@ -734,12 +752,14 @@
             })
             .catch(function(res) {
               $rootScope.loading = false;
-              Modal.alert("error in parsing data", true);
-            })
-        })
-        .catch(function(res) {
-          Modal.alert("error in file upload", true);
-        });
+              Modal.alert("error in parsing data ", true);
+            });
+//        })
+//        .catch(function(res) {
+//          Modal.alert("error in file upload", true);
+//        });
+        };
+        reader.readAsBinaryString(files[0]);
     }
 
     function clickHandler(type, val) {
@@ -750,7 +770,7 @@
       else if (type == "months" && !val)
         delete $scope.product.rent.rateMonths;
     }
- 
+
 
     function firstStep(form, product) {
 
@@ -763,7 +783,7 @@
         form.mfgyear.$invalid = true;
         ret = true;
       }
-      
+
       if($scope.product.tradeType && $scope.product.tradeType == 'RENT' && $scope.product.auctionListing){
         Modal.alert("Auction is not allowed for rent assets.");
         return;
@@ -817,7 +837,7 @@
 
 
       });
-     
+
 
       if ($scope.product.images.length == 0) {
         Modal.alert("Please upload atleast one image in General Appearence section.", true);
@@ -1420,7 +1440,7 @@
           return "No";
       }
     }
-    
+
     $scope.getImageURL = function(assetDir,key){
         var uploadImagePrefix = $rootScope.uploadImagePrefix;
         //console.log(uploadImagePrefix + assetDir+'/'+key);
@@ -1598,4 +1618,61 @@
 
 
   }
-})();
+
+  //Crop Image Controller
+  function CropImageCtrl($scope, Auth, $location, $window, $http, $uibModalInstance) {
+    $scope.imageOut = '';
+    $scope.options = {};
+    var imgParts = $scope.imgSrc.split(".");
+    var imgExt = imgParts[imgParts.length - 1];
+    $scope.options.image = $scope.prefix + $scope.imgSrc + "?timestamp=" + new Date().getTime();
+    $scope.options.viewSizeWidth = 500;
+    $scope.options.viewSizeHeight = 500;
+
+    $scope.options.viewShowRotateBtn = false;
+    $scope.options.rotateRadiansLock = false;
+
+    $scope.options.outputImageWidth = 0;
+    $scope.options.outputImageHeight = 0;
+    $scope.options.outputImageRatioFixed = false;
+    $scope.options.outputImageType = imgExt;
+    $scope.options.outputImageSelfSizeCrop = true;
+    $scope.options.viewShowCropTool = true;
+    $scope.options.inModal = true;
+    $scope.options.watermarkType = 'image';
+    $scope.options.watermarkImage = null;
+
+    $scope.cropImage = function() {
+      $scope.$broadcast('cropImage');
+    };
+
+    $scope.saveImage = function() {
+      $scope.$broadcast('cropImageSave');
+    };
+
+    $scope.saveCrop = function(data) {
+      var serData = {};
+      serData['data'] = data;
+      //serData["imgExt"] = imgExt;
+      serData['assetdir'] = $scope.assetDir;
+      serData['filename'] = $scope.imgSrc;
+      $http.post('/api/common/saveasimage', serData)
+        .then(function(res) {
+          $uibModalInstance.close("ok");
+        })
+        .catch(function(res) {
+          console.log(res);
+        })
+    };
+    $scope.closeModal = function() {
+      $uibModalInstance.close();
+    }
+    $scope.dismissModal = function() {
+      $uibModalInstance.dismiss();
+    }
+
+  }
+
+
+
+})(XLSX);

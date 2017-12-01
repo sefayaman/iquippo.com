@@ -115,7 +115,7 @@ exports.getSellers = function(req,res,next){
 //search products
 exports.search = function(req, res) {
   var term = new RegExp(req.body.searchstr, 'i');
-  
+
   var filter = {};
   //filter["status"] = true;
   filter["deleted"] = false;
@@ -170,7 +170,7 @@ exports.search = function(req, res) {
     var brRegex = new RegExp(req.body.brandStr, 'i');
     arr[arr.length] = { "brand.name": { $regex: brRegex}};
     arr[arr.length] = { "brand.otherName": { $regex: brRegex}};
-   
+
   }
 
   if(req.body.modelStr){
@@ -207,7 +207,7 @@ exports.search = function(req, res) {
     var stateRegex = new RegExp(req.body.stateName, 'i');
     filter['state'] = {$regex:stateRegex};
   }
-  
+
    if(req.body.productName){
     var pdNameRegex = new RegExp(req.body.productName, 'i');
     arr[arr.length] = {name:{$regex:pdNameRegex}};
@@ -220,7 +220,7 @@ exports.search = function(req, res) {
       filter["tradeType"] = req.body.tradeType;
   }
   if(req.body.tradeValue)
-   filter["tradeType"] = {$regex:new RegExp(req.body.tradeValue,'i')}; 
+   filter["tradeType"] = {$regex:new RegExp(req.body.tradeValue,'i')};
   if(req.body.assetStatus)
     filter["assetStatus"] = {$regex:new RegExp(req.body.assetStatus,'i')};
   if(req.body.assetId)
@@ -290,7 +290,7 @@ exports.search = function(req, res) {
 
   if(req.body.categoryId)
     filter["category._id"] = req.body.categoryId;
-  
+
   if(req.sellers && req.sellers.length)
     filter["seller._id"] = {$in:req.sellers};
   if(req.body.bidRequestApproved && req.body.bidRequestApproved === 'y')
@@ -308,17 +308,17 @@ exports.search = function(req, res) {
         data.forEach(function(x){
           usersArr.push(x._id.toString());
         })
-      } 
-      arr[arr.length] = { "seller._id": {"$in":usersArr}}; 
+      }
+      arr[arr.length] = { "seller._id": {"$in":usersArr}};
       fetchResults();
-    }) 
+    })
   } else if(req.body.userid) {
     filter["seller._id"] = req.body.userid;
     fetchResults();
   } else {
     fetchResults();
   }
- 
+
   function fetchResults(){
     if(arr.length > 0 && locationArr.length >0 )
        filter['$and'] = [{$or:arr},{$or:locationArr}];
@@ -330,13 +330,13 @@ exports.search = function(req, res) {
     var result = {};
     if(req.body.pagination){
       paginatedProducts(req,res,filter,result);
-      return;    
+      return;
     }
     var maxItem = 600;
     if(req.body.maxItem)
       maxItem = req.body.maxItem;
 
-    var sortObj = {}; 
+    var sortObj = {};
     if(req.body.sort)
       sortObj = req.body.sort;
     sortObj['createdAt'] = -1;
@@ -385,7 +385,7 @@ exports.search = function(req, res) {
             var days = b.diff(a, 'days') + 1;
             item.ageingOfAsset = days;
             item.parkingCharges = days * item.parkingChargePerDay;
-            
+
             if(!assetIdCache[item.assetId]){
               assetIdCache[item.assetId] = true;
 
@@ -485,7 +485,7 @@ exports.search = function(req, res) {
       return res.status(200).json(result.products);
     })
   }
-  
+
 
 };
 
@@ -542,7 +542,7 @@ function paginatedProducts(req,res,filter,result){
     console.log("######",err);
     handleError(res,err);
   })
- 
+
 }
 
 //bulk product update
@@ -557,8 +557,8 @@ exports.bulkUpdate = function(req,res){
         dataToSet.status = false;
         //dataToSet.featured = false;
          Product.update({_id : {"$in":bodyData.selectedIds}}, {$set:dataToSet}, {multi: true} , function(err, product) {
-            if(err) { 
-              return handleError(res, err); 
+            if(err) {
+              return handleError(res, err);
             }
             return res.status(200).json({});
           });
@@ -566,8 +566,8 @@ exports.bulkUpdate = function(req,res){
       case 'priceonrequest':
          dataToSet.priceOnRequest = true;
           Product.update({_id : {"$in":bodyData.selectedIds},tradeType:{$ne:'RENT'}}, {$set:dataToSet}, {multi: true} , function(err, product) {
-            if(err) { 
-              return handleError(res, err); 
+            if(err) {
+              return handleError(res, err);
             }
             return res.status(200).json({});
           });
@@ -714,7 +714,7 @@ exports.update = function(req, res) {
        req.assetDir = req.body.assetDir;
        checkAndCopyImage(req,res,null);
   }else{
-    updateProduct(req,res)    
+    updateProduct(req,res)
   }
 };
 
@@ -732,14 +732,14 @@ exports.create = function(req, res) {
         req.assetDir = req.body.assetDir;
         checkAndCopyImage(req,res,null);
       }else{
-        addProduct(req,res)    
+        addProduct(req,res)
       }
-    } 
+    }
   });
 };
 
 function checkAndCopyImage(req,res,cb){
-  
+
    if(req.imgCounter < req.totalImages){
       var imgObj = req.images[req.imgCounter];
       var imgPath = config.uploadPath + req.assetDir + "/" + imgObj.src;
@@ -768,7 +768,7 @@ function checkAndCopyImage(req,res,cb){
         if(req.isEdit)
           updateProduct(req,res);
         else
-          addProduct(req,res);  
+          addProduct(req,res);
       }
    }
 }
@@ -828,7 +828,7 @@ function updateProduct(req,res){
       var fileAfterCompression=0;
       if (fs.existsSync(featureFilePath)) {
         return updateProductData();
-      } 
+      }
 
       fsExtra.copy(imgPath, featureFilePath, {
           replace: false
@@ -859,7 +859,7 @@ function updateProduct(req,res){
                   }
                   var stats=fs.statSync(featureFilePath);
                   fileAfterCompression=stats.size;
-                  debug("SIZE After compression",fileAfterCompression);    
+                  debug("SIZE After compression",fileAfterCompression);
                   return updateProductData();
                 })
               })
@@ -878,17 +878,17 @@ function updateProduct(req,res){
                         return updateProductData();
                       }
                       var stats=fs.statSync(featureFilePath);
-                      fileAfterCompression=stats.size; 
+                      fileAfterCompression=stats.size;
                       return updateProductData();
                     })
                   })
                 }
               }
             })
-          })   
+          })
         })
       } else {
-        updateProductData();      
+        updateProductData();
       }
 
     function updateProductData(){
@@ -936,7 +936,7 @@ function addProduct(req,res){
                   if (err) throw err;
                   var stats=fs.statSync(featureFilePath);
                    fileAfterCompression=stats.size;
-                   debug("SIZE After compression",fileAfterCompression);        
+                   debug("SIZE After compression",fileAfterCompression);
                   counter++;
                 })
               })
@@ -950,7 +950,7 @@ function addProduct(req,res){
                   fs.writeFile(featureFilePath,buffer, function(err) {
                     if (err) throw err;
                     var stats=fs.statSync(featureFilePath);
-                    fileAfterCompression=stats.size; 
+                    fileAfterCompression=stats.size;
                     console.log("SIZE After compression",fileAfterCompression);
                     counter++;
                   })
@@ -958,9 +958,9 @@ function addProduct(req,res){
               }
             }
           })
-    
+
       })
-           
+
   })
 }
 
@@ -983,7 +983,7 @@ exports.setExpiry = function(req, res) {
     if(err) { return handleError(res, err); }
     return res.status(201).json(product);
   });
-  
+
 };
 
 exports.updateInquiryCounter = function(req,res){
@@ -1010,8 +1010,8 @@ exports.countryWiseProductCount = function(req,res){
             status: true,
             deleted: false
         }},
-    { $group: 
-      { _id: '$country', total_products: { $sum: 1 } } 
+    { $group:
+      { _id: '$country', total_products: { $sum: 1 } }
     },
     function (err, result) {
       if (err) return handleError(err);
@@ -1027,8 +1027,8 @@ exports.categoryWiseCount = function(req,res){
       filter['category._id'] = {$in:req.body.categoryIds};
     Product.aggregate(
     { $match:filter},
-    { $group: 
-      { _id: '$category._id', count: { $sum: 1 } } 
+    { $group:
+      { _id: '$category._id', count: { $sum: 1 } }
     },
     {$sort:{count:-1}},
     function (err, result) {
@@ -1045,8 +1045,8 @@ exports.statusWiseCount = function(req,res){
     filter['status'] = true;
     Product.aggregate(
     { $match:filter},
-    { $group: 
-      { _id: '$assetStatus', count: { $sum: 1 } } 
+    { $group:
+      { _id: '$assetStatus', count: { $sum: 1 } }
     },
     {$sort:{count:-1}},
     function (err, result) {
@@ -1072,16 +1072,16 @@ exports.userWiseProductCount = function(req,res){
     filter["seller._id"] = req.body.userId;
   Product.aggregate(
     { $match: filter },
-    { $group: 
-      { _id: '$assetStatus', total_assetStatus: { $sum: 1 } } 
+    { $group:
+      { _id: '$assetStatus', total_assetStatus: { $sum: 1 } }
     },
     function (err, result) {
       if (err) return handleError(err);
       filter['assetStatus'] = 'listed';
        Product.aggregate(
         { $match: filter },
-        { $group: 
-          { _id: '$tradeType', total_tradeType: { $sum: 1 } } 
+        { $group:
+          { _id: '$tradeType', total_tradeType: { $sum: 1 } }
         },
         function (err, data) {
           if (err) return handleError(err);
@@ -1091,8 +1091,8 @@ exports.userWiseProductCount = function(req,res){
           delete filter.assetStatus;
            Product.aggregate(
             { $match: filter },
-            { $group: 
-              { _id: 'inquiryCount', inquiryCount: { $sum: '$inquiryCounter' } } 
+            { $group:
+              { _id: 'inquiryCount', inquiryCount: { $sum: '$inquiryCounter' } }
             },
             function (err, inCount) {
               if (err) return handleError(err);
@@ -1332,7 +1332,7 @@ exports.exportProducts = function(req, res) {
             }
 
             delete obj.__rowNum__;
-            
+
             responseData.push(obj);
           }
         });
@@ -1416,8 +1416,8 @@ function fetchModel(model, cb) {
 }
 
 exports.updateExcelData = function (req,res,next){
+  console.log("I am here",req.updateData);
   var successCount = 0;
-
   if(!req.updateData.length && !req.errorList.length){
     req.errorList = [];
     for(var j = 0 ; j < req.totalCount ; j++){
@@ -1433,6 +1433,7 @@ exports.updateExcelData = function (req,res,next){
 
   var dataToUpdate = req.updateData;
 
+console.log("data to be updated",dataToUpdate);
   async.eachLimit(dataToUpdate,5,intialize,finalize);
 
   function finalize(err){
@@ -1440,7 +1441,7 @@ exports.updateExcelData = function (req,res,next){
       console.log(err);
       return next(new APIError(500,'Error while updation'));
     }
-   
+
     return res.json({successCount:successCount , errorList : req.errorList,totalCount : req.totalCount});
   }
 
@@ -1452,17 +1453,18 @@ exports.updateExcelData = function (req,res,next){
         req.errorList.push({
           Error:'Error while updating information',
           rowCount : data.rowCount
-        })
+        });
         return cb();
       }
       successCount++;
       return cb();
-    })
+    });
   }
-    
-}
+
+};
 
 exports.createProductReq = function(req,res,next){
+  console.log("create",req.updateData);
   if(!req.updateData.length && !req.errorList.length)
     return next(new APIError(500,'Error while updation'));
 
@@ -1507,6 +1509,7 @@ exports.createProductReq = function(req,res,next){
 }
 
 exports.parseExcel = function(req,res,next){
+
   var body = req.body;
   var ret;
   ['fileName', 'user','type'].some(function(x) {
@@ -1517,7 +1520,7 @@ exports.parseExcel = function(req,res,next){
 
   if(ret)
     return next(new APIError(412,'Missing mandatory parameter: ' + ret));
-  
+
   var options = {
     file: body.fileName,
     headers: Object.keys(productFieldsMap),
@@ -1527,7 +1530,45 @@ exports.parseExcel = function(req,res,next){
   req.excelData = Utillity.toJSON(options);
   req.reqType = 'Update';
   return next();
-}
+};
+
+exports.parseUpdateData = function(req,res,next){
+  var data = req.body.data;
+//  var ret;
+//  ['fileName', 'user','type'].some(function(x) {
+//    if (!body[x]) {
+//      ret = x;
+//    }
+//  });
+
+//  if(ret)
+//    return next(new APIError(412,'Missing mandatory parameter: ' + ret));
+
+  if (!data.length) {
+      return res.status(400).send('Missing mandatory parameter');
+    }
+   data=JSON.parse(JSON.stringify(data));
+    data = data.filter(function(x) {
+        Object.keys(x).forEach(function(key) {
+          if (productFieldsMap[key]) {
+           if(key !== "Row_Count"){
+            x[productFieldsMap[key]] = trim(x[key] || "");
+           }
+           else{
+            // x.key=Number(x.key);
+            x[productFieldsMap[key]] = x[key] || 0;
+           }
+          }
+          delete x[key];
+        });
+        return x;
+      });
+  req.excelData = data;
+  req.reqType = 'Update';
+  return next();
+};
+
+
 
 exports.parseImportExcel = function(req,res,next){
   var body = req.body;
@@ -1553,6 +1594,38 @@ exports.parseImportExcel = function(req,res,next){
   return next();
 }
 
+exports.parseImportData = function(req,res,next){
+    var data = req.body.data;
+    //var fieldMapping = Object.keys(productFieldsMap);
+    if (!productFieldsMap || !data.length) {
+      return res.status(400).send('Invalid or Missing mapping');//new Error('Invalid or Missing mapping');
+    }
+
+//    if (!fieldMapping.__rowNum__)
+//      fieldMapping.__rowNum__ = 'rowCount';
+
+    data = data.filter(function(x) {
+      Object.keys(x).forEach(function(key) {
+        if (productFieldsMap[key]) {
+          if(key !== "Row_Count"){
+           x[productFieldsMap[key]] = trim(x[key] || "");
+          }
+          else{
+           // x.key=Number(x.key);
+           x[productFieldsMap[key]] = x[key] || 0;
+          }
+         }
+         delete x[key];
+    });
+    return x;
+    });
+    req.excelData = data;
+
+    req.reqType = 'Upload';
+    return next();
+
+};
+
 
 exports.validateExcelData = function(req, res, next) {
   var excelData = req.excelData;
@@ -1570,22 +1643,18 @@ exports.validateExcelData = function(req, res, next) {
     return next(new APIError(404,'No Data to update'));
   }
 
-  
-
   var updateData = [];
   var errorList = [];
   var assetIdObj = {};
   req.totalCount = excelData.length;
   async.eachLimit(excelData, 10, intialize, finalize);
-
   function finalize(err) {
     if (err) {
       console.log(err);
       return next(new APIError(500,'Error while updating'));
     }
-
     if(!updateData.length && !errorList.length){
-      return res.json({successCount:0 , errorList : excelData.length,totalCount : req.totalCount});
+      return res.json({successCount:0 , errorList : req.errorList,totalCount : req.totalCount});
     }
     req.errorList = errorList;
     req.updateData = updateData;
@@ -1610,18 +1679,19 @@ exports.validateExcelData = function(req, res, next) {
     validateAdditionalInfo : Any othe column would be added here which does not require any processing
     validateOnlyAdminCols : This function validates the cols which only admin can update
     */
-    if(reqType == 'Update'){
+    if(reqType === 'Update'){
       Product.find({
         assetId: row.assetId
       }, function(err, doc) {
         if (err || !doc.length) {
+          console.log("I can be");
           errorList.push({
             Error: 'No asset id found',
             rowCount: row.rowCount
-          })
+          });
           return cb();
         }
-
+        console.log("I am here alse",type);
         if(type === 'template_update') {
           async.parallel({
             validateGenericField:validateGenericField,
@@ -1635,17 +1705,19 @@ exports.validateExcelData = function(req, res, next) {
             validateOnlyAdminCols: validateOnlyAdminCols,
             validateForBid:validateForBid,
             validatePrice : validatePrice
-          }, buildData);          
+          }, buildData);
         }else if(type === 'auction_update'){
           async.parallel({
             validateAuction : validateAuction
           },buildData);
         }else
           return cb();
-      });      
+      });
     } else if(reqType === 'Upload'){
+      console.log("uploading");
       if(!assetIdObj[row.assetId]){
         assetIdObj[row.assetId] = true;
+        //debugger;
         async.parallel({
           validateGenericField:validateGenericField,
           validateMadnatoryCols : validateMadnatoryCols,
@@ -1665,7 +1737,7 @@ exports.validateExcelData = function(req, res, next) {
         errorList.push({
             Error: 'Duplicate Records in excel sheet',
             rowCount: row.rowCount
-          })
+          });
           return cb();
       }
     }
@@ -1690,7 +1762,7 @@ exports.validateExcelData = function(req, res, next) {
             errorList.push({
                 Error : 'Error in finding active bids',
                 rowCount :row.rowCount
-            }); 
+            });
             return callback('Error')
           };
           if(resultArr.length){
@@ -1724,7 +1796,8 @@ exports.validateExcelData = function(req, res, next) {
 
       fieldsToBeCopied.forEach(function(x){
         obj[x] = row[x];
-      })
+      });
+      console.log("object generic",obj);
       return callback(null,obj);
     }
 
@@ -1736,12 +1809,12 @@ exports.validateExcelData = function(req, res, next) {
       row.priceOnRequest = row.priceOnRequest || "";
       obj.currencyType = row.currencyType || "INR";
       obj.grossPrice = row.grossPrice;
-      obj.priceOnRequest = row.priceOnRequest.toLowerCase() === 'yes'? true:false; 
+      obj.priceOnRequest = row.priceOnRequest.toLowerCase() === 'yes'? true:false;
       if(isCustomer){
          if(!obj.grossPrice)
             obj.priceOnRequest = true;
         return callback(null,obj);
-      } 
+      }
 
       if(!obj.grossPrice && !row.reservePrice && !row.valuationAmount){
         obj.priceOnRequest = true;
@@ -1869,10 +1942,10 @@ exports.validateExcelData = function(req, res, next) {
         return callback('Error');
       }*/
 
+      console.log("object generic2 madnatory");
       return callback();
 
     }
-
 
     function validateAuction(callback){
       if (user.role !== 'admin') {
@@ -1882,7 +1955,7 @@ exports.validateExcelData = function(req, res, next) {
         });
         return callback('Error');
       }
-       
+
       if(row.auctionListing && row.auctionListing.toLowerCase() === 'yes'){
         if(!row.auctionId){
           errorList.push({
@@ -1971,7 +2044,7 @@ exports.validateExcelData = function(req, res, next) {
         }
 
         function createAuctionRequest(innerCb){
-          var auctionData = { 
+          var auctionData = {
             valuationReport: '',
             dbAuctionId: auctionMaster[0]._id,
             emdAmount: row.emdAmount,
@@ -1986,7 +2059,7 @@ exports.validateExcelData = function(req, res, next) {
             statuses: [ { createdAt: new Date(),
                  status: 'payment_pending',
                  userId: user._id } ],
-            product:{ 
+            product:{
               _id: existingProduct._id,
               assetId: existingProduct.assetId,
               city: existingProduct.city,
@@ -2006,10 +2079,10 @@ exports.validateExcelData = function(req, res, next) {
             endDate: auctionMaster[0].endDate,
             auctionId: row.auctionId,
             transactionId: paymentTransData._id,
-            valuation: { 
-              _id: valuationData._id, 
+            valuation: {
+              _id: valuationData._id,
               status: 'payment_pending'
-            } 
+            }
           };
 
 
@@ -2028,7 +2101,7 @@ exports.validateExcelData = function(req, res, next) {
         }
 
         function createValauationReq(innerCb){
-          var valauationData = { 
+          var valauationData = {
             valuationAgency: { _id: vendorData[0]._id,
               name:  vendorData[0].entityName,
               email: vendorData[0].user.email,
@@ -2039,7 +2112,7 @@ exports.validateExcelData = function(req, res, next) {
             seller: existingProduct.seller,
             initiatedBy: 'Admin',
             purpose: 'Listing in auction',
-            product:{ 
+            product:{
               _id: existingProduct._id,
               assetId: existingProduct.assetId,
               city: existingProduct.city,
@@ -2049,11 +2122,11 @@ exports.validateExcelData = function(req, res, next) {
               mfgYear : existingProduct.mfgYear
             },
             status: 'payment_pending',
-            statuses: 
+            statuses:
              [ { createdAt: new Date(),
                  status: 'payment_pending',
                  userId: user._id }],
-            isAuction: true 
+            isAuction: true
           };
 
           ValuationReq.create(valauationData,function(err,valuationInfo){
@@ -2161,7 +2234,7 @@ exports.validateExcelData = function(req, res, next) {
         }
 
         function validateAuctionMaster(innerCb){
-          AuctionMaster.find(reqOpts,function(err,auction){ 
+          AuctionMaster.find(reqOpts,function(err,auction){
             if(err || !auction){
               errorList.push({
                 Error : 'Error while validating auction id',
@@ -2238,7 +2311,7 @@ exports.validateExcelData = function(req, res, next) {
         }
     }
 
-    
+
 
     function validateDupProd(callback){
       Product.find({assetId:row.assetId},function(err,products){
@@ -2257,7 +2330,8 @@ exports.validateExcelData = function(req, res, next) {
           });
           return callback('Error');
         }
-        return callback();
+        console.log("I m here not");
+        return callback(null);
       });
     }
 
@@ -2270,7 +2344,7 @@ exports.validateExcelData = function(req, res, next) {
           });
           return callback('Error');
         }
-        
+
         if(products.length){
           errorList.push({
             Error : 'Duplicate Asset Id present in quene',
@@ -2278,6 +2352,7 @@ exports.validateExcelData = function(req, res, next) {
           });
           return callback('Error');
         }
+        console.log(" I am validating dup product");
         return callback();
       });
     }
@@ -2299,8 +2374,8 @@ exports.validateExcelData = function(req, res, next) {
         updateData.push(obj);
       }
 
+      console.log("boject",updateData);
       return cb();
-
     }
 
 
@@ -2363,14 +2438,14 @@ exports.validateExcelData = function(req, res, next) {
         }
       }
 
-      
+
       ['dispSellerContact', 'dispSellerAlternateContact'].forEach(function(x) {
         if (row[x]) {
           if (row[x].toLowerCase() === 'yes')
             obj[x] = true
           else if (row[x].toLowerCase() === 'no')
             obj[x] = false;
-          else 
+          else
             delete row[x];
         }
       });
@@ -2407,7 +2482,7 @@ exports.validateExcelData = function(req, res, next) {
         if (row[x])
           obj[x] = trim(row[x]);
       })
-    
+
       var additionalCols = ['comment', 'rateMyEquipment', 'mileage', 'serialNo', 'mfgYear', 'variant','specialOffers'];
       additionalCols.forEach(function(x) {
         if (row[x]) {
@@ -2842,6 +2917,7 @@ exports.validateExcelData = function(req, res, next) {
           })
         })
       } else {
+        console.log("validated category");
         return callback(null, obj);
       }
     }
@@ -2872,7 +2948,7 @@ function bulkProductStatusUpdate(req,res,data){
           errorObj["message"] = "Unknown Error.";
           req.errors[req.errors.length] = errorObj;
           req.counter ++;
-          bulkProductStatusUpdate(req,res,data); 
+          bulkProductStatusUpdate(req,res,data);
           return;
         }else if(!product){
             var errorObj = {};
@@ -2882,7 +2958,7 @@ function bulkProductStatusUpdate(req,res,data){
             req.errors[req.errors.length] = errorObj;
             req.counter ++;
             bulkProductStatusUpdate(req,res,data);
-            return; 
+            return;
         }else{
              var assetStatus = row["Asset_Status*"];
             if(!assetStatus){
@@ -2893,7 +2969,7 @@ function bulkProductStatusUpdate(req,res,data){
                 req.errors[req.errors.length] = errorObj;
                 req.counter ++;
                 bulkProductStatusUpdate(req,res,data);
-                return; 
+                return;
             }
             assetStatus = trim(assetStatus).toLowerCase();
             if(['listed','sold','rented'].indexOf(assetStatus) == -1){
@@ -2904,7 +2980,7 @@ function bulkProductStatusUpdate(req,res,data){
                 req.errors[req.errors.length] = errorObj;
                 req.counter ++;
                 bulkProductStatusUpdate(req,res,data);
-                return; 
+                return;
             }
             var ret = checkValidTransition(product.tradeType,assetStatus);
 
@@ -2934,7 +3010,7 @@ function bulkProductStatusUpdate(req,res,data){
                     req.errors[req.errors.length] = errorObj;
                     req.counter ++;
                     bulkProductStatusUpdate(req,res,data);
-                    return; 
+                    return;
                   } else {
                     //create app notificaton
                     var productData = {};
@@ -2955,11 +3031,11 @@ function bulkProductStatusUpdate(req,res,data){
                       req.counter ++;
                       bulkProductStatusUpdate(req,res,data);
                     });
-                    
+
                   }
               });
             }
-        }; 
+        };
 
       })
   }else{
@@ -3027,14 +3103,14 @@ function importProducts(req,res,data){
         importProducts(req,res,data);
         return;
     }else{
-      req.assetIdCache[assetIdVal] = true;      
+      req.assetIdCache[assetIdVal] = true;
     }
     var product = {};
     Seq()
     .seq(function(){
       var self = this;
        Product.find({assetId:assetIdVal},function(err,products){
-        if(err) return handleError(res, err); 
+        if(err) return handleError(res, err);
         if(products.length > 0){
           var errorObj = {};
           errorObj['rowCount'] = req.counter + 2;
@@ -3048,7 +3124,7 @@ function importProducts(req,res,data){
 
           //product["assetId"] = trim(assetId);
           //self();
-          IncomingProduct.find({assetId:assetIdVal},function(err,prds){ 
+          IncomingProduct.find({assetId:assetIdVal},function(err,prds){
             if(err) return handleError(res, err);
             if(prds.length > 0){
               var errorObj = {};
@@ -3063,7 +3139,7 @@ function importProducts(req,res,data){
               product.assetId = assetIdVal;
               self();
             }
-          });      
+          });
         }
       })
     })
@@ -3084,7 +3160,7 @@ function importProducts(req,res,data){
       categoryName = trim(categoryName);
       var catTerm = new RegExp("^" + categoryName + "$", 'i');
       Category.find({name:catTerm},function(err,cats){
-        if(err) return handleError(res, err); 
+        if(err) return handleError(res, err);
         if(cats.length > 0){
           product.group = cats[0].group;
           product.category = {};
@@ -3154,7 +3230,7 @@ function importProducts(req,res,data){
         catTerm = brTerm;
 
        Brand.find({name:brTerm,'category.name':catTerm},function(err,brds){
-        if(err) return handleError(res, err); 
+        if(err) return handleError(res, err);
         if(brds.length > 0){
           product.brand = {};
           product.brand['_id'] = brds[0]['_id'] + "";
@@ -3178,7 +3254,7 @@ function importProducts(req,res,data){
           }else{
             product["name"] += " " + brandName;
           }
-             
+
           self();
         }else{
           var errorObj = {};
@@ -3224,7 +3300,7 @@ function importProducts(req,res,data){
         catTerm = mdTerm;
       }
       Model.find({name:mdTerm,'category.name':catTerm,'brand.name':brTerm},function(err,models){
-        if(err) return handleError(res, err); 
+        if(err) return handleError(res, err);
         if(models.length > 0){
           product.model = {};
           product.model['_id'] = models[0]['_id'] + "";
@@ -3271,7 +3347,7 @@ function importProducts(req,res,data){
       var subCategoryName  = row["Sub_Category"] || "";
       subCategoryName  = trim(subCategoryName);
       SubCategory.find({name:subCategoryName},function(err,subcategorys){
-        if(err) return handleError(res, err); 
+        if(err) return handleError(res, err);
         if(subcategorys.length > 0){
           product.subcategory = {};
           product.subcategory['_id'] = subcategorys[0]['_id'] + "";
@@ -3295,7 +3371,7 @@ function importProducts(req,res,data){
       }
       sellerMobile = trim(sellerMobile)
        User.find({mobile:sellerMobile, deleted:false},function(err,usrs){
-        if(err) return handleError(res, err); 
+        if(err) return handleError(res, err);
         if(usrs.length > 0){
          product.seller = {};
          product.seller["country"] = usrs[0]['country'];
@@ -3389,13 +3465,13 @@ function importProducts(req,res,data){
 
                 prOnReq = trim(prOnReq).toLowerCase();
                 if(prOnReq == 'yes' || prOnReq == 'y') {
-                  product["priceOnRequest"] = true; 
+                  product["priceOnRequest"] = true;
                 }else {
                   product["priceOnRequest"] = false;
                 }
             }
-            
-        }          
+
+        }
 
         product["productCondition"] = trim(row["Product_Condition"] || "").toLowerCase();
 
@@ -3437,7 +3513,7 @@ function importProducts(req,res,data){
           req.counter ++;
           importProducts(req,res,data);
           return;
-         
+
         }
         product["mfgYear"] = mfgYear;
 
@@ -3473,7 +3549,7 @@ function importProducts(req,res,data){
         }
           var fromDate = new Date(row["Availability_of_Asset_From"]);
           var validDate = isValid(fromDate);
-          
+
           if(!fromDate || !validDate){
             var errorObj = {};
             errorObj['rowCount'] = req.counter + 2;
@@ -3666,7 +3742,7 @@ function importProducts(req,res,data){
           }
           product["rent"].negotiable = negotiableFlag;
         }
-        
+
         product["rateMyEquipment"] = trim(row["Rate_My_Equipment"] || "");
 
         // technical info
@@ -3683,12 +3759,12 @@ function importProducts(req,res,data){
         product["serviceInfo"][0].authServiceStation = trim(row["Authorized_Station"] || "");
         product["serviceInfo"][0].serviceAt = trim(row["Service_at_KMs"] || "");
         product["serviceInfo"][0].operatingHour = trim(row["Operating_Hours"] || "");
-        
+
         var servicedate = new Date(row["Service_Date"]);
         var validDate = isValid(servicedate);
-          
+
         if(servicedate && validDate) {
-          product["serviceInfo"][0].servicedate =  servicedate; 
+          product["serviceInfo"][0].servicedate =  servicedate;
         }
 
         //product["serviceInfo"][0].servicedate =  new Date(trim(row["Service_Date"] || "")) || "";
@@ -3714,12 +3790,12 @@ function importProducts(req,res,data){
   }else{
     res.status(200).json({successCount:req.successProductArr.length,errorList:req.errors});
   }
-  
+
 }
 
 function isValid(d) {
   return d.getTime() === d.getTime();
-}; 
+};
 
 function getOtherObj(arr,term){
   var objRef = null;
@@ -3771,12 +3847,12 @@ exports.createOrUpdateAuction = function(req,res){
       if(!req.body.payment)
         self();
       else{
-        
+
         PaymentTransaction.create(req.body.payment,function(err,paytm){
           if(err){return handleError(res,err)}
           else{
             req.payTransId = paytm._id;
-            self();     
+            self();
           }
         })
       }
@@ -3786,14 +3862,14 @@ exports.createOrUpdateAuction = function(req,res){
       if(!req.body.valuation)
         self();
       else{
-        
+
         if(req.payTransId)
         req.body.valuation.transactionId = req.payTransId + "";
         ValuationReq.create(req.body.valuation,function(err,vals){
           if(err){return handleError(res,err)}
           else{
             req.valuationId = vals._id;
-            self();     
+            self();
           }
         })
       }
@@ -3822,7 +3898,7 @@ exports.createOrUpdateAuction = function(req,res){
           else{
             req.auctionId = acts._id;
             self();
-            }     
+            }
         })
       }
     })
@@ -3832,7 +3908,7 @@ exports.createOrUpdateAuction = function(req,res){
       auctionUpdate._id = req.auctionId + "";
       if(req.valuationId)
         auctionUpdate.valuationId = req.valuationId + "";
-      
+
       Product.update({_id:req.body.auction.product._id},{$set:{auction:auctionUpdate}},function(err,prds){
          if(err){return handleError(res,err)}
           else{
@@ -3878,7 +3954,7 @@ function updateAssetId(req,res){
         if(err){return handleError(res,err)};
          req.counter ++;
          updateAssetId(req,res);
-      });      
+      });
   }else
 res.status(200).send("successful updation of" + req.counter +" "+ "records");
 
