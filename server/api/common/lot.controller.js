@@ -296,16 +296,10 @@ exports.getLotsInAuction = function(req, res) {
       filter.auction_id = queryParam._id;
     if(queryParam.lotId)
       filter['_id'] = queryParam.lotId;
-    console.log("lot@@@@@",filter);
     Lot.find(filter, function(err, result) {
       if (err) callback(err);
       if (result.length > 0) {
           options.lotData = result;
-     /* result.forEach(function(x) {
-        lotInfo[x._id] = {};
-        lotInfo[x._id].lotNumber = x.lotNumber;
-        lotInfo[x._id].amount = x.startingPrice;
-      });*/
         return callback(null, options);
       } else {
         return callback(new APIError(404, 'Lot not found'));
