@@ -58,14 +58,11 @@
             if (vm.activeBid === 'actionable') {
                 filter.bidRequestApproved = 'n';
                 getBidProducts(filter);
-                getBidProductsAll(filter);
             } else if (vm.activeBid === 'saleinprocess') {
                 filter.bidRequestApproved = 'y';
                 getBidProducts(filter);
-                getBidProductsAll(filter);
             } else
                 getClosedBids(filter);
-                getClosedBidsAll(filter);
         }
 
         function getBidProducts(filter) {
@@ -75,18 +72,6 @@
                     .then(function (result) {
                         vm.dataList = result.products;
                         $scope.pager.update(result.prodcuts, result.totalItems);
-                    })
-                    .catch(function (err) {
-
-                    });
-        }
-        function getBidProductsAll(filter) {
-            //$scope.pager.copy(filter);
-            //filter.pagination = true;
-            AssetSaleSvc.getBidProduct(filter)
-                    .then(function (result) {
-                        vm.dataListAll = result.products;
-                        //$scope.pager.update(result.prodcuts, result.totalItems);
                     })
                     .catch(function (err) {
 
@@ -104,17 +89,6 @@
                         $scope.pager.update(result.items, result.totalItems);
                     });
         }
-        function getClosedBidsAll(filter) {
-            //$scope.pager.copy(filter);
-            filter.actionable = 'n';
-            //filter.dealStatus = dealStatuses[12];
-            //filter.pagination = true;
-            AssetSaleSvc.get(filter)
-                    .then(function (result) {
-                        vm.dataListAll = result.items;
-                        //$scope.pager.update(result.items, result.totalItems);
-                    });
-        }
 
         function openDialog(data, popupName, modalClass, viewBlock) {
             var newScope = $rootScope.$new();
@@ -126,12 +100,11 @@
         function exportExcel(allReport) {
             var exportFilter = {};
             angular.copy(initFilter, exportFilter);
-            console.log('--data_check-list--',vm.dataList);
-            console.log('--data_check-all--',vm.dataListAll);
+            //console.log('--data_check--',vm.dataList);
             if (vm.activeBid === 'actionable' || vm.activeBid === 'saleinprocess') {
-                if (vm.dataListAll) {
+                if (vm.dataList) {
                     exportFilter.productIds = [];
-                    vm.dataListAll.forEach(function (item) {
+                    vm.dataList.forEach(function (item) {
                         exportFilter.productIds.push(item._id);
                     });
                 }
