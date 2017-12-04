@@ -76,6 +76,14 @@
                     .catch(function (err) {
 
                     });
+            filter.pagination = false;
+            AssetSaleSvc.getBidProduct(filter)
+                    .then(function (result) {
+                        vm.dataListAll = result.products;    
+                    })
+                    .catch(function (err) {
+
+                    });
         }
 
         function getClosedBids(filter) {
@@ -87,6 +95,11 @@
                     .then(function (result) {
                         vm.dataList = result.items;
                         $scope.pager.update(result.items, result.totalItems);
+                    });
+            filter.pagination = false;
+            AssetSaleSvc.get(filter)
+                    .then(function (result) {
+                        vm.dataListAll = result.items;
                     });
         }
 
@@ -100,11 +113,14 @@
         function exportExcel(allReport) {
             var exportFilter = {};
             angular.copy(initFilter, exportFilter);
-            console.log('--data_check--',vm.dataList);
+            //console.log('--data_check--',vm.dataListAll);
             if (vm.activeBid === 'actionable' || vm.activeBid === 'saleinprocess') {
-                if (vm.dataList) {
+                /*for all data without pagination*/
+                
+                /*for all data without pagination*/
+                if (vm.dataListAll) {
                     exportFilter.productIds = [];
-                    vm.dataList.forEach(function (item) {
+                    vm.dataListAll.forEach(function (item) {
                         exportFilter.productIds.push(item._id);
                     });
                 }
@@ -121,7 +137,7 @@
             if (allReport === 'payment') {
                 exportFilter = {};
                 angular.copy(initFilter, exportFilter);
-                exportFilter.payment = 'y'
+                exportFilter.payment = 'y';
             }
 
             if (!Auth.isAdmin())
