@@ -638,6 +638,16 @@ function filterInActiveProduct(req,res){
           if (req.auctionReqs[i].product._id === item._id)
             req.auctionReqs.splice(i, 1);
         }
+      }else if(item.status && !item.deleted){
+        for (var i = 0; i < req.auctionReqs.length; i++) {
+          if (req.auctionReqs[i].product._id === (item._id && item._id.toString())){
+            ['operatingHour'].forEach(function(x){
+              if(item[x]){
+                req.auctionReqs[i].product[x] = item[x];
+              }
+            })
+          }   
+        }
       }
     });
     return res.status(200).json(req.auctionReqs);
