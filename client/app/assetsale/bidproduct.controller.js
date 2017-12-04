@@ -48,19 +48,25 @@
             if (reset)
                 $scope.pager.reset();
             var filter = angular.copy(initFilter);
+            var filterAll = angular.copy(initFilter);
             if (vm.searchStr) {
                 filter.isSearch = true;
                 filter.searchstr = vm.searchStr;
                 if (vm.activeBid === 'closed')
                     filter.searchStr = vm.searchStr;
+                    filterAll.searchStr = vm.searchStr;
             }
 
             if (vm.activeBid === 'actionable') {
                 filter.bidRequestApproved = 'n';
+                filterAll.bidRequestApproved = 'n';
                 getBidProducts(filter);
+                getBidProductAll(filterAll);
             } else if (vm.activeBid === 'saleinprocess') {
                 filter.bidRequestApproved = 'y';
+                filterAll.bidRequestApproved = 'y';
                 getBidProducts(filter);
+                getBidProductAll(filterAll);
             } else
                 getClosedBids(filter);
         }
@@ -72,6 +78,16 @@
                     .then(function (result) {
                         vm.dataList = result.products;
                         $scope.pager.update(result.prodcuts, result.totalItems);
+                    })
+                    .catch(function (err) {
+
+                    });
+        }
+        
+        function getBidProductAll(filterAll){
+            AssetSaleSvc.getBidProductAll(filterAll)
+                    .then(function (result) {
+                        vm.dataListAll = result.products;
                     })
                     .catch(function (err) {
 
@@ -102,9 +118,9 @@
             angular.copy(initFilter, exportFilter);
             //console.log('--data_check--',vm.dataList);
             if (vm.activeBid === 'actionable' || vm.activeBid === 'saleinprocess') {
-                if (vm.dataList) {
+                if (vm.dataListAll) {
                     exportFilter.productIds = [];
-                    vm.dataList.forEach(function (item) {
+                    vm.dataListAll.forEach(function (item) {
                         exportFilter.productIds.push(item._id);
                     });
                 }
