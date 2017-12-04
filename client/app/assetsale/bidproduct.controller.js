@@ -113,7 +113,8 @@
         function exportExcel(allReport) {
             var exportFilter = {};
             angular.copy(initFilter, exportFilter);
-            //console.log('--data_check--',vm.dataListAll);
+            console.log('--data_check all--',vm.dataListAll);
+            console.log('--data_check page--',vm.dataList);
             if (vm.activeBid === 'actionable' || vm.activeBid === 'saleinprocess') {
                 /*for all data without pagination*/
                 
