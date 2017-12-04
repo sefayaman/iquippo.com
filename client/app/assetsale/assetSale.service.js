@@ -16,6 +16,7 @@
     svc.get = get;
     svc.getMaxBidOnProduct = getMaxBidOnProduct;
     svc.getBidProduct = getBidProduct;
+    svc.getBidProductAll = getBidProductAll;
 	  svc.getBidOrBuyCalculation = getBidOrBuyCalculation;
     svc.validateAction = validateAction;
     svc.getEmdOnProduct = getEmdOnProduct;
@@ -176,8 +177,18 @@
       return res.data;
     })
     .catch(function(err){
-      throw err
+      throw err;
+    });
+  }
+  
+  function getBidProductAll(filter){
+    return $http.post(path + "/bidproduct",filter)
+    .then(function(res){
+        return res.data;
     })
+    .catch(function(err){
+      throw err;
+    });
   }
 
   function validateAction(bid,action){
