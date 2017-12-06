@@ -4,6 +4,7 @@ var Model = require('../services/services.model');
 var APIError = require('../../components/_error');
 var _ = require('lodash');
 var utility = require('../../components/utility');
+var validator = require('validator');
 
 var reports = {
 	count: function(req, res, next) {
@@ -35,7 +36,7 @@ var reports = {
 			'_id': -1
 		};
 
-		if (options.first_id && options.first_id !== 'null') {
+		if (options.first_id && options.first_id !== 'null' && validator.isMongoId(options.first_id)) {
 			filters._id = {
 				'$gt': options.first_id
 			};
@@ -45,13 +46,13 @@ var reports = {
 			};
 		}
 
-		if (options.last_id && options.last_id !== 'null') {
+		if (options.last_id && options.last_id !== 'null' && validator.isMongoId(options.last_id)) {
 			filters._id = {
 				'$lt': options.last_id
 			};
 		}
 
-		if (options.last_id && options.last_id !== 'null' && options.first_id && options.first_id !== 'null') {
+		if (options.last_id && options.last_id !== 'null' && options.first_id && options.first_id !== 'null' && validator.isMongoId(options.first_id) && validator.isMongoId(options.last_id)) {
 			filters._id = {
 				'$gt': options.first_id,
 				'$lt': options.last_id
@@ -78,7 +79,10 @@ var reports = {
 		if (options.type)
 			query = query.where('type').equals(options.type);
 
-		query = query.limit(options.limit || 10);
+		if(!Number(options.limit))
+			delete options.limit;
+
+		query = query.limit(Number(options.limit) || 50);
 
 		query.exec(fetchData);
 
