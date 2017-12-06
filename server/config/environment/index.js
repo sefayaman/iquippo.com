@@ -67,7 +67,8 @@ var all = {
     callbackURL:  (process.env.DOMAIN || '') + '/auth/linkedin/callback'
   },
   importDir:"import",
-  awsBucketPrefix : "/assets/uploads/"
+  awsBucketPrefix : "/assets/uploads/",
+  userDetailInApi:true
 };
 
 // Export the config object based on the NODE_ENV
