@@ -62,7 +62,49 @@ function getToken(req,res){
 }
 
 function validate(req,res){
-  return res.status(200).send("Valid");
+  if(!config.userDetailInApi)
+    return res.status(200).send("Valid");
+
+  var resData = {};
+  var user = req.user;
+  var userEmail = user.email;
+  var isCpDesk = false;
+  if(userEmail){
+    var emailParts = userEmail.split('@');
+    if(emailParts.length && emailParts.length === 2 && emailParts[0].indexOf('cpdesk') !== -1 && emailParts[1] === 'iquippo.com')
+      isCpDesk = true;
+  }
+  if(isCpDesk)
+    resData.sourcing_user_type = "CD";
+   else if(user.role === 'admin')
+    resData.sourcing_user_type = "AD";
+   else if(user.role === 'enterprise' && isServiceAvailed(user,'Finance'))
+    resData.sourcing_user_type = "EU";
+  else if(user.role === 'channelpartner')
+    resData.sourcing_user_type = "CP";
+   else
+    resData.sourcing_user_type = "EC";
+      
+    var userName = user.fname;
+    if(user.mname)
+      userName += " " + user.mname;
+    userName += " " + user.lname;
+    resData.sourcing_user_name = userName;
+    resData.sourcing_user_mobile = user.mobile;
+    resData.email = user.email || "";
+    resData.location = user.city || "";
+    resData.dealership_name = user.company || "";
+    return res.status(200).json(resData);
+}
+
+function isServiceAvailed(user,service){
+    if(user.availedServices && user.availedServices.length > 0){
+          for(var i=0;i<user.availedServices.length;i++){
+           if(user.availedServices[i].code === service)
+            return true;
+          }
+        }
+        return false;
 }
 
 exports.isAuthenticated = isAuthenticated;

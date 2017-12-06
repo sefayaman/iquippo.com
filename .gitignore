@@ -34,3 +34,4 @@ dist/public/bower_components
 dist/server
 
 npm-debug.log
+/server/config/environment/local.js
