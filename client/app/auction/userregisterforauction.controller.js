@@ -95,7 +95,7 @@
             closeDialog();
             if(result.data){
               if(result.data =="done" && auctionData.emdTax === $scope.OverAll){
-                 Modal.alert("You have already registered for this auction with lotnumbers" +" "+ result.selectedLots); 
+                 Modal.alert("You have already registered for this auction"); 
                  return;
                }
               if(result.data =="undone" && auctionData.emdTax === $scope.OverAll){

@@ -104,7 +104,7 @@ function AuctionRegisCtrl($scope, $rootScope, $location, Modal, Auth,PagerSvc,$u
             if(result.data){
               closeDialog();
               if(result.data =="done"){
-                 Modal.alert("You have already registered for this auction with lotnumbers" +" "+ result.selectedLots); 
+                 Modal.alert("You have already registered for this auction"); 
                  return;
                }
               if(result.data =="undone"){

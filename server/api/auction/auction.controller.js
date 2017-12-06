@@ -1510,6 +1510,7 @@ function auctionListing(results){
     })
     function upcominAuctionCount(cb){
       var filter = {};
+      filter.isDeleted = false;
       filter.endDate ={'$gt': currentDate};
       var query = AuctionMaster.find(filter).count();
       query.exec(function(err,upcomingCount){
@@ -1522,6 +1523,7 @@ function auctionListing(results){
 
     function closedAuctionCount(cb){
       var filter = {};
+      filter.isDeleted = false;
       filter.endDate = {'$lt': currentDate};
       var query = AuctionMaster.find(filter).count();
         query.exec(function(err,closeCount){
@@ -1534,6 +1536,7 @@ function auctionListing(results){
 
 exports.getAuctionWiseProductData = function(req, res) {
   var filter = {};
+  filter.isDeleted = false;
   if(req.body.auctionIds)
     filter['dbAuctionId'] = {$in:req.body.auctionIds};
   if(req.body.status)

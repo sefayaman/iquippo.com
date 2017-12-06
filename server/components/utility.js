@@ -146,7 +146,7 @@ function uploadMultipartFileOnS3(localFilePath, dirName, files, cb) {
   awsS3Client.createMultipartUpload(multipartParams, function(mpErr, multipart) {
     if (mpErr) {
       console.error('Error!', mpErr);
-      return cb(err);
+      return cb(mpErr);
     }
     for (var start = 0; start < buffer.length; start += partSize) {
       partNum++;

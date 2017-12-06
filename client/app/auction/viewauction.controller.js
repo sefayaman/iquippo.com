@@ -42,7 +42,7 @@
           .then(function(result){
             if(result.data){
               if(result.data =="done" && auction.emdTax === $scope.OverAll){
-                 Modal.alert("You have already registered for this auction with lotnumbers" +" "+ result.selectedLots); 
+                 Modal.alert("You have already registered for this auction"); 
                  return;
                }
               if(result.data =="undone" && auction.emdTax === $scope.OverAll){

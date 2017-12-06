@@ -262,7 +262,7 @@
             console.log("the registration",result);
             if(result.data){
               if(result.data =="done" && $scope.auctionData.emdTax === $scope.OverAll){
-                 Modal.alert("You have already registered for this auction with lotnumbers" +" "+ result.selectedLots); 
+                 Modal.alert("You have already registered for this auction"); 
                  return;
                }
               if(result.data =="undone" && $scope.auctionData.emdTax === $scope.OverAll){
