@@ -10,7 +10,7 @@ router.get('/fetch.json', controller.fetch, controller.renderJson);
 router.use(json2xls.middleware);
 router.get('/fetch.csv', controller.fetch, controller.renderCsv);
 router.get('/fetch.count.json', controller.count);
-
+require('./newequipments')(router);
 
 
 module.exports = router;
