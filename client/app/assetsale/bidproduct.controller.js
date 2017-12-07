@@ -77,10 +77,10 @@
             AssetSaleSvc.getBidProduct(filter)
                     .then(function (result) {
                         vm.dataList = result.products;
-                        $scope.pager.update(result.prodcuts, result.totalItems);
+                        $scope.pager.update(result.products, result.totalItems);
                     })
                     .catch(function (err) {
-
+                        Modal.alert(err);
                     });
         }
         
@@ -90,7 +90,7 @@
                         vm.dataListAll = result.products;
                     })
                     .catch(function (err) {
-
+                        Modal.alert(err);
                     });
         }
 
