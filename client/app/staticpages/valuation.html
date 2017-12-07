@@ -473,8 +473,8 @@
 					</div>
 					<div class="row">
 						<div class="col-sm-3" >
-							<div class="floating-label-wrapper" ng-class="{'has-error': form.location.$invalid && form.submitted}">
-					          	<label>Location*</label>
+                      <label>Location*</label>
+                      <div class="floating-label-wrapper" ng-class="{'has-error': form.location.$invalid && form.submitted}">
 					            <select class="form-control" name="location" ng-model="addTransactionVm.enterpriseValuation.city" required>
 					              <option value="">Select Location</option>
 					                <option ng-repeat="location in locationList | orderBy:'name'" value="{{location.name}}">{{location.name}}</option>
@@ -487,8 +487,8 @@
 								<input type="text" class="form-control" name="contactPerson"  placeholder="Contact Person" ng-model="addTransactionVm.enterpriseValuation.contactPerson" required>
 							</div>
 						</div>
-						<div class="col-sm-3 form-group" ng-class="{'has-error': form.contactNumber.$invalid && form.submitted}">
-							<div class="floating-label-wrapper">
+						<div class="col-sm-3 form-group" >
+							<div class="floating-label-wrapper" ng-class="{'has-error': form.contactNumber.$invalid && form.submitted}">
 								<label>Contact Person Tel No*.</label>
 								<input type="text" class="form-control" name="contactNumber" placeholder="Contact Person Tel No." ng-model="addTransactionVm.enterpriseValuation.contactPersonTelNo" required>
 							</div>
