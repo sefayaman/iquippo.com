@@ -245,7 +245,7 @@
             
           </div>
           <div class="row" ng-if="!isLoggedIn() || (isLoggedIn() && auctionData.auctionType === 'L')">      
-            <div class="col-sm-6 col-md-4 form-group" ng-repeat="lot in viewLotVm.lotListing | startFrom:(pager.currentPage -1 )*pager.itemsPerPage | limitTo:pager.itemsPerPage">
+            <div class="col-sm-6 col-md-4 form-group" ng-repeat="lot in viewLotVm.lotListing | startFrom:(viewLotVm.currentPage -1 )*viewLotVm.itemsPerPage | limitTo:viewLotVm.itemsPerPage">
               <div class="media text-center form-group">
                 <!-- <a href="/used/{{auctionProduct.product.category}}/{{auctionProduct.product.brand}}/{{auctionProduct.product.assetId}}" ng-if="auctionProduct.product._id">
                    <img src="http://placehold.it/300x200" class="img-responsive" ng-if="!auctionProduct.product.primaryImg">              
@@ -310,7 +310,7 @@
           </div>
 
           <div class="text-center form-group">
-            <uib-pagination ng-change="viewLotVm.onPageChange()" total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" boundary-links="false" rotate="false" next-text=">" previous-text="<"></uib-pagination>
+            <uib-pagination ng-change="viewLotVm.onPageChange()" total-items="viewLotVm.totalItems" ng-model="viewLotVm.currentPage" items-per-page="viewLotVm.itemsPerPage" max-size="6" boundary-links="false" rotate="false" next-text=">" previous-text="<"></uib-pagination>
           </div>
         </div>
       </div>

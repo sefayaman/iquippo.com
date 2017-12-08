@@ -7,7 +7,14 @@
     var vm = this;
     var dbAuctionId = $stateParams.dbAuctionId;
     $scope.equipmentSearchFilter = {};
-    $scope.pager = PagerSvc.getPager(null,1,24);
+    //$scope.pager = PagerSvc.getPager(null,1,24);
+    //pagination variables
+    var prevPage = 0;
+    vm.itemsPerPage = 24;
+    vm.currentPage = 1;
+    vm.totalItems = 0;
+    vm.maxSize = 6;
+
     vm.onGroupChange = onGroupChange;
     vm.onCategoryChange= onCategoryChange;
     vm.onBrandChange= onBrandChange;
@@ -161,7 +168,7 @@
       if(vm.show == true)
          vm.show=false;
       if(!noReset)
-         $scope.pager.reset();
+        vm.currentPage = 1;
       if(!initLoad){
         saveState(false);
       }
@@ -181,6 +188,7 @@
           $scope.searching = false;
           $scope.noResult = false;
           if(res && res.length){
+            vm.totalItems = res.length;
             vm.lotListing = res;
             vm.lotListing.forEach(function(lot){
               lot.isVisible = false;
@@ -332,14 +340,14 @@
   }
 
    function saveState(retainState){
-    $scope.equipmentSearchFilter.currentPage = $scope.pager.currentPage + "";
+    $scope.equipmentSearchFilter.currentPage = vm.currentPage + "";
     $state.go($state.current.name,$scope.equipmentSearchFilter,{location:'replace',notify:false});
   }
 
   function restoreState(){
       $scope.equipmentSearchFilter = $stateParams;
-      $scope.pager.currentPage  = parseInt($stateParams.currentPage) || 1;
-      $scope.equipmentSearchFilter.currentPage = $scope.pager.currentPage + "";
+      vm.currentPage  = parseInt($stateParams.currentPage) || 1;
+      $scope.equipmentSearchFilter.currentPage = vm.currentPage + "";
   }
 
   //Entry point
