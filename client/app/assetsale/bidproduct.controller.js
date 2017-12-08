@@ -85,7 +85,7 @@
         }
         
         function getBidProductAll(filterAll){
-            AssetSaleSvc.getBidProductAll(filterAll)
+            AssetSaleSvc.getBidAllProduct(filterAll)
                     .then(function (result) {
                         vm.dataListAll = result.products;
                     })
@@ -116,7 +116,7 @@
         function exportExcel(allReport) {
             var exportFilter = {};
             angular.copy(initFilter, exportFilter);
-            //console.log('--data_check--',vm.dataList);
+            console.log('--data_check--',vm.dataListAll);
             if (vm.activeBid === 'actionable' || vm.activeBid === 'saleinprocess') {
                 if (vm.dataListAll) {
                     exportFilter.productIds = [];
