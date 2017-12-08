@@ -10,3 +10,5 @@
 *.png binary
 *.gif binary
 *.bson binary
+*.xlsx binary
+*.xls binary

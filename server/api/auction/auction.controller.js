@@ -770,6 +770,16 @@ function filterInActiveProduct(req,res){
           if (req.auctionReqs[i].product._id === item._id)
             req.auctionReqs.splice(i, 1);
         }
+      }else if(item.status && !item.deleted){
+        for (var i = 0; i < req.auctionReqs.length; i++) {
+          if (req.auctionReqs[i].product._id === (item._id && item._id.toString())){
+            ['operatingHour'].forEach(function(x){
+              if(item[x]){
+                req.auctionReqs[i].product[x] = item[x];
+              }
+            })
+          }   
+        }
       }
     });
     return res.status(200).json(req.auctionReqs);
@@ -1131,6 +1141,7 @@ exports.createAuctionMaster = function(req, res) {
         message: "Auction Id already exist."
       });
     } else {
+
       AuctionMaster.create(req.body, function(err, auctionData) {
         if (err) {
           return handleError(res, err);
@@ -1322,9 +1333,9 @@ exports.updateAuctionMaster = function(req, res) {
     multi: true
   }, function(err, product) {
     if (err) {
-      console.log("Error with updating auction request");
+      //console.log("Error with updating auction request");
     }
-    console.log("Auction Request Updated");
+    //console.log("Auction Request Updated");
   });
 }*/
 
@@ -1664,6 +1675,7 @@ exports.getAuctionMaster = function(req, res) {
     if (err) {
       return handleError(res, err);
     }
+
     return res.status(200).json(auctions);
   });
 }

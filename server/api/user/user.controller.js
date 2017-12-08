@@ -756,14 +756,12 @@ exports.createUserReq = function(req, res, next) {
   }
 
   function intialize(data, cb) {
-    
 
     data.createdBy = req.body.user;
     data.createdAt = new Date();
     data.updatedAt = new Date();
     data.agree = true;
 
-    console.log("DATAs",data);
 
     if (data.userType === "Individual")
       data.userType = "individual";
@@ -774,7 +772,6 @@ exports.createUserReq = function(req, res, next) {
 
     User.create(data, function(err, doc) {
       if (err || !doc) {
-        console.log("I am being pushed");
         req.errorList.push({
           Error: 'Error while updating information',
           rowCount: data.rowCount

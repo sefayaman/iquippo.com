@@ -21,6 +21,7 @@ client/assets/uploads/banner/*
 client/assets/uploads/avatar/*
 client/assets/uploads/auctionmaster/*
 client/assets/uploads/auction/*
+client/assets/uploads/manpower/*
 client/assets/uploads_bak
 client/app/constant.js
 client/index.html
@@ -33,3 +34,4 @@ dist/public/bower_components
 dist/server
 
 npm-debug.log
+/server/config/environment/local.js

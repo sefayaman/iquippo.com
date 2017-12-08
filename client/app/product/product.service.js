@@ -5,7 +5,7 @@
  function productSvc($http,$rootScope,$q,Auth,$httpParamSerializer){
       var prdService = {};
       var path = '/api/products';
-      
+
       var productCache = {};
       var featuredProductCache = [];
       var searchResult = [];
@@ -48,6 +48,7 @@
       prdService.getProductOnSellerId = getProductOnSellerId;
       //prdService.getAssetMapData=getAssetMapData
       prdService.sendReqToCreateAsset = sendReqToCreateAsset;
+      prdService.importData = importData;
 
        function getFeaturedProduct(id){
           var deferred = $q.defer();
@@ -124,7 +125,7 @@
       };
 
       function getProductOnSellerId(filter){
-        
+
         return $http.post(path + "/search",filter)
           .then(function(res){
             return res.data;
@@ -135,7 +136,7 @@
       };
 
       function getProductOnFilter(filter){
-        
+
         return $http.post(path + "/search",filter)
           .then(function(res){
             return res.data;
@@ -178,7 +179,7 @@
       function addProductInHistory(product){
         return $http.post(path + "/createhistory",product)
         .then(function(res){
-          return res.data; 
+          return res.data;
         })
         .catch(function(res){
           throw res;
@@ -227,7 +228,7 @@
                   throw res;
                 })
       }
-      
+
       function updateProduct(product){
 
         return $http.put(path + "/" + product._id,product).
@@ -265,14 +266,32 @@
 
 
       //Bulk product update via excel
-      function bulkEditProduct(dataToSend){
-        return $http.post(path + "/bulkeditproduct",dataToSend)
+      function bulkEditProduct(data){
+        var dataToSend={};
+        var user = {};
+        user._id = Auth.getCurrentUser()._id;
+        user.fname = Auth.getCurrentUser().fname;
+        user.mname = Auth.getCurrentUser().mname;
+        user.lname = Auth.getCurrentUser().lname;
+        user.role = Auth.getCurrentUser().role;
+        user.userType = Auth.getCurrentUser().userType;
+        user.phone = Auth.getCurrentUser().phone;
+        user.mobile = Auth.getCurrentUser().mobile;
+        user.email = Auth.getCurrentUser().email;
+        user.country = Auth.getCurrentUser().country;
+        user.company = Auth.getCurrentUser().company;
+        dataToSend={
+          type:"template_update",
+          user:user,
+          data:data
+        };
+           return $http.post(path + "/bulkeditproduct",dataToSend)
               .then(function(res){
                 return res.data;
               })
               .catch(function(res){
                 throw res;
-              })
+              });
       }
 
     function parseExcel(fileName){
@@ -289,6 +308,27 @@
         user.country = Auth.getCurrentUser().country;
         user.company = Auth.getCurrentUser().company;
           return $http.post(path + "/v1/import",{filename:fileName,user:user})
+                .then(function(res){
+                  return res.data;
+                })
+                .catch(function(res){
+                  throw res;
+                })
+      }
+     function importData(data){
+        var user = {};
+        user._id = Auth.getCurrentUser()._id;
+        user.fname = Auth.getCurrentUser().fname;
+        user.mname = Auth.getCurrentUser().mname;
+        user.lname = Auth.getCurrentUser().lname;
+        user.role = Auth.getCurrentUser().role;
+        user.userType = Auth.getCurrentUser().userType;
+        user.phone = Auth.getCurrentUser().phone;
+        user.mobile = Auth.getCurrentUser().mobile;
+        user.email = Auth.getCurrentUser().email;
+        user.country = Auth.getCurrentUser().country;
+        user.company = Auth.getCurrentUser().company;
+          return $http.post(path + "/v1/import",{data:data,user:user})
                 .then(function(res){
                   return res.data;
                 })

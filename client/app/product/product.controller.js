@@ -1,15 +1,10 @@
-(function() {
+(function(xlsx) {
   'use strict';
   angular.module('sreizaoApp').controller('ProductCtrl', ProductCtrl);
 
   //Product upload controller
   function ProductCtrl($scope, $http, $rootScope, $stateParams, groupSvc, categorySvc, SubCategorySvc, LocationSvc, uploadSvc, productSvc, brandSvc, modelSvc, Auth, $uibModal, Modal, $state, notificationSvc, AppNotificationSvc, userSvc, $timeout, $sce, vendorSvc, AuctionMasterSvc, AuctionSvc, PaymentMasterSvc, ValuationSvc, ProductTechInfoSvc, AppStateSvc, VatTaxSvc, LotSvc, CertificateMasterSvc) {
     var vm = this;
-    //Start NJ : uploadProductClick object push in GTM dataLayer
-    dataLayer.push(gaMasterObject.uploadProductClick);
-    //NJ: set upload product Start Time
-    $scope.productUploadStartTime = new Date();
-
     //End
     $scope.fireCommand = fireCommand;
     $scope.container = {};
@@ -615,15 +610,15 @@
       });
     }
 
-    function userSearch(userSearchText) {
+    function userSearch(userSearchText){
       if (!$scope.product.seller.userType)
         return;
 
-      if (userSearchText && userSearchText.length < 4)
+      if(userSearchText && userSearchText.length < 4)
         return;
 
-      $scope.container.sellerName = "";
-      $scope.product.seller.email = "";
+      $scope.container.sellerName="";
+      $scope.product.seller.email="";
 
       var dataToSend = {};
       dataToSend["status"] = true;
@@ -650,9 +645,7 @@
         if (result.length == 1)
           onUserChange(result[0]);
       })
-
     }
-
 
     function onCategoryChange(categoryId, noChange) {
       if (!noChange) {
@@ -814,27 +807,45 @@
       $scope.container.sellerName = seller.fname + " " + seller.lname;
     }
 
-    function updateAssetTemp(files, args) {
+    function updateAssetTemp(files,args) {
       if (!files[0])
         return;
       if (files[0].name.indexOf('.xlsx') == -1) {
         Modal.alert('Please upload a valid file');
         return;
       }
-      uploadSvc.upload(files[0], importDir)
-        .then(function(result) {
-          var dataToSend = {};
-          dataToSend.fileName = result.data.filename;
-          dataToSend.user = {
-            _id: Auth.getCurrentUser()._id,
-            email: Auth.getCurrentUser().email,
-            mobile: Auth.getCurrentUser().mobile,
-            role: Auth.getCurrentUser().role
-          };
 
-          dataToSend.type = args.name || 'template_update';
-          $rootScope.loading = true;
-          productSvc.bulkEditProduct(dataToSend)
+      //
+      var reader = new FileReader();
+
+        reader.onload = function (e) {
+          /* read workbook */
+          var bstr = e.target.result;
+          var workbook = xlsx.read(bstr, {type:'binary'});
+          var worksheet = workbook.Sheets[workbook.SheetNames[0]];
+          var data = xlsx.utils.sheet_to_json(worksheet);
+
+          data.forEach(function(x){
+            x.Row_Count=x.__rowNum__;
+          });
+          console.log("data>>>>> ",data);
+      //
+
+//      uploadSvc.upload(files[0], importDir)
+//        .then(function(result) {
+//          var dataToSend = {};
+//          dataToSend.fileName = result.data.filename;
+//          dataToSend.user = {
+//            _id  : Auth.getCurrentUser()._id,
+//            email : Auth.getCurrentUser().email,
+//            mobile : Auth.getCurrentUser().mobile,
+//            role : Auth.getCurrentUser().role
+//          };
+//
+//          dataToSend.type = args.name || 'template_update';
+//          $rootScope.loading = true;
+
+          productSvc.bulkEditProduct(data)
             .then(function(res) {
               $rootScope.loading = false;
               var totalRecord = res.totalCount;
@@ -853,12 +864,14 @@
             })
             .catch(function(res) {
               $rootScope.loading = false;
-              Modal.alert("error in parsing data", true);
-            })
-        })
-        .catch(function(res) {
-          Modal.alert("error in file upload", true);
-        });
+              Modal.alert("error in parsing data ", true);
+            });
+//        })
+//        .catch(function(res) {
+//          Modal.alert("error in file upload", true);
+//        });
+        };
+        reader.readAsBinaryString(files[0]);
     }
 
     function clickHandler(type, val) {
@@ -1637,22 +1650,6 @@
         //angular.copy($scope.setAssetMapData, $scope.product.assetMapData);
       }
       productSvc.addProduct(product).then(function(proResult) {
-
-          //Start NJ : uploadProductSubmit object push in GTM dataLayer
-          if(proResult.errorCode === 1)
-            Modal.alert(proResult.message);
-
-          var result = {};
-          angular.copy(proResult.product, result);
-          dataLayer.push(gaMasterObject.uploadProductSubmit);
-
-          //NJ : set upload product Start time
-
-          var productUploadSubmitTime = new Date();
-          var timeDiff = Math.floor(((productUploadSubmitTime - $scope.productUploadStartTime) / 1000) * 1000);
-          gaMasterObject.uploadProductSubmitTime.timingValue = timeDiff;
-          ga('send', gaMasterObject.uploadProductSubmitTime);
-
           $rootScope.loading = false;
           setScroll(0);
           $scope.successMessage = "Product added successfully.";
@@ -2117,4 +2114,57 @@ function checkForLot(lotNumber) {
     };
   }
 
-})();
+  //Crop Image Controller
+  function CropImageCtrl($scope, Auth, $location, $window, $http, $uibModalInstance) {
+    $scope.imageOut = '';
+    $scope.options = {};
+    var imgParts = $scope.imgSrc.split(".");
+    var imgExt = imgParts[imgParts.length - 1];
+    $scope.options.image = $scope.prefix + $scope.imgSrc + "?timestamp=" + new Date().getTime();
+    $scope.options.viewSizeWidth = 500;
+    $scope.options.viewSizeHeight = 500;
+
+    $scope.options.viewShowRotateBtn = false;
+    $scope.options.rotateRadiansLock = false;
+
+    $scope.options.outputImageWidth = 0;
+    $scope.options.outputImageHeight = 0;
+    $scope.options.outputImageRatioFixed = false;
+    $scope.options.outputImageType = imgExt;
+    $scope.options.outputImageSelfSizeCrop = true;
+    $scope.options.viewShowCropTool = true;
+    $scope.options.inModal = true;
+    $scope.options.watermarkType = 'image';
+    $scope.options.watermarkImage = null;
+
+    $scope.cropImage = function() {
+      $scope.$broadcast('cropImage');
+    };
+
+    $scope.saveImage = function() {
+      $scope.$broadcast('cropImageSave');
+    };
+
+    $scope.saveCrop = function(data) {
+      var serData = {};
+      serData['data'] = data;
+      //serData["imgExt"] = imgExt;
+      serData['assetdir'] = $scope.assetDir;
+      serData['filename'] = $scope.imgSrc;
+      $http.post('/api/common/saveasimage', serData)
+        .then(function(res) {
+          $uibModalInstance.close("ok");
+        })
+        .catch(function(res) {
+          console.log(res);
+        })
+    };
+    $scope.closeModal = function() {
+      $uibModalInstance.close();
+    }
+    $scope.dismissModal = function() {
+      $uibModalInstance.dismiss();
+    }
+
+  }
+})(XLSX);
