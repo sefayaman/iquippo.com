@@ -39,6 +39,12 @@ function OfflinePaymentCtrl($scope,$rootScope,Modal,$stateParams,$state,$uibModa
       vm.dataModel.amount =  $scope.offlinePayment.totalAmount;
       vm.dataModel.transactionId =  $scope.offlinePayment.transactionId;
     }
+    if($scope.viewMode === 'paymentView') {
+      $scope.totalPaidAmount = 0;
+      $scope.offlinePayment.payments.forEach(function(item) {
+        $scope.totalPaidAmount = Number($scope.totalPaidAmount) + Number(item.amount);
+      });
+    }
    }
    
   function save(form){
@@ -46,7 +52,9 @@ function OfflinePaymentCtrl($scope,$rootScope,Modal,$stateParams,$state,$uibModa
       $scope.submitted = true;
       return;
     }
-    vm.dataModel.payments = [];
+    vm.dataModel.totalAmount = vm.dataModel.amount;
+    if(!vm.dataModel.payments)
+      vm.dataModel.payments = [];
     var stsObj = {};
     stsObj.paymentModeType = vm.dataModel.paymentModeType;
     stsObj.refNo = vm.dataModel.refNo;
@@ -54,6 +62,7 @@ function OfflinePaymentCtrl($scope,$rootScope,Modal,$stateParams,$state,$uibModa
     stsObj.amount = vm.dataModel.amount;
     stsObj.bankname = vm.dataModel.bankname;
     stsObj.branch = vm.dataModel.branch;
+    stsObj.createdAt = new Date();
     vm.dataModel.payments[vm.dataModel.payments.length] = stsObj;
     vm.dataModel.userDataSendToAuction = true;
     $rootScope.loading = true;
@@ -64,7 +73,6 @@ function OfflinePaymentCtrl($scope,$rootScope,Modal,$stateParams,$state,$uibModa
         $rootScope.loading = false;
         $rootScope.$broadcast('refreshPaymentHistroyList');
         Modal.alert(res.message);
-        //Modal.alert('Payment Request save successfully!');
         closeDialog();
     })
     .catch(function(err){
