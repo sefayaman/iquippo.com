@@ -3,19 +3,22 @@
 'use strict';
 angular.module('sreizaoApp').controller('AuctionPaymentListingCtrl',AuctionPaymentListingCtrl);
 
-function AuctionPaymentListingCtrl($scope,$rootScope,Modal,Auth,PaymentSvc) {
+function AuctionPaymentListingCtrl($scope, $rootScope, Modal, Auth, PaymentSvc, PagerSvc) {
 	var vm = this;
-	vm.trasactions = [];
+	vm.transactions = [];
 	var filter = {};
-	$scope.transactionStatuses = transactionStatuses;
+  var initFilter = {};
+  vm.searchStr = "";
+  $scope.pager = PagerSvc.getPager();
+  $scope.transactionStatuses = transactionStatuses;
 
-	vm.updateSelection = updateSelection;
 	vm.exportExcel = exportExcel;
 	vm.openPaymentModel = openPaymentModel;
 	var selectedIds = [];
 	$scope.ReqSubmitStatuses = ReqSubmitStatuses;
 	vm.resendUserData = resendUserData;
-  
+  vm.fireCommand = fireCommand;
+
 	$scope.$on('refreshPaymentHistroyList',function(){
         getTrasactions(filter);
     });
@@ -34,6 +37,9 @@ function AuctionPaymentListingCtrl($scope,$rootScope,Modal,Auth,PaymentSvc) {
 	function init(){
 	 	Auth.isLoggedInAsync(function(loggedIn){
 	 		if(loggedIn){
+        filter ={};
+        initFilter.pagination = true;
+        angular.copy(initFilter, filter);
 	 			getTrasactions(filter);	
 	 		}
 	 	})
@@ -41,46 +47,38 @@ function AuctionPaymentListingCtrl($scope,$rootScope,Modal,Auth,PaymentSvc) {
 
 	 init();
 
-	 function getTrasactions(filterObj){
-		 //console.log("filter",filterObj);
+  function fireCommand(reset){
+    if (reset)
+        $scope.pager.reset();
+    filter = {};
+    angular.copy(initFilter, filter);
+    if (vm.searchStr)
+        filter.searchStr = vm.searchStr;
+    getTrasactions(filter);
+  }
+
+  function getTrasactions(filterObj){
+    $scope.pager.copy(filterObj);
 		filterObj.auctionPaymentReq = "Auction Request";
 	 	PaymentSvc.getOnFilter(filterObj)
 	 	.then(function(result){
-	 		vm.transactions = result;
+	 		vm.transactions = result.items;
+      vm.totalItems = result.totalItems;
+      $scope.pager.update(result.items, result.totalItems);
 	 	})
 	 	.catch(function(err){
-	 		//error handling
 	 	});
-	 }
+	}
 
-	 function exportExcel(){
-        var dataToSend ={};
-        if(Auth.getCurrentUser()._id && Auth.getCurrentUser().role != 'admin') 
-        dataToSend["userid"] = Auth.getCurrentUser()._id;
-    	if(!vm.master && selectedIds.length == 0){
-    		Modal.alert("Please select valuation request to export.");
-    		return;
-    	}
-    	if(!vm.master)
-    		dataToSend['ids'] = selectedIds;
-        PaymentSvc.export(dataToSend)
-        .then(function(buffData){
-          saveAs(new Blob([s2ab(buffData)],{type:"application/octet-stream"}), "payment_"+ new Date().getTime() +".xlsx")
-        });
-    }
-
-  function updateSelection(event,id){
-  		if(vm.master){
-  			vm.master = false;
-  			selectedIds = [];
-  		}
-        var checkbox = event.target;
-        var action = checkbox.checked?'add':'remove';
-        if(action == 'add' && selectedIds.indexOf(id) == -1)
-          selectedIds.push(id)
-        if(action == 'remove' && selectedIds.indexOf(id) != -1)
-          selectedIds.splice(selectedIds.indexOf(id),1);
-    }
+	function exportExcel(){
+    var dataToSend ={};
+    dataToSend.auctionPaymentHistory = true;
+    dataToSend.auctionPaymentReq = "Auction Request";
+    PaymentSvc.export(dataToSend)
+    .then(function(buffData){
+      saveAs(new Blob([s2ab(buffData)],{type:"application/octet-stream"}), "Payment_"+ new Date().getTime() +".xlsx")
+    });
+  }
 
   function resendUserData(data) {
     $rootScope.loading = true;

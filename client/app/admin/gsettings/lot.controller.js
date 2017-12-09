@@ -3,7 +3,7 @@
 
 angular.module('admin').controller('LotCtrl', LotCtrl);
 
-function LotCtrl($scope, $rootScope, $state,Modal,Auth,PagerSvc,$filter,AuctionSvc,LotSvc){
+function LotCtrl($scope, $rootScope, $state,Modal,Auth,PagerSvc,$filter,AuctionMasterSvc,LotSvc){
   var vm  = this;
   vm.dataModel = {};
   vm.duplicate = {};
@@ -254,11 +254,10 @@ function LotCtrl($scope, $rootScope, $state,Modal,Auth,PagerSvc,$filter,AuctionS
 
   function getAuctions() {
     var filter = {};
-    filter.auctionType = "upcoming";
-    AuctionSvc.getAuctionDateData(filter).then(function(result) {
-      vm.auctionListing = result.items;
-    }).catch(function(err) {
+    filter['yetToStartDate'] = new Date();
 
+    AuctionMasterSvc.get(filter).then(function(result) {
+      vm.auctionListing = result;
     });
   }
 

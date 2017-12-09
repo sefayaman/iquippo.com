@@ -51,6 +51,11 @@ function paymentUpdate(options,cb){
 //search based on filter
 exports.getOnFilter = function(req, res) {
   var filter = {};
+  if (req.body.searchStr) {
+    filter['$text'] = {
+    '$search': "\""+req.body.searchStr+"\""
+    }
+  }
   if(req.body._id)
     filter._id = req.body._id;
 
@@ -72,6 +77,11 @@ exports.getOnFilter = function(req, res) {
     filter.requestType= typeFilter;
   }
 
+  if (req.body.pagination) {
+    Util.paginatedResult(req, res, Payment, filter, {});
+    return;
+  }
+  
   var query = Payment.find(filter).sort({createdAt: -1});
   query.exec(
                function (err, payments) {
@@ -290,6 +300,10 @@ function excel_from_data(data, isAdmin) {
 exports.exportPayment = function(req,res){
   var filter = {};
   var isAdmin = true;
+  if(req.body.auctionPaymentHistory) {
+    auctionReport(req, res);
+    return;
+  }
   if(req.body.userid){
     filter["user._id"] = req.body.userid;
     isAdmin = false;
@@ -298,16 +312,97 @@ exports.exportPayment = function(req,res){
     filter['_id'] = {$in:req.body.ids};
   var query = Payment.find(filter).sort({transactionId:1});
   query.exec(
-     function (err, payments) {
-        if(err) { return handleError(res, err); }
-        var ws_name = "Payment"
-        var wb = new Workbook();
-        var ws = excel_from_data(payments,isAdmin);
-        wb.SheetNames.push(ws_name);
-        wb.Sheets[ws_name] = ws;
-        var wbout = xlsx.write(wb, {bookType:'xlsx', bookSST:true, type: 'binary'});
-        res.end(wbout);
-     });
+    function (err, payments) {
+      if(err) { return handleError(res, err); }
+      var ws_name = "Payment"
+      var wb = new Workbook();
+      var ws = excel_from_data(payments,isAdmin);
+      wb.SheetNames.push(ws_name);
+      wb.Sheets[ws_name] = ws;
+      var wbout = xlsx.write(wb, {bookType:'xlsx', bookSST:true, type: 'binary'});
+      res.end(wbout);
+   });
+}
+
+var EXPORT_PAYMENT = {
+                      'Transaction Id' : 'transactionId',
+                      'Auction Id' : 'auctionId',
+                      'Lots' : 'lots',
+                      'Customer Id' : 'customerId',
+                      'Full Name' : 'fullName',
+                      'Mobile No.' : 'mobile',
+                      'Email Address' : 'email',
+                      'Payment Mode Type': 'paymentModeType',
+                      'Bank Name': 'bankName',
+                      'Branch': 'branch',
+                      'Ref No': 'refNo',
+                      'Amount': 'amount',
+                      'Payment Date': 'paymentDate',
+                      'Date of Entry': 'createdAt'
+                    };
+
+function _formatPayments(item,innerItem,jsonArr){
+    var obj = {};
+    obj['transactionId'] = item.transactionId || "";
+    obj['auctionId'] = item.auctionId || "";
+    obj['lots'] = item.selectedLots.join() || "";
+    obj['customerId'] = item.user.customerId || "";
+    obj['fullName'] = item.user.fname + " " + item.user.lname || "";
+    obj['mobile'] = item.user.mobile|| "" ;
+    obj['email'] = item.user.email || "" ;
+    obj['paymentModeType'] = innerItem.paymentModeType || "";
+    obj['bankName'] = innerItem.bankname || "";
+    obj['branch'] = innerItem.branch || "";
+    obj['refNo'] = innerItem.refNo || "";
+    obj['amount'] = innerItem.amount || 0;
+    obj['paymentDate'] = innerItem.paymentDate || "";
+    obj['createdAt'] = innerItem.createdAt || ""
+    jsonArr.push(obj);
+  }
+
+function auctionReport(req, res) {
+  var filter = {};
+  if(req.body.auctionPaymentReq)
+    filter.requestType = req.body.auctionPaymentReq;
+  
+  var query = Payment.find(filter).sort({createdAt:-1});
+  query.exec(
+    function (err, resList) {
+      if(err) return handleError(res,err);
+      var jsonArr = [];
+      resList.forEach(function(item,index){
+          if(item.payments){
+            item.payments.forEach(function(innerItem){
+              _formatPayments(item,innerItem,jsonArr);
+            });
+          }
+      });
+      resList = [];
+      if(jsonArr.length > 0)
+        resList = jsonArr.slice();
+      var dataArr = [];
+      var headers = Object.keys(EXPORT_PAYMENT);
+      dataArr.push(headers);
+      resList.forEach(function(item, idx){
+        dataArr[idx + 1] = [];
+        headers.forEach(function(header){
+          if(EXPORT_PAYMENT[header] == 'createdAt')
+            dataArr[idx + 1].push(Util.toIST(_.get(item, 'createdAt', '')));
+          // else if(EXPORT_PAYMENT[header] == 'paymentDate')
+          //   dataArr[idx + 1].push(Util.toIST(_.get(item, 'paymentDate', '')));
+          else
+            dataArr[idx + 1].push(_.get(item,EXPORT_PAYMENT[header],''));
+        });
+      });
+      
+      var ws = Util.excel_from_data(dataArr, headers);
+      var ws_name = "Auction_Payment_Report_" + new Date().getTime();
+      var wb = Util.getWorkbook();
+      wb.SheetNames.push(ws_name);
+      wb.Sheets[ws_name] = ws;
+      var wbout = xlsx.write(wb, {bookType:'xlsx', bookSST:true, type: 'binary'});
+      res.end(wbout);
+   });
 }
 
 /*//ccavenue payment keys

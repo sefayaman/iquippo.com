@@ -10,13 +10,20 @@
         </div>     
       </div>
       <hr>
-      
-      
-     
-        <div class="clearfix form-group"></div>
+      <p class="text-right"></p>
+      <div class="col-sm-12">
+        <div class="row">
+          <div class="col-sm-9">
+            Showing : {{auctionPaymentListingVm.totalItems}} Records
+          </div>
+          <div class="col-sm-3 pull-right">
+            <div class="tablesearch text-right form-group">
+               Search: <input type="text" placeholder="Search..." ng-model="auctionPaymentListingVm.searchStr" ng-change="auctionPaymentListingVm.fireCommand(true)" ng-model-options="{debounce:500}">
+            </div>
+          </div>
+        </div>
         <div class="table-responsive">
-            <table datatable="ng" dt-options="dtOptions" class="table table-bordred table-striped">
-
+            <table class="table table-bordered table-striped">
               <thead>
                 <!-- <th width="40"><input type="checkbox" ng-model="auctionPaymentListingVm.master"> All</th>  -->
                 <th>Transaction ID</th>                                
@@ -55,6 +62,8 @@
               </tbody>
             </table>
         </div>
+        <uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="pager.maxSize" ng-change="auctionPaymentListingVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+      </div>
     </div>
   </div>
 </div>

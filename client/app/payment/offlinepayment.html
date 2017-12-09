@@ -23,9 +23,9 @@
 					<label>Transaction Id</label>
 					<input type="text" class="form-control" name="transactionId" value="" placeholder="offlinePaymentVm.dataModel.transactionId" ng-model="offlinePaymentVm.dataModel.transactionId" disabled>
 				</div> -->
-				<div class="col-sm-6 form-group text-left">
-					<label>Amount</label>
-					<input type="text" class="form-control" name="amount" value="" placeholder="offlinePaymentVm.dataModel.amount" ng-model="offlinePaymentVm.dataModel.amount">
+				<div class="col-sm-6 form-group text-left" ng-class="{'has-error': offlineform.amount.$invalid && submitted}">
+					<label>*Amount</label>
+					<input type="text" class="form-control" name="amount" value="" placeholder="Amount" ng-model="offlinePaymentVm.dataModel.amount" required>
 				</div>
 				<div class="col-sm-6 form-group text-left" ng-class="{'has-error': offlineform.paymentDate.$invalid && submitted}">
 					<label>*Date of Payment</label>
