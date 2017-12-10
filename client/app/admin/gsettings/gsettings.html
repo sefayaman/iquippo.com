@@ -3354,7 +3354,7 @@
 								<td>{{lotdata.reservePrice}}</td>
 								<td>{{lotdata.lastMinuteBid}}</td>
 								<td>{{lotdata.extendedTo}}</td>
-								<td><a href="javascript:void(0);">View Range</a></td>
+								<td><span ng-if="lotdata.static_increment">{{lotdata.static_increment}}</span></td>
 								<td><a href="javascript:void(0);">View Range</a></td>
 								<td>{{lotdata.startDate | date:'MM/dd/yyyy hh:mm a'}}</td>
 								<td>{{lotdata.endDate | date:'MM/dd/yyyy hh:mm a'}}</td>
