@@ -5,8 +5,10 @@ var trim = require('trim');
 var config = require('../config/environment');
 var importPath = config.uploadPath + config.importDir + "/";
 var debug = require('debug')('server.components.utility');
+var async = require('async');
 var moment = require('moment');
 var fs = require('fs');
+var AuctionMaster = require('../api/auction/auctionmaster.model');
 var AWS = require('aws-sdk');
 var util = require('util');
 var bucket = config.awsBucket;
@@ -18,9 +20,13 @@ var s3Options = {
   endpoint: config.awsEndpoint,
   sslEnabled: true
 };
+var dateFormat = require('dateformat');
 var multiparty = require('connect-multiparty'),
-multipartyMiddleware = multiparty();
-AWS.config.update({accessKeyId: config.awsAccessKeyId, secretAccessKey: config.awsSecretAccessKey});
+  multipartyMiddleware = multiparty();
+AWS.config.update({
+  accessKeyId: config.awsAccessKeyId,
+  secretAccessKey: config.awsSecretAccessKey
+});
 AWS.config.region = 'ap-south-1';
 
 var awsS3Client = new AWS.S3(s3Options);
@@ -29,6 +35,7 @@ var options = {
 };
 
 var client = s3.createClient(options);
+var request = require('request');
 
 exports.toIST = toIST;
 exports.convertQVAPLStatus = convertQVAPLStatus;
@@ -74,7 +81,7 @@ function uploadFileS3(localFilePath, dirName, cb) {
       Prefix: "assets/uploads/" + dirName
     }
   };
-  
+
   var uploader = client.uploadDir(params);
   uploader.on('error', function(err) {
     if (err) {
@@ -87,6 +94,7 @@ function uploadFileS3(localFilePath, dirName, cb) {
     return cb();
   });
 }
+
 function uploadFileOnS3(localFilePath, dirName, cb) {
   var params = {
     localFile: localFilePath,
@@ -95,7 +103,7 @@ function uploadFileOnS3(localFilePath, dirName, cb) {
       Key: dirName
     }
   };
- 
+
   var uploader = client.uploadFile(params);
   uploader.on('error', function(err) {
     if (err) {
@@ -103,7 +111,7 @@ function uploadFileOnS3(localFilePath, dirName, cb) {
       return cb(err);
     }
   });
-    /*uploader.on('progress', function() {
+  /*uploader.on('progress', function() {
     console.log("progress", uploader.progressMd5Amount,
       uploader.progressAmount, uploader.progressTotal);
   });*/
@@ -113,7 +121,10 @@ function uploadFileOnS3(localFilePath, dirName, cb) {
     return cb();
   });
 }
+
 function uploadMultipartFileOnS3(localFilePath, dirName, files, cb) {
+  if (!files[0])
+    return;
   var file = files[0];
   var buffer = fs.readFileSync(file.path);
   var startTime = new Date();
@@ -135,9 +146,8 @@ function uploadMultipartFileOnS3(localFilePath, dirName, files, cb) {
   awsS3Client.createMultipartUpload(multipartParams, function(mpErr, multipart) {
     if (mpErr) {
       console.error('Error!', mpErr);
-      return cb(err);
+      return cb(mpErr);
     }
-    //console.log('Got upload ID', multipart.UploadId);
     for (var start = 0; start < buffer.length; start += partSize) {
       partNum++;
       var end = Math.min(start + partSize, buffer.length);
@@ -148,7 +158,7 @@ function uploadMultipartFileOnS3(localFilePath, dirName, files, cb) {
         PartNumber: String(partNum),
         UploadId: multipart.UploadId
       };
-      
+
       uploadPart(awsS3Client, multipart, partParams);
     }
   });
@@ -169,7 +179,6 @@ function uploadMultipartFileOnS3(localFilePath, dirName, files, cb) {
   function uploadPart(awsS3Client, multipart, partParams, tryNum) {
     var tryNum = tryNum || 1;
     awsS3Client.uploadPart(partParams, function(multiErr, mData) {
-      console.log('started');
       if (multiErr) {
         console.log('Upload part error:', multiErr);
 
@@ -186,8 +195,6 @@ function uploadMultipartFileOnS3(localFilePath, dirName, files, cb) {
         ETag: mData.ETag,
         PartNumber: Number(this.request.params.PartNumber)
       };
-      //console.log('Completed part', this.request.params.PartNumber);
-      //console.log('mData', mData);
       if (--numPartsLeft > 0) return; // complete only when all parts uploaded
 
       var doneParams = {
@@ -197,36 +204,13 @@ function uploadMultipartFileOnS3(localFilePath, dirName, files, cb) {
         UploadId: multipart.UploadId
       };
 
-      //console.log('Completing upload...');
       completeMultipartUpload(awsS3Client, doneParams);
-    }).on('httpUploadProgress', function(progress) {  console.log(Math.round(progress.loaded/progress.total*100)+ '% done') });
-  }
-  }
-
-//AA:Upload a directory to S3
-/*function uploadZipFileToS3(localDirPath, filename, cb) {
-  fs.readFile(localDirPath, function(err, data) {
-    if (err) {
-      console.log(err);
-      return cb(err);
-    }
-    //var base64data = new Buffer(data, 'binary').toString('base64');
-
-    var s3Params = {
-      Bucket: config.awsBucket,
-      Key: 'assets/uploads/temp/' + filename,
-      ContentType: 'application/zip',
-      Body: data
-    };
-
-    awsS3Client.putObject(s3Params, function(perr, presp) {
-      if (perr) {
-        return cb(perr)
-      }
-      return cb();
+    }).on('httpUploadProgress', function(progress) {
+      console.log(Math.round(progress.loaded / progress.total * 100) + '% done')
     });
-  });
-}*/
+  }
+}
+
 
 function downloadFromS3(opts, cb) {
   var params = {
@@ -271,8 +255,8 @@ function deleteFromS3(opts, cb) {
   deleter.on('end', function() {
     return cb();
   });
-
 }
+
 //s3 listobject
 function getListObjectS3(localDirPath, cb) {
   var params = {
@@ -298,57 +282,239 @@ function getListObjectS3(localDirPath, cb) {
         
       }
     });
-}
-// delete s3 file
-function deleteS3File(fileName) {
-    var params = {
-        Bucket: config.awsBucket,
-        Key: fileName
-    };
-    awsS3Client.deleteObject(params, function (err, data) {
-        if (data) {
-            //console.log("File deleted successfully");
-        }
-        else {
-            console.log("Check if you have sufficient permissions : "+err);
-        }
-    });
-}
+  }
 
-
-//AA:Upload a directory to S3
-/*function uploadDirToS3(localDirPath, cb) {
-  var params = {
-    localDir: localDirPath,
-
-    s3Params: {
-      Bucket: config.awsBucket,
-      Prefix: "assets/"
-
+function isEmpty(myObject) {
+  for (var key in myObject) {
+    if (myObject.hasOwnProperty(key)) {
+      return false;
     }
+  }
+
+  return true;
+}
+
+exports.sendCompiledData = sendCompiledData;
+function sendCompiledData(options, cb) {
+  if (options.dataToSend.reqSubmitStatus)
+    delete options.dataToSend.reqSubmitStatus;
+
+  if (options.dataToSend.hasOwnProperty('__v'))
+    delete options.dataToSend._v;
+  if (options.dataToSend.startDate && options.dataToSend.endDate) {
+    var startDate = new Date(options.dataToSend.startDate);
+    options.dataToSend.startDate = new Date(startDate.getTime() - startDate.getTimezoneOffset() * 60000).toISOString();
+
+    var endDate = new Date(options.dataToSend.endDate);
+    options.dataToSend.endDate = new Date(endDate.getTime() - endDate.getTimezoneOffset() * 60000).toISOString();
+  }
+  
+  if (options.dataToSend.regEndDate) {
+    var regEndDate = new Date(options.dataToSend.regEndDate);
+    options.dataToSend.regEndDate = new Date(regEndDate.getTime() - regEndDate.getTimezoneOffset() * 60000).toISOString();
+  }
+
+  if (options.dataToSend.insStartDate && options.dataToSend.insEndDate) {
+    var insStartDate = new Date(options.dataToSend.insStartDate);
+    options.dataToSend.insStartDate = new Date(insStartDate.getTime() - insStartDate.getTimezoneOffset() * 60000).toISOString();
+
+    var insEndDate = new Date(options.dataToSend.insEndDate);
+    options.dataToSend.insEndDate = new Date(insEndDate.getTime() - insEndDate.getTimezoneOffset() * 60000).toISOString();
+  }
+  if (options.dataToSend.hasOwnProperty('updatedAt') && options.dataToSend.hasOwnProperty('createdAt')) {
+    delete options.dataToSend.updatedAt;
+    delete options.dataToSend.createdAt;
+  }
+  async.series([function(next) {
+    fetchAuctionId(options, next);
+  }, function(next) {
+    compileData(options, next);
+  }, function(next) {
+    sendData(options, next);
+  }], function(err, results) {
+    if (err) {
+      return cb(err)
+    }
+    var aucResult = {};
+    results.forEach(function(item){
+      if(item.err)
+        aucResult.err = item.err;
+      if(item.results)
+        aucResult.result = item.results;
+    });
+    //console.log("Output result#aucResult.result#", aucResult);
+    return cb(null, aucResult);
+  });
+}
+
+function fetchAuctionId(options, callback) {
+  if (options.dataToSend && options.dataToSend.auction_id && options.dataType !== 'auctionData') {
+    AuctionMaster.find({
+      "_id": options.dataToSend.auction_id
+    }, function(err, auctionData) {
+      if (err) return callback(err);
+      options.dataToSend.auctionId = auctionData[0].auctionId;
+      return callback(null, options);
+    });
+  } else {
+    return callback(null, options);
+  }
+}
+
+function compileData(options, callback) {
+  switch (options.dataType) {
+    case "userInfo":
+    /*if(options.dataToSend.selectedLots) {
+      options.dataToSend.selectedLots = options.dataToSend.selectedLots.join();
+      console.log("options.dataToSend.selectedLots", options.dataToSend.selectedLots)
+    }*/
+      callback(null, options);
+      break;
+    case "lotData":
+      if (options.dataToSend.hasOwnProperty('assetDir'))
+        delete options.dataToSend.assetDir;
+      if(!options.dataToSend.isDeleted) {
+        if (options.dataToSend.bidIncrement && options.dataToSend.bidIncrement.length < 1) {
+          //options.dataToSend.bidIncrement = [{}];
+          options.dataToSend.bidIncrement = {};
+        } else {
+            var bidIncObj = {};
+            options.dataToSend.bidIncrement.forEach(function(x) {
+              bidIncObj[x.bidFrom + "-" + x.bidTo] = x.bidIncrement;
+            });
+            options.dataToSend.bidIncrement = bidIncObj;
+          }
+      }
+      callback(null, options);
+      break;
+    case "emdData":
+      callback(null, options);
+      break;
+    case "auctionData":
+      if(options.dataToSend.primaryImg)
+        options.dataToSend.primaryImg = config.awsUrl + config.awsBucket + "/assets/uploads/auctionmaster/" + options.dataToSend.primaryImg;
+      if(!options.dataToSend.isDeleted) {
+        if (options.dataToSend.bidIncrement && options.dataToSend.bidIncrement.length < 1) {
+          options.dataToSend.bidIncrement = {};
+        } else {
+            var bidIncObj = {};
+            options.dataToSend.bidIncrement.forEach(function(x) {
+              bidIncObj[x.bidFrom + "-" + x.bidTo] = x.bidIncrement;
+            });
+            options.dataToSend.bidIncrement = bidIncObj;
+          }
+      }
+
+      if (options.dataToSend.hasOwnProperty('staticIncrement'))
+        delete options.dataToSend.staticIncrement;
+      if (options.dataToSend.hasOwnProperty('rangeIncrement'))
+        delete options.dataToSend.rangeIncrement;
+      if (options.dataToSend.hasOwnProperty('bidInfo'))
+        delete options.dataToSend.bidInfo;
+      if (options.dataToSend.hasOwnProperty('auctionOwner') && options.dataToSend.hasOwnProperty('auctionOwnerMobile')) {
+        delete options.dataToSend.auctionOwner;
+        delete options.dataToSend.auctionOwnerMobile;
+      }
+      callback(null, options);
+      break;
+    case "assetData":
+      callback(null, options);
+      break;
+  }
+}
+
+
+function sendData(options, callback) {
+  if(options.dataType === 'auctionData' || options.dataType === 'lotData') {
+    var serviceData = [];
+    serviceData.push(options.dataToSend);
+    serviceData = JSON.stringify(serviceData);
+  } else {
+    var serviceData = JSON.stringify(options.dataToSend);
+  }
+  var dataFormat = {
+    "userInfo": "users",
+    "lotData": "lots",
+    "auctionData": "auctions",
+    "emdData": "emd",
+    "assetData": "assets"
+  };
+  var format = "";
+  format = dataFormat[options.dataType];
+
+  var data = {};
+  data[format] = serviceData;
+  console.log("serviceDatas", data);
+
+  var obj = {
+    "userInfo": 'registered-user-update',
+    "lotData": 'new-lots',
+    "auctionData": 'new-auction',
+    "emdData": 'emddata',
+    "assetData": 'assetdata'
   };
 
-  var uploader = client.uploadDir(params);
-  uploader.on('error', function(err) {
+  var headers = {
+    'User-Agent': 'Super Agent/0.0.1',
+    'Content-Type': 'application/x-www-form-urlencoded'
+  }
+  var url = config.auctionURL + obj[options.dataType];
+  console.log("URL###", url);
+  request.post({
+    url: url,
+    headers:headers,
+    rejectUnauthorized:false,
+    form: data
+  }, function(err, httpres, asData) {
     if (err) {
-      util.log(err);
-      cb(new Error('Unable to upload file'));
+      console.log("+++++++",err);
+      return callback(err);
+    } else {
+      try {
+        console.log("=======++__________",asData);
+        var res = {};
+        var asData = JSON.parse(asData);
+        if(asData.err.length > 0)
+          res.err = asData.err;
+        else
+          res.err = "";
+
+        if(asData.results.length > 0)
+          res.results = asData.results;
+        else
+          res.results = "";
+        //console.log("=======++res",res);
+      } catch (err) {
+        //return callback(err);
+      }
+      return callback(null, res);
     }
   });
-  uploader.on('end', function() {
-    return cb();
-  });
-}*/
+}
 
-function convertQVAPLStatus(qvaplStatus){
-  
+// delete s3 file
+function deleteS3File(fileName) {
+  var params = {
+    Bucket: config.awsBucket,
+    Key: fileName
+  };
+  awsS3Client.deleteObject(params, function(err, data) {
+    if (data) {
+      //console.log("File deleted successfully");
+    } else {
+      console.log("Check if you have sufficient permissions : " + err);
+    }
+  });
+}
+
+function convertQVAPLStatus(qvaplStatus) {
   var statusMapping = {
-    created : "Request Submitted",
-    assign :  "Request Submitted",
+    created: "Request Submitted",
+    assign: "Request Submitted",
     accept: "Inspection In Progress",
-    complete : "Inspection Completed",
-    updated : "Valuation Report Submitted",
-    cancel : 'Cancelled'
+    complete: "Inspection Completed",
+    updated: "Valuation Report Submitted",
+    cancel: 'Cancelled'
   }
   return statusMapping[qvaplStatus];
 }

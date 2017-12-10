@@ -25,14 +25,14 @@
             <img class="media-object" ng-if="auction.primaryImg" src="{{uploadImagePrefix}}{{auctionmasterDir}}/{{auction.primaryImg}}" alt="Image">
             <img src="/assets/images/ongoing.jpg" ng-if="!auction.primaryImg">
           </a>
-          <a class="pull-left" href="/assetinauction/{{auction._id}}" ng-if="auction.total_products !== 0">
+          <a class="pull-left" href="/auctionlot/{{auction._id}}" ng-if="auction.total_products !== 0">
             <img class="media-object" ng-if="auction.primaryImg" src="{{uploadImagePrefix}}{{auctionmasterDir}}/{{auction.primaryImg}}" alt="Image">
             <img src="/assets/images/ongoing.jpg" ng-if="!auction.primaryImg">
           </a> -->
           <div class="calendar-date upcoming-calendar text-center pull-left">
             <div class="row">
-              <div class="col-xs-4 col-sm-12"><small>{{auction.startDate | date :'EEEE'}}</small></div>
-              <div class="col-xs-3 col-sm-12"><h4>{{auction.startDate | date :'dd'}}</h4></div>
+              <div class="col-xs-5 col-sm-12"><small>{{auction.startDate | date :'EEEE'}}</small></div>
+              <div class="col-xs-2 padd-right col-sm-12"><h4>{{auction.startDate | date :'dd'}}</h4></div>
               <div class="col-xs-5 col-sm-12"><small>{{auction.startDate | date :'MMMM'}}</small></div>
             </div>
           </div>
@@ -59,10 +59,10 @@
             <div class="auctions-register-buttons">
               <div class="row">
                 <div class="col-xs-6 col-sm-6">
-                  <a href="javascript:void(0);" class="btn btn-default btn-block" ng-click="auctionDateVm.openBidModal(auction)">Register</a>
+                  <a href="javascript:void(0);" class="btn btn-default btn-block" ng-click="auctionDateVm.openRegisterNow(auction)">Register Now</a>
                 </div>
                 <div class="col-xs-6 col-sm-6">
-                  <a href="/assetinauction/{{auction._id}}?type={{auctionType}}"  class="btn btn-primary btn-block" ng-disabled="auction.total_products === 0">View Assets</a>
+                  <a href="/auctionlot/{{auction._id}}?type={{auctionType}}"  class="btn btn-primary btn-block" ng-disabled="auction.total_products === 0">View Lots</a>
                 </div>
               </div>
             </div>
@@ -82,14 +82,14 @@
             <img class="media-object" ng-if="auction.primaryImg" src="{{uploadImagePrefix}}{{auctionmasterDir}}/{{auction.primaryImg}}" alt="Image">
             <img src="/assets/images/ongoing.jpg" ng-if="!auction.primaryImg">
           </a>
-          <a class="pull-left" href="/assetinauction/{{auction._id}}" ng-if="auction.total_products !== 0">
+          <a class="pull-left" href="/auctionlot/{{auction._id}}" ng-if="auction.total_products !== 0">
           <img class="media-object" ng-if="auction.primaryImg" src="{{uploadImagePrefix}}{{auctionmasterDir}}/{{auction.primaryImg}}" alt="Image">
             <img src="/assets/images/upcoming.jpg" ng-if="!auction.primaryImg">
           </a> -->
           <div class="calendar-date upcoming-calendar pull-left">
             <div class="row">
-              <div class="col-xs-4 col-sm-12"><small>{{auction.startDate | date :'EEEE'}}</small></div>
-              <div class="col-xs-3 col-sm-12"><h4>{{auction.startDate | date :'dd'}}</h4></div>
+              <div class="col-xs-5 col-sm-12"><small>{{auction.startDate | date :'EEEE'}}</small></div>
+              <div class="col-xs-2 padd-right col-sm-12"><h4>{{auction.startDate | date :'dd'}}</h4></div>
               <div class="col-xs-5 col-sm-12"><small>{{auction.startDate | date :'MMMM'}}</small></div>
             </div>
           </div>
@@ -113,10 +113,10 @@
             <div class="auctions-register-buttons">
               <div class="row">
                 <div class="col-xs-6 col-sm-6">
-                  <a href="javascript:void(0);" class="btn btn-default btn-block" ng-click="auctionDateVm.openBidModal(auction)">Register</a>
+                  <a href="javascript:void(0);" class="btn btn-default btn-block" ng-click="auctionDateVm.openRegisterNow(auction)">Register Now</a>
                 </div>
                 <div class="col-xs-6 col-sm-6">
-                  <a href="/assetinauction/{{auction._id}}?type={{auctionType}}" class="btn btn-primary btn-block" ng-disabled="auction.total_products === 0">View Assets</a>
+                  <a href="/auctionlot/{{auction._id}}?type={{auctionType}}" class="btn btn-primary btn-block" ng-disabled="auction.total_products === 0">View Lots</a>
                 </div>
               </div>
             </div>
@@ -139,14 +139,14 @@
             <img class="media-object" ng-if="auction.primaryImg" src="{{uploadImagePrefix}}{{auctionmasterDir}}/{{auction.primaryImg}}" alt="Image">
             <img src="/assets/images/ongoing.jpg" ng-if="!auction.primaryImg">
           </a>
-          <a class="pull-left" href="/assetinauction/{{auction._id}}" ng-if="auction.total_products !== 0">
+          <a class="pull-left" href="/auctionlot/{{auction._id}}" ng-if="auction.total_products !== 0">
             <img class="media-object" ng-if="auction.primaryImg" src="{{uploadImagePrefix}}{{auctionmasterDir}}/{{auction.primaryImg}}" alt="Image">
             <img src="/assets/images/ongoing.jpg" ng-if="!auction.primaryImg">
           </a> -->
            <div class="calendar-date upcoming-calendar pull-left">
             <div class="row">
-              <div class="col-xs-4 col-sm-12"><small>{{auction.startDate | date :'EEEE'}}</small></div>
-              <div class="col-xs-3 col-sm-12"><h4>{{auction.startDate | date :'dd'}}</h4></div>
+              <div class="col-xs-5 col-sm-12"><small>{{auction.startDate | date :'EEEE'}}</small></div>
+              <div class="col-xs-2 padd-right col-sm-12"><h4>{{auction.startDate | date :'dd'}}</h4></div>
               <div class="col-xs-5 col-sm-12"><small>{{auction.startDate | date :'MMMM'}}</small></div>
             </div>
           </div>
@@ -168,10 +168,10 @@
             <div class="auctions-register-buttons">
               <div class="row">
                 <div class="col-xs-6 col-sm-6">
-                  <!-- <a href="javascript:void(0);" class="btn btn-default btn-block" ng-click="auctionDateVm.openBidModal(auction)">Register</a> -->
+                  <!-- <a href="javascript:void(0);" class="btn btn-default btn-block" ng-click="auctionDateVm.openRegisterNow(auction)">Register</a> -->
                 </div>
                 <div class="col-xs-6 col-sm-6">
-                  <a href="/assetinauction/{{auction._id}}?type={{auctionType}}"  class="btn btn-primary btn-block" ng-disabled="auction.total_products === 0">View Assets</a>
+                  <a href="/auctionlot/{{auction._id}}?type={{auctionType}}"  class="btn btn-primary btn-block" ng-disabled="auction.total_products === 0">View Lots</a>
                 </div>
               </div>
             </div>

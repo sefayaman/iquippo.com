@@ -8,6 +8,8 @@ var servicefeeCtrl = require('./servicefee.controller');
 var servicetaxCtrl = require('./servicetax.controller');
 var vattaxCtrl = require('./vattax.controller');
 var countCtrl = require('./count.controller');
+var emdCtrl = require('./emd.controller');
+var lotCtrl = require('./lot.controller');
 var offerCtrl = require('./offer.controller');
 var financeIntegrationCtrl = require('./financeintegration.controller');
 var kycCtrl = require('./kycmaster.controller');
@@ -145,10 +147,26 @@ router.get('/bulkupload/request/fetch',bulkUploadCtrl.fetch,bulkUploadCtrl.rende
 router.post('/bulkupload/request/delete',bulkUploadCtrl.delete);
 
 //counts on dashboard//
+router.put('/removelotdata/:id', auth.hasRole('admin'),lotCtrl.removeLotData);
 router.post('/assetlisted', auth.hasRole('admin'),countCtrl.create);
 router.get('/assetlisted',countCtrl.getAssetCount);
 router.put('/assetlisted/:id', auth.hasRole('admin'),countCtrl.updateAssetListed);
-
+router.post('/emd', auth.hasRole('admin'),emdCtrl.create);
+router.post('/emd/getData',emdCtrl.getEmdData);
+router.get('/emd/amount',emdCtrl.getEmdAmountData);
+router.put('/emd/:id', auth.hasRole('admin'),emdCtrl.updateEmdData);
+//router.delete('/emd/:id',auth.hasRole('admin'), emdCtrl.destroy);
+router.put('/emd/delete/:id',auth.hasRole('admin'), emdCtrl.destroy);
+router.post('/sendreqtocreateemd', emdCtrl.sendReqToCreateEmd);
+router.get('/lot',lotCtrl.getLotData);
+router.get('/lotdata',lotCtrl.getLots);
+//router.delete('/lot/:id',auth.hasRole('admin'), lotCtrl.destroy);
+router.put('/lot/delete/:id',auth.hasRole('admin'), lotCtrl.destroy);
+router.post('/lot',lotCtrl.create);
+router.put('/lot/:id', auth.hasRole('admin'),lotCtrl.updateLotData);
+router.put('/lot/updateproductlot/:id', auth.hasRole('admin'),lotCtrl.updateProductLotData);
+router.get('/lot/lotsinauction',lotCtrl.getLotsInAuction);
+router.post('/sendreqtocreatelot', lotCtrl.sendReqToCreateLot);
 //Valuation Cancellation Fee master
 router.get('/valuationcancellationfee',auth.hasRole('admin'),valuationCancellationCtrl.get);
 router.get('/findcancellationfee',valuationCancellationCtrl.getValuationRequest,valuationCancellationCtrl.getCancellationFee);
@@ -156,6 +174,7 @@ router.post('/valuationcancellationfee',auth.hasRole('admin'),valuationCancellat
 router.put('/valuationcancellationfee/:id',auth.hasRole('admin'),valuationCancellationCtrl.validate,valuationCancellationCtrl.update);
 router.delete('/valuationcancellationfee/:id',auth.hasRole('admin'),valuationCancellationCtrl.destroy);
 
+//router.get('/updatelots/isdeleted',lotCtrl.updatelotsisdeleted);
 router.get('/inputform',auth.hasRole('admin'), inputFormCtrl.get);
 router.post('/inputform', auth.hasRole('admin'),inputFormCtrl.create);
 router.put('/inputform/:id', auth.hasRole('admin'),inputFormCtrl.update);

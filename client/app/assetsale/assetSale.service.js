@@ -16,7 +16,8 @@
     svc.get = get;
     svc.getMaxBidOnProduct = getMaxBidOnProduct;
     svc.getBidProduct = getBidProduct;
-	  svc.getBidOrBuyCalculation = getBidOrBuyCalculation;
+    svc.getBidAllProduct = getBidAllProduct;
+    svc.getBidOrBuyCalculation = getBidOrBuyCalculation;
     svc.validateAction = validateAction;
     svc.getEmdOnProduct = getEmdOnProduct;
     svc.changeBidStatus = changeBidStatus;
@@ -176,8 +177,19 @@
       return res.data;
     })
     .catch(function(err){
-      throw err
+      throw err;
+    });
+  }
+  
+  function getBidAllProduct(filter){
+    filter.itemsPerPage = 1000;
+    return $http.post(path + "/bidproduct",filter)
+    .then(function(res){
+        return res.data;
     })
+    .catch(function(err){
+      throw err;
+    });
   }
 
   function validateAction(bid,action){

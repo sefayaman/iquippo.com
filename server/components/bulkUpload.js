@@ -171,6 +171,7 @@ bulkUpload.init = function(taskData, next) {
 						obj.user = x.user;
 						obj.dbAuctionId = x.auction.dbAuctionId;
 						obj.lotNo = x.lotNo;
+						obj.lot_id = x.auction.lot_id;
 						obj.auctionId = x.auction.auctionId;
 						obj.startDate = x.auction.startDate;
 						obj.endDate = x.auction.endDate;

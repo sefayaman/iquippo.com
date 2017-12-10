@@ -77,16 +77,18 @@ function exportUsers(res) {
       var dirName = 'downloads/user-exports/'+filename;
       var localDir = config.uploadPath+'user-exports';
       var localFilePath = config.uploadPath+'user-exports/'+filename;
+
+      var localDir = config.uploadPath+'user-exports';
       if (!fs.existsSync(localDir)){
-         fs.mkdirSync(localDir);
-      }  
-     
+          fs.mkdirSync(localDir);
+        }
+
       fs.writeFile(localFilePath, wbout,"binary",function(err) {
             if (err) {
                 console.log(err);
             } else {
                
-                Utility.uploadFileOnS3(localFilePath, dirName, function(err, val){
+                Utility.uploadMultipartFileOnS3(localFilePath, dirName, function(err, val){
                   if (err) {
                     console.log(err)
                     //return cb(err);

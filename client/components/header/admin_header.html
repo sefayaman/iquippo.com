@@ -93,7 +93,11 @@
                      <li ng-if="isAdmin()">
                         <a href="/classifiedadlisting"><i class="fa fa-newspaper-o"></i>  Classified Ad</a>
                     </li>
-                    <!-- <li ng-if="isAdmin()">
+
+                    <li>
+                        <a ng-href="https://auctionsoftwaremarketplace.com:3007/buyer/{{getCurrentUser()._id}}" target="_blank"><i class="fa fa-gavel"></i> Auction Dashboard</a>
+                    </li>
+                     <!-- <li ng-if="isAdmin()">
                         <a href="/classifiedadlisting"><i class="fa fa-history"></i>History</a>
                     </li> -->
                     <!-- <li ng-if="isAdmin()">
@@ -152,6 +156,10 @@
                     </li>
                     <li>
                         <a href="/paymenthistory"><i class="fa fa-cc"></i>Payment History</a>
+                    </li> 
+                    
+                    <li>
+                        <a href="/auctionpaymenthistory" ng-if="isAdmin()"><i class="fa fa-cc"></i>Auction Payment History</a>
                     </li>  
                     <li>
                         <a href="/reports"><i class="fa fa-cc"></i>Reports</a>
