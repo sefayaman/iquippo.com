@@ -20,8 +20,8 @@ function AuctionPaymentListingCtrl($scope, $rootScope, Modal, Auth, PaymentSvc, 
   vm.fireCommand = fireCommand;
 
 	$scope.$on('refreshPaymentHistroyList',function(){
-        getTrasactions(filter);
-    });
+    fireCommand(true);
+  });
 
 	function openPaymentModel(paymentData, openDialog){
 		Auth.isLoggedInAsync(function(loggedIn) {

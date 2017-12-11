@@ -129,7 +129,7 @@
                 {{ errors.password }}
               </p>
              </div>
-             <div class="col-sm-6 form-group" ng-if="isAdmin()" ng-class="{'has-error': reqForm.batonNo.$invalid && reqForm.submitted}">
+             <div class="col-sm-6 form-group" ng-if="isAdmin() && currentAuction.auctionType === 'L'" ng-class="{'has-error': reqForm.batonNo.$invalid && reqForm.submitted}">
                 <input type="text" class="form-control" placeholder="*Baton No." name="batonNo" ng-model="auctionRegVm.user.batonNo" required="isAdmin()">
               </div>
             </div>

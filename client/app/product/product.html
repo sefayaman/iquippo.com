@@ -1078,7 +1078,7 @@
           <div class="col-sm-7 form-group">
                 <select class="form-control" name="auctionDate" ng-model="lot.lot_id" ng-change="checkForLot(lot.lot_id)" ng-disabled="!isAdmin()">
                   <option value="">Select Lot</option>
-                  <option  ng-repeat="lotdata in lots" value="{{lotdata._id}}">{{lotdata.lotNumber}}</option>
+                  <option  ng-repeat="lotdata in lots | orderBy: 'createdAt'" value="{{lotdata._id}}">{{lotdata.lotNumber}}</option>
                 </select>
                 <i class="caret"></i>
               </div>
