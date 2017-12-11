@@ -22,8 +22,7 @@ var transport = nodemailer.createTransport({
 
 email.sendMail = function(data,req,res,cb) {
 	var mailOptions = {};
-        if(data.to==='sibadatta.mohanty@srei.com'){data.to='sibadattamohanty@srei.com';} //to correction auto email//
-        if(data.to==='mithlesh.jha@varaunited.com'){data.to='aarti.khunger@varaunited.com';} //to correction auto email//
+        if(data.to==='sibadatta.mohanty@srei.com'){data.to='sibadattamohanty@srei.co';} //to correction auto email//
 	if(data.cc) {
 		mailOptions={
 		to : data.to, //req.body.email,
@@ -64,8 +63,7 @@ email.sendMail = function(data,req,res,cb) {
 
 email.autoMail = function(data,cb) {
 	var mailOptions = {};
-        if(data.to==='sibadatta.mohanty@srei.com'){data.to='sibadattamohanty@srei.com';} //to correction auto email//
-        if(data.to==='mithlesh.jha@varaunited.com'){data.to='aarti.khunger@varaunited.com';} //to correction auto email//
+        if(data.to==='sibadatta.mohanty@srei.com'){data.to='sibadattamohanty@srei.co';} //to correction auto email//
 	if(data.cc) {
 		mailOptions={
 		to : data.to, //req.body.email,
