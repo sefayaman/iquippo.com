@@ -76,7 +76,7 @@
 
   <div class="container">
     <div class="row main-auction">
-      <div class="col-sm-4" ng-repeat="auction in mainVm.auctionListing | orderBy: '-startDate'">
+      <div class="col-sm-4" ng-repeat="auction in mainVm.auctionListing | orderBy: 'startDate'">
         <a href="/auctionlot/{{auction._id}}?type=upcoming" class="media">
           <div class="calendar-date pull-left" href="javascript:void(0)">
             <h4>{{auction.startDate | date :'dd'}}</h4>
