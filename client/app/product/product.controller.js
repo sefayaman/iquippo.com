@@ -1650,6 +1650,12 @@
         //angular.copy($scope.setAssetMapData, $scope.product.assetMapData);
       }
       productSvc.addProduct(product).then(function(proResult) {
+          if(proResult.errorCode === 1)
+            Modal.alert(proResult.message);
+
+          var result = {};
+          angular.copy(proResult.product, result);
+
           $rootScope.loading = false;
           setScroll(0);
           $scope.successMessage = "Product added successfully.";
