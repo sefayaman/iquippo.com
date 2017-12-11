@@ -162,7 +162,7 @@ angular.module('sreizaoApp')
       }
     }
 
-    $rootScope.submitToRapid = function(){
+    /*$rootScope.submitToRapid = function(){
       var userId = "";
       Auth.removeCookies();
       if(Auth.getCurrentUser()._id)
@@ -172,6 +172,6 @@ angular.module('sreizaoApp')
         $window.location.href = res.data;
         //$window.open(res.data,"_blank");
       });
-    };
+    };*/
     
   })

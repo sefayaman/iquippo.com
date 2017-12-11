@@ -23,6 +23,7 @@ router.use('/linkedin', require('./linkedin'));
 
 //Authentication for external client
 router.get("/gettoken",extAuth.isAuthenticated(),extAuth.getToken);
+router.get("/tokenandurl",extAuth.getTokenAndRedirectUrl);
 router.get("/validate",extAuth.isAuthenticated(),extAuth.validate);
 
 
