@@ -42,6 +42,18 @@ angular.module('sreizaoApp')
             throw err;
         });
       },
+      getTokenAndUrl:function(){
+        var authUrl = "/auth/tokenandurl";
+        if(currentUser._id)
+          authUrl += "?_id=" + currentUser._id;
+        return $http.get(authUrl)
+        .then(function(res){
+          return res.data;
+        })
+        .catch(function(err){
+            throw err;
+        });
+      },
 
       /**
        * Delete access token and user info
