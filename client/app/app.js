@@ -131,6 +131,7 @@ angular.module('sreizaoApp',[
     settingSvc.getDevEnvironment()
     .then(function(res){
         DevEnvironment = res.mode === 'production'?false:true;
+        $rootScope.liveOrUatFlag = DevEnvironment;
         setEnviormentVariables();
       })
       .catch(function(stRes){
@@ -273,8 +274,10 @@ angular.module('sreizaoApp',[
    });
 
     function setEnviormentVariables(){
-      if(DevEnvironment)
+      if(DevEnvironment){
         supportMail = "iquippo.uat@gmail.com";
+        auctionURL = "https://auctionsoftwaremarketplace.com:3007"
+      }
     }
    
    Auth.removeCookies();

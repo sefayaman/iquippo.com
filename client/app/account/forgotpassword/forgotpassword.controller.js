@@ -52,8 +52,6 @@
         $scope.isUserFound = false;
         console.log(res.data);
       });
-
-
     }
 
     function sendOTP() {

@@ -7,14 +7,27 @@ angular.module('admin').factory("userRegForAuctionSvc", userRegForAuctionSvc);
 
     svc.get = get;
     svc.save = save;
-    svc.validateUser = validateUser;
     svc.exportData = exportData;
     svc.getFilterOnRegisterUser = getFilterOnRegisterUser;
+    svc.sendUserData=sendUserData;
+    svc.saveOfflineRequest=saveOfflineRequest;
     //svc.update = update;
     //svc.destroy = destroy;
+    svc.checkUserRegis = checkUserRegis;
     
+   function sendUserData(filter){
+     return $http.post(svcPath + '/senddata',filter)
+     .then(function(res){
+       return res.data;
+     })
+     .catch(function(err){
+       throw err;
+     });
+   }
+
+
    function get(filter){
-      var path = svcPath; 
+      var path = svcPath + '/getdata'; 
       var queryParam = "";
         if(filter)
           queryParam = $httpParamSerializer(filter);
@@ -39,8 +52,27 @@ angular.module('admin').factory("userRegForAuctionSvc", userRegForAuctionSvc);
         });
      }
 
-     function validateUser(data) {
-      return $http.post(svcPath + '/validateuser',data);
+     function checkUserRegis(data){
+         // var path = '/api/auction/checkUserRegis';
+
+          return $http.post(svcPath + '/checkUserRegis',data)
+          .then(function(res){
+            return res.data;
+          })
+          .catch(function(err){
+            throw err;
+          });
+      }
+
+      function saveOfflineRequest(data){
+        // var path = '/api/auction/checkUserRegis';
+         return $http.post(svcPath + '/saveOfflineRequest',data)
+         .then(function(res){
+           return res.data;
+         })
+         .catch(function(err){
+           throw err;
+         });
      }
 
      function exportData(data) {

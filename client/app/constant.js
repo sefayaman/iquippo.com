@@ -51,6 +51,10 @@ var Modals = {
     tplUrl : "app/auction/userregisterforauction.html",
     Ctrl : 'userRegForAuctionCtrl as auctionRegVm'
   },
+  auctionRegislogin : {
+    tplUrl : "app/auction/auctloginregis.html",
+    Ctrl : 'AuctionRegisCtrl as auctionRegisVm'
+  },
   invoiceDetails : {
     tplUrl : "app/assetsale/invoicedetails.html",
     Ctrl : 'invoiceDetailsCtrl as invoiceDetailsVm'
@@ -90,6 +94,10 @@ var Modals = {
   DoUpload:{
     tplUrl:'app/assetsale/doupload.html',
     Ctrl:'DoUploadCtrl as doUploadVm'
+  },
+  OfflinePaymentPopup:{
+    tplUrl:'app/payment/offlinepayment.html',
+    Ctrl:'OfflinePaymentCtrl as offlinePaymentVm'
   }
 };
 
@@ -316,7 +324,7 @@ var transactionStatuses = [
 
 //var EnterpriseValuationStatuses = ['Request Initiated','Request Failed','Request Submitted','Valuation Report Failed','Valuation Report Submitted','Invoice Generated','Payment Received','Payment Made to valuation Partner','Completed'];
 var EnterpriseValuationStatuses = ['Request Initiated','Request Failed','Request Submitted','Inspection In Progress','Inspection Completed','Valuation Report Failed','Valuation Report Submitted','Invoice Generated','Payment Received','Payment Made to valuation Partner','Completed'];
-
+var ReqSubmitStatuses = ['Request Submitted', 'Request Failed'];
 var TaxList =  ["Service Tax","Swatch Bharat Cess","Krishi Kalyan Cess"];
 
 var offerStatuses=['Bid Received','Bid Changed','Bid Withdraw'];
@@ -486,6 +494,7 @@ var HOME_BANNER =  [{
     }];
 
 var serverPath = location.protocol +"//" + location.host; 
+var auctionURL = "https://auctions.iquippo.com"
 //var serverPath = "http://14.141.64.180:8100"; 
 var supportMail = "info@iquippo.com";
 var DevEnvironment = false; 
