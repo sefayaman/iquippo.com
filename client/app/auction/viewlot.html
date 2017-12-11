@@ -97,9 +97,9 @@
           </button>
         </div>        
         <div class="col-xs-6 col-sm-2 padd-left form-group asset-sale">          
-           <button type="button" ng-if="!redirectToLiveAuction" class="btn btn-primary btn-block" ng-if="auctionData.auctionType === 'L'" ng-disabled="auctionData.auctionValue === 'upcomingAuctions'" ng-click="viewLotVm.openLiveAuctionURL(true)">View Live Auction</button>
+           <button type="button" class="btn btn-primary btn-block" ng-if="!redirectToLiveAuction && auctionData.auctionType === 'L'" ng-disabled="auctionData.auctionValue === 'upcomingAuctions'" ng-click="viewLotVm.openLiveAuctionURL(true)">View Live Auction</button>
 
-           <a ng-href="{{liveAuctionURLSCE}}" target="_blank" ng-if="redirectToLiveAuction" class="btn btn-primary btn-block" ng-if="auctionData.auctionType === 'L'" ng-disabled="auctionData.auctionValue === 'upcomingAuctions'">View Live Auction</a>
+           <a ng-href="{{liveAuctionURLSCE}}" target="_blank" class="btn btn-primary btn-block" ng-if="redirectToLiveAuction && auctionData.auctionType === 'L'" ng-disabled="auctionData.auctionValue === 'upcomingAuctions'">View Live Auction</a>
         </div>
         <div class="col-xs-6 col-sm-2 padd-left form-group asset-sale pull-right">          
           <button type="button" class="btn btn-primary btn-block" ng-if="auctionData.auctionValue !='closedAuctions'" ng-click="viewLotVm.openRegisterNow()" class="btn btn-default btn-sm active">Register</button>
