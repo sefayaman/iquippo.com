@@ -19,7 +19,7 @@
     <h4><strong>ONGOING</strong></h4>
     <legend></legend>
     <div class="row">
-      <div class="col-sm-6 col-md-6 form-group" ng-repeat="auction in auctionDateVm.auctionListing| orderBy: '-startDate'" ng-if="auction.auctionValue == 'ongoingAuctions'">
+      <div class="col-sm-6 col-md-6 form-group" ng-repeat="auction in auctionDateVm.auctionListing| orderBy: 'startDate'" ng-if="auction.auctionValue == 'ongoingAuctions'">
         <div class="media all-auctions">
           <!-- <a class="pull-left" href="javascript:void(0)" ng-if="auction.total_products === 0">
             <img class="media-object" ng-if="auction.primaryImg" src="{{uploadImagePrefix}}{{auctionmasterDir}}/{{auction.primaryImg}}" alt="Image">
@@ -76,7 +76,7 @@
     <h4><strong>COMING SOON</strong></h4>
     <legend></legend>
     <div class="row">
-      <div class="col-sm-6 col-md-6 form-group" ng-repeat="auction in auctionDateVm.auctionListing | orderBy: '-startDate' " ng-if="auction.auctionValue == 'upcomingAuctions'">
+      <div class="col-sm-6 col-md-6 form-group" ng-repeat="auction in auctionDateVm.auctionListing | orderBy: 'startDate' " ng-if="auction.auctionValue == 'upcomingAuctions'">
         <div class="media all-auctions">
         <!-- <a class="pull-left" href="javascript:void(0)" ng-if="auction.total_products === 0">
             <img class="media-object" ng-if="auction.primaryImg" src="{{uploadImagePrefix}}{{auctionmasterDir}}/{{auction.primaryImg}}" alt="Image">
