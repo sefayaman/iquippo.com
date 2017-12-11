@@ -30,7 +30,7 @@
               <input type="text" class="form-control form-group" name="userId" placeholder="Mobile Number or Email Address" ng-model="auctionRegVm.userId" required>
               <input ng-if="!isAdmin()" class="form-control form-group" placeholder="Password" type="password" name="passwordlogin" ng-model="auctionRegVm.passwordlogin" required>
               <div class="form-group" ng-class="{'has-error': aucform.batonNo.$invalid && aucform.submitted }">
-                <input ng-if="isAdmin()" class="form-control form-group" placeholder="Baton No." type="text" name="batonNo" ng-model="auctionRegVm.user.batonNo" required>
+                <input ng-if="isAdmin() && currentAuction.auctionType === 'L'" class="form-control form-group" placeholder="Baton No." type="text" name="batonNo" ng-model="auctionRegVm.user.batonNo" required>
               </div>
               <!-- <select ng-if="currentAuction.emdTax === 'lotwise'" class="form-control form-group" name="selectedLots" id="selectedLots" style="height: 80px;" ng-options="lots.lotNumber as lots.lotNumber for lots in auctionRegVm.lotList" ng-model="auctionRegVm.selectedLots.lotNumber" multiple>
               </select> --> 

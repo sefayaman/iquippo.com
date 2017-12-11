@@ -86,8 +86,8 @@
             <h4 class="media-heading">{{auction.name}}</h4>
             <p><small>({{auction.total_products}} Assets  |  {{auction.state}})</small></p>
             <!-- <span>{{auction.startTimer | date :'hh:mma'}} to {{auction.endTimer | date :'hh:mma'}}</span> -->
-            <span ng-if="auction.auctionType === 'online'"><i class="fa fa-gavel"></i> Online Auction</span>
-            <span ng-if="auction.auctionType === 'live'"><i class="fa fa-gavel"></i> Live Auction</span>
+            <span ng-if="auction.auctionType === 'A'"><i class="fa fa-gavel"></i> Online Auction</span>
+            <span ng-if="auction.auctionType === 'L'"><i class="fa fa-gavel"></i> Live Auction</span>
           </div>
         </a>
       </div>
