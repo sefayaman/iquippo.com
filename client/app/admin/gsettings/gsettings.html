@@ -589,7 +589,9 @@
 						<td>{{auc.auctionAddr}}</td>
 						<td>{{auc.contactName}}</td>
 						<td>{{auc.contactNumber}}</td> -->
-						<td>{{auc.auctionType | titleCase}}</td>
+						<td><span ng-if="auc.auctionType === 'A'">Online</span>
+							<span ng-if="auc.auctionType === 'L'">Live</span>
+						</td>
 						<!-- <td>{{}}</td> -->
 						<td>{{auc.emdAmount}}</td>
 						<!-- <td>{{}}</td>
