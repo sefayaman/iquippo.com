@@ -1454,7 +1454,6 @@ exports.getFilterOnAuctionMaster = function(req, res) {
 
   if (arr.length > 0)
     filter['$or'] = arr;
-  console.log("filter###", filter);
   var result = {};
   if (req.body.pagination && !req.body.statusType) {
     return Utility.paginatedResult(req, res, AuctionMaster, filter, {}, function(results) {
@@ -1495,7 +1494,7 @@ function auctionListing(results){
           var endDate = auction.endDate;
           auction.endTimer = endDate.getTime();
           var d = new Date();
-          auction.startTimer = d.getTime();
+          auction.startTimer = startDate.getTime();
           
           if (startDate > currentDate) {
             auction.auctionValue = "upcomingAuctions";

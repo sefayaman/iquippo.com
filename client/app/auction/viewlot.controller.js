@@ -33,6 +33,7 @@
     $scope.lotsArr = [];
     $scope.OverAll = "overall";
     $scope.LotWist = "lotwise";
+    $scope.redirectToLiveAuction = false;
 
     function init(){
 
@@ -42,8 +43,10 @@
       AuctionSvc.getAuctionDateData(filter)
         .then(function(result) {
           $rootScope.loading = false;
-          if(result && result.items && result.items.length)
+          if(result && result.items && result.items.length) {
             $scope.auctionData = result.items[0];
+            openLiveAuctionURL(false);
+          }
           else
             return backButton();
         })
@@ -130,9 +133,8 @@
       $window.history.back();
     }
 
-    function openLiveAuctionURL() {
-      if(!Auth.getCurrentUser()._id) {
-        //Modal.alert("Please Login/Register for uploading the products!", true);
+    function openLiveAuctionURL(initFlag) {
+      if(!Auth.getCurrentUser()._id && initFlag) {
         Auth.goToLogin();
         return;
       }
@@ -146,23 +148,32 @@
         dataObj.checkRegUser = true;
       userRegForAuctionSvc.checkUserRegis(dataObj)
         .then(function(result) {
-          console.log("User regis",result);
-            if(result.errorCode === 0){
+          $scope.redirectToLiveAuction = false;
+          if(!initFlag) {
+            if(result.errorCode === 0 && Auth.getCurrentUser()._id) {
+              $scope.redirectToLiveAuction = true;
               var liveAuctionUrl = auctionURL + "/liveAuction/"+dbAuctionId+"/"+Auth.getCurrentUser()._id;
-              var liveAuctionURLSCE = $sce.trustAsResourceUrl(liveAuctionUrl);
-              window.open(liveAuctionURLSCE,'_blank');
+              $scope.liveAuctionURLSCE = $sce.trustAsResourceUrl(liveAuctionUrl);
             }
-            else if(result.errorCode === 1)
-              Modal.alert("You have done partial registration, payment part is pending with lotnumbers" + result.selectedLots +". If you have already paid please contact support team!");              
-            else
-              Modal.alert("You are not register for this auction.Please register to access this auction!");
+            return;
+          }
+
+          if(result.errorCode === 0){
+            $scope.redirectToLiveAuction = true;
+            var liveAuctionUrl = auctionURL + "/liveAuction/"+dbAuctionId+"/"+Auth.getCurrentUser()._id;
+            $scope.liveAuctionURLSCE = $sce.trustAsResourceUrl(liveAuctionUrl);
+            //window.open(liveAuctionURLSCE,'_blank');
+          }
+          else if(result.errorCode === 1)
+            Modal.alert("You have done partial registration, payment part is pending with lotnumbers" + result.selectedLots +". If you have already paid please contact support team!");              
+          else
+            Modal.alert("You are not registered for this auction. Please register to access this auction!");
         })
         .catch(function(err) {
           if (err && err.data)
             Modal.alert(err.data);
         });
     }
-
 
   function fireCommand(noReset,initLoad){
       if(vm.show == true)

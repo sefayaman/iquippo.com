@@ -493,7 +493,7 @@ var HOME_BANNER =  [{
     }];
 
 var serverPath = location.protocol +"//" + location.host; 
-var auctionURL = "https://auctionsoftwaremarketplace.com:3007"
+var auctionURL = "https://auctions.iquippo.com"
 //var serverPath = "http://14.141.64.180:8100"; 
 var supportMail = "info@iquippo.com";
 var DevEnvironment = false; 

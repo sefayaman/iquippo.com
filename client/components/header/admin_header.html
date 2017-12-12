@@ -95,7 +95,8 @@
                     </li>
 
                     <li>
-                        <a ng-href="https://auctionsoftwaremarketplace.com:3007/buyer/{{getCurrentUser()._id}}" target="_blank"><i class="fa fa-gavel"></i> Auction Dashboard</a>
+                        <a ng-if="liveOrUatFlag" ng-href="https://auctionsoftwaremarketplace.com:3007/buyer/{{getCurrentUser()._id}}" target="_blank"><i class="fa fa-gavel"></i> Auction Dashboard</a>
+                        <a ng-if="!liveOrUatFlag" ng-href="https://auctions.iquippo.com/buyer/{{getCurrentUser()._id}}" target="_blank"><i class="fa fa-gavel"></i> Auction Dashboard</a>
                     </li>
                      <!-- <li ng-if="isAdmin()">
                         <a href="/classifiedadlisting"><i class="fa fa-history"></i>History</a>

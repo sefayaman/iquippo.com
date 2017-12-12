@@ -1097,7 +1097,7 @@ body{font-family: Lato-Regular ,sans-serif;}
 }
 .text-ellips{white-space: nowrap;overflow: hidden;text-overflow: ellipsis; font-size: 13px;} 
 .category-name{text-transform: uppercase; font-weight: bold; margin: 1.3em 0 2em; font-size: 16px; color: #2F2F2F;}
-.category-name h5{margin-bottom: 2px; font-weight: bold; font-size: 16px; color: #2F2F2F;}
+.category-name h5{margin-bottom: 2px; font-weight: bold; font-size: 16px; color: #2F2F2F;height:40px;}
 .category-name span{font-size: 13px; text-transform: capitalize;}
 .category-item{
   width: 100%;
@@ -1639,4 +1639,6 @@ footer .subscribe{height: 40px;}
 .upcoming-auction .media.all-auctions .calendar-date h4{font-size: 30px; margin-top: 5px;}
 .upcoming-auction .media.all-auctions .calendar-date small{font-size: 13px;}
 .login-margin{margin-top: 0;}
+#search-result_wrapper .media .media-body.lot-body{clear: both;}
+#search-result_wrapper .media a.lot-image img.img-responsive{width: 100%;}
 }
