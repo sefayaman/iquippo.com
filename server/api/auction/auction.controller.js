@@ -1494,7 +1494,7 @@ function auctionListing(results){
           var endDate = auction.endDate;
           auction.endTimer = endDate.getTime();
           var d = new Date();
-          auction.startTimer = d.getTime();
+          auction.startTimer = startDate.getTime();
           
           if (startDate > currentDate) {
             auction.auctionValue = "upcomingAuctions";
