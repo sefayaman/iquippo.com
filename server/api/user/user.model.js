@@ -34,6 +34,7 @@ var UserSchema = new Schema({
   hashedPassword: String,
   phone: String,
   mobile: String,
+  clientIp:String,
   agree: Boolean,
   company: String,
   imgsrc: String,
