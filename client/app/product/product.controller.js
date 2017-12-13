@@ -98,6 +98,7 @@
     //$scope.checkBidIncrement = checkBidIncrement;
     $scope.lot.staticIncrement = false;
     $scope.lot.rangeIncrement = false;
+    $scope.ReqSubmitStatuses = ReqSubmitStatuses;
 
     $scope.listInAuction = function(data) {
       if (data == true) {
@@ -1794,12 +1795,12 @@ function checkForLot(lotNumber) {
         stObj.status = $scope.product.assetStatus;
         stObj.createdAt = new Date();
         $scope.product.assetStatuses[$scope.product.assetStatuses.length] = stObj;
-        if ($scope.product.assetStatus == assetStatuses[2].code) {
+        if ($scope.product.assetStatus == assetStatuses[2].code || $scope.product.assetStatus == assetStatuses[1].code) {
           $scope.product.isSold = true;
           //$scope.product.featured = false;
           //$scope.product.status = false;
-        } else if ($scope.product.assetStatus == assetStatuses[1].code) {
-          $scope.product.isSold = true;
+        } else if ($scope.product.assetStatus == assetStatuses[0].code) {
+          $scope.product.isSold = false;
           //$scope.product.featured = false;
         }
       }
