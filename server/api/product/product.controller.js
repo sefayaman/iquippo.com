@@ -3155,6 +3155,8 @@ function checkValidTransition(tradeType,assetStatus){
     ret = true;
   else if(tradeType =='SELL' && assetStatus != 'rented')
     ret = true;
+  else if(tradeType =='NOT_AVAILABLE' && assetStatus != 'not_available')
+    ret = true;
   return ret;
 
 }

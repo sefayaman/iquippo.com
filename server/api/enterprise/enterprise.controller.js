@@ -180,7 +180,7 @@ exports.getOnId = function(req, res) {
 exports.create = function(req, res, next){
 
     var mandatoryParams =  ['agency.partnerId','enterprise.enterpriseId','purpose','requestType','assetCategory',"yardParked",'country','state','city','contactPerson','contactPersonTelNo','assetDescription'];
-    var vehicleParamsArr = ['engineNo','chassisNo'];
+    var vehicleParamsArr = ['registrationNo','chassisNo'];
 
     var returnVal = mandatoryParams.every(function(key){  
         var val = _.get(req.body,key,"");
