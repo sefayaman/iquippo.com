@@ -68,6 +68,7 @@ exports.signUp = function(req, res) {
   console.log("username::::" + req.body.name);
   newUser.createdAt = new Date();
   newUser.updatedAt = new Date();
+  newUser.clientIp=req.connection.remoteAddress;
   newUser.save(function(err, user) {
     if (err) return validationError(res, err);
     var token = jwt.sign({

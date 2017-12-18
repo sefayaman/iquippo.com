@@ -562,11 +562,13 @@ informationMessage['invoiceUpdateForThirdParty'] = "Invoice in third party's nam
 var newsEvents = [
   {
     name:"The Economic Times",
-    image:"The_Economic_Times.jpg"
+    //image:"The_Economic_Times.jpg"
+    image:"The_Economic_Times.PNG"
   },
   {
     name:"The Hindu Business Line",
-    image:"The_Hindu_Business_Line.jpg"
+    //image:"The_Hindu_Business_Line.jpg"
+    image:"The_Hindu_Business_Line_1.jpg"
   },
   {
     name:"The Financial Express",
@@ -609,7 +611,7 @@ var newsEvents = [
     image:"Financial_Explorer.jpg"
   },
   {
-    name:"J&amp;K Newspoint",
+    name:"J & K Newspoint",
     image:"J&K_Newspoint.jpg"
   },
   {
