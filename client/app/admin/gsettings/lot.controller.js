@@ -16,21 +16,33 @@ function LotCtrl($scope, $rootScope, $state,Modal,Auth,PagerSvc,$filter,AuctionM
   $scope.isEdit = false;
   vm.update = update;
   vm.destroy = destroy;
-  vm.searchFn = searchFn;
-  //vm.dataModel.bidInfo = [{}];
+  vm.fireCommand = fireCommand;
   vm.dataModel.bidIncrement = [{}];
   vm.checkForLot = checkForLot;
   vm.checkBidIncrement = checkBidIncrement;
   vm.dataModel.staticIncrement = false;
   $scope.ReqSubmitStatuses = ReqSubmitStatuses;
+  $scope.pager = PagerSvc.getPager();
+  var initFilter = {};
+  var filter = {};
+  vm.searchStr = "";
   
   function init() {
+    filter = {};
+    initFilter.pagination = true;
+    angular.copy(initFilter, filter);
     getAuctions();
-    getLotData();
+    getLotData(filter);
   } 
 
-  function searchFn(type){
-    vm.filteredList = $filter('filter')(vm.LotData,vm.searchStr);
+  function fireCommand(reset){
+    if (reset)
+        $scope.pager.reset();
+    filter = {};
+    angular.copy(initFilter, filter);
+    if (vm.searchStr)
+        filter.searchStr = vm.searchStr;
+    getLotData(filter);
   }
 
   function editClicked(rowData){
@@ -117,7 +129,7 @@ function LotCtrl($scope, $rootScope, $state,Modal,Auth,PagerSvc,$filter,AuctionM
   function resetLotData() {
     vm.dataModel = {};
     $scope.submitted = false;
-    getLotData();
+    fireCommand(true);
   }
 
   function update(form){
@@ -188,7 +200,7 @@ function LotCtrl($scope, $rootScope, $state,Modal,Auth,PagerSvc,$filter,AuctionM
     LotSvc.sendReqToCreateLot(lotData)
       .then(function(res) {
           if (res.errorCode == 0) {
-            getLotData();
+            fireCommand(true);
           }
           Modal.alert(res.message);
           $rootScope.loading = false;
@@ -229,7 +241,7 @@ function LotCtrl($scope, $rootScope, $state,Modal,Auth,PagerSvc,$filter,AuctionM
         LotSvc.destroy(lot)
         .then(function(result){
           if (result.errorCode == 0)
-            getLotData();
+            fireCommand(true);
           Modal.alert(result.message);
           $rootScope.loading = false;
         })
@@ -242,11 +254,14 @@ function LotCtrl($scope, $rootScope, $state,Modal,Auth,PagerSvc,$filter,AuctionM
     });
   } 
 
-  function getLotData(){
-    LotSvc.getData({})
+  function getLotData(filter){
+    $scope.pager.copy(filter);
+    LotSvc.getData(filter)
     .then(function(result){
-      vm.LotData = result;
-      vm.filteredList = result;
+      vm.LotData = result.items;
+      vm.filteredList = result.items;
+      vm.totalItems = result.totalItems;
+      $scope.pager.update(result.items, result.totalItems);
     })
     .catch(function(res){
     });
@@ -262,7 +277,7 @@ function LotCtrl($scope, $rootScope, $state,Modal,Auth,PagerSvc,$filter,AuctionM
   }
 
   function checkForLot(lotNumber,auction_id){
-    var filter={};
+    filter={};
     filter.lot = lotNumber;
     filter.auction_id = auction_id;
     if(auction_id && lotNumber){
