@@ -21,6 +21,8 @@ function AuctionRegisCtrl($scope, $rootScope, $location, Modal, Auth,PagerSvc,$u
   $scope.errorMsg = "";
   $scope.OverAll = "overall";
   $scope.LotWist = "lotwise";
+  $scope.option.select = 'offline';
+  
   function init() {
     if($scope.regLots && $scope.regLots.length > 0){
       var lots = $scope.regLots.join();
@@ -171,6 +173,9 @@ function AuctionRegisCtrl($scope, $rootScope, $location, Modal, Auth,PagerSvc,$u
       $rootScope.loading = false;
       if($scope.option.select === 'offline') {
         updatePayment(dataObj, result);
+      } else {
+        Modal.alert("Please select payment option.");
+        return;
       }
       closeDialog();
     })

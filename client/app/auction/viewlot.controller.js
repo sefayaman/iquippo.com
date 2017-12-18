@@ -289,12 +289,13 @@
                 return;
               }
             }
+            $scope.lotsArr = [];
             if(result && result.length > 0 && $scope.auctionData.emdTax === $scope.LotWist)
-            { $scope.lotsArr = [];
-                result.forEach(function(item){
-                  for (var i=0; i < item.selectedLots.length;i++)
-                    $scope.lotsArr.push(item.selectedLots[i]);
-                });
+            { 
+              result.forEach(function(item){
+                for (var i=0; i < item.selectedLots.length;i++)
+                  $scope.lotsArr.push(item.selectedLots[i]);
+              });
             }
             if(!Auth.isAdmin()) {
               var auctionRegislogin = $rootScope.$new();

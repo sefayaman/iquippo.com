@@ -3324,9 +3324,9 @@
 		</form>
  		<legend></legend>
 		<div class="row form-group">
-			<div class="col-sm-6"><p class="text-left">Showing : </p></div>
+			<div class="col-sm-6"><p class="text-left">Showing : {{lotVm.totalItems}} Records</p></div>
 			<div class="col-sm-6 tablesearch text-right">
-			Search: <input type="text" placeholder="Search..." ng-model="lotVm.searchStr" ng-change="lotVm.searchFn()" ng-model-options="{debounce:500}">
+			Search: <input type="text" placeholder="Search..." ng-model="lotVm.searchStr" ng-change="lotVm.fireCommand(true)" ng-model-options="{debounce:500}">
            </div>
 		</div>
 		<div class="row">
@@ -3371,7 +3371,7 @@
 						</tbody>
 					</table>
 				</div>
-				<uib-pagination total-items="gsettingVm.totalProductTechInfoCount" ng-model="gsettingVm.currentPage" items-per-page="gsettingVm.itemsPerPage" max-size="gsettingVm.maxSize" ng-change="gsettingVm.fireCommand(false,null,'technical')" class="pagination-sm" rotate="false">  </uib-pagination>
+				<uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="pager.maxSize" ng-change="lotVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
 			</div>
 		</div>
     </div>

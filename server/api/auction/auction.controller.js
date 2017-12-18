@@ -136,7 +136,8 @@ function _create(data, cb) {
     .par(function() {
       var self = this;
       AuctionRequest.find({
-        "product.assetId": data.product.assetId
+        "product.assetId": data.product.assetId,
+        "isDeleted":false
       }, function(err, acts) {
         if (err) {
           self(err)
@@ -234,7 +235,8 @@ exports.create = function(req, res, next) {
     .par(function() {
       var self = this;
       AuctionRequest.find({
-        "product.assetId": req.body.product.assetId
+        "product.assetId": req.body.product.assetId,
+        "isDeleted":false
       }, function(err, acts) {
         if (err) {
           self(err)
@@ -794,7 +796,8 @@ exports.update = function(req, res) {
   req.body.updatedAt = new Date();
   AuctionRequest.find({
     "product.assetId": req.body.product.assetId,
-    "status" : "request_approved"
+    "status" : "request_approved",
+    "isDeleted" : false
   }, function(err, auctions) {
     if (err) {
       return handleError(res, err);
@@ -2086,7 +2089,7 @@ exports.validateUpdateLotStatus = function(req,res,next){
   }
 
   function getAssetInLot(cb){
-    AuctionRequest.find({lot_id:bodyData.lot_id,dbAuctionId:bodyData.auction_id},function(err,assets){
+    AuctionRequest.find({lot_id:bodyData.lot_id,dbAuctionId:bodyData.auction_id,isDeleted:false},function(err,assets){
       if(err)
         return cb("Error in asset lot");
       if(!assets.length)
