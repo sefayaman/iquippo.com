@@ -228,6 +228,8 @@ exports.search = function(req, res) {
     filter["assetId"] = {$regex:new RegExp(req.body.assetId,'i')};
    if(req.body.assetIds && req.body.assetIds.length > 0)
     filter["assetId"] = {$in:req.body.assetIds};
+  if(req.body.assetIdEx)
+    filter["assetId"] = req.body.assetIdEx;
   if(req.body.group)
     filter["group.name"] = req.body.group;
   if(req.body.category)

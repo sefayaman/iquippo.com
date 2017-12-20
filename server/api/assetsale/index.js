@@ -16,7 +16,7 @@ router.get('/count',controller.getBidCount);
 router.post('/withdrawbid',auth.isAuthenticated(),controller.withdrawBid);
 router.get('/bidorbuycalculation',controller.calculateGst,controller.calculateTcs,controller.callculateParkingCharge,controller.getBidOrBuyCalculation);
 router.get('/getemd',controller.getEMDBasedOnUser);
-router.get('/export',auth.isAuthenticated(),controller.getSellers,controller.exportExcel);
+router.get('/export',auth.isAuthenticated(),controller.getSellers,controller.getProductsList, controller.exportExcel);
 
 module.exports = router;
 

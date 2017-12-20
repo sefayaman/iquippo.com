@@ -877,7 +877,6 @@ exports.getMaxBidOnProduct = function(req, res) {
 };
 
 exports.getSellers = function(req,res,next){
-	
 	var userType = req.body.userType || req.query.userType;
 	var partnerId = req.body.partnerId || req.query.partnerId;
 	var defaultPartner = req.body.defaultPartner || req.query.defaultPartner;
@@ -955,15 +954,41 @@ exports.getSellers = function(req,res,next){
 }
 
 exports.getBidProduct = function(req,res,next){
-  	
-  	if(req.body.userType === 'FA'){
+	if(req.body.userType === 'FA'){
   		if(!req.sellers.length)
   			return res.status(200).json({totalItems:0,products:[]});
   		req.bidRequestApproved = true;
   	}
 	req.body.bidReceived = true;
 	req.body.pagination = true;
-  	next();
+
+	next();
+}
+
+exports.getProductsList = function(req,res,next){
+	if(req.query.productsWise === 'n')
+		return next();
+
+	req.productIds = [];
+	var productFilter = {};
+	productFilter.deleted = false;
+	if(req.sellers && req.sellers.length)
+		productFilter["seller._id"] = {$in:req.sellers};
+	if(req.query.bidRequestApproved && req.query.bidRequestApproved === 'y')
+		productFilter.bidRequestApproved = true;
+	if(req.query.bidRequestApproved && req.query.bidRequestApproved === 'n')
+		productFilter.bidRequestApproved = false;
+	if(req.query.bidReceived)
+		productFilter.bidReceived = true;
+	Product.find(productFilter,function(err,proList){
+		if(err || !proList.length){
+		  return next();
+		}
+		proList.forEach(function(item){
+		  req.productIds.push(item._id);
+		});
+		next();
+	})
 }
 
 exports.exportExcel = function(req,res){
@@ -1000,9 +1025,9 @@ exports.exportExcel = function(req,res){
   	if(user.role == 'admin' && queryParam.payment === 'y') {
   		fieldsMap = fieldConfig['EXPORT_PAYMENT'];
   	}
-  	if(queryParam.productIds)
-		filter['product.proData'] = {$in:queryParam.productIds.split(',') || []};
-	
+	if(req.productIds)
+		filter['product.proData'] = {$in:req.productIds || []};
+
 	if(queryParam.offerStatus)
 		filter.offerStatus = queryParam.offerStatus;
 
@@ -1013,6 +1038,7 @@ exports.exportExcel = function(req,res){
 		filter.bidStatus = queryParam.bidStatus;
 	if(req.sellers && req.sellers.length)
   		filter['product.seller._id'] = {$in:req.sellers || []};
+
   	var query = AssetSaleBid.find(filter).populate('user product.proData');
 	query.exec(function(err,resList){
 		if(err) return handleError(res,err);

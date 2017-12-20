@@ -84,6 +84,10 @@ function AuctionRegisCtrl($scope, $rootScope, $location, Modal, Auth,PagerSvc,$u
           closeDialog();
           save(dataObj,vm.emdamount);
         } else {
+          if (angular.isUndefined(vm.dataToSend)) {
+            Modal.alert("Atleast one lot should be selected"); 
+            return;
+          }
           var lotsArr = [];
           for (var i=0; i < vm.dataToSend.selectedLots.length; i++) {
             for (var j=0; j < vm.dataToSend.selectedLots[i].length; j++)
@@ -106,7 +110,7 @@ function AuctionRegisCtrl($scope, $rootScope, $location, Modal, Auth,PagerSvc,$u
             if(result.data){
               closeDialog();
               if(result.data =="done"){
-                 Modal.alert("You have already registered for this auction"); 
+                 Modal.alert("You have already registered for this auction");
                  return;
                }
               if(result.data =="undone"){
