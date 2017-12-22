@@ -94,20 +94,11 @@ exports.getAuctionInfoForProduct = function(req, res) {
       auctionData = result[0].toObject();
       var currentDate = new Date();
       auctionData.visibleBuyNow = true;
-      if (auctionData.insStartDate < currentDate && auctionData.endDate > currentDate)
+      if (auctionData.startDate < currentDate && auctionData.endDate > currentDate)
         auctionData.visibleBuyNow = false;
-      /*var tempArr = [];
-      if(result) {
-        result.forEach(function(auction) {
-          auction = auction.toObject();
-          var currentDate = new Date();
-          result.visibleBuyNow = true;
-          if (auction.startDate < currentDate && auction.endDate > currentDate)
-            auction.visibleBuyNow = false;
-          tempArr[tempArr.length] = auction;
-        })
-        result = tempArr;
-      }*/
+      auctionData.allowProxyBid = false;
+      if (auctionData.insStartDate < currentDate && auctionData.endDate > currentDate)
+        auctionData.allowProxyBid = true;
       return res.status(200).json(auctionData);
     });
   });

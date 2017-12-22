@@ -154,8 +154,10 @@
                   </div> 
                    <div class="row">
                     <div class="col-xs-6 form-group padd-right">
-                      <i class="fa fa-check-circle-o"></i> <span ng-if="product.assetStatus === 'listed'">Available for Sale</span>
-                      <span ng-if="product.assetStatus === 'sold'">Sold</span>
+                      <i class="fa fa-check-circle-o"></i> <span ng-if="product.assetStatus === 'listed' && product.tradeType === 'SELL'">Available for Sale</span>
+                      <span ng-if="product.tradeType === 'NOT_AVAILABLE' && (product.assetStatus === 'sold' || product.assetStatus === 'listed')">Not Available for Sale</span>
+                      <span ng-if="product.assetStatus === 'sold' && product.tradeType === 'SELL'">Sold</span>
+
                     </div>
                     <!-- <div class="col-xs-6 form-group text-right padd-left">
                       <a href="javascript:void(0);" class="text-danger"> <img src="/assets/images/compare.png" width="16" height="18" alt=""> <span>Add to Compare</span></a>

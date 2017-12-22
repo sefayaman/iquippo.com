@@ -927,7 +927,7 @@ function updateProduct(req,res){
     function updateProductData(){
       Product.update({_id:req.params.id},{$set:req.body},function(err){
         if (err) { return handleError(res, err); }
-        if((req.body.tradeType === 'SELL' || req.body.tradeType === 'BOTH') && req.body.auctionListing) {
+        if(req.body.tradeType === 'SELL' && req.body.auctionListing) {
           if(req.body.deleted) {
             AuctionReq.update({_id:req.proData.auction._id},{$set:{"isDeleted":true}}, function(aucErr, resultData) {
               if (aucErr)
@@ -936,10 +936,9 @@ function updateProduct(req,res){
           }
           req.body._id = req.params.id;
           postRequest(req, res);
-        } else if(req.proData.auctionListing && !req.body.auctionListing) {
+        } else if(req.proData.auctionListing && (!req.body.auctionListing || req.body.tradeType === 'NOT_AVAILABLE')) {
           if(req.body.assetMapData)
             delete req.body.assetMapData;
-          //AuctionReq.update({_id:req.proData.auction._id},{$set:{"isDeleted":true}}).exec();
           AuctionReq.update({_id:req.proData.auction._id},{$set:{"isDeleted":true}}, function(aucErr, resultData) {
             if (aucErr)
               return handleError(res, err);

@@ -453,8 +453,8 @@
             AuctionSvc.getAuctionInfoForProduct(auctionFilter)
               .then(function(aucts) {
                 $scope.auctionsData = aucts;
-                if($scope.auctionsData.allowBid)
-                  $scope.allowBid = $scope.auctionsData.allowBid;
+                if($scope.auctionsData.allowProxyBid)
+                  $scope.allowBid = "No";
                 else
                   $scope.allowBid = 'Yes';
               });
