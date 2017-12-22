@@ -30,7 +30,6 @@ function PartnerManagementCtrl($scope, DTOptionsBuilder, $rootScope, $http, Auth
     .then(function(result){
       $scope.locationList = result;
     });
-
     loadVendors();
   }
 
@@ -162,6 +161,8 @@ function PartnerManagementCtrl($scope, DTOptionsBuilder, $rootScope, $http, Auth
       $scope.services.push($scope.Inspection);
     if($scope.Sale_Fulfilment)
       $scope.services.push($scope.Sale_Fulfilment);
+    if($scope.Auction_Registration)
+      $scope.services.push($scope.Auction_Registration);
 
     vm.vendorReg.services = $scope.services;
     if(!vm.vendorReg.user.state)
@@ -210,7 +211,8 @@ function PartnerManagementCtrl($scope, DTOptionsBuilder, $rootScope, $http, Auth
     $scope.ManPower = "";
     $scope.Finance = "";
     $scope.Auction = "";
-    $scope.Dealer = "";
+    $scope.Sale_Fulfilment = "";
+    $scope.Auction_Registration = "";
     $scope.isEdit = false;
     $rootScope.isSuccess = false;
     $rootScope.isError = false;
@@ -330,6 +332,8 @@ function PartnerManagementCtrl($scope, DTOptionsBuilder, $rootScope, $http, Auth
        serviceArr.push('Inspection');
        else if(tempArr[i] == 'Sale Fulfilment')
        serviceArr.push('Sale Fulfilment');
+     else if(tempArr[i] == 'Auction Registration')
+       serviceArr.push('Auction Registration');
     }
     return serviceArr.join();
   }
@@ -400,6 +404,8 @@ function updateVendor(vendor) {
         $scope.Inspection = vendor.services[i];
        else if(vendor.services[i] == 'Sale Fulfilment')
         $scope.Sale_Fulfilment = vendor.services[i];
+      else if(vendor.services[i] == 'Auction Registration')
+        $scope.Auction_Registration = vendor.services[i];
     }
     $scope.isEdit = true;
     vm.existFlag = true;

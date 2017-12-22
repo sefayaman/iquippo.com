@@ -13,6 +13,7 @@ angular.module('sreizaoApp').factory("vendorSvc",vendorSvc)
     var dealerVendorList =[];
     var inspectionVendorList = [];
     var saleFulfilmentVendorList = [];
+    var auctionRegVendorList = [];
       var vendorService = {};
       var path = '/api/vendor';
       
@@ -102,6 +103,7 @@ angular.module('sreizaoApp').factory("vendorSvc",vendorSvc)
           dealerVendorList =[];
           inspectionVendorList = [];
           saleFulfilmentVendorList = [];
+          auctionRegVendorList = [];
       		return res.data;
       	})
       	.catch(function(err){
@@ -122,6 +124,7 @@ angular.module('sreizaoApp').factory("vendorSvc",vendorSvc)
             dealerVendorList =[];
             inspectionVendorList = [];
             saleFulfilmentVendorList = [];
+            auctionRegVendorList = [];
             return res.data.vendor + 1;
           })
           .catch(function(err){
@@ -142,6 +145,7 @@ angular.module('sreizaoApp').factory("vendorSvc",vendorSvc)
           dealerVendorList =[];
           inspectionVendorList = [];
           saleFulfilmentVendorList = [];
+          auctionRegVendorList = [];
         	return res.data;
         })
         .catch(function(err){
@@ -185,11 +189,14 @@ angular.module('sreizaoApp').factory("vendorSvc",vendorSvc)
           else if(data[i].services[j] == 'Dealer' && data[i].status){
             dealerVendorList.push(vd);
           }
-           else if(data[i].services[j] == 'Inspection' && data[i].status){
+          else if(data[i].services[j] == 'Inspection' && data[i].status){
             inspectionVendorList.push(vd);
           }
-           else if(data[i].services[j] == 'Sale Fulfilment' && data[i].status){
+          else if(data[i].services[j] == 'Sale Fulfilment' && data[i].status){
             saleFulfilmentVendorList.push(vd);
+          }
+          else if(data[i].services[j] == 'Auction Registration' && data[i].status){
+            auctionRegVendorList.push(vd);
           }
         }
       }
@@ -206,6 +213,7 @@ angular.module('sreizaoApp').factory("vendorSvc",vendorSvc)
     dealerVendorList = [];
     inspectionVendorList = [];
     saleFulfilmentVendorList = [];
+    auctionRegVendorList =[];
   }
 
   function getShippingVendors(){
@@ -254,8 +262,11 @@ angular.module('sreizaoApp').factory("vendorSvc",vendorSvc)
       case 'Inspection':
          list = inspectionVendorList;
       break;
-       case 'Sale Fulfilment':
+      case 'Sale Fulfilment':
          list = saleFulfilmentVendorList;
+      break;
+      case 'Auction Registration':
+         list = auctionRegVendorList;
       break;
     }
     return list;

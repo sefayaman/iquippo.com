@@ -55,7 +55,7 @@ function AuctionRegisCtrl($scope, $rootScope, $location, Modal, Auth,PagerSvc,$u
         dataObj.auction.emdTax = $scope.currentAuction.emdTax;
         dataObj.auction.auctionOwnerMobile = $scope.currentAuction.auctionOwnerMobile;
 
-        if(!Auth.isAdmin()) {
+        if(!Auth.isAdmin() && !Auth.isAuctionRegPermission()) {
           dataObj.user.customerId = Auth.getCurrentUser().customerId;
           dataObj.user._id = Auth.getCurrentUser()._id;
           dataObj.user.fname = Auth.getCurrentUser().fname;
@@ -99,7 +99,7 @@ function AuctionRegisCtrl($scope, $rootScope, $location, Modal, Auth,PagerSvc,$u
           validateData.user = {};
           validateData.auction.dbAuctionId = $scope.currentAuction._id;
           validateData.selectedLots = lotsArr;
-          if(!Auth.isAdmin()) {
+          if(!Auth.isAdmin() && !Auth.isAuctionRegPermission()) {
             validateData.user._id = Auth.getCurrentUser()._id;
             validateData.user.mobile = Auth.getCurrentUser().mobile;
           } else {
@@ -158,17 +158,16 @@ function AuctionRegisCtrl($scope, $rootScope, $location, Modal, Auth,PagerSvc,$u
     stObj.status = transactionStatuses[1].code;
     stObj.createdAt = new Date();
     paymentObj.statuses[paymentObj.statuses.length] = stObj;
-    if(Auth.isAdmin()) {
-      var OfflinePaymentScope = $rootScope.$new();
-      OfflinePaymentScope.offlinePayment = paymentObj;
-      OfflinePaymentScope.viewMode = "paymentAdd";
-      OfflinePaymentScope.registerByAdmin = true;
-      Modal.openDialog('OfflinePaymentPopup',OfflinePaymentScope);
-    } else {
-      userRegForAuctionSvc.saveOfflineRequest(paymentObj).then(function(rd){
+    userRegForAuctionSvc.saveOfflineRequest(paymentObj).then(function(rd){
+      if(Auth.isAdmin() || Auth.isAuctionRegPermission()) {
+        var OfflinePaymentScope = $rootScope.$new();
+        OfflinePaymentScope.offlinePayment = paymentObj;
+        OfflinePaymentScope.viewMode = "paymentAdd";
+        OfflinePaymentScope.registerByAdmin = true;
+        Modal.openDialog('OfflinePaymentPopup',OfflinePaymentScope);
+      } else
         Modal.alert("You have sucessfully registered for the auction. Please pay the EMD amount and inform our customer care team."); 
-      });
-    }
+    });
   }
   function save(dataObj,amount){
     dataObj.totalAmount = amount;
