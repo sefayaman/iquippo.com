@@ -39,7 +39,8 @@ function BulkProductCtrl($state,$scope,$rootScope,$window,uploadSvc,productSvc,s
 
   function loadIncomingProduct(){
     var obj = {
-      userId:Auth.getCurrentUser()._id
+      userId:Auth.getCurrentUser()._id,
+      role:Auth.getCurrentUser().role
     };
     productSvc.loadIncomingProduct(obj)
     .then(function(result){

@@ -9,7 +9,12 @@ module.exports = {
 	'Model*': 'model',
 	'Other_Model*': 'other_model', //if present then populate otherName and make name to Other
 	'Sub_Category': 'sub_category',
+	'Engine_No': 'engineNo',
+	'Chasis_No': 'chasisNo',
+	'Registration_No': 'registrationNo',
 	'Variant': 'variant',
+        'Product_Group':'group_name', 
+        'Product_Name':'name', 
 	'Trade_Type(Buy/Sell/Both)*': 'tradeType',
 	'Manufacturing_Year*': 'mfgYear', //could not update
 	'Price_On_Request(Yes/No)*': 'priceOnRequest',
@@ -22,6 +27,7 @@ module.exports = {
 	'Seller_Mobile*': 'seller_mobile',
 	'Seller_Email_Address': 'seller_email',
 	'Seller_Name' : 'seller_name',
+        'Seller_Role':'seller_role',
 	//seller information start  end
 	'Motor_Operating_Hours': 'motorOperatingHour',
 	'Mileage': 'mileage',
