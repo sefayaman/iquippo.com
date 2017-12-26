@@ -67,11 +67,18 @@ exports.getOnId = function(req, res) {
 //incoming products
 
 exports.incomingProduct = function(req,res){
-   IncomingProduct.find({'user._id':req.body.userId}, function (err, products) {
-    if(err) { return handleError(res, err); }
-    return res.status(200).json(products);
+    var filter = {};
+    if(req.body.role==='admin'){
+        filter = {};
+    }
+    else{
+        filter["user._id"] = req.body.userId;
+    }
+    IncomingProduct.find(filter, function (err, products) {
+        if(err) { return handleError(res, err); }
+        return res.status(200).json(products);
   });
-}
+};
 
 exports.deleteIncomingProduct = function(req,res){
   IncomingProduct.findOneAndRemove({_id:req.body.productId},function(err,dt){
@@ -1317,7 +1324,7 @@ exports.exportProducts = function(req, res) {
               if (mapedFields[y] && (extraCols.indexOf(y) < 0)) {
                 if(x[y])
                   obj[mapedFields[y]] = x[y];
-                ['category', 'brand', 'model'].forEach(function(u) {
+                ['category', 'brand', 'model', 'group'].forEach(function(u) {
                   if (x[u])
                     obj[mapedFields[u]] = x[u].name;
                 });
@@ -1331,12 +1338,15 @@ exports.exportProducts = function(req, res) {
               obj[mapedFields.other_brand] = colData.brand.otherName;
             if (colData.model && colData.model.otherName)
               obj[mapedFields.other_model] = colData.model.otherName;
+            if (colData.group && colData.group.name)
+              obj[mapedFields.group_name] = colData.group.name;
 
             //Seller Information Cols
             if (colData.seller) {
               obj[mapedFields.seller_name] = _.get(colData, 'seller.fname', '') + _.get(colData, 'seller.lname', '');
               obj[mapedFields.seller_email] = _.get(colData, 'seller.email', '');
               obj[mapedFields.seller_mobile] = _.get(colData, 'seller.mobile', '');
+              obj[mapedFields.seller_role] = _.get(colData, 'seller.role', '');
             }
 
             //Technical Information Cols
@@ -1806,7 +1816,7 @@ exports.validateExcelData = function(req, res, next) {
             validateSeller: validateSeller,
             validateTechnicalInfo: validateTechnicalInfo,
             validateServiceInfo: validateServiceInfo,
-            validateCity : validateCity,
+            //validateCity : validateCity,
             validateRentInfo: validateRentInfo,
             validateAdditionalInfo: validateAdditionalInfo,
             validateOnlyAdminCols: validateOnlyAdminCols,
@@ -2591,7 +2601,7 @@ exports.validateExcelData = function(req, res, next) {
           obj[x] = trim(row[x]);
       })
 
-      var additionalCols = ['comment', 'rateMyEquipment', 'mileage', 'serialNo', 'mfgYear', 'variant','specialOffers'];
+      var additionalCols = ['comment', 'rateMyEquipment', 'mileage', 'serialNo', 'mfgYear', 'variant', 'engineNo', 'chasisNo', 'registrationNo', 'specialOffers'];
       additionalCols.forEach(function(x) {
         if (row[x]) {
           obj[x] = row[x];
