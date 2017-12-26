@@ -62,27 +62,27 @@
     $scope.redirectToAuction = redirectToAuction;
     vm.withdrawBid = withdrawBid;
     vm.getMiscDoc = getMiscDoc;
-    
+
     // bid summary
     function openBidModal(bidAmounts, bid, form) {
       if (form && form.$invalid) {
         $scope.bidSubmitted = true;
         return;
       }
-      
+
       if (!Auth.getCurrentUser()._id) {
          Auth.goToLogin();
         //Modal.alert("Please Login/Register for submitting your request!", true);
         return;
       }
-        
+
       var bidSummaryScope = $rootScope.$new();
       if(bid == "placebid" || bid == "proxybid"){
 
       bidSummaryScope.params = {
         bidAmount: bidAmounts,
         product:$scope.currentProduct,
-        stateId:$scope.state._id, 
+        stateId:$scope.state._id,
         bid: "placebid",
         offerType: "Bid",
         callback: countBid
@@ -239,7 +239,7 @@
           productSvc.serviceRequest($scope.productQuote)
             .then(function(res) {
               if (res && res.data && res.data.errorCode !== 0) {
-                //Modal.alert(res.data.message, true);  
+                //Modal.alert(res.data.message, true);
                 $state.go('main');
                 return;
               }
@@ -601,7 +601,7 @@
           productSvc.serviceRequest(dataFinance)
             .then(function(res) {
               if (res && res.data && res.data.errorCode !== 0) {
-                //Modal.alert(res.data.message, true);  
+                //Modal.alert(res.data.message, true);
                 $state.go('main');
                 return;
               }
