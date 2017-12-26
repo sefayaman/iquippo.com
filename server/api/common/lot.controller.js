@@ -246,6 +246,12 @@ function compileData(callback) {
 exports.getLotData = function(req, res) {
   var filter = {};
   filter.isDeleted = false;
+  
+  if (req.query.searchStr) {
+       filter['$text'] = {
+        '$search': "\""+req.query.searchStr+"\""
+      }
+  }
   if (req.query.auction_id) {
     filter.auction_id = req.query.auction_id;
   }
@@ -256,6 +262,11 @@ exports.getLotData = function(req, res) {
     filter._id = req.query._id;
   if (req.query.lot)
     filter.lotNumber = req.query.lot;
+
+  if (req.query.pagination) {
+    Util.paginatedResult(req, res, Lot, filter, {});
+    return;
+  }
 
   var query = Lot.find(filter).sort({createdAt: -1});
   query.exec(function(err, result) {
