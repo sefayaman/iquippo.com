@@ -610,7 +610,7 @@ var newsEvents = [
     image:"Financial_Explorer.jpg"
   },
   {
-    name:"J&amp;K Newspoint",
+    name:"J & K Newspoint",
     image:"J&K_Newspoint.jpg"
   },
   {
