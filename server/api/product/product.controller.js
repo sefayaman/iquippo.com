@@ -664,6 +664,7 @@ exports.getTechSpec = function(req,res,next){
           var dataObj = {};
           dataObj.name = item.name;
           dataObj.value = item.value;
+          dataObj.priority = item.priority || 0;
           req.body.techSpec[req.body.techSpec.length] = dataObj;
         }
       });

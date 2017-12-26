@@ -11,6 +11,7 @@
       svc.update = update;
       svc.destroy = destroy;
       svc.saveOfferRequest =saveOfferRequest;
+      svc.getOfferReq = getOfferReq;
        
      function get(filter){
 
@@ -69,6 +70,22 @@
           .catch(function(err){
             throw err;
           })
+       }
+
+       function getOfferReq(filter){
+         var queryParam = "";
+          var serPath = offerRequestPath;
+          if(filter)
+              queryParam = $httpParamSerializer(filter);
+          if(queryParam)
+              serPath += "?" + queryParam;
+          return $http.get(serPath)
+                .then(function(res){
+                    return res.data;
+                  })
+                  .catch(function(err){
+                    throw err;
+                  })
        }
   
 
