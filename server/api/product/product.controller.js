@@ -224,6 +224,8 @@ exports.search = function(req, res) {
    filter["tradeType"] = {$regex:new RegExp(req.body.tradeValue,'i')};
   if(req.body.assetStatus)
     filter["assetStatus"] = {$regex:new RegExp(req.body.assetStatus,'i')};
+  if(req.body.assetIdEx)
+    filter["assetId"] = req.body.assetIdEx;
   if(req.body.assetId)
     filter["assetId"] = {$regex:new RegExp(req.body.assetId,'i')};
    if(req.body.assetIds && req.body.assetIds.length > 0)
@@ -664,6 +666,7 @@ exports.getTechSpec = function(req,res,next){
           var dataObj = {};
           dataObj.name = item.name;
           dataObj.value = item.value;
+          dataObj.priority = item.priority || 0;
           req.body.techSpec[req.body.techSpec.length] = dataObj;
         }
       });
@@ -927,7 +930,7 @@ function updateProduct(req,res){
     function updateProductData(){
       Product.update({_id:req.params.id},{$set:req.body},function(err){
         if (err) { return handleError(res, err); }
-        if((req.body.tradeType === 'SELL' || req.body.tradeType === 'BOTH') && req.body.auctionListing) {
+        if(req.body.tradeType === 'SELL' && req.body.auctionListing) {
           if(req.body.deleted) {
             AuctionReq.update({_id:req.proData.auction._id},{$set:{"isDeleted":true}}, function(aucErr, resultData) {
               if (aucErr)
@@ -936,10 +939,9 @@ function updateProduct(req,res){
           }
           req.body._id = req.params.id;
           postRequest(req, res);
-        } else if(req.proData.auctionListing && !req.body.auctionListing) {
+        } else if(req.proData.auctionListing && (!req.body.auctionListing || req.body.tradeType === 'NOT_AVAILABLE')) {
           if(req.body.assetMapData)
             delete req.body.assetMapData;
-          //AuctionReq.update({_id:req.proData.auction._id},{$set:{"isDeleted":true}}).exec();
           AuctionReq.update({_id:req.proData.auction._id},{$set:{"isDeleted":true}}, function(aucErr, resultData) {
             if (aucErr)
               return handleError(res, err);

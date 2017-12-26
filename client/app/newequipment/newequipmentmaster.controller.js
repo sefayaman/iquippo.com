@@ -3,7 +3,7 @@
   angular.module('sreizaoApp').controller('NewEquipmentMasterCtrl', NewEquipmentMasterCtrl);
 
   //Product upload controller
-  function NewEquipmentMasterCtrl($scope, $http, $rootScope, $stateParams, groupSvc, categorySvc, SubCategorySvc, LocationSvc, uploadSvc, productSvc, brandSvc, modelSvc, Auth, $uibModal, Modal, $state, notificationSvc, AppNotificationSvc, userSvc, $timeout, $sce, vendorSvc, AuctionMasterSvc, AuctionSvc, PaymentMasterSvc, ValuationSvc, ProductTechInfoSvc, AppStateSvc,VatTaxSvc,CertificateMasterSvc) {
+  function NewEquipmentMasterCtrl($scope, $http, $rootScope, $stateParams, groupSvc, categorySvc, SubCategorySvc, LocationSvc, uploadSvc, productSvc, brandSvc, modelSvc, Auth, $uibModal, Modal, $state, notificationSvc, AppNotificationSvc, userSvc, $timeout, $sce, vendorSvc, AppStateSvc,CertificateMasterSvc) {
 
     var vm = this;
     //Start NJ : uploadProductClick object push in GTM dataLayer
@@ -21,7 +21,6 @@
     };
 
     var prevAssetStatus = assetStatuses[0].code;
-    var prevAuctionStatus = auctionStatuses[0].code;
     $rootScope.isSuccess = false;
     $rootScope.isError = false;
     $scope.assetDir = "";
@@ -64,25 +63,20 @@
     $scope.updateAssetTemp = updateAssetTemp;
     $scope.onStateChange = onStateChange;
     $scope.onCountryChange = onCountryChange;
-    //$scope.onRoleChange = onRoleChange;
     $scope.userSearch=userSearch;
     $scope.onCategoryChange = onCategoryChange;
     $scope.onBrandChange = onBrandChange;
     $scope.onModelChange = onModelChange;
-    $scope.onTradeTypeChange = onTradeTypeChange;
     $scope.clickHandler = clickHandler;
-    //$scope.addOrUpdateProduct = addOrUpdateProduct;
     $scope.onUserChange = onUserChange;
     $scope.reset = reset;
     $scope.resetClick = resetClick;
     $scope.makePrimary = makePrimary;
     $scope.deleteImg = deleteImg;
     $scope.previewProduct = previewProduct;
-    //$scope.openCropModal = openCropModal;
     $scope.rotate = rotate;
     $scope.playVideo = playVideo;
     $scope.firstStep = firstStep;
-    $scope.secondStep = secondStep;
     $scope.goToUsermanagement = goToUsermanagement;
 
     function productInit() {
@@ -90,33 +84,18 @@
       product = $scope.product = {};
       $scope.product.images = [];
       $scope.assetStatuses = assetStatuses;
-      $scope.product.technicalInfo = {};
-      $scope.product.technicalInfo.params = [{}];
-      $scope.product.serviceInfo = [{}];
       $scope.product.miscDocuments = [{}];
       $scope.product.videoLinks = [{}];
       $scope.product.country = "";
       $scope.product.status = false;
-      $scope.product.auctionListing = false;
-      $scope.product.assetStatus = assetStatuses[0].code;
+     $scope.product.assetStatus = assetStatuses[0].code;
       $scope.product.featured = false;
-      $scope.product.rent = {};
-      $scope.product.rent.rateHours = {};
-      $scope.product.rent.rateDays = {};
-      $scope.product.rent.rateMonths = {};
-      $scope.product.rent.rateHours.rateType = 'hours';
       $scope.product.productCondition = "new";
-      $scope.product.rent.negotiable = false;
       product.group = {};
       product.category = {};
       product.brand = {};
       product.model = {};
       product.seller = {};
-      product.auction = {};
-
-      $scope.valuationReq = {};
-      $scope.valuationReq.valuationAgency = {};
-      $scope.auctionReq = {};
     }
 
     function goToUsermanagement() {
@@ -148,42 +127,10 @@
       .then(function(certList){
         $scope.certificationList = certList;
       });
-      /* SubCategorySvc.getAllSubCategory()
-      .then(function(result){
-        $scope.allSubCategory = result;
-      });*/
-
-      /*LocationSvc.getAllState()
-      .then(function(result){
-        $scope.stateList = result;
-
-
-      });*/
 
       if (!Auth.isAdmin() && !Auth.isChannelPartner()) {
         product.seller = Auth.getCurrentUser();
       }
-
-
-
-      PaymentMasterSvc.getAll()
-        .then(function(result) {
-          $scope.payments = result;
-          vendorSvc.getAllVendors()
-            .then(function() {
-              var agency = vendorSvc.getVendorsOnCode('Valuation');
-              $scope.valAgencies = [];
-              agency.forEach(function(item) {
-                var pyMst = PaymentMasterSvc.getPaymentMasterOnSvcCode("Valuation", item._id);
-                if (pyMst && pyMst.fees)
-                  $scope.valAgencies[$scope.valAgencies.length] = item;
-                else if (pyMst && pyMst.fees === 0)
-                  $scope.valAgencies[$scope.valAgencies.length] = item;
-              });
-            });
-        });
-
-      //LocationSvc.getAllLocation()
 
       // product edit case
       if ($stateParams.id) {
@@ -213,14 +160,14 @@
           $scope.imagesOther = [];
           $scope.images = [];
           
-          if (response[0].serviceInfo.length > 0) {
+         /* if (response[0].serviceInfo.length > 0) {
             for (var i = 0; i < response[0].serviceInfo.length; i++) {
               if (response[0].serviceInfo[i] && response[0].serviceInfo[i].servicedate)
                 response[0].serviceInfo[i].servicedate = moment(response[0].serviceInfo[i].servicedate).toDate();
             }
           } else {
             $scope.product.serviceInfo = [{}];
-          }
+          }*/
 
           $scope.product.images.forEach(function(item, index) {
             if (item.catImgType) {
@@ -256,44 +203,12 @@
           else
             prevAssetStatus = product.assetStatus = "";
 
-          if (product.auctionListing) {
-            prevAuctionStatus = "request submitted";
 
-            if (product.auction && product.auction._id) {
-              var serData = {};
-              serData._id = product.auction._id;
-              AuctionSvc.getOnFilter(serData)
-                .then(function(result) {
-                  if (result.length > 0) {
-                    $scope.auctionReq = result[0];
-                  }
-                })
-            }
-
-          }
-          if (!product.auction)
-            product.auction = {};
-
-          //$scope.userType = product.seller.userType;
           $scope.product.country = $scope.product.country;
-          // $scope.product.auctionListing = false;
           $scope.assetDir = product.assetDir;
           $scope.container.selectedCategoryId = $scope.product.category._id;
           $scope.container.selectedBrandId = $scope.product.brand._id;
           $scope.container.selectedModelId = $scope.product.model._id;
-
-          var techFilter = {
-            category: $scope.product.category.name,
-            brand: $scope.product.brand.name,
-            model: $scope.product.model.name,
-          }
-          if (isEmpty($scope.product.technicalInfo)) {
-            $scope.product.technicalInfo = {};
-            $scope.product.technicalInfo.params = [{}];
-            getProductInfo(techFilter);
-          }
-
-          //$scope.container.selectedSubCategory = $scope.product.subcategory;
 
           $scope.container.sellerName = $scope.product.seller.fname + " " + $scope.product.seller.lname;
 
@@ -302,12 +217,7 @@
           $scope.onCountryChange(true);
           $scope.onStateChange(true);
           $scope.setDate($scope.product.mfgYear, 1, 1);
-          if ($scope.product.rent) {
-            $scope.product.rent.fromDate = moment($scope.product.rent.fromDate).toDate();
-            $scope.product.rent.toDate = moment($scope.product.rent.toDate).toDate();
-          }
-          if ($scope.product.repoDate)
-              $scope.product.repoDate = moment($scope.product.repoDate).format('MM/DD/YYYY');
+
           if ($scope.product.currencyType == "INR")
             $scope.product.currencyType = "";
           $scope.productName = $scope.product.name;
@@ -321,7 +231,6 @@
             $scope.enableButton = !Auth.isAdmin() && product.status;
             $scope.isEdit = true;
           }
-          $scope.onTradeTypeChange($scope.product.tradeType);
           prepareImgArr();
          
         })
@@ -654,40 +563,9 @@
           brand: product.brand.name,
           model: product.model.name
         };
-        getProductInfo(techFilter);
 
       } else
         product.model = {};
-    }
-
-    function getProductInfo(techFilter) {
-
-      ProductTechInfoSvc.fetchInfo(techFilter)
-        .then(function(techInfo) {
-          if (!$scope.product.technicalInfo) {
-            $scope.product.technicalInfo = {};
-            $scope.product.technicalInfo.params = [{}];
-          }
-          if (techInfo.length) {
-            $scope.product.technicalInfo['grossWeight'] = techInfo[0].information.grossWeight;
-            $scope.product.technicalInfo['operatingWeight'] = techInfo[0].information.operatingWeight;
-            $scope.product.technicalInfo['bucketCapacity'] = techInfo[0].information.bucketCapacity;
-            $scope.product.technicalInfo['enginePower'] = techInfo[0].information.enginePower;
-            $scope.product.technicalInfo['liftingCapacity'] = techInfo[0].information.liftingCapacity;
-          }
-        })
-    }
-
-    function onTradeTypeChange(tradeType) {
-      $scope.assetList = [];
-      for (var i = 0; i < assetStatuses.length; i++) {
-        if (tradeType == 'SELL' && assetStatuses[i].code == 'rented')
-          continue;
-        if (tradeType == 'RENT' && assetStatuses[i].code == 'sold')
-          continue;
-
-        $scope.assetList[$scope.assetList.length] = assetStatuses[i];
-      }
     }
 
     function onUserChange(seller) {
@@ -774,30 +652,16 @@
 
       var ret = false;
 
-      /*if ($scope.container.mfgYear) {
+      if ($scope.container.mfgYear) {
         if ($scope.container.mfgYear.getFullYear)
           $scope.product.mfgYear = $scope.container.mfgYear.getFullYear();
       } else {
         form.mfgyear.$invalid = true;
         ret = true;
-      }*/
-      
-      if($scope.product.tradeType && $scope.product.tradeType == 'RENT' && $scope.product.auctionListing){
-        Modal.alert("Auction is not allowed for rent assets.");
-        return;
-      }
-
-      if($scope.product.tradeType != "SELL" && $scope.product.tradeType != 'NOT_AVAILABLE'){
-        if($scope.product.rent && !$scope.product.rent.negotiable && angular.isUndefined($scope.product.rent.rateHours) && angular.isUndefined($scope.product.rent.rateDays) && angular.isUndefined($scope.product.rent.rateMonths)) {
-          ret = true;
-          Modal.alert("Please select at-least one check box in 'Check Rental Rate For'.", true);
-          return;
-        }
       }
 
       if (form.$invalid || ret) {
         $scope.submitted = true;
-        //angular.element("[name='" + $scope.form.$name + "']").find('.ng-invalid:visible:first').focus();
         $timeout(function() {
           angular.element(".has-error").find('input,select').first().focus();
         }, 20);
@@ -807,11 +671,7 @@
         Modal.alert("Seller doesn't exist!");
         return;
       }
-      /*if($scope.container.selectedSubCategory){
-         product.subcategory = {};
-         product.subcategory['_id'] = $scope.container.selectedSubCategory['_id'];
-         product.subcategory['name'] = $scope.container.selectedSubCategory['name'];
-      }*/
+
       var primarySet = "";
       product.assetDir = $scope.assetDir;
       $scope.product.images = [];
@@ -863,17 +723,7 @@
       } else {
         product.applyWaterMark = false;
       }
-
-      if (product.auctionListing) {
-        goToSecondStep();
-        return;
-      } else {
-        var cb = null;
-        if ($scope.valuationReq.valuate)
-          cb = postValuationRequest;
-
-        addOrUpdate(cb);
-      }
+      addOrUpdate();
 
     }
 
@@ -910,278 +760,6 @@
       $scope.product.images = $scope.product.images.concat(tempArr);
     }
 
-    function goToSecondStep() {
-
-      $scope.tabObj.step1 = false;
-      $scope.tabObj.step2 = true;
-      filter = {};
-      filter['yetToStartDate'] = new Date();
-      AuctionMasterSvc.get(filter)
-        .then(function(aucts) {
-          $scope.auctions = aucts;
-        });
-
-      $scope.auctionReq.valuationReport = checkValuationReport();
-
-    }
-
-    function checkValuationReport() {
-      var fileName = "";
-      var lastTime = new Date().getTime();
-      for (var i = 0; i < $scope.product.miscDocuments.length; i++) {
-        if ($scope.product.miscDocuments[i].type == 'Valuation') {
-          var creationTime = new Date($scope.product.miscDocuments[i].createdAt).getTime();
-          if (creationTime <= lastTime) {
-            fileName = $scope.product.miscDocuments[i].name;
-            lastTime = creationTime;
-          }
-        }
-      }
-      return fileName;
-    }
-
-    function secondStep(form, product) {
-      if (form.$invalid) {
-        $scope.auctSubmitted = true;
-        return;
-      }
-
-      /*var auctionAvailed = product.auction && product.auction._id ? true : false;
-      if (product.auctionListing && !$scope.auctionReq.valuationReport && !$scope.valuationReq.valuate && !auctionAvailed) {
-        Modal.alert("Valuation report is mandatory for aution listing");
-        return;
-      }*/
-      addOrUpdate(postAuction);
-    }
-
-
-
-    function postAuction(productObj) {
-
-      var stsObj = {};
-      if (!productObj.auction)
-        productObj.auction = {};
-      if (!productObj.auction._id) {
-        $scope.auctionReq.user = {};
-        $scope.auctionReq.user._id = Auth.getCurrentUser()._id;
-        $scope.auctionReq.user.mobile = Auth.getCurrentUser().mobile;
-        $scope.auctionReq.user.email = Auth.getCurrentUser().email;
-        $scope.auctionReq.seller = {};
-        $scope.auctionReq.seller._id = productObj.seller._id;
-        $scope.auctionReq.seller.name = productObj.seller.fname;
-
-        if (productObj.seller.mname)
-          $scope.auctionReq.seller.name += " " + productObj.seller.mname;
-        if (productObj.seller.lname)
-          $scope.auctionReq.seller.name += " " + productObj.seller.lname;
-
-        $scope.auctionReq.seller.email = productObj.seller.email;
-        $scope.auctionReq.seller.mobile = productObj.seller.mobile;
-        $scope.auctionReq.seller.countryCode=productObj.seller.countryCode;
-        $scope.auctionReq.status = auctionStatuses[0].code;
-        $scope.auctionReq.statuses = [];
-        stsObj.createdAt = new Date();
-        stsObj.status = auctionStatuses[0].code;
-        stsObj.userId = Auth.getCurrentUser()._id;
-        $scope.auctionReq.statuses[$scope.auctionReq.statuses.length] = stsObj;
-      }
-
-      $scope.auctionReq.product = {};
-      $scope.auctionReq.product._id = productObj._id;
-      $scope.auctionReq.product.assetId = productObj.assetId;
-      $scope.auctionReq.product.name = productObj.name;
-      $scope.auctionReq.product.productId = productObj.productId;
-      $scope.auctionReq.product.category = productObj.category.name;
-      $scope.auctionReq.product.brand = productObj.brand.name;
-      $scope.auctionReq.product.model = product.model.name;
-      $scope.auctionReq.product.mfgYear = productObj.mfgYear;
-      $scope.auctionReq.product.serialNo = productObj.serialNo;
-      $scope.auctionReq.product.grossPrice = productObj.grossPrice;
-      $scope.auctionReq.product.assetDir = productObj.assetDir;
-      $scope.auctionReq.product.primaryImg = productObj.primaryImg;
-      $scope.auctionReq.product.city = productObj.city;
-
-
-      for (var i = 0; i < $scope.auctions.length; i++) {
-        if ($scope.auctions[i]._id == $scope.auctionReq.dbAuctionId) {
-          $scope.auctionReq.startDate = $scope.auctions[i].startDate;
-          $scope.auctionReq.endDate = $scope.auctions[i].endDate;
-          $scope.auctionReq.auctionId = $scope.auctions[i].auctionId;
-          break;
-        }
-      }
-
-      if ($scope.valuationReq.valuate) {
-        createValuationRequest(productObj, "Listing in auction");
-      }
-
-      $scope.valuationReq.isAuction = true;
-      var paymentTransaction = createPaymentObj(productObj, "Auction Listing");
-
-      var serverObj = {};
-      serverObj['auction'] = $scope.auctionReq;
-      if ($scope.valuationReq.valuate)
-        serverObj['valuation'] = $scope.valuationReq;
-      if (paymentTransaction){
-        serverObj['payment'] = paymentTransaction;
-        serverObj.payment.auctionId = productObj.auctionId || "";
-        serverObj.payment.entityName = ($scope.valAgencies && $scope.valAgencies.length && $scope.valAgencies[0].name) || '';
-      }
-
-      
-
-      productSvc.createOrUpdateAuction(serverObj)
-        .then(function(res) {
-          //goto payment if payment are necessary
-          if (paymentTransaction && res.transactionId)
-            $state.go("payment", {
-              tid: res.transactionId
-            });
-          else
-            $state.go('newequipmentlisting');
-        })
-        .catch(function(err) {
-          //error handling
-        })
-    }
-
-    function postValuationRequest(productObj) {
-      if (!productObj.auction)
-        productObj.auction = {};
-
-      createValuationRequest(productObj, "Buying or Selling of Asset");
-      var paymentTransaction = createPaymentObj(productObj, "Auction Listing");
-      ValuationSvc.save({
-          valuation: $scope.valuationReq,
-          payment: paymentTransaction
-        })
-        .then(function(result) {
-          if (result.transactionId)
-            $state.go('payment', {
-              tid: result.transactionId
-            });
-        })
-        .catch(function() {
-          //error handling
-        });
-
-
-    }
-
-    function createValuationRequest(productObj, purpose) {
-
-      $scope.valuationReq.user = {};
-      $scope.valuationReq.user._id = Auth.getCurrentUser()._id;
-      $scope.valuationReq.user.fname = Auth.getCurrentUser().fname;
-      $scope.valuationReq.user.lname = Auth.getCurrentUser().lname;
-      $scope.valuationReq.user.country = Auth.getCurrentUser().country;
-      $scope.valuationReq.user.city = Auth.getCurrentUser().city;
-      $scope.valuationReq.user.phone = Auth.getCurrentUser().phone;
-      $scope.valuationReq.user.mobile = Auth.getCurrentUser().mobile;
-      $scope.valuationReq.user.email = Auth.getCurrentUser().email;
-      $scope.valuationReq.seller = {};
-      $scope.valuationReq.seller._id = productObj.seller._id;
-      $scope.valuationReq.seller.mobile = productObj.seller.mobile;
-      $scope.valuationReq.seller.countryCode=productObj.seller.countryCode;
-      $scope.valuationReq.seller.email = productObj.seller.email;
-
-      $scope.valuationReq.initiatedBy = "seller";
-      $scope.valuationReq.purpose = purpose;
-      $scope.valuationReq.product = {};
-      $scope.valuationReq.product._id = productObj._id;
-      $scope.valuationReq.product.assetId = productObj.assetId;
-      $scope.valuationReq.product.assetDir = productObj.assetDir;
-      $scope.valuationReq.product.primaryImg = productObj.primaryImg;
-      $scope.valuationReq.product.category = productObj.category.name;
-      $scope.valuationReq.product.mfgYear = productObj.mfgYear;
-      $scope.valuationReq.product.city = productObj.city;
-      $scope.valuationReq.product.status = productObj.assetStatus;
-      $scope.valuationReq.product.serialNumber = productObj.serialNo;
-      $scope.valuationReq.product.name = productObj.name;
-      for (var i = 0; i < $scope.valAgencies.length; i++) {
-        if ($scope.valuationReq.valuationAgency._id == $scope.valAgencies[i]._id) {
-          $scope.valuationReq.valuationAgency.name = $scope.valAgencies[i].name;
-          $scope.valuationReq.valuationAgency.email = $scope.valAgencies[i].email;
-          $scope.valuationReq.valuationAgency.mobile = $scope.valAgencies[i].mobile;
-          $scope.valuationReq.valuationAgency.countryCode=LocationSvc.getCountryCode($scope.valAgencies[i].country);
-          break;
-        }
-      }
-      $scope.valuationReq.status = valuationStatuses[0].code;
-      $scope.valuationReq.statuses = [];
-      var stObject = {};
-      stObject.createdAt = new Date();
-      stObject.status = valuationStatuses[0].code;
-      stObject.userId = Auth.getCurrentUser()._id;
-      $scope.valuationReq.statuses[$scope.valuationReq.statuses.length] = stObject;
-    }
-
-    function createPaymentObj(productObj, requestType) {
-
-      var paymentTransaction = {};
-      paymentTransaction.payments = [];
-      paymentTransaction.totalAmount = 0;
-      paymentTransaction.requestType = requestType;;
-      var payObj = null;
-      var createTraction = false;
-      if (!productObj.auction._id && productObj.auctionListing) {
-        payObj = {};
-        var pyMaster = PaymentMasterSvc.getPaymentMasterOnSvcCode("Auction");
-        payObj.type = "auctionreq";
-        payObj.charge = pyMaster.fees || 0;
-        paymentTransaction.totalAmount += payObj.charge;
-        paymentTransaction.payments[paymentTransaction.payments.length] = payObj;
-        createTraction = true;
-      }
-
-      if ($scope.valuationReq.valuate) {
-        payObj = {};
-        var pyMaster = PaymentMasterSvc.getPaymentMasterOnSvcCode("Valuation", $scope.valuationReq.valuationAgency._id);
-        payObj.type = "valuationreq";
-        payObj.charge = pyMaster.fees;
-        paymentTransaction.totalAmount += payObj.charge;
-        paymentTransaction.payments[paymentTransaction.payments.length] = payObj;
-        createTraction = true;
-      }
-
-      if (createTraction) {
-
-        paymentTransaction.product = {};
-        paymentTransaction.product.type = "equipment";
-        paymentTransaction.product._id = productObj._id;
-        paymentTransaction.product.assetId = productObj.assetId;
-        paymentTransaction.product.assetDir = productObj.assetDir;
-        paymentTransaction.product.primaryImg = productObj.primaryImg;
-        paymentTransaction.product.city = productObj.city;
-        paymentTransaction.product.name = productObj.name;
-        paymentTransaction.product.status = productObj.assetStatus;
-        paymentTransaction.product.category = productObj.category.name;
-        paymentTransaction.user = {};
-        paymentTransaction.user._id = Auth.getCurrentUser()._id;
-        paymentTransaction.user.fname = Auth.getCurrentUser().fname;
-        paymentTransaction.user.mobile = Auth.getCurrentUser().mobile;
-        paymentTransaction.user.email = Auth.getCurrentUser().email;
-        paymentTransaction.user.city = Auth.getCurrentUser().city;
-
-        paymentTransaction.status = transactionStatuses[0].code;
-        paymentTransaction.statuses = [];
-        var sObj = {};
-        sObj.createdAt = new Date();
-        sObj.status = transactionStatuses[0].code;
-        sObj.userId = Auth.getCurrentUser()._id;
-        paymentTransaction.statuses[paymentTransaction.statuses.length] = sObj;
-        if (Auth.isAdmin())
-          paymentTransaction.paymentMode = "offline";
-        else
-          paymentTransaction.paymentMode = "online";
-      }
-
-      if (createTraction)
-        return paymentTransaction;
-      else
-        return null;
-    }
-
     function addOrUpdate(cb) {
 
       $scope.product.videoLinks = $scope.product.videoLinks.filter(function(item, idx) {
@@ -1200,13 +778,13 @@
 
       });
 
-      $scope.product.serviceInfo = $scope.product.serviceInfo.filter(function(item, idx) {
+     /* $scope.product.serviceInfo = $scope.product.serviceInfo.filter(function(item, idx) {
         if (item && (item.servicedate || item.operatingHour || item.serviceAt || item.authServiceStation))
           return true;
         else
           return false;
 
-      });
+      });*/
 
        $scope.certificationList.forEach(function(certObj){
         if(certObj.name === $scope.product.certificationName)
@@ -1491,27 +1069,6 @@
           $scope.timestamp = new Date().getTime();
         })
     }
-
-    /*function openCropModal(idx) {
-
-      if ($scope.images[idx].waterMarked)
-        return;
-      var cropScope = $rootScope.$new();
-      cropScope.imgSrc = $scope.images[idx].src;
-      cropScope.prefix = $rootScope.uploadImagePrefix + $scope.assetDir + "/";
-      cropScope.assetDir = $scope.assetDir;
-      var cropImageModal = $uibModal.open({
-        templateUrl: "cropImage.html",
-        scope: cropScope,
-        controller: 'CropImageCtrl',
-        size: 'lg'
-      });
-
-      cropImageModal.result.then(function(res) {
-        $scope.timestamp = new Date().getTime();
-      })
-
-    };*/
 
     function playVideo(idx) {
       var videoScope = $rootScope.$new();

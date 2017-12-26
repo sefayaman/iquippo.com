@@ -284,14 +284,16 @@ function ProductListingCtrl($scope, $location, $rootScope, $http, productSvc, Au
 
   function deleteProduct(product){
     product.deleted = true;
-    productSvc.updateProduct(product).then(function(result){
+    productSvc.updateProduct(product).then(function(proResult){
         fireCommand(true);
+        var result = {};
+        angular.copy(proResult.product, result);
         var data = {};
         Modal.alert("Product deleted successfully", true);
         data['to'] = supportMail;
         data['subject'] = 'Product Deleted';
         //result.data.serverPath = serverPath;
-        notificationSvc.sendNotification('productDeletedEmailToAdmin', data, result.data,'email');
+        notificationSvc.sendNotification('productDeletedEmailToAdmin', data, result,'email');
       });
   }
 

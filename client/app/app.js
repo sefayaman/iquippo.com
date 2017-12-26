@@ -220,6 +220,7 @@ angular.module('sreizaoApp',[
     $rootScope.isValuationPartner = Auth.isValuationPartner;
     $rootScope.isBuySaleApprover = Auth.isBuySaleApprover;
     $rootScope.isBuySaleViewOnly = Auth.isBuySaleViewOnly;
+    $rootScope.isAuctionRegPermission = Auth.isAuctionRegPermission;
     
     $rootScope.closeMeassage = function(){
       $rootScope.isSuccess = false;

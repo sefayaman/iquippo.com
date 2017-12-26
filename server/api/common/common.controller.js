@@ -884,7 +884,7 @@ exports.updateMasterData = function(req, res) {
 								r: 0
 							},
 							e: {
-								c: 2,
+								c: 3,
 								r: data.length
 							}
 						};
@@ -895,7 +895,7 @@ exports.updateMasterData = function(req, res) {
 								r: 0
 							},
 							e: {
-								c: 4,
+								c: 5,
 								r: data.length
 							}
 						};
@@ -946,8 +946,11 @@ exports.updateMasterData = function(req, res) {
 							r: R
 						})
 						ws[cell_ref] = cell;
-						if (level == 'category')
+
+						if (level == 'category') {
+							addUsedAndNew(C, R, cell, ws, dt);
 							continue;
+						}
 
 						if (R == 0)
 							cell = {
@@ -982,9 +985,35 @@ exports.updateMasterData = function(req, res) {
 							r: R
 						})
 						ws[cell_ref] = cell;
+						addUsedAndNew(C, R, cell, ws, dt);
 					}
 					ws['!ref'] = xslx.utils.encode_range(range);
 					return ws;
+				}
+
+				function addUsedAndNew(C, R, cell, ws, dt) {
+					if (R == 0)
+						cell = {
+							v: "Used / New"
+						};
+					else {
+						if (dt) {
+							if (dt.isForUsed && dt.isForNew)
+								cell = {v: "Yes / Yes"};
+							else if (dt.isForUsed && !dt.isForNew)
+								cell = {v: "Yes / No"};
+							else if (!dt.isForUsed && dt.isForNew)
+								cell = {v: "No / Yes"};
+							else
+								cell = {v: "No / No"};
+						}
+					}
+					setType(cell);
+					var cell_ref = xslx.utils.encode_cell({
+						c: C++,
+						r: R
+					})
+					ws[cell_ref] = cell;
 				}
 
 				exports.importMasterData = function(req, res) {
@@ -1014,7 +1043,6 @@ exports.updateMasterData = function(req, res) {
 					req.successCount = 0;
 					importData(req, res, data);
 				}
-
 
 				var MASTER_DATA_HEADER = ["Product_Group", "Product_Category", "Brand_Name", "Model_No"];
 
