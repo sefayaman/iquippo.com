@@ -97,7 +97,7 @@
                     </div>
                     <div class="col-sm-4 form-group">
                       <label class="invisible">To Buy</label>
-                        <a href="javascript:void(0);" ng-click="productDetailVm.openBidModal(currentProduct.grossPrice || 0,'buynow')" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE' || auctionsData.visibleBuyNow == false  || productDetailVm.userCurrentBid.offerType == 'Buynow'" class="btn btn-primary btn-block">Buy Now</a>
+                        <a href="javascript:void(0);" ng-click="productDetailVm.openBidModal(currentProduct.grossPrice || 0,'buynow')" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE' || !auctionsData.visibleBuyNow  || productDetailVm.userCurrentBid.offerType == 'Buynow'" class="btn btn-primary btn-block">Buy Now</a>
                     </div>                  
                   </div>
                   <div class="option-border text-center">
@@ -133,7 +133,7 @@
                     <!-- <button type="button" ng-if="(!isLoggedIn() || userBids == 0) && allowBid != 'No'" class="btn btn-primary btn-block" ng-click="productDetailVm.openBidModal(productDetailVm.bidAmount,'placebid',assetSale)" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE'">
                     Place Bid
                     </button> -->
-                    <button type="button" ng-if="allowBid == 'No'" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE' || auctionsData.visibleBuyNow == false" class="btn btn-primary btn-block" ng-click="productDetailVm.openBidModal(productDetailVm.bidAmount,'proxybid',assetSale)">Proxy Bid</button>
+                    <button type="button" ng-if="allowBid == 'No'" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE' || !auctionsData.visibleBuyNow" class="btn btn-primary btn-block" ng-click="productDetailVm.openBidModal(productDetailVm.bidAmount,'proxybid',assetSale)">Proxy Bid</button>
                   </div>
                 </div>
                 <div class="row price-offer" ng-if="isLoggedIn() && userBids >= 1 && (allowBid != 'No')">

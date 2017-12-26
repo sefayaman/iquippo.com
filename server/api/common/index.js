@@ -186,10 +186,10 @@ router.get('/offer/get', offerCtrl.get);
 router.put('/offer/:id', auth.hasRole('admin'),offerCtrl.update);
 router.delete('/offer/:id',auth.hasRole('admin'), offerCtrl.destroy);
 router.post('/offerrequest',auth.isAuthenticated(),offerCtrl.createOfferRequest);
-
+router.get('/offerrequest',auth.hasRole('admin'),offerCtrl.getOfferRequest);
 //router.get('/offer/getfilterdata', offerCtrl.getFilterData);
 
 router.post('/bookademo',bookADemoCtrl.create);
-router.get('/bookademo', bookADemoCtrl.get);
+router.get('/bookademo',auth.hasRole('admin'),bookADemoCtrl.get);
 
 module.exports = router;

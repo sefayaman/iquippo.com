@@ -302,6 +302,12 @@ angular.module('sreizaoApp')
         else
           return false;
       },
+      isAuctionRegPermission: function() {
+        if(currentUser && currentUser.isPartner && currentUser.partnerInfo && currentUser.partnerInfo.services.length > 0)
+          return currentUser.partnerInfo.services.indexOf("Auction Registration") > -1 ? true : false;
+        else
+          return false;
+      },
       isFAgencyPartner: function() {
         if(currentUser && currentUser.isPartner && currentUser.partnerInfo && currentUser.partnerInfo.services.length > 0)
           return currentUser.partnerInfo.services.indexOf("Sale Fulfilment") > -1 ? true : false;

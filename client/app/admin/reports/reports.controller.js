@@ -3,7 +3,7 @@
   angular.module('report').controller('ReportsCtrl', ReportsCtrl);
 
   //controller function
-  function ReportsCtrl($scope, $rootScope, $http, Auth, ReportsSvc, $window, $uibModal, userSvc, ValuationSvc, userRegForAuctionSvc) {
+  function ReportsCtrl($scope, $rootScope, $http, Auth, ReportsSvc,OfferSvc,NewEquipmentSvc,$window, $uibModal, userSvc, ValuationSvc, userRegForAuctionSvc,commonSvc) {
     var vm = this;
     vm.tabValue = "callback";
 
@@ -28,6 +28,9 @@
     vm.insuranceListing = [];
     vm.quickQueryListing = [];
     vm.buyOrRentListing =[];
+    vm.bulkOrderListing =[];
+    vm.offerRequestListing =[];
+    vm.bookademoListing = [];
     //vm.additionalSvcListing = [];
     vm.buyNowListing = [];
     vm.forRentNowListing = [];
@@ -37,7 +40,7 @@
     vm.contactUsListing =[];
     vm.registerUser = [];
     $scope.valuationStatuses = valuationStatuses;
-    $scope.isAdmin=false;
+    //$scope.isAdmin=false;
     var dataToSend = {};
     var userMobileNos = [];
 
@@ -87,7 +90,7 @@
           dataToSend.pagination = true;
           dataToSend.itemsPerPage = vm.itemsPerPage;
           if(Auth.getCurrentUser().mobile && Auth.getCurrentUser().role != 'admin') {
-              $scope.isAdmin=false;
+              //$scope.isAdmin=false;
               if(Auth.getCurrentUser().role == 'channelpartner') {
                 var userFilter = {};
                 userFilter.userId =  Auth.getCurrentUser()._id;
@@ -109,7 +112,7 @@
                 getReportData(dataToSend, vm.tabValue);
               }
             } else{
-               $scope.isAdmin=true;
+               //$scope.isAdmin=true;
               getReportData(dataToSend, vm.tabValue);}
         }
       })
@@ -185,6 +188,15 @@
           break;
         case 'auctionRegReport':
           getReportData(filter, 'auctionRegReport');
+          break;
+        case 'offerreq':
+          getReportData(filter, 'offerreq');
+          break;
+        case 'bulkorder':
+          getReportData(filter, 'bulkorder');
+          break;
+        case 'bookademo':
+          getReportData(filter, 'bookademo');
           break;
       }
     }
@@ -542,6 +554,44 @@
               }
             });
           break;
+          case 'offerreq':
+          OfferSvc.getOfferReq(filter)
+            .then(function(result) {
+              vm.offerRequestListing = result.items;
+              vm.totalItems = result.totalItems;
+              prevPage = vm.currentPage;
+              if (vm.offerRequestListing.length > 0) {
+                first_id = vm.offerRequestListing[0]._id;
+                last_id = vm.offerRequestListing[vm.offerRequestListing.length - 1]._id;
+              }
+            });
+          break;
+          case 'bulkorder':
+          resetCount();
+          NewEquipmentSvc.getNewBulkOrder(filter)
+            .then(function(result) {
+              vm.bulkOrderListing = result.items;
+              vm.totalItems = result.totalItems;
+              prevPage = vm.currentPage;
+              if (vm.bulkOrderListing.length > 0) {
+                first_id = vm.bulkOrderListing[0]._id;
+                last_id = vm.bulkOrderListing[vm.bulkOrderListing.length - 1]._id;
+              }
+            });
+          break;
+          case 'bookademo':
+          resetCount();
+          commonSvc.getBookADemo(filter)
+            .then(function(result) {
+              vm.bookademoListing = result.items;
+              vm.totalItems = result.totalItems;
+              prevPage = vm.currentPage;
+              if (vm.bookademoListing.length > 0) {
+                first_id = vm.bookademoListing[0]._id;
+                last_id = vm.bookademoListing[vm.bookademoListing.length - 1]._id;
+              }
+            });
+          break;
       }
     }
 
@@ -591,6 +641,12 @@
         if(Auth.getCurrentUser().mobile && Auth.isAuctionPartner())
           filter.auctionOwnerMobile = Auth.getCurrentUser().mobile;
         fileName = "User_Request_For_Auction_Report_";
+      } else if(vm.tabValue == "offerreq"){
+         fileName = "offerreq_";
+      }else if(vm.tabValue == "bulkorder"){
+         fileName = "bulkorder_";
+      }else if(vm.tabValue == "bookademo"){
+         fileName = "bookademo_";
       }
       else 
         fileName = "ValuationReport_";

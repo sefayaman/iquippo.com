@@ -42,7 +42,7 @@
             <h2>
             {{currentProduct.name}}
             </h2>
-              <div class="row maximum-capacity" ng-repeat="techspec in techSpecFields">
+              <div class="row maximum-capacity" ng-repeat="techspec in techSpecFields | orderBy:'-priority'">
               <div class="col-xs-7 padd-left">
                 {{techspec.name}}
               </div>
