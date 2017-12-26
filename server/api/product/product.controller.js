@@ -224,6 +224,8 @@ exports.search = function(req, res) {
    filter["tradeType"] = {$regex:new RegExp(req.body.tradeValue,'i')};
   if(req.body.assetStatus)
     filter["assetStatus"] = {$regex:new RegExp(req.body.assetStatus,'i')};
+  if(req.body.assetIdEx)
+    filter["assetId"] = req.body.assetIdEx;
   if(req.body.assetId)
     filter["assetId"] = {$regex:new RegExp(req.body.assetId,'i')};
    if(req.body.assetIds && req.body.assetIds.length > 0)
