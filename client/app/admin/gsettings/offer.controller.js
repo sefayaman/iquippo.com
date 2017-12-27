@@ -271,7 +271,7 @@
           });
           $scope.modelList.forEach(function(model){
             if(model._id === vm.dataModel.model.id)
-              vm.dataModel.name = model.name;
+              vm.dataModel.model.name = model.name;
           });
          var locationArr = vm.dataModel.locationArr;
          delete vm.dataModel.locationArr;
