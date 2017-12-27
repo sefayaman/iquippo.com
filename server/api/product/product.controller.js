@@ -1817,7 +1817,7 @@ exports.validateExcelData = function(req, res, next) {
             validateTechnicalInfo: validateTechnicalInfo,
             validateServiceInfo: validateServiceInfo,
             //validateCity : validateCity,
-            validateRentInfo: validateRentInfo,
+            //validateRentInfo: validateRentInfo,
             validateAdditionalInfo: validateAdditionalInfo,
             validateOnlyAdminCols: validateOnlyAdminCols,
             validateForBid:validateForBid,
