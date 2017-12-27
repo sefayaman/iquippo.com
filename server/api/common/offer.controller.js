@@ -8,6 +8,34 @@ var Utility = require('./../../components/utility.js');
 var moment = require("moment");
 var xlsx = require('xlsx');
 
+var Offer_Master_Excel_Header = {
+    "Category": "category.name",
+    "Brand": "brand.name",
+    "Model": "model.name",
+    "Country":"country",
+    "State": "locations",
+    "Cash Offer" : "cash_purchase",
+    "Finance Offer" : "finance",
+    "Lease Offer" : "lease",
+    "Created At" : "createdAt"
+};
+
+ var Excel_Header = {
+    "Order Id": "orderId",
+    "Category": "category.name",
+    "Brand": "brand.name",
+    "Model": "model.name",
+    "State": "state",
+    "Customer Name" : "customerName",
+    "Customer Mobile" : "mobile",
+    "Customer Email" : "email",
+    "Cash Offer" : "cashOffer",
+    "Finance Offer" : "financeOffer",
+    "Lease Offer" : "leaseOffer",
+    "Created At" : "createdAt"
+  };
+
+
   exports.create = function(req, res,next) {
       var model = new Offer(req.body);
             model.save(function(err, st) {
@@ -41,12 +69,21 @@ var xlsx = require('xlsx');
           filter['model.id'] = queryParam.modelId;
         if (queryParam.stateName)
           filter['location.name'] = queryParam.stateName;
+        if(queryParam.pagination){
+          return Utility.paginatedResult(req, res, Offer, filter, {});
+        }
+        
         var query = Offer.find(filter);
         query.exec(function(err, result) {
           if (err) {
             return handleError(res, err);
           }
-          return res.status(200).json(result);
+          req.result = result;
+          if(queryParam.type == 'excel')
+            renderOfferMasterExcel(req,res);
+          else
+            renderJSON(req,res); 
+          //return res.status(200).json(result);
         });
     };
 
@@ -83,7 +120,45 @@ var xlsx = require('xlsx');
       });
     };
 
-    //Offer request api
+  function renderOfferMasterExcel(req,res){
+    var dataArr = [];
+    var keys = Object.keys(Offer_Master_Excel_Header);
+    dataArr[dataArr.length] = keys;
+    req.result.forEach(function(item){
+      var rowData = [];
+      keys.forEach(function(key){
+        var val = _.get(item,Offer_Master_Excel_Header[key],"");
+        if(Offer_Master_Excel_Header[key] == 'locations' && item.location.length){
+          val = "";
+          item.location.forEach(function(location){
+            val += location.name + ",";
+          });
+          val = val.substring(0,val.length - 1);
+        }
+        if(Offer_Master_Excel_Header[key] == 'cash_purchase')
+          val = item.cash_purchase ? "Yes" : "No";
+         if(Offer_Master_Excel_Header[key] == 'finance')
+          val = item.finance ? "Yes" : "No";
+         if(Offer_Master_Excel_Header[key] == 'lease')
+          val = item.lease? "Yes" : "No";
+          if(Offer_Master_Excel_Header[key] == "createdAt")
+            val = moment(item.createdAt).utcOffset('+0530').format('MM/DD/YYYY');
+        rowData.push(val);
+      });
+      if(rowData.length)
+        dataArr.push(rowData)
+    }); 
+    var ws = Utility.excel_from_data(dataArr,keys);
+    var ws_name = "OfferReq_" + new Date().getTime();
+    var wb = Utility.getWorkbook();
+    wb.SheetNames.push(ws_name);
+    wb.Sheets[ws_name] = ws;
+    var wbout = xlsx.write(wb, {bookType:'xlsx', bookSST:true, type: 'binary'});
+    res.end(wbout);
+  }
+  
+
+  //Offer request api
 
  exports.createOfferRequest = function(req, res,next) {
       var model = new OfferRequest(req.body);
@@ -122,21 +197,6 @@ var xlsx = require('xlsx');
   function renderJSON(req,res){
     return res.status(200).json(req.result);
   }
-
-  var Excel_Header = {
-    "Order Id": "orderId",
-    "Category": "category.name",
-    "Brand": "brand.name",
-    "Model": "model.name",
-    "State": "state",
-    "Customer Name" : "customerName",
-    "Customer Mobile" : "mobile",
-    "Customer Email" : "email",
-    "Cash Offer" : "cashOffer",
-    "Finance Offer" : "financeOffer",
-    "Lease Offer" : "leaseOffer",
-    "Created At" : "createdAt"
-  };
 
   function renderExcel(req,res){
     var dataArr = [];

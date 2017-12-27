@@ -2907,33 +2907,40 @@
                     <form class="techInformationForm" name="offerform" novalidate>
                         <div class="row form-group">
 
-                            <div class="col-sm-3" ng-class="{'has-error':offerVm.category.$invalid && submitted}">
+                            <div class="col-sm-2" ng-class="{'has-error':offerform.category.$invalid && submitted}">
                                 <label>Select Category</label>
-                                <select class="form-control form-group" name="category" ng-model="container.selectedCategoryId" ng-change="onCategoryChange(container.selectedCategoryId)" required> 
+                                <select class="form-control form-group" name="category" ng-model="offerVm.dataModel.category.id" ng-change="onCategoryChange(offerVm.dataModel.category.id)" required> 
                                     <option value=""> Select Category </option> 
                                     <option value="{{category._id}}" ng-repeat="category in allCategory">{{category.name}}</option>
                                 </select>
                             </div>
 
-                            <div class="col-sm-3" ng-class="{'has-error':offerVm.brand.$invalid && submitted}">
+                            <div class="col-sm-2" ng-class="{'has-error':offerform.brand.$invalid && submitted}">
                                 <label>Select Brand</label>
-                                <select class="form-control form-group" name="brand" ng-model="container.selectedBrandId" ng-change="onBrandChange(container.selectedBrandId)" required> 
+                                <select class="form-control form-group" name="brand" ng-model="offerVm.dataModel.brand.id" ng-change="onBrandChange(offerVm.dataModel.brand.id)" required> 
                                     <option value=""> Select Brand </option> 
                                     <option value="{{brand._id}}" ng-repeat="brand in brandList| orderBy:'name'">{{brand.name}}</option>
                                 </select>
                             </div>
 
-                            <div class="col-sm-3" ng-class="{'has-error':offerVm.model.$invalid && submitted}">
+                            <div class="col-sm-2" ng-class="{'has-error':offerform.model.$invalid && submitted}">
                                 <label>Select Model</label>
-                                <select class="form-control form-group" name="model" ng-model="container.selectedModelId" ng-change="onModelChange(container.selectedModelId)" required > 
+                                <select class="form-control form-group" name="model" ng-model="offerVm.dataModel.model.id" required > 
                                     <option value=""> Select Model </option> 
                                     <option value="{{model._id}}" ng-repeat="model in modelList| orderBy:'name'">{{model.name}}</option>
                                 </select>
                             </div>
+                             <div class="col-sm-3" ng-class="{'has-error':offerform.country.$invalid && submitted}">
+                                <label>Select Country</label>
+                                <select class="form-control" name="country"  ng-model="offerVm.dataModel.country" ng-change="onCountryChange(offerVm.dataModel.country)" required> 
+                                    <option value=""> Select Country </option> 
+                                    <option ng-repeat="country in allCountries" value="{{country.name}}">{{country.name}}</option>
+                                </select>
 
-                            <div class="col-sm-3" ng-class="{'has-error':offerVm.location.$invalid && submitted}">
+                            </div>
+                             <div class="col-sm-3" ng-class="{'has-error':offerform.location.$invalid && submitted}">
                                 <label>Select Location</label>
-                                <select multiple="true" class="form-control" name="location"  ng-model="container.locationArr" style="height:70px;" required> 
+                                <select multiple="true" class="form-control" name="location"  ng-model="offerVm.dataModel.locationArr" style="height:70px;" required> 
                                     <option value=""> Select Location </option> 
                                     <option ng-repeat="state in stateList" value="{{state._id}}">{{state.name}}</option>
                                 </select>
@@ -2941,30 +2948,48 @@
                             </div>
 
                         </div>
+                       <!--  <div class="row form-group">
+                             <div class="col-sm-2" ng-class="{'has-error':offerform.country.$invalid && submitted}">
+                                <label>Select Country</label>
+                                <select class="form-control" name="country"  ng-model="offerVm.dataModel.country" ng-change="onCountryChange(offerVm.dataModel.country)" required> 
+                                    <option value=""> Select Country </option> 
+                                    <option ng-repeat="country in allCountries" value="{{country.name}}">{{country.name}}</option>
+                                </select>
 
+                            </div>
+                             <div class="col-sm-2" ng-class="{'has-error':offerform.location.$invalid && submitted}">
+                                <label>Select Location</label>
+                                <select multiple="true" class="form-control" name="location"  ng-model="offerVm.dataModel.locationArr" style="height:70px;" required> 
+                                    <option value=""> Select Location </option> 
+                                    <option ng-repeat="state in stateList" value="{{state._id}}">{{state.name}}</option>
+                                </select>
+
+                            </div>
+                        </div>
+ -->
                         <div class="row">
                             <div class="col-sm-2">
                                 <div class="checkbox">
-                                    <input type="checkbox" id="cash_purchase" name="purchase" ng-model="purchase" value="checked" ng-change ="checkPurchase(purchase)">
+                                    <input type="checkbox" id="cash_purchase" name="purchase" ng-model="offerVm.dataModel.cash_purchase">
                                     <label for="cash_purchase">Cash Purchase</label>
                                 </div>
 
                             </div>
                             <!-- start purchase-->
-                            <div class="col-sm-10" ng-if="purchase">
-                                <div  class="row" ng-repeat="purchaseField in offerVm.purchaseFields">
+                            <div class="col-sm-10" ng-if="offerVm.dataModel.cash_purchase">
+                                <div  class="row" ng-repeat="purchaseField in offerVm.dataModel.caseInfo">
                                     <div class="col-sm-4 form-group">
                                         <label>Price : </label>
-                                        <input type="text" class="form-control form-group" name="price" ng-model="offerVm.purchaseArr[$index].price" ng-value="{{container.price}}"  placeholder="Price">
+                                        <input type="text" class="form-control form-group" name="price" ng-model="purchaseField.price"  placeholder="Price">
                                     </div>
                                     <div class="col-sm-4 form-group">
                                         <label>Free Of Cost</label>	
-                                        <input type="text" class="form-control form-group" name="freeofcost" ng-model="offerVm.purchaseArr[$index].freeofcost" ng-value="{{container.freeofcost}}" placeholder="Free Of Cost"> 
+                                        <input type="text" class="form-control form-group" name="freeofcost" ng-model="purchaseField.freeofcost" placeholder="Free Of Cost"> 
                                     </div>
                                     <div class="col-sm-2 form-group">
                                         <label class="invisible">Cash Purchase</label>
-                                        <button type="button" class="btn btn-default btn-block" ng-click="offerVm.purchaseFields.push({})" ng-if="$last">Add More</button>
-                                        <button type="button" class="btn btn-default btn-block" ng-click="offerVm.purchaseFields.splice($index, 1)" ng-if="!$last">Delete</button>
+                                        <button type="button" class="btn btn-default btn-block" ng-click="offerVm.dataModel.caseInfo.push({})" ng-if="$last">Add More</button>
+                                        <button type="button" class="btn btn-default btn-block" ng-click="offerVm.dataModel.caseInfo.splice($index, 1)" ng-if="!$last">Delete</button>
                                     </div>
 
                                 </div>
@@ -2975,49 +3000,49 @@
                             <!-- start finance-->
                             <div class="col-sm-2">
                                 <div class="checkbox">
-                                    <input type="checkbox" id="list_finance" name="finance" ng-model="finance" value="checked" ng-change ="checkFinance(finance)">
+                                    <input type="checkbox" id="list_finance" name="finance" ng-model="offerVm.dataModel.finance">
                                     <label for="list_finance">List In Finance</label>
                                 </div>
                             </div>
-                            <div class="col-sm-10" ng-if="finance">
-                                <div ng-repeat="financeField in offerVm.financeFields">
-                                    <div class="row" ng-repeat="financerField in offerVm.financerFields" ng-init="f1Index = $index">
+                            <div class="col-sm-10" ng-if="offerVm.dataModel.finance">
+                                <div ng-repeat="financer in offerVm.dataModel.financeInfo">
+                                    <div class="row">
                                         <div class="col-sm-4 form-group">
-                                            <select class="form-control form-group" name="financer" ng-model="offerVm.financer[f1Index]"> 
+                                            <select class="form-control form-group" name="financer" ng-model="financer.id"> 
                                                 <option value="">Select Financer</option> 
                                                 <option value="{{al._id}}" ng-repeat="al in agency| orderBy:'entityName'">{{al.entityName}}</option>
                                             </select>
                                         </div>
                                         <div class="col-sm-offset-6 col-sm-2 form-group">
-                                            <button type="button" class="btn btn-default btn-block" ng-click="offerVm.financerFields.push({}); offerVm.financerInfoFields.push([{}])" ng-if="$last">Add More</button>
-                                            <button type="button" class="btn btn-default btn-block" ng-click="offerVm.financerFields.splice($index, 1); offerVm.financerInfoFields.splice($index, 0)" ng-if="!$last">Delete</button>
+                                            <button type="button" class="btn btn-default btn-block" ng-click="offerVm.dataModel.financeInfo.push({dataArr:[{}]})" ng-if="$last">Add More</button>
+                                            <button type="button" class="btn btn-default btn-block" ng-click="offerVm.dataModel.financeInfo.splice($index, 1)" ng-if="!$last">Delete</button>
                                         </div>
                                         <div class="col-sm-12 form-group">
-                                            <div  class="row" ng-repeat="financerinfoField in offerVm.financerInfoFields[f1Index]" ng-init="f2Index = $index">
+                                            <div  class="row" ng-repeat="data in financer.dataArr">
                                                 <div class="col-sm-3">
-                                                    <input type="text" class="form-control form-group" name="tenure" ng-model="offerVm.financerinfo[f1Index][f2Index].tenure" ng-value="" placeholder="Tenure">  
+                                                    <input type="text" class="form-control form-group" name="tenure" ng-model="data.tenure" placeholder="Tenure">  
                                                 </div>
                                                 <div class="col-sm-3">
-                                                    <input type="text" class="form-control form-group" name="amount" ng-model="offerVm.financerinfo[f1Index][f2Index].amount" ng-value="" placeholder="amount">  
+                                                    <input type="text" class="form-control form-group" name="amount" ng-model="data.amount" placeholder="amount">  
                                                 </div>
                                                 <div class="col-sm-3">
-                                                    <input type="text" class="form-control form-group" name="rate" ng-model="offerVm.financerinfo[f1Index][f2Index].rate" ng-value="" placeholder="Rate">  
+                                                    <input type="text" class="form-control form-group" name="rate" ng-model="data.rate" ng-value="" placeholder="Rate">  
                                                 </div>
                                                 <div class="col-sm-3">
-                                                    <input type="text" class="form-control form-group" name="margin" ng-model="offerVm.financerinfo[f1Index][f2Index].margin" ng-value="" placeholder="Margin">  
+                                                    <input type="text" class="form-control form-group" name="margin" ng-model="data.margin" placeholder="Margin">  
                                                 </div>
                                                 <div class="col-sm-3">
-                                                    <input type="text" class="form-control form-group" name="processingfee" ng-model="offerVm.financerinfo[f1Index][f2Index].processingfee" ng-value="" placeholder="Processingfee">  
+                                                    <input type="text" class="form-control form-group" name="processingfee" ng-model="data.processingfee" placeholder="Processingfee">  
                                                 </div>
                                                 <div class="col-sm-3">
-                                                    <input type="text" class="form-control form-group" name="installment" ng-model="offerVm.financerinfo[f1Index][f2Index].installment" ng-value="" placeholder="Installment">  
+                                                    <input type="text" class="form-control form-group" name="installment" ng-model="data.installment"  placeholder="Installment">  
                                                 </div>
                                                 <div class="col-sm-3">
-                                                    <input type="text" class="form-control form-group" name="freecost" ng-model="offerVm.financerinfo[f1Index][f2Index].freecost" ng-value="" placeholder="Freecost">  
+                                                    <input type="text" class="form-control form-group" name="freecost" ng-model="data.freecost" placeholder="Freecost">  
                                                 </div>
                                                 <div class="col-sm-2 pull-right">
-                                                    <button type="button" class="btn btn-default btn-block" ng-click="offerVm.financerInfoFields[f1Index].push({})" ng-if="$last">Add More</button>
-                                                    <button type="button" class="btn btn-default btn-block" ng-click="offerVm.financerInfoFields[f1Index].splice($index, 1)" ng-if="!$last">Delete</button>
+                                                    <button type="button" class="btn btn-default btn-block" ng-click="financer.dataArr.push({})" ng-if="$last">Add More</button>
+                                                    <button type="button" class="btn btn-default btn-block" ng-click="financer.dataArr.splice($index, 1)" ng-if="!$last">Delete</button>
                                                 </div>
                                             </div> 
                                             <legend></legend>
@@ -3032,49 +3057,49 @@
                         <div class="row">
                             <div class="col-sm-2">
                                 <div class="checkbox">
-                                    <input type="checkbox" id="list_lease" name="lease" ng-model="lease" value="checked" ng-change ="checkLease(lease)">
+                                    <input type="checkbox" id="list_lease" name="lease" ng-model="offerVm.dataModel.lease">
                                     <label for="list_lease">List In Lease</label>
                                 </div>
                             </div>
-                            <div class="col-sm-10" ng-if="lease">
-                                <div ng-repeat="leaseField in offerVm.leaseFields">
-                                    <div class="row" ng-repeat="leaserField in offerVm.leaserFields" ng-init="l1Index = $index">
+                            <div class="col-sm-10" ng-if="offerVm.dataModel.lease">
+                                <div ng-repeat="lease in offerVm.dataModel.leaseInfo">
+                                    <div class="row">
                                         <div class="col-sm-4 form-group">
-                                            <select class="form-control form-group" name="leaser" ng-model="offerVm.leaser[l1Index]"> 
+                                            <select class="form-control form-group" name="leaser" ng-model="lease.id"> 
                                                 <option value="">Select Financer</option> 
                                                 <option value="{{al._id}}" ng-repeat="al in agency| orderBy:'entityName'">{{al.entityName}}</option>
                                             </select>
                                         </div>
                                         <div class="col-sm-offset-6 col-sm-2 form-group">
-                                            <button type="button" class="btn btn-default btn-block" ng-click="offerVm.leaserFields.push({}); offerVm.leaserInfoFields.push([{}])" ng-if="$last">Add More</button>
-                                            <button type="button" class="btn btn-default btn-block" ng-click="offerVm.leaserFields.splice($index, 1); offerVm.leaserInfoFields.splice($index, 0)" ng-if="!$last">Delete</button>
+                                            <button type="button" class="btn btn-default btn-block" ng-click="offerVm.dataModel.leaseInfo.push({dataArr:[{}]})" ng-if="$last">Add More</button>
+                                            <button type="button" class="btn btn-default btn-block" ng-click="offerVm.dataModel.leaseInfo.splice($index, 1)" ng-if="!$last">Delete</button>
                                         </div>
                                         <div class="col-sm-12 form-group">
-                                            <div  class="row" ng-repeat="leaserinfoField in offerVm.leaserInfoFields[l1Index]" ng-init="l2Index = $index"> 
+                                            <div  class="row" ng-repeat="data in lease.dataArr"> 
                                                 <div class="col-sm-3">
-                                                    <input type="text" class="form-control form-group" name="tenure" ng-model="offerVm.leaserinfo[l1Index][l2Index].tenure" ng-value="" placeholder="Tenure">  
+                                                    <input type="text" class="form-control form-group" name="tenure" ng-model="data.tenure" placeholder="Tenure">  
                                                 </div>
                                                 <div class="col-sm-3">
-                                                    <input type="text" class="form-control form-group" name="amount" ng-model="offerVm.leaserinfo[l1Index][l2Index].amount" ng-value="" placeholder="amount">  
+                                                    <input type="text" class="form-control form-group" name="amount" ng-model="data.amount"  placeholder="amount">  
                                                 </div>
                                                 <div class="col-sm-3">
-                                                    <input type="text" class="form-control form-group" name="downpayment" ng-model="offerVm.leaserinfo[l1Index][l2Index].rate" ng-value="" placeholder="Rate">  
+                                                    <input type="text" class="form-control form-group" name="downpayment" ng-model="data.rate" placeholder="Rate">  
                                                 </div>
                                                 <div class="col-sm-3">
-                                                    <input type="text" class="form-control form-group" name="margin" ng-model="offerVm.leaserinfo[l1Index][l2Index].margin" ng-value="" placeholder="Margin">  
+                                                    <input type="text" class="form-control form-group" name="margin" ng-model="data.margin"  placeholder="Margin">  
                                                 </div>
                                                 <div class="col-sm-3">
-                                                    <input type="text" class="form-control form-group" name="processingfee" ng-model="offerVm.leaserinfo[l1Index][l2Index].processingfee" ng-value="" placeholder="Processingfee">  
+                                                    <input type="text" class="form-control form-group" name="processingfee" ng-model="data.processingfee"  placeholder="Processingfee">  
                                                 </div>
                                                 <div class="col-sm-3">
-                                                    <input type="text" class="form-control form-group" name="installment" ng-model="offerVm.leaserinfo[l1Index][l2Index].installment" ng-value="" placeholder="Installment">  
+                                                    <input type="text" class="form-control form-group" name="installment" ng-model="data.installment"  placeholder="Installment">  
                                                 </div>
                                                 <div class="col-sm-3">
-                                                    <input type="text" class="form-control form-group" name="freecost" ng-model="offerVm.leaserinfo[l1Index][l2Index].freecost" ng-value="" placeholder="Freecost">  
+                                                    <input type="text" class="form-control form-group" name="freecost" ng-model="data.freecost"  placeholder="Freecost">  
                                                 </div>
                                                 <div class="col-sm-2 pull-right">
-                                                    <button type="button" class="btn btn-default btn-block" ng-click="offerVm.leaserInfoFields[l1Index].push({})" ng-if="$last">Add More</button>
-                                                    <button type="button" class="btn btn-default btn-block" ng-click="offerVm.leaserInfoFields[l1Index].splice($index, 1)" ng-if="!$last">Delete</button>
+                                                    <button type="button" class="btn btn-default btn-block" ng-click="lease.dataArr.push({})" ng-if="$last">Add More</button>
+                                                    <button type="button" class="btn btn-default btn-block" ng-click="lease.dataArr.splice($index, 1)" ng-if="!$last">Delete</button>
                                                 </div>
                                             </div> 
                                             <legend></legend>
@@ -3094,11 +3119,10 @@
                         </div>
                     </form>
 
-                    <p class="text-right">Showing : {{offerVm.totalProductTechInfoCount}} Records</p>
+                    <p class="text-right">Showing : {{pager.totalItems}} Records</p>
                     <div class="row form-group">
                         <div class="col-sm-12 tablesearch text-right">
-                            Search: <input type="text" placeholder="Search..." ng-model="offerVm.searchStr" ng-change="offerVm.searchFn()" ng-model-options="{debounce:500}">
-                            <!--                        Search: <input type="text" placeholder="Search..." ng-model="vcancellationVm.searchStr" ng-change="vcancellationVm.searchFn()" ng-model-options="{debounce:500}">-->
+                            Search: <input type="text" placeholder="Search..." ng-model="offerVm.searchStr" ng-change="offerVm.fireCommand(true)" ng-model-options="{debounce:500}">
                         </div>
                     </div>
 
@@ -3120,13 +3144,13 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr ng-repeat="offer in offerVm.offer">
+                                        <tr ng-repeat="offer in offerVm.offerList">
                                             <td>{{offer.category.name}}
                                             </td>
                                             <td>{{offer.brand.name}}</td>
                                             <td>{{offer.model.name}}</td>
-                                            <td ng-if="stateList.length === offer.location.length">All</td>
-                                            <td ng-if="stateList.length != offer.location.length"><span ng-repeat="state in offer.location">{{state.name}}</span></td>
+                                            <td ng-if="offer.forAll">All</td>
+                                            <td ng-if="!offer.forAll"><span ng-repeat="state in offer.location">{{state.name}}</span></td>
                                             <td>{{offer.cash_purchase}}</td>
                                             <td>{{offer.finance}}</td>
                                             <td>{{offer.lease}}</td>
@@ -3149,7 +3173,7 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <uib-pagination total-items="gsettingVm.totalProductTechInfoCount" ng-model="offerVm.currentPage" items-per-page="offerVm.itemsPerPage" max-size="offerVm.maxSize" ng-change="offerVm.fireCommand(false, null, 'technical')" class="pagination-sm" rotate="false">  </uib-pagination>
+                           <uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="pager.maxSize" ng-change="offerVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
                         </div>
                     </div>
                 </div>

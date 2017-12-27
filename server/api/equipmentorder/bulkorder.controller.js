@@ -52,9 +52,9 @@ function renderJSON(req,res){
     "Customer Name": "name",
     "Customer Mobile": "mobile",
     "Customer Email": "email",
-    "City" : "city",
+    "Country" : "country",
     "State": "state",
-    "Country" : "country"
+    "City" : "city"
   };
 
   var Data_Excel_Header = {
@@ -64,7 +64,7 @@ function renderJSON(req,res){
     "Indicative Price":"indicativePrice",
     "Indicative Rate":"indicativeRate",
     "Indicative Down Payment":"indicativeDownpayment",
-    "Created At" : "createdAt"
+    "Date of Request" : "createdAt"
   }
 
   function renderExcel(req,res){
