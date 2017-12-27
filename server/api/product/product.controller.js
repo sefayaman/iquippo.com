@@ -1565,6 +1565,7 @@ console.log("data to be updated",dataToUpdate);
   function intialize(data,cb){
     var assetId = data.assetId;
     delete data.assetId;
+    console.log('dddd',data, 'iiiii: ',assetId);
     Product.findOneAndUpdate({assetId:assetId},{'$set':data},function(err,doc){
       if(err || !doc){
         req.errorList.push({
@@ -1811,7 +1812,7 @@ exports.validateExcelData = function(req, res, next) {
         console.log("I am here alse",type);
         if(type === 'template_update') {
           async.parallel({
-            validateGenericField:validateGenericField,
+            //validateGenericField:validateGenericField,
             validateCategory: validateCategory, //{}
             validateSeller: validateSeller,
             validateTechnicalInfo: validateTechnicalInfo,
@@ -1821,7 +1822,7 @@ exports.validateExcelData = function(req, res, next) {
             validateAdditionalInfo: validateAdditionalInfo,
             validateOnlyAdminCols: validateOnlyAdminCols,
             validateForBid:validateForBid,
-            validatePrice : validatePrice
+            //validatePrice : validatePrice
           }, buildData);
         }else if(type === 'auction_update'){
           async.parallel({
