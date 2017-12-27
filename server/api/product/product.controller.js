@@ -1565,11 +1565,10 @@ console.log("data to be updated",dataToUpdate);
   function intialize(data,cb){
     var assetId = data.assetId;
     delete data.assetId;
-    console.log('dddd',data, 'iiiii: ',assetId);
     Product.findOneAndUpdate({assetId:assetId},{'$set':data},function(err,doc){
       if(err || !doc){
         req.errorList.push({
-          Error:'Error while updating information',
+          Error: err+'Error while updating information ',err,
           rowCount : data.rowCount
         });
         return cb();
@@ -1822,7 +1821,7 @@ exports.validateExcelData = function(req, res, next) {
             validateAdditionalInfo: validateAdditionalInfo,
             validateOnlyAdminCols: validateOnlyAdminCols,
             validateForBid:validateForBid,
-            //validatePrice : validatePrice
+            validatePrice : validatePrice
           }, buildData);
         }else if(type === 'auction_update'){
           async.parallel({
@@ -1926,7 +1925,10 @@ exports.validateExcelData = function(req, res, next) {
       var obj = {};
       row.priceOnRequest = row.priceOnRequest || "";
       obj.currencyType = row.currencyType || "INR";
-      obj.grossPrice = row.grossPrice;
+      if(row.grossPrice){
+        obj.grossPrice = row.grossPrice;
+      }
+        
       obj.priceOnRequest = row.priceOnRequest.toLowerCase() === 'yes'? true:false;
       if(isCustomer){
          if(!obj.grossPrice)
