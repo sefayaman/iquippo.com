@@ -74,6 +74,7 @@ exports.incomingProduct = function(req,res){
     else{
         filter["user._id"] = req.body.userId;
     }
+    console.log('role',req.body.role,'incomingproducts',filter);
     IncomingProduct.find(filter, function (err, products) {
         if(err) { return handleError(res, err); }
         return res.status(200).json(products);
