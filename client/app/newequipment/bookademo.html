@@ -22,7 +22,7 @@
                   </div> -->
                   <div class="form-group col-sm-6" ng-class="{'has-error': form.mobile.$invalid &&
                    submitted }">
-                    <input type="number" class="form-control" name="mobile" ng-model="dataModel.mobile"  placeholder="* Mobile No." uib-tooltip="+91-98-XXXX-XXXX" tooltip-trigger="focus" tooltip-placement="top" required>
+                    <input type="number" class="form-control" name="mobile" ng-model="dataModel.mobile"  placeholder="* Mobile No." uib-tooltip="+91-98-XXXX-XXXX" tooltip-trigger="focus" tooltip-placement="top" string-to-number required>
                     
                   </div>
                   <div class="form-group col-sm-6" ng-class="{'has-error': form.email.$invalid && submitted }">

@@ -378,9 +378,11 @@
       });
     }
 
-    function onCountryChange(scope,country){
-            scope.dataModel.state = "";
-            scope.dataModel.city = "";
+    function onCountryChange(scope,country,noChange){
+            if(!noChange){
+              scope.dataModel.state = "";
+              scope.dataModel.city = "";
+            } 
             scope.cityList = [];
             scope.stateList = [];
             var filter = {};
@@ -393,8 +395,10 @@
             scope.dataModel.countryCode = LocationSvc.getCountryCode(country);
       }
 
-      function onStateChange(scope,state){
-            scope.dataModel.city = "";
+      function onStateChange(scope,state,noChange){
+          if(!noChange){
+             scope.dataModel.city = "";
+            } 
             var filter = {};
             scope.cityList = [];
             filter.stateName = state;
@@ -410,6 +414,18 @@
       bookADemoScope.onCountryChange = onCountryChange;
       bookADemoScope.onStateChange = onStateChange;
       bookADemoScope.dataModel = {};
+      if(Auth.getCurrentUser()._id){
+        bookADemoScope.dataModel.fname = Auth.getCurrentUser().fname;
+        bookADemoScope.dataModel.lname= Auth.getCurrentUser().lname;
+        bookADemoScope.dataModel.mobile = Auth.getCurrentUser().mobile;
+        bookADemoScope.dataModel.email = Auth.getCurrentUser().email;
+        bookADemoScope.dataModel.country = Auth.getCurrentUser().country;
+        bookADemoScope.dataModel.state = Auth.getCurrentUser().state;
+        bookADemoScope.dataModel.city = Auth.getCurrentUser().city;
+        onCountryChange(bookADemoScope,bookADemoScope.dataModel.country,true);
+        onStateChange(bookADemoScope,bookADemoScope.dataModel.state,true)
+      }
+
       var bookADemoModal = $uibModal.open({
         templateUrl: "app/newequipment/bookademo.html",
         scope: bookADemoScope,
