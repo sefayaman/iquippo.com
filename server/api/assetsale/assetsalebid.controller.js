@@ -329,7 +329,20 @@ exports.validateUpdate = function(req,res,next){
 			} else {
 				if(req.bid.dealStatus === dealStatuses[0] && req.bid.bidStatus === bidStatuses[7] && req.bid.lastAccepted)
 					req.bids[0].lastAccepted = false;
+				var bidCount = req.otherBids.length || 0;
+				var highestBid = 0;
+				if(req.otherBids.length)
+					highestBid = getMaxBid(req.otherBids).bidAmount || 0;
+				var bidRec = true;
+				if(bidCount === 0)
+					bidRec = false;
+				if(req.bid.bidStatus === bidStatuses[7])
+					req.product.cooling = false;	
+				req.product.bidReceived = bidRec;
+				req.product.bidCount = bidCount;
+				req.product.highestBid = highestBid;
 				req.bids[0].status = false;
+				req.updateProduct = true;
 				next();
 			}
 		}

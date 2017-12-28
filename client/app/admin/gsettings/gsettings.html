@@ -3150,7 +3150,7 @@
                                             <td>{{offer.brand.name}}</td>
                                             <td>{{offer.model.name}}</td>
                                             <td ng-if="offer.forAll">All</td>
-                                            <td ng-if="!offer.forAll"><span ng-repeat="state in offer.location">{{state.name}}</span></td>
+                                            <td ng-if="!offer.forAll"><span ng-repeat="state in offer.location">{{state.name}}<span ng-if="!$last"> , </span></span></td>
                                             <td>{{offer.cash_purchase}}</td>
                                             <td>{{offer.finance}}</td>
                                             <td>{{offer.lease}}</td>
@@ -3163,9 +3163,9 @@
                                                 <a href="javascript:void(0);" class="btn btn-danger btn-sm" uib-popover="Delete" popover-trigger="mouseenter" ng-click="offerVm.destroy(offer._id)"><i class="fa fa-trash" ></i></a>
 
                                                 <button class="btn btn-success" ng-model="offer.status" uib-btn-checkbox ng-click="changeStatus(offer._id, offer.status)">
-                                                    <span ng-if="offer.status" uib-popover="Activate" popover-trigger="mouseenter">
+                                                    <span ng-if="!offer.status" uib-popover="Activate" popover-trigger="mouseenter">
                                                         <i class="fa fa-toggle-off"></i>							
-                                                    </span> <span ng-if="!offer.status" uib-popover="Deactivate" popover-trigger="mouseenter">
+                                                    </span> <span ng-if="offer.status" uib-popover="Deactivate" popover-trigger="mouseenter">
                                                         <i class="fa fa-toggle-on"></i>							
                                                     </span></button>
                                             </td>
