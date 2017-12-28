@@ -1737,7 +1737,7 @@ exports.parseImportData = function(req,res,next){
     });
     return x;
     });
-    console.log('xlsx_data',data);
+    
     req.excelData = data;
 
     req.reqType = 'Upload';
@@ -1781,7 +1781,7 @@ exports.validateExcelData = function(req, res, next) {
   }
 
   function intialize(row, cb) {
-      console.log('assetid:',row.assetId);
+      
     if (!row.assetId) {
       errorList.push({
         Error: 'Asset Id missing',
@@ -1804,14 +1804,14 @@ exports.validateExcelData = function(req, res, next) {
         assetId: row.assetId
       }, function(err, doc) {
         if (err || !doc.length) {
-          console.log("I can be",row.assetId);
+          
           errorList.push({
             Error: 'No asset id found',
             rowCount: row.rowCount
           });
           return cb();
         }
-        console.log("I am here alse",type);
+        
         if(type === 'template_update') {
           async.parallel({
             //validateGenericField:validateGenericField,

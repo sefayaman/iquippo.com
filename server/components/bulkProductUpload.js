@@ -49,8 +49,8 @@ function getProduct(assetIds, zipEntryObj, taskData, cb) {
   if (assetIds.length > 0) {
     var assetId = assetIds[0];
     IncomingProduct.findOne({
-      assetId: assetId,
-      'user._id': taskData.user._id
+      assetId: assetId//,
+      //'user._id': taskData.user._id
     }, function(err, incPrd) {
       if (err || !incPrd) {
         assetIds.splice(0, 1);
