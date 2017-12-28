@@ -66,8 +66,15 @@ function getValuationRequest(req,res){
     var stsArr = queryParam.status.split(',');
     filter["status"] = {$in:stsArr};
   }
-   if (queryParam.statusType)
-    filter["status"] = queryParam.statusType;
+   if (queryParam.statusType){
+    if(queryParam.statusType === 'Request Cancelled')
+      filter['cancelled'] = true;
+    else{
+      filter["status"] = queryParam.statusType;
+      filter['cancelled'] = false;
+    }    
+   }
+
   if (queryParam.mobile)
     filter["mobile"] = queryParam.mobile;
   if (queryParam.enterpriseId)
