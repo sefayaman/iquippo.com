@@ -54,9 +54,9 @@ exports.create = function(req,res){
     "Category": "category",
     "Brand": "brand",
     "Model": "model",
-    "City" : "city",
-    "State": "state",
     "Country" : "country",
+    "State": "state",
+    "City" : "city",
     "Created At" : "createdAt"
   };
 
