@@ -97,7 +97,7 @@
                     </div>
                     <div class="col-sm-4 form-group">
                       <label class="invisible">To Buy</label>
-                        <a href="javascript:void(0);" ng-click="productDetailVm.openBidModal(currentProduct.grossPrice || 0,'buynow')" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE' || !auctionsData.visibleBuyNow  || productDetailVm.userCurrentBid.offerType == 'Buynow'" class="btn btn-primary btn-block">Buy Now</a>
+                        <a href="javascript:void(0);" ng-click="productDetailVm.openBidModal(currentProduct.grossPrice || 0,'buynow')" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE' || auctionsData.visibleBuyNow == false  || productDetailVm.userCurrentBid.offerType == 'Buynow'" class="btn btn-primary btn-block">Buy Now</a>
                     </div>                  
                   </div>
                   <div class="option-border text-center">
@@ -664,7 +664,7 @@
                       <button type="submit" class="btn btn-warning btn-block" ng-click="productDetailVm.addProductToCart(currentProduct)">Add to Cart</button>
                     </div>
               </div>
-            </div> -->
+            </div>
             <div class="panel panel-primary" ng-if="currentProduct.tradeType == 'RENT' || currentProduct.tradeType == 'BOTH'">
               <div class="panel-heading">
                 <h3 class="panel-title">For Rent</h3>
