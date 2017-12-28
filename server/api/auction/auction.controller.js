@@ -1553,6 +1553,7 @@ exports.getAuctionWiseProductData = function(req, res) {
   Seq()
   .par(function(){
     var self = this;
+    filter['product.isSold'] = false;
     var query = AuctionRequest.aggregate([{"$match":filter},{
     "$group": {
          _id: "$dbAuctionId",

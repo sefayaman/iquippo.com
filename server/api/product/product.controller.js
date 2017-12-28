@@ -1569,7 +1569,7 @@ console.log("data to be updated",dataToUpdate);
     Product.findOneAndUpdate({assetId:assetId},{'$set':data},function(err,doc){
       if(err || !doc){
         req.errorList.push({
-          Error: err+'Error while updating information ',err,
+          Error: err +'Error while updating information ',
           rowCount : data.rowCount
         });
         return cb();
