@@ -1103,6 +1103,42 @@ exports.exportExcel = function(req,res){
 				else
 					val = "";
 			}*/
+
+			if(keyObj.key && (keyObj.key === 'approvedBy' || keyObj.key === 'approvalDate') && item.bidStatuses.length > 0) {
+				for(var i = item.bidStatuses.length - 1; i > 0; i--) {
+					if (item.bidStatuses[i].status === bidStatuses[7]) {
+						if(keyObj.key === 'approvedBy') {
+							if(item.bidStatuses[i].userId === 'SYSTEM')
+								val = 'System';
+							else if(item.product && item.product.seller && item.bidStatuses[i].userId === item.product.seller._id)
+								val = 'Seller';
+							else
+								val = 'Admin';
+						} else
+							val = moment(item.bidStatuses[i].createdAt).utcOffset('+0530').format('MM/DD/YYYY hh:mm a');
+							break;
+					}
+				}
+			}
+
+			if(keyObj.key && keyObj.key === 'bidStatusUpdateBy' && item.bidStatuses.length > 0) {
+				if(item.bidStatuses[item.bidStatuses.length - 1].userId === 'SYSTEM')
+					val = 'System';
+				else if(item.product && item.product.seller && item.bidStatuses[item.bidStatuses.length - 1].userId === item.product.seller._id)
+					val = 'Seller';
+				else
+					val = 'Admin';
+			}
+
+			if(keyObj.key && keyObj.key === 'dealStatusUpdatedBy' && item.dealStatuses.length > 0) {
+				if(item.dealStatuses[item.dealStatuses.length - 1].userId === 'SYSTEM')
+					val = 'System';
+				else if(item.product && item.product.seller && item.dealStatuses[item.dealStatuses.length - 1].userId === item.product.seller._id)
+					val = 'Seller';
+				else
+					val = 'Admin';
+			}
+
 			if(keyObj.key && keyObj.key === 'buyerName' && item.user)
 				val = item.user.fname + " " + item.user.lname;
 			if(keyObj.key && keyObj.key == 'fullPaymentAmount')
