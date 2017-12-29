@@ -14,11 +14,11 @@ function MyAccountCtrl($scope,$rootScope,Auth,$state,Modal,LocationSvc,userSvc,U
     vm.onStateChange = onStateChange;
     
     vm.editBasicInfo = false;
-    vm.editProfessionalInfo = false;
+    vm.editAdditionalInfo = false;
     vm.validateAadhaar = validateAadhaar;
     var FIELDS_MAPPING = {
-                            basicInfo:['fname','lname','email','mobile','country','state','city'],
-                            professionalInfo:['profession','jobProfile','panNumber','aadhaarNumber']
+                            basicInfo:['fname','lname','email','mobile', 'aadhaarNumber','panNumber','country','state','city'],
+                            AdditionalInfo:['userType','company','socialInfo','profession','jobProfile']
                         };
 
     function init(){
@@ -29,17 +29,17 @@ function MyAccountCtrl($scope,$rootScope,Auth,$state,Modal,LocationSvc,userSvc,U
 
     function editClicked(prop){
       vm.editBasicInfo = false;
-      vm.editProfessionalInfo = false;
+      vm.editAdditionalInfo = false;
       if(prop === 'editBasicInfo')
         vm.editBasicInfo = true;
-      if(prop === 'editProfessionalInfo')
-        vm.editProfessionalInfo = true;
+      if(prop === 'editAdditionalInfo')
+        vm.editAdditionalInfo = true;
 
     }
 
     function cancelClicked(){
       vm.editBasicInfo = false;
-      vm.editProfessionalInfo = false;
+      vm.editAdditionalInfo = false;
       vm.userInfo = angular.copy(Auth.getCurrentUser());
     }
     
@@ -117,7 +117,7 @@ function MyAccountCtrl($scope,$rootScope,Auth,$state,Modal,LocationSvc,userSvc,U
         $rootScope.loading = false;
         Auth.refreshUser(init);
         vm.editBasicInfo = false;
-        vm.editProfessionalInfo = false;
+        vm.editAdditionalInfo = false;
         if(!noAlert)
             Modal.alert("User Updated.",true);
         updateCoupon();

@@ -3221,11 +3221,10 @@
                 <legend></legend>			
                 <div class="row form-group">
                     <div class="col-sm-6">
-                        <!-- <p>Showing : </p> -->
+                        <p>Showing : {{emdVm.totalItems}} Records</p>
                     </div>
                     <div class="col-sm-6 tablesearch text-right">
-                        Search: <input type="text" placeholder="Search..." ng-model="emdVm.searchStr" ng-change="emdVm.searchFn()" ng-model-options="{debounce:500}">
-
+                        Search: <input type="text" placeholder="Search..." ng-model="emdVm.searchStr" ng-change="emdVm.fireCommand(true)" ng-model-options="{debounce:500}">
                     </div>
                 </div>
                 <div class="row">
@@ -3235,7 +3234,7 @@
                                 <thead>
                                     <tr>
                                         <th>Auction Id</th>
-                                        <th>Auction Name</th>
+                                        <!-- <th>Auction Name</th> -->
                                         <th>Lot ID</th>
                                         <th>EMD Amount</th>
                                         <th>Actions</th>
@@ -3244,7 +3243,7 @@
                                 <tbody>
                                     <tr ng-repeat="emddata in emdVm.filteredList">
                                         <td>{{emddata.auctionId}}</td>
-                                        <td>{{emddata.auctionName}}</td>
+                                        <!-- <td>{{emddata.auctionName}}</td> -->
                                         <td>{{emddata.selectedLots[0].lotNumber.toString()}}</td>
                                         <td>{{emddata.emdAmount}}</td>
                                         <td>
@@ -3258,7 +3257,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        <uib-pagination total-items="gsettingVm.totalProductTechInfoCount" ng-model="gsettingVm.currentPage" items-per-page="gsettingVm.itemsPerPage" max-size="gsettingVm.maxSize" ng-change="gsettingVm.fireCommand(false, null, 'technical')" class="pagination-sm" rotate="false">  </uib-pagination>
+                        <uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="pager.maxSize" ng-change="emdVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
                     </div>
                 </div>
             </div>
