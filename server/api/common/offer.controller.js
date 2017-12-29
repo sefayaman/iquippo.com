@@ -270,7 +270,7 @@ var Offer_Master_Excel_Header = {
           if(item.isForSelf)
             val = "Self";
           else
-            val = offer.user.name || "";
+            val = item.user.name || "";
         }
         rowData.push(val);
       });
