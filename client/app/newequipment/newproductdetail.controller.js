@@ -274,6 +274,7 @@
       offerReq.state = $scope.location;
       offerReq.user = {
         _id: Auth.getCurrentUser()._id,
+        customerId: Auth.getCurrentUser().customerId,
         name : Auth.getCurrentUser().fname + " " + Auth.getCurrentUser().lname,
         email : Auth.getCurrentUser().email,
         mobile : Auth.getCurrentUser().mobile,
