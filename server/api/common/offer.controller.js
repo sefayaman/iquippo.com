@@ -21,20 +21,33 @@ var Offer_Master_Excel_Header = {
 };
 
  var Excel_Header = {
-    "Order Id": "orderId",
+    "User Id" : "user.customerId",
+    "Request Raised By" : "requestRaisedBy",
+    "Customer Name" : "customerName",
+    "Customer Mobile" : "mobile",
+    "Email Id" : "email",
+    "Ticket Id/Enquiry Id": "orderId",
     "Category": "category.name",
     "Brand": "brand.name",
     "Model": "model.name",
-    "State": "state",
-    "Customer Name" : "customerName",
-    "Customer Mobile" : "mobile",
-    "Customer Email" : "email",
-    "Cash Offer" : "cashOffer",
-    "Finance Offer" : "financeOffer",
-    "Lease Offer" : "leaseOffer",
-    "Created At" : "createdAt"
+    "State": "state"
   };
 
+  var Data_Excel_Header = {
+    "Offer Type" : "type",
+    "Price" : "price",
+    "Free Of Cost" : "freeofcost",
+    "Financer/Leaser name" : "financerName",
+     "Quantity" : "quantity",
+    "Tenure" : "tenure",
+    "Amount" : "amount",
+    "Rate" : "rate",
+    "Margin" : "margin",
+    "Processing Fee":"processingfee",
+    "Installment":"installment",
+    "Free Of Cost":"freecost",
+    "Date Of Request":"createdAt"
+  }
 
   exports.create = function(req, res,next) {
       var model = new Offer(req.body);
@@ -123,6 +136,7 @@ var Offer_Master_Excel_Header = {
   function renderOfferMasterExcel(req,res){
     var dataArr = [];
     var keys = Object.keys(Offer_Master_Excel_Header);
+    var dataKeys = Object.keys()
     dataArr[dataArr.length] = keys;
     req.result.forEach(function(item){
       var rowData = [];
@@ -178,8 +192,14 @@ var Offer_Master_Excel_Header = {
       }
 
       if(queryParam.pagination){
-        return Utility.paginatedResult(req, res, OfferRequest, filter, {});
+        return Utility.paginatedResult(req, res, OfferRequest, filter, {},function(resultData){
+          //console.log(resultData);
+          var resultArr = formatData(resultData.items);
+          resultData.items = resultArr;
+          return res.status(200).json(resultData);
+        });
       }
+      console.log("hi");
       var limit = 1000;
       if(queryParam.limit && queryParam.limit < 1000)
         limit = queryParam.limit;
@@ -195,33 +215,81 @@ var Offer_Master_Excel_Header = {
   }
 
   function renderJSON(req,res){
-    return res.status(200).json(req.result);
+    var result = formatData(req.result);
+    return res.status(200).json(result);
+  }
+
+  function formatData(resultArr){
+    var dataArr = [];
+    if(!resultArr || !resultArr.length)
+      return dataArr;
+    resultArr.forEach(function(item){
+      item = item.toObject();
+      item.orders = [];
+      if(item.cashOffer && item.cashOffer.length){
+        item.cashOffer.forEach(function(cash){
+          cash.type = "Cash";
+          item.orders.push(cash);
+        });
+      }
+      if(item.financeOffer && item.financeOffer.length){
+         item.financeOffer.forEach(function(finace){
+          finace.type = "Finace";
+          item.orders.push(finace);
+        });
+      }
+     
+     if(item.leaseOffer && item.leaseOffer.length){
+      item.leaseOffer.forEach(function(lease){
+        lease.type = "Lease";
+        item.orders.push(lease);
+      });
+     }
+      dataArr.push(item);
+    });
+    return dataArr;
   }
 
   function renderExcel(req,res){
     var dataArr = [];
     var keys = Object.keys(Excel_Header);
+    var dataKeys = Object.keys(Data_Excel_Header);
     dataArr[dataArr.length] = keys;
-    req.result.forEach(function(item){
+    dataArr[0] = dataArr[0].concat(dataKeys);
+    var resultArr = formatData(req.result);
+    if(!resultArr || !resultArr.length)
+      return handleError(res, "There is no data found to export");
+
+    resultArr.forEach(function(item){
       var rowData = [];
       keys.forEach(function(key){
         var val = _.get(item,Excel_Header[key],"");
         if(Excel_Header[key] == 'customerName')
           val = item.fname + " " + item.lname;
-        if(Excel_Header[key] == 'cashOffer')
-          val = item.cashOffer && item.cashOffer.length ? "Yes" : "No";
-         if(Excel_Header[key] == 'financeOffer')
-          val = item.financeOffer && item.financeOffer.length ? "Yes" : "No";
-         if(Excel_Header[key] == 'leaseOffer')
-          val = item.leaseOffer && item.leaseOffer.length ? "Yes" : "No";
-          if(Excel_Header[key] == "createdAt")
-            val = moment(item.createdAt).utcOffset('+0530').format('MM/DD/YYYY');
+        if(Excel_Header[key] == "requestRaisedBy"){
+          if(item.isForSelf)
+            val = "Self";
+          else
+            val = item.user.name || "";
+        }
         rowData.push(val);
       });
-      if(rowData.length)
-        dataArr.push(rowData)
+      if(!item.orders || !item.orders.length)
+        return;
+      item.orders.forEach(function(order,idx){
+        var row = [].concat(rowData);
+        row[5] = row[5] + "." + (idx + 1);
+        dataKeys.forEach(function(key){
+          var val = _.get(order,Data_Excel_Header[key],"");
+          if(Data_Excel_Header[key] == "createdAt"){
+            val = moment(item.createdAt).utcOffset('+0530').format('MM/DD/YYYY');
+          }
+          row.push(val);
+        });
+        dataArr.push(row);
+      });
     }); 
-    var ws = Utility.excel_from_data(dataArr,keys);
+    var ws = Utility.excel_from_data(dataArr,dataArr[0]);
     var ws_name = "OfferReq_" + new Date().getTime();
     var wb = Utility.getWorkbook();
     wb.SheetNames.push(ws_name);

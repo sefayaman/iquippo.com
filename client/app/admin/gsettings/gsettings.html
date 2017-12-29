@@ -2942,7 +2942,7 @@
                                 <label>Select Location</label>
                                 <select multiple="true" class="form-control" name="location"  ng-model="offerVm.dataModel.locationArr" style="height:70px;" required> 
                                     <option value=""> Select Location </option> 
-                                    <option ng-repeat="state in stateList" value="{{state._id}}">{{state.name}}</option>
+                                    <option ng-repeat="state in stateList | orderBy:'name'" value="{{state._id}}">{{state.name}}</option>
                                 </select>
 
                             </div>
@@ -3688,12 +3688,12 @@
                                             </div>
                                             <div class="col-sm-2">
                                                 <div class="checkbox">
-                                                    <input  type="checkbox" name="" ng-change="techspecVm.checkCount(field)" ng-model="field.isFront" id="checked_{{$index}}">
+                                                    <input  type="checkbox" name="" ng-model="field.isFront" id="checked_{{$index}}">
                                                     <label for="checked_{{$index}}">Select {{field.name}}</label>
                                                 </div>
                                             </div>
                                             <div class="col-sm-3" ng-if="field.isFront" ng-class="{'has-error':techfieldform.priority_{{$index}}.$invalid && submitted}">
-                                                <input type="number" class="form-control" name="priority_{{$index}}" placeholder="*Enter Priority" ng-model="field.priority" min="0" ng-required="field.isFront">
+                                                <input type="number" class="form-control" name="priority_{{$index}}" placeholder="*Enter Priority" ng-model="field.priority" ng-required="field.isFront">
                                             </div>
                                         </div>
                                     </div>
