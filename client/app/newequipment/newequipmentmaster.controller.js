@@ -205,6 +205,8 @@
 
 
           $scope.product.country = $scope.product.country;
+          if($scope.product.mfgYear)
+            $scope.container.mfgYear = Number($scope.product.mfgYear);
           $scope.assetDir = product.assetDir;
           $scope.container.selectedCategoryId = $scope.product.category._id;
           $scope.container.selectedBrandId = $scope.product.brand._id;
@@ -216,7 +218,6 @@
           $scope.onBrandChange($scope.product.brand._id, true);
           $scope.onCountryChange(true);
           $scope.onStateChange(true);
-          $scope.setDate($scope.product.mfgYear, 1, 1);
 
           if ($scope.product.currencyType == "INR")
             $scope.product.currencyType = "";
@@ -649,16 +650,18 @@
  
 
     function firstStep(form, product) {
-
       var ret = false;
 
       if ($scope.container.mfgYear) {
-        if ($scope.container.mfgYear.getFullYear)
-          $scope.product.mfgYear = $scope.container.mfgYear.getFullYear();
-      } else {
-        form.mfgyear.$invalid = true;
-        ret = true;
-      }
+        var currentYear = new Date().getFullYear();
+        if($scope.container.mfgYear <= currentYear)
+          $scope.product.mfgYear = $scope.container.mfgYear;
+        else {
+          form.mfgyear.$invalid = true;
+          ret = true;
+        }
+      } else
+      $scope.product.mfgYear = "";
 
       if (form.$invalid || ret) {
         $scope.submitted = true;
@@ -985,7 +988,7 @@
       }];
       prepareImgArr();
       productHistory = $scope.productHistory = {};
-      $scope.container.mfgYear = null;
+      $scope.container.mfgYear = "";
     }
 
     function makePrimary(val, imageArr) {
@@ -1130,81 +1133,6 @@
         };
 
     }
-
-    // date picker
-    $scope.today = function() {
-      $scope.container.mfgYear = new Date();
-    };
-    if (!$scope.isEdit)
-      $scope.today();
-
-    $scope.clear = function() {
-      $scope.container.mfgYear = null;
-    };
-
-    $scope.toggleMin = function() {
-      $scope.minDate = $scope.minDate ? null : new Date();
-    };
-    $scope.toggleMin();
-    $scope.maxDate = new Date();
-    $scope.minDate = new Date(1900, 1, 1);
-
-
-    $scope.open = function($event) {
-      $scope.container.opened = true;
-    };
-
-    $scope.popups = [{
-      opened: false
-    }]
-
-    $scope.open1 = function() {
-      $scope.popup1.opened = true;
-    };
-    $scope.open2 = function() {
-      $scope.popup2.opened = true;
-    };
-    $scope.open3 = function() {
-      $scope.popup3.opened = true;
-    };
-
-    $scope.popup1 = {
-      opened: false
-    };
-    $scope.popup2 = {
-      opened: false
-    };
-    $scope.popup3 = {
-      opened: false
-    };
-
-    $scope.setDate = function(year, month, day) {
-      $scope.container.mfgYear = new Date(year, month, day);
-    };
-
-    $scope.datepickerOptions = {
-      datepickerMode: "'year'",
-      minMode: "'year'",
-      minDate: "minDate",
-      showWeeks: "false"
-    };
-
-    $scope.formats = ['yyyy', 'dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
-    $scope.format = $scope.formats[0];
-    $scope.formats1 = ['dd/MM/yyyy', 'dd.MM.yyyy', 'shortDate'];
-    $scope.format1 = $scope.formats1[0];
-
-    $scope.status = {
-      opened: false
-    };
-
-    $scope.oneAtATime = true;
-    $scope.status = {
-      FirstOpen: true,
-      FirstDisabled: false
-    };
-
-
   }
 
 })();
