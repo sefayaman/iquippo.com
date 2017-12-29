@@ -961,7 +961,13 @@
       if (product.auctionListing && $scope.product.tradeType === 'SELL') {
         goToSecondStep();
         return;
-      } else {
+      }
+      
+      if(product.auctionListing && $scope.product.tradeType === 'NOT_AVAILABLE'){
+          Modal.alert("This asset is NOT AVAILABLE, It can't be listed in Auction" );
+          return;
+      }
+        else {
         var cb = null;
         product.auctionListing = false;
         if ($scope.valuationReq.valuate)
