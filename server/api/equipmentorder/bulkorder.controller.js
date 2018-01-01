@@ -48,10 +48,11 @@ function renderJSON(req,res){
 }
 
   var Customer_Excel_Header = {
-    "Order Id": "orderId",
-    "Customer Name": "name",
-    "Customer Mobile": "mobile",
-    "Customer Email": "email",
+    "Ticket Id": "orderId",
+    "Request Raised By" : "requestRaisedBy",
+    "User Name": "name",
+    "Mobile": "mobile",
+    "Email Address": "email",
     "Country" : "country",
     "State": "state",
     "City" : "city"
@@ -61,6 +62,7 @@ function renderJSON(req,res){
     "Category" : "category",
     "Brand" : "brand",
     "Model" : "model",
+    "Quantity" : "quantity",
     "Indicative Price":"indicativePrice",
     "Indicative Rate":"indicativeRate",
     "Indicative Down Payment":"indicativeDownpayment",
@@ -88,6 +90,12 @@ function renderJSON(req,res){
         row[0] = row[0] + "." + (idx + 1);
         dataKeys.forEach(function(key){
           var val = _.get(order,Data_Excel_Header[key],"");
+          if(Data_Excel_Header[key] == "requestRaisedBy"){
+            if(item.forSelf)
+              val = "Self"
+            else
+              val = item.name || "";
+          }
           if(Data_Excel_Header[key] == "createdAt")
             val = moment(item.createdAt).utcOffset('+0530').format('MM/DD/YYYY');
           row.push(val);

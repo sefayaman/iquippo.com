@@ -1,0 +1,158 @@
+<table cellpadding="5" style="width:90%;font-size:12px; margin:0 auto; padding: 20px; font-family:Verdana, Geneva, sans-serif;border: 5px solid rgba(128, 128, 128, 0.28);">
+	<tr>
+		<td valign="top"><img src="{{awsBaseImagePath}}/assets/images/srei-logo-img.png"></td>
+	</tr>
+    <tr>
+		<td style="font-size:16px;"><h3>Dear {{financerName}},</h3></td>	
+	</tr>
+    <tr>
+        <td>
+            We have received a lead from the below customer for the following equipments. Request you to assign a Sales Representative to take it forward.
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <table border="0" cellspacing="1" cellpadding="1" style="font-size:13px;line-height:20px;color:#333333; text-align: left; margin: 5px 0;">
+                <tr>
+                    <td><b>Customer Name :</b> {{name}}</td>
+                </tr>
+                <tr>
+                    <td><b>Address :</b> {{user.city}},{{user.state}},{{user.country}}</td>
+                </tr>
+                <tr>
+                    <td><b>Mobile No :</b>{{mobile}}</td>
+                </tr>
+                <tr>
+                    <td><b>Email ID :</b>{{email}}</td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+  <tr>
+
+    <td style="color:#01395c; padding-bottom:10px;">       
+        <table border="0" cellspacing="0" cellpadding="0" width="80%" bgcolor="#ffffff">
+        <tr>            
+            <td>
+                <table border="0" cellspacing="1" cellpadding="1" style="font-size:13px;line-height:20px;color:#333333; text-align: left; margin: 5px 0;">
+                    <tr>
+                        <td><strong>{{productName}}</strong></td>
+                    </tr>
+                    <tr>
+                        <td><b>Brand :</b> {{brand.name}}</td>
+                    </tr>
+                    <tr>
+                        <td><b>Model :</b> {{model.name}}</td>
+                    </tr>
+                    
+                </table>                
+            </td>
+            <td align="center">
+                <img width="200" height="165" src="{{awsBaseImagePath}}/assets/uploads/{{assetDir}}/{{primaryImg}}" style="border: 3px solid #ccc;">
+                <p style="font-weight: bold; margin: 15px 15px 5px 0;">
+                    <a href="{{serverPath}}/new/{{category.name}}/{{brand.name}}/{{assetId}}" style="font-size:14px; color: #004394; background:#ccc; padding: 10px 20px;" > Click to View </a>
+                </p>
+            </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+   <tr>
+       <td>
+           <table cellspacing="0" cellpadding="5" border="1" width="100%" style="font-size: 12px;">
+               <tr>
+                   <td colspan="2">Options considered for Asset acquisition :</td>
+               </tr>
+               {{#if finance}}
+                   <tr>
+                       <td>Financing</td>
+                       <td>
+                            <table cellspacing="0" cellpadding="4" border="1" width="100%" style="text-align: center; font-size: 12px;" align="center">                  
+                                <thead>
+                                    <tr>                                
+                                        <th>Tenure</th>
+                                        <th>Margin</th>
+                                        <th>Rate</th>
+                                        <th>Rate</th>
+                                        <th>Monthly Installment</th>
+                                        <th>Processing Fee</th>
+                                        <th>Quantity</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                   {{#each data.financeOffer}}
+                                        <tr>
+                                            <td colspan="7">Option {{@index}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>{{this.tenure}}</td>
+                                            <td>{{this.margin}}</td>
+                                            <td>{{this.amount}}</td>
+                                            <td>{{this.rate}}</td>
+                                            <td>{{this.installment}}</td>
+                                            <td>{{this.processingfee}}</td>
+                                            <td>{{this.quantity}}</td>
+                                        </tr>
+                                {{/each}}
+                                </tbody>
+                            </table>
+                            
+                       </td>
+                   </tr>
+               {{/if}}
+               {{#if lease}}
+                   <tr>
+                       <td>Leasing</td>
+                       <td>
+                            <table cellspacing="0" cellpadding="4" border="1" width="100%" style="text-align: center; font-size: 12px;" align="center">                  
+                                <thead>
+                                    <tr>                                
+                                        <th>Tenure</th>
+                                        <th>Margin</th>
+                                        <th>Rate</th>
+                                        <th>Rate</th>
+                                        <th>Monthly Installment</th>
+                                        <th>Processing Fee</th>
+                                        <th>Quantity</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {{#each data.leaseOffer}}
+                                        <tr>
+                                            <td colspan="7">Option {{@index}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>{{this.tenure}}</td>
+                                            <td>{{this.margin}}</td>
+                                            <td>{{this.amount}}</td>
+                                            <td>{{this.rate}}</td>
+                                            <td>{{this.installment}}</td>
+                                            <td>{{this.processingfee}}</td>
+                                            <td>{{this.quantity}}</td>
+                                        </tr>
+                                        {{/each}}
+                                </tbody>
+                            </table>
+                            
+                       </td>
+                   </tr>
+               {{/if}}
+           </table>
+       </td>
+   </tr>
+    <tr>
+        <td style="color:#01395c;">
+            <p>One of our representatives will get in touch with you shortly.</p>
+            <p>Assuring of best services</p> 
+        </td>
+    </tr>
+    <tr>
+        <td style="color:#01395c;font-weight:bold;">
+          	<p style="margin: 0;">Thank You.</p>
+            <p style="margin: 0;">Team iQuippo</p>
+        </td>
+    </tr>
+    <tr>
+        <td style="font-size: 11px;">This is an auto generated mail, kindly do not reply to this email.</td>
+    </tr>
+</table>

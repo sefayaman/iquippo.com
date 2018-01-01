@@ -31,7 +31,7 @@
                 <option value="valuationReport">Valuation Report</option>
                 <option value="contactUs">Contact Us</option>
                 <option value="auctionRegReport" ng-if="auctionVisibleFlag">Auction Registration Report</option>
-                <option value="offerreq" ng-if="isAdmin()">Offer Master History</option>
+                <option value="offerreq" ng-if="isAdmin()">Offer Request History</option>
                 <option value="bulkorder" ng-if="isAdmin()">Bulk Order Request</option>
                 <option value="bookademo" ng-if="isAdmin()">Book A Demo</option>
               </select>
@@ -811,7 +811,7 @@
                     <th>State</th>
                     <th>Offer Type</th>
                     <th>Price</th>
-                    <th>Free Of Cost</th>
+                    <!-- <th>Free Of Cost</th> -->
                     <th>Financer/Leaser name</th>                                
                     <th>Quantity</th>
                     <th>Tenure</th>                                
@@ -840,7 +840,7 @@
                     <td>{{offer.state}}</td>
                     <td>{{order.type}}</td> 
                     <td>{{order.price}}</td>
-                    <td>{{order.freeofcost}}</td>
+                   <!--  <td>{{order.freeofcost}}</td> -->
                     <td>{{order.financerName}}</td>
                     <td>{{order.quantity}}</td>
                     <td>{{order.tenure}}</td>
@@ -849,7 +849,11 @@
                     <td>{{order.margin}}</td>
                     <td>{{order.processingfee}}</td> 
                     <td>{{order.installment}}</td> 
-                    <td>{{order.freecost}}</td>                       
+                    <td>
+                      <span>
+                        {{order.freeofcost || order.freecost}} ({{order.type}})
+                      </span>
+                    </td>                       
                   </tr>
                 </tbody>
               </table>
