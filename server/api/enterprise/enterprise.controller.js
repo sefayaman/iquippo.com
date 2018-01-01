@@ -1916,7 +1916,7 @@ function valiadeDataType(val,type){
 var Invoice_Properties = ["invoiceNo","requestType","enterprise","agency","totalAmount","createdAt"]
 exports.exportExcel = function(req,res){
   var queryParam = req.query;
-  var filter = {};
+   var filter = {};
   if(queryParam.enterpriseId)
     filter['enterprise.enterpriseId'] = queryParam.enterpriseId;
   if(queryParam.agencyId)
@@ -2077,9 +2077,11 @@ function exportExcel(req,res,fieldMap,jsonArr){
       }
       allowedHeaders.push(hd);
   }
-  dataArr.push(allowedHeaders);
+  var str = allowedHeaders.join(",");
+  str += "\r\n";
+  //dataArr.push(allowedHeaders);
   jsonArr.forEach(function(item,idx){
-    dataArr[idx + 1] = [];
+    //dataArr[idx + 1] = [];
     if(item.deleted)
         item.status = "Deleted";
     else if(item.cancelled)
@@ -2106,20 +2108,32 @@ function exportExcel(req,res,fieldMap,jsonArr){
           val = "";
         
       }
-
-       dataArr[idx + 1].push(val);
+        val = val + "";
+        if(val)
+          val = val.replace(/,|\n/g, ' ') ;
+        str += val + ",";
+       //dataArr[idx + 1].push(val);
     });
-
+    str += "\r\n";
   });
 
-  var ws = Utility.excel_from_data(dataArr,allowedHeaders);
+  str = str.substring(0,str.length -1);
+  return  renderCsv(res,str);
+  /*var ws = Utility.excel_from_data(dataArr,allowedHeaders);
   var ws_name = "entvaluation_" + new Date().getTime();
 
   var wb = Utility.getWorkbook();
   wb.SheetNames.push(ws_name);
   wb.Sheets[ws_name] = ws;
   var wbout = xlsx.write(wb, {bookType:'xlsx', bookSST:true, type: 'binary'});
-  res.end(wbout);
+  res.end(wbout);*/
+}
+
+function renderCsv(res,csv){
+   var fileName = "entvaluation_" + new Date().getTime();
+  res.setHeader('Content-Type', 'application/octet-stream');
+  res.setHeader("Content-Disposition", 'attachment; filename=' + fileName + '.csv;');
+  res.end(csv, 'binary'); 
 }
 
 function handleError(res, err) {

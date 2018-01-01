@@ -23,9 +23,8 @@
       
     </div>
     <div class="col-sm-2 text-right">
-      
         <button class="btn btn-success btn-block" ng-click="enterpriseTransactionVm.exportExcel()"><i class="fa fa-file-excel-o"></i> Export Excel</button>
-     
+        <form-submitter name="transactionexport" method="get" action="api/enterprise/export"></form-submitter>
     </div>
   </div>
     <legend></legend>
