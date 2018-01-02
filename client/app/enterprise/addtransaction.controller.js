@@ -315,6 +315,9 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
 
     function update(formFlag) {
       setData(formFlag);
+      var statusIndex = EnterpriseValuationStatuses.indexOf(vm.enterpriseValuation.status);   
+      if(statusIndex < 6)
+        delete vm.enterpriseValuation.reportDate;
       var serData = {
         data:vm.enterpriseValuation,
         user:Auth.getCurrentUser(),

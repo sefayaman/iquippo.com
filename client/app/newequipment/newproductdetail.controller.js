@@ -272,6 +272,10 @@
       offerReq.brand = $scope.currentProduct.brand;
       offerReq.model = $scope.currentProduct.model;
       offerReq.state = $scope.location;
+      offerReq.assetDir = $scope.currentProduct.assetDir;
+      offerReq.assetId = $scope.currentProduct.assetId;
+      offerReq.primaryImg = $scope.currentProduct.primaryImg;
+      offerReq.productName = $scope.currentProduct.name;
       offerReq.user = {
         _id: Auth.getCurrentUser()._id,
         customerId: Auth.getCurrentUser().customerId,
