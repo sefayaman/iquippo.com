@@ -81,6 +81,12 @@ function renderJSON(req,res){
       var rowData = [];
       keys.forEach(function(key){
         var val = _.get(item,Customer_Excel_Header[key],"");
+        if(Customer_Excel_Header[key] == "requestRaisedBy"){
+            if(item.forSelf)
+              val = "Self"
+            else
+              val = item.name || "";
+          }
         rowData.push(val);
       });
       if(!item.orders ||  !item.orders)
@@ -90,12 +96,6 @@ function renderJSON(req,res){
         row[0] = row[0] + "." + (idx + 1);
         dataKeys.forEach(function(key){
           var val = _.get(order,Data_Excel_Header[key],"");
-          if(Data_Excel_Header[key] == "requestRaisedBy"){
-            if(item.forSelf)
-              val = "Self"
-            else
-              val = item.name || "";
-          }
           if(Data_Excel_Header[key] == "createdAt")
             val = moment(item.createdAt).utcOffset('+0530').format('MM/DD/YYYY');
           row.push(val);

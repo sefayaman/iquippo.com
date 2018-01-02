@@ -25,7 +25,7 @@ var Offer_Master_Excel_Header = {
 var Offer_Master_Data_Excel_Header = {
     "Offer Type" : "type",
     "Price" : "price",
-    "Free Of Cost" : "freeofcost",
+   /* "Free Of Cost" : "freeofcost",*/
     "Financer/Leaser name" : "financerName",
     "Tenure" : "tenure",
     "Amount" : "amount",
@@ -182,6 +182,13 @@ var Offer_Master_Data_Excel_Header = {
         row[0] = row[0] + "." + (idx + 1);
         dataKeys.forEach(function(key){
           var val = _.get(order,Offer_Master_Data_Excel_Header[key],"");
+          if(Offer_Master_Data_Excel_Header[key] == "freecost"){
+            val = order.freeofcost || order.freecost;
+            if(val)
+              val += "(" + order.type  + ")";
+            else
+              val = ""; 
+          }
           if(Offer_Master_Data_Excel_Header[key] == "createdAt"){
             val = moment(item.createdAt).utcOffset('+0530').format('MM/DD/YYYY');
           }
@@ -407,7 +414,7 @@ var Offer_Master_Data_Excel_Header = {
         for(var key in lease.data){
             var dt = lease.data[key];
             dt.finacerName = lease.financerName;
-            dt.type = "Finace";
+            dt.type = "Lease";
             item.orders.push(dt);
           }
       });
@@ -450,7 +457,10 @@ var Offer_Master_Data_Excel_Header = {
           var val = _.get(order,Data_Excel_Header[key],"");
           if(Data_Excel_Header[key] == "freecost"){
             val = order.freeofcost || order.freecost;
-            val += "(" + order.type  + ")"; 
+            if(val)
+              val += "(" + order.type  + ")";
+            else
+               val = "";
           }
           if(Data_Excel_Header[key] == "createdAt"){
             val = moment(item.createdAt).utcOffset('+0530').format('MM/DD/YYYY');
