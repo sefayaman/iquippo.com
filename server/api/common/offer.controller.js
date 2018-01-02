@@ -355,18 +355,24 @@ var Offer_Master_Data_Excel_Header = {
       item.orders = [];
       if(item.cashOffer && item.cashOffer.length && !isOfferMaster){
         item.cashOffer.forEach(function(cash){
+          if(!cash)
+            return;
           cash.type = "Cash";
           item.orders.push(cash);
         });
       }
        if(item.caseInfo && item.caseInfo.length && isOfferMaster){
         item.caseInfo.forEach(function(cash){
+          if(!cash)
+            return;
           cash.type = "Cash";
           item.orders.push(cash);
         });
       }
       if(item.financeOffer && item.financeOffer.length && !isOfferMaster){
          item.financeOffer.forEach(function(finace){
+          if(!finace)
+            return;
           finace.type = "Finance";
           item.orders.push(finace);
         });
@@ -374,6 +380,8 @@ var Offer_Master_Data_Excel_Header = {
 
       if(item.financeInfo && item.financeInfo.length && isOfferMaster){
          item.financeInfo.forEach(function(finace){
+          if(!finace || !finace.data)
+            return;
           for(var key in finace.data){
             var dt = finace.data[key];
             dt.financerName = finace.financerName;
@@ -385,6 +393,8 @@ var Offer_Master_Data_Excel_Header = {
      
      if(item.leaseOffer && item.leaseOffer.length && !isOfferMaster){
       item.leaseOffer.forEach(function(lease){
+        if(!lease)
+            return;
         lease.type = "Lease";
         item.orders.push(lease);
       });
@@ -392,6 +402,8 @@ var Offer_Master_Data_Excel_Header = {
 
      if(item.leaseInfo && item.leaseInfo.length && isOfferMaster){
       item.leaseInfo.forEach(function(lease){
+        if(!lease || !lease.data)
+            return;
         for(var key in lease.data){
             var dt = lease.data[key];
             dt.finacerName = lease.financerName;
