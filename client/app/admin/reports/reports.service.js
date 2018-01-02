@@ -163,7 +163,6 @@
     }
 
     function exportData(data, refName) {
-      console.log("data",data);
       var url = "";
       if (refName == "callback")
         url = path + "/callback/export";
@@ -189,14 +188,33 @@
         url = path + "/auction/userregforauction/export";
       } //else
         //url = path + "/productquote/export";
-       console.log("ready Data",data);
-      return $http.post(url, data)
+      if(['offerreq','bulkorder','bookademo'].indexOf(refName) !== -1)
+        return exportExcel(data, refName);
+
+       return $http.post(url, data)
         .then(function(res) {
           return res.data
         })
         .catch(function(err) {
           throw err
         })
+    }
+
+    function exportExcel(data, refName){
+      var apiUrl = "";
+      if(refName === "offerreq")
+        apiUrl = path + "/common/offerrequest";
+      else if(refName === "bulkorder")
+        apiUrl = path + "/equipmentorder/newbulkorder";
+      else if(refName === 'bookademo')
+        apiUrl = path + "/common/bookademo";
+      return $http.get(apiUrl + "?type=excel")
+              .then(function(res){
+                return res.data
+              })
+              .catch(function(err) {
+                  throw err
+              })
     }
 
     return reportService;

@@ -252,18 +252,18 @@
   //Register Now
     function openRegisterNow(){
       Auth.isLoggedInAsync(function(loggedIn) {
-        if (loggedIn && !Auth.isAdmin()) {
+        if (loggedIn && !Auth.isAdmin() && !Auth.isAuctionRegPermission()) {
           var dataObj = {};
           dataObj.auction = {};
           dataObj.user = {};
           dataObj.auction.dbAuctionId = dbAuctionId;
-          if(!Auth.isAdmin()) {
+          //if(!Auth.isAdmin()) {
             dataObj.user._id = Auth.getCurrentUser()._id;
             dataObj.user.mobile = Auth.getCurrentUser().mobile;
-          } else {
-            dataObj.user._id = $scope.registerUser._id;
-            dataObj.user.mobile = $scope.registerUser.mobile;
-          }
+          // } else {
+          //   dataObj.user._id = $scope.registerUser._id;
+          //   dataObj.user.mobile = $scope.registerUser.mobile;
+          // }
           // if($scope.currentAuction.emdTax === $scope.LotWist) {
           //   dataObj.selectedLots =  vm.dataToSend.selectedLots;
           // }
@@ -289,26 +289,27 @@
                 return;
               }
             }
+            $scope.lotsArr = [];
             if(result && result.length > 0 && $scope.auctionData.emdTax === $scope.LotWist)
-            { $scope.lotsArr = [];
-                result.forEach(function(item){
-                  for (var i=0; i < item.selectedLots.length;i++)
-                    $scope.lotsArr.push(item.selectedLots[i]);
-                });
+            { 
+              result.forEach(function(item){
+                for (var i=0; i < item.selectedLots.length;i++)
+                  $scope.lotsArr.push(item.selectedLots[i]);
+              });
             }
-            if(!Auth.isAdmin()) {
+            //if(!Auth.isAdmin()) {
               var auctionRegislogin = $rootScope.$new();
               auctionRegislogin.currentAuction = $scope.auctionData;
               if($scope.lotsArr.length > 0 && $scope.auctionData.emdTax === $scope.LotWist)
                 auctionRegislogin.regLots = $scope.lotsArr;
               Modal.openDialog('auctionRegislogin',auctionRegislogin);
-            } else {
-              var regUserAuctionScope = $rootScope.$new();
-              regUserAuctionScope.currentAuction = $scope.auctionData;
-              if($scope.lotsArr.length > 0 && $scope.auctionData.emdTax === $scope.LotWist)
-                auctionRegislogin.regLots = $scope.lotsArr;
-              Modal.openDialog('auctionRegistration', regUserAuctionScope);
-            }
+            // } else {
+            //   var regUserAuctionScope = $rootScope.$new();
+            //   regUserAuctionScope.currentAuction = $scope.auctionData;
+            //   if($scope.lotsArr.length > 0 && $scope.auctionData.emdTax === $scope.LotWist)
+            //     auctionRegislogin.regLots = $scope.lotsArr;
+            //   Modal.openDialog('auctionRegistration', regUserAuctionScope);
+            // }
           }); 
         } else {
           var regUserAuctionScope = $rootScope.$new();

@@ -5,7 +5,7 @@ var mongoose = require('mongoose'),
 
 
 var BookADemoSchema = new Schema({
-  demoId:String,
+  ticketId:String,
   fname: String,
   lname: String,
   phone:String,
@@ -29,7 +29,7 @@ BookADemoSchema.pre('save',function(next){
   var prefix = 'DR';
   var sequence = seqGenerator.sequence();
   sequence.next(function(seqnum){
-    self.groupId = prefix + seqnum;
+    self.ticketId = prefix + seqnum;
     return next();
   },'BookADemo',"100002");
 

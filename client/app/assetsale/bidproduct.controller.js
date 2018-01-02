@@ -116,27 +116,29 @@
         function exportExcel(allReport) {
             var exportFilter = {};
             angular.copy(initFilter, exportFilter);
-            console.log('--data_check--',vm.dataListAll);
-            if (vm.activeBid === 'actionable' || vm.activeBid === 'saleinprocess') {
-                if (vm.dataListAll) {
-                    exportFilter.productIds = [];
-                    vm.dataListAll.forEach(function (item) {
-                        exportFilter.productIds.push(item._id);
-                    });
-                }
+            if (vm.activeBid === 'actionable') {
+                exportFilter.productsWise = 'y';
+                exportFilter.bidRequestApproved = 'n';
+                exportFilter.actionable = 'y';
+            } else if(vm.activeBid === 'saleinprocess') {
+                exportFilter.productsWise = 'y';
+                exportFilter.bidRequestApproved = 'y';
                 exportFilter.actionable = 'y';
             } else {
+                exportFilter.productsWise = 'n';
                 exportFilter.actionable = 'n';
-                //exportFilter.dealStatuses = dealStatuses[12];
             }
+
             if (allReport === 'all') {
                 exportFilter = {};
                 angular.copy(initFilter, exportFilter);
+                exportFilter.productsWise = 'n';
                 exportFilter.bidChanged = true;
             }
             if (allReport === 'payment') {
                 exportFilter = {};
                 angular.copy(initFilter, exportFilter);
+                exportFilter.productsWise = 'n';
                 exportFilter.payment = 'y';
             }
 

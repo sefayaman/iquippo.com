@@ -48,6 +48,11 @@ var app = express();
 var server = require('http').createServer(app);
 //var socket=require('socket.io');
 
+app.get('/_status',function(req,res){
+  res.status(200);
+  res.end();
+});
+
 require('./config/express')(app);
 require('./routes')(app);
 
@@ -148,6 +153,8 @@ app.post('/api/uploads', function(req, res) {
     }
   });
 });
+
+
 
 app.post('/api/multiplefile/upload', function(req, res) {
   var assetDir = req.query.assetDir;

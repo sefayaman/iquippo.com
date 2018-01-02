@@ -13,7 +13,7 @@
       <p class="text-right">Showing : {{reportsVm.totalItems}} Records</p>
      
         <div class="row"> 
-          <div class="col-sm-9 form-group">
+          <div class="col-sm-3 form-group">
             <div class="filter-select">
               <select ng-model="reportsVm.tabValue" ng-change="reportsVm.selectReportData(reportsVm.tabValue)">
                 <option value="callback">Call Back</option>
@@ -31,9 +31,12 @@
                 <option value="valuationReport">Valuation Report</option>
                 <option value="contactUs">Contact Us</option>
                 <option value="auctionRegReport" ng-if="auctionVisibleFlag">Auction Registration Report</option>
+                <option value="offerreq" ng-if="isAdmin()">Offer Request History</option>
+                <option value="bulkorder" ng-if="isAdmin()">Bulk Order Request</option>
+                <option value="bookademo" ng-if="isAdmin()">Book A Demo</option>
               </select>
             </div>
-          </div>                  
+          </div>             
           <div class="col-xs-12 col-sm-3 pull-right">
             <div class="tablesearch text-right form-group">
                Search: <input type="text" placeholder="Search..." ng-model="reportsVm.searchStr" ng-change="reportsVm.fireCommand(true)" ng-model-options="{debounce:500}">
@@ -479,8 +482,8 @@
                   <th>Product Name</th>                                
                   <th>Location of Asset</th>
                   <th>Manufacturing Year</th>
-                  <th ng-if="isAdmin">Seller Name</th>
-                  <th ng-if="isAdmin">Seller Contact Number</th>  
+                  <th ng-if="isAdmin()">Seller Name</th>
+                  <th ng-if="isAdmin()">Seller Contact Number</th>  
                   <th>Date of Request</th>                
                  </tr> 
                 </thead>
@@ -500,8 +503,8 @@
                   <td>{{addSvc.product.name}}</td>
                   <td>{{addSvc.product.city}}</td>                  
                   <td>{{addSvc.product.mfgYear}}</td>
-                  <td ng-if="isAdmin">{{addSvc.product.seller.fname}} {{addSvc.product.seller.lname}}</td>
-                  <td ng-if="isAdmin">{{addSvc.product.seller.mobile}}</td>
+                  <td ng-if="isAdmin()">{{addSvc.product.seller.fname}} {{addSvc.product.seller.lname}}</td>
+                  <td ng-if="isAdmin()">{{addSvc.product.seller.mobile}}</td>
                   <td>{{addSvc.createdAt | date:'MM/dd/yyyy hh:mm a'}}</td>                  
                  </tr>
                 </tbody>
@@ -527,8 +530,8 @@
                   <th>Product Name</th>                                
                   <th>Location of Asset</th>
                   <th>Manufacturing Year</th>
-                  <th ng-if="isAdmin">Seller Name</th>
-                  <th ng-if="isAdmin">Seller Contact Number</th>                 
+                  <th ng-if="isAdmin()">Seller Name</th>
+                  <th ng-if="isAdmin()">Seller Contact Number</th>                 
                   <th>Rent Information – Hours</th>                  
                   <th>Rent Information – Days</th>                  
                   <th>Rent Information – Months</th>                  
@@ -552,8 +555,8 @@
                   <td>{{addSvc.product.name}}</td>
                   <td>{{addSvc.product.city}}</td>                  
                   <td>{{addSvc.product.mfgYear}}</td>
-                  <td ng-if="isAdmin">{{addSvc.product.seller.fname}} {{addSvc.product.seller.lname}}</td>
-                  <td ng-if="isAdmin">{{addSvc.product.seller.mobile}}</td>
+                  <td ng-if="isAdmin()">{{addSvc.product.seller.fname}} {{addSvc.product.seller.lname}}</td>
+                  <td ng-if="isAdmin()">{{addSvc.product.seller.mobile}}</td>
                   <td>{{addSvc.product.rent.rateHours.rentAmountH}}</td>
                   <td>{{addSvc.product.rent.rateDays.rentAmountD}}</td>
                   <td>{{addSvc.product.rent.rateMonths.rentAmountM}}</td>
@@ -784,6 +787,158 @@
                     <td>+{{regUser.user.countryCode}}-{{regUser.user.mobile}}</td>              
                     <td>{{regUser.user.email}}</td>              
                     <td>{{regUser.createdAt | date:'MM/dd/yyyy'}}</td>                            
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <uib-pagination total-items="reportsVm.totalItems" ng-model="reportsVm.currentPage" items-per-page="reportsVm.itemsPerPage" max-size="reportsVm.maxSize" ng-change="reportsVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+          </div>
+
+          <div ng-if="reportsVm.tabValue == 'offerreq'">
+            <div class="table-responsive">
+               <table class="table table-bordred table-striped">
+                <thead>
+                  <tr>
+                    <th>User Id</th>
+                    <th>Request Raised By</th>
+                    <th>Customer Name</th>                               
+                    <th>Mobile Number</th>                                
+                    <th>Email Id</th>
+                    <th>Ticket Id/Enquiry Id</th>                                
+                    <th>Category</th>                                
+                    <th>Brand</th>                                
+                    <th>Model</th>                                
+                    <th>State</th>
+                    <th>Offer Type</th>
+                    <th>Price</th>
+                    <!-- <th>Free Of Cost</th> -->
+                    <th>Financer/Leaser name</th>                                
+                    <th>Quantity</th>
+                    <th>Tenure</th>                                
+                    <th>Amount</th> 
+                    <th>Rate</th>
+                    <th>Margin</th>
+                    <th>Processing Fee</th>
+                    <th>Installment</th>
+                    <th>Free Of cost</th>  
+                  </tr>           
+                </thead>
+                <tbody ng-repeat="offer in reportsVm.offerRequestListing">
+                  <tr ng-repeat="order in offer.orders">
+                    <td>{{offer.user.customerId}}</td>
+                    <td>
+                        <span ng-if="offer.isForSelf">Self</span>
+                        <span ng-if="!offer.isForSelf">{{offer.user.name}}</span>
+                    </td>
+                    <td>{{offer.fname}} {{offer.lname}}</td>
+                    <td>{{offer.mobile}}</td>              
+                    <td>{{offer.email}}</td>
+                    <td>{{offer.orderId}}.{{$index + 1}}</td>
+                    <td>{{offer.category.name}}</td>   
+                    <td>{{offer.brand.name}}</td>
+                    <td>{{offer.model.name}}</td>              
+                    <td>{{offer.state}}</td>
+                    <td>{{order.type}}</td> 
+                    <td>{{order.price}}</td>
+                   <!--  <td>{{order.freeofcost}}</td> -->
+                    <td>{{order.financerName}}</td>
+                    <td>{{order.quantity}}</td>
+                    <td>{{order.tenure}}</td>
+                    <td>{{order.amount}}</td> 
+                    <td>{{order.rate}}</td>
+                    <td>{{order.margin}}</td>
+                    <td>{{order.processingfee}}</td> 
+                    <td>{{order.installment}}</td> 
+                    <td>
+                      <span>
+                        {{order.freeofcost || order.freecost}} ({{order.type}})
+                      </span>
+                    </td>                       
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <uib-pagination total-items="reportsVm.totalItems" ng-model="reportsVm.currentPage" items-per-page="reportsVm.itemsPerPage" max-size="reportsVm.maxSize" ng-change="reportsVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+          </div>
+
+          <div ng-if="reportsVm.tabValue == 'bulkorder'">
+            <div class="table-responsive">
+               <table class="table table-bordred table-striped">
+                <thead>
+                  <tr>
+                    <th>Ticket Id</th>
+                    <th>Request Raised By</th>                               
+                    <th>User Name</th>                                
+                    <th>Mobile</th>                                
+                    <th>Email Address</th>                                
+                    <th>Category</th>                                
+                    <th>Brand</th>                                
+                    <th>Model</th>                                
+                    <th>Country</th>                                
+                    <th>State</th>                                
+                    <th>City</th>                                
+                    <th>Quantity</th>                                
+                    <th>Indicative Price</th> 
+                    <th>Indicative Rate</th>  
+                    <th>Indicative Down Payment</th>  
+                  </tr>           
+                </thead>
+                <tbody ng-repeat="bulkOrder in reportsVm.bulkOrderListing">
+                  <tr ng-repeat="order in bulkOrder.orders">
+                    <td>{{bulkOrder.orderId}}.{{$index + 1}}</td>
+                    <td>
+                        <span ng-if="bulkOrder.forSelf">Self</span>
+                        <span ng-if="!bulkOrder.forSelf">{{bulkOrder.user.name}}</span>
+                    </td>   
+                    <td>{{bulkOrder.name}}</td>
+                    <td>{{bulkOrder.mobile}}</td>              
+                    <td>{{bulkOrder.email}}</td>
+                    <td>{{order.category}}</td>
+                    <td>{{order.brand}}</td>
+                    <td>{{order.model}}</td>   
+                    <td>{{bulkOrder.country}}</td>
+                    <td>{{bulkOrder.state}}</td>              
+                    <td>{{bulkOrder.city}}</td> 
+                    <td>{{order.quantity}}</td>
+                    <td>{{order.indicativePrice}}</td>
+                    <td>{{order.indicativeRate}}</td>                         
+                    <td>{{order.indicativeDownpayment}}</td>                                                 
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <uib-pagination total-items="reportsVm.totalItems" ng-model="reportsVm.currentPage" items-per-page="reportsVm.itemsPerPage" max-size="reportsVm.maxSize" ng-change="reportsVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+          </div>
+           <div ng-if="reportsVm.tabValue == 'bookademo'">
+            <div class="table-responsive">
+               <table class="table table-bordred table-striped">
+                <thead>
+                  <tr>
+                    <th>Ticket Id</th>                               
+                    <th>Name</th>                                
+                    <th>Mobile</th>                                
+                    <th>Email</th>                                
+                    <th>Category</th>                                
+                    <th>Brand</th>                                
+                    <th>Model</th>
+                    <th>Country</th> 
+                    <th>State</th> 
+                    <th>City</th>              
+                  </tr>           
+                </thead>
+                <tbody>
+                  <tr ng-repeat="demoReq in reportsVm.bookademoListing">
+                    <td>{{demoReq.ticketId}}</td>   
+                    <td>{{demoReq.fname}} {{demoReq.lname}}</td>
+                    <td>{{demoReq.mobile}}</td>              
+                    <td>{{demoReq.email}}</td>
+                    <td>{{demoReq.category}}</td>
+                    <td>{{demoReq.brand}}</td>
+                    <td>{{demoReq.model}}</td>             
+                    <td>{{demoReq.country}}</td>
+                     <td>{{demoReq.state}}</td> 
+                    <td>{{demoReq.city}}</td>  
+                                                                     
                   </tr>
                 </tbody>
               </table>

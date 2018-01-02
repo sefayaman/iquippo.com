@@ -52,8 +52,8 @@
             </div>
             <!-- success error end -->
             <!-- tabs -->
-            <uib-tabset justified="true">
-            <uib-tab heading="Step1" index="0" active="tabObj.step1">
+           <!--  <uib-tabset justified="true">
+            <uib-tab heading="Step1" index="0" active="tabObj.step1"> -->
             <form name="form" novalidate>
               <div class="panel panel-default seller_info" ng-if="isActive() || isChannelPartner()">
                 <div class="panel-heading">
@@ -180,13 +180,8 @@
                     </div>
                     <div class="row">
                       <div class="form-group col-sm-5">Manufacturing Year</div>
-                      <div class="form-group col-xs-9 col-sm-6">
-                        <input type="text" name="mfgyear" ng-value="container.mfgYear" ng-model="container.mfgYear" class="form-control" placeholder="yyyy" uib-datepicker-popup="{{format}}" datepicker-options="{{datepickerOptions}}" is-open="container.opened" date-disabled="disabled(date, mode)" close-text="Close" disabled/>
-                      </div>
-                      <div class="form-group col-xs-3 col-sm-1 text-center padd">
-                        <a href class="form-control btn btn-default" ng-click="open($event, 'mfgYear')">
-                          <i class="fa fa-calendar-o fa-1x"></i>
-                        </a>
+                      <div class="form-group col-sm-4" ng-class="{'has-error': form.mfgyear.$invalid && submitted}">
+                        <input type="number" name="mfgyear" ng-value="container.mfgYear" ng-model="container.mfgYear" class="form-control" placeholder="yyyy" min="1950" ng-maxlength="4" ng-minlength="4"/>
                       </div>
                     </div>                    
                     <div class="row" ng-if="product.tradeType != 'RENT'">
@@ -560,8 +555,8 @@
       <button ng-show="enableButton" class="btn btn-danger" confirmed-click="firstStep(form,product)" ng-confirm-click="This operation will make product inactive and needs administrator approval for activation. Do you want to continue?">Submit</button>
     </div>
   </form>
-  </uib-tab>
-  <uib-tab heading="Step2" index="1" active="tabObj.step2" disable="true">
+  <!-- </uib-tab> -->
+<!--   <uib-tab heading="Step2" index="1" active="tabObj.step2" disable="true">
   <form name="auctForm" novalidate>
     <div class="panel panel-default">
       <div class="panel-heading">
@@ -597,8 +592,8 @@
       </div>
     </div>
   </form>
-  </uib-tab>
-  </uib-tabset>
+  </uib-tab> -->
+  <!-- </uib-tabset> -->
 </div>
 </div>
 </div>

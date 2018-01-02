@@ -94,20 +94,11 @@ exports.getAuctionInfoForProduct = function(req, res) {
       auctionData = result[0].toObject();
       var currentDate = new Date();
       auctionData.visibleBuyNow = true;
-      if (auctionData.insStartDate < currentDate && auctionData.endDate > currentDate)
+      if (auctionData.startDate < currentDate && auctionData.endDate > currentDate)
         auctionData.visibleBuyNow = false;
-      /*var tempArr = [];
-      if(result) {
-        result.forEach(function(auction) {
-          auction = auction.toObject();
-          var currentDate = new Date();
-          result.visibleBuyNow = true;
-          if (auction.startDate < currentDate && auction.endDate > currentDate)
-            auction.visibleBuyNow = false;
-          tempArr[tempArr.length] = auction;
-        })
-        result = tempArr;
-      }*/
+      auctionData.allowProxyBid = false;
+      if (auctionData.insStartDate < currentDate && auctionData.endDate > currentDate)
+        auctionData.allowProxyBid = true;
       return res.status(200).json(auctionData);
     });
   });
@@ -136,7 +127,8 @@ function _create(data, cb) {
     .par(function() {
       var self = this;
       AuctionRequest.find({
-        "product.assetId": data.product.assetId
+        "product.assetId": data.product.assetId,
+        "isDeleted":false
       }, function(err, acts) {
         if (err) {
           self(err)
@@ -234,7 +226,8 @@ exports.create = function(req, res, next) {
     .par(function() {
       var self = this;
       AuctionRequest.find({
-        "product.assetId": req.body.product.assetId
+        "product.assetId": req.body.product.assetId,
+        "isDeleted":false
       }, function(err, acts) {
         if (err) {
           self(err)
@@ -794,7 +787,8 @@ exports.update = function(req, res) {
   req.body.updatedAt = new Date();
   AuctionRequest.find({
     "product.assetId": req.body.product.assetId,
-    "status" : "request_approved"
+    "status" : "request_approved",
+    "isDeleted" : false
   }, function(err, auctions) {
     if (err) {
       return handleError(res, err);
@@ -1559,6 +1553,7 @@ exports.getAuctionWiseProductData = function(req, res) {
   Seq()
   .par(function(){
     var self = this;
+    filter['product.isSold'] = false;
     var query = AuctionRequest.aggregate([{"$match":filter},{
     "$group": {
          _id: "$dbAuctionId",
@@ -2086,7 +2081,7 @@ exports.validateUpdateLotStatus = function(req,res,next){
   }
 
   function getAssetInLot(cb){
-    AuctionRequest.find({lot_id:bodyData.lot_id,dbAuctionId:bodyData.auction_id},function(err,assets){
+    AuctionRequest.find({lot_id:bodyData.lot_id,dbAuctionId:bodyData.auction_id,isDeleted:false},function(err,assets){
       if(err)
         return cb("Error in asset lot");
       if(!assets.length)

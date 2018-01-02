@@ -3,6 +3,7 @@
 var _ = require('lodash');
 var Seq = require('seq');
 var TechSpecMaster = require('./techspecmaster.model.js');
+var Product = require('./../product/product.model.js');
 var TechSpecValMaster = require('./techspecvalmaster.model.js');
 var Utility = require('./../../components/utility.js');
 
@@ -24,10 +25,10 @@ exports.get = function(req, res) {
     filter.model = queryParam.model;
   
 
-  /*if (queryParam.pagination) {
-    Utility.paginatedResult(req, res, InputFormReq, filter, {});
+  if (queryParam.pagination) {
+    Utility.paginatedResult(req, res, TechSpecMaster, filter, {});
     return;
-  }*/
+  }
 
   var query = TechSpecMaster.find(filter);
 
@@ -86,12 +87,6 @@ exports.createfield = function(req, res) {//console.log("req.body=",req.body);
 //search based on filter
 exports.getOnFilter = function(req, res) {
   var filter = {};
-  // if(req.body._id)
-  //   filter["_id"] = req.body._id;
-  // if(req.body.userId)
-  //   filter["user._id"] = req.body.userId;
-  // if(req.body.mobile)
-  //   filter["user.mobile"] = req.body.mobile;
   if (req.query.searchStr) {
     filter['$text'] = {
       '$search': "\""+req.query.searchStr+"\""
@@ -153,10 +148,32 @@ exports.fieldUpdate = function(req, res) {
     if(!fieldValue) { return res.status(404).send('Not Found'); }
     TechSpecValMaster.update({_id:req.params.id},{$set:req.body},function(err){
         if (err) { return handleError(res, err); }
+        updateProduct(req.body);
         return res.status(200).json({errorCode:0, message:"Request updated sucessfully"});
     });
   });
 };
+
+function updateProduct(techSpecData){
+  var filter = {};
+  filter['category._id'] = techSpecData.category.categoryId;
+  filter['brand._id'] = techSpecData.brand.brandId;
+  filter['model._id'] = techSpecData.model.modelId;
+  filter.productCondition = 'new';
+  var techSpecs = [];
+  techSpecData.fields.forEach(function(item){
+    if(item && item.isFront) {
+      var dataObj = {};
+      dataObj.name = item.name;
+      dataObj.value = item.value;
+      dataObj.priority = item.priority || 0;
+      techSpecs[techSpecs.length] = dataObj;
+    }
+  });
+  var dataToUpdate = {'techSpec' : techSpecs};
+  Product.update(filter,{$set:dataToUpdate}).exec();
+}
+
 // Deletes a input req from the DB.
 exports.delete = function(req, res) {
   TechSpecMaster.findById(req.params.id, function (err, field) {

@@ -2,8 +2,8 @@
   <ol class="breadcrumb">
     <li><a href="/">Home</a></li>
     <li><a href="/used"> Used Equipments </a></li>
-    <li><a href="/viewproducts">{{currentProduct.group.name}}</a></li>
-    <li ng-if="currentProduct.category.name != 'Other'"><a href="javascript:void(0);">{{currentProduct.category.name}}</a></li>
+    <li><a href="/used/viewproducts?group={{currentProduct.group.name}}">{{currentProduct.group.name}}</a></li>
+    <li ng-if="currentProduct.category.name != 'Other'"><a href="/used/viewproducts?category={{currentProduct.category.name}}">{{currentProduct.category.name}}</a></li>
     <li ng-if="currentProduct.category.name == 'Other'">{{currentProduct.category.otherName}}</li>
     <li><a class="active">{{currentProduct.name}}</a></li>
   </ol>
@@ -100,13 +100,12 @@
                         <a href="javascript:void(0);" ng-click="productDetailVm.openBidModal(currentProduct.grossPrice || 0,'buynow')" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE' || auctionsData.visibleBuyNow == false  || productDetailVm.userCurrentBid.offerType == 'Buynow'" class="btn btn-primary btn-block">Buy Now</a>
                     </div>                  
                   </div>
-                  <div class="option-border text-center">
+                    <div class="option-border text-center" ng-if="currentProduct.assetStatus != 'rented'">
                     <span class="option">or</span>
                     <hr>
                   </div>
                 </div>
-                
-                <div class="row price-offer" ng-if="(!isLoggedIn() || userBids == 0) && allowBid != 'No'">
+                <div class="row price-offer" ng-if="(!isLoggedIn() || userBids == 0) && allowBid != 'No' && currentProduct.tradeType!='RENT' && currentProduct.assetStatus != 'rented'">
                   <div class="col-sm-8 form-group">
                     <label>To Negotiate</label>
                     <div ng-class="{'has-error': assetSale.bidAmount.$invalid && bidSubmitted}">
@@ -133,7 +132,7 @@
                     <!-- <button type="button" ng-if="(!isLoggedIn() || userBids == 0) && allowBid != 'No'" class="btn btn-primary btn-block" ng-click="productDetailVm.openBidModal(productDetailVm.bidAmount,'placebid',assetSale)" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE'">
                     Place Bid
                     </button> -->
-                    <button type="button" ng-if="allowBid == 'No'" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE' || auctionsData.visibleBuyNow == false" class="btn btn-primary btn-block" ng-click="productDetailVm.openBidModal(productDetailVm.bidAmount,'proxybid',assetSale)">Proxy Bid</button>
+                    <button type="button" ng-if="allowBid == 'No'" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE' || !auctionsData.visibleBuyNow" class="btn btn-primary btn-block" ng-click="productDetailVm.openBidModal(productDetailVm.bidAmount,'proxybid',assetSale)">Proxy Bid</button>
                   </div>
                 </div>
                 <div class="row price-offer" ng-if="isLoggedIn() && userBids >= 1 && (allowBid != 'No')">
@@ -612,111 +611,6 @@
               <div class="col-xs-12 col-sm-6 form-group">
                 <div class="floating-label-wrapper">
                   <label>Purpose of Inspection</label>
-              <div class="panel-body">
-                  <form novalidate class="originalPrice" name="originalPrice">
-                    <div class="sale-price form-group" ng-if="currentProduct.priceOnRequest==false">
-                        <div class="row" >
-                          <div class="col-xs-5 col-sm-4">
-                            <strong>
-                              Sale Price
-                            </strong>
-                          </div>
-                          <div class="col-xs-7 col-sm-4 padd-left">
-                            <div class="price-request">
-                              <div ng-if="currentProduct.grossPrice">
-                                <i class="fa fa-inr"></i> {{currentProduct.grossPrice}}
-                              </div>
-                              <div ng-if="!currentProduct.grossPrice" ng-model="valuefor">
-                                <i class="fa fa-inr"></i> Price On Request
-                              </div>
-                            </div>
-                          </div>
-                          <div class="col-xs-12 col-sm-4">
-                            <div>
-                              <a href="javascript:void(0);" ng-click="negotiate(originalPrice,'false')" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE'" class="btn btn-warning btn-block">Buy Now</a>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </form>
-                    <div class="">
-                      <form novalidate class="negotiations" name="negotiations">
-                        <div class="col-sm-4">
-                          <h5>
-                            Make an Offer
-                          </h5>
-                        </div>
-                        <div class="col-sm-4">
-                          <div ng-class="{'has-error': negotiations.amount.$invalid && negotiationSubmitted}">
-                            <input type="number" min="0" name="amount" class="form-control" placeholder="Enter Offer" ng-model="productDetailVm.negotiateAmt" required>
-                          </div>
-                        </div>
-                        <div class="col-sm-4 text-right">
-                          <div>
-                            <a href="javascript:void(0);" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE'" ng-click="negotiate(negotiations,'true')" class="btn btn-warning btn-block">Submit Bid</a>
-                          </div>
-                        </div>
-                      </form>
-                    </div>
-                    <div class="clearfix form-group"></div>
-                    <hr>
-                    <div class="col-sm-offset-8 col-sm-4 text-right">
-                      <button type="submit" class="btn btn-warning btn-block" ng-click="productDetailVm.addProductToCart(currentProduct)">Add to Cart</button>
-                    </div>
-              </div>
-            </div> -->
-            <div class="panel panel-primary" ng-if="currentProduct.tradeType == 'RENT' || currentProduct.tradeType == 'BOTH'">
-              <div class="panel-heading">
-                <h3 class="panel-title">For Rent</h3>
-              </div>
-              <div class="panel-body">
-                  <form novalidate class="forRent" name="forRent">
-                    
-                    <div class="table-responsive">
-                      <table class="table table-bordered">
-                        <tr>
-                          <th class="col-sm-4">Time Duration</th>
-                          <th class="col-sm-4">Rate</th>
-                          <th class="col-sm-4">Security Deposit</th>
-                        </tr>
-                        <tr ng-if="currentProduct.rent.rateHours.rateType == 'hours'">
-                          <td>Hourly</td>
-                          <td><i class="fa fa-inr"></i> {{currentProduct.rent.rateHours.rentAmountH}}</td>
-                          <td><i class="fa fa-inr"></i>{{currentProduct.rent.rateHours.seqDepositH}} </td>
-                        </tr>
-                        <tr ng-if="currentProduct.rent.rateDays.rateType == 'days'">
-                          <td>Daily</td>
-                          <td><i class="fa fa-inr"></i> {{currentProduct.rent.rateDays.rentAmountD}}</td>
-                          <td><i class="fa fa-inr"></i>{{currentProduct.rent.rateDays.seqDepositD}}</td>
-                        </tr>
-                        <tr ng-if="currentProduct.rent.rateMonths.rateType == 'months'">
-                          <td>Monthly</td>
-                          <td><i class="fa fa-inr"></i> {{currentProduct.rent.rateMonths.rentAmountM}}</td>
-                          <td><i class="fa fa-inr"></i> {{currentProduct.rent.rateMonths.seqDepositM}}</td>
-                        </tr>
-                      </table>
-                    </div>
-                    <div class="text-right">
-                       <button type="submit" ng-disabled="currentProduct.assetStatus == 'sold'" class="btn btn-warning" ng-click="negotiate('forRent','rent')">Get it Now</button>
-                    </div>
-                  </form>
-                    <hr>
-                    <div class="text-right">                      
-                      <button type="submit" class="btn btn-warning" ng-click="productDetailVm.addProductToCart(currentProduct)">Add to Cart</button>
-                    </div>
-                    <small>* Other Terms &amp; Conditions applied.</small>
-              </div>
-            </div>
-
-            <div class="panel panel-default" ng-if="isLoggedIn() && assetListedInAuction && displayBid === 'true'">
-              <div class="panel-body" ng-disabled="true">
-                <iframe ng-src="{{asWidgetURLSCE}}" style="width: 100%; height: 300px; border: 1px solid #eee;"></iframe>
-              </div>
-            </div>
-    
-            <div class="panel panel-primary" ng-if="isLoggedIn()">
-                <div class="panel-heading" ng-if="currentProduct.dispSellerInfo == 'yes'">
-                  <h3 class="panel-title">Contact Seller</h3>
                 </div>
                 <div class="row">
                   <div class="col-xs-12 col-sm-6 form-group" ng-class="{'has-error': reqForCertify.certification.$invalid && inspectSubmitted}">

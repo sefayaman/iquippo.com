@@ -6,8 +6,8 @@
   <div class="modal-body">
     <div ng-if="true">
       <div ng-if="isRegister">
-        <p ng-if="!isAdmin()">Are you an existing user on iQuippo?</p>
-        <p ng-if="isAdmin()">Does the user already exist on iQuippo?</p>
+        <p ng-if="!isAdmin() && !isAuctionRegPermission()">Are you an existing user on iQuippo?</p>
+        <p ng-if="isAdmin() || isAuctionRegPermission()">Does the user already exist on iQuippo?</p>
         <div class="row">
           <div class="col-xs-6">
             <div class="radio radio-info">
@@ -28,9 +28,9 @@
           <div class="row">
             <div class="col-sm-offset-2 col-sm-8 form-group" ng-class="{'has-error': aucform.userId.$invalid && aucform.submitted }">
               <input type="text" class="form-control form-group" name="userId" placeholder="Mobile Number or Email Address" ng-model="auctionRegVm.userId" required>
-              <input ng-if="!isAdmin()" class="form-control form-group" placeholder="Password" type="password" name="passwordlogin" ng-model="auctionRegVm.passwordlogin" required>
+              <input ng-if="!isAdmin() && !isAuctionRegPermission()" class="form-control form-group" placeholder="Password" type="password" name="passwordlogin" ng-model="auctionRegVm.passwordlogin" required>
               <div class="form-group" ng-class="{'has-error': aucform.batonNo.$invalid && aucform.submitted }">
-                <input ng-if="isAdmin() && currentAuction.auctionType === 'L'" class="form-control form-group" placeholder="Baton No." type="text" name="batonNo" ng-model="auctionRegVm.user.batonNo" required>
+                <input ng-if="(isAdmin() || isAuctionRegPermission()) && currentAuction.auctionType === 'L'" class="form-control form-group" placeholder="Baton No." type="text" name="batonNo" ng-model="auctionRegVm.user.batonNo" required="isAdmin() || isAuctionRegPermission()">
               </div>
               <!-- <select ng-if="currentAuction.emdTax === 'lotwise'" class="form-control form-group" name="selectedLots" id="selectedLots" style="height: 80px;" ng-options="lots.lotNumber as lots.lotNumber for lots in auctionRegVm.lotList" ng-model="auctionRegVm.selectedLots.lotNumber" multiple>
               </select> --> 
@@ -117,7 +117,7 @@
                <input type="text" class="form-control" name="panNumber"  placeholder="PAN Number" ng-model="auctionRegVm.user.panNumber" uib-tooltip="XXXXX9999X" tooltip-trigger="focus" pattern="^[A-Z]{5}[0-9]{4}[A-Z]{1}$" tooltip-placement="top">
               </div>
                
-             <div class="col-sm-6 form-group" ng-class="{'has-error': reqForm.password.$invalid && reqForm.submitted}" ng-if="!isAdmin()">
+             <div class="col-sm-6 form-group" ng-class="{'has-error': reqForm.password.$invalid && reqForm.submitted}" ng-if="!isAdmin() && !isAuctionRegPermission()">
               <input type="password" class="form-control" ng-model="auctionRegVm.user.password" placeholder="*Password" name="password" ng-minlength="4"
                        required
                        mongoose-error>
@@ -129,8 +129,8 @@
                 {{ errors.password }}
               </p>
              </div>
-             <div class="col-sm-6 form-group" ng-if="isAdmin() && currentAuction.auctionType === 'L'" ng-class="{'has-error': reqForm.batonNo.$invalid && reqForm.submitted}">
-                <input type="text" class="form-control" placeholder="*Baton No." name="batonNo" ng-model="auctionRegVm.user.batonNo" required="isAdmin()">
+             <div class="col-sm-6 form-group" ng-if="(isAdmin() || isAuctionRegPermission()) && currentAuction.auctionType === 'L'" ng-class="{'has-error': reqForm.batonNo.$invalid && reqForm.submitted}">
+                <input type="text" class="form-control" placeholder="*Baton No." name="batonNo" ng-model="auctionRegVm.user.batonNo" required="isAdmin() || isAuctionRegPermission()">
               </div>
             </div>
                      
