@@ -391,7 +391,7 @@ var Offer_Master_Data_Excel_Header = {
             return;
           for(var key in finace.data){
             var dt = finace.data[key];
-            dt.financerName = finace.financerName;
+            dt.financerName = finace.name;
             dt.type = "Finance";
             item.orders.push(dt);
           }
@@ -413,7 +413,7 @@ var Offer_Master_Data_Excel_Header = {
             return;
         for(var key in lease.data){
             var dt = lease.data[key];
-            dt.finacerName = lease.financerName;
+            dt.finacerName = lease.name;
             dt.type = "Lease";
             item.orders.push(dt);
           }
