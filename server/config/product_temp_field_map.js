@@ -2,12 +2,12 @@
 
 module.exports = {
 	'Asset_ID*': 'assetId',
-	'Category': 'category',
-	'Other_Category': 'other_category', //if present then populate otherName and make name to Other
-	'Brand': 'brand',
-	'Other_Brand': 'other_brand', //if present then populate otherName and make name to Other
-	'Model': 'model',
-	'Other_Model': 'other_model', //if present then populate otherName and make name to Other
+	'Category*': 'category',
+	'Other_Category*': 'other_category', //if present then populate otherName and make name to Other
+	'Brand*': 'brand',
+	'Other_Brand*': 'other_brand', //if present then populate otherName and make name to Other
+	'Model*': 'model',
+	'Other_Model*': 'other_model', //if present then populate otherName and make name to Other
 	'Sub_Category': 'sub_category',
 	'Engine_No': 'engineNo',
 	'Chasis_No': 'chasisNo',
@@ -15,16 +15,16 @@ module.exports = {
 	'Variant': 'variant',
         'Product_Group':'group_name', 
         'Product_Name':'name', 
-	'Trade_Type(SELL/NOT_AVAILABLE)': 'tradeType',
-	'Manufacturing_Year': 'mfgYear', //could not update
-	'Price_On_Request(Yes/No)': 'priceOnRequest',
-	'Currency': 'currencyType',
-	'Sale_Price': 'grossPrice',
-	'Country': 'country',
-	'State': 'state',
-	'Location': 'city',
+	'Trade_Type(SELL/NOT_AVAILABLE)*': 'tradeType',
+	'Manufacturing_Year*': 'mfgYear', //could not update
+	'Price_On_Request(Yes/No)*': 'priceOnRequest',
+	'Currency*': 'currencyType',
+	'Sale_Price*': 'grossPrice',
+	'Country*': 'country',
+	'State*': 'state',
+	'Location*': 'city',
 	//seller information start  need to check from user
-	'Seller_Mobile': 'seller_mobile',
+	'Seller_Mobile*': 'seller_mobile',
 	'Seller_Email_Address': 'seller_email',
 	'Seller_Name' : 'seller_name',
         'Seller_Role':'seller_role',
@@ -73,7 +73,7 @@ module.exports = {
 	'Video_Link': 'videoLinks',
 
 	//only visible to admin
-	'Asset_Status(Listed/Sold)': 'assetStatus',
+	'Asset_Status(listed/sold)': 'assetStatus',
 	'To_be_shown_under_Product_Information(Yes/No)': 'dispSellerInfo',
 	'Contact_Number_to_be_displayed_in_front_end(Yes/No)': 'dispSellerContact',
 	'Alternate_Contact_Number': 'alternateMobile',
