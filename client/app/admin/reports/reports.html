@@ -866,7 +866,8 @@
                <table class="table table-bordred table-striped">
                 <thead>
                   <tr>
-                    <th>Ticket id</th>                               
+                    <th>Ticket Id</th>
+                    <th>Request Raised By</th>                               
                     <th>User Name</th>                                
                     <th>Mobile</th>                                
                     <th>Email Address</th>                                
@@ -884,7 +885,11 @@
                 </thead>
                 <tbody ng-repeat="bulkOrder in reportsVm.bulkOrderListing">
                   <tr ng-repeat="order in bulkOrder.orders">
-                    <td>{{bulkOrder.orderId}}.{{$index + 1}}</td>   
+                    <td>{{bulkOrder.orderId}}.{{$index + 1}}</td>
+                    <td>
+                        <span ng-if="bulkOrder.forSelf">Self</span>
+                        <span ng-if="!bulkOrder.forSelf">{{bulkOrder.user.name}}</span>
+                    </td>   
                     <td>{{bulkOrder.name}}</td>
                     <td>{{bulkOrder.mobile}}</td>              
                     <td>{{bulkOrder.email}}</td>
@@ -909,7 +914,7 @@
                <table class="table table-bordred table-striped">
                 <thead>
                   <tr>
-                    <th>Ticket id</th>                               
+                    <th>Ticket Id</th>                               
                     <th>Name</th>                                
                     <th>Mobile</th>                                
                     <th>Email</th>                                

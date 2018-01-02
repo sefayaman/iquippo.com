@@ -85,7 +85,7 @@ function renderJSON(req,res){
             if(item.forSelf)
               val = "Self"
             else
-              val = item.name || "";
+              val = item.user.name || "";
           }
         rowData.push(val);
       });
