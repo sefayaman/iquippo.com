@@ -15,7 +15,7 @@ module.exports = {
 	'Variant': 'variant',
         'Product_Group':'group_name', 
         'Product_Name':'name', 
-	'Trade_Type(Buy/Sell/Both)*': 'tradeType',
+	'Trade_Type(SELL/NOT_AVAILABLE)*': 'tradeType',
 	'Manufacturing_Year*': 'mfgYear', //could not update
 	'Price_On_Request(Yes/No)*': 'priceOnRequest',
 	'Currency*': 'currencyType',
@@ -73,7 +73,7 @@ module.exports = {
 	'Video_Link': 'videoLinks',
 
 	//only visible to admin
-	'Asset_Status(Listed/Sold/Rented)': 'assetStatus',
+	'Asset_Status(Listed/Sold)': 'assetStatus',
 	'To_be_shown_under_Product_Information(Yes/No)': 'dispSellerInfo',
 	'Contact_Number_to_be_displayed_in_front_end(Yes/No)': 'dispSellerContact',
 	'Alternate_Contact_Number': 'alternateMobile',
