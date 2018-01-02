@@ -6,19 +6,36 @@ var OfferRequest = require('./newofferrequest.model');
 var ApiError = require('../../components/_error');
 var Utility = require('./../../components/utility.js');
 var moment = require("moment");
+var commonController = require('./common.controller');
+var notification = require('./../../components/notification.js');
+var Vendor = require('./../vendor/vendor.model');
+var config = require('./../../config/environment');
 var xlsx = require('xlsx');
+var async = require('async');
 
 var Offer_Master_Excel_Header = {
+    "Serial No." : "serialNumber",
     "Category": "category.name",
     "Brand": "brand.name",
     "Model": "model.name",
     "Country":"country",
-    "State": "locations",
-    "Cash Offer" : "cash_purchase",
-    "Finance Offer" : "finance",
-    "Lease Offer" : "lease",
-    "Created At" : "createdAt"
+    "State": "locations"
 };
+
+var Offer_Master_Data_Excel_Header = {
+    "Offer Type" : "type",
+    "Price" : "price",
+   /* "Free Of Cost" : "freeofcost",*/
+    "Financer/Leaser name" : "financerName",
+    "Tenure" : "tenure",
+    "Amount" : "amount",
+    "Rate" : "rate",
+    "Margin" : "margin",
+    "Processing Fee":"processingfee",
+    "Installment":"installment",
+    "Free Of Cost":"freecost",
+    "Created At":"createdAt"
+  }
 
  var Excel_Header = {
     "User Id" : "user.customerId",
@@ -36,7 +53,7 @@ var Offer_Master_Excel_Header = {
   var Data_Excel_Header = {
     "Offer Type" : "type",
     "Price" : "price",
-    "Free Of Cost" : "freeofcost",
+   /* "Free Of Cost" : "freeofcost",*/
     "Financer/Leaser name" : "financerName",
      "Quantity" : "quantity",
     "Tenure" : "tenure",
@@ -136,9 +153,13 @@ var Offer_Master_Excel_Header = {
   function renderOfferMasterExcel(req,res){
     var dataArr = [];
     var keys = Object.keys(Offer_Master_Excel_Header);
-    var dataKeys = Object.keys()
+    var dataKeys = Object.keys(Offer_Master_Data_Excel_Header)
     dataArr[dataArr.length] = keys;
-    req.result.forEach(function(item){
+    dataArr[0] = dataArr[0].concat(dataKeys);
+    var resultArr = formatData(req.result,true);
+    if(!resultArr || !resultArr.length)
+      return handleError(res, "There is no data found to export");
+    resultArr.forEach(function(item,index){
       var rowData = [];
       keys.forEach(function(key){
         var val = _.get(item,Offer_Master_Excel_Header[key],"");
@@ -149,21 +170,37 @@ var Offer_Master_Excel_Header = {
           });
           val = val.substring(0,val.length - 1);
         }
-        if(Offer_Master_Excel_Header[key] == 'cash_purchase')
-          val = item.cash_purchase ? "Yes" : "No";
-         if(Offer_Master_Excel_Header[key] == 'finance')
-          val = item.finance ? "Yes" : "No";
-         if(Offer_Master_Excel_Header[key] == 'lease')
-          val = item.lease? "Yes" : "No";
-          if(Offer_Master_Excel_Header[key] == "createdAt")
-            val = moment(item.createdAt).utcOffset('+0530').format('MM/DD/YYYY');
+        if(Offer_Master_Excel_Header[key] == 'serialNumber')
+          val = index + 1;
+
         rowData.push(val);
       });
-      if(rowData.length)
-        dataArr.push(rowData)
+      if(!item.orders || !item.orders.length)
+        return;
+      item.orders.forEach(function(order,idx){
+        var row = [].concat(rowData);
+        row[0] = row[0] + "." + (idx + 1);
+        dataKeys.forEach(function(key){
+          var val = _.get(order,Offer_Master_Data_Excel_Header[key],"");
+          if(Offer_Master_Data_Excel_Header[key] == "freecost"){
+            val = order.freeofcost || order.freecost;
+            if(val)
+              val += "(" + order.type  + ")";
+            else
+              val = ""; 
+          }
+          if(Offer_Master_Data_Excel_Header[key] == "createdAt"){
+            val = moment(item.createdAt).utcOffset('+0530').format('MM/DD/YYYY');
+          }
+          row.push(val);
+        });
+        dataArr.push(row);
+      });
+      //if(rowData.length)
+        //dataArr.push(rowData)
     }); 
-    var ws = Utility.excel_from_data(dataArr,keys);
-    var ws_name = "OfferReq_" + new Date().getTime();
+    var ws = Utility.excel_from_data(dataArr,dataArr[0]);
+    var ws_name = "Offer_master_" + new Date().getTime();
     var wb = Utility.getWorkbook();
     wb.SheetNames.push(ws_name);
     wb.Sheets[ws_name] = ws;
@@ -178,9 +215,107 @@ var Offer_Master_Excel_Header = {
       var model = new OfferRequest(req.body);
       model.save(function(err, result) {
       if(err) { return res.status(500).send(err); }
+          postNotification(result);
           return res.status(200).json(result);
       });
   };
+
+  function postNotification(bodyData){
+    bodyData.cash_purchase = bodyData.cashOffer && bodyData.cashOffer.length > 0? true:false;
+    bodyData.finance = bodyData.financeOffer && bodyData.financeOffer.length > 0? true:false;
+    bodyData.lease = bodyData.leaseOffer && bodyData.leaseOffer.length > 0? true:false;
+    if(bodyData && bodyData.email){
+        var userEmailData = {};
+        userEmailData.subject = "User Subject --" + bodyData.orderId;
+        userEmailData.to = bodyData.email;
+        userEmailData.notificationType = "email";
+        sendEmail(bodyData,userEmailData,"OfferEmailCustomer",null);
+        var adminMailData = {};
+        adminMailData.subject = "Admin Subject -- " + bodyData.orderId;
+        adminMailData.to = config.supportMail;
+        adminMailData.notificationType = "email";
+        sendEmail(bodyData,adminMailData,"OfferEmailCustomer",null);
+      }
+
+      var enterpriseData = {};
+      if(bodyData.financeOffer && bodyData.financeOffer.length){
+        bodyData.financeOffer.forEach(function(fiOffer){
+          if(!enterpriseData[fiOffer.financerId]){
+            enterpriseData[fiOffer.financerId] =  {};
+            enterpriseData[fiOffer.financerId].financeOffer = [];
+          }
+            fiOffer.type = "fi";
+            enterpriseData[fiOffer.financerId].financeOffer.push(fiOffer);
+        });
+      }
+
+      if(bodyData.leaseOffer && bodyData.leaseOffer.length){
+        bodyData.leaseOffer.forEach(function(liOffer){
+          if(!enterpriseData[liOffer.financerId]){
+              enterpriseData[liOffer.financerId] = {};
+              enterpriseData[liOffer.financerId].leaseOffer = [];
+          }
+          if(enterpriseData[liOffer.financerId] && !enterpriseData[liOffer.financerId].leaseOffer)
+              enterpriseData[liOffer.financerId].leaseOffer = [];
+
+            liOffer.type = "li";
+            enterpriseData[liOffer.financerId].leaseOffer.push(liOffer);
+        });
+      }
+
+      var keys = Object.keys(enterpriseData);
+      if(!keys.length)
+        return;
+      var dataArr = [];
+      keys.forEach(function(key){
+        var obj = {};
+        obj.category = bodyData.category;
+        obj.brand = bodyData.brand;
+        obj.model = bodyData.model;
+        obj.orderId = bodyData.orderId;
+        obj.user = bodyData.user;
+        obj.name = bodyData.fname + " " + bodyData.lname;
+        obj.mobile = bodyData.mobile;
+        obj.email = bodyData.email;
+        obj.assetId = bodyData.assetId;
+        obj.assetDir = bodyData.assetDir;
+        obj.primaryImg = bodyData.primaryImg;
+        obj.data = enterpriseData[key];
+        obj.finance = obj.data.financeOffer && obj.data.financeOffer.length?true:false;
+        obj.lease = obj.data.leaseOffer && obj.data.leaseOffer.length?true:false;
+        obj.financerId = key;
+        dataArr.push(obj);
+      });
+      async.eachLimit(dataArr,2,initFinacerMail,function(err){
+        if(err)
+          console.log("err in sending offer request mail",err);
+      });
+
+      function initFinacerMail(data,cb){
+        if(!data.financerId)
+          return cb();
+        Vendor.find({_id:data.financerId},function(err,vendors){
+          if(err || !vendors || !vendors.length)
+            return cb();
+          var mailData = {};
+          mailData.subject = "Finacer Subject --- " + bodyData.orderId;;
+          mailData.to = vendors[0].user.email;
+          mailData.notificationType = "email";
+          data.financerName = vendors[0].entityName;
+          sendEmail(data,mailData,"OfferEmailFinancer",null);
+          return cb();
+        });
+      }
+  }
+
+ function sendEmail(tplData,emailData,tplName,cb) {
+    commonController.compileTemplate(tplData, config.serverPath, tplName, function(success,retData){
+      if(success){
+        emailData.content =  retData;
+        notification.pushNotification(emailData);
+      }
+    });
+  }
 
   exports.getOfferRequest = function(req,res){
      var filter = {};
@@ -199,7 +334,6 @@ var Offer_Master_Excel_Header = {
           return res.status(200).json(resultData);
         });
       }
-      console.log("hi");
       var limit = 1000;
       if(queryParam.limit && queryParam.limit < 1000)
         limit = queryParam.limit;
@@ -219,30 +353,70 @@ var Offer_Master_Excel_Header = {
     return res.status(200).json(result);
   }
 
-  function formatData(resultArr){
+  function formatData(resultArr,isOfferMaster){
     var dataArr = [];
     if(!resultArr || !resultArr.length)
       return dataArr;
     resultArr.forEach(function(item){
       item = item.toObject();
       item.orders = [];
-      if(item.cashOffer && item.cashOffer.length){
+      if(item.cashOffer && item.cashOffer.length && !isOfferMaster){
         item.cashOffer.forEach(function(cash){
+          if(!cash)
+            return;
           cash.type = "Cash";
           item.orders.push(cash);
         });
       }
-      if(item.financeOffer && item.financeOffer.length){
+       if(item.caseInfo && item.caseInfo.length && isOfferMaster){
+        item.caseInfo.forEach(function(cash){
+          if(!cash)
+            return;
+          cash.type = "Cash";
+          item.orders.push(cash);
+        });
+      }
+      if(item.financeOffer && item.financeOffer.length && !isOfferMaster){
          item.financeOffer.forEach(function(finace){
-          finace.type = "Finace";
+          if(!finace)
+            return;
+          finace.type = "Finance";
           item.orders.push(finace);
         });
       }
+
+      if(item.financeInfo && item.financeInfo.length && isOfferMaster){
+         item.financeInfo.forEach(function(finace){
+          if(!finace || !finace.data)
+            return;
+          for(var key in finace.data){
+            var dt = finace.data[key];
+            dt.financerName = finace.name;
+            dt.type = "Finance";
+            item.orders.push(dt);
+          }
+        });
+      }
      
-     if(item.leaseOffer && item.leaseOffer.length){
+     if(item.leaseOffer && item.leaseOffer.length && !isOfferMaster){
       item.leaseOffer.forEach(function(lease){
+        if(!lease)
+            return;
         lease.type = "Lease";
         item.orders.push(lease);
+      });
+     }
+
+     if(item.leaseInfo && item.leaseInfo.length && isOfferMaster){
+      item.leaseInfo.forEach(function(lease){
+        if(!lease || !lease.data)
+            return;
+        for(var key in lease.data){
+            var dt = lease.data[key];
+            dt.finacerName = lease.name;
+            dt.type = "Lease";
+            item.orders.push(dt);
+          }
       });
      }
       dataArr.push(item);
@@ -281,6 +455,13 @@ var Offer_Master_Excel_Header = {
         row[5] = row[5] + "." + (idx + 1);
         dataKeys.forEach(function(key){
           var val = _.get(order,Data_Excel_Header[key],"");
+          if(Data_Excel_Header[key] == "freecost"){
+            val = order.freeofcost || order.freecost;
+            if(val)
+              val += "(" + order.type  + ")";
+            else
+               val = "";
+          }
           if(Data_Excel_Header[key] == "createdAt"){
             val = moment(item.createdAt).utcOffset('+0530').format('MM/DD/YYYY');
           }

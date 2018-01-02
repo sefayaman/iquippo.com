@@ -1104,7 +1104,7 @@ exports.exportExcel = function(req,res){
 					val = "";
 			}*/
 
-			if(keyObj.key && (keyObj.key === 'approvedBy' || keyObj.key === 'approvalDate') && item.bidStatuses.length > 0) {
+			if(keyObj.key && (keyObj.key === 'approvedBy' || keyObj.key === 'approvalDate' || keyObj.key === 'approvalTime') && item.bidStatuses.length > 0) {
 				for(var i = item.bidStatuses.length - 1; i > 0; i--) {
 					if (item.bidStatuses[i].status === bidStatuses[7]) {
 						if(keyObj.key === 'approvedBy') {
@@ -1114,8 +1114,10 @@ exports.exportExcel = function(req,res){
 								val = 'Seller';
 							else
 								val = 'Admin';
-						} else
-							val = moment(item.bidStatuses[i].createdAt).utcOffset('+0530').format('MM/DD/YYYY hh:mm a');
+						} else if( keyObj.key === 'approvalDate')
+							val = moment(item.bidStatuses[i].createdAt).utcOffset('+0530').format('MM/DD/YYYY');
+						else
+							val = moment(item.bidStatuses[i].createdAt).utcOffset('+0530').format('hh:mm a');
 							break;
 					}
 				}
