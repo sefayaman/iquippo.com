@@ -215,7 +215,7 @@ var Offer_Master_Data_Excel_Header = {
       var model = new OfferRequest(req.body);
       model.save(function(err, result) {
       if(err) { return res.status(500).send(err); }
-          postNotification(result);
+          //postNotification(result);
           return res.status(200).json(result);
       });
   };
