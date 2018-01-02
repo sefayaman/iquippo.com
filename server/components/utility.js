@@ -510,7 +510,7 @@ function deleteS3File(fileName) {
 function convertQVAPLStatus(qvaplStatus) {
   var statusMapping = {
     created: "Request Submitted",
-    assign: "Request Submitted",
+    assigned: "Request Submitted",
     accept: "Inspection In Progress",
     complete: "Inspection Completed",
     updated: "Valuation Report Submitted",
