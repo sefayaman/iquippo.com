@@ -48,6 +48,11 @@ var app = express();
 var server = require('http').createServer(app);
 //var socket=require('socket.io');
 
+app.get('/_status',function(req,res){
+  res.status(200);
+  res.end();
+});
+
 require('./config/express')(app);
 require('./routes')(app);
 
@@ -148,6 +153,8 @@ app.post('/api/uploads', function(req, res) {
     }
   });
 });
+
+
 
 app.post('/api/multiplefile/upload', function(req, res) {
   var assetDir = req.query.assetDir;
@@ -421,12 +428,12 @@ function handleError(res, err) {
 // Start server
 server.listen(config.port, config.ip, function() {
   console.log('Express server listening on %d, in %s mode', config.port, app.get('env'));
-  notification.startNotification();
-  taskRunner.startTaskRunner();
-  valReqSubmitter.start();
-  assetSaleTracker.start();
-  checkQuickQueryNotificationService.start();
-  checkSearchMatchingNotificationService.start();
+  // notification.startNotification();
+  // taskRunner.startTaskRunner();
+  // valReqSubmitter.start();
+  // assetSaleTracker.start();
+  // checkQuickQueryNotificationService.start();
+  // checkSearchMatchingNotificationService.start();
   //userExportsService.start();
 });
 

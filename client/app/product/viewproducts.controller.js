@@ -3,13 +3,15 @@
 angular.module('sreizaoApp').controller('ViewProductsCtrl', ViewProductsCtrl);
 
 function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Auth, CartSvc, productSvc,categorySvc,groupSvc,LocationSvc,brandSvc,modelSvc,Modal,$timeout,$window) {
-  
+
   var vm = this;
   $scope.productList = [];
   $scope.equipmentSearchFilter = {};
   $scope.filterType = $state.current.name;
   var productList = [];
-  
+
+  console.log("the params",$stateParams);
+
   $scope.searching = true;
   $scope.noResult = false;
   $scope.status = {};
@@ -40,7 +42,7 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
   var allCategory = [];
   var allBrand = [];
   function init(){
-    
+
       for(var key in $stateParams){
         if($stateParams[key])
           $scope.status[key] = true;
@@ -64,11 +66,11 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
         allBrand = result;
         $scope.brandList = result;
         if($stateParams.category)
-            onCategoryChange($stateParams.category,true); 
+            onCategoryChange($stateParams.category,true);
       });
       restoreState();
       fireCommand(true,true);
-      
+
   }
 
   function clearAll(){
@@ -110,7 +112,7 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
   }
 
   function onBrandChange(brand,noAction){
-    
+
     if(!brand) {
       fireCommand();
       return;
@@ -166,7 +168,7 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
      return LocationSvc.getAssetIdHelp(serData)
       .then(function(result){
          return result.map(function(item){
-              
+
               return item.name;
         });
       });
@@ -207,7 +209,7 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
     }else{
        $scope.noResult = true;
     }
-    
+
   }
 
   function addProductToCart(product){

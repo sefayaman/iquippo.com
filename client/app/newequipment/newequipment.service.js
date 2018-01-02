@@ -8,7 +8,7 @@
     
     angular.module('sreizaoApp').factory('NewEquipmentSvc', NewEquipmentSvc);
     
-    function NewEquipmentSvc($http){
+    function NewEquipmentSvc($http,$httpParamSerializer){
         
         var svc = {};
         var path = '/api/newequipment';
@@ -16,6 +16,7 @@
         var data = {};
         //var promoFilter = 'promotion';
         svc.saveNewBulkOrder = saveNewBulkOrder;
+        svc.getNewBulkOrder = getNewBulkOrder;
 
         function saveNewBulkOrder(data){
         	return $http.post(newBulkOrderPath,data)
@@ -26,6 +27,23 @@
         				throw err;
         			});
         }
+
+        function getNewBulkOrder(filter){
+            var queryParam = "";
+            var serPath = newBulkOrderPath;
+            if(filter)
+                queryParam = $httpParamSerializer(filter);
+            if(queryParam)
+                serPath += "?" + queryParam;
+            return $http.get(serPath)
+                    .then(function(res){
+                        return res.data
+                    })
+                    .catch(function(err){
+                        throw err;
+                    });
+        }
+
         return svc;
     }
     

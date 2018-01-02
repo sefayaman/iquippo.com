@@ -329,7 +329,20 @@ exports.validateUpdate = function(req,res,next){
 			} else {
 				if(req.bid.dealStatus === dealStatuses[0] && req.bid.bidStatus === bidStatuses[7] && req.bid.lastAccepted)
 					req.bids[0].lastAccepted = false;
+				var bidCount = req.otherBids.length || 0;
+				var highestBid = 0;
+				if(req.otherBids.length)
+					highestBid = getMaxBid(req.otherBids).bidAmount || 0;
+				var bidRec = true;
+				if(bidCount === 0)
+					bidRec = false;
+				if(req.bid.bidStatus === bidStatuses[7])
+					req.product.cooling = false;	
+				req.product.bidReceived = bidRec;
+				req.product.bidCount = bidCount;
+				req.product.highestBid = highestBid;
 				req.bids[0].status = false;
+				req.updateProduct = true;
 				next();
 			}
 		}
@@ -877,7 +890,6 @@ exports.getMaxBidOnProduct = function(req, res) {
 };
 
 exports.getSellers = function(req,res,next){
-	
 	var userType = req.body.userType || req.query.userType;
 	var partnerId = req.body.partnerId || req.query.partnerId;
 	var defaultPartner = req.body.defaultPartner || req.query.defaultPartner;
@@ -955,15 +967,41 @@ exports.getSellers = function(req,res,next){
 }
 
 exports.getBidProduct = function(req,res,next){
-  	
-  	if(req.body.userType === 'FA'){
+	if(req.body.userType === 'FA'){
   		if(!req.sellers.length)
   			return res.status(200).json({totalItems:0,products:[]});
   		req.bidRequestApproved = true;
   	}
 	req.body.bidReceived = true;
 	req.body.pagination = true;
-  	next();
+
+	next();
+}
+
+exports.getProductsList = function(req,res,next){
+	if(req.query.productsWise === 'n')
+		return next();
+
+	req.productIds = [];
+	var productFilter = {};
+	productFilter.deleted = false;
+	if(req.sellers && req.sellers.length)
+		productFilter["seller._id"] = {$in:req.sellers};
+	if(req.query.bidRequestApproved && req.query.bidRequestApproved === 'y')
+		productFilter.bidRequestApproved = true;
+	if(req.query.bidRequestApproved && req.query.bidRequestApproved === 'n')
+		productFilter.bidRequestApproved = false;
+	if(req.query.bidReceived)
+		productFilter.bidReceived = true;
+	Product.find(productFilter,function(err,proList){
+		if(err || !proList.length){
+		  return next();
+		}
+		proList.forEach(function(item){
+		  req.productIds.push(item._id);
+		});
+		next();
+	})
 }
 
 exports.exportExcel = function(req,res){
@@ -1000,9 +1038,9 @@ exports.exportExcel = function(req,res){
   	if(user.role == 'admin' && queryParam.payment === 'y') {
   		fieldsMap = fieldConfig['EXPORT_PAYMENT'];
   	}
-  	if(queryParam.productIds)
-		filter['product.proData'] = {$in:queryParam.productIds.split(',') || []};
-	
+	if(req.productIds)
+		filter['product.proData'] = {$in:req.productIds || []};
+
 	if(queryParam.offerStatus)
 		filter.offerStatus = queryParam.offerStatus;
 
@@ -1013,6 +1051,7 @@ exports.exportExcel = function(req,res){
 		filter.bidStatus = queryParam.bidStatus;
 	if(req.sellers && req.sellers.length)
   		filter['product.seller._id'] = {$in:req.sellers || []};
+
   	var query = AssetSaleBid.find(filter).populate('user product.proData');
 	query.exec(function(err,resList){
 		if(err) return handleError(res,err);
@@ -1064,6 +1103,44 @@ exports.exportExcel = function(req,res){
 				else
 					val = "";
 			}*/
+
+			if(keyObj.key && (keyObj.key === 'approvedBy' || keyObj.key === 'approvalDate' || keyObj.key === 'approvalTime') && item.bidStatuses.length > 0) {
+				for(var i = item.bidStatuses.length - 1; i > 0; i--) {
+					if (item.bidStatuses[i].status === bidStatuses[7]) {
+						if(keyObj.key === 'approvedBy') {
+							if(item.bidStatuses[i].userId === 'SYSTEM')
+								val = 'System';
+							else if(item.product && item.product.seller && item.bidStatuses[i].userId === item.product.seller._id)
+								val = 'Seller';
+							else
+								val = 'Admin';
+						} else if( keyObj.key === 'approvalDate')
+							val = moment(item.bidStatuses[i].createdAt).utcOffset('+0530').format('MM/DD/YYYY');
+						else
+							val = moment(item.bidStatuses[i].createdAt).utcOffset('+0530').format('hh:mm a');
+							break;
+					}
+				}
+			}
+
+			if(keyObj.key && keyObj.key === 'bidStatusUpdateBy' && item.bidStatuses.length > 0) {
+				if(item.bidStatuses[item.bidStatuses.length - 1].userId === 'SYSTEM')
+					val = 'System';
+				else if(item.product && item.product.seller && item.bidStatuses[item.bidStatuses.length - 1].userId === item.product.seller._id)
+					val = 'Seller';
+				else
+					val = 'Admin';
+			}
+
+			if(keyObj.key && keyObj.key === 'dealStatusUpdatedBy' && item.dealStatuses.length > 0) {
+				if(item.dealStatuses[item.dealStatuses.length - 1].userId === 'SYSTEM')
+					val = 'System';
+				else if(item.product && item.product.seller && item.dealStatuses[item.dealStatuses.length - 1].userId === item.product.seller._id)
+					val = 'Seller';
+				else
+					val = 'Admin';
+			}
+
 			if(keyObj.key && keyObj.key === 'buyerName' && item.user)
 				val = item.user.fname + " " + item.user.lname;
 			if(keyObj.key && keyObj.key == 'fullPaymentAmount')

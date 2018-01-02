@@ -7,6 +7,7 @@ var OfferSchema = new Schema({
         category: {},
         brand: {},
         model: {},
+        country:{type:String,default:'India'},
         location: [{
             id:{type:Schema.Types.ObjectId,ref:'State'},
             name:String

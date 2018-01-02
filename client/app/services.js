@@ -225,7 +225,7 @@
   
     return appNotificationSvc;
 }])
-  .factory("commonSvc",['$http',function($http){
+  .factory("commonSvc",['$http','$httpParamSerializer',function($http,$httpParamSerializer){
     var commonSvc = {};
     var path = '/api/common';
     commonSvc.sendOtp = function(data){
@@ -254,16 +254,22 @@
         .catch(function(err){
             throw err;
         });
-    }
+    };
     commonSvc.getBookADemo = function(filter){
-      return $http.get(path + "/bookademo")
+      var serPath = path + "/bookademo";
+      var queryParam = "";
+      if(filter)
+       queryParam = $httpParamSerializer(filter);
+      if(queryParam)
+        serPath += "?" + queryParam;
+      return $http.get(serPath)
         .then(function(res){
             return res.data;
         })
         .catch(function(err){
             throw err;
         });
-    }
+    };
     return commonSvc;
 }])
 .factory("InvitationSvc",['$http','$q','$rootScope',function($http,$q,$rootScope){

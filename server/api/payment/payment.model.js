@@ -15,6 +15,7 @@ var PaymentTransactionSchema = new Schema({
   totalAmount:Number,
   requestType:String,
   ccAvenueRes:{},
+  ccAvenueData:{},
   paymentMode : {type:String,default:'online'},
   statusCode : {type:Number,default:-1},
   selectedLots:[],

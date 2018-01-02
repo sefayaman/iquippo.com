@@ -67,11 +67,19 @@ exports.getOnId = function(req, res) {
 //incoming products
 
 exports.incomingProduct = function(req,res){
-   IncomingProduct.find({'user._id':req.body.userId}, function (err, products) {
-    if(err) { return handleError(res, err); }
-    return res.status(200).json(products);
+    var filter = {};
+    if(req.body.role==='admin'){
+        filter = {};
+    }
+    else{
+        filter["user._id"] = req.body.userId;
+    }
+    console.log('role',req.body.role,'incomingproducts',filter);
+    IncomingProduct.find(filter, function (err, products) {
+        if(err) { return handleError(res, err); }
+        return res.status(200).json(products);
   });
-}
+};
 
 exports.deleteIncomingProduct = function(req,res){
   IncomingProduct.findOneAndRemove({_id:req.body.productId},function(err,dt){
@@ -224,10 +232,14 @@ exports.search = function(req, res) {
    filter["tradeType"] = {$regex:new RegExp(req.body.tradeValue,'i')};
   if(req.body.assetStatus)
     filter["assetStatus"] = {$regex:new RegExp(req.body.assetStatus,'i')};
+  if(req.body.assetIdEx)
+    filter["assetId"] = req.body.assetIdEx;
   if(req.body.assetId)
     filter["assetId"] = {$regex:new RegExp(req.body.assetId,'i')};
    if(req.body.assetIds && req.body.assetIds.length > 0)
     filter["assetId"] = {$in:req.body.assetIds};
+  if(req.body.assetIdEx)
+    filter["assetId"] = req.body.assetIdEx;
   if(req.body.group)
     filter["group.name"] = req.body.group;
   if(req.body.category)
@@ -662,6 +674,7 @@ exports.getTechSpec = function(req,res,next){
           var dataObj = {};
           dataObj.name = item.name;
           dataObj.value = item.value;
+          dataObj.priority = item.priority || 0;
           req.body.techSpec[req.body.techSpec.length] = dataObj;
         }
       });
@@ -925,7 +938,7 @@ function updateProduct(req,res){
     function updateProductData(){
       Product.update({_id:req.params.id},{$set:req.body},function(err){
         if (err) { return handleError(res, err); }
-        if((req.body.tradeType === 'SELL' || req.body.tradeType === 'BOTH') && req.body.auctionListing) {
+        if(req.body.tradeType === 'SELL' && req.body.auctionListing) {
           if(req.body.deleted) {
             AuctionReq.update({_id:req.proData.auction._id},{$set:{"isDeleted":true}}, function(aucErr, resultData) {
               if (aucErr)
@@ -934,10 +947,9 @@ function updateProduct(req,res){
           }
           req.body._id = req.params.id;
           postRequest(req, res);
-        } else if(req.proData.auctionListing && !req.body.auctionListing) {
+        } else if(req.proData.auctionListing && (!req.body.auctionListing || req.body.tradeType === 'NOT_AVAILABLE')) {
           if(req.body.assetMapData)
             delete req.body.assetMapData;
-          //AuctionReq.update({_id:req.proData.auction._id},{$set:{"isDeleted":true}}).exec();
           AuctionReq.update({_id:req.proData.auction._id},{$set:{"isDeleted":true}}, function(aucErr, resultData) {
             if (aucErr)
               return handleError(res, err);
@@ -1313,7 +1325,7 @@ exports.exportProducts = function(req, res) {
               if (mapedFields[y] && (extraCols.indexOf(y) < 0)) {
                 if(x[y])
                   obj[mapedFields[y]] = x[y];
-                ['category', 'brand', 'model'].forEach(function(u) {
+                ['category', 'brand', 'model', 'group'].forEach(function(u) {
                   if (x[u])
                     obj[mapedFields[u]] = x[u].name;
                 });
@@ -1327,12 +1339,15 @@ exports.exportProducts = function(req, res) {
               obj[mapedFields.other_brand] = colData.brand.otherName;
             if (colData.model && colData.model.otherName)
               obj[mapedFields.other_model] = colData.model.otherName;
+            if (colData.group && colData.group.name)
+              obj[mapedFields.group_name] = colData.group.name;
 
             //Seller Information Cols
             if (colData.seller) {
               obj[mapedFields.seller_name] = _.get(colData, 'seller.fname', '') + _.get(colData, 'seller.lname', '');
               obj[mapedFields.seller_email] = _.get(colData, 'seller.email', '');
               obj[mapedFields.seller_mobile] = _.get(colData, 'seller.mobile', '');
+              obj[mapedFields.seller_role] = _.get(colData, 'seller.role', '');
             }
 
             //Technical Information Cols
@@ -1554,7 +1569,7 @@ console.log("data to be updated",dataToUpdate);
     Product.findOneAndUpdate({assetId:assetId},{'$set':data},function(err,doc){
       if(err || !doc){
         req.errorList.push({
-          Error:'Error while updating information',
+          Error: err +'Error while updating information ',
           rowCount : data.rowCount
         });
         return cb();
@@ -1722,6 +1737,7 @@ exports.parseImportData = function(req,res,next){
     });
     return x;
     });
+    
     req.excelData = data;
 
     req.reqType = 'Upload';
@@ -1765,6 +1781,7 @@ exports.validateExcelData = function(req, res, next) {
   }
 
   function intialize(row, cb) {
+      
     if (!row.assetId) {
       errorList.push({
         Error: 'Asset Id missing',
@@ -1787,23 +1804,23 @@ exports.validateExcelData = function(req, res, next) {
         assetId: row.assetId
       }, function(err, doc) {
         if (err || !doc.length) {
-          console.log("I can be");
+          
           errorList.push({
             Error: 'No asset id found',
             rowCount: row.rowCount
           });
           return cb();
         }
-        console.log("I am here alse",type);
+        
         if(type === 'template_update') {
           async.parallel({
-            validateGenericField:validateGenericField,
+            //validateGenericField:validateGenericField,
             validateCategory: validateCategory, //{}
             validateSeller: validateSeller,
             validateTechnicalInfo: validateTechnicalInfo,
             validateServiceInfo: validateServiceInfo,
-            validateCity : validateCity,
-            validateRentInfo: validateRentInfo,
+            //validateCity : validateCity,
+            //validateRentInfo: validateRentInfo,
             validateAdditionalInfo: validateAdditionalInfo,
             validateOnlyAdminCols: validateOnlyAdminCols,
             validateForBid:validateForBid,
@@ -1911,7 +1928,10 @@ exports.validateExcelData = function(req, res, next) {
       var obj = {};
       row.priceOnRequest = row.priceOnRequest || "";
       obj.currencyType = row.currencyType || "INR";
-      obj.grossPrice = row.grossPrice;
+      if(row.grossPrice){
+        obj.grossPrice = row.grossPrice;
+      }
+        
       obj.priceOnRequest = row.priceOnRequest.toLowerCase() === 'yes'? true:false;
       if(isCustomer){
          if(!obj.grossPrice)
@@ -2587,7 +2607,7 @@ exports.validateExcelData = function(req, res, next) {
           obj[x] = trim(row[x]);
       })
 
-      var additionalCols = ['comment', 'rateMyEquipment', 'mileage', 'serialNo', 'mfgYear', 'variant','specialOffers'];
+      var additionalCols = ['comment', 'rateMyEquipment', 'mileage', 'serialNo', 'mfgYear', 'variant', 'engineNo', 'chasisNo', 'registrationNo', 'specialOffers'];
       additionalCols.forEach(function(x) {
         if (row[x]) {
           obj[x] = row[x];

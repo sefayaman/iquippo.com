@@ -11,6 +11,8 @@
       svc.update = update;
       svc.destroy = destroy;
       svc.saveOfferRequest =saveOfferRequest;
+      svc.getOfferReq = getOfferReq;
+      svc.exportExcel = exportExcel;
        
      function get(filter){
 
@@ -69,6 +71,35 @@
           .catch(function(err){
             throw err;
           })
+       }
+
+       function getOfferReq(filter){
+         var queryParam = "";
+          var serPath = offerRequestPath;
+          if(filter)
+              queryParam = $httpParamSerializer(filter);
+          if(queryParam)
+              serPath += "?" + queryParam;
+          return $http.get(serPath)
+                .then(function(res){
+                    return res.data;
+                  })
+                  .catch(function(err){
+                    throw err;
+                  })
+       }
+
+       function exportExcel(){
+        var path = svcPath +"/get?type=excel"; 
+         return $http.get(path)
+            .then(function(res){
+              saveAs(new Blob([s2ab(res.data)], {
+                type: "application/octet-stream"
+              }), "offermaster" + new Date().getTime() + ".xlsx")
+            })
+            .catch(function(err){
+              throw err; 
+            });
        }
   
 

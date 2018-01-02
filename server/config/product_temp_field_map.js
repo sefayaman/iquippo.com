@@ -9,8 +9,13 @@ module.exports = {
 	'Model*': 'model',
 	'Other_Model*': 'other_model', //if present then populate otherName and make name to Other
 	'Sub_Category': 'sub_category',
+	'Engine_No': 'engineNo',
+	'Chasis_No': 'chasisNo',
+	'Registration_No': 'registrationNo',
 	'Variant': 'variant',
-	'Trade_Type(Buy/Sell/Both)*': 'tradeType',
+        'Product_Group':'group_name', 
+        'Product_Name':'name', 
+	'Trade_Type(SELL/NOT_AVAILABLE)*': 'tradeType',
 	'Manufacturing_Year*': 'mfgYear', //could not update
 	'Price_On_Request(Yes/No)*': 'priceOnRequest',
 	'Currency*': 'currencyType',
@@ -22,6 +27,7 @@ module.exports = {
 	'Seller_Mobile*': 'seller_mobile',
 	'Seller_Email_Address': 'seller_email',
 	'Seller_Name' : 'seller_name',
+        'Seller_Role':'seller_role',
 	//seller information start  end
 	'Motor_Operating_Hours': 'motorOperatingHour',
 	'Mileage': 'mileage',
@@ -67,7 +73,7 @@ module.exports = {
 	'Video_Link': 'videoLinks',
 
 	//only visible to admin
-	'Asset_Status(Listed/Sold/Rented)': 'assetStatus',
+	'Asset_Status(listed/sold)': 'assetStatus',
 	'To_be_shown_under_Product_Information(Yes/No)': 'dispSellerInfo',
 	'Contact_Number_to_be_displayed_in_front_end(Yes/No)': 'dispSellerContact',
 	'Alternate_Contact_Number': 'alternateMobile',

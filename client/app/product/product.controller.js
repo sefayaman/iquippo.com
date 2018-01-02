@@ -98,6 +98,7 @@
     //$scope.checkBidIncrement = checkBidIncrement;
     $scope.lot.staticIncrement = false;
     $scope.lot.rangeIncrement = false;
+    $scope.ReqSubmitStatuses = ReqSubmitStatuses;
 
     $scope.listInAuction = function(data) {
       if (data == true) {
@@ -320,11 +321,6 @@
             product.auction._id=product.auction.id;
             delete product.auction.id;
           }*/
-          if ($scope.product.tradeType === 'SELL' || $scope.product.tradeType === 'BOTH') {
-            $scope.assetMapCreationPossibility = true;
-          } else {
-            $scope.assetMapCreationPossibility = false;
-          }
 
           if (product.auctionListing && product.auction && product.auction._id) {
             var serData = {};
@@ -344,7 +340,7 @@
                   AuctionSvc.getAuctionExpire(auctionexpiredata).then(function(results) {
                     $scope.date = new Date();
                     if (results.length > 0) {
-                      $scope.assetMapCreation = true;
+                      //$scope.assetMapCreation = true;
                       $scope.lot = {};
                     } else {
                       $scope.isExpire = false;
@@ -358,13 +354,8 @@
                         checkForLot($scope.auctionReq.lot_id);
                     }
                   });
-                } else {
-                  $scope.assetMapCreation = true;
                 }
               });
-          } else {
-            if ($scope.assetMapCreationPossibility)
-              $scope.assetMapCreation = true;
           }
 
           if (!product.auction)
@@ -770,9 +761,6 @@
 
     function onTradeTypeChange(tradeType) {
       $scope.assetList = [];
-      $scope.assetMapCreationPossibility = false;
-      if ($scope.product.tradeType === 'SELL' || $scope.product.tradeType === 'BOTH')
-        $scope.assetMapCreationPossibility = true;
       for (var i = 0; i < assetStatuses.length; i++) {
         if (tradeType == 'SELL' && assetStatuses[i].code == 'rented')
           continue;
@@ -970,22 +958,18 @@
         product.applyWaterMark = false;
       }
 
-      if (product.auctionListing && $scope.assetMapCreationPossibility) {
+      if (product.auctionListing && $scope.product.tradeType === 'SELL') {
         goToSecondStep();
         return;
-      } else {
-        /*if ($scope.assetMapId) {
-          filter._id = $scope.assetMapId;
-          filter.isDeleted = true;
-          productSvc.updateAssetMap(filter)
-            .then(function(res) {
-              console.log("res deletd", res);
-            })
-            .catch(function(err) {
-              throw err;
-            })
-        }*/
+      }
+      
+      if(product.auctionListing && $scope.product.tradeType === 'NOT_AVAILABLE'){
+          Modal.alert("This asset is NOT AVAILABLE, It can't be listed in Auction" );
+          return;
+      }
+        else {
         var cb = null;
+        product.auctionListing = false;
         if ($scope.valuationReq.valuate)
           cb = postValuationRequest;
 
@@ -1794,12 +1778,12 @@ function checkForLot(lotNumber) {
         stObj.status = $scope.product.assetStatus;
         stObj.createdAt = new Date();
         $scope.product.assetStatuses[$scope.product.assetStatuses.length] = stObj;
-        if ($scope.product.assetStatus == assetStatuses[2].code) {
+        if ($scope.product.assetStatus == assetStatuses[2].code || $scope.product.assetStatus == assetStatuses[1].code) {
           $scope.product.isSold = true;
           //$scope.product.featured = false;
           //$scope.product.status = false;
-        } else if ($scope.product.assetStatus == assetStatuses[1].code) {
-          $scope.product.isSold = true;
+        } else if ($scope.product.assetStatus == assetStatuses[0].code) {
+          $scope.product.isSold = false;
           //$scope.product.featured = false;
         }
       }
@@ -1817,7 +1801,7 @@ function checkForLot(lotNumber) {
       } else {
         $scope.product.assetMapData = {};
       }
-      if (!product.auctionListing)
+      if (!product.auctionListing || $scope.product.tradeType === 'NOT_AVAILABLE')
         product.auction = {};
       productSvc.updateProduct(product).then(function(proResult) {
 

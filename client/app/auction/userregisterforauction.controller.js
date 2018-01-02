@@ -75,7 +75,7 @@
           dataObj.auction = {};
           dataObj.user = {};
           dataObj.auction.dbAuctionId = $scope.currentAuction._id;
-          if(!Auth.isAdmin()) {
+          if(!Auth.isAdmin() && !Auth.isAuctionRegPermission()) {
             dataObj.user._id = Auth.getCurrentUser()._id;
             dataObj.user.mobile = Auth.getCurrentUser().mobile;
           } else {
@@ -103,12 +103,13 @@
                 return;
               }
             }
+            $scope.lotsArr = [];
             if(result && result.length > 0 && auctionData.emdTax === $scope.LotWist)
-            { $scope.lotsArr = [];
-                result.forEach(function(item){
-                  for (var i=0; i < item.selectedLots.length;i++)
-                    $scope.lotsArr.push(item.selectedLots[i]);
-                });
+            {   
+              result.forEach(function(item){
+                for (var i=0; i < item.selectedLots.length;i++)
+                  $scope.lotsArr.push(item.selectedLots[i]);
+              });
             }
             openActionDialog(auctionData, userData);
           }); 
@@ -153,7 +154,7 @@
     }
 
     function login(auctionData, userData) {
-      if(Auth.isAdmin()) {
+      if(Auth.isAdmin() || Auth.isAuctionRegPermission()) {
         userData.batonNo = vm.user.batonNo;
         validateRegisterUser(auctionData, userData);
       } else {
@@ -179,7 +180,7 @@
       auctionRegislogin.registrationPage = true;
       if($scope.lotsArr.length > 0 && auctionData.emdTax === $scope.LotWist)
         auctionRegislogin.regLots = $scope.lotsArr;
-      if(Auth.isAdmin())
+      if(Auth.isAdmin() || Auth.isAuctionRegPermission())
         auctionRegislogin.registerUser = userData;
       Modal.openDialog('auctionRegislogin',auctionRegislogin);   
     }
@@ -196,7 +197,7 @@
       vm.UserObj.city = userData.city;
       vm.UserObj.panNumber = userData.panNumber;
       vm.UserObj.password = userData.password;
-      if(Auth.isAdmin()) {
+      if(Auth.isAdmin() || Auth.isAuctionRegPermission()) {
         vm.UserObj.createdBy = {};
         vm.UserObj.createdBy._id = Auth.getCurrentUser()._id;
         vm.UserObj.createdBy.fname = Auth.getCurrentUser().fname;
@@ -222,7 +223,7 @@
           Modal.alert("The specified email is already in use.",true);
            return;
         } else {
-          if(Auth.isAdmin())
+          if(Auth.isAdmin() || Auth.isAuctionRegPermission())
             saveNewUser(auctionData, vm.UserObj);
           else
             sendOTP();
@@ -308,7 +309,7 @@
       dataToSend['password'] = vm.user.password;
       dataToSend['userId'] = userData.customerId;
       dataToSend['customerId'] = userData.customerId;
-      if(Auth.isAdmin())
+      if(Auth.isAdmin() || Auth.isAuctionRegPermission())
         dataToSend['password'] = "1234";
       dataToSend['existFlag'] = false;
       
@@ -322,7 +323,7 @@
       auctionRegislogin.currentAuction = auctionData;
       if($scope.lotsArr.length > 0 && auctionData.emdTax === $scope.LotWist)
         auctionRegislogin.regLots = $scope.lotsArr;
-      if(Auth.isAdmin())
+      if(Auth.isAdmin() || Auth.isAuctionRegPermission())
         auctionRegislogin.registerUser = userData;
       Modal.openDialog('auctionRegislogin',auctionRegislogin);
     }

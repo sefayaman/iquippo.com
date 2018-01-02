@@ -8,6 +8,10 @@ angular.module('sreizaoApp').controller('NewEquipmentListCtrl', NewEquipmentList
     $scope.equipmentSearchFilter = {};
     $scope.filterType = $state.current.name;
     var productList = [];
+    var searchObj={};
+
+
+   console.log("The searching man",searchObj);
 
     $scope.searching = true;
     $scope.noResult = false;
@@ -31,12 +35,12 @@ angular.module('sreizaoApp').controller('NewEquipmentListCtrl', NewEquipmentList
     vm.onPageChange = onPageChange;
     vm.creatSpecification = creatSpecification;
     $scope.clearAll = clearAll;
-    
+
     var allCategory = [];
     var allBrand = [];
 
     function init(){
-    
+
       for(var key in $stateParams){
         if($stateParams[key])
           $scope.status[key] = true;
@@ -60,12 +64,17 @@ angular.module('sreizaoApp').controller('NewEquipmentListCtrl', NewEquipmentList
         allBrand = result;
         $scope.brandList = result;
         if($stateParams.category)
-            onCategoryChange($stateParams.category,true); 
+            onCategoryChange($stateParams.category,true);
       });
       getTechSpec();
       restoreState();
       fireCommand(true,true);
-    
+
+      searchObj={
+        username:Auth.getCurrentUser().customerId,
+        email:Auth.getCurrentUser().email,
+        searchStr:$stateParams.searchstr
+      }
     }
 
     function clearAll(){
@@ -78,7 +87,7 @@ angular.module('sreizaoApp').controller('NewEquipmentListCtrl', NewEquipmentList
     saveState();
     fireCommand();
   }
-    
+
     function onGroupChange(group,noAction){
     if(!noAction){
       $scope.equipmentSearchFilter.category = "";
@@ -106,7 +115,7 @@ angular.module('sreizaoApp').controller('NewEquipmentListCtrl', NewEquipmentList
   }
 
   function onBrandChange(brand,noAction){
-    
+
     if(!brand) {
       fireCommand();
       return;
@@ -156,7 +165,7 @@ angular.module('sreizaoApp').controller('NewEquipmentListCtrl', NewEquipmentList
      return LocationSvc.getAssetIdHelp(serData)
       .then(function(result){
          return result.map(function(item){
-              
+
               return item.name;
         });
       });
@@ -197,7 +206,7 @@ angular.module('sreizaoApp').controller('NewEquipmentListCtrl', NewEquipmentList
     }else{
        $scope.noResult = true;
     }
-    
+
   }
 
 
@@ -219,7 +228,7 @@ angular.module('sreizaoApp').controller('NewEquipmentListCtrl', NewEquipmentList
       vm.currentPage  = parseInt($stateParams.currentPage) || 1;
       $scope.equipmentSearchFilter.currentPage = vm.currentPage + "";
   }
-  
+
   function getTechSpec(){
       var filter = {};
       //filter['mName'] = filterData.modelId;
@@ -229,13 +238,13 @@ angular.module('sreizaoApp').controller('NewEquipmentListCtrl', NewEquipmentList
             console.log($scope.techSpecification);
       });
   }
-  
+
   function creatSpecification(){
       return;
   }
-  
+
    init();
-    
+
   }
-  
+
 })();
