@@ -205,6 +205,7 @@ function nextApprovableBid(bid,otherBids){
 function updateBid(bid,callback){
   var bidId = bid._id;
   delete bid._id;
+  bid.updatedAt = new Date();
   AssetSaleModel.update({_id:bidId},{$set:bid},function(err,res){
     if(err) {
       return callback(err);
