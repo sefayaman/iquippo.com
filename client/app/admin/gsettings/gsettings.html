@@ -2980,19 +2980,21 @@
                                 <div  class="row" ng-repeat="purchaseField in offerVm.dataModel.caseInfo">
                                     <div class="col-sm-4 form-group">
                                         <label>Price : </label>
-                                        <input type="text" class="form-control form-group" name="price" ng-model="purchaseField.price"  placeholder="Price">
+                                        <input type="text" class="form-control" name="price" ng-model="purchaseField.price"  placeholder="Price">
                                     </div>
                                     <div class="col-sm-4 form-group">
                                         <label>Free Of Cost</label>	
-                                        <input type="text" class="form-control form-group" name="freeofcost" ng-model="purchaseField.freeofcost" placeholder="Free Of Cost"> 
+                                        <input type="text" class="form-control" name="freeofcost" ng-model="purchaseField.freeofcost" placeholder="Free Of Cost"> 
                                     </div>
                                     <div class="col-sm-2 form-group">
                                         <label class="invisible">Cash Purchase</label>
                                         <button type="button" class="btn btn-default btn-block" ng-click="offerVm.dataModel.caseInfo.push({})" ng-if="$last">Add More</button>
                                         <button type="button" class="btn btn-default btn-block" ng-click="offerVm.dataModel.caseInfo.splice($index, 1)" ng-if="!$last">Delete</button>
                                     </div>
-
-                                </div>
+                                    <div class="col-sm-12">
+                                        <legend></legend>
+                                    </div>
+                                </div>                                
                             </div>
                         </div>
                         <!-- end purchase-->
@@ -3044,8 +3046,11 @@
                                                     <button type="button" class="btn btn-default btn-block" ng-click="financer.dataArr.push({})" ng-if="$last">Add More</button>
                                                     <button type="button" class="btn btn-default btn-block" ng-click="financer.dataArr.splice($index, 1)" ng-if="!$last">Delete</button>
                                                 </div>
+                                                <div class="col-sm-12">
+                                                    <legend></legend>
+                                                </div>
                                             </div> 
-                                            <legend></legend>
+                                            
                                         </div>
 
                                     </div>
@@ -3101,8 +3106,10 @@
                                                     <button type="button" class="btn btn-default btn-block" ng-click="lease.dataArr.push({})" ng-if="$last">Add More</button>
                                                     <button type="button" class="btn btn-default btn-block" ng-click="lease.dataArr.splice($index, 1)" ng-if="!$last">Delete</button>
                                                 </div>
-                                            </div> 
-                                            <legend></legend>
+                                                <div class="col-sm-12">
+                                                    <legend></legend>
+                                                </div>
+                                            </div>
                                         </div>
 
                                     </div>
