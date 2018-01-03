@@ -539,8 +539,9 @@ exports.validateSubmitBid = function(req,res,next){
 				if(req.query.typeOfRequest == "changeBid"){
 					AssetSaleUtil.setStatus(bid,offerStatuses[1],'offerStatus','offerStatuses',req.user._id);
 					bid.bidChanged = true;
-					bid.status = false;
+					//bid.status = false;
 				}
+                                bid.status = false;
 				AssetSaleUtil.setStatus(bid,bidStatuses[1],'bidStatus','bidStatuses',req.user._id);
 			 	AssetSaleUtil.setStatus(bid,dealStatuses[2],'dealStatus','dealStatuses',req.user._id);
 			});
