@@ -146,7 +146,7 @@
 				    	  		
 				    	  	</div>
 				    	  	<div class="col-sm-2 form-group text-center">
-				    	  		<div class="checkbox"><input type="checkbox" name="equipment" value="" id="categorynewequip" placeholder="" ng-model="c.isForNew"> <label for="categorynewequip"> New Equipment </label>
+				    	  		<div class="checkbox"><input type="checkbox" name="equipment" value="" id="categorynewequip" placeholder="" ng-model="c.isForNew" ng-true-value="'catbanner'" ng-false-value="false"> <label for="categorynewequip"> New Equipment </label>
 				    	  		</div>
 				    	  	</div>	
                             <div class="form-group col-sm-2">
@@ -157,7 +157,20 @@
 			                    <span>{{c.imgSrc}}</span>
                             </div>                            
 				    	  </div>
-                          <div class="row">                         	                          	
+                          <div class="row">                         	                          	<div class="col-sm-2 form-group" ng-if="c.isForNew == 'catbanner'">
+                          		<span class="btn btn-warning fileinput-button">
+	                                <span>Top banner image</span>
+	                                <input type="file" accept="image/*" ng-model ="files" ng-change="uploadImage(files,c,'Category',0)" file>
+			                    </span>
+			                    <span>{{c.imgSrc}}</span>
+                          	</div>
+                          	<div class="col-sm-2 form-group" ng-if="c.isForNew == 'catbanner'">
+                          		<span class="btn btn-warning fileinput-button">
+	                                <span>Left banner image</span>
+	                                <input type="file" accept="image/*" ng-model ="files" ng-change="uploadImage(files,c,'Category',0)" file>
+			                    </span>
+			                    <span>{{c.imgSrc}}</span>
+                          	</div>
                            	<div class="form-group col-sm-2 pull-right">
                            		<button type="button" class="btn btn-primary btn-md btn-block" ng-click="masterDataVm.Save('Category')" ng-if="!categoryEdit">Save</button>
                            		<button type="button" class="btn btn-primary btn-md btn-block" ng-click="masterDataVm.update('Category')" ng-if="categoryEdit">Update</button>
@@ -251,16 +264,16 @@
 
                                     </div>
                                     <div class="col-sm-3 form-group text-center">
-                                        <div class="checkbox"><input type="checkbox" name="brandEquipment" value="" id="Brandnewequip" placeholder="" ng-model="b.isForNew"> <label for="Brandnewequip"> New Equipment </label>
+                                        <div class="checkbox"><input type="checkbox" name="brandEquipment" value="" id="Brandnewequip" placeholder="" ng-model="b.isForNew" ng-true-value="'brandbanner'" ng-false-value="false"> <label for="Brandnewequip"> New Equipment </label>
                                         </div>
                                     </div>
                                     <div class="form-group col-sm-3" ng-class="{'has-error': form.errorBrand && submitted}">
 	                                <input id="brandName" name="brandName" ng-model="b.name" type="text"  class="form-control" placeholder="Enter Brand Name" required>
 	                            </div> 
-	                            <div class="col-sm-2 form-group">
+	                            <div class="col-sm-3 form-group">
 	                          		<input type="number" class="form-control" placeholder="Priority for Used" ng-model="b.priorityForUsed">
 	                          	</div>
-	                          	<div class="col-sm-2 form-group">
+	                          	<div class="col-sm-3 form-group">
 	                          		<input type="number" class="form-control" placeholder="Priority for New" ng-model="b.priorityForNew">
 	                          	</div>
 	                            <div class="form-group col-sm-2">
@@ -281,12 +294,26 @@
                                         </select>
                                     </div> -->
                                     <div class="form-group col-sm-2">
-	                            	<span class="btn btn-warning fileinput-button">
-		                                <span>Browse image...</span>
-		                                <input type="file"   accept="image/*" ng-model ="files" ng-change="uploadImage(files,b,'Brand',0,'imgNewEquipmentSrc')" file>
-				                    </span>
-				                    <span>{{b.imgNewEquipmentSrc}}</span>
-	                            </div>
+		                            	<span class="btn btn-warning fileinput-button">
+			                                <span>Browse image...</span>
+			                                <input type="file"   accept="image/*" ng-model ="files" ng-change="uploadImage(files,b,'Brand',0,'imgNewEquipmentSrc')" file>
+					                    </span>
+					                    <span>{{b.imgNewEquipmentSrc}}</span>
+		                            </div>
+		                            <div class="col-sm-2 form-group" ng-if="b.isForNew == 'brandbanner'">
+		                          		<span class="btn btn-warning fileinput-button">
+			                                <span>Top banner image</span>
+			                                <input type="file" accept="image/*" ng-model ="files" ng-change="uploadImage(files,c,'Category',0)" file>
+					                    </span>
+					                    <span>{{c.imgSrc}}</span>
+		                          	</div>
+		                          	<div class="col-sm-2 form-group" ng-if="b.isForNew == 'brandbanner'">
+		                          		<span class="btn btn-warning fileinput-button">
+			                                <span>Left banner image</span>
+			                                <input type="file" accept="image/*" ng-model ="files" ng-change="uploadImage(files,c,'Category',0)" file>
+					                    </span>
+					                    <span>{{c.imgSrc}}</span>
+		                          	</div>
 				    	  	                    	
                                     <div class="form-group col-sm-2 pull-right">
                                         <button type="button" class="btn btn-primary btn-md btn-block" ng-click="masterDataVm.Save('Brand')" ng-if="!brandEdit">Save</button>
