@@ -21,9 +21,11 @@ mongoose.connection.on('error', function(err) {
 
 
 function init(processCb) {
-  var updateFilter = {$or : [{bidStatus:bidStatuses[1],dealStatus:dealStatuses[2]},{bidStatus : bidStatuses[6],dealStatus: dealStatuses[1]}]};
-  AssetSaleModel.update(updateFilter,{$set:{status:false}},function(err,resData){
+  var updateFilter = {$or : [{bidStatus:bidStatuses[1],dealStatus:dealStatuses[2]},{bidStatus : bidStatuses[6],dealStatus: dealStatuses[1]}],status:true};
+  console.log("filter",updateFilter);
+    AssetSaleModel.update(updateFilter,{$set:{status:false}},{multi:true},function(err,resData){
     if(err) return processCb(err);
+    console.log("res Data",resData);
      getProduct();
   });
 
@@ -45,7 +47,7 @@ function init(processCb) {
         prd.highestBid = getMaxBid(bids).bidAmount || 0;
       }else
         prd.bidReceived = false;
-      Product.update({_id:prd._id},function(error,resultData){
+      Product.update({_id:prd._id},{$set:prd},function(error,resultData){
         if(err) console.log("$$$$$$$$",error);
         return cb();
       });
