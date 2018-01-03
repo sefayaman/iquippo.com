@@ -32,13 +32,16 @@
               <div class="row form-group" ng-repeat="py in paymentVm.payTransaction.payments">
                 <div class="col-xs-4 col-sm-4">
                   <div class="media">
-                    <a class="pull-left" href="javascrip:void(0)">
+                    <!-- <a class="pull-left" href="javascrip:void(0)">
                       <img class="img-circle media-object" ng-src="{{uploadImagePrefix}}{{paymentVm.payTransaction.product.assetDir}}/{{paymentVm.payTransaction.product.primaryImg}}" alt="Image" width="70" height="70">
-                    </a>
+                    </a> -->
                     <div class="media-body payment-details">
-                      <h4 class="media-heading"><a href="javascript:void(0);">{{paymentVm.payTransaction.product.name}}</a></h4>                      
+                      <h4 class="media-heading"><a href="javascript:void(0);">
+                        <span ng-if="paymentVm.payTransaction.product.name">{{paymentVm.payTransaction.product.name}}</span>
+                        <span ng-if="!paymentVm.payTransaction.product.name">{{paymentVm.payTransaction.product.category}} {{paymentVm.payTransaction.product.model}} {{paymentVm.payTransaction.product.brand}}</span>
+                      </a></h4>                      
                       <p ng-if="paymentVm.payTransaction.product.type == 'spare'">{{paymentVm.payTransaction.product.partNo}} {{paymentVm.payTransaction.product.manufacturer}}</p>
-                      <p>{{paymentVm.payTransaction.product.city}}</p>
+                      <!-- <p>{{paymentVm.payTransaction.product.city}}</p> -->
 
                     </div>
                   </div>
