@@ -483,8 +483,11 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
       }
       filter.type = "transaction";
       filter.role = Auth.getCurrentUser().role;
-      $scope.filter = filter;
-      $scope.$broadcast("submit");
+      //$scope.filter = filter;
+      var exportObj = {filter:filter};
+      exportObj.method = "GET";
+      exportObj.action = "api/enterprise/export";
+      $scope.$broadcast("submit",exportObj);
       //EnterpriseSvc.exportExcel("transaction",filter);
     }
 

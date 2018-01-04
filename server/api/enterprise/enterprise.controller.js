@@ -2118,7 +2118,7 @@ function exportExcel(req,res,fieldMap,jsonArr){
   });
 
   str = str.substring(0,str.length -1);
-  return  renderCsv(res,str);
+  return  renderCsv(req,res,str);
   /*var ws = Utility.excel_from_data(dataArr,allowedHeaders);
   var ws_name = "entvaluation_" + new Date().getTime();
 
@@ -2129,8 +2129,8 @@ function exportExcel(req,res,fieldMap,jsonArr){
   res.end(wbout);*/
 }
 
-function renderCsv(res,csv){
-   var fileName = "entvaluation_" + new Date().getTime();
+function renderCsv(req,res,csv){
+   var fileName = req.query.type + "_" + new Date().getTime();
   res.setHeader('Content-Type', 'application/octet-stream');
   res.setHeader("Content-Disposition", 'attachment; filename=' + fileName + '.csv;');
   res.end(csv, 'binary'); 
