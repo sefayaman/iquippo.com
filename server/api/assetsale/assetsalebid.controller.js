@@ -324,6 +324,7 @@ exports.validateUpdate = function(req,res,next){
 						req.product.bidCount = bidCount;
 						req.product.highestBid = highestBid;
 					}
+					req.bids[0].status = false;
 					next();
 				});
 			} else {
@@ -538,8 +539,9 @@ exports.validateSubmitBid = function(req,res,next){
 				if(req.query.typeOfRequest == "changeBid"){
 					AssetSaleUtil.setStatus(bid,offerStatuses[1],'offerStatus','offerStatuses',req.user._id);
 					bid.bidChanged = true;
-					bid.status = false;
+					//bid.status = false;
 				}
+                                bid.status = false;
 				AssetSaleUtil.setStatus(bid,bidStatuses[1],'bidStatus','bidStatuses',req.user._id);
 			 	AssetSaleUtil.setStatus(bid,dealStatuses[2],'dealStatus','dealStatuses',req.user._id);
 			});
@@ -605,6 +607,7 @@ exports.submitBid = function(req, res) {
 	function updateBid(bid,cb){
 		var bidId = bid._id;
 		delete bid._id;
+		bid.updatedAt = new Date();
 		AssetSaleBid.update({_id:bidId},{$set:bid},function(err){
 			if(err) console.log("Error in prevoius bid update",err);
 			/*var bidArr = [];
@@ -687,6 +690,7 @@ exports.withdrawBid = function(req, res) {
 	 	bidData.status = false;
 		var bidId = bidData._id;
 		delete bidData._id;
+		bidData.updatedAt = new Date();
 		AssetSaleBid.update({_id : bidId}, {
 			$set: bidData}, function(err, result) {
 			if (err) return callback({status:500,msg:err});
