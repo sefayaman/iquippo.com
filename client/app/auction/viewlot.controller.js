@@ -207,7 +207,7 @@
                 lot.primaryImg= $rootScope.uploadImagePrefix + lot.assets[0].product.assetDir +"/" + lot.assets[0].product.primaryImg;
               if(!Auth.getCurrentUser()._id)
                 return;
-              lot.isVisible = false;
+              //lot.isVisible = false;
               if($scope.auctionData.auctionType == 'L')
                 return;
               var url = auctionURL+ "/bidwidget/" + dbAuctionId + "/" + lot._id + "/" + Auth.getCurrentUser()._id + "?random=" + Math.random();
