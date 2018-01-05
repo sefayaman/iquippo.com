@@ -23,6 +23,7 @@ function MyAccountCtrl($scope,$rootScope,Auth,$state,Modal,LegalTypeSvc,KYCSvc,L
     $scope.bankNameList = bankNameList;
     vm.addressProofList = [];
     vm.idProofList = [];
+    $scope.kycInfo = {};
     $scope.type = ['Address Proof', 'Identity Proof'];
     var FIELDS_MAPPING = {
                             basicInfo:['fname','lname','email','mobile', 'aadhaarNumber','panNumber','country','state','city'],
@@ -36,10 +37,22 @@ function MyAccountCtrl($scope,$rootScope,Auth,$state,Modal,LegalTypeSvc,KYCSvc,L
       vm.userInfo = angular.copy(Auth.getCurrentUser());
       if(vm.userInfo.bankInfo.length < 1)
         vm.userInfo.bankInfo = [{}];
-      if(vm.userInfo.kycInfo.length < 1)
-        vm.userInfo.kycInfo = [{}];
       if(vm.userInfo.GSTInfo.length < 1)
         vm.userInfo.GSTInfo = [{}];
+      if(vm.userInfo.kycInfo.length < 1)
+        vm.userInfo.kycInfo = [{}];
+      else {
+        angular.copy(vm.userInfo.kycInfo, $scope.kycList);
+        $scope.kycList.forEach(function(item){
+          if(item.type == $scope.type[0]){
+            $scope.kycInfo.addressProof = item.name;
+            $scope.kycInfo.addressProofDocName = item.docName;
+          } else if(item.type == $scope.type[1]){
+            $scope.kycInfo.idProof = item.name;
+            $scope.kycInfo.idProofDocName = item.docName;
+          }
+        });
+      }
       onCountryChange(vm.userInfo.country,true);
       onStateChange(vm.userInfo.state,true);
       loadLegalTypeData();
@@ -122,28 +135,28 @@ function MyAccountCtrl($scope,$rootScope,Auth,$state,Modal,LegalTypeSvc,KYCSvc,L
       var userData = {_id:vm.userInfo._id};
 
       var addProofObj = {};
-      if(vm.kycInfo.addressProof) {
+      if($scope.kycInfo.addressProof) {
         addProofObj.type = $scope.type[0];
-        addProofObj.name = vm.kycInfo.addressProof;
-        if(vm.kycInfo.addressProofDocName)
-         addProofObj.docName = vm.kycInfo.addressProofDocName;
+        addProofObj.name = $scope.kycInfo.addressProof;
+        if($scope.kycInfo.addressProofDocName)
+         addProofObj.docName = $scope.kycInfo.addressProofDocName;
         else {
           Modal.alert("Please upload address proof document.", true);
           return;
         }
-        $scope.bidData.kyc[$scope.bidData.kyc.length] = addProofObj;
+        vm.userInfo.kycInfo[vm.userInfo.kycInfo.length] = addProofObj;
       }
       var idProofObj = {};
-      if(vm.kycInfo.idProof) {
+      if($scope.kycInfo.idProof) {
         idProofObj.type = $scope.type[1];
-        idProofObj.name = vm.kycInfo.idProof;
-        if(vm.kycInfo.idProofDocName)
-         idProofObj.docName = vm.kycInfo.idProofDocName;
+        idProofObj.name = $scope.kycInfo.idProof;
+        if($scope.kycInfo.idProofDocName)
+         idProofObj.docName = $scope.kycInfo.idProofDocName;
         else {
           Modal.alert("Please upload ID proof document.", true);
           return;
         }
-        $scope.bidData.kyc[$scope.bidData.kyc.length] = idProofObj;
+        vm.userInfo.kycInfo[vm.userInfo.kycInfo.length] = idProofObj;
       }
 
       FIELDS_MAPPING[fieldKey].forEach(function(key){
@@ -237,34 +250,28 @@ function MyAccountCtrl($scope,$rootScope,Auth,$state,Modal,LegalTypeSvc,KYCSvc,L
       });
     }
 
-    function updateAvatar(files){
+    function updateAvatar(files, _this, type){
       if(files.length == 0)
         return;
       $rootScope.loading = true;
-      uploadSvc.upload(files[0],avatarDir).then(function(result){
+      uploadSvc.upload(files[0], avatarDir).then(function(result){
           $rootScope.loading = false;
-          var userData = {_id:vm.userInfo._id};
-          userData.imgsrc = result.data.filename;
-          updateUser(userData,true);
+          if(!type) {
+            var userData = {_id:vm.userInfo._id};
+            userData.imgsrc = result.data.filename;
+            updateUser(userData,true);
+          } else {
+            if(type == 'addressProof'){
+              $scope.kycInfo.addressProofDocName = result.data.filename;
+            }
+            if(type == 'idProof'){
+                $scope.kycInfo.idProofDocName = result.data.filename;
+            }
+          }
         })
         .catch(function(err){
           $rootScope.loading = false;
         });
-    }
-
-    function uploadDoc(files, _this, type) {
-      if (files.length == 0)
-        return;
-
-      uploadSvc.upload(files[0], $scope.bidData.product.assetDir).then(function(result) {
-        if(type == 'addressProof'){
-            vm.kycInfo.addressProofDocName = result.data.filename;
-        }
-        if(type == 'idProof'){
-            vm.kycInfo.idProofDocName = result.data.filename;
-        }
-        
-      });
     }
 
     function onCountryChange(country,noChange){

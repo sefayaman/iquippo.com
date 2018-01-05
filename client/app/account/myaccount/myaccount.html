@@ -251,17 +251,17 @@
                         </div>
                     </div>
                     <div class="col-sm-3 form-group">
-                      <select class="form-control" ng-model="myAccountVm.userInfo.idProof" name="idProof">
+                      <select class="form-control" ng-model="kycInfo.idProof" name="idProof">
                         <option value="">Select Identity Proof</option>
                         <option ng-repeat="idProof in myAccountVm.idProofList | orderBy:'name'" value="{{idProof.docName}}">{{idProof.docName}}</option>
                       </select>
                     </div>
                     <div class="col-sm-3 form-group">
                         <span class="btn btn-warning fileinput-button">
-                          <span>Browse image...</span>
-                          <input type="file" accept="image/*" ng-model ="files" ng-change="" file>
+                          <input type="file" name="doc" data-filetype="doc" onchange="angular.element(this).scope().updateAvatar(this.files,this,'idProof')"  class="ng-scope">
+                          <span class="fa fa-upload"></span>
                         </span>
-                         <span>{{}}</span>
+                         <span>{{kycInfo.idProofDocName}}</span>
                     </div>
                   </div>
                   <div class="row">
@@ -271,17 +271,17 @@
                       </div>
                     </div>
                     <div class="col-sm-3 form-group">
-                      <select class="form-control" ng-model="myAccountVm.userInfo.addressProof" name="addressProof">
+                      <select class="form-control" ng-model="kycInfo.addressProof" name="addressProof">
                         <option value="">Select Address Proof</option>
                         <option ng-repeat="addProof in myAccountVm.addressProofList | orderBy:'name'" value="{{addProof.docName}}">{{addProof.docName}}</option>
                       </select>
                     </div>
                     <div class="col-sm-3 form-group">
                         <span class="btn btn-warning fileinput-button">
-                          <span>Browse image...</span>
-                          <input type="file" accept="image/*" ng-model ="files" ng-change="" file>
+                          <input type="file" name="doc" data-filetype="doc" onchange="angular.element(this).scope().updateAvatar(this.files,this,'addressProof')"  class="ng-scope">
+                          <span class="fa fa-upload"></span>
                         </span>
-                         <span>{{}}</span>
+                         <span>{{kycInfo.addressProofDocName}}</span>
                     </div>
                   </div>
                   <div class="row form-group">
