@@ -558,6 +558,9 @@ informationMessage['classifiedSuccess'] = "Your request for Classified Ad has be
 /*channel partner messsage */
 informationMessage['deleteChannelPartnerConfirm'] = "Do you want to delete this user?";
 
+/*otp message*/
+informationMessage['otpMessage'] = 'Dear User, One Time Password (OTP) to verify your iQuippo account is ';
+
 /*Asset Sale messages*/
 //informationMessage['buyNowApprovalIfYes'] = "Your Bid request has been submitted successfully.";
 //informationMessage['buyNowApprovalIfNo'] = "Your Sale process is in process , you may contact us at 03366022059";

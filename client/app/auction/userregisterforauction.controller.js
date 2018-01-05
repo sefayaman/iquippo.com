@@ -234,7 +234,7 @@
 
     function sendOTP() {
       var dataToSend = {};
-      dataToSend['content'] = 'Dear User, One TimePassword (OTP) to verify your iQuippo account is ';
+      dataToSend['content'] = informationMessage.otpMessage;;
       dataToSend['otpOn'] = "mobile";
       dataToSend['sendToClient'] = 'y';
       if (vm.user.mobile)

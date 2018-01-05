@@ -21,6 +21,12 @@ var APIError = require('../../components/_error');
 var USER_REG_REQ="userRegEmailFromAdminChannelPartner";
 var Seqgen = require('./../../components/seqgenerator').sequence();
 var AppSetting = require('../common/setting.model');
+var EnterpriseValuation = require('../enterprise/enterprisevaluation.model');
+var AuctionReq = require('../auction/auction.model');
+var ValuationReq = require('../valuation/valuation.model');
+var PaymentTransaction = require('../payment/payment.model');
+var UserRegForAuction = require('../auction/userregisterforauction.model');
+
 var validationError = function(res, err) {
   console.log(err);
   return res.status(422).json(err);
@@ -1135,16 +1141,33 @@ exports.update = function(req, res) {
         dataObj['user.state'] = req.body.state;
       if (req.body.imgsrc)
         dataObj['user.imgsrc'] = req.body.imgsrc;
-      //if(req.body.isPartner) {
       updateVendor(dataObj, req, res);
-      //}
-      //if(req.body.isManpower) {
       updateManpower(dataObj, req, res);
-      //}
+      if(req.body.mobileUpdate)
+        updateMobileInOtherModel(req.body);
       return res.status(200).json(req.body);
     });
   });
 };
+
+function updateMobileInOtherModel(data) {
+  Product.update({'user.mobile': data.oldMobile},{$set:{'user.mobile':data.mobile}},{multi:true}).exec();
+  Product.update({'seller.mobile': data.oldMobile},{$set:{'seller.mobile':data.mobile}},{multi:true}).exec();
+
+  AuctionReq.update({'user.mobile': data.oldMobile},{$set:{'user.mobile':data.mobile}},{multi:true}).exec();
+  AuctionReq.update({'seller.mobile': data.oldMobile},{$set:{'seller.mobile':data.mobile}},{multi:true}).exec();
+
+  EnterpriseValuation.update({'agency.mobile': data.oldMobile},{$set:{'agency.mobile':data.mobile}},{multi:true}).exec();
+  EnterpriseValuation.update({'enterprise.mobile': data.oldMobile},{$set:{'enterprise.mobile':data.mobile}},{multi:true}).exec();
+  EnterpriseValuation.update({'createdBy.mobile': data.oldMobile},{$set:{'createdBy.mobile':data.mobile}},{multi:true}).exec();
+
+  ValuationReq.update({'user.mobile': data.oldMobile},{$set:{'user.mobile':data.mobile}},{multi:true}).exec();
+  ValuationReq.update({'seller.mobile': data.oldMobile},{$set:{'seller.mobile':data.mobile}},{multi:true}).exec();
+  ValuationReq.update({'valuationAgency.mobile': data.oldMobile},{$set:{'valuationAgency.mobile':data.mobile}},{multi:true}).exec();
+
+  PaymentTransaction.update({'user.mobile': data.oldMobile},{$set:{'user.mobile':data.mobile}},{multi:true}).exec();
+  UserRegForAuction.update({'user.mobile': data.oldMobile},{$set:{'user.mobile':data.mobile}},{multi:true}).exec();
+}
 
 //update partner
 function updateVendor(userData, req, res) {

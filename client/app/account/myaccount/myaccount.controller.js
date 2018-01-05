@@ -4,7 +4,7 @@
 angular.module('account').controller('MyAccountCtrl',MyAccountCtrl);
 
 //controller function
-function MyAccountCtrl($scope,$rootScope,Auth,$state,Modal,LegalTypeSvc,KYCSvc,LocationSvc,userSvc,User,uploadSvc,productSvc, UtilSvc, ManpowerSvc, InvitationSvc, SubCategorySvc, categorySvc) {
+function MyAccountCtrl($scope,$rootScope,Auth,$state,Modal,commonSvc,LegalTypeSvc,KYCSvc,LocationSvc,userSvc,User,uploadSvc,productSvc, UtilSvc, ManpowerSvc, InvitationSvc, SubCategorySvc, categorySvc) {
     var vm = this;
     vm.editClicked = editClicked;
     vm.cancelClicked = cancelClicked;
@@ -18,7 +18,13 @@ function MyAccountCtrl($scope,$rootScope,Auth,$state,Modal,LegalTypeSvc,KYCSvc,L
     vm.editKYCInfo = false;
     vm.editBankInfo = false;
     vm.editGstInfo = false;
+    vm.editMobile = false;
+    vm.edit = true;
+    vm.submit = false;
+    vm.verify = false;
     vm.validateAadhaar = validateAadhaar;
+    vm.updateMobile = updateMobile;
+    vm.verifyOtp = verifyOtp;
     $scope.legalTypeList = [];
     $scope.bankNameList = bankNameList;
     vm.addressProofList = [];
@@ -92,9 +98,94 @@ function MyAccountCtrl($scope,$rootScope,Auth,$state,Modal,LegalTypeSvc,KYCSvc,L
       });
     }
 
+    function updateMobile(prop){
+      vm.editMobile = false;
+      vm.edit = false;
+      vm.submit = false;
+      vm.verify = false;
+      switch (prop) {
+        case 'editMobile':
+            vm.userInfo.otp = "";
+            vm.oldMobile = vm.userInfo.mobile;
+            vm.editMobile = true;
+            vm.edit = false;
+            vm.submit = true;
+            break;
+        case 'submit':
+            if(vm.userInfo.country)
+              $scope.code = LocationSvc.getCountryCode(vm.userInfo.country);
+            validateMobile();
+            vm.submit = false;
+            vm.verify = true;
+            break;
+        case 'reset':
+            vm.edit = true;
+            break;
+      }
+    }
+
+    function validateMobile(){
+      var dataToSend = {};
+      if (vm.userInfo.mobile)
+        dataToSend['mobile'] = vm.userInfo.mobile;
+      Auth.validateSignup(dataToSend).then(function(data){
+        if (data.errorCode == 1) {
+          Modal.alert("Mobile number already in use. Please use another mobile number", true);
+          return;
+        } else {
+          sendOTP();
+        }
+      });
+    }
+
+    function sendOTP() {
+      var dataToSend = {};
+      dataToSend['content'] = informationMessage.otpMessage;
+      dataToSend['sendToClient'] = 'y';
+      if(vm.userInfo.mobile){
+        if ($scope.code)
+          dataToSend.countryCode = $scope.code;
+        dataToSend['mobile'] = vm.userInfo.mobile;
+      }
+      if(!dataToSend.mobile){
+        Modal.alert('Please enter the mobile number', true);
+        return;
+      }
+
+      commonSvc.sendOtp(dataToSend)
+        .then(function(result) {
+          vm.otpCode = result;
+          Modal.alert('OTP has been sent successfully', true);
+        })
+        .catch(function(res) {
+          Modal.alert("Error occured in sending OTP.Please try again.", true);
+        });
+    }
+
+    function verifyOtp(form){
+      if(form.$invalid){
+        $scope.submitted = true;
+        return;
+      }
+      if (!angular.isUndefined(vm.otpCode) && !angular.isUndefined(vm.userInfo.otp) && vm.otpCode == vm.userInfo.otp){
+        var userData = {_id:vm.userInfo._id};
+        userData.mobile = vm.userInfo.mobile;
+        userData.oldMobile = vm.oldMobile;
+        userData.mobileUpdate = true;
+        updateUser(userData,false);
+        vm.edit = true;
+        vm.verify = false;
+      }else{
+        Modal.alert("Incorrect OTP please enter correct OTP.", true);
+      }
+    }
+
     function editClicked(prop){
       vm.editBasicInfo = false;
       vm.editAdditionalInfo = false;
+      vm.editKYCInfo = false;
+      vm.editBankInfo = false;
+      vm.editGstInfo = false;
       if(prop === 'editBasicInfo')
         vm.editBasicInfo = true;
       if(prop === 'editAdditionalInfo')
