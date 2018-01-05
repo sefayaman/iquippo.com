@@ -251,11 +251,11 @@
 
                                 </div>
                                 <div class="col-sm-2 form-group text-center">
-                                    <div class="checkbox"><input type="checkbox" name="brandEquipment" value="" id="Brandnewequip" ng-model="b.isForNew" ng-true-value="'brandbanner-checkbox'" ng-false-value="false"> <label for="Brandnewequip"> New Equipment </label>
+                                    <div class="checkbox"><input type="checkbox" name="brandEquipment" value="" id="Brandnewequip" ng-model="b.isForNew" ng-false-value="false"> <label for="Brandnewequip"> New Equipment </label>
                                     </div>
                                 </div>
-                                <div class="col-sm-2 form-group text-center" ng-if="b.isForNew == 'brandbanner-checkbox'">
-                                    <div class="checkbox"><input type="checkbox" name="brandEquipment" value="" id="Brandbanner" ng-true-value="'brandbanner'" ng-false-value="false"> <label for="Brandbanner"> Brand Promotion Banner </label>
+                                <div class="col-sm-2 form-group text-center" ng-if="b.isForNew">
+                                    <div class="checkbox"><input type="checkbox" name="brandEquipment" ng-model="b.enableHomeBanner"id="Brandbanner" ng-false-value="false"> <label for="Brandbanner"> Brand Promotion Banner </label>
                                     </div>
                                 </div>
                                 <div class="form-group col-sm-3" ng-class="{'has-error': form.errorBrand && submitted}">
@@ -264,11 +264,11 @@
 	                            <div class="col-sm-3 form-group">
 	                          		<input type="number" class="form-control" placeholder="Priority for Used" ng-model="b.priorityForUsed">
 	                          	</div>
-	                          	<div class="col-sm-3 form-group" ng-if="b.isForNew == 'brandbanner-checkbox'">
-			    	  	        	<input type="text" class="form-control" name="" value="" placeholder="About Brand">
+	                          	<div class="col-sm-3 form-group" ng-if="b.isForNew">
+			    	  	        	<input type="text" class="form-control" name="" ng-model="b.brandDesc" value="" placeholder="About Brand">
 			    	  	        </div> 
-			    	  	        <div class="col-sm-3 form-group" ng-if="b.isForNew == 'brandbanner-checkbox'">
-			    	  	        	<input type="text" class="form-control" name="" value="" placeholder="Dealership Network">
+			    	  	        <div class="col-sm-3 form-group" ng-if="b.isForNew">
+			    	  	        	<input type="text" class="form-control" name="" ng-model="b.dealershipNetworkDesc" value="" placeholder="Dealership Network">
 			    	  	        </div>
 	                          	<div class="col-sm-3 form-group">
 	                          		<input type="number" class="form-control" placeholder="Priority for New" ng-model="b.priorityForNew">
@@ -298,19 +298,19 @@
 					                    <span>{{b.imgNewEquipmentSrc}}</span>
 		                            </div>
 
-		                            <div class="col-sm-3 form-group" >
+		                            <div class="col-sm-3 form-group" ng-if="b.enableHomeBanner && b.isForNew">
 		                          		<span class="btn btn-warning fileinput-button">
 			                                <span>Top banner image</span>
-			                                <input type="file" accept="image/*" ng-model ="files" ng-change="uploadImage(files,c,'Category',0)" file>
+			                                <input type="file" accept="image/*" ng-model ="files" ng-change="uploadImage(files,b,'Brand',0,'homeBannerTop')" file>
 					                    </span>
-					                    <span>file name</span>
+					                    <span>{{b.homeBannerTop}}</span>
 		                          	</div>
-		                          	<div class="col-sm-3 form-group">
+		                          	<div class="col-sm-3 form-group" ng-if="b.enableHomeBanner && b.isForNew">
 		                          		<span class="btn btn-warning fileinput-button">
 			                                <span>Left banner image</span>
-			                                <input type="file" accept="image/*" ng-model ="files" ng-change="uploadImage(files,c,'Category',0)" file>
+			                                <input type="file" accept="image/*" ng-model ="files" ng-change="uploadImage(files,b,'Brand',0,'homeBannerLeft')" file>
 					                    </span>
-					                    <span>file name</span>
+					                    <span>{{b.homeBannerLeft}}</span>
 		                          	</div>				    	  	              	
                                     <div class="form-group col-sm-2 pull-right">
                                         <button type="button" class="btn btn-primary btn-md btn-block" ng-click="masterDataVm.Save('Brand')" ng-if="!brandEdit">Save</button>
@@ -415,7 +415,7 @@
 					    	  		
 					    	  	</div>
 					    	  	<div class="col-sm-3 form-group text-center">
-					    	  		<div class="checkbox"><input type="checkbox" name="brandEquipment" value="" id="modelnewequip" ng-model="m.isForNew" ng-true-value="'newmodel-checkbox'" ng-false-value="false"> <label for="modelnewequip"> New Equipment </label>
+					    	  		<div class="checkbox"><input type="checkbox" name="brandEquipment" value="" id="modelnewequip" ng-model="m.isForNew" ng-false-value="false"> <label for="modelnewequip"> New Equipment </label>
 					    	  		</div>
 					    	  	</div>
 					    	  	<div class="form-group col-sm-3" ng-class="{'has-error': form.errorBrand && submitted}">
@@ -426,8 +426,8 @@
                                	<div class="form-group col-sm-3" ng-class="{'has-error': form.errorModel && submitted}">
                                    <input id="modelName" ng-model="m.name" name="modelName" type="text" class="form-control" placeholder="Enter Model Name" required>
                                	</div>
-                               	<div class="form-group col-sm-3" ng-if="m.isForNew == 'newmodel-checkbox'">
-                                   <input type="text" class="form-control" placeholder="About Model">
+                               	<div class="form-group col-sm-3" ng-if="m.isForNew">
+                                   <input type="text" class="form-control" placeholder="About Model" ng-model="m.modelDesc">
                                	</div>
                                	<div class="form-group col-sm-2 pull-right">
                                		<button type="button" class="btn btn-primary btn-md btn-block" ng-click="masterDataVm.Save('Model')" ng-if="!modelEdit">Save</button>

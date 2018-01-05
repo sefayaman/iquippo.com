@@ -2665,7 +2665,58 @@ exports.updateMasterData = function(req, res) {
 					return d.getTime() === d.getTime();
 				}
 
-				function handleError(res, err) {
-					//console.log(err);
-					return res.status(500).send(err);
+
+exports.getNewEquipmentOtherInfo = function(req,res){
+	var queryParam = req.query;
+	if(!queryParam.brand || !queryParam.model)
+		return res.status(412).send("Insufficient data");
+	async.parallel({brand:getBrandInfo,model:getModelInfo},function(err,result){
+		if(err)
+			return handleError(res,err);
+		var resData = {};
+		if(result.brand && result.brand.brandDesc){
+			resData.brandDesc = result.brand.brandDesc;
+			resData.dealershipNetworkDesc = result.brand.dealershipNetworkDesc;
+		}
+		if(result.model && result.model.modelDesc){
+			resData.modelDesc = result.model.modelDesc;
+		}
+
+		return res.status(200).json(resData);
+
+	});
+
+	function getBrandInfo(cb){
+		Brand.find({isForNew:true,name:queryParam.brand},function(err,brands){
+			if(err) return cb(err);
+			var brObj = {};
+			for(var i = 0 ; i < brands.length;i++){
+				if(brands[i] && brands[i].brandDesc){
+					brObj = brands[i];
+					break;
 				}
+			}
+			return cb(null,brObj);
+		});
+	}
+
+	function getModelInfo(cb){
+		Model.find({isForNew:true,name:queryParam.model},function(err,models){
+			if(err) return cb(err);
+			var modelObj = {};
+			for(var i = 0 ; i < models.length;i++){
+				if(models[i] && models[i].modelDesc){
+					modelObj = models[i];
+					break;
+				}
+			}
+			return cb(null,modelObj);
+		});
+	}
+
+}
+
+function handleError(res, err) {
+	//console.log(err);
+	return res.status(500).send(err);
+}

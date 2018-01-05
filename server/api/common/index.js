@@ -192,4 +192,6 @@ router.get('/offerrequest',auth.hasRole('admin'),offerCtrl.getOfferRequest);
 router.post('/bookademo',bookADemoCtrl.create);
 router.get('/bookademo',auth.hasRole('admin'),bookADemoCtrl.get);
 
+router.get('/newequipmentotherinfo', controller.getNewEquipmentOtherInfo);
+
 module.exports = router;
