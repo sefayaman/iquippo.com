@@ -17,6 +17,11 @@ var BrandSchema = new Schema({
   isForUsed:{type:Boolean,default:false},
   priorityForUsed:{type:Number,default:0},
   priorityForNew:{type:Number,default:0},
+  enableHomeBanner:{type:Boolean,default:false},
+  homeBannerLeft:String,
+  homeBannerTop:String,
+  brandDesc:String,
+  dealershipNetworkDesc:String,
   createdAt:Date,
   updatedAt:Date,
   useFor: String

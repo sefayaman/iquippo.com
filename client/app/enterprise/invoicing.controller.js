@@ -428,8 +428,14 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth,
         filter['fromDate'] = encodeURIComponent(vm.fromDate);
       if(vm.toDate)
         filter['toDate'] = encodeURIComponent(vm.toDate);
+      filter.type = "invoice";
+      filter.role = Auth.getCurrentUser().role;
+      var exportObj = {filter:filter};
+      exportObj.method = "GET";
+      exportObj.action = "api/enterprise/export";
+      $scope.$broadcast("submit",exportObj);
 
-      EnterpriseSvc.exportExcel("invoice",filter);
+      //EnterpriseSvc.exportExcel("invoice",filter);
     }
       //starting point
       Auth.isLoggedInAsync(function(loggedIn){

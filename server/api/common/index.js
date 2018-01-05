@@ -198,4 +198,6 @@ router.post('/legaltype', auth.hasRole('admin'),legalEntityTypeCtrl.create);
 router.put('/legaltype/:id', auth.hasRole('admin'),legalEntityTypeCtrl.update);
 router.delete('/legaltype/:id',auth.hasRole('admin'), legalEntityTypeCtrl.destroy);
 
+router.get('/newequipmentotherinfo', controller.getNewEquipmentOtherInfo);
+
 module.exports = router;
