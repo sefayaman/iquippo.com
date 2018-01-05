@@ -22,6 +22,7 @@ var bulkUploadCtrl = require('./uploadrequest/uploadrequest.controller');
 var valuationCancellationCtrl = require('./valuationcancellationfee.controller');
 var inputFormCtrl = require('./inputformmaster.controller');
 var bookADemoCtrl = require('./bookademo.controller');
+var legalEntityTypeCtrl = require('./legalentitytype.controller');
 var json2xls = require('json2xls');
 var router = express.Router();
 
@@ -191,5 +192,10 @@ router.get('/offerrequest',auth.hasRole('admin'),offerCtrl.getOfferRequest);
 
 router.post('/bookademo',bookADemoCtrl.create);
 router.get('/bookademo',auth.hasRole('admin'),bookADemoCtrl.get);
+
+router.get('/legaltype', legalEntityTypeCtrl.get);
+router.post('/legaltype', auth.hasRole('admin'),legalEntityTypeCtrl.create);
+router.put('/legaltype/:id', auth.hasRole('admin'),legalEntityTypeCtrl.update);
+router.delete('/legaltype/:id',auth.hasRole('admin'), legalEntityTypeCtrl.destroy);
 
 module.exports = router;

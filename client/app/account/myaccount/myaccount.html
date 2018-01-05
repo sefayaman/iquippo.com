@@ -68,7 +68,7 @@
                       </div>
                       <div class="row">
                         <div class="col-sm-6 form-group">
-                          <div class="floating-label-wrapper">
+                          <div class="floating-label-wrapper" ng-class="{'has-error':basicForm.aadhaarNumber.$invalid && submitted}">
                             <label for="aadhaar">AADHAAR Number</label>
                             <input type="text" class="form-control" id="aadhaar" name="aadhaarNumber" placeholder="AADHAAR Number" ng-model="myAccountVm.userInfo.aadhaarNumber" ng-disabled="!myAccountVm.editBasicInfo" uib-tooltip="9999 9999 9999" tooltip-trigger="focus" ng-keyup="myAccountVm.validateAadhaar(myAccountVm.userInfo.aadhaarNumber)" tooltip-placement="top" with-floating-label>
                           </div>
@@ -113,137 +113,123 @@
                       </div>
                     </div>
                   </div>
+                  <div class="row form-group">
+                    <div class="col-xs-offset-2 col-xs-4 form-group">
+                      <button type="button" class="btn btn-primary btn-block" ng-click="myAccountVm.save(basicForm,'basicInfo')" ng-if="myAccountVm.editBasicInfo">Save</button>
+                    </div>
+                    <div class="col-xs-4 form-group">
+                      <button type="button" class="btn btn-primary btn-block" ng-if="myAccountVm.editBasicInfo" ng-click="myAccountVm.cancelClicked()">Cancel</button>
+                    </div>
+                  </div>
                     
                 </form>
               </div>
             </uib-tab>
             <uib-tab heading="Additional Information">
               <!-- Additional info -->
-              <form name="additionalForm">
+              <form name="additionalForm" novalidate>
                 <div class="category-block">
                   <h4>Additional Information
-                    <a href="javascript:void(0);" class="pull-right" ng-click="myAccountVm.editClicked('editAdditionalInfo')"> 
-                      <small><i class="fa fa-pencil"></i> Edit details</small> 
-                    </a>
+                  <a href="javascript:void(0);" class="pull-right" ng-click="myAccountVm.editClicked('editAdditionalInfo')">
+                    <small><i class="fa fa-pencil"></i> Edit details</small>
+                  </a>
                   </h4>
                   <hr>
                   <div class="row">
-                  <div class="col-sm-5 form-group">
+                    <div class="col-sm-5 form-group">
                       <div class="floating-label-wrapper">
-                          <label for="fname">Constitution</label>
-                          <div class="row">
-                            <div class="col-sm-6">
-                              <div class="radio">
-                                <input type="radio" name="userType" ng-model="myAccountVm.userInfo.userType" id="individual" value="individual" ng-disabled="!myAccountVm.editAdditionalInfo"/> <label for="individual"> Individual </label>
-                              </div>
-                            </div>
-                            <div class="col-sm-6">
-                              <div class="radio">
-                                <input type="radio" name="userType" ng-model="myAccountVm.userInfo.userType" id="legal" value="legalentity" ng-disabled="!myAccountVm.editAdditionalInfo"/> <label for="legal"> Legal </label>
-                              </div>
+                        <label for="fname">Constitution</label>
+                        <div class="row">
+                          <div class="col-sm-6">
+                            <div class="radio">
+                              <input type="radio" name="userType" ng-model="myAccountVm.userInfo.userType" id="individual" value="individual" ng-disabled="!myAccountVm.editAdditionalInfo"/> <label for="individual"> Individual </label>
                             </div>
                           </div>
-
-                         <!--  Individual <input type="radio" name="userType" ng-model="myAccountVm.userInfo.userType" value="individual" ng-disabled="!myAccountVm.editAdditionalInfo"/> Legal  <input type="radio" name="userType" ng-model="myAccountVm.userInfo.userType" value="legalentity" ng-disabled="!myAccountVm.editAdditionalInfo"/> -->                                         
+                          <div class="col-sm-6">
+                            <div class="radio">
+                              <input type="radio" name="userType" ng-model="myAccountVm.userInfo.userType" id="legal" value="legalentity" ng-disabled="!myAccountVm.editAdditionalInfo"/> <label for="legal"> Legal </label>
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                  </div>
-                  <div class="col-sm-3 form-group">
-                    <div class="floating-label-wrapper">
+                    </div>
+                    <div class="col-sm-3 form-group" ng-if="myAccountVm.userInfo.userType === 'legalentity'">
+                      <div class="floating-label-wrapper" ng-class="{'has-error':basicForm.legalType.$invalid && submitted}">
                         <label>Legal Entity Type</label>
-                        <select class="form-control">
-                          <option value="">Select Type</option>
+                        <select class="form-control" name="legalType" ng-model="myAccountVm.userInfo.legalType" ng-disabled="!myAccountVm.editAdditionalInfo" required="myAccountVm.userInfo.userType === 'legalentity'">
+                          <option value="">*Select Type</option>
+                          <option value="{{legType.legalType}}" ng-repeat="legType in legalTypeList">{{legType.legalType}}</option>
                         </select>
                       </div>
-                  </div>
-                  <div class="col-sm-4 form-group">
+                    </div>
+                    <div class="col-sm-4 form-group" ng-if="myAccountVm.userInfo.userType === 'legalentity'">
                       <div class="floating-label-wrapper" ng-class="{'has-error':basicForm.company.$invalid && submitted}">
                         <label>Legal Entity Name</label>
-                        <input type="text" class="form-control" name="company" ng-disabled="!myAccountVm.editAdditionalInfo" placeholder="*Legal Entity Name" ng-model="myAccountVm.userInfo.company" ng-required= "myAccountVm.userInfo.userType === 'legalentity'">
+                        <input type="text" class="form-control" name="company" ng-disabled="!myAccountVm.editAdditionalInfo" placeholder="*Legal Entity Name" ng-model="myAccountVm.userInfo.company" ng-required="myAccountVm.userInfo.userType === 'legalentity'">
                       </div>
+                    </div>
                   </div>
-              </div>
-
-              <div class="row">
-                  <div class="col-sm-6 form-group">
+                  <div class="row">
+                    <div class="col-sm-6 form-group">
                       <div class="floating-label-wrapper">
-                          <label for="Profile">Profile</label>
+                        <label for="Profile">Profile</label>
                       </div>
-                  </div>
-                  <div class="col-sm-6 form-group">
+                    </div>
+                    <div class="col-sm-6 form-group">
                       &nbsp;
+                    </div>
                   </div>
-              </div>
-              <div class="row">
-                  <div class="col-sm-4 form-group">
+                  <div class="row">
+                    <div class="col-sm-4 form-group">
                       <div class="floating-label-wrapper">
                         <div><label>Twitter URL</label></div>
                         <input type="text" class="form-control" placeholder="http://yoururl.com" ng-model="myAccountVm.userInfo.socialInfo.twitterUrl" value="myAccountVm.userInfo.socialInfo.twitterUrl" ng-disabled="!myAccountVm.editAdditionalInfo">
                       </div>
-                  </div>
-                  <div class="col-sm-4 form-group">
+                    </div>
+                    <div class="col-sm-4 form-group">
                       <div class="floating-label-wrapper">
                         <div><label>LinkedIn URL</label></div>
-                        <input type="text" class="form-control" placeholder="http://yoururl.com" ng-model="myAccountVm.userInfo.socialInfo.linkedInUrl" value="myAccountVm.userInfo.socialInfo.linkedInUrl" ng-disabled="!myAccountVm.editAdditionalInfo">                                     
+                        <input type="text" class="form-control" placeholder="http://yoururl.com" ng-model="myAccountVm.userInfo.socialInfo.linkedInUrl" value="myAccountVm.userInfo.socialInfo.linkedInUrl" ng-disabled="!myAccountVm.editAdditionalInfo">
                       </div>
-                  </div>
-                  <div class="col-sm-4 form-group">
+                    </div>
+                    <div class="col-sm-4 form-group">
                       <div class="floating-label-wrapper">
                         <div><label>Facebook URL</label></div>
                         <input type="text" class="form-control" placeholder="http://yoururl.com" ng-model="myAccountVm.userInfo.socialInfo.facebookUrl" value="{{myAccountVm.userInfo.socialInfo.facebookUrl}}" ng-disabled="!myAccountVm.editAdditionalInfo">
                       </div>
+                    </div>
                   </div>
-              </div>
-
-              <div class="row">
-                  <div class="col-sm-6 form-group">
+                  <div class="row">
+                    <div class="col-sm-6 form-group">
                       <div class="floating-label-wrapper">
-                          <label for="Segment">Segment</label>
-                          <input type="text" class="form-control" id="Segment" name="Segment" ng-disabled="!myAccountVm.editAdditionalInfo" placeholder="Segment" ng-model="myAccountVm.userInfo.profession">
+                        <label for="Segment">Segment</label>
+                        <input type="text" class="form-control" id="Segment" name="Segment" ng-disabled="!myAccountVm.editAdditionalInfo" placeholder="Segment" ng-model="myAccountVm.userInfo.profession">
                       </div>
-                  </div>
-                  <div class="col-sm-6 form-group">
+                    </div>
+                    <div class="col-sm-6 form-group">
                       &nbsp;
+                    </div>
                   </div>
-              </div>
-
-              <div class="row">
-                  <div class="col-sm-6 form-group">
+                  <div class="row">
+                    <div class="col-sm-6 form-group">
                       <div class="floating-label-wrapper">
-                          <label for="JobProfile">Job Profile</label>
-                          <input type="text" class="form-control" id="JobProfile" name="jobProfile" ng-disabled="!myAccountVm.editAdditionalInfo" placeholder="Job Profile" ng-model="myAccountVm.userInfo.jobProfile">
+                        <label for="JobProfile">Job Profile</label>
+                        <input type="text" class="form-control" id="JobProfile" name="jobProfile" ng-disabled="!myAccountVm.editAdditionalInfo" placeholder="Job Profile" ng-model="myAccountVm.userInfo.jobProfile">
                       </div>
-                  </div>
-                  <div class="col-sm-6 form-group">
+                    </div>
+                    <div class="col-sm-6 form-group">
                       &nbsp;
+                    </div>
                   </div>
-              </div>
-                  <!-- <div class="row">
-                    <div class="col-sm-3 form-group">
-                      <div class="floating-label-wrapper">
-                        <label for="profession">Profession</label>
-                        <input type="text" class="form-control" id="profession" placeholder="Profession" ng-model="myAccountVm.userInfo.profession"  ng-disabled="!myAccountVm.editAdditionalInfo" with-floating-label>
-                      </div>
-                    </div>
-                    <div class="col-sm-3 form-group">
-                       <div class="floating-label-wrapper">
-                        <label for="jprofile">Job Profile</label>
-                        <input type="text" class="form-control" id="jprofile" placeholder="Job Profile" ng-model="myAccountVm.userInfo.jobProfile"  ng-disabled="!myAccountVm.editAdditionalInfo" with-floating-label>
-                      </div>
-                    </div>
-                    <div class="col-sm-3 form-group">
-                      <div class="floating-label-wrapper">
-                        <label for="pan">PAN Number</label>
-                        <input type="text" class="form-control" id="pan" placeholder="PAN Number" ng-model="myAccountVm.userInfo.panNumber" ng-disabled="!myAccountVm.editAdditionalInfo" with-floating-label>
-                      </div>
-                    </div>
-                    <div class="col-sm-3 form-group">
-                       <div class="floating-label-wrapper">
-                        <label for="aadhaar">AADHAAR Number</label>
-                        <input type="text" class="form-control" id="aadhaar" name="aadhaarNumber" placeholder="AADHAAR Number" ng-model="myAccountVm.userInfo.aadhaarNumber" ng-disabled="!myAccountVm.editAdditionalInfo" uib-tooltip="9999 9999 9999" tooltip-trigger="focus" ng-keyup="myAccountVm.validateAadhaar(myAccountVm.userInfo.aadhaarNumber)"
-                              tooltip-placement="top" with-floating-label>
-                      </div>
-                    </div>
-                  </div> -->
+                  
+                </div>
+                <div class="row form-group">
+                  <div class="col-xs-offset-2 col-xs-4 form-group">
+                    <button type="button" class="btn btn-primary btn-block" ng-click="myAccountVm.save(additionalForm,'AdditionalInfo')" ng-if="myAccountVm.editAdditionalInfo">Save</button>
+                  </div>
+                  <div class="col-xs-4 form-group">
+                    <button type="button" class="btn btn-primary btn-block" ng-if="myAccountVm.editAdditionalInfo" ng-click="myAccountVm.cancelClicked()">Cancel</button>
+                  </div>
                 </div>
               </form>
             </uib-tab>
@@ -265,6 +251,12 @@
                         </div>
                     </div>
                     <div class="col-sm-3 form-group">
+                      <select class="form-control" ng-model="myAccountVm.userInfo.idProof" name="idProof">
+                        <option value="">Select Identity Proof</option>
+                        <option ng-repeat="idProof in myAccountVm.idProofList | orderBy:'name'" value="{{idProof.docName}}">{{idProof.docName}}</option>
+                      </select>
+                    </div>
+                    <div class="col-sm-3 form-group">
                         <span class="btn btn-warning fileinput-button">
                           <span>Browse image...</span>
                           <input type="file" accept="image/*" ng-model ="files" ng-change="" file>
@@ -274,9 +266,15 @@
                   </div>
                   <div class="row">
                     <div class="col-sm-3 form-group">
-                        <div class="floating-label-wrapper">
-                            <label for="JobProfile">Address Proof</label>                          
-                        </div>
+                      <div class="floating-label-wrapper">
+                        <label for="JobProfile">Address Proof</label>
+                      </div>
+                    </div>
+                    <div class="col-sm-3 form-group">
+                      <select class="form-control" ng-model="myAccountVm.userInfo.addressProof" name="addressProof">
+                        <option value="">Select Address Proof</option>
+                        <option ng-repeat="addProof in myAccountVm.addressProofList | orderBy:'name'" value="{{addProof.docName}}">{{addProof.docName}}</option>
+                      </select>
                     </div>
                     <div class="col-sm-3 form-group">
                         <span class="btn btn-warning fileinput-button">
@@ -286,174 +284,118 @@
                          <span>{{}}</span>
                     </div>
                   </div>
+                  <div class="row form-group">
+                  <div class="col-xs-offset-2 col-xs-4 form-group">
+                    <button type="button" class="btn btn-primary btn-block" ng-click="myAccountVm.save(additionalForm,'KycInfo')" ng-if="myAccountVm.editKYCInfo">Save</button>
+                  </div>
+                  <div class="col-xs-4 form-group">
+                    <button type="button" class="btn btn-primary btn-block" ng-if="myAccountVm.editKYCInfo" ng-click="myAccountVm.cancelClicked()">Cancel</button>
+                  </div>
+                </div>
                 </form>
               </div>
             </uib-tab> 
-          </uib-tabset>           
-          
-          <!-- <div class="category-block">
-            <h4>Address Information
-              <a href="javascript:void(0);" class="pull-right"> 
-                <small><i class="fa fa-pencil"></i> Edit details</small> 
-              </a>
-            </h4>
-            <legend></legend>
-            <div class="row">
-              <div class="col-sm-4 form-group">
-                <div class="floating-label-wrapper">
-                  <label for="houseno">House No./Block</label>
-                  <input type="text" class="form-control" id="houseno" placeholder="House No./Block" ng-model="user.houseno"  with-floating-label>
-                </div>
-              </div>
-              <div class="col-sm-4 form-group">
-                 <div class="floating-label-wrapper">
-                  <label for="locality">Locality</label>
-                  <input type="text" class="form-control" id="locality" placeholder="Locality" ng-model="user.locality"  with-floating-label>
-                </div>
-              </div>
-              <div class="col-sm-4 form-group">
-                <div class="floating-label-wrapper">
-                  <label for="landmark">Landmark</label>
-                  <input type="text" class="form-control" id="landmark" placeholder="Landmark" ng-model="user.landmark"  with-floating-label>
-                </div>
-              </div>            
-            </div>
-            <div class="row">
-              <div class="col-sm-4 form-group">
-                <div class="floating-label-wrapper">
-                  <select class="form-control">
-                    <option>Country</option>
-                  </select>
-                </div>
-              </div>                
-              <div class="col-sm-4 form-group">
-                 <div class="floating-label-wrapper">
-                  <select class="form-control">
-                    <option>State</option>
-                  </select>
-                </div>
-              </div>         
-              <div class="col-sm-4 form-group">
-                <div class="floating-label-wrapper">
-                  <select class="form-control">
-                    <option>City</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-          </div> -->
-
-          <div class="row form-group" ng-if="myAccountVm.editAdditionalInfo || myAccountVm.editBasicInfo">
-            <div class="col-xs-offset-2 col-xs-4 form-group">
-              <button type="button" class="btn btn-primary btn-block" ng-click="myAccountVm.save(basicForm,'basicInfo')" ng-if="myAccountVm.editBasicInfo">Save</button>
-              <button type="button" class="btn btn-primary btn-block" ng-click="myAccountVm.save(additionalForm,'AdditionalInfo')" ng-if="myAccountVm.editAdditionalInfo">Save</button>
-            </div>
-            <div class="col-xs-4 form-group">
-              <button type="button" class="btn btn-primary btn-block" ng-click="myAccountVm.cancelClicked()">Cancel</button>
-            </div>
-          </div>
+          </uib-tabset>
         </div>
       </uib-tab>
       <uib-tab index="1" heading="Bank Details">
         <div class="information-tabs">
-          <form name="bankForm">
+          <form name="bankForm" novalidate>
             <h4>
               Bank Details
-
               <a href="javascript:void(0);" class="pull-right" ng-click="myAccountVm.editClicked('editBankInfo')"> 
                 <small><i class="fa fa-pencil"></i> Edit details</small> 
               </a>
             </h4>
             <hr>
-            <div class="row">
-              <div class="col-sm-6 form-group">
-                <div class="floating-label-wrapper">
-                  <label>Bank Name</label>
-                  <select class="form-control">
-                    <option>Axis Bank</option>
-                    <option>Bank of Baroda</option>
-                  </select>
+            <div class="row" ng-repeat="bank in myAccountVm.userInfo.bankInfo">
+              <!-- <div class="row"> -->
+                <div class="col-sm-6 form-group">
+                  <div class="floating-label-wrapper" ng-class="{'has-error':bankForm.bankName.$invalid && submitted}">
+                    <label>*Bank Name</label>
+                    <select class="form-control" name="bankName" ng-model="bank.bankName" ng-disabled="!myAccountVm.editBankInfo" required>
+                      <option value="">*Select Bank</option>
+                      <option value="{{bank.name}}" ng-repeat="bank in bankNameList">{{bank.name}}</option>
+                    </select>
+                  </div>
                 </div>
-              </div>
-              <div class="col-sm-6 form-group">
-                <div class="floating-label-wrapper">
-                  <label>Branch Name</label>
-                  <input type="text" class="form-control" name="brname" placeholder="Branch Name" ng-model="myAccountVm.bankInfo.brname" ng-disabled="!myAccountVm.editBankInfo" required>
+                <div class="col-sm-6 form-group">
+                  <div class="floating-label-wrapper" ng-class="{'has-error':bankForm.branch.$invalid && submitted}">
+                    <label>*Branch Name</label>
+                    <input type="text" class="form-control" name="branch" placeholder="Branch Name" ng-model="bank.branch" ng-disabled="!myAccountVm.editBankInfo" required>
+                  </div>
+                </div>              
+              <!-- </div> -->
+              <!-- <div class="row"> -->
+                <div class="col-sm-6 form-group">
+                  <div class="floating-label-wrapper" ng-class="{'has-error':bankForm.ifsc.$invalid && submitted}">
+                    <label for="ifsc">*IFSC Code</label>
+                    <input type="text" class="form-control" id="ifsc" name="ifsc" placeholder="IFSC Code" ng-model="bank.ifsc" ng-disabled="!myAccountVm.editBankInfo" required>
+                  </div>
                 </div>
-              </div>              
+                <div class="col-sm-6 form-group">
+                  <div class="floating-label-wrapper" ng-class="{'has-error':bankForm.accountNo.$invalid && submitted}">
+                    <label for="accountNo">*Account Number</label>
+                    <input type="text" class="form-control" id="accountNo" name="accountNo" placeholder="Account Number" ng-model="bank.accountNo" ng-disabled="!myAccountVm.editBankInfo" required>
+                  </div>
+                </div>
+              <!-- </div> -->
             </div>
-            <div class="row">
-              <div class="col-sm-6 form-group">
-                <div class="floating-label-wrapper">
-                  <label for="ifsc">IFSC Code</label>
-                  <input type="text" class="form-control" id="ifsc" name="ifsc" placeholder="IFSC Code" ng-model="myAccountVm.bankInfo.ifsc" ng-disabled="!myAccountVm.editBankInfo" required>
-                </div>
+            <div class="row form-group">
+              <div class="col-xs-offset-2 col-xs-4 form-group">
+                <button type="button" class="btn btn-primary btn-block" ng-click="myAccountVm.save(bankForm,'BankInfo')" ng-if="myAccountVm.editBankInfo">Save</button>
               </div>
-              <div class="col-sm-6 form-group">
-                <div class="floating-label-wrapper">
-                  <label for="accountNo">Account Number</label>
-                  <input type="text" class="form-control" id="accountNo" name="accountNo" placeholder="Account Number" ng-model="myAccountVm.bankInfo.accountNo" ng-disabled="!myAccountVm.editBankInfo" required>
-                </div>
+              <div class="col-xs-4 form-group">
+                <button type="button" class="btn btn-primary btn-block" ng-if="myAccountVm.editBankInfo" ng-click="myAccountVm.cancelClicked()">Cancel</button>
               </div>
             </div>
           </form>
-          <div class="row form-group" ng-if="myAccountVm.editBankInfo">
-            <div class="col-xs-offset-2 col-xs-4 form-group">
-              <button type="button" class="btn btn-primary btn-block" ng-click="myAccountVm.save(basicForm,'basicInfo')" ng-if="myAccountVm.editBasicInfo">Save</button>
-              <button type="button" class="btn btn-primary btn-block" ng-click="myAccountVm.save(additionalForm,'AdditionalInfo')" ng-if="myAccountVm.editAdditionalInfo">Save</button>
-            </div>
-            <div class="col-xs-4 form-group">
-              <button type="button" class="btn btn-primary btn-block" ng-click="myAccountVm.cancelClicked()">Cancel</button>
-            </div>
-          </div>
         </div>
       </uib-tab>
       <uib-tab index="2" heading="Tax Details">
         <div class="information-tabs">
-          <form name="bankForm">
+          <form name="taxForm" novalidate>
             <h4>
               Tax Details
-
-              <a href="javascript:void(0);" class="pull-right" ng-click="myAccountVm.editClicked('editTaxInfo')"> 
+              <a href="javascript:void(0);" class="pull-right" ng-click="myAccountVm.editClicked('editGstInfo')"> 
                 <small><i class="fa fa-pencil"></i> Edit details</small> 
               </a>
             </h4>
             <hr>
             <h5>GST Information</h5>
-            <div class="row">
+            <div class="row" ng-repeat="gst in myAccountVm.userInfo.GSTInfo">
               <div class="col-sm-5 form-group">
-                <div class="floating-label-wrapper">
-                  <label>State</label>
-                  <select class="form-control">
-                    <option>State1</option>
-                    <option>State2</option>
+                <div class="floating-label-wrapper" ng-class="{'has-error':taxForm.field_{{$index}}.$invalid && submitted}">
+                  <label>*State</label>
+                  <select class="form-control" name="field_{{$index}}" ng-model="gst.state" ng-disabled="!myAccountVm.editGstInfo" required>
+                    <option value="">State</option>
+                    <option value="{{st.name}}" ng-repeat="st in allStateList">{{st.name}}</option>
                   </select>
                 </div>
               </div>
               <div class="col-sm-5 form-group">
-                <div class="floating-label-wrapper">
-                  <label>Registration Number</label>
-                  <input type="text" class="form-control" name="brname" placeholder="Registration Number" ng-model="myAccountVm.taxInfo.registration" ng-disabled="!myAccountVm.editTaxInfo" required>
+                <div class="floating-label-wrapper" ng-class="{'has-error':taxForm.field_{{$index}}.$invalid && submitted}">
+                  <label>*Registration Number</label>
+                  <input type="text" class="form-control" name="field_{{$index}}" placeholder="Registration Number" ng-model="gst.registrationNo" ng-disabled="!myAccountVm.editGstInfo" required>
                 </div>
               </div>
               <div class="col-sm-2">
                 <div class="floating-label-wrapper">
                   <label class="invisible">Action</label>
-                  <button type="button" class="btn btn-default btn-block">Add More</button>
-                  <button type="button" class="btn btn-default btn-block">Delete</button>
+                  <button type="button" class="btn btn-default btn-block" ng-click="myAccountVm.userInfo.GSTInfo.push({})" ng-if="$last" ng-disabled="!myAccountVm.editGstInfo">Add More</button>
+                  <button type="button" class="btn btn-default btn-block" ng-click="myAccountVm.userInfo.GSTInfo.splice($index, 1)" ng-if="!$last" ng-disabled="!myAccountVm.editGstInfo">Delete</button>
                 </div>
               </div>              
             </div>
+            <div class="row form-group">
+              <div class="col-xs-offset-2 col-xs-4 form-group">
+                <button type="button" class="btn btn-primary btn-block" ng-click="myAccountVm.save(taxForm,'GstInfo')" ng-if="myAccountVm.editGstInfo">Save</button>
+              </div>
+              <div class="col-xs-4 form-group">
+                <button type="button" class="btn btn-primary btn-block" ng-if="myAccountVm.editGstInfo" ng-click="myAccountVm.cancelClicked()">Cancel</button>
+              </div>
+            </div>
           </form>
-          <div class="row form-group" ng-if="myAccountVm.editBankInfo">
-            <div class="col-xs-offset-2 col-xs-4 form-group">
-              <button type="button" class="btn btn-primary btn-block" ng-click="myAccountVm.save(basicForm,'basicInfo')" ng-if="myAccountVm.editBasicInfo">Save</button>
-              <button type="button" class="btn btn-primary btn-block" ng-click="myAccountVm.save(additionalForm,'AdditionalInfo')" ng-if="myAccountVm.editAdditionalInfo">Save</button>
-            </div>
-            <div class="col-xs-4 form-group">
-              <button type="button" class="btn btn-primary btn-block" ng-click="myAccountVm.cancelClicked()">Cancel</button>
-            </div>
-          </div>
         </div>
       </uib-tab>
     </uib-tabset>

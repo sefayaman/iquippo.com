@@ -36,6 +36,7 @@ var UserSchema = new Schema({
   mobile: String,
   clientIp:String,
   agree: Boolean,
+  legalType:String,
   company: String,
   imgsrc: String,
   city:String,
@@ -95,7 +96,10 @@ var UserSchema = new Schema({
   otp:{},
   personalInfo:{},
   professionalInfo:{},
-  socialInfo:{}
+  socialInfo:{},
+  kycInfo:[{}],
+  bankInfo:[{}],
+  GSTInfo:[{}]
 });
 
 /**
