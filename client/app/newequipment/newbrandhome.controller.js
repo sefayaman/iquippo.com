@@ -1,20 +1,18 @@
 (function(){
 'use strict';
-angular.module('sreizaoApp').controller('NewEquipmentListCtrl', NewEquipmentListCtrl);
+angular.module('sreizaoApp').controller('NewBrandHomeCtrl', NewBrandHomeCtrl);
 
-  function NewEquipmentListCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Auth, CartSvc, productSvc,categorySvc,SubCategorySvc,LocationSvc,brandSvc,modelSvc, groupSvc,TechSpecMasterSvc ,DTOptionsBuilder,Modal,$timeout,$window) {
-    $rootScope.loading = false;
+  function NewBrandHomeCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Auth, CartSvc, productSvc,categorySvc,SubCategorySvc,LocationSvc,brandSvc,modelSvc, groupSvc,TechSpecMasterSvc ,DTOptionsBuilder,Modal,$timeout,$window) {
     var vm = this;
+    $scope.brand = null;
     $scope.productList = [];
     $scope.equipmentSearchFilter = {};
     var productList = [];
-    var searchObj={};
-
     $scope.searching = true;
     $scope.noResult = false;
     $scope.status = {};
     $scope.techSpecification = {};
-    $scope.displayText = $stateParams.group || $stateParams.category || "";
+    $scope.displayText = $stateParams.brand;
 
     /* pagination flag */
     vm.itemsPerPage = 12;
@@ -22,17 +20,11 @@ angular.module('sreizaoApp').controller('NewEquipmentListCtrl', NewEquipmentList
     vm.totalItems = 0;
     vm.maxSize = 6;
     vm.sortByFlag = "";
-    vm.onGroupChange = onGroupChange;
-    vm.onCategoryChange = onCategoryChange;
     vm.fireCommand = fireCommand;
     vm.getAssetIdHelp = getAssetIdHelp;
-    
     vm.sortBy = sortBy;
     vm.onPageChange = onPageChange;
     $scope.clearAll = clearAll;
-
-    var allCategory = [];
-    var allBrand = [];
 
     function init(){
 
@@ -40,79 +32,49 @@ angular.module('sreizaoApp').controller('NewEquipmentListCtrl', NewEquipmentList
         if($stateParams[key])
           $scope.status[key] = true;
       }
-
-      groupSvc.getAllGroup({isForNew:true})
-      .then(function(result){
-        $scope.allGroup = result;
-      });
-
-      categorySvc.getCategoryOnFilter({isForNew:true})
-      .then(function(result){
-        $scope.categoryList = result;
-        allCategory = result;
-        if($stateParams.group)
-            onGroupChange($stateParams.group,true);
-      });
-
-      brandSvc.getBrandOnFilter({isForNew:true})
-      .then(function(result){
-        allBrand = result;
-        $scope.brandList = result;
-        if($stateParams.category)
-            onCategoryChange($stateParams.category,true);
+      var filter = {};
+      filter['brandName'] = $stateParams.brand;
+      filter['isForNew'] = true;
+      modelSvc.getModelOnFilter(filter)
+      .then(function(result) {
+        $scope.modelList = result;
       });
       restoreState();
       fireCommand(true,true);
     }
 
-    function clearAll(){
-    for(var key in $scope.equipmentSearchFilter){
-      $scope.equipmentSearchFilter[key] = "";
+    function getBrandDetail(){
+      $rootScope.loading = true;
+      var brandFilter = {isForNew:true,enableHomeBanner:true};
+      brandFilter.name = $stateParams.brand;
+      if(!$stateParams.brand){
+        $rootScope.loading = false;
+        $state.go("main");
+        return;
+      }
+
+      brandSvc.getBrandOnFilter(brandFilter)
+      .then(function(result){
+        if(result && result.length){
+          $rootScope.loading = false;
+          $scope.brand = result[0];
+          init();
+        }else{
+          //$rootScope.loading = false;
+          $state.go("newequipmentlist",{brand:$stateParams.brand},{location:'replace',notify:true});
+        }
+      });
     }
 
-    $scope.categoryList = allCategory;
-    $scope.brandList = allBrand;
+    function clearAll(){
+    for(var key in $scope.equipmentSearchFilter){
+      if(key !== 'brand')
+        $scope.equipmentSearchFilter[key] = "";
+    }
     saveState();
     fireCommand();
   }
 
-    function onGroupChange(group,noAction){
-    if(!noAction){
-      $scope.equipmentSearchFilter.category = "";
-      $scope.equipmentSearchFilter.brand = "";
-      $scope.brandList = [];
-    }
-
-    $scope.categoryList = allCategory.filter(function(item){
-      return item.group.name === group && item.isForNew;
-    });
-
-    if(!noAction)
-      fireCommand();
-  }
-
-  function onCategoryChange(category,noAction){
-    if(!noAction){
-      $scope.equipmentSearchFilter.brand = "";
-    }
-    $scope.brandList = allBrand.filter(function(item){
-      return item.category.name === category && item.isForNew;
-    });
-    if(!noAction)
-      fireCommand();
-  }
-
-  function onBrandChange(brand,noAction){
-
-    if(!brand) {
-      fireCommand();
-      return;
-    }
-   var filter = {};
-   filter['brandName'] = brand;
-    if(!noAction)
-      fireCommand();
-  }
 
   function fireCommand(noReset,initLoad){
 
@@ -124,6 +86,7 @@ angular.module('sreizaoApp').controller('NewEquipmentListCtrl', NewEquipmentList
       }
 
       var filter = {};
+      $scope.equipmentSearchFilter.brand = $stateParams.brand;
       angular.copy($scope.equipmentSearchFilter,filter);
       filter['status'] = true;
       filter['sort'] = {featured:-1};
@@ -205,10 +168,10 @@ angular.module('sreizaoApp').controller('NewEquipmentListCtrl', NewEquipmentList
 
   function saveState(retainState){
     $scope.equipmentSearchFilter.currentPage = vm.currentPage + "";
-    if(retainState)
+    //if(retainState)
       $state.go($state.current.name,$scope.equipmentSearchFilter,{location:'replace',notify:false});
-    else
-      $state.go("newviewproduct",$scope.equipmentSearchFilter,{location:'replace',notify:false});
+    //else
+     // $state.go("newviewproduct",$scope.equipmentSearchFilter,{location:'replace',notify:false});
   }
 
   function restoreState(){
@@ -217,7 +180,9 @@ angular.module('sreizaoApp').controller('NewEquipmentListCtrl', NewEquipmentList
       $scope.equipmentSearchFilter.currentPage = vm.currentPage + "";
   }
 
-   init();
+
+   //init();
+   getBrandDetail();
 
   }
 

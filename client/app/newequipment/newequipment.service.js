@@ -17,6 +17,7 @@
         //var promoFilter = 'promotion';
         svc.saveNewBulkOrder = saveNewBulkOrder;
         svc.getNewBulkOrder = getNewBulkOrder;
+        svc.getEquipmentOtherInfo = getEquipmentOtherInfo;
 
         function saveNewBulkOrder(data){
         	return $http.post(newBulkOrderPath,data)
@@ -42,6 +43,22 @@
                     .catch(function(err){
                         throw err;
                     });
+        }
+
+        function getEquipmentOtherInfo(filter){
+             var queryParam = "";
+            var serPath = "/api/common/newequipmentotherinfo";
+            if(filter)
+                queryParam = $httpParamSerializer(filter);
+            if(queryParam)
+                serPath += "?" + queryParam;
+            return $http.get(serPath)
+            .then(function(res){
+                return res.data;
+            })
+            .catch(function(err){
+                throw err;
+            })
         }
 
         return svc;

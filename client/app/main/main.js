@@ -807,12 +807,21 @@ angular.module('sreizaoApp')
         controller: "NewEquipmentListCtrl as newequipmentlistVm",
         layout:'client'
       })
-      .state('newproductbybrand',{
+      .state('brandHome',{
+        url: "/new/brands/:brand?currentPage&group&category&model" + 
+            "&type&currencyType&currencyMin&currencyMax&" +
+            "&mfgYearMin&mfgYearMax&stateName&cityName&assetId&"+
+            "searchstr&operatingHour&mileage&productName&location&locationName",
+        templateUrl: 'app/newequipment/newbrandhome.html',
+        controller: 'NewBrandHomeCtrl as newBrandHomeVm',
+        layout:'client'
+      })
+     /* .state('newproductbybrand',{
         url: '/new/brands/:brand?currentPage',
         templateUrl: 'app/newequipment/newproducts.html',
         controller: 'NewEquipmentListCtrl as newequipmentlistVm',
         layout:'client'
-      })
+      })*/
        .state('newsplproduct',{
         url: '/new/spl/:certificationName?currentPage',
         templateUrl: 'app/newequipment/newproducts.html',

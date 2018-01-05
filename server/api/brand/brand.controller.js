@@ -75,6 +75,10 @@ exports.getBrandOnFilter = function(req,res){
      var term = new RegExp(data.searchStr, 'i');
       filter['name'] = { $regex: term };
   }
+  if(data.name)
+    filter['name'] = data.name;
+   if(data.enableHomeBanner)
+    filter['enableHomeBanner'] = true;
    var sortObj = {name:1};
   if(data.sortBy){
      sortObj = {};

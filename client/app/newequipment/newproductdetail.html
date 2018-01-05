@@ -103,6 +103,22 @@
             </div>
           </div>
         </uib-tab>
+        <uib-tab heading="ADDITIONAL INFO">
+          <div class="row">
+            <div class="col-sm-12 form-group" ng-if="otherInfo.brandDesc">
+              <label>About {{currentProduct.brand.name}}</label>
+              <h4>{{otherInfo.brandDesc}}</h4>
+            </div>
+            <div class="col-sm-12 form-group" ng-if="otherInfo.dealershipNetworkDesc">
+              <label>Dealership Network</label>
+              <h4>{{otherInfo.dealershipNetworkDesc}}</h4>
+            </div>
+            <div class="col-sm-12 form-group" ng-if="otherInfo.modelDesc">
+              <label>About {{currentProduct.name}}</label>
+              <h4>{{otherInfo.modelDesc}}</h4>
+            </div>
+          </div>
+        </uib-tab>
       </uib-tabset>
 
       <div ng-if="offerCliced">
