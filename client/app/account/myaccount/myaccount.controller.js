@@ -24,6 +24,7 @@ function MyAccountCtrl($scope,$rootScope,Auth,$state,Modal,LegalTypeSvc,KYCSvc,L
     vm.addressProofList = [];
     vm.idProofList = [];
     $scope.kycInfo = {};
+    $scope.kycList = [];
     $scope.type = ['Address Proof', 'Identity Proof'];
     var FIELDS_MAPPING = {
                             basicInfo:['fname','lname','email','mobile', 'aadhaarNumber','panNumber','country','state','city'],
@@ -39,9 +40,12 @@ function MyAccountCtrl($scope,$rootScope,Auth,$state,Modal,LegalTypeSvc,KYCSvc,L
         vm.userInfo.bankInfo = [{}];
       if(vm.userInfo.GSTInfo.length < 1)
         vm.userInfo.GSTInfo = [{}];
-      if(vm.userInfo.kycInfo.length < 1)
+      if(vm.userInfo.kycInfo.length < 1) {
         vm.userInfo.kycInfo = [{}];
+        $scope.kycInfo = {};
+      }
       else {
+        $scope.kycList = [];
         angular.copy(vm.userInfo.kycInfo, $scope.kycList);
         $scope.kycList.forEach(function(item){
           if(item.type == $scope.type[0]){
@@ -112,8 +116,23 @@ function MyAccountCtrl($scope,$rootScope,Auth,$state,Modal,LegalTypeSvc,KYCSvc,L
       vm.userInfo = angular.copy(Auth.getCurrentUser());
       if(!vm.userInfo.bankInfo || vm.userInfo.bankInfo.length < 1)
         vm.userInfo.bankInfo = [{}];
-      if(!vm.userInfo.kycInfo || vm.userInfo.kycInfo.length < 1)
+      if(!vm.userInfo.kycInfo || vm.userInfo.kycInfo.length < 1){
         vm.userInfo.kycInfo = [{}];
+        $scope.kycInfo = {};
+      }
+      else {
+        $scope.kycList = [];
+        angular.copy(vm.userInfo.kycInfo, $scope.kycList);
+        $scope.kycList.forEach(function(item){
+          if(item.type == $scope.type[0]){
+            $scope.kycInfo.addressProof = item.name;
+            $scope.kycInfo.addressProofDocName = item.docName;
+          } else if(item.type == $scope.type[1]){
+            $scope.kycInfo.idProof = item.name;
+            $scope.kycInfo.idProofDocName = item.docName;
+          }
+        });
+      }
       if(!vm.userInfo.GSTInfo || vm.userInfo.GSTInfo.length < 1)
         vm.userInfo.GSTInfo = [{}];
     }
@@ -126,37 +145,48 @@ function MyAccountCtrl($scope,$rootScope,Auth,$state,Modal,LegalTypeSvc,KYCSvc,L
     }
 
     function save(form,fieldKey){
-
       if(form.$invalid){
         $scope.submitted = true;
         return;
       }
 
       var userData = {_id:vm.userInfo._id};
-
-      var addProofObj = {};
-      if($scope.kycInfo.addressProof) {
-        addProofObj.type = $scope.type[0];
-        addProofObj.name = $scope.kycInfo.addressProof;
-        if($scope.kycInfo.addressProofDocName)
-         addProofObj.docName = $scope.kycInfo.addressProofDocName;
-        else {
-          Modal.alert("Please upload address proof document.", true);
+      if(vm.editKYCInfo) {
+        var addProofObj = {};
+        if($scope.kycInfo.addressProof) {
+          vm.userInfo.kycInfo = [{}];
+          addProofObj.type = $scope.type[0];
+          addProofObj.name = $scope.kycInfo.addressProof;
+          if($scope.kycInfo.addressProofDocName)
+           addProofObj.docName = $scope.kycInfo.addressProofDocName;
+          else {
+            Modal.alert("Please upload address proof document.", true);
+            return;
+          }
+          vm.userInfo.kycInfo[vm.userInfo.kycInfo.length] = addProofObj;
+        }
+        var idProofObj = {};
+        if($scope.kycInfo.idProof) {
+          idProofObj.type = $scope.type[1];
+          idProofObj.name = $scope.kycInfo.idProof;
+          if($scope.kycInfo.idProofDocName)
+           idProofObj.docName = $scope.kycInfo.idProofDocName;
+          else {
+            Modal.alert("Please upload ID proof document.", true);
+            return;
+          }
+          vm.userInfo.kycInfo[vm.userInfo.kycInfo.length] = idProofObj;
+        }
+        vm.userInfo.kycInfo = vm.userInfo.kycInfo.filter(function(item, idx) {
+          if (item && item.docName)
+            return true;
+          else
+            return false;
+        });
+        if(!vm.userInfo.kycInfo || vm.userInfo.kycInfo.length < 1) {
+          Modal.alert("Please upload KYC document.", true);
           return;
         }
-        vm.userInfo.kycInfo[vm.userInfo.kycInfo.length] = addProofObj;
-      }
-      var idProofObj = {};
-      if($scope.kycInfo.idProof) {
-        idProofObj.type = $scope.type[1];
-        idProofObj.name = $scope.kycInfo.idProof;
-        if($scope.kycInfo.idProofDocName)
-         idProofObj.docName = $scope.kycInfo.idProofDocName;
-        else {
-          Modal.alert("Please upload ID proof document.", true);
-          return;
-        }
-        vm.userInfo.kycInfo[vm.userInfo.kycInfo.length] = idProofObj;
       }
 
       FIELDS_MAPPING[fieldKey].forEach(function(key){
