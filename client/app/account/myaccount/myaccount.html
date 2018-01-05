@@ -59,11 +59,21 @@
                             <input type="email" class="form-control" id="email" placeholder="Enter Email" ng-model="myAccountVm.userInfo.email"  with-floating-label ng-disabled="!myAccountVm.editBasicInfo">
                           </div>
                         </div>
-                        <div class="col-sm-6 form-group">
+                        <div class="col-sm-3 form-group">
                            <div class="floating-label-wrapper" ng-class="{'has-error':basicForm.mobile.$invalid && submitted}">
                             <label for="mobile">Mobile Number</label>
                             <input type="text" class="form-control" id="mobile" name="mobile" placeholder="Mobile Number" ng-model="myAccountVm.userInfo.mobile"  with-floating-label ng-disabled="myAccountVm.userInfo.mobile" required>
                           </div>
+                        </div>
+                        <div class="col-sm-2 form-group padd-left">
+                           <div class="floating-label-wrapper">
+                            <label for="otp">OTP</label>
+                            <input type="text" class="form-control" id="otp" name="otp" placeholder="Enter OTP" with-floating-label>
+                          </div>
+                        </div>
+                        <div class="col-sm-1 padd-left">
+                          <button type="button" class="btn btn-block btn-sm btn-primary"><i class=" fa fa-pencil"></i></button>
+                          <button type="button" ng-if="false" class="btn btn-block btn-sm btn-primary"><i class=" fa fa-check"></i></button>
                         </div>
                       </div>
                       <div class="row">

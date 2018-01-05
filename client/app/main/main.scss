@@ -1184,7 +1184,7 @@ align-items: center; justify-content: center;
 .information-tabs .tab-content label{color: #999; font-size: 13px;}
 .information-tabs .tab-content h4{margin: 0; font-size: 1.1em; font-weight: bold;}
 .myprofile-tabs{margin: 3em 0;}
-.myprofile-tabs .nav-pills.nav-stacked{width: 25%; float: left; min-height: 300px; box-shadow: 1px 1px 4px #ccc; border: 1px solid #ddd;}
+.myprofile-tabs .nav-pills.nav-stacked{width: 25%; float: left; box-shadow: 1px 1px 4px #ccc; border: 1px solid #ddd;}
 .myprofile-tabs .nav-pills.nav-stacked > li.active > a{border-radius: 0;}
 .myprofile-tabs > .tab-content{width: 75%; float: left; padding: 0 !important;}
 .myprofile-tabs .information-tabs{margin: 0; padding: 0 15px;}
