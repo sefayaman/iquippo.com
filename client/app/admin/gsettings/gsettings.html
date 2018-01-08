@@ -3437,12 +3437,21 @@
                                 <option ng-repeat="dealer in dealerVm.dealerList" value="{{dealer._id}}">{{dealer.entityName}}</option>
                             </select>
                         </div>
+                        <div class="col-sm-3" ng-class="{'has-error':dealerForm.country.$invalid && submitted}">
+                            <select class="form-control" name="country" ng-model="dealerVm.dataModel.country" ng-change="dealerVm.onCountryChange(dealerVm.dataModel.country)" required>
+                                <option value="">*Select Country</option>
+                                <option ng-repeat="country in allCountries" value="{{country.name}}">{{country.name}}</option>
+                            </select>
+                        </div>
                         <div class="col-sm-3" ng-class="{'has-error':dealerForm.state.$invalid && submitted}">
                             <select multiple="true" class="form-control" name="state" ng-model="dealerVm.stateIdArr" style="height:70px;" required>
                                 <option value="">*Select State</option>
                                 <option ng-repeat="state in dealerVm.stateList" value="{{state._id}}">{{state.name}}</option>
                             </select>
                         </div>
+                        
+                    </div>
+                    <div class="row">
                         <div class="col-sm-2 pull-right">
                             <button type="button" class="btn btn-block btn-primary" ng-if="isEdit" ng-click="dealerVm.update(dealerForm)">Update</button>
                             <button type="button" class="btn btn-block btn-primary" ng-if="!isEdit" ng-click="dealerVm.save(dealerForm)">Save</button>
@@ -3468,12 +3477,12 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr  ng-repeat="dealer in dealerVm.filteredList">
+                            <tr  ng-repeat="dealer in dealerVm.dataList">
                                 <td>{{dealer.brand.name}}</td>
                                 <td>{{dealer.dealer.name}}</td>
-                                <td><span ng-repeat="state in dealer.state">{{state.name}},</span></td>
-                                <td ng-if="dealer.status == 'true'"><a href="javascript:void(0);" ng-click="dealerVm.changeStatus(dealer, 'false')">Active</a></td>
-                                <td ng-if="dealer.status == 'false'"><a href="javascript:void(0);" ng-click="dealerVm.changeStatus(dealer, 'true')">Deactive</a></td>
+                                <td><span ng-repeat="state in dealer.state">{{state.name}}</span><span ng-if="!$last">,</span></td>
+                                <td ng-if="dealer.status"><a href="javascript:void(0);" ng-click="dealerVm.changeStatus(dealer, 'false')">Deactivate</a></td>
+                                <td ng-if="!dealer.status"><a href="javascript:void(0);" ng-click="dealerVm.changeStatus(dealer, 'true')">Activate</a></td>
                                 <td>
                                     <button type="button" class="btn btn-sm btn-primary" ng-click="dealerVm.editClicked(dealer)"><i class="fa fa-pencil"></i></button>
                                     <button type="button" class="btn btn-sm btn-danger" ng-click="dealerVm.destroy(dealer._id)"><i class="fa fa-trash"></i></button>
@@ -3483,7 +3492,7 @@
                         </tbody>
                     </table>
                 </div>
-                <!--<uib-pagination total-items="dealerVm.totalItems" ng-model="dealerVm.currentPage" items-per-page="dealerVm.itemsPerPage" max-size="dealerVm.maxSize" ng-change="dealerVm.fireCommand(false,null,'dealermaster')" class="pagination-sm" rotate="false">  </uib-pagination>-->
+                <uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="pager.maxSize" ng-change="dealerVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
             </div>
             <!-- Certificate tab value-->
             <div ng-if="gsettingVm.tabValue == 'certificate'" ng-controller="CertificateMasterCtrl as certificateVm">
