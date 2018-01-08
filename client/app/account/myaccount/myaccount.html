@@ -10,7 +10,10 @@
 <section class="category-block">
   <div class="container">
     <uib-tabset active="activePill" vertical="true" type="pills" class="myprofile-tabs">
-      <uib-tab index="0" heading="Personal Information">
+      <uib-tab index="0">
+        <uib-tab-heading>
+          <i class="fa fa-user"></i> <span class="hidden-xs">Personal Information</span>
+        </uib-tab-heading>
         <div class="information-tabs">
           <h3 ng-if="isNew">Congratulations! Your account has been created successfully.</h3>
           <uib-tabset justified="true">
@@ -129,10 +132,10 @@
                     </div>
                   </div>
                   <div class="row form-group">
-                    <div class="col-xs-offset-2 col-xs-4 form-group">
+                    <div class="col-xs-6 col-sm-offset-2 col-sm-4 form-group">
                       <button type="button" class="btn btn-primary btn-block" ng-click="myAccountVm.save(basicForm,'basicInfo')" ng-if="myAccountVm.editBasicInfo">Save</button>
                     </div>
-                    <div class="col-xs-4 form-group">
+                    <div class="col-xs-6 col-sm-4 form-group">
                       <button type="button" class="btn btn-primary btn-block" ng-if="myAccountVm.editBasicInfo" ng-click="myAccountVm.cancelClicked()">Cancel</button>
                     </div>
                   </div>
@@ -239,10 +242,10 @@
                   
                 </div>
                 <div class="row form-group">
-                  <div class="col-xs-offset-2 col-xs-4 form-group">
+                  <div class="col-xs-6 col-sm-offset-2 col-sm-4 form-group">
                     <button type="button" class="btn btn-primary btn-block" ng-click="myAccountVm.save(additionalForm,'AdditionalInfo')" ng-if="myAccountVm.editAdditionalInfo">Save</button>
                   </div>
-                  <div class="col-xs-4 form-group">
+                  <div class="col-xs-6 col-sm-4 form-group">
                     <button type="button" class="btn btn-primary btn-block" ng-if="myAccountVm.editAdditionalInfo" ng-click="myAccountVm.cancelClicked()">Cancel</button>
                   </div>
                 </div>
@@ -300,10 +303,10 @@
                     </div>
                   </div>
                   <div class="row form-group">
-                  <div class="col-xs-offset-2 col-xs-4 form-group">
+                  <div class="col-xs-6 col-sm-offset-2 col-sm-4 form-group">
                     <button type="button" class="btn btn-primary btn-block" ng-click="myAccountVm.save(KYCDetails,'KycInfo')" ng-if="myAccountVm.editKYCInfo">Save</button>
                   </div>
-                  <div class="col-xs-4 form-group">
+                  <div class="col-xs-6 col-sm-4 form-group">
                     <button type="button" class="btn btn-primary btn-block" ng-if="myAccountVm.editKYCInfo" ng-click="myAccountVm.cancelClicked()">Cancel</button>
                   </div>
                 </div>
@@ -313,7 +316,10 @@
           </uib-tabset>
         </div>
       </uib-tab>
-      <uib-tab index="1" heading="Bank Details">
+      <uib-tab index="1">
+        <uib-tab-heading>
+          <i class="fa fa-university"></i> <span class="hidden-xs">Bank Details</span>
+        </uib-tab-heading>
         <div class="information-tabs">
           <form name="bankForm" novalidate>
             <h4>
@@ -357,17 +363,20 @@
               <!-- </div> -->
             </div>
             <div class="row form-group">
-              <div class="col-xs-offset-2 col-xs-4 form-group">
+              <div class="col-xs-6 col-sm-offset-2 col-sm-4 form-group">
                 <button type="button" class="btn btn-primary btn-block" ng-click="myAccountVm.save(bankForm,'BankInfo')" ng-if="myAccountVm.editBankInfo">Save</button>
               </div>
               <div class="col-xs-4 form-group">
-                <button type="button" class="btn btn-primary btn-block" ng-if="myAccountVm.editBankInfo" ng-click="myAccountVm.cancelClicked()">Cancel</button>
+                <button col-xs-6 type="smtton" class="btn btn-primary btn-block" ng-if="myAccountVm.editBankInfo" ng-click="myAccountVm.cancelClicked()">Cancel</button>
               </div>
             </div>
           </form>
         </div>
       </uib-tab>
-      <uib-tab index="2" heading="Tax Details">
+      <uib-tab index="2">
+        <uib-tab-heading>
+          <i class="fa fa-file-text-o"></i> <span class="hidden-xs">Tax Details</span>
+        </uib-tab-heading>
         <div class="information-tabs">
           <form name="taxForm" novalidate>
             <h4>
@@ -403,11 +412,11 @@
               </div>              
             </div>
             <div class="row form-group">
-              <div class="col-xs-offset-2 col-xs-4 form-group">
+              <div class="col-xs-6 col-sm-offset-2 col-sm-4 form-group">
                 <button type="button" class="btn btn-primary btn-block" ng-click="myAccountVm.save(taxForm,'GstInfo')" ng-if="myAccountVm.editGstInfo">Save</button>
               </div>
               <div class="col-xs-4 form-group">
-                <button type="button" class="btn btn-primary btn-block" ng-if="myAccountVm.editGstInfo" ng-click="myAccountVm.cancelClicked()">Cancel</button>
+                <button col-xs-6 type="smtton" class="btn btn-primary btn-block" ng-if="myAccountVm.editGstInfo" ng-click="myAccountVm.cancelClicked()">Cancel</button>
               </div>
             </div>
           </form>
