@@ -1814,7 +1814,7 @@ exports.validateExcelData = function(req, res, next) {
         
         if(type === 'template_update') {
           async.parallel({
-            //validateGenericField:validateGenericField,
+            validateGenericField:validateGenericField,
             validateCategory: validateCategory, //{}
             validateSeller: validateSeller,
             validateTechnicalInfo: validateTechnicalInfo,
