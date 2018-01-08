@@ -248,6 +248,7 @@ function MyAccountCtrl($scope,$rootScope,Auth,$state,Modal,commonSvc,LegalTypeSv
           vm.userInfo.kycInfo = [{}];
           addProofObj.type = $scope.type[0];
           addProofObj.name = $scope.kycInfo.addressProof;
+          addProofObj.isActive = false;
           if($scope.kycInfo.addressProofDocName)
            addProofObj.docName = $scope.kycInfo.addressProofDocName;
           else {
@@ -260,6 +261,7 @@ function MyAccountCtrl($scope,$rootScope,Auth,$state,Modal,commonSvc,LegalTypeSv
         if($scope.kycInfo.idProof) {
           idProofObj.type = $scope.type[1];
           idProofObj.name = $scope.kycInfo.idProof;
+          idProofObj.isActive = false;
           if($scope.kycInfo.idProofDocName)
            idProofObj.docName = $scope.kycInfo.idProofDocName;
           else {

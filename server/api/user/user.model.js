@@ -98,7 +98,13 @@ var UserSchema = new Schema({
   professionalInfo:{},
   socialInfo:{},
   kycInfo:[{}],
-  bankInfo:[{}],
+  bankInfo:[{
+    bankName:String,
+    ifsc:String,
+    branch:String,
+    accountNo:String,
+    isPrimary:{type:Boolean,default:false}
+  }],
   GSTInfo:[{}]
 });
 

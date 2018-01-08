@@ -50,13 +50,17 @@ function EmdCtrl($scope,$rootScope,$state,Modal,Auth,PagerSvc,$filter,LotSvc,Auc
   }
 
   function onSelectAuction(dbAuctionId) {
+    if(!dbAuctionId) {
+      resetEMDData();
+      return;
+    }
     filter={};
     filter.auction_id  = dbAuctionId;
     filter.isDeleted = false;
     getLotData(filter);
     for(var i=0; i < vm.auctionListing.length; i++){
       if(vm.auctionListing[i]._id == dbAuctionId){
-        vm.auctionName = vm.auctionListing[i].name;
+        vm.dataModel.auctionName = vm.auctionListing[i].name;
         vm.dataModel.auctionId = vm.auctionListing[i].auctionId;
         break;
       }
@@ -64,7 +68,7 @@ function EmdCtrl($scope,$rootScope,$state,Modal,Auth,PagerSvc,$filter,LotSvc,Auc
   }
 
   function editClicked(rowData){
-    getAuctions();
+    //getAuctions();
     vm.dataModel = {};
     angular.copy(rowData, vm.dataModel);
     vm.dataModel.auction_id = rowData.auction_id;
@@ -103,6 +107,7 @@ function EmdCtrl($scope,$rootScope,$state,Modal,Auth,PagerSvc,$filter,LotSvc,Auc
 
   function resetEMDData() {
     vm.dataModel = {};
+    $scope.lotList = [];
     $scope.submitted = false;
     fireCommand(true);
   }
