@@ -377,7 +377,10 @@ function MyAccountCtrl($scope,$rootScope,Auth,$state,Modal,commonSvc,LegalTypeSv
       if(files.length == 0)
         return;
       $rootScope.loading = true;
-      uploadSvc.upload(files[0], avatarDir).then(function(result){
+      var uploadDir = avatarDir;
+      if(type)
+        uploadDir = kycDocDir;
+      uploadSvc.upload(files[0], uploadDir).then(function(result){
           $rootScope.loading = false;
           if(!type) {
             var userData = {_id:vm.userInfo._id};

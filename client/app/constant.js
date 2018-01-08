@@ -144,6 +144,7 @@ var importDir = "import";
 var categoryDir = "category";
 var manpowerDir = "manpower";
 var avatarDir = "avatar";
+var kycDocDir = "kyc";
 var classifiedAdDir = "classifiedad";
 var manufacturerDir = "manufacturer";
 var bannerDir = "banner";
