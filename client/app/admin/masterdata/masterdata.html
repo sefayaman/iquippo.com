@@ -364,8 +364,8 @@
 										<span ng-if="brand.isForNew && brand.isForUsed">&amp;</span>
 										<span ng-if="brand.isForNew">For New</span></td>
 									<td>{{brand.group.name}}</td>
-									<td>{{}}</td>
-									<td>{{}}</td>
+									<td><span ng-if="brand.isForNew && brand.enableHomeBanner && brand.homeBannerTop">Yes</span></td>
+									<td><span ng-if="brand.isForNew && brand.enableHomeBanner && brand.homeBannerLeft">Yes</span></td>
 									<td>{{getStatus(brand.visibleOnUsed)}}</td>
 									 <td>
 									 	<a class="btn btn-primary btn-sm" href="javascript:void(0);" ng-click="masterDataVm.editClick('Brand',brand)" ><i class="fa fa-pencil"></i> </a>
