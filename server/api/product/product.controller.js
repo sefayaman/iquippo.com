@@ -1908,7 +1908,7 @@ exports.validateExcelData = function(req, res, next) {
       });
       dateColumns.forEach(function(x){
         if(row[x]){
-          var d = Utillity.dateUtil.isValidDateTime(row[x],validDateFormat);
+          var d = Utillity.dateUtil.isValidDateTime(row[x],'MM/DD/YYYY');
           if(d.isValid())
             obj[x] = new Date(Utillity.dateUtil.validateAndFormatDate(d,'MM/DD/YYYY'));
         }

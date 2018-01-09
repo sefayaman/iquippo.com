@@ -244,6 +244,7 @@ module.exports = {
 		"Asset Name":{key:"assetDescription"},
 		"Engine No":{key:"engineNo"},
 		"Chassis No":{key:"chassisNo"},
+		"Serial No":{key:"serialNo"},
 		"Regn No":{key:"registrationNo"},
 		"Invoice Date":{key:"customerInvoiceDate",type:'date'},
 		"Invoice Value":{key:"customerInvoiceValue"},
