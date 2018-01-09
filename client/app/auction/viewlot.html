@@ -237,7 +237,7 @@
                     </div>                 
                     
                   </div>
-                  <div class="col-sm-5 padd-left" ng-if="lot.isVisible">
+                  <div class="col-sm-5 padd-left" ng-if="regLotForUser.indexOf(lot.lotNumber) !== -1">
                     <iframe ng-src="{{lot.url}}" name="frame_{{$index}}" id="{{lot._id}}" style="border:0; width: 100%; height: 200px;"></iframe>
                   </div>
                 </div>    

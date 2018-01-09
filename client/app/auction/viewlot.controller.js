@@ -27,6 +27,7 @@
 
     var allCategory = [];
     var allBrand = [];
+    $scope.regLotForUser = [];
 
     $scope.auctionData = null;
 
@@ -36,7 +37,6 @@
     $scope.redirectToLiveAuction = false;
 
     function init(){
-
       var filter = {};
       filter._id = dbAuctionId;
       $rootScope.loading = true;
@@ -46,6 +46,8 @@
           if(result && result.items && result.items.length) {
             $scope.auctionData = result.items[0];
             openLiveAuctionURL(false);
+            if(Auth.getCurrentUser()._id)
+              checkWidgetAccessOnLot();
           }
           else
             return backButton();
@@ -77,6 +79,22 @@
       });
       restoreState();
       fireCommand(false,true);
+    }
+
+    function checkWidgetAccessOnLot(){
+      var dataObj = {};
+      dataObj.auction = {};
+      dataObj.user = {};
+      dataObj.auction.dbAuctionId = dbAuctionId;
+      dataObj.user._id = Auth.getCurrentUser()._id;
+      dataObj.emdTax = $scope.auctionData.emdTax;
+      if($scope.auctionData.emdTax === $scope.LotWist)
+        dataObj.checkRegUser = true;
+      dataObj.onlyRegLotForUser = true;
+      userRegForAuctionSvc.checkUserRegis(dataObj)
+      .then(function(result) {
+        $scope.regLotForUser = result.regLot;
+      });
     }
 
    function clearAll(){
@@ -202,17 +220,16 @@
             vm.totalItems = res.length;
             vm.lotListing = res;
             vm.lotListing.forEach(function(lot){
-              lot.isVisible = false;
+              //lot.isVisible = false;
               if(lot.assets.length && lot.assets[0].product)
                 lot.primaryImg= $rootScope.uploadImagePrefix + lot.assets[0].product.assetDir +"/" + lot.assets[0].product.primaryImg;
               if(!Auth.getCurrentUser()._id)
                 return;
-              //lot.isVisible = false;
               if($scope.auctionData.auctionType == 'L')
                 return;
               var url = auctionURL+ "/bidwidget/" + dbAuctionId + "/" + lot._id + "/" + Auth.getCurrentUser()._id + "?random=" + Math.random();
               lot.url = $sce.trustAsResourceUrl(url);
-              checkWidgetAccessOnLot(lot);
+              //checkWidgetAccessOnLot(lot);
             });
           }else{
             $scope.noResult = true;
@@ -224,7 +241,7 @@
         });
     }
 
-    function checkWidgetAccessOnLot(lot){
+    /*function checkWidgetAccessOnLot(lot){
       $timeout(function() {
        var lotObj = lot;
         var dataObj = {};
@@ -247,7 +264,7 @@
           }
         });
       },0);
-    }
+    }*/
 
   //Register Now
     function openRegisterNow(){
@@ -340,7 +357,7 @@
           brand:asset.brand,
           id:asset.assetId
         };
-        if(Auth.isLoggedIn() && lot.isVisible)
+        if(Auth.isLoggedIn() && $scope.regLotForUser.indexOf(lot.lotNumber) !== -1)
           statParam.lot = lot._id;
         $state.go('productdetail',statParam);
       }
