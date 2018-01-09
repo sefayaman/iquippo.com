@@ -1630,7 +1630,8 @@ exports.generateInvoice = function(req,res){
       var data = {
         invoiceData : invoiceData[0],
         invoiceDate : Utility.dateUtil.validateAndFormatDate(invoiceData[0].createdAt,'MM/DD/YYYY'),
-        serverPath:config.serverPath
+        serverPath:config.serverPath,
+        awsBaseImagePath:config.awsUrl + '/' + config.awsBucket
       };
 
       var result = template(data);
@@ -1931,9 +1932,9 @@ exports.exportExcel = function(req,res){
 
   var dateFilter = {};
   if(queryParam.fromDate)
-    dateFilter['$gte'] = new Date(queryParam.fromDate);
+    dateFilter['$gte'] = new Date(decodeURIComponent(queryParam.fromDate));
   if(queryParam.toDate) {
-      var toDate = new Date(queryParam.toDate);
+      var toDate = new Date(decodeURIComponent(queryParam.toDate));
       var nextDay = toDate.getDate() + 1;
       toDate.setDate(nextDay);
       dateFilter.$lt = toDate;
