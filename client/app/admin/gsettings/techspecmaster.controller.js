@@ -4,7 +4,7 @@
 angular.module('admin').controller('TechSpecMasterCtrl', TechSpecMasterCtrl);
 
 function TechSpecMasterCtrl($scope,$rootScope,$state,uploadSvc,categorySvc,brandSvc, modelSvc,Modal,TechSpecMasterSvc, Auth,PagerSvc,$filter){
-	  var vm  = this;
+    var vm  = this;
     $scope.pager = PagerSvc.getPager();
     vm.tabVal = "techSpec";
     $scope.isEdit = false;
@@ -27,6 +27,8 @@ function TechSpecMasterCtrl($scope,$rootScope,$state,uploadSvc,categorySvc,brand
     vm.onModelChange = onModelChange;
     vm.checkCount = checkCount;
     vm.getTechSpecData = getTechSpecData;
+    //vm.exportExcel = TechSpecMasterSvc.exportExcel;
+    vm.exportExcel = exportExcel;
 
     vm.searchStr = "";
     vm.fieldList =[];
@@ -422,6 +424,20 @@ function TechSpecMasterCtrl($scope,$rootScope,$state,uploadSvc,categorySvc,brand
         }else
           $state.go("main");
     });
+    
+    function exportExcel(reqParam){
+        var filter = {};
+        if(reqParam==='category'){
+            filter.type = "techspec";
+        }
+        else{
+           filter.type = "techspecbrand"; 
+        }
+        var exportObj = {filter:filter};
+        exportObj.method = "GET";
+        exportObj.action = "api/techspec/export";
+        $scope.$broadcast("submit",exportObj);
+    }
 }
 
 })();

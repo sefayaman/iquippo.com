@@ -11,11 +11,12 @@ var DealerLocationSchema = new Schema({
     data:{type:Schema.Types.ObjectId,ref:'Vendor'},
     name:String
   },
+  country:String,
   state:[{
     data:{type:Schema.Types.ObjectId,ref:'State'},
     name:String
   }],
-  status:String,
+  status:{type:Boolean,default:true},
   createdAt: {type:Date,default:Date.now},
   updatedAt: {type:Date,default:Date.now}
 });

@@ -2,10 +2,12 @@
 
 var _ = require('lodash');
 var Seq = require('seq');
+var moment = require('moment');
 var TechSpecMaster = require('./techspecmaster.model.js');
 var Product = require('./../product/product.model.js');
 var TechSpecValMaster = require('./techspecvalmaster.model.js');
 var Utility = require('./../../components/utility.js');
+var fieldsConfig = require('./fieldsConfig');
 
 // Get list of all 
 exports.get = function(req, res) {
@@ -35,6 +37,10 @@ exports.get = function(req, res) {
   query.exec(function(err, result) {
     if (err) {
       return handleError(res, err);
+    }
+    req.result = result;
+    if(queryParam.type === 'excel'){
+      renderTechspecMasterExcel(req,res);
     }
     return res.status(200).json(result);
   });
@@ -67,6 +73,10 @@ exports.getFieldData = function(req, res) {
   query.exec(function(err, result) {
     if (err) {
       return handleError(res, err);
+    }
+    req.result = result;
+    if(queryParam.type === 'excel'){
+      renderTechspecMasterExcel(req,res);
     }
     return res.status(200).json(result);
   });
@@ -196,6 +206,99 @@ exports.fieldDelete = function(req, res) {
     });
   });
 };
+
+
+exports.exportExcel = function(req,res){
+  var queryParam = req.query;
+   var filter = {};
+  
+
+  var dateFilter = {};
+  switch(queryParam.type){
+    case "techspec":
+
+      var fieldMap = fieldsConfig["EXPORT_TECHSPEC_CATEGORY"];
+      var query = TechSpecMaster.find(filter).sort({createdAt:-1});
+      query.exec(function(err,dataArr){
+          if(err) { return handleError(res, err); }
+          exportExcel(req,res,fieldMap,dataArr);
+      });
+      break;
+    case 'techspecbrand':
+
+      var fieldMap = fieldsConfig["EXPORT_TECHSPEC_BRAND"];
+      var query = TechSpecValMaster.find(filter).sort({createdAt:-1});
+       query.exec(function(err,dataArr){
+          if(err) { return handleError(res, err); }
+          console.log('brand_______________',dataArr);
+          exportExcel(req,res,fieldMap,dataArr);
+      });
+      break;
+      default:
+  }
+
+
+  
+  
+};
+
+function exportExcel(req,res,fieldMap,jsonArr){
+  var queryParam = req.query;
+  var role = queryParam.role;
+  var headers = Object.keys(fieldMap);
+  var allowedHeaders = [];
+  for(var i=0;i < headers.length;i++){
+      var hd = headers[i];
+      var obj = fieldMap[hd];
+      if(obj.allowedRoles && obj.allowedRoles.indexOf(role) == -1){
+        continue;
+      }
+      allowedHeaders.push(hd);
+  }
+  var str = allowedHeaders.join(",");
+  str += "\r\n";
+  //dataArr.push(allowedHeaders);
+  jsonArr.forEach(function(item,idx){
+    //dataArr[idx + 1] = [];
+
+    allowedHeaders.forEach(function(header){
+      var keyObj = fieldMap[header];
+      var val = _.get(item,keyObj.key,"");
+      if(keyObj.type && keyObj.type == 'boolean')
+          val = val?'YES':'NO';
+      if(keyObj.type && keyObj.type == 'date' && val)
+        val = moment(val).utcOffset('+0530').format('MM/DD/YYYY');
+      if(keyObj.type && keyObj.type == 'datetime' && val)
+        val = moment(val).utcOffset('+0530').format('MM/DD/YYYY HH:mm');
+      if(keyObj.type && keyObj.type == 'url' && val){
+        if(val.filename){
+          if(val.external === true)
+          val = val.filename;
+          else
+            val =  req.protocol + "://" + req.headers.host + "/download/"+ item.assetDir + "/" + val.filename || "";
+        }else
+          val = "";
+        
+      }
+        val = val + "";
+        if(val)
+          val = val.replace(/,|\n/g, ' ') ;
+        str += val + ",";
+       //dataArr[idx + 1].push(val);
+    });
+    str += "\r\n";
+  });
+
+  str = str.substring(0,str.length -1);
+  return  renderCsv(req,res,str);
+}
+
+function renderCsv(req,res,csv){
+   var fileName = req.query.type + "_" + new Date().getTime();
+  res.setHeader('Content-Type', 'application/octet-stream');
+  res.setHeader("Content-Disposition", 'attachment; filename=' + fileName + '.csv;');
+  res.end(csv, 'binary'); 
+}
 
 function handleError(res, err) {
   return res.status(500).send(err);

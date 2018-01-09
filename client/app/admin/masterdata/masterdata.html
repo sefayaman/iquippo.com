@@ -49,10 +49,10 @@
                             </div>  
                           </div>
                           <div class="row">
-                          	<div class="col-sm-2 form-group">
+                          	<div class="col-sm-3 form-group">
                           		<input type="number" class="form-control"  placeholder="Priority for Used" ng-model="g.priorityForUsed">
                           	</div>
-                          	<div class="col-sm-2 form-group">
+                          	<div class="col-sm-3 form-group">
                           		<input type="number" class="form-control" placeholder="Priority for New" ng-model="g.priorityForNew">
                           	</div>
                           	<div class="form-group col-sm-2 pull-right">
@@ -61,6 +61,8 @@
                            	</div>
                           </div>
                      	</form>	
+					    <legend></legend>
+
                      	<div ng-if="refresh">
                      		<div class="row">
                      			<div class="col-sm-3">
@@ -165,6 +167,7 @@
                            	
                           </div>
                      	</form>	
+					    <legend></legend>
 
                      	<div class="row">
                      		<div class="col-sm-3">
@@ -319,7 +322,7 @@
 	                           	
 	                          </div>
 	                     	</form>					      
-					    	<hr>
+					    	<legend></legend>
 					    	<div class="row">
 					    		<div class="col-sm-3">
 					              <div class="checkbox"><input type="checkbox"  id="newequipsb" placeholder="" ng-model="masterDataVm.isForNew" ng-change="masterDataVm.searchFn('brand')"> <label for="newequipsb"> New Equipment </label>
@@ -335,57 +338,59 @@
 					              </div>
 					            </div>
 					        </div>
-			               	<table class="table table-bordred table-striped">				
-	                            <thead>
-                                    <tr>
-                                    	<th>Image</th>                                    	
-                                    	<th>Brand</th>
-	                                    <th>Product Category</th>
-	                                    <th>Equipment Type</th>
-	                                    <th>Product Group</th>                                    
-	                                    <th>Top Banner Uploaded</th>    
-	                                    <th>Left Banner Uploaded</th>     
-	                                    <th>Status</th>                                    
-	                                    <th>Actions</th>
-                                    </tr>		
-                                </thead>
-                         		<tbody>
-                         		  <tr ng-repeat="brand in filteredBrand| startFrom:(masterDataVm.bCurrentPage -1 )*masterDataVm.itemsPerPage|limitTo:masterDataVm.itemsPerPage">
-                         		  	<td>
-                         		  		<span class="master-browse" tooltip-trigger="mouseenter" tooltip-placement="top" uib-tooltip="Change Image">
-											<img class="sheduleImg img-circle" ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{brand.imgSrc}}" alt="Image">
-										<input type="file" accept="image/*" ng-model ="files" ng-change="uploadImage(files,brand,'Brand',1)" file>
-										</span>
-                         		  	</td>                         		  	
-									<td>{{brand.name}}</td>
-									<td>{{brand.category.name}}</td>
-									<td>
-									<span ng-if="brand.isForUsed">For Used</span>
-										<span ng-if="brand.isForNew && brand.isForUsed">&amp;</span>
-										<span ng-if="brand.isForNew">For New</span></td>
-									<td>{{brand.group.name}}</td>
-									<td>{{}}</td>
-									<td>{{}}</td>
-									<td>{{getStatus(brand.visibleOnUsed)}}</td>
-									 <td>
-									 	<a class="btn btn-primary btn-sm" href="javascript:void(0);" ng-click="masterDataVm.editClick('Brand',brand)" ><i class="fa fa-pencil"></i> </a>
-										<a class="btn btn-danger btn-sm" href="javascript:void(0);" ng-click="masterDataVm.deleteClick('Brand',brand)"><i class="fa fa-trash"></i> </a>
-										<button class="btn btn-success" ng-model="brand.visibleOnUsed" uib-btn-checkbox ng-click="masterDataVm.makeVisibleHome(brand,'Brand',false)"><span ng-if="!brand.visibleOnUsed" uib-popover="Activate for Used" popover-trigger="mouseenter">
-											<i class="fa fa-toggle-off"></i>								
-											</span> <span ng-if="brand.visibleOnUsed" uib-popover="Deactivate for Used" popover-trigger="mouseenter">
-											<i class="fa fa-toggle-on"></i>							
+			               	<div class="table-responsive">
+			               		<table class="table table-bordred table-striped">				
+		                            <thead>
+	                                    <tr>
+	                                    	<th>Image</th>                                    	
+	                                    	<th>Brand</th>
+		                                    <th>Product Category</th>
+		                                    <th>Equipment Type</th>
+		                                    <th>Product Group</th>                                    
+		                                    <th>Top Banner Uploaded</th>    
+		                                    <th>Left Banner Uploaded</th>     
+		                                    <th>Status</th>                                    
+		                                    <th>Actions</th>
+	                                    </tr>		
+	                                </thead>
+	                         		<tbody>
+	                         		  <tr ng-repeat="brand in filteredBrand| startFrom:(masterDataVm.bCurrentPage -1 )*masterDataVm.itemsPerPage|limitTo:masterDataVm.itemsPerPage">
+	                         		  	<td>
+	                         		  		<span class="master-browse" tooltip-trigger="mouseenter" tooltip-placement="top" uib-tooltip="Change Image">
+												<img class="sheduleImg img-circle" ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{brand.imgSrc}}" alt="Image">
+											<input type="file" accept="image/*" ng-model ="files" ng-change="uploadImage(files,brand,'Brand',1)" file>
 											</span>
-										</button>
-										<button class="btn btn-success" ng-model="brand.visibleOnNew" uib-btn-checkbox ng-click="masterDataVm.makeVisibleHome(brand,'Brand',true)"><span ng-if="!brand.visibleOnNew" uib-popover="Activate for New" popover-trigger="mouseenter">
-											<i class="fa fa-toggle-off"></i>								
-											</span> <span ng-if="brand.visibleOnNew" uib-popover="Deactivate for New" popover-trigger="mouseenter">
-											<i class="fa fa-toggle-on"></i>							
-											</span>
-										</button>
-									</td> 
-								  </tr>
-                                </tbody>
-                            </table>
+	                         		  	</td>                         		  	
+										<td>{{brand.name}}</td>
+										<td>{{brand.category.name}}</td>
+										<td>
+										<span ng-if="brand.isForUsed">For Used</span>
+											<span ng-if="brand.isForNew && brand.isForUsed">&amp;</span>
+											<span ng-if="brand.isForNew">For New</span></td>
+										<td>{{brand.group.name}}</td>
+										<td><span ng-if="brand.isForNew && brand.enableHomeBanner && brand.homeBannerTop">Yes</span></td>
+										<td><span ng-if="brand.isForNew && brand.enableHomeBanner && brand.homeBannerLeft">Yes</span></td>
+										<td>{{getStatus(brand.visibleOnUsed)}}</td>
+										 <td>
+										 	<a class="btn btn-primary btn-sm" href="javascript:void(0);" ng-click="masterDataVm.editClick('Brand',brand)" ><i class="fa fa-pencil"></i> </a>
+											<a class="btn btn-danger btn-sm" href="javascript:void(0);" ng-click="masterDataVm.deleteClick('Brand',brand)"><i class="fa fa-trash"></i> </a>
+											<button class="btn btn-success" ng-model="brand.visibleOnUsed" uib-btn-checkbox ng-click="masterDataVm.makeVisibleHome(brand,'Brand',false)"><span ng-if="!brand.visibleOnUsed" uib-popover="Activate for Used" popover-trigger="mouseenter">
+												<i class="fa fa-toggle-off"></i>								
+												</span> <span ng-if="brand.visibleOnUsed" uib-popover="Deactivate for Used" popover-trigger="mouseenter">
+												<i class="fa fa-toggle-on"></i>							
+												</span>
+											</button>
+											<button class="btn btn-success" ng-model="brand.visibleOnNew" uib-btn-checkbox ng-click="masterDataVm.makeVisibleHome(brand,'Brand',true)"><span ng-if="!brand.visibleOnNew" uib-popover="Activate for New" popover-trigger="mouseenter">
+												<i class="fa fa-toggle-off"></i>								
+												</span> <span ng-if="brand.visibleOnNew" uib-popover="Deactivate for New" popover-trigger="mouseenter">
+												<i class="fa fa-toggle-on"></i>							
+												</span>
+											</button>
+										</td> 
+									  </tr>
+	                                </tbody>
+	                            </table>
+			               	</div>
                 			<uib-pagination total-items="masterDataVm.bTotalItems" ng-model="masterDataVm.bCurrentPage" items-per-page="masterDataVm.itemsPerPage" max-size="masterDataVm.maxSize" class="pagination-sm" rotate="false">  </uib-pagination>
 					    </uib-tab>
 					    <uib-tab heading="Model" select="masterDataVm.reset()">
@@ -436,6 +441,7 @@
                                	
                               </div>
                          	</form>
+					    	<legend></legend>
 
                          	<div class="row">
                          		<div class="col-sm-3">

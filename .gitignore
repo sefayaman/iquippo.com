@@ -35,3 +35,5 @@ dist/server
 
 npm-debug.log
 /server/config/environment/local.js
+/client/app/admin/gsettings/offer.controller-vin.js
+/client/app/admin/gsettings/gsettings-vin.html
