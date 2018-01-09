@@ -100,7 +100,6 @@ angular.module('sreizaoApp',[
     $rootScope.valuationList = valuationList;
     $rootScope.tradeType = tradeType;
     $rootScope.rateMyEquipmentOpt = rateMyEquipmentOpt;
-    $rootScope.bankNameList = bankNameList;
     $rootScope.invitationData = {};
     $rootScope.expValue = expValue;
     $rootScope.spareStatus = spareStatus;

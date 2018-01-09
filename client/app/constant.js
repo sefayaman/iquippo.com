@@ -368,21 +368,6 @@ var rateMyEquipmentOpt = [
 }
 ];
 
-var bankNameList = [
-{
-  "name" : "Axis"
-},
-{
-  "name" : "ICICI"
-},
-{
-  "name" : "SBI"
-},
-{
-  "name" : "PNB"
-}
-];
-
 var valuationList = [
 {
   "name" : "Compliance",

@@ -26,7 +26,6 @@ function MyAccountCtrl($scope,$rootScope,Auth,$state,Modal,commonSvc,LegalTypeSv
     vm.updateMobile = updateMobile;
     vm.verifyOtp = verifyOtp;
     $scope.legalTypeList = [];
-    $scope.bankNameList = bankNameList;
     vm.addressProofList = [];
     vm.idProofList = [];
     $scope.kycInfo = {};

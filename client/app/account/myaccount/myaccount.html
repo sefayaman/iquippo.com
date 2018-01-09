@@ -334,10 +334,7 @@
                 <div class="col-sm-6 form-group">
                   <div class="floating-label-wrapper" ng-class="{'has-error':bankForm.bankName.$invalid && submitted}">
                     <label>*Bank Name</label>
-                    <select class="form-control" name="bankName" ng-model="bank.bankName" ng-disabled="!myAccountVm.editBankInfo" required>
-                      <option value="">*Select Bank</option>
-                      <option value="{{bank.name}}" ng-repeat="bank in bankNameList">{{bank.name}}</option>
-                    </select>
+                    <input type="text" class="form-control" name="bankName" placeholder="Bank Name" ng-model="bank.bankName" ng-disabled="!myAccountVm.editBankInfo" required>
                   </div>
                 </div>
                 <div class="col-sm-6 form-group">
