@@ -884,7 +884,7 @@ exports.updateMasterData = function(req, res) {
 								r: 0
 							},
 							e: {
-								c: 3,
+								c: 5,
 								r: data.length
 							}
 						};
@@ -895,7 +895,7 @@ exports.updateMasterData = function(req, res) {
 								r: 0
 							},
 							e: {
-								c: 5,
+								c: 7,
 								r: data.length
 							}
 						};
@@ -994,18 +994,52 @@ exports.updateMasterData = function(req, res) {
 				function addUsedAndNew(C, R, cell, ws, dt) {
 					if (R == 0)
 						cell = {
-							v: "Used / New"
+							v: "Used"
+						};
+					else {
+						if (dt) {
+							if (dt.isForUsed)
+								cell = {v: "Yes"};
+							else
+								cell = {v: "No"};
+						}
+					}
+					setType(cell);
+					var cell_ref = xslx.utils.encode_cell({
+						c: C++,
+						r: R
+					})
+					ws[cell_ref] = cell;
+
+					if (R == 0)
+						cell = {
+							v: "New"
+						};
+					else {
+						if (dt) {
+							if (dt.isForNew)
+								cell = {v: "Yes"};
+							else
+								cell = {v: "No"};
+						}
+					}
+					setType(cell);
+					var cell_ref = xslx.utils.encode_cell({
+						c: C++,
+						r: R
+					})
+					ws[cell_ref] = cell;
+
+					if (R == 0)
+						cell = {
+							v: "Both"
 						};
 					else {
 						if (dt) {
 							if (dt.isForUsed && dt.isForNew)
-								cell = {v: "Yes / Yes"};
-							else if (dt.isForUsed && !dt.isForNew)
-								cell = {v: "Yes / No"};
-							else if (!dt.isForUsed && dt.isForNew)
-								cell = {v: "No / Yes"};
+								cell = {v: "Yes"};
 							else
-								cell = {v: "No / No"};
+								cell = {v: "No"};
 						}
 					}
 					setType(cell);

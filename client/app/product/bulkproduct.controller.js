@@ -157,7 +157,7 @@ function BulkProductCtrl($state,$scope,$rootScope,$window,uploadSvc,productSvc,s
             var serData = {};
             serData.serverPath = serverPath;
             serData.errorList = res.errorList;
-            //notificationSvc.sendNotification('BulkProductStatusUpdateError', data, serData,'email');
+            notificationSvc.sendNotification('BulkProductStatusUpdateError', data, serData,'email');
             message += "Error details have been sent on registered email id.";
           }
           $scope.successMessage = message;

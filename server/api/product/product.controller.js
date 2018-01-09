@@ -74,7 +74,7 @@ exports.incomingProduct = function(req,res){
     else{
         filter["user._id"] = req.body.userId;
     }
-    console.log('role',req.body.role,'incomingproducts',filter);
+    //console.log('role',req.body.role,'incomingproducts',filter);
     IncomingProduct.find(filter, function (err, products) {
         if(err) { return handleError(res, err); }
         return res.status(200).json(products);
@@ -972,7 +972,7 @@ function addProduct(req, res){
   if(req.body.featured){
     var imgPath = config.uploadPath + req.body.assetDir + "/" + req.body.primaryImg;
     var featureFilePath=config.uploadPath+"featured/"+req.body.primaryImg;
-    console.log("featureFilePath----",featureFilePath);
+    //console.log("featureFilePath----",featureFilePath);
     var fileParts=req.body.primaryImg.split('.');
     var extPart=fileParts[1];
     var fileBeforeCompression=1;
@@ -1534,7 +1534,7 @@ function fetchModel(model, cb) {
 }
 
 exports.updateExcelData = function (req,res,next){
-  console.log("I am here",req.updateData);
+  //console.log("I am here",req.updateData);
   var successCount = 0;
   if(!req.updateData.length && !req.errorList.length){
     req.errorList = [];
@@ -1551,7 +1551,7 @@ exports.updateExcelData = function (req,res,next){
 
   var dataToUpdate = req.updateData;
 
-console.log("data to be updated",dataToUpdate);
+//console.log("data to be updated",dataToUpdate);
   async.eachLimit(dataToUpdate,5,intialize,finalize);
 
   function finalize(err){
@@ -1582,7 +1582,7 @@ console.log("data to be updated",dataToUpdate);
 };
 
 exports.createProductReq = function(req,res,next){
-  console.log("create",req.updateData);
+  //console.log("create",req.updateData);
   if(!req.updateData.length && !req.errorList.length)
     return next(new APIError(500,'Error while updation'));
 
@@ -1814,7 +1814,7 @@ exports.validateExcelData = function(req, res, next) {
         
         if(type === 'template_update') {
           async.parallel({
-            //validateGenericField:validateGenericField,
+            validateGenericField:validateGenericField,
             validateCategory: validateCategory, //{}
             validateSeller: validateSeller,
             validateTechnicalInfo: validateTechnicalInfo,
@@ -1834,7 +1834,7 @@ exports.validateExcelData = function(req, res, next) {
           return cb();
       });
     } else if(reqType === 'Upload'){
-      console.log("uploading");
+      //console.log("uploading");
       if(!assetIdObj[row.assetId]){
         assetIdObj[row.assetId] = true;
         //debugger;
@@ -1908,7 +1908,7 @@ exports.validateExcelData = function(req, res, next) {
       });
       dateColumns.forEach(function(x){
         if(row[x]){
-          var d = Utillity.dateUtil.isValidDateTime(row[x],validDateFormat);
+          var d = Utillity.dateUtil.isValidDateTime(row[x],'MM/DD/YYYY');
           if(d.isValid())
             obj[x] = new Date(Utillity.dateUtil.validateAndFormatDate(d,'MM/DD/YYYY'));
         }
@@ -1917,7 +1917,7 @@ exports.validateExcelData = function(req, res, next) {
       fieldsToBeCopied.forEach(function(x){
         obj[x] = row[x];
       });
-      console.log("object generic",obj);
+      //console.log("object generic",obj);
       return callback(null,obj);
     }
 
@@ -1993,7 +1993,7 @@ exports.validateExcelData = function(req, res, next) {
               });
               return callback('Error');
             }
-
+            
             if(cityInfo[0].state.name !== row.state || cityInfo[0].state.country !== row.country){
               errorList.push({
                 Error : 'Invalid State or country',
@@ -2065,7 +2065,7 @@ exports.validateExcelData = function(req, res, next) {
         return callback('Error');
       }*/
 
-      console.log("object generic2 madnatory");
+      //console.log("object generic2 madnatory");
       return callback();
 
     }
@@ -2454,7 +2454,7 @@ exports.validateExcelData = function(req, res, next) {
           });
           return callback('Error');
         }
-        console.log("I m here not");
+        //console.log("I m here not");
         return callback(null);
       });
     }
@@ -2476,7 +2476,7 @@ exports.validateExcelData = function(req, res, next) {
           });
           return callback('Error');
         }
-        console.log(" I am validating dup product");
+        //console.log(" I am validating dup product");
         return callback();
       });
     }
@@ -2498,7 +2498,7 @@ exports.validateExcelData = function(req, res, next) {
         updateData.push(obj);
       }
 
-      console.log("boject",updateData);
+      //console.log("boject",updateData);
       return cb();
     }
 
@@ -3041,7 +3041,7 @@ exports.validateExcelData = function(req, res, next) {
           })
         })
       } else {
-        console.log("validated category");
+        //console.log("validated category");
         return callback(null, obj);
       }
     }
