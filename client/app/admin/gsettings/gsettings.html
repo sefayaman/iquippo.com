@@ -3480,7 +3480,7 @@
                             <tr  ng-repeat="dealer in dealerVm.dataList">
                                 <td>{{dealer.brand.name}}</td>
                                 <td>{{dealer.dealer.name}}</td>
-                                <td><span ng-repeat="state in dealer.state">{{state.name}}</span><span ng-if="!$last">,</span></td>
+                                <td><span ng-repeat="state in dealer.state">{{state.name}}<span ng-if="!$last"> , </span></span></td>
                                 <td ng-if="dealer.status"><a href="javascript:void(0);" ng-click="dealerVm.changeStatus(dealer, 'false')">Deactivate</a></td>
                                 <td ng-if="!dealer.status"><a href="javascript:void(0);" ng-click="dealerVm.changeStatus(dealer, 'true')">Activate</a></td>
                                 <td>

@@ -275,6 +275,11 @@ function MasterDataCtrl($scope, $rootScope,MasterDataService, groupSvc, modelSvc
 
 				break;
 			case "Brand":
+				if($scope.b && !$scope.b.enableHomeBanner){
+					$scope.b.homeBannerLeft  = "";
+					$scope.b.homeBannerTop = "";
+				}
+
 				MasterDataService.SaveBrand($scope.b).then(function(Info) {
 				loadAllBrand();
 				if(Info.Code=="SUCCESS"){
@@ -608,6 +613,10 @@ function MasterDataCtrl($scope, $rootScope,MasterDataService, groupSvc, modelSvc
 				dataToSend.group= filterObject($scope.c.group);
 			break;
 			case "Brand":
+				if($scope.b && !$scope.b.enableHomeBanner){
+					$scope.b.homeBannerLeft  = "";
+					$scope.b.homeBannerTop = "";
+				}
 				dataToSend = $scope.b;
 				dataToSend.group = filterObject($scope.b.group);
 				dataToSend.category = filterObject($scope.b.category);
