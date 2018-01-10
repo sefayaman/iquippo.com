@@ -350,10 +350,10 @@ function MasterDataCtrl($scope, $rootScope,MasterDataService, groupSvc, modelSvc
 					$scope.form.errorBrand = true;
 					isValid = false;
 				}
-				if($scope.b.isForNew && $scope.b.enableHomeBanner && (!$scope.b.homeBannerLeft ||  !$scope.b.homeBannerTop)){
+				/*if($scope.b.isForNew && $scope.b.enableHomeBanner && (!$scope.b.homeBannerLeft ||  !$scope.b.homeBannerTop)){
 					isValid = false;
 					Modal.alert("Upload home banner images",true);
-				}
+				}*/
 				if($scope.b.name.toLowerCase() != "other" && ($scope.b.group.name.toLowerCase() == "other" || $scope.b.category.name.toLowerCase() == "other")){
 					isValid = false;
 					Modal.alert("Invaid combination",true);
