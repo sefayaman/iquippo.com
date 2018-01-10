@@ -2111,7 +2111,7 @@ function exportExcel(req,res,fieldMap,jsonArr){
       }
         val = val + "";
         if(val)
-          val = val.replace(/,|\n/g, ' ') ;
+          val = val.replace(/,|\n|\r\n/g, ' ') ;
         str += val + ",";
        //dataArr[idx + 1].push(val);
     });
