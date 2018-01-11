@@ -12,11 +12,11 @@ module.exports = {
         "Category Name": {key: "category.name"},
         "Brand Name": {key: "brand.name"},
         "Model Name": {key: "model.name"},
-        "Field Name": {key: "fieldName"},
-        "Field Type": {key: "fieldType"},
-        "Field Value": {key: "fieldValue"},
-        "Visible on Front": {key: "isFront",type:'boolean'},
-        "Updated At": {key: "updatedAt",type:'date'},
-        "Created At": {key: "createdAt",type:'date'}
+        "Field Name": {key: "name"},
+        "Field Type": {key: "type"},
+        "Field Value": {key: "value"},
+        "Visible on Front": {key: "isFront",type:'boolean'}
+//        "Updated At": {key: "updatedAt",type:'date'},
+//        "Created At": {key: "createdAt",type:'date'}
     }
 };

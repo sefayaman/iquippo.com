@@ -535,7 +535,7 @@ exports.exportCSV = function(req,res){
         var key = LOT_HEADER[header]["key"];
         var val = __.get(lot,key,"");
         if(key === "serialNo"){
-          val = index + 1
+          val = (index +1) + 1;
           val += ".0";
         }
         if(key === "bidIncrementType")
@@ -550,7 +550,7 @@ exports.exportCSV = function(req,res){
       if(!lot.static_increment && lot.bidIncrement && lot.bidIncrement.length){
         lot.bidIncrement.forEach(function(bidInc,idx){
           var row = [].concat(rowData);
-          row[0] = index + "." + (idx + 1);
+          row[0] = (index + 1 ) + "." + (idx + 1);
           dataHeader.forEach(function(key){
             var bidVal = __.get(bidInc,BID_HEADER[key],"");
             bidVal = Util.toCsvValue(bidVal);
