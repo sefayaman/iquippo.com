@@ -118,6 +118,7 @@ function MyAccountCtrl($scope,$rootScope,Auth,$state,Modal,commonSvc,LegalTypeSv
             vm.verify = true;
             break;
         case 'reset':
+            vm.userInfo = angular.copy(Auth.getCurrentUser());
             vm.edit = true;
             break;
       }

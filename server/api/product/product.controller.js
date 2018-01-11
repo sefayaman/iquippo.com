@@ -957,7 +957,7 @@ function updateProduct(req,res){
             postRequest(req, res);
           });
         } else
-          return res.status(200).json(req.body);
+          return res.status(200).json({product:req.body});
       });
     }
   });
@@ -1033,7 +1033,7 @@ function addProduct(req, res){
       postRequest(req, res);
     }
     else
-      return res.status(201).json(product);
+      return res.status(201).json({product:product});
     });
   }
 

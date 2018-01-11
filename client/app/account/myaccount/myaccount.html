@@ -68,8 +68,8 @@
                             <input type="text" class="form-control" id="mobile" name="mobile" placeholder="Mobile Number" ng-model="myAccountVm.userInfo.mobile"  with-floating-label ng-disabled="!myAccountVm.editMobile" required>
                           </div>
                         </div>
-                        <div class="col-sm-2 form-group padd-left">
-                           <div class="floating-label-wrapper" ng-if="myAccountVm.verify" ng-class="{'has-error':basicForm.otp.$invalid && submitted}">
+                        <div class="col-sm-2 form-group padd-left" ng-if="myAccountVm.verify">
+                           <div class="floating-label-wrapper" ng-class="{'has-error':basicForm.otp.$invalid && submitted}">
                             <label for="otp">OTP</label>
                             <input type="text" class="form-control" id="otp" name="otp" ng-model="myAccountVm.userInfo.otp" placeholder="Enter OTP" with-floating-label ng-required="myAccountVm.verify">
                           </div>
@@ -279,7 +279,7 @@
                           <input type="file" name="doc" data-filetype="doc" onchange="angular.element(this).scope().updateAvatar(this.files,this,'idProof')"  class="ng-scope" ng-disabled="!myAccountVm.editKYCInfo">
                           <span class="fa fa-upload"></span>
                         </span>
-                         <span>{{kycInfo.idProofDocName}}</span>
+                         <span><a href="{{uploadImagePrefix}}{{kycDocDir}}/{{kycInfo.idProofDocName}}" target="_blank">{{kycInfo.idProofDocName}}</a></span>
                     </div>
                   </div>
                   <div class="row">
@@ -299,7 +299,7 @@
                           <input type="file" name="doc" data-filetype="doc" onchange="angular.element(this).scope().updateAvatar(this.files,this,'addressProof')"  class="ng-scope" ng-disabled="!myAccountVm.editKYCInfo">
                           <span class="fa fa-upload"></span>
                         </span>
-                         <span>{{kycInfo.addressProofDocName}}</span>
+                         <span><a href="{{uploadImagePrefix}}{{kycDocDir}}/{{kycInfo.addressProofDocName}}" target="_blank">{{kycInfo.addressProofDocName}}</a></span>
                     </div>
                   </div>
                   <div class="row form-group">
