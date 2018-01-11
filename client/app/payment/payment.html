@@ -17,55 +17,57 @@
               </div>
               <!-- /.row -->
 
-              <div class="row form-group">
-                <div class="col-xs-4 col-sm-4">
-                  <h4>Product</h4>
-                </div>
-                <div class="col-xs-4 col-sm-4">
-                  <h4>Type</h4>
-                </div>
-                <div class="col-xs-4 col-sm-4">
-                  <h4>Price(Rs.)</h4>
-                </div>
-              </div>
-              <legend></legend>
-              <div class="row form-group" ng-repeat="py in paymentVm.payTransaction.payments">
-                <div class="col-xs-4 col-sm-4">
-                  <div class="media">
-                    <!-- <a class="pull-left" href="javascrip:void(0)">
-                      <img class="img-circle media-object" ng-src="{{uploadImagePrefix}}{{paymentVm.payTransaction.product.assetDir}}/{{paymentVm.payTransaction.product.primaryImg}}" alt="Image" width="70" height="70">
-                    </a> -->
-                    <div class="media-body payment-details">
-                      <h4 class="media-heading"><a href="javascript:void(0);">
-                        <span ng-if="paymentVm.payTransaction.product.name">{{paymentVm.payTransaction.product.name}}</span>
-                        <span ng-if="!paymentVm.payTransaction.product.name">{{paymentVm.payTransaction.product.category}} {{paymentVm.payTransaction.product.model}} {{paymentVm.payTransaction.product.brand}}</span>
-                      </a></h4>                      
-                      <p ng-if="paymentVm.payTransaction.product.type == 'spare'">{{paymentVm.payTransaction.product.partNo}} {{paymentVm.payTransaction.product.manufacturer}}</p>
-                      <!-- <p>{{paymentVm.payTransaction.product.city}}</p> -->
+              <div class="table-responsive">
+                <table class="table table-striped">
+                  <tr>
+                    <th>Product</th>
+                    <th>Auction</th>
+                    <th>Auction Id</th>
+                    <th>Lot Number</th>
+                    <th>Type</th>
+                    <th>Price(Rs.)</th>
+                  </tr>
+                  <tr ng-repeat="py in paymentVm.payTransaction.payments">
+                    <td>
+                      <div class="media">
+                        <!-- <a class="pull-left" href="javascrip:void(0)">
+                          <img class="img-circle media-object" ng-src="{{uploadImagePrefix}}{{paymentVm.payTransaction.product.assetDir}}/{{paymentVm.payTransaction.product.primaryImg}}" alt="Image" width="70" height="70">
+                        </a> -->
+                        <div class="media-body payment-details">
+                          <h4 class="media-heading"><a href="javascript:void(0);">
+                            <span ng-if="paymentVm.payTransaction.product.name">{{paymentVm.payTransaction.product.name}}</span>
+                            <span ng-if="!paymentVm.payTransaction.product.name">{{paymentVm.payTransaction.product.category}} {{paymentVm.payTransaction.product.model}} {{paymentVm.payTransaction.product.brand}}</span>
+                          </a></h4>                      
+                          <p ng-if="paymentVm.payTransaction.product.type == 'spare'">{{paymentVm.payTransaction.product.partNo}} {{paymentVm.payTransaction.product.manufacturer}}</p>
+                          <!-- <p>{{paymentVm.payTransaction.product.city}}</p> -->
 
-                    </div>
-                  </div>
-                </div>
-                <div class="col-xs-4 col-sm-4">
-                  <span ng-if="py.type=='auctionreq'">Auction (quippoauctions.com)</span>
-                  <span ng-if="py.type=='valuationreq'">Valuation (Agency Name)</span>
-                  <span ng-if="py.type=='sparebuy'">Spares - Buy</span>
-                </div>
-                <div class="col-xs-4 col-sm-4">
-                  {{py.charge}}
-                </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>
+                      <span ng-if="py.type=='auctionreq'">Auction (quippoauctions.com)</span>
+                      <span ng-if="py.type=='valuationreq'">Valuation (Agency Name)</span>
+                      <span ng-if="py.type=='sparebuy'">Spares - Buy</span>
+                    </td>
+                    <td>
+                      {{py.charge}}
+                    </td>
+                  </tr>
+                </table>
               </div>
-
-                <div class="well form-group">
+              <div class="well form-group">
                   <div class="row">
-                      <div class="col-sm-4">
+                      <div class="col-sm-5">
                         Payment Mode: <span>{{paymentVm.payTransaction.paymentMode}}</span>
                       </div>
-                      <div class="col-xs-6 col-sm-4 text-left">
+                      <div class="col-xs-6 col-sm-3 text-right">
                         Total: 
                       </div>
-                      <div class="col-xs-6 col-sm-4 text-left">
-                        Rs. {{paymentVm.payTransaction.totalAmount}}
+                      <div class="col-xs-6 col-sm-4 text-center">
+                        <strong>Rs. {{paymentVm.payTransaction.totalAmount}}</strong>
                       </div> 
                   </div>
                 </div>
