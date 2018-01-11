@@ -160,6 +160,7 @@ router.put('/emd/:id', auth.hasRole('admin'),emdCtrl.updateEmdData);
 router.put('/emd/delete/:id',auth.hasRole('admin'), emdCtrl.destroy);
 router.post('/sendreqtocreateemd', emdCtrl.sendReqToCreateEmd);
 router.get('/lot',lotCtrl.getLotData);
+router.get('/lot/csv',auth.hasRole('admin'),lotCtrl.exportCSV);
 router.get('/lotdata',lotCtrl.getLots);
 //router.delete('/lot/:id',auth.hasRole('admin'), lotCtrl.destroy);
 router.put('/lot/delete/:id',auth.hasRole('admin'), lotCtrl.destroy);

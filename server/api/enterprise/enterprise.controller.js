@@ -1929,7 +1929,6 @@ exports.exportExcel = function(req,res){
     var ids = queryParam.ids.split(',');
     filter['_id'] = {$in:ids};
   }
-
   var dateFilter = {};
   if(queryParam.fromDate)
     dateFilter['$gte'] = new Date(decodeURIComponent(queryParam.fromDate));
@@ -2109,9 +2108,7 @@ function exportExcel(req,res,fieldMap,jsonArr){
           val = "";
         
       }
-        val = val + "";
-        if(val)
-          val = val.replace(/,|\n|\r\n/g, ' ') ;
+      val = Utility.toCsvValue(val);
         str += val + ",";
        //dataArr[idx + 1].push(val);
     });

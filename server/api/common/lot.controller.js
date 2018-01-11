@@ -8,6 +8,8 @@ var async = require('async');
 var APIError = require('../../components/_error');
 var Util = require('../../components/utility');
 var validator = require('validator');
+var moment = require("moment");
+var __ = require('lodash');
 var ReqSubmitStatuses = ['Request Submitted', 'Request Failed'];
   
   exports.create = function(req, res, next) {
@@ -494,6 +496,90 @@ exports.removeLotData = function(req, res) {
     return res.status(200).json(req.body);
   });
 };
+
+var LOT_HEADER = {
+  "Serial No." : {key:"serialNo"},
+  "Auction ID":{key:"auctionId"},
+  "Lot Number":{key:"lotNumber"},
+  "Start Price":{key:"startingPrice"},
+  "Reserve Price":{key:"reservePrice"},
+  "Lot Start Date" : {key : "startDate",type:"date"},
+  "Lot Start Time" : {key : "startDate",type:"time"},
+  "Lot End Date" : {key : "endDate",type:"date"},
+  "Lot End Time" : {key : "endDate",type:"time"},
+  "Last Minute Bid":{key:"lastMinuteBid"},
+  "Extended To" : {key : "extendedTo"},
+  "Bid Increment Type" : {key : "bidIncrementType"},
+  "Static" :{key : "static_increment"}
+}
+
+var  BID_HEADER = {
+  "Bid From" : "bidFrom",
+  "Bid To" : "bidTo",
+  "Bid Increment" : "bidIncrement"
+}
+
+exports.exportCSV = function(req,res){
+  Lot.find({isDeleted:false},function(err,lots){
+    if(err) return handleError(err);
+    var csvStr = "";
+    var lotHeader = Object.keys(LOT_HEADER);
+    var dataHeader = Object.keys(BID_HEADER);
+    csvStr += lotHeader.join(",");
+    csvStr += ","
+    csvStr += dataHeader.join(",");
+    csvStr += "\r\n";
+    lots.forEach(function(lot,index){
+      var rowData = [];
+      lotHeader.forEach(function(header){
+        var key = LOT_HEADER[header]["key"];
+        var val = __.get(lot,key,"");
+        if(key === "serialNo"){
+          val = index + 1
+          val += ".0";
+        }
+        if(key === "bidIncrementType")
+          val = lot.static_increment?"Static":"Bid Range";
+        if(LOT_HEADER[header]["type"] && val && LOT_HEADER[header]["type"] === 'date')
+           val = moment(val).utcOffset('+0530').format('MM/DD/YYYY');
+        if(LOT_HEADER[header]["type"]&& val && LOT_HEADER[header]["type"] === 'time')
+           val = moment(val).utcOffset('+0530').format('HH:mm');
+        val = Util.toCsvValue(val);
+        rowData.push(val);
+      });
+      if(!lot.static_increment && lot.bidIncrement && lot.bidIncrement.length){
+        lot.bidIncrement.forEach(function(bidInc,idx){
+          var row = [].concat(rowData);
+          row[0] = index + "." + (idx + 1);
+          dataHeader.forEach(function(key){
+            var bidVal = __.get(bidInc,BID_HEADER[key],"");
+            bidVal = Util.toCsvValue(bidVal);
+            row.push(bidVal);
+          });
+          csvStr += row.join(",");
+          csvStr += "\r\n";
+        });
+      }else{
+        csvStr += rowData.join(",");
+        csvStr += "\r\n";
+      }
+    });
+    csvStr = csvStr.substring(0,csvStr.length -1);
+    try{
+      req.filename = "lotmaster";
+      renderCsv(req,res,csvStr);
+    }catch(e){
+
+    }
+  });
+}
+
+function renderCsv(req,res,csv){
+   var fileName = req.filename + "_" + new Date().getTime();
+  res.setHeader('Content-Type', 'application/octet-stream');
+  res.setHeader("Content-Disposition", 'attachment; filename=' + fileName + '.csv;');
+  res.end(csv, 'binary'); 
+}
 
 function handleError(res, err) {
   return res.status(404).json(err);

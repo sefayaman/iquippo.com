@@ -3271,7 +3271,28 @@
             </div>
             <!--    Lot Master-->
             <div ng-if="gsettingVm.tabValue == 'lot'" ng-controller="LotCtrl as lotVm">
-                <h4>Add Lots</h4>
+               
+                <div class="row">
+                    <div class="col-sm-6">
+                        <h4>Add Lots</h4>
+                    </div>
+                    <!-- <div class="col-sm-offset-2 col-sm-2">             
+                            <span class="btn btn-success btn-block fileinput-button">
+                                    <input type="file" name="template_update">
+                                    <span>
+                                            <i class="fa fa-file-excel-o"></i> Import Excel
+                                    </span>
+                            </span>             
+                    </div>   -->
+                    <div class="col-sm-offset-4 col-sm-2">              
+                            <button class="btn btn-success btn-block fileinput-button" ng-click="lotVm.exportCSV()">
+                                    <span>
+                                            <i class="fa fa-file-excel-o"></i> Export Excel
+                                    </span>
+                            </button> 
+                            <export-form name="lotmasterexport" method="GET" action="api/common/lot/csv"></export-form>
+                    </div>          
+                </div>
                 <legend></legend>
                 <form class="techInformationForm" name="lotform" novalidate>
                     <div class="row form-group">

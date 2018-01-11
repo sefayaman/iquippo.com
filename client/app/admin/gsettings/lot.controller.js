@@ -20,6 +20,7 @@ function LotCtrl($scope, $rootScope, $state,Modal,Auth,PagerSvc,$filter,AuctionM
   vm.dataModel.bidIncrement = [{}];
   vm.checkForLot = checkForLot;
   vm.checkBidIncrement = checkBidIncrement;
+  vm.exportCSV = exportCSV;
   vm.dataModel.staticIncrement = false;
   $scope.ReqSubmitStatuses = ReqSubmitStatuses;
   $scope.pager = PagerSvc.getPager();
@@ -302,6 +303,11 @@ function LotCtrl($scope, $rootScope, $state,Modal,Auth,PagerSvc,$filter,AuctionM
 
       });
     }
+ }
+
+ function exportCSV(){
+  var exportObj = {filter:{}};
+  $scope.$broadcast("submit",exportObj);
  }
 
   Auth.isLoggedInAsync(function(loggedIn){
