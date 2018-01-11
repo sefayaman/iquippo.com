@@ -2471,7 +2471,7 @@ exports.validateExcelData = function(req, res, next) {
 
         if(products.length){
           errorList.push({
-            Error : 'Duplicate Asset Id present in quene',
+            Error : 'Duplicate Asset Id present in queue',
             rowCount : row.rowCount
           });
           return callback('Error');

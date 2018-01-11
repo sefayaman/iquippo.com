@@ -3,18 +3,18 @@
     <li>
       <a href="/main"> Home </a>
     </li>
-    <li><a href="/new"> New Equipments </a></li>
+    <li><a href="/new"> New Equipment </a></li>
     <li class="active"> {{displayText || equipmentSearchFilter.brand || equipmentSearchFilter.location || equipmentSearchFilter.assetId || "New Products"}} </li>
   </ol>
 </div>
-<div class="new-equipments-banner">
+<div class="new-equipments-banner" ng-if="brand.homeBannerTop">
   <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{brand.homeBannerTop}}" height="200" width="100%" alt="">
 </div>
 <section class="category-block">
   <div class="container-fluid">
     <div class="row">
       <div class="col-sm-3" ng-class="{hidefilter: !filterbutton.value1}">
-        <div class="new-equipments-banner form-group">
+        <div class="new-equipments-banner form-group" ng-if="brand.homeBannerLeft">
           <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{brand.homeBannerLeft}}" height="300" width="100%" alt="">
         </div>
       <button class="btn btn-danger visible-xs filter-display" ng-click="filterbutton.value1 = !filterbutton.value1"><i class="fa fa-times"></i> Close</button>
