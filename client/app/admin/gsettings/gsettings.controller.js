@@ -6,6 +6,7 @@
     //Controller function
     function GSettingCtrl($scope, $rootScope, Auth, PagerSvc, productSvc, DTOptionsBuilder, LocationSvc, notificationSvc, SubCategorySvc, Modal, settingSvc, PaymentMasterSvc, vendorSvc, uploadSvc, AuctionMasterSvc, categorySvc, brandSvc, modelSvc, ManufacturerSvc, BannerSvc, AuctionSvc, ProductTechInfoSvc, FinanceMasterSvc, LeadMasterSvc, $window,LotSvc) {
         $scope.dtOptions = DTOptionsBuilder.newOptions().withOption('order', []);
+        $scope.actionAdditionalInfo = false;
         var vm = this;
         vm.tabValue = 'loc';
         vm.onTabChange = onTabChange;
@@ -83,10 +84,12 @@
         vm.auctionEdit = false;
         vm.saveAuctionMaster = saveAuctionMaster;
         vm.auctionData.bidIncrement = [{}];
+        vm.auctionData.contactDetails = [{}];
         vm.editAuctionMaster = editAuctionMaster;
         vm.updateAuctionMaster = updateAuctionMaster;
         vm.fireCommand = fireCommand;
         vm.getProductData = getProductData;
+        vm.showAddionalInfo = showAddionalInfo;
         vm.resendAuctionMasterData = resendAuctionMasterData;
         $scope.uploadDoc = uploadDoc;
         $scope.getConcatData = [];
@@ -822,6 +825,8 @@
             $scope.isCollapsed = !$scope.isCollapsed;
             vm.auctionData = {};
             vm.auctionData.bidIncrement=[{}];
+            vm.auctionData.contactDetails = [{}];
+            $scope.actionAdditionalInfo = false;
             loadAuctionData();
         }
 
@@ -868,6 +873,7 @@
                         resetAuctionData();
                         Modal.alert(res.message);
                         $rootScope.loading = false;
+                        $scope.actionAdditionalInfo = false;
                     }    
                 })
                 .catch(function(err){
@@ -901,6 +907,7 @@
                         resetAuctionData();
                         Modal.alert("Auction request updated successfully !!!");
                         $rootScope.loading = false;
+                        $scope.actionAdditionalInfo = false;
                     }
                 })
                 .catch(function(err){
@@ -910,6 +917,9 @@
                 });
         }
 
+        function showAddionalInfo(){
+            $scope.actionAdditionalInfo = true;
+        }
         function getChangeAuctionMasterData() {
             vm.auctionOwnerLists.forEach(function(item) {
                 if (item.user.mobile == vm.auctionData.auctionOwnerMobile)
@@ -986,6 +996,9 @@
               vm.auctionData.rangeIncrement = false;
               vm.auctionData.bidIncrement = [{}];
             }
+
+            if(!vm.auctionData.contactDetails || !vm.auctionData.contactDetails.length || (vm.auctionData.contactDetails.length && !vm.auctionData.contactDetails[0]))
+                vm.auctionData.contactDetails = [{}];
             if(vm.auctionData.static_increment) {
               vm.auctionData.static_increment = parseInt(vm.auctionData.static_increment);
               vm.auctionData.staticIncrement = true;
@@ -1006,6 +1019,7 @@
                 vm.auctionData.regEndDate = moment(vm.auctionData.regEndDate).format('MM/DD/YYYY');
             vm.auctionEdit = true;
             $scope.isCollapsed = false;
+            $scope.actionAdditionalInfo = true;
         }
 
         function getAuctionMaster(filter) {

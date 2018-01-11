@@ -536,7 +536,7 @@ exports.exportCSV = function(req,res){
         var val = __.get(lot,key,"");
         if(key === "serialNo"){
           val = (index +1) + 1;
-          val += ".0";
+          val += ".1";
         }
         if(key === "bidIncrementType")
           val = lot.static_increment?"Static":"Bid Range";

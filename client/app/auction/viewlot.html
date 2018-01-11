@@ -90,7 +90,7 @@
             <small class="text-success" ng-if="auctionData.auctionValue =='upcomingAuctions'">( <i class="fa fa-circle"></i> Upcoming)</small>
             <small class="text-success" ng-if="auctionData.auctionValue =='closedAuctions'">( <i class="fa fa-circle"></i> Closed)</small>
           </h4>
-          <h4 class="filter-heading">Auction Id : {{}} </h4>
+          <h4 class="filter-heading">Auction Id : {{auctionData.auctionId}} </h4>
         </div>
         <div class="visible-xs btn-group filter-group form-group">
           <button class="btn btn-default visible-xs" ng-click="filterbutton.value1 = !filterbutton.value1">
@@ -126,17 +126,17 @@
       </div>
       <div>
       <div class="row">
-        <div class="col-sm-7">
+        <div class="col-sm-7" ng-if="auctionData.onBehalfOfClient">
           <h5><strong>On behalf of our client:</strong></h5>
-          Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
+            {{auctionData.onBehalfOfClient}}
         </div>
         <div class="col-xs-6 col-sm-3">
           <h5><strong>Asset Category:</strong></h5>
-          <p>JCB Exclavators</p>
+          <p>{{auctionData.assetCategory}}</p>
         </div>
         <div class="col-xs-6 col-sm-2">
           <h5><strong>Location:</strong></h5>
-          <p>Delhi/NCR</p>
+          <p>{{auctionData.city}}</p>
         </div>
       </div>
       <uib-accordion close-others="oneAtATime" class="view-offer auction-offer">
@@ -145,12 +145,12 @@
             Important Points for Buyers
             <i class="pull-right fa" ng-class="{'fa-angle-up': status.buyer, 'fa-angle-down': !status.buyer}"></i>
           </uib-accordion-heading>
-          <p><strong>Buyers Premium:</strong> 3% plus applicable GST</p>
-          <p><strong>TAX:</strong> GST as applicable</p>
-          <p><strong>Payment date:</strong> Payment deadline is strictly within 5 working days</p>
-          <p><strong>Asset Removal Date:</strong> Payment deadline is strictly within 5 working days</p>
-          <p><strong>EMD:</strong> Payment deadline is strictly within 5 working days</p>
-          <p><strong>Additional Information:</strong> Payment deadline is strictly within 5 working days</p>
+          <p><strong>Buyers Premium:</strong>{{auctionData.buyersPremium}}</p>
+          <p><strong>TAX:</strong> {{auctionData.buyersTax}}</p>
+          <p><strong>Payment date:</strong> {{auctionData.buyersPaymentDate}}</p>
+          <p><strong>Asset Removal Date:</strong> {{auctionData.buyersAssetRemovelDate}}</p>
+          <p><strong>EMD:</strong> {{auctionData.buyersEmd}}</p>
+          <p><strong>Additional Information:</strong> {{auctionData.buyersAdditionalInfo}}</p>
         </uib-accordion-group>
         <uib-accordion-group is-open="status.details">
           <uib-accordion-heading>
@@ -158,12 +158,12 @@
             <i class="pull-right fa" ng-class="{'fa-angle-up': status.details, 'fa-angle-down': !status.details}"></i>
           </uib-accordion-heading>
           <div class="row">
-            <div class="col-sm-3 form-group">
-              <p><i class="fa fa-phone"></i> {{auctionData.contactName}} ({{auctionData.contactNumber}})</p>
-              <p><i class="fa fa-map-marker"></i> Gurgoan</p>
-              <p><i class="fa fa-envelope"></i> Saharsh@iquippo.com</p>
+            <div class="col-sm-3 form-group" ng-repeat="contact in auctionData.contactDetails">
+              <p><i class="fa fa-phone"></i> {{contact.personName}} ({{contact.personNumber}})</p>
+              <p><i class="fa fa-map-marker"></i> {{contact.personLocation}}</p>
+              <p><i class="fa fa-envelope"></i> {{contact.personEmail}}</p>
             </div>
-            <div class="col-sm-3 form-group">
+            <!-- <div class="col-sm-3 form-group">
               <p><i class="fa fa-phone"></i> Saharsh Baid (9876543210)</p>
               <p><i class="fa fa-map-marker"></i> Gurgoan</p>
               <p><i class="fa fa-envelope"></i> Saharsh@iquippo.com</p>
@@ -177,7 +177,7 @@
               <p><i class="fa fa-phone"></i> Saharsh Baid (9876543210)</p>
               <p><i class="fa fa-map-marker"></i> Gurgoan</p>
               <p><i class="fa fa-envelope"></i> Saharsh@iquippo.com</p>
-            </div>
+            </div> -->
           </div>
         </uib-accordion-group>
         <uib-accordion-group is-open="status.terms">
@@ -185,7 +185,7 @@
             Term/Disclaimer
             <i class="pull-right fa" ng-class="{'fa-angle-up': status.terms, 'fa-angle-down': !status.terms}"></i>
           </uib-accordion-heading>
-            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+          {{auctionData.termDesclaimer}}
         </uib-accordion-group>
       </uib-accordion>
       
