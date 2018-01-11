@@ -525,8 +525,83 @@
                                     </div>
                                 </div>
 
-                                <div class="row form-group">						
-                                    <div class="col-sm-2 pull-right">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title">Add Additional Information</h3>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <div class="col-sm-12 form-group">
+                                                <textarea placeholder="On behalf of our client" style="width: 100%"></textarea>               
+                                            </div>
+                                        </div>
+                                        <h4>Important Points for Buyers</h4>
+                                        <div class="row">
+                                            <div class="col-sm-3 form-group">
+                                                <label>Buyers Premium</label>
+                                                <input type="text" class="form-control" name="" value="" placeholder="Buyers Premium">
+                                            </div>
+                                            <div class="col-sm-3 form-group">
+                                                <label>TAX</label>
+                                                <input type="text" class="form-control" name="" value="" placeholder="TAX">
+                                            </div>
+                                            <div class="col-sm-3 form-group">
+                                                <label>Payment date</label>
+                                                <input type="text" class="form-control" name="" value="" placeholder="Payment date">
+                                            </div>
+                                            <div class="col-sm-3 form-group">
+                                                <label>Asset Removal Date</label>
+                                                <input type="text" class="form-control" name="" value="" placeholder="Asset Removal Date">
+                                            </div>
+                                            <div class="col-sm-3 form-group">
+                                                <label>EMD</label>
+                                                <input type="text" class="form-control" name="" value="" placeholder="EMD">
+                                            </div>
+                                            <div class="col-sm-3 form-group">
+                                                <label>Additional Information</label>
+                                                <input type="text" class="form-control" name="" value="" placeholder="Additional Information">
+                                            </div>
+                                        </div>
+
+                                        <h4>Contact Details</h4>
+                                        <div class="row">
+                                            <div class="col-sm-2 form-group">
+                                                <label>Contact Person Name</label>
+                                                <input type="text" class="form-control" name="" value="" placeholder="Contact Person Name">
+                                            </div>
+                                            <div class="col-sm-2 form-group">
+                                                <label>Contact Person Number</label>
+                                                <input type="number" class="form-control" name="" value="" placeholder="Contact Person Number">
+                                            </div>
+                                            <div class="col-sm-2 form-group">
+                                                <label>Email Id</label>
+                                                <input type="text" class="form-control" name="" value="" placeholder="Email">
+                                            </div>
+                                            <div class="col-sm-2 form-group">
+                                                <label>Location</label>
+                                                <input type="text" class="form-control" name="" value="" placeholder="Location">
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <div class="invisible">Action</div>
+                                                <button type="button" class="btn btn-default">Add More</button>
+                                                <button type="button" class="btn btn-default">Delete</button>
+                                            </div>
+                                        </div>
+
+                                        <h4>Add Term/Disclaimer</h4>
+                                        <div class="row">
+                                            <div class="col-sm-12 form-group">
+                                                <textarea placeholder="Term/Disclaimer" style="width: 100%"></textarea>               
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row form-group">	
+                                    <div class="col-sm-offset-8 col-sm-2">
+                                        <button type="button" class="btn btn-primary btn-block">Add Additional Info.</button>
+                                    </div>					
+                                    <div class="col-sm-2">
                                         <button class="btn btn-primary btn-block" ng-click="gsettingVm.saveAuctionMaster(auctionDateForm)" ng-if="!gsettingVm.auctionEdit"> Save </button>
                                         <button type="button" class="btn btn-primary btn-md btn-block" ng-click="gsettingVm.updateAuctionMaster(auctionDateForm)" ng-if="gsettingVm.auctionEdit">Update</button>
                                     </div>

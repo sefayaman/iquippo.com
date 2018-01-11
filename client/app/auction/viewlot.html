@@ -90,6 +90,7 @@
             <small class="text-success" ng-if="auctionData.auctionValue =='upcomingAuctions'">( <i class="fa fa-circle"></i> Upcoming)</small>
             <small class="text-success" ng-if="auctionData.auctionValue =='closedAuctions'">( <i class="fa fa-circle"></i> Closed)</small>
           </h4>
+          <h4 class="filter-heading">Auction Id : {{}} </h4>
         </div>
         <div class="visible-xs btn-group filter-group form-group">
           <button class="btn btn-default visible-xs" ng-click="filterbutton.value1 = !filterbutton.value1">
@@ -124,16 +125,16 @@
           </div>
       </div>
       <div>
-     <!--  <div class="row">
-        <div class="col-sm-6">
+      <div class="row">
+        <div class="col-sm-7">
           <h5><strong>On behalf of our client:</strong></h5>
           Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
         </div>
         <div class="col-xs-6 col-sm-3">
-          <h5><strong>Lot Description:</strong></h5>
+          <h5><strong>Asset Category:</strong></h5>
           <p>JCB Exclavators</p>
         </div>
-        <div class="col-xs-6 col-sm-3">
+        <div class="col-xs-6 col-sm-2">
           <h5><strong>Location:</strong></h5>
           <p>Delhi/NCR</p>
         </div>
@@ -179,10 +180,15 @@
             </div>
           </div>
         </uib-accordion-group>
+        <uib-accordion-group is-open="status.terms">
+          <uib-accordion-heading>
+            Term/Disclaimer
+            <i class="pull-right fa" ng-class="{'fa-angle-up': status.terms, 'fa-angle-down': !status.terms}"></i>
+          </uib-accordion-heading>
+            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+        </uib-accordion-group>
       </uib-accordion>
-      <p>
-        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-      </p> -->
+      
       <div id="search-result_wrapper">
         <!-- <div class="row">
           <div class="col-sm-6 col-md-6 form-group padd-right">
