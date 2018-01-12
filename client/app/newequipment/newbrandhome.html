@@ -14,7 +14,7 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-sm-3" ng-class="{hidefilter: !filterbutton.value1}">
-        <div class="new-equipments-banner form-group" ng-if="brand.homeBannerLeft">
+        <div class="new-equipments-banner new-equipments-left form-group" ng-if="brand.homeBannerLeft">
           <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{brand.homeBannerLeft}}" height="250" width="100%" alt="">
         </div>
       <button class="btn btn-danger visible-xs filter-display" ng-click="filterbutton.value1 = !filterbutton.value1"><i class="fa fa-times"></i> Close</button>
