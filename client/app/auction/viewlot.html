@@ -154,16 +154,16 @@
           <p ng-if="auctionData.buyersEmd"><strong>EMD:</strong> {{auctionData.buyersEmd}}</p>
           <p ng-if="auctionData.buyersAdditionalInfo"><strong>Additional Information:</strong> {{auctionData.buyersAdditionalInfo}}</p>
         </uib-accordion-group>
-        <uib-accordion-group is-open="status.details" ng-if="auctionData.contactDetails">
+        <uib-accordion-group is-open="status.details" ng-if="contactDetailsVisible">
           <uib-accordion-heading>
             Contact Details
             <i class="pull-right fa" ng-class="{'fa-angle-up': status.details, 'fa-angle-down': !status.details}"></i>
           </uib-accordion-heading>
           <div class="row">
             <div class="col-sm-3 form-group" ng-repeat="contact in auctionData.contactDetails">
-              <p><i class="fa fa-phone"></i> {{contact.personName}} ({{contact.personNumber}})</p>
-              <p><i class="fa fa-map-marker"></i> {{contact.personLocation}}</p>
-              <p><i class="fa fa-envelope"></i> {{contact.personEmail}}</p>
+              <p ng-if="contact.personName || contact.personNumber"><i class="fa fa-phone"></i> {{contact.personName}} ({{contact.personNumber}})</p>
+              <p ng-if="contact.personLocation"><i class="fa fa-map-marker"></i> {{contact.personLocation}}</p>
+              <p ng-if="contact.personEmail"><i class="fa fa-envelope"></i> {{contact.personEmail}}</p>
             </div>
           </div>
         </uib-accordion-group>

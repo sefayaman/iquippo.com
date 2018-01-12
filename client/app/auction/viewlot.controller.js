@@ -45,6 +45,9 @@
           $rootScope.loading = false;
           if(result && result.items && result.items.length) {
             $scope.auctionData = result.items[0];
+            $scope.contactDetailsVisible = false;
+            if($scope.auctionData.contactDetails && $scope.auctionData.contactDetails.length > 0)
+              $scope.contactDetailsVisible = true;
             openLiveAuctionURL(false);
             if(Auth.getCurrentUser()._id)
               checkWidgetAccessOnLot();
