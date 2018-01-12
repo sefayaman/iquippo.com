@@ -99,33 +99,45 @@ exports.updateLotData = function(req, res) {
 
   if (req.body.auction_id)
     req.body.auction_id = req.body.auction_id;
-  Lot.find({_id: req.params.id}, function(err, lotResult) {
-    if (err) return handleError(res, err);
-    delete req.body._id;
-    Lot.update({_id: req.params.id}, {$set: req.body}, function(err) {
-      if (err)
-        return res.status(412).send("Unable to update lot request. Please contact support team.");
-      
-      options.dataToSend = req.body;
-      options.dataToSend._id = req.params.id;
-      options.dataType = "lotData";
-      Util.sendCompiledData(options, function(err, result) {
-        if (err || (result && result.err)) {
-          //options.dataToSend = lotResult[0].toObject();
-          options.dataToSend.reqSubmitStatus =  ReqSubmitStatuses[1];
 
-          update(options.dataToSend);
-          if(result && result.err)
-            return res.status(412).send(result.err);
+  var filter = {};
+  filter.isDeleted = false;
+  if (req.body.auction_id)
+    filter.auction_id = req.body.auction_id;
+  if (req.body.lotNumber)
+    filter.lotNumber = req.body.lotNumber;
+
+  Lot.find(filter, function(err, lotResult) {
+    if (err) return handleError(res, err);
+    if(lotResult.length > 0){
+      return res.status(201).json({errorCode: 1,message: "Data already exist with same auction id and lot number!"});
+    } else {
+      delete req.body._id;
+      Lot.update({_id: req.params.id}, {$set: req.body}, function(err) {
+        if (err)
           return res.status(412).send("Unable to update lot request. Please contact support team.");
-        }
-        if(result){
-          options.dataToSend.reqSubmitStatus =  ReqSubmitStatuses[0];
-          update(options.dataToSend);
-          return res.status(201).json({errorCode: 0,message: "Lot request updated successfully !!!"});
-        }
+        
+        options.dataToSend = req.body;
+        options.dataToSend._id = req.params.id;
+        options.dataType = "lotData";
+        Util.sendCompiledData(options, function(err, result) {
+          if (err || (result && result.err)) {
+            //options.dataToSend = lotResult[0].toObject();
+            options.dataToSend.reqSubmitStatus =  ReqSubmitStatuses[1];
+
+            update(options.dataToSend);
+            if(result && result.err)
+              return res.status(412).send(result.err);
+            return res.status(412).send("Unable to update lot request. Please contact support team.");
+          }
+          if(result){
+            options.dataToSend.reqSubmitStatus =  ReqSubmitStatuses[0];
+            update(options.dataToSend);
+            return res.status(201).json({errorCode: 0,message: "Lot request updated successfully !!!"});
+          }
+        });
       });
-    });
+    }
   });
 };
 
