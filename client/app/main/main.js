@@ -511,12 +511,26 @@ angular.module('sreizaoApp')
       //   authenticate:true,
       //   layout:' '
       // })
-       .state('paymentresponse', {
+      .state('paymentresponse', {
         url: '/paymentresponse/:tid',
         templateUrl: 'app/payment/paymentresponse.html',
         controller: 'PaymentResponseCtrl as paymentResponseVm',
         authenticate:true,
         layout:'admin'
+      })
+      .state('auctionpayment', {
+        url: '/auctionpayment/:tid',
+        templateUrl: 'app/payment/payment.html',
+        controller: 'PaymentCtrl as paymentVm',
+        authenticate:true,
+        layout:'client'
+      })
+      .state('auctionpaymentresponse', {
+        url: '/auctionpaymentresponse/:tid',
+        templateUrl: 'app/payment/paymentresponse.html',
+        controller: 'AuctionPaymentResponseCtrl as auctionPaymentResponseVm',
+        authenticate:true,
+        layout:'client'
       })
       .state('spareupload', {
         url: '/spareupload',

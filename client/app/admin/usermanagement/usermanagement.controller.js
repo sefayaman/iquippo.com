@@ -350,13 +350,18 @@ angular.module('sreizaoApp')
 
 }])
 
-  .controller('AddUserCtrl', ['$scope', '$rootScope','LocationSvc', '$http', 'Auth', 'Modal', 'uploadSvc', 'notificationSvc','vendorSvc', 'userSvc', '$uibModalInstance', 'UtilSvc',
-   function ($scope, $rootScope,LocationSvc, $http, Auth, Modal, uploadSvc ,notificationSvc,vendorSvc, userSvc, $uibModalInstance, UtilSvc) {
+  .controller('AddUserCtrl', ['$scope', '$rootScope','LocationSvc', '$http', 'Auth', 'Modal', 'uploadSvc', 'notificationSvc','vendorSvc', 'KYCSvc','userSvc', '$uibModalInstance', 'UtilSvc', 'LegalTypeSvc',
+   function ($scope, $rootScope,LocationSvc, $http, Auth, Modal, uploadSvc ,notificationSvc,vendorSvc,KYCSvc, userSvc, $uibModalInstance, UtilSvc, LegalTypeSvc) {
     $scope.newUser ={};
     $scope.newUser.isOtherCountry=false;
     $scope.newUser.isOtherState=false;
     $scope.newUser.isOtherCity=false;
     $scope.errors = {};
+    $scope.addressProofList = [];
+    $scope.idProofList = [];
+    $scope.kycInfo = {};
+    $scope.kycList = [];
+    $scope.type = ['Address Proof', 'Identity Proof'];
 
       var services = [
                       {name:"Valuation",code:"Valuation",sequence:1,approvalRequired:"No"},
@@ -376,7 +381,9 @@ angular.module('sreizaoApp')
     $scope.getServices = getServices;
     $scope.getVendors=getVendors;
     $scope.validateAadhaar = validateAadhaar;
-    
+    $scope.updateKyc = updateKyc;
+    $scope.onChangeHandler = onChangeHandler;
+
     function init(){
       if($scope.isEdit) {
         angular.copy($scope.userInfo, $scope.newUser);
@@ -397,6 +404,24 @@ angular.module('sreizaoApp')
           $scope.newUser.city = "Other"
         }
         $scope.headerName = "Edit User";
+
+        if($scope.newUser.kycInfo.length < 1) {
+          $scope.newUser.kycInfo = [{}];
+          $scope.kycInfo = {};
+        }
+        else {
+          $scope.kycList = [];
+          angular.copy($scope.newUser.kycInfo, $scope.kycList);
+          $scope.kycList.forEach(function(item){
+            if(item.type == $scope.type[0]){
+              $scope.kycInfo.addressProof = item.name;
+              $scope.kycInfo.addressProofDocName = item.docName;
+            } else if(item.type == $scope.type[1]){
+              $scope.kycInfo.idProof = item.name;
+              $scope.kycInfo.idProofDocName = item.docName;
+            }
+          });
+        }
       }
       else {
         $scope.newUser = {};
@@ -407,15 +432,38 @@ angular.module('sreizaoApp')
         $scope.headerName = "Add User";
       }
       getEnterprises();
+      loadLegalTypeData();
+      getKYCData();
     }
 
     loadVendors();
     init();
-    
+
     function loadVendors(){
       vendorSvc.getAllVendors()
          .then(function(res){
          })
+    }
+
+    function loadLegalTypeData() {
+      LegalTypeSvc.get()
+        .then(function(result){
+          $scope.legalTypeList = result;
+      });
+    }
+
+    function getKYCData() {
+      KYCSvc.get().then(function(result) {
+        if(!result)
+          return;
+        
+        result.forEach(function(item){
+          if(item.kycType == $scope.type[0])
+            $scope.addressProofList[$scope.addressProofList.length] = item;
+          if(item.kycType == $scope.type[1])
+            $scope.idProofList[$scope.idProofList.length] = item; 
+        });
+      });
     }
 
     function getVendors(code){
@@ -425,6 +473,13 @@ angular.module('sreizaoApp')
       //console.log("ListVendor",$scope.vendorList);
     }
     
+    function onChangeHandler(){
+      if($scope.newUser.userType !== 'legalentity'){
+        $scope.newUser.legalType = "";
+        $scope.newUser.company = "";
+      }
+    }
+
     function getServices(isNew,isChanged){
 
       $scope.availedServices = [];
@@ -554,6 +609,41 @@ angular.module('sreizaoApp')
       $scope.form.aadhaarNumber.$invalid = validFlag;
       ret = validFlag;
     }
+    $scope.newUser.kycInfo = [{}];
+    if($scope.kycInfo.addressProof) {
+      var addProofObj = {};
+      addProofObj.type = $scope.type[0];
+      addProofObj.name = $scope.kycInfo.addressProof;
+      addProofObj.isActive = false;
+      if($scope.kycInfo.addressProofDocName)
+       addProofObj.docName = $scope.kycInfo.addressProofDocName;
+      else {
+        Modal.alert("Please upload address proof document.", true);
+        return;
+      }
+      $scope.newUser.kycInfo[$scope.newUser.kycInfo.length] = addProofObj;
+    }
+    
+    if($scope.kycInfo.idProof) {
+      var idProofObj = {};
+      idProofObj.type = $scope.type[1];
+      idProofObj.name = $scope.kycInfo.idProof;
+      idProofObj.isActive = false;
+      if($scope.kycInfo.idProofDocName)
+       idProofObj.docName = $scope.kycInfo.idProofDocName;
+      else {
+        Modal.alert("Please upload ID proof document.", true);
+        return;
+      }
+      $scope.newUser.kycInfo[$scope.newUser.kycInfo.length] = idProofObj;
+    }
+    $scope.newUser.kycInfo = $scope.newUser.kycInfo.filter(function(item, idx) {
+      if (item && item.docName)
+        return true;
+      else
+        return false;
+    });
+
     if($scope.form.$invalid || ret) {
         $scope.submitted = true;
         return;
@@ -640,6 +730,22 @@ angular.module('sreizaoApp')
         if(item.checked)
           $scope.newUser.availedServices[$scope.newUser.availedServices.length] = item;
       });
+    }
+
+    function updateKyc(files, _this, type){
+      if(files.length == 0)
+        return;
+      $rootScope.loading = true;
+      uploadSvc.upload(files[0], kycDocDir).then(function(result){
+          $rootScope.loading = false;
+            if(type == 'addressProof')
+              $scope.kycInfo.addressProofDocName = result.data.filename;
+            if(type == 'idProof')
+                $scope.kycInfo.idProofDocName = result.data.filename;
+        })
+        .catch(function(err){
+          $rootScope.loading = false;
+        });
     }
 
   function saveNewUser(){

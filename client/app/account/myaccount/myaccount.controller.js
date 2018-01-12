@@ -4,7 +4,7 @@
 angular.module('account').controller('MyAccountCtrl',MyAccountCtrl);
 
 //controller function
-function MyAccountCtrl($scope,$rootScope,Auth,$state,Modal,commonSvc,LegalTypeSvc,KYCSvc,LocationSvc,userSvc,User,uploadSvc,productSvc, UtilSvc, ManpowerSvc, InvitationSvc, SubCategorySvc, categorySvc) {
+function MyAccountCtrl($scope,$rootScope,Auth,$state,Modal,commonSvc,LegalTypeSvc,BankSvc,KYCSvc,LocationSvc,userSvc,User,uploadSvc,productSvc, UtilSvc, ManpowerSvc, InvitationSvc, SubCategorySvc, categorySvc) {
     var vm = this;
     vm.editClicked = editClicked;
     vm.cancelClicked = cancelClicked;
@@ -30,10 +30,11 @@ function MyAccountCtrl($scope,$rootScope,Auth,$state,Modal,commonSvc,LegalTypeSv
     vm.idProofList = [];
     $scope.kycInfo = {};
     $scope.kycList = [];
+    $scope.bankNameList = [];
     $scope.type = ['Address Proof', 'Identity Proof'];
     var FIELDS_MAPPING = {
-                            basicInfo:['fname','lname','email','mobile', 'aadhaarNumber','panNumber','country','state','city'],
-                            AdditionalInfo:['userType','company','socialInfo','profession','jobProfile','legalType'],
+                            basicInfo:['fname','lname','email','mobile', 'aadhaarNumber','country','state','city'],
+                            AdditionalInfo:['userType','company','socialInfo','profession','jobProfile','legalType','panNumber','companyIdentificationNo','tradeLicense'],
                             KycInfo:['kycInfo'],
                             BankInfo:['bankInfo'],
                             GstInfo:['GSTInfo']
@@ -67,12 +68,20 @@ function MyAccountCtrl($scope,$rootScope,Auth,$state,Modal,commonSvc,LegalTypeSv
       loadLegalTypeData();
       loadAllState();
       getKYCData();
+      getBankList();
     }
 
     function loadLegalTypeData() {
       LegalTypeSvc.get()
         .then(function(result){
           $scope.legalTypeList = result;
+      });
+    }
+
+    function getBankList() {
+      BankSvc.get()
+        .then(function(result){
+          $scope.bankNameList = result;
       });
     }
 
@@ -115,7 +124,6 @@ function MyAccountCtrl($scope,$rootScope,Auth,$state,Modal,commonSvc,LegalTypeSv
               $scope.code = LocationSvc.getCountryCode(vm.userInfo.country);
             validateMobile();
             vm.submit = false;
-            vm.verify = true;
             break;
         case 'reset':
             vm.userInfo = angular.copy(Auth.getCurrentUser());
@@ -131,8 +139,11 @@ function MyAccountCtrl($scope,$rootScope,Auth,$state,Modal,commonSvc,LegalTypeSv
       Auth.validateSignup(dataToSend).then(function(data){
         if (data.errorCode == 1) {
           Modal.alert("Mobile number already in use. Please use another mobile number", true);
+          vm.verify = false;
+          vm.edit = true;
           return;
         } else {
+          vm.verify = true;
           sendOTP();
         }
       });

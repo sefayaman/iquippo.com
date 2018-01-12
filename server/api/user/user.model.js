@@ -37,6 +37,8 @@ var UserSchema = new Schema({
   clientIp:String,
   agree: Boolean,
   legalType:String,
+  companyIdentificationNo:String,
+  tradeLicense:String,
   company: String,
   imgsrc: String,
   city:String,

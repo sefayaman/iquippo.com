@@ -130,7 +130,8 @@ function PaymentCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,$location,
       bodyRequest += "&merchant_param1="+ encodeURIComponent($location.host());
       bodyRequest += "&merchant_param2="+ vm.payTransaction.user._id;
       bodyRequest += "&merchant_param3=main";
-      
+      if(vm.payTransaction.requestType === 'Auction Request')
+         bodyRequest += "&merchant_param4=auction_request";
       PaymentSvc.encrypt({ 'rawstr' : bodyRequest})
       .then(function(encrytedData){
       	 $scope.ccAvenue = true;

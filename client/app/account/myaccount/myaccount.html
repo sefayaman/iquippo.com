@@ -75,30 +75,23 @@
                           </div>
                         </div>
                         <div class="col-sm-2 padd-left">
-                          <button type="button" class="btn btn-primary" uib-popover="Update Mobile No." popover-trigger="mouseenter" ng-click="myAccountVm.updateMobile('editMobile')" ng-if="myAccountVm.edit"><i class=" fa fa-pencil"></i></button>
+                          <button type="button" class="btn btn-default" uib-popover="Update Mobile No." popover-trigger="mouseenter" ng-click="myAccountVm.updateMobile('editMobile')" ng-if="myAccountVm.edit"><i class=" fa fa-pencil"></i></button>
 
-                          <button type="button" class="btn btn-primary" uib-popover="Submit" popover-trigger="mouseenter" ng-click="myAccountVm.updateMobile('submit')" ng-if="myAccountVm.submit"><i class=" fa fa-check"></i></button>
+                          <button type="button" class="btn btn-default" uib-popover="Submit" popover-trigger="mouseenter" ng-click="myAccountVm.updateMobile('submit')" ng-if="myAccountVm.submit"><i class=" fa fa-check"></i></button>
 
-                          <button type="button" class="btn btn-primary" uib-popover="Verify" popover-trigger="mouseenter" ng-click="myAccountVm.verifyOtp(basicForm)" ng-if="myAccountVm.verify"><i class=" fa fa-check"></i></button>
+                          <button type="button" class="btn btn-default" uib-popover="Verify" popover-trigger="mouseenter" ng-click="myAccountVm.verifyOtp(basicForm)" ng-if="myAccountVm.verify"><i class=" fa fa-check"></i></button>
 
-                          <button type="button" class="btn btn-primary" uib-popover="Reset" popover-trigger="mouseenter" ng-click="myAccountVm.updateMobile('reset')" ng-if="!myAccountVm.edit"><i class=" fa fa-close"></i></button>
+                          <button type="button" class="btn btn-default" uib-popover="Reset" popover-trigger="mouseenter" ng-click="myAccountVm.updateMobile('reset')" ng-if="!myAccountVm.edit"><i class=" fa fa-close"></i></button>
                         </div>
                       </div>
                       <div class="row">
                         <div class="col-sm-5 form-group">
+                          <label for="aadhaar">AADHAAR Number</label>
                           <div class="floating-label-wrapper" ng-class="{'has-error':basicForm.aadhaarNumber.$invalid && submitted}">
-                            <label for="aadhaar">AADHAAR Number</label>
+                            
                             <input type="text" class="form-control" id="aadhaar" name="aadhaarNumber" placeholder="AADHAAR Number" ng-model="myAccountVm.userInfo.aadhaarNumber" ng-disabled="!myAccountVm.editBasicInfo" uib-tooltip="9999 9999 9999" tooltip-trigger="focus" ng-keyup="myAccountVm.validateAadhaar(myAccountVm.userInfo.aadhaarNumber)" tooltip-placement="top" with-floating-label>
                           </div>
                         </div>
-                        <div class="col-sm-5 form-group">
-                          <div class="floating-label-wrapper">
-                            <label for="pan">PAN Number</label>
-                            <input type="text" class="form-control" id="pan" placeholder="PAN Number" ng-model="myAccountVm.userInfo.panNumber" ng-disabled="!myAccountVm.editBasicInfo" with-floating-label>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="row">
                         <div class="col-sm-5 form-group">
                           <div class="floating-label-wrapper" ng-class="{'has-error':basicForm.country.$invalid && submitted}">
                               <label>Country</label>
@@ -108,6 +101,8 @@
                               </select>
                             </div>
                         </div>
+                      </div>
+                      <div class="row">                        
                         <div class="col-sm-5 form-group">
                            <div class="floating-label-wrapper" ng-class="{'has-error':basicForm.state.$invalid && submitted}">
                           <label>State</label>
@@ -117,9 +112,7 @@
                             </select>
                           </div>
                         </div>
-                      </div>
-                      <div class="row">
-                        <div class="col-sm-5 form-group">
+                         <div class="col-sm-5 form-group">
                           <div class="floating-label-wrapper" ng-class="{'has-error':basicForm.city.$invalid && submitted}">
                             <label>City</label>
                             <select class="form-control" name="city" ng-model="myAccountVm.userInfo.city" ng-disabled="!myAccountVm.editBasicInfo" required>
@@ -172,7 +165,7 @@
                       </div>
                     </div>
                     <div class="col-sm-3 form-group" ng-if="myAccountVm.userInfo.userType === 'legalentity'">
-                      <div class="floating-label-wrapper" ng-class="{'has-error':basicForm.legalType.$invalid && submitted}">
+                      <div class="floating-label-wrapper" ng-class="{'has-error':additionalForm.legalType.$invalid && submitted}">
                         <label>Legal Entity Type</label>
                         <select class="form-control" name="legalType" ng-model="myAccountVm.userInfo.legalType" ng-disabled="!myAccountVm.editAdditionalInfo" required="myAccountVm.userInfo.userType === 'legalentity'">
                           <option value="">*Select Type</option>
@@ -181,20 +174,30 @@
                       </div>
                     </div>
                     <div class="col-sm-4 form-group" ng-if="myAccountVm.userInfo.userType === 'legalentity'">
-                      <div class="floating-label-wrapper" ng-class="{'has-error':basicForm.company.$invalid && submitted}">
+                      <div class="floating-label-wrapper" ng-class="{'has-error':additionalForm.company.$invalid && submitted}">
                         <label>Legal Entity Name</label>
                         <input type="text" class="form-control" name="company" ng-disabled="!myAccountVm.editAdditionalInfo" placeholder="*Legal Entity Name" ng-model="myAccountVm.userInfo.company" ng-required="myAccountVm.userInfo.userType === 'legalentity'">
                       </div>
                     </div>
                   </div>
                   <div class="row">
-                    <div class="col-sm-6 form-group">
-                      <div class="floating-label-wrapper">
-                        <label for="Profile">Profile</label>
+                    <div class="col-sm-4 form-group">
+                      <div class="floating-label-wrapper" ng-class="{'has-error':additionalForm.panNumber.$invalid && submitted}">
+                        <label for="panNumber">PAN Number</label>
+                        <input type="text" class="form-control" id="panNumber" placeholder="PAN Number" name="panNumber" ng-model="myAccountVm.userInfo.panNumber" ng-disabled="!myAccountVm.editAdditionalInfo" ng-required="myAccountVm.userInfo.userType === 'legalentity'" with-floating-label>
                       </div>
                     </div>
-                    <div class="col-sm-6 form-group">
-                      &nbsp;
+                    <div class="col-sm-4 form-group" ng-if="myAccountVm.userInfo.userType === 'legalentity'">
+                      <div class="floating-label-wrapper" ng-class="{'has-error':additionalForm.companyIdentificationNo.$invalid && submitted}">
+                        <label for="companyIdentificationNo">Company Identification No</label>
+                        <input type="text" class="form-control" id="companyIdentificationNo" name="companyIdentificationNo" ng-model="myAccountVm.userInfo.companyIdentificationNo"  ng-disabled="!myAccountVm.editAdditionalInfo" placeholder="Company Identification No" ng-required="myAccountVm.userInfo.userType === 'legalentity'" with-floating-label>
+                      </div>
+                    </div>
+                    <div class="col-sm-4 form-group" ng-if="myAccountVm.userInfo.userType === 'legalentity'">
+                      <div class="floating-label-wrapper" ng-class="{'has-error':additionalForm.tradeLicense.$invalid && submitted}">
+                        <label for="tradeLicense">Trade License</label>
+                        <input type="text" class="form-control" id="tradeLicense" name="tradeLicense" ng-model="myAccountVm.userInfo.tradeLicense" ng-disabled="!myAccountVm.editAdditionalInfo" placeholder="Trade License" ng-required="myAccountVm.userInfo.userType === 'legalentity'" with-floating-label>
+                      </div>
                     </div>
                   </div>
                   <div class="row">
@@ -334,7 +337,10 @@
                 <div class="col-sm-6 form-group">
                   <div class="floating-label-wrapper" ng-class="{'has-error':bankForm.bankName.$invalid && submitted}">
                     <label>*Bank Name</label>
-                    <input type="text" class="form-control" name="bankName" placeholder="Bank Name" ng-model="bank.bankName" ng-disabled="!myAccountVm.editBankInfo" required>
+                    <select class="form-control" name="bankName" ng-model="bank.bankName" ng-disabled="!myAccountVm.editBankInfo" required>
+                      <option value="">*Select Bank</option>
+                       <option value="{{bank.bankName}}" ng-repeat="bank in bankNameList">{{bank.bankName}}</option>
+                    </select>
                   </div>
                 </div>
                 <div class="col-sm-6 form-group">

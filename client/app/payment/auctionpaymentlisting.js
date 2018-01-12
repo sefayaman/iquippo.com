@@ -85,7 +85,7 @@ function AuctionPaymentListingCtrl($scope, $rootScope, Modal, Auth, PaymentSvc, 
     PaymentSvc.sendReqToCreateUser(data)
       .then(function(res) {
           if (res.errorCode == 0) {
-            getTrasactions(filter);
+            fireCommand(true);
           }
           Modal.alert(res.message);
           $rootScope.loading = false;

@@ -1,6 +1,74 @@
+<!-- for Auction -->
+<section class="category-block" ng-if="auctionResponse">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-offset-2 col-sm-8" ng-if="auctionPaymentResponseVm.success && auctionPaymentResponseVm.payTransaction.paymentMode == 'online'">
+          <div class="payment-icon text-center">
+             <i class="fa fa-check-circle-o fa-5x text-success" aria-hidden="true"></i>
+             <h2 class="text-success">
+               THANK YOU !
+            </h2>
+            <h4>
+                YOUR PAYMENT HAS BEEN SUBMITTED SUCCESSFULLY. YOUR TRANSACTION REFERENCE NUMBER IS {{auctionPaymentResponseVm.payTransaction.ccAvenueRes.bank_ref_no}} 
+
+            </h4>
+            <h4>
+                You will be hear from us within 1-2 days.
+                
+            </h4>
+          </div>
+      </div>
+       <!-- <div class="col-lg-12" ng-if="auctionPaymentResponseVm.success && auctionPaymentResponseVm.payTransaction.paymentMode == 'offline'">
+          <div class="payment-icon text-center">
+             <i class="fa fa-check-circle-o fa-5x text-success" aria-hidden="true"></i>
+             <h2 class="text-success">
+              Thank you for placing your order with iQuippo.com
+            </h2>
+            <h4>
+               You have chosen to pay Offline. You will hear from our executives on your request soon and your order will be processed on payment confirmation..
+
+            </h4>
+            <h4>     
+                Happy Shopping!
+            </h4>
+          </div>
+      </div> -->
+       <div class="col-sm-offset-2 col-sm-8" ng-if="!auctionPaymentResponseVm.success">
+          <div class="payment-icon text-center">
+             <i class="fa fa-times-circle-o fa-5x text-warning"></i>
+             <h2 class="text-warning">
+               Oops!!! Something went Wrong!
+            </h2>
+            <h4>
+                 Your Transaction could not be completed. Please retry for online payment by clicking at "Retry Online Payment" option 
+                 Also, You can pay offline by clicking at "Offline Payment" option.
+                 You can geet in touch with us at <a href="javascript:void(0);">info@iquippo.com</a>for any other queries.
+            </h4>
+          </div>
+          <div class="row">
+            <div class="col-xs-6 col-sm-6 form-group">
+              <div class="radio radio-info">
+                      <input type="radio" id="offline" name="payment" ng-model="option.select" value="offline">
+                      <label for="offline"> Offline Payment </label>
+                  </div>
+            </div>
+            <div class="col-xs-6 col-sm-6 form-group">
+              <div class="radio radio-info">
+                      <input type="radio" id="online" name="payment" ng-model="option.select" value="online">
+                      <label for="online"> Retry Online Payment</label>
+                  </div>
+            </div>
+          </div>
+          <div class="text-right">
+            <button type="button" class="btn btn-priamry" ng-click="auctionPaymentResponseVm.submit()">Proceed</button>                
+          </div>
+      </div>
+    </div>
+  </div>
+</section>
 
 <!--for payment -->
-<div id="wrapper">
+<div id="wrapper" ng-if="!auctionResponse">
   <section class="wrapper">
     <div class="container-fluid">
       <div class="row">        

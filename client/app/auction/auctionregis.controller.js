@@ -22,6 +22,7 @@ function AuctionRegisCtrl($scope, $rootScope, $location, Modal, Auth,PagerSvc,$u
   $scope.OverAll = "overall";
   $scope.LotWist = "lotwise";
   $scope.option.select = 'offline';
+  $scope.kyc = {};
   
   function init() {
     if($scope.regLots && $scope.regLots.length > 0){
@@ -43,6 +44,16 @@ function AuctionRegisCtrl($scope, $rootScope, $location, Modal, Auth,PagerSvc,$u
   }
 
   function submit(lotData, paymentProcess){
+    if(paymentProcess && !$scope.kycExist) {
+      $scope.kycExist = false;
+      if(!Auth.getCurrentUser().kycInfo || Auth.getCurrentUser().kycInfo.length < 1){
+        $scope.kycExist = true;
+        return;
+      }
+    }
+    if($scope.kycExist && !$scope.kyc.kycUploadlater)
+      return;
+
     Auth.isLoggedInAsync(function(loggedIn) {
       if (loggedIn) {
         var dataObj = {};
@@ -110,13 +121,13 @@ function AuctionRegisCtrl($scope, $rootScope, $location, Modal, Auth,PagerSvc,$u
             if(result.data){
               closeDialog();
               if(result.data =="done"){
-                 Modal.alert("You have already registered for this auction");
-                 return;
-               }
+                Modal.alert("You have already registered for this auction");
+                return;
+              }
               if(result.data =="undone"){
                 Modal.alert("Your EMD payment is still pending. Please pay the EMD amount and inform our customer care team.",true);
                 return;
-                }
+              }
             }
             vm.dataModel.auction_id = $scope.currentAuction._id;
             vm.dataModel.selectedLots = lotsArr;
@@ -151,6 +162,8 @@ function AuctionRegisCtrl($scope, $rootScope, $location, Modal, Auth,PagerSvc,$u
     paymentObj.auction_id = dataObj.auction.dbAuctionId;
     paymentObj.emdTax = dataObj.auction.emdTax;
     paymentObj.requestType = "Auction Request";
+    if($scope.kyc.kycUploadlater)
+      paymentObj.kycUploadlater = "Yes";
     paymentObj.status = transactionStatuses[1].code;
     paymentObj.statuses = [];
     var stObj = {};
@@ -169,7 +182,7 @@ function AuctionRegisCtrl($scope, $rootScope, $location, Modal, Auth,PagerSvc,$u
         Modal.alert("You have sucessfully registered for the auction. Please pay the EMD amount and inform our customer care team."); 
     });
   }
-  function save(dataObj,amount){
+  function save(dataObj, amount){
     dataObj.totalAmount = amount;
     userRegForAuctionSvc.save(dataObj)
     .then(function(result){
@@ -177,8 +190,29 @@ function AuctionRegisCtrl($scope, $rootScope, $location, Modal, Auth,PagerSvc,$u
       if($scope.option.select === 'offline') {
         updatePayment(dataObj, result);
       } else {
-        Modal.alert("Please select payment option.");
-        return;
+        var paymentObj = {};
+        paymentObj.paymentMode = $scope.option.select;
+        paymentObj.transactionId = result.transactionId;
+        paymentObj.auctionId = dataObj.auction.auctionId;
+        paymentObj.auction_id = dataObj.auction.dbAuctionId;
+        paymentObj.emdTax = dataObj.auction.emdTax;
+        paymentObj.requestType = "Auction Request";
+        paymentObj.status = transactionStatuses[1].code;
+        if($scope.kyc.kycUploadlater)
+          paymentObj.kycUploadlater = "Yes";
+        paymentObj.payments = [];
+        var payObj = {};
+        payObj.paymentModeType = "Net Banking";
+        payObj.amount = dataObj.totalAmount;
+        payObj.paymentDate = new Date();
+        payObj.createdAt = new Date();
+        paymentObj.totalAmount = dataObj.totalAmount;
+        paymentObj.payments[paymentObj.payments.length] = payObj;
+        userRegForAuctionSvc.saveOfflineRequest(paymentObj).then(function(rd){
+          $state.go("auctionpayment", {
+                tid: rd._id
+              });
+        });
       }
       closeDialog();
     })
@@ -187,6 +221,7 @@ function AuctionRegisCtrl($scope, $rootScope, $location, Modal, Auth,PagerSvc,$u
         Modal.alert(err.data); 
     });
   }
+
   init();
 
   function closeDialog() {

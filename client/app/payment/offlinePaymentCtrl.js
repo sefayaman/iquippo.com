@@ -42,6 +42,7 @@ function OfflinePaymentCtrl($scope,$rootScope,Modal,$stateParams,$state,$uibModa
     if($scope.viewMode === 'paymentView') {
       $scope.totalPaidAmount = 0;
       $scope.offlinePayment.payments.forEach(function(item) {
+        if(item.paymentStatus !== 'failed')
         $scope.totalPaidAmount = Number($scope.totalPaidAmount) + Number(item.amount);
       });
     }

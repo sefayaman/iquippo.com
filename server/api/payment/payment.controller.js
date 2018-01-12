@@ -487,7 +487,9 @@ function sendPaymentRes(req,res,resPayment){
       res.redirect('http://mobile?payment=failed');
     else
       res.redirect('http://mobile?payment=success');
-  }else
+  }else if(resPayment.merchant_param4 === "auction_request")
+    res.redirect("http://"+ resPayment.merchant_param1 +"/auctionpaymentresponse/" + resPayment.order_id);
+  else
     res.redirect("http://"+ resPayment.merchant_param1 +"/paymentresponse/" + resPayment.order_id);
 }
 

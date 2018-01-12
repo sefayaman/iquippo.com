@@ -16,6 +16,7 @@ var PaymentTransactionSchema = new Schema({
   requestType:String,
   ccAvenueRes:{},
   ccAvenueData:{},
+  kycUploadlater:String,
   paymentMode : {type:String,default:'online'},
   statusCode : {type:Number,default:-1},
   selectedLots:[],
