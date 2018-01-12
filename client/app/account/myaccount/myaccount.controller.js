@@ -25,6 +25,7 @@ function MyAccountCtrl($scope,$rootScope,Auth,$state,Modal,commonSvc,LegalTypeSv
     vm.validateAadhaar = validateAadhaar;
     vm.updateMobile = updateMobile;
     vm.verifyOtp = verifyOtp;
+    vm.onChangeHandler = onChangeHandler;
     $scope.legalTypeList = [];
     vm.addressProofList = [];
     vm.idProofList = [];
@@ -139,6 +140,7 @@ function MyAccountCtrl($scope,$rootScope,Auth,$state,Modal,commonSvc,LegalTypeSv
       Auth.validateSignup(dataToSend).then(function(data){
         if (data.errorCode == 1) {
           Modal.alert("Mobile number already in use. Please use another mobile number", true);
+          vm.userInfo = angular.copy(Auth.getCurrentUser());
           vm.verify = false;
           vm.edit = true;
           return;
@@ -147,6 +149,15 @@ function MyAccountCtrl($scope,$rootScope,Auth,$state,Modal,commonSvc,LegalTypeSv
           sendOTP();
         }
       });
+    }
+
+    function onChangeHandler(){
+      if(vm.userInfo.userType !== 'legalentity'){
+        vm.userInfo.legalType = "";
+        vm.userInfo.company = "";
+        vm.userInfo.companyIdentificationNo = "";
+        vm.userInfo.tradeLicense = "";
+      }
     }
 
     function sendOTP() {
@@ -294,7 +305,7 @@ function MyAccountCtrl($scope,$rootScope,Auth,$state,Modal,commonSvc,LegalTypeSv
       }
 
       FIELDS_MAPPING[fieldKey].forEach(function(key){
-        if(vm.userInfo[key])
+        if(!angular.isUndefined(vm.userInfo[key]))
           userData[key] = vm.userInfo[key];
       });
 
