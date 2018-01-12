@@ -40,6 +40,7 @@ function AuctionPaymentResponseCtrl($scope,$rootScope,Modal,$stateParams,$state,
             var paymentObj = angular.copy(vm.payTransaction.payments[0]);
             vm.payTransaction.payments = [];
             paymentObj.refNo = vm.payTransaction.ccAvenueRes.bank_ref_no;
+            paymentObj.bankname = vm.payTransaction.ccAvenueRes.card_name;
             paymentObj.paymentStatus = "success";
             vm.payTransaction.payments[vm.payTransaction.payments.length] = paymentObj;
           }
@@ -66,6 +67,7 @@ function AuctionPaymentResponseCtrl($scope,$rootScope,Modal,$stateParams,$state,
         payTranData.payments = [];
         var paymentObj = angular.copy(vm.payTransaction.payments[0]);
         paymentObj.refNo = vm.payTransaction.ccAvenueRes.bank_ref_no;
+        paymentObj.bankname = vm.payTransaction.ccAvenueRes.card_name;
         paymentObj.paymentStatus = transactionStatuses[2].code;
         payTranData.payments[payTranData.payments.length] = paymentObj;
       }

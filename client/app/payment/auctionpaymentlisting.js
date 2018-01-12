@@ -39,6 +39,9 @@ function AuctionPaymentListingCtrl($scope, $rootScope, Modal, Auth, PaymentSvc, 
 	 		if(loggedIn){
         filter ={};
         initFilter.pagination = true;
+        if(!Auth.isAdmin() && !Auth.isAuctionRegPermission()){
+          initFilter['userId'] = Auth.getCurrentUser()._id;
+        }
         angular.copy(initFilter, filter);
 	 			getTrasactions(filter);	
 	 		}

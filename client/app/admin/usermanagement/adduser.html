@@ -265,7 +265,7 @@
                             <label>Identity Proof</label>                          
                         </div>
                     </div>
-                    <div class="col-sm-4 form-group text-left" ng-class="{'has-error': KYCDetails.idProof.$invalid && submitted }">
+                    <div class="col-sm-4 form-group text-left" ng-class="{'has-error': form.idProof.$invalid && submitted }">
                       <select class="form-control" ng-model="kycInfo.idProof" name="idProof" ng-required="kycInfo.idProofDocName">
                         <option value="">Select Identity Proof</option>
                         <option ng-repeat="idProof in idProofList | orderBy:'name'" value="{{idProof.docName}}">{{idProof.docName}}</option>
@@ -285,7 +285,7 @@
                         <label for="JobProfile">Address Proof</label>
                       </div>
                     </div>
-                    <div class="col-sm-4 form-group text-left" ng-class="{'has-error': KYCDetails.addressProof.$invalid && submitted }">
+                    <div class="col-sm-4 form-group text-left" ng-class="{'has-error': form.addressProof.$invalid && submitted }">
                       <select class="form-control" ng-model="kycInfo.addressProof" name="addressProof" ng-required="kycInfo.addressProofDocName">
                         <option value="">Select Address Proof</option>
                         <option ng-repeat="addProof in addressProofList | orderBy:'name'" value="{{addProof.docName}}">{{addProof.docName}}</option>

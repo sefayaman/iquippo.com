@@ -938,6 +938,13 @@
               vm.auctionData.bidIncrement = [];
             }
 
+            vm.auctionData.contactDetails = vm.auctionData.contactDetails.filter(function(item, idx) {
+                if (item && (item.personName || item.personNumber || item.personEmail || item.personLocation))
+                  return true;
+                else
+                  return false;
+            });
+
             if(!vm.auctionData.staticIncrement) 
               vm.auctionData.static_increment = "";
 
