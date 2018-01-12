@@ -520,7 +520,8 @@ var  BID_HEADER = {
 }
 
 exports.exportCSV = function(req,res){
-  Lot.find({isDeleted:false},function(err,lots){
+  var query = Lot.find({isDeleted:false}).sort({auction_id:-1,_id:-1});
+  query.exec(function(err,lots){
     if(err) return handleError(err);
     var csvStr = "";
     var lotHeader = Object.keys(LOT_HEADER);
@@ -534,16 +535,17 @@ exports.exportCSV = function(req,res){
       lotHeader.forEach(function(header){
         var key = LOT_HEADER[header]["key"];
         var val = __.get(lot,key,"");
-        if(key === "serialNo"){
-          val = (index +1) + 1;
-          val += ".1";
-        }
+        if(key === "serialNo")
+          val = (index + 1) + ".1";
+
         if(key === "bidIncrementType")
           val = lot.static_increment?"Static":"Bid Range";
         if(LOT_HEADER[header]["type"] && val && LOT_HEADER[header]["type"] === 'date')
            val = moment(val).utcOffset('+0530').format('MM/DD/YYYY');
-        if(LOT_HEADER[header]["type"]&& val && LOT_HEADER[header]["type"] === 'time')
-           val = moment(val).utcOffset('+0530').format('HH:mm');
+        if(LOT_HEADER[header]["type"]&& val && LOT_HEADER[header]["type"] === 'time'){
+           val = moment(val).utcOffset('+0530').format("h:mm a");
+        }
+          
         val = Util.toCsvValue(val);
         rowData.push(val);
       });
