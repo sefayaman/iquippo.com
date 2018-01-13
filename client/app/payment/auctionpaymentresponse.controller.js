@@ -72,7 +72,7 @@ function AuctionPaymentResponseCtrl($scope,$rootScope,Modal,$stateParams,$state,
         payTranData.payments[payTranData.payments.length] = paymentObj;
       }
       userRegForAuctionSvc.saveOfflineRequest(payTranData).then(function(rd){
-        Modal.alert("You have sucessfully registered for the auction. Please pay the EMD amount and inform our customer care team."); 
+        Modal.alert(informationMessage.auctionPaymentSuccessMsg); 
         $state.go("main");
       });
     } else {

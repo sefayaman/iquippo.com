@@ -121,11 +121,11 @@ function AuctionRegisCtrl($scope, $rootScope, $location, Modal, Auth,PagerSvc,$u
             if(result.data){
               closeDialog();
               if(result.data =="done"){
-                Modal.alert("You have already registered for this auction");
+                Modal.alert(informationMessage.auctionRegMsg, true);
                 return;
               }
               if(result.data =="undone"){
-                Modal.alert("Your EMD payment is still pending. Please pay the EMD amount and inform our customer care team.",true);
+                Modal.alert(informationMessage.auctionPaymentPendingMsg,true);
                 return;
               }
             }
@@ -179,7 +179,7 @@ function AuctionRegisCtrl($scope, $rootScope, $location, Modal, Auth,PagerSvc,$u
         OfflinePaymentScope.registerByAdmin = true;
         Modal.openDialog('OfflinePaymentPopup',OfflinePaymentScope);
       } else
-        Modal.alert("You have sucessfully registered for the auction. Please pay the EMD amount and inform our customer care team."); 
+        Modal.alert(informationMessage.auctionPaymentSuccessMsg, true); 
     });
   }
   function save(dataObj, amount){

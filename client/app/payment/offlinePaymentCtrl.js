@@ -64,6 +64,7 @@ function OfflinePaymentCtrl($scope,$rootScope,Modal,$stateParams,$state,$uibModa
     stsObj.bankname = vm.dataModel.bankname;
     stsObj.branch = vm.dataModel.branch;
     stsObj.createdAt = new Date();
+    stsObj.paymentStatus = "success";
     vm.dataModel.payments[vm.dataModel.payments.length] = stsObj;
     vm.dataModel.userDataSendToAuction = true;
     $rootScope.loading = true;

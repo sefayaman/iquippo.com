@@ -42,11 +42,11 @@
           .then(function(result){
             if(result.data){
               if(result.data =="done" && auction.emdTax === $scope.OverAll){
-                 Modal.alert("You have already registered for this auction"); 
+                 Modal.alert(informationMessage.auctionRegMsg, true); 
                  return;
                }
               if(result.data =="undone" && auction.emdTax === $scope.OverAll){
-                Modal.alert("Your EMD payment is still pending. Please pay the EMD amount and inform our customer care team.",true);
+                Modal.alert(informationMessage.auctionPaymentPendingMsg,true);
                 return;
               }
             }

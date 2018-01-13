@@ -562,6 +562,11 @@ informationMessage['kycUpdate'] = "KYC Documents uploaded successfully.";
 informationMessage['invoiceUpdateForSelf'] = "Invoice in your name has been submitted successfully.";
 informationMessage['invoiceUpdateForThirdParty'] = "Invoice in third party's name has been submitted successfully.";
 
+/*Auction messages*/
+informationMessage['auctionRegMsg'] = "You have already registered for this auction.";
+informationMessage['auctionPaymentPendingMsg'] = 'Your EMD payment is still pending. For paying EMD amount "Online" go to Payment History in your dashboard, for "Offline" please reach to our customer care team.';
+informationMessage['auctionPaymentSuccessMsg'] = "You have sucessfully registered for the auction. Please pay the EMD amount and inform our customer care team.";
+
 var newsEvents = [
   {
     name:"The Economic Times",

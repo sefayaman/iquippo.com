@@ -3,7 +3,7 @@
 'use strict';
 angular.module('sreizaoApp').controller('AuctionPaymentListingCtrl',AuctionPaymentListingCtrl);
 
-function AuctionPaymentListingCtrl($scope, $rootScope, Modal, Auth, PaymentSvc, PagerSvc) {
+function AuctionPaymentListingCtrl($scope, $state, $rootScope, $uibModal, Modal, Auth, PaymentSvc, PagerSvc, userRegForAuctionSvc) {
 	var vm = this;
 	vm.transactions = [];
 	var filter = {};
@@ -18,6 +18,7 @@ function AuctionPaymentListingCtrl($scope, $rootScope, Modal, Auth, PaymentSvc, 
 	$scope.ReqSubmitStatuses = ReqSubmitStatuses;
 	vm.resendUserData = resendUserData;
   vm.fireCommand = fireCommand;
+  vm.openPaymentOptionModal = openPaymentOptionModal;
 
 	$scope.$on('refreshPaymentHistroyList',function(){
     fireCommand(true);
@@ -48,7 +49,77 @@ function AuctionPaymentListingCtrl($scope, $rootScope, Modal, Auth, PaymentSvc, 
 	 	})
 	 }
 
-	 init();
+	init();
+
+  function openPaymentOptionModal(paymentData){
+    var payScope = $rootScope.$new();
+    payScope.auctionRegPayment = paymentData;
+    payScope.option = {};
+    payScope.option.select = paymentData.paymentMode;
+    var paymentModal = $uibModal.open({
+      animation: true,
+        templateUrl: "paymentOption.html",
+        scope: payScope,
+        size: 'lg'
+    });
+
+    payScope.submit = function () {
+      if(!payScope.option.select) {
+        Modal.alert("Please select your preferred payment method", true);
+        return;
+      }
+      if(!payScope.kycExist) {
+        payScope.kycExist = false;
+        if(!Auth.getCurrentUser().kycInfo || Auth.getCurrentUser().kycInfo.length < 1){
+          payScope.kycExist = true;
+          return;
+        }
+      }
+      if(payScope.kycExist && !payScope.option.kycUploadlater)
+        return;
+
+      if(payScope.option.select === 'offline') {
+        var payTranData = {};
+        payTranData.paymentMode = payScope.option.select;
+        payTranData.transactionId = payScope.auctionRegPayment._id;
+        payTranData.status = transactionStatuses[1].code;
+        if(payScope.option.kycUploadlater)
+          payTranData.kycUploadlater = "Yes";
+        if(payScope.auctionRegPayment.payments.length ===1) {
+          payTranData.payments = [];
+          var paymentObj = angular.copy(payScope.auctionRegPayment.payments[0]);
+          paymentObj.refNo = payScope.auctionRegPayment.ccAvenueRes.bank_ref_no;
+          paymentObj.bankname = payScope.auctionRegPayment.ccAvenueRes.card_name;
+          paymentObj.paymentStatus = transactionStatuses[2].code;
+          payTranData.payments[payTranData.payments.length] = paymentObj;
+        }
+        if(payScope.auctionRegPayment.statuses.length < 1)
+          payTranData.statuses = [];
+        else {
+          payTranData.statuses = angular.copy(payScope.auctionRegPayment.statuses);
+        }
+        var stObj = {};
+        stObj.userId = Auth.getCurrentUser()._id;
+        stObj.status = transactionStatuses[1].code;
+        stObj.createdAt = new Date();
+        payTranData.statuses[payTranData.statuses.length] = stObj;
+        userRegForAuctionSvc.saveOfflineRequest(payTranData).then(function(rd){
+          Modal.alert(informationMessage.auctionPaymentSuccessMsg);
+          paymentModal.dismiss('cancel');
+          $rootScope.$broadcast('refreshPaymentHistroyList');
+        });
+      } else {
+        $state.go("auctionpayment", {
+          tid: payScope.auctionRegPayment._id
+        });
+        paymentModal.dismiss('cancel');
+      }
+    };
+
+    payScope.close = function () {
+      paymentModal.dismiss('cancel');
+    };
+  }
 
   function fireCommand(reset){
     if (reset)
