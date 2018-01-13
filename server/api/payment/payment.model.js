@@ -29,6 +29,8 @@ var PaymentTransactionSchema = new Schema({
 
 PaymentTransactionSchema.pre('save', function(next){
   var doc = this;
+  if(doc.transactionId)
+    return next();
   // get the next sequence
   sequence.next(function(nextSeq){
     doc.transactionId = nextSeq;
