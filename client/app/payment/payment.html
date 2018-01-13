@@ -32,8 +32,8 @@
         </div>
         <div class="clearfix form-group"></div>
         <div class="text-center">
-          <button class="btn btn-success" ng-if = "paymentVm.enablePayment && paymentVm.payTransaction.paymentMode != 'online' && !isAdmin()" ng-click="paymentVm.confirmPurchase()">Confirm Purchase</button>
-          <button class="btn btn-success" ng-if = "paymentVm.enablePayment && isAdmin()" ng-click="paymentVm.confirmPayment()">Confirm Payment</button>
+          <!-- <button class="btn btn-success" ng-if = "paymentVm.enablePayment && paymentVm.payTransaction.paymentMode != 'online' && !isAdmin()" ng-click="paymentVm.confirmPurchase()">Confirm Purchase</button>
+          <button class="btn btn-success" ng-if = "paymentVm.enablePayment && isAdmin()" ng-click="paymentVm.confirmPayment()">Confirm Payment</button> -->
           <button class="btn btn-success" ng-if = "paymentVm.enablePayment && paymentVm.payTransaction.paymentMode == 'online' && !isAdmin()" ng-click="paymentVm.payNow()">Proceed to Payment</button>
         </div>
   </div>

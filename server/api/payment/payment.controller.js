@@ -7,6 +7,7 @@ var  xlsx = require('xlsx');
 var config = require('./../../config/environment');
 var async=require('async');
 var Util = require('./../../components/utility.js');
+var moment = require('moment');
 
 var trasactionStatuses = ['failed','pending','completed'];
 var ReqSubmitStatuses = ['Request Submitted', 'Request Failed'];
@@ -337,6 +338,7 @@ var EXPORT_PAYMENT = {
                       'Branch': 'branch',
                       'Ref No': 'refNo',
                       'Amount': 'amount',
+                      'Payment Status': 'paymentStatus',
                       'Payment Date': 'paymentDate',
                       'Date of Entry': 'createdAt'
                     };
@@ -355,7 +357,8 @@ function _formatPayments(item,innerItem,jsonArr){
     obj['branch'] = innerItem.branch || "";
     obj['refNo'] = innerItem.refNo || "";
     obj['amount'] = innerItem.amount || 0;
-    obj['paymentDate'] = innerItem.paymentDate || "";
+    obj['paymentStatus'] = innerItem.paymentStatus || 'success';
+    obj['paymentDate'] = moment(new Date(innerItem.paymentDate)).utcOffset('+0530').format('MM/DD/YYYY') || "";
     obj['createdAt'] = innerItem.createdAt || ""
     jsonArr.push(obj);
   }
@@ -364,7 +367,9 @@ function auctionReport(req, res) {
   var filter = {};
   if(req.body.auctionPaymentReq)
     filter.requestType = req.body.auctionPaymentReq;
-  
+  if(req.body.userId)
+    filter["user._id"] = req.body.userId;
+
   var query = Payment.find(filter).sort({createdAt:-1});
   query.exec(
     function (err, resList) {
@@ -388,8 +393,6 @@ function auctionReport(req, res) {
         headers.forEach(function(header){
           if(EXPORT_PAYMENT[header] == 'createdAt')
             dataArr[idx + 1].push(Util.toIST(_.get(item, 'createdAt', '')));
-          // else if(EXPORT_PAYMENT[header] == 'paymentDate')
-          //   dataArr[idx + 1].push(Util.toIST(_.get(item, 'paymentDate', '')));
           else
             dataArr[idx + 1].push(_.get(item,EXPORT_PAYMENT[header],''));
         });

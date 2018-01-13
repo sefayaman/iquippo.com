@@ -146,6 +146,9 @@ function AuctionPaymentListingCtrl($scope, $state, $rootScope, $uibModal, Modal,
 
 	function exportExcel(){
     var dataToSend ={};
+    if(!Auth.isAdmin() && !Auth.isAuctionRegPermission()){
+      dataToSend['userId'] = Auth.getCurrentUser()._id;
+    }
     dataToSend.auctionPaymentHistory = true;
     dataToSend.auctionPaymentReq = "Auction Request";
     PaymentSvc.export(dataToSend)
