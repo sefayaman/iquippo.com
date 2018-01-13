@@ -63,6 +63,7 @@ function AuctionPaymentResponseCtrl($scope,$rootScope,Modal,$stateParams,$state,
       var payTranData = {};
       payTranData.paymentMode = $scope.option.select;
       payTranData.transactionId = vm.payTransaction._id;
+      payTranData.status = transactionStatuses[1].code;
       if(vm.payTransaction.payments.length ===1) {
         payTranData.payments = [];
         var paymentObj = angular.copy(vm.payTransaction.payments[0]);
@@ -71,6 +72,16 @@ function AuctionPaymentResponseCtrl($scope,$rootScope,Modal,$stateParams,$state,
         paymentObj.paymentStatus = transactionStatuses[2].code;
         payTranData.payments[payTranData.payments.length] = paymentObj;
       }
+      if(vm.payTransaction.statuses.length < 1)
+        payTranData.statuses = [];
+      else {
+        payTranData.statuses = angular.copy(vm.payTransaction.statuses);
+      }
+      var stObj = {};
+      stObj.userId = Auth.getCurrentUser()._id;
+      stObj.status = transactionStatuses[1].code;
+      stObj.createdAt = new Date();
+      payTranData.statuses[payTranData.statuses.length] = stObj;
       userRegForAuctionSvc.saveOfflineRequest(payTranData).then(function(rd){
         Modal.alert(informationMessage.auctionPaymentSuccessMsg); 
         $state.go("main");
