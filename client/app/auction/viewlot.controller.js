@@ -32,6 +32,7 @@
     $scope.auctionData = null;
 
     $scope.lotsArr = [];
+    vm.lotListing = [];
     $scope.OverAll = "overall";
     $scope.LotWist = "lotwise";
     $scope.redirectToLiveAuction = false;
@@ -240,6 +241,8 @@
           }
         })
         .catch(function(err) {
+          $scope.noResult = true;
+          $scope.searching = false;
           throw err;
         });
     }
@@ -290,9 +293,11 @@
           //else 
           if($scope.auctionData.emdTax === $scope.OverAll) {
             dataObj.selectedLots = [];
-            vm.lotListing.forEach(function(item){
-              dataObj.selectedLots[dataObj.selectedLots.length] = item.lotNumber;
-            });
+            if(vm.lotListing) {
+              vm.lotListing.forEach(function(item){
+                dataObj.selectedLots[dataObj.selectedLots.length] = item.lotNumber;
+              });
+            }
           } else {
             dataObj.emdTax = $scope.LotWist;
           }
