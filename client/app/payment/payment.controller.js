@@ -23,7 +23,7 @@ function PaymentCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,$location,
   
 
    //iquippo.com ccavenue detail 
-   var currentURL = " http://iquippo.com";
+   var currentURL = "https://iquippo.com";
    var accessCode = 'AVSY67DJ29AL34YSLA';
 
  	//Default parameter value
