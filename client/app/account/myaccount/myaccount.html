@@ -75,7 +75,7 @@
                           </div>
                         </div>
                         <div class="col-sm-2 padd-left">
-                          <button type="button" class="btn btn-default" uib-popover="Update Mobile No." popover-trigger="mouseenter" ng-click="myAccountVm.updateMobile('editMobile')" ng-if="myAccountVm.edit"><i class=" fa fa-pencil"></i></button>
+                          <button type="button" class="btn btn-default" uib-popover="Update Mobile No." popover-trigger="mouseenter" ng-click="myAccountVm.updateMobile('editMobile')" ng-if="myAccountVm.edit" ng-disabled="myAccountVm.editBasicInfo"><i class=" fa fa-pencil"></i></button>
 
                           <button type="button" class="btn btn-default" uib-popover="Submit" popover-trigger="mouseenter" ng-click="myAccountVm.updateMobile('submit')" ng-if="myAccountVm.submit"><i class=" fa fa-check"></i></button>
 

@@ -208,8 +208,10 @@ function MyAccountCtrl($scope,$rootScope,Auth,$state,Modal,commonSvc,LegalTypeSv
       vm.editKYCInfo = false;
       vm.editBankInfo = false;
       vm.editGstInfo = false;
-      if(prop === 'editBasicInfo')
+      if(prop === 'editBasicInfo') {
+        updateMobile('reset');
         vm.editBasicInfo = true;
+      }
       if(prop === 'editAdditionalInfo')
         vm.editAdditionalInfo = true;
       if(prop === 'editKYCInfo')
