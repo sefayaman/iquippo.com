@@ -477,6 +477,8 @@ angular.module('sreizaoApp')
       if($scope.newUser.userType !== 'legalentity'){
         $scope.newUser.legalType = "";
         $scope.newUser.company = "";
+        $scope.newUser.companyIdentificationNo = "";
+        $scope.newUser.tradeLicense = "";
       }
     }
 
