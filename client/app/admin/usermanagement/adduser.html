@@ -246,7 +246,15 @@
                   <div class="form-group col-sm-6" ng-class="{'has-error':form.aadhaarNumber.$invalid && submitted}">
                     <input type="text" class="form-control" name="aadhaarNumber"  placeholder="AADHAAR Number" uib-tooltip="9999 9999 9999" tooltip-trigger="focus" ng-keyup="validateAadhaar(newUser.aadhaarNumber)" tooltip-placement="top" ng-model="newUser.aadhaarNumber">
                   </div>                  
-                </div>   
+                </div> 
+                <div class="row">
+                  <div class="col-sm-6 form-group">
+                    <input type="text" class="form-control" name="" value="" placeholder="Company Identification No">
+                  </div>
+                  <div class="col-sm-6 form-group">
+                    <input type="text" class="form-control" name="" value="" placeholder="Trade License">
+                  </div>
+                </div>  
                 <!-- <div class="row">
                   <div class="col-sm-6 form-group">
                     <span class="btn btn-warning fileinput-button">
@@ -260,19 +268,19 @@
                  </div>  -->
 
                   <div class="row">
-                    <div class="col-sm-4 form-group">
+                    <div class="col-sm-3 form-group text-left">
                         <div class="floating-label-wrapper">
                             <label>Identity Proof</label>                          
                         </div>
                     </div>
-                    <div class="col-sm-4 form-group text-left" ng-class="{'has-error': form.idProof.$invalid && submitted }">
+                    <div class="col-sm-6 form-group text-left" ng-class="{'has-error': form.idProof.$invalid && submitted }">
                       <select class="form-control" ng-model="kycInfo.idProof" name="idProof" ng-required="kycInfo.idProofDocName">
                         <option value="">Select Identity Proof</option>
                         <option ng-repeat="idProof in idProofList | orderBy:'name'" value="{{idProof.docName}}">{{idProof.docName}}</option>
                       </select>
-                      <span><a href="{{uploadImagePrefix}}{{kycDocDir}}/{{kycInfo.idProofDocName}}" target="_blank">{{kycInfo.idProofDocName}}</a></span>
+                      <div class="text-ellips"><a href="{{uploadImagePrefix}}{{kycDocDir}}/{{kycInfo.idProofDocName}}" target="_blank">{{kycInfo.idProofDocName}}</a></div>
                     </div>
-                    <div class="col-sm-4 form-group">
+                    <div class="col-sm-3 form-group">
                         <span class="btn btn-warning fileinput-button">
                           <input type="file" name="doc" data-filetype="doc" onchange="angular.element(this).scope().updateKyc(this.files,this,'idProof')"  class="ng-scope">
                           <span class="fa fa-upload"></span>
@@ -280,19 +288,19 @@
                     </div>
                   </div>
                   <div class="row">
-                    <div class="col-sm-4 form-group">
+                    <div class="col-sm-3 form-group text-left">
                       <div class="floating-label-wrapper">
                         <label for="JobProfile">Address Proof</label>
                       </div>
                     </div>
-                    <div class="col-sm-4 form-group text-left" ng-class="{'has-error': form.addressProof.$invalid && submitted }">
+                    <div class="col-sm-6 form-group text-left" ng-class="{'has-error': form.addressProof.$invalid && submitted }">
                       <select class="form-control" ng-model="kycInfo.addressProof" name="addressProof" ng-required="kycInfo.addressProofDocName">
                         <option value="">Select Address Proof</option>
                         <option ng-repeat="addProof in addressProofList | orderBy:'name'" value="{{addProof.docName}}">{{addProof.docName}}</option>
                       </select>
-                      <span><a href="{{uploadImagePrefix}}{{kycDocDir}}/{{kycInfo.addressProofDocName}}" target="_blank">{{kycInfo.addressProofDocName}}</a></span>
+                      <div class="text-ellips"><a href="{{uploadImagePrefix}}{{kycDocDir}}/{{kycInfo.addressProofDocName}}" target="_blank">{{kycInfo.addressProofDocName}}</a></div>
                     </div>
-                    <div class="col-sm-4 form-group">
+                    <div class="col-sm-3 form-group">
                         <span class="btn btn-warning fileinput-button">
                           <input type="file" name="doc" data-filetype="doc" onchange="angular.element(this).scope().updateKyc(this.files,this,'addressProof')"  class="ng-scope">
                           <span class="fa fa-upload"></span>
