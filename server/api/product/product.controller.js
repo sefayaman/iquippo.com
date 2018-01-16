@@ -1947,7 +1947,7 @@ exports.validateExcelData = function(req, res, next) {
       if(row.reservePrice){
         obj.grossPrice = row.reservePrice;
         return callback(null,obj);
-      }else if(row.seller_mobile && row.valuationAmount){
+      }else if(row.valuationAmount){
         AssetSaleUtil.getMarkupOnSellerMobile(row.seller_mobile,function(err,result){
             if(err){
                errorList.push({
