@@ -10,7 +10,7 @@ function PaymentCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,$location,
    //var ccavenueURL = "https://test.ccavenue.com";
 
    //ccavenue live  url
-   var ccavenueURL = " https://secure.ccavenue.com";
+   //var ccavenueURL = " https://secure.ccavenue.com";
 
    //localhost ccavennue test account crediential
    //var currentURL = "http://localhost";
@@ -23,8 +23,8 @@ function PaymentCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,$location,
   
 
    //iquippo.com ccavenue detail 
-   var currentURL = "https://iquippo.com";
-   var accessCode = 'AVSY67DJ29AL34YSLA';
+   // var currentURL = "https://iquippo.com";
+   // var accessCode = 'AVSY67DJ29AL34YSLA';
 
  	//Default parameter value
 
@@ -97,11 +97,11 @@ function PaymentCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,$location,
       confirmPayment();
       return;
    }
- 	  var bodyRequest = "";
- 	  bodyRequest = "merchant_id=111628&order_id=" + vm.payTransaction._id;
+ 	   var bodyRequest = "";
+      bodyRequest = "merchant_id=111628&order_id=" + vm.payTransaction._id;
       bodyRequest += "&currency=INR&amount=" + vm.payTransaction.totalAmount;
-      bodyRequest += "&redirect_url=" + encodeURIComponent(currentURL + '/api/payment/paymentresponse') 
-      bodyRequest += "&cancel_url=" + encodeURIComponent(currentURL + '/api/payment/paymentresponse');
+      bodyRequest += "&redirect_url=" + encodeURIComponent(serverPath + '/api/payment/paymentresponse')
+      bodyRequest += "&cancel_url=" + encodeURIComponent(serverPath + '/api/payment/paymentresponse');
       bodyRequest += "&language=en";
       bodyRequest += "&integration_type=iframe_normal";
 

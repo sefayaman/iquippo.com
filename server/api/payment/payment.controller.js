@@ -488,13 +488,13 @@ function sendPaymentRes(req,res,resPayment){
   var status = resPayment.order_status.toString().toLowerCase().trim();
   if(resPayment.merchant_param3 == "mobapp"){
     if (status != 'success')
-      res.redirect('https://mobile?payment=failed');
+      res.redirect('http://mobile?payment=failed');
     else
-      res.redirect('https://mobile?payment=success');
+      res.redirect('http://mobile?payment=success');
   }else if(resPayment.merchant_param4 === "auction_request")
-    res.redirect("https://"+ resPayment.merchant_param1 +"/auctionpaymentresponse/" + resPayment.order_id);
+    res.redirect(config.serverPath +"/auctionpaymentresponse/" + resPayment.order_id);
   else
-    res.redirect("https://"+ resPayment.merchant_param1 +"/paymentresponse/" + resPayment.order_id);
+    res.redirect(config.serverPath +"/paymentresponse/" + resPayment.order_id);
 }
 
 function handleError(res, err) {

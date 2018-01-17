@@ -278,7 +278,10 @@ angular.module('sreizaoApp',[
     function setEnviormentVariables(){
       if(DevEnvironment){
         supportMail = "iquippo.uat@gmail.com";
-        auctionURL = "https://auctionsoftwaremarketplace.com:3007"
+        auctionURL = "https://auctionsoftwaremarketplace.com:3007";
+        ccavenueURL = "https://test.ccavenue.com";
+        currentURL = "http://uat.iquippo.com";
+        accessCode = 'AVSW00DJ54AN50WSNA';
       }
     }
    

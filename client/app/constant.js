@@ -499,6 +499,10 @@ var auctionURL = "https://auctions.iquippo.com"
 var supportMail = "info@iquippo.com";
 var DevEnvironment = false; 
 var supportContact = "011 66025672";
+/*for payment gateway */
+var ccavenueURL = "https://secure.ccavenue.com";
+var currentURL = "https://iquippo.com";
+var accessCode = 'AVSY67DJ29AL34YSLA';
 /*if(location.host.indexOf('iquippo.com') == -1){
   supportMail = "iquippo.uat@gmail.com";
   DevEnvironment = true;
