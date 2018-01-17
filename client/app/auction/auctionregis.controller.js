@@ -200,14 +200,7 @@ function AuctionRegisCtrl($scope, $rootScope, $location, Modal, Auth,PagerSvc,$u
         paymentObj.status = transactionStatuses[1].code;
         if($scope.kyc.kycUploadlater)
           paymentObj.kycUploadlater = "Yes";
-        paymentObj.payments = [];
-        var payObj = {};
-        payObj.paymentModeType = "Net Banking";
-        payObj.amount = dataObj.totalAmount;
-        payObj.paymentDate = new Date();
-        payObj.createdAt = new Date();
         paymentObj.totalAmount = dataObj.totalAmount;
-        paymentObj.payments[paymentObj.payments.length] = payObj;
         userRegForAuctionSvc.saveOfflineRequest(paymentObj).then(function(rd){
           $state.go("auctionpayment", {
                 tid: rd._id

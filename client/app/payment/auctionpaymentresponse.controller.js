@@ -33,22 +33,40 @@ function AuctionPaymentResponseCtrl($scope,$rootScope,Modal,$stateParams,$state,
         $scope.auctionResponse = true;
       else
         $scope.auctionResponse = false;
-
- 			if(vm.payTransaction.paymentMode == 'online' && !Auth.isAdmin()){
+      vm.payTransaction.paymentMode = "online";
+      
+ 			if(vm.payTransaction.paymentMode == 'online' && !Auth.isAdmin() && !Auth.isAuctionRegPermission()){
 	 			if(vm.payTransaction.statusCode == 0) {
-          if(vm.payTransaction.payments.length ===1) {
-            var paymentObj = angular.copy(vm.payTransaction.payments[0]);
-            vm.payTransaction.payments = [];
-            paymentObj.refNo = vm.payTransaction.ccAvenueRes.bank_ref_no;
-            paymentObj.bankname = vm.payTransaction.ccAvenueRes.card_name;
-            paymentObj.paymentStatus = "success";
-            vm.payTransaction.payments[vm.payTransaction.payments.length] = paymentObj;
-          }
-          resendUserDataToAucion(vm.payTransaction);
-	 				PaymentSvc.updateStatus(vm.payTransaction,transactionStatuses[5].code);
+          setPayment(vm.payTransaction, vm.success);
+          if(vm.payTransaction.status !== transactionStatuses[5].code)
+            vm.payTransaction.status = transactionStatuses[5].code;
+          var stsObj = {};
+          stsObj.createdAt = new Date();
+          stsObj.userId = Auth.getCurrentUser()._id;
+          stsObj.status = transactionStatuses[5].code;
+          vm.payTransaction.statuses[vm.payTransaction.statuses.length] = stsObj;
+          
+          vm.payTransaction.userDataSendToAuction = true;
+          $rootScope.loading = true;
+          PaymentSvc.update(vm.payTransaction)
+            .then(function(res) {
+                $rootScope.loading = false;
+            })
+          .catch(function(err){
+            $rootScope.loading = false;
+          });
         } else {
 	 				vm.success = false;
-	 				PaymentSvc.updateStatus(vm.payTransaction,transactionStatuses[2].code);
+          setPayment(vm.payTransaction, vm.success);
+          if(vm.payTransaction.status !== transactionStatuses[5].code)
+              vm.payTransaction.status = transactionStatuses[2].code;
+          var stsObj = {};
+          stsObj.createdAt = new Date();
+          stsObj.userId = Auth.getCurrentUser()._id;
+          stsObj.status = transactionStatuses[2].code;
+          vm.payTransaction.statuses[vm.payTransaction.statuses.length] = stsObj;
+
+	 				PaymentSvc.update(vm.payTransaction);
 	 			}	
  			}
  		})
@@ -58,21 +76,31 @@ function AuctionPaymentResponseCtrl($scope,$rootScope,Modal,$stateParams,$state,
  		})
  	}
 
+  function setPayment(payTran, success) {
+    if(payTran.payments.length < 1)
+      payTran.payments = [];
+    var paymentObj = {};
+    paymentObj.paymentModeType = "Net Banking";
+    paymentObj.amount = payTran.totalAmount;
+    paymentObj.paymentDate = new Date();
+    paymentObj.createdAt = new Date();
+    paymentObj.refNo = payTran.ccAvenueRes.bank_ref_no;
+    paymentObj.bankname = payTran.ccAvenueRes.card_name;
+    if(success)
+      paymentObj.paymentStatus = "success";
+    else
+      paymentObj.paymentStatus = transactionStatuses[2].code;
+
+    vm.payTransaction.payments[vm.payTransaction.payments.length] = paymentObj;
+  }
+
   function submit() {
     if($scope.option.select === 'offline') {
       var payTranData = {};
       payTranData.paymentMode = $scope.option.select;
       payTranData.transactionId = vm.payTransaction._id;
-      payTranData.status = transactionStatuses[1].code;
-      if(vm.payTransaction.payments.length ===1) {
-        payTranData.payments = [];
-        var paymentObj = angular.copy(vm.payTransaction.payments[0]);
-        paymentObj.refNo = vm.payTransaction.ccAvenueRes.bank_ref_no;
-        paymentObj.bankname = vm.payTransaction.ccAvenueRes.card_name;
-        paymentObj.paymentStatus = transactionStatuses[2].code;
-        payTranData.payments[payTranData.payments.length] = paymentObj;
-      }
-      if(vm.payTransaction.statuses.length < 1)
+
+      if(vm.payTransaction.statuses && vm.payTransaction.statuses.length < 1)
         payTranData.statuses = [];
       else {
         payTranData.statuses = angular.copy(vm.payTransaction.statuses);
@@ -91,19 +119,6 @@ function AuctionPaymentResponseCtrl($scope,$rootScope,Modal,$stateParams,$state,
                 tid: vm.payTransaction._id
               });
     }
-  }
-
-  function resendUserDataToAucion(data) {
-    $rootScope.loading = true;
-    PaymentSvc.sendReqToCreateUser(data)
-      .then(function(res) {
-          $rootScope.loading = false;
-      })
-      .catch(function(err){
-        if(err)
-          //Modal.alert(err.data);
-        $rootScope.loading = false;
-      });
   }
 
  	init();

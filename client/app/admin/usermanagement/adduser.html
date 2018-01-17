@@ -248,11 +248,11 @@
                   </div>                  
                 </div> 
                 <div class="row">
-                  <div class="col-sm-6 form-group">
-                    <input type="text" class="form-control" name="" value="" placeholder="Company Identification No">
+                  <div class="col-sm-6 form-group" ng-class="{'has-error': form.companyIdentificationNo.$invalid && submitted }">
+                    <input type="text" class="form-control" name="companyIdentificationNo" ng-model="newUser.companyIdentificationNo"  placeholder="*Company Identification No" ng-required= "newUser.userType == 'legalentity'" ng-disabled="newUser.userType != 'legalentity'">
                   </div>
-                  <div class="col-sm-6 form-group">
-                    <input type="text" class="form-control" name="" value="" placeholder="Trade License">
+                  <div class="col-sm-6 form-group" ng-class="{'has-error': form.tradeLicense.$invalid && submitted }">
+                    <input type="text" class="form-control" name="tradeLicense" ng-model="newUser.tradeLicense"  placeholder="*Trade License" ng-required= "newUser.userType == 'legalentity'" ng-disabled="newUser.userType != 'legalentity'">
                   </div>
                 </div>  
                 <!-- <div class="row">

@@ -471,7 +471,8 @@ exports.paymentResponse = function(req,res){
 
       if(status == "success")
         payment.statusCode = 0;
-          
+      else
+        payment.statusCode = -1;  
       payment.save(function(err,pys){
         if(err) { return handleError(res, err); }
         else{

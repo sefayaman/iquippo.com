@@ -34,11 +34,11 @@
         <div class="text-center">
           <!-- <button class="btn btn-success" ng-if = "paymentVm.enablePayment && paymentVm.payTransaction.paymentMode != 'online' && !isAdmin()" ng-click="paymentVm.confirmPurchase()">Confirm Purchase</button>
           <button class="btn btn-success" ng-if = "paymentVm.enablePayment && isAdmin()" ng-click="paymentVm.confirmPayment()">Confirm Payment</button> -->
-          <button class="btn btn-success" ng-if = "paymentVm.enablePayment && paymentVm.payTransaction.paymentMode == 'online' && !isAdmin()" ng-click="paymentVm.payNow()">Proceed to Payment</button>
+          <button class="btn btn-success" ng-if = "!isAdmin() && !isAuctionRegPermission()" ng-click="paymentVm.payNow()">Proceed to Payment</button>
         </div>
   </div>
   <div class="container">
-    <div class="page-wrapper" ng-if="ccAvenue">
+    <div ng-if="ccAvenue">
       <iframe width="100%" height="570" scrolling="yes" frameborder="0"  id="paymentFrame" ng-src="{{ ccavenueURLSCE }}"></iframe>
     </div>
   </div>

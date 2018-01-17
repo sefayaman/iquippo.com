@@ -54,6 +54,7 @@ function OfflinePaymentCtrl($scope,$rootScope,Modal,$stateParams,$state,$uibModa
       return;
     }
     vm.dataModel.totalAmount = vm.dataModel.amount;
+    vm.dataModel.paymentMode = "offline";
     if(!vm.dataModel.payments)
       vm.dataModel.payments = [];
     var stsObj = {};

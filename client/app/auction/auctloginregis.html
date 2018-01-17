@@ -32,15 +32,15 @@
           <div class="row">
             <div class="col-xs-6 col-sm-6 form-group">
               <div class="radio radio-info">
-                      <input type="radio" id="offline" name="payment" ng-model="option.select" value="offline">
-                      <label for="offline"> Offline Payment </label>
-                  </div>
+                <input type="radio" id="offline" name="payment" ng-model="option.select" value="offline">
+                <label for="offline"> Offline Payment </label>
+              </div>
             </div>
             <div class="col-xs-6 col-sm-6 form-group">
               <div class="radio radio-info">
-                      <input type="radio" id="online" name="payment" ng-model="option.select" value="online">
-                      <label for="online"> Online Payment</label>
-                  </div>
+                <input type="radio" id="online" name="payment" ng-model="option.select" value="online" ng-disabled="isAdmin() || isAuctionRegPermission()">
+                <label for="online"> Online Payment</label>
+              </div>
             </div>
           </div>
           <div class="row" ng-if="kycExist">

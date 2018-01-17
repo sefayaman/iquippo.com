@@ -57,9 +57,9 @@
                       </div>
                       <div class="row">
                         <div class="col-sm-5 form-group">
-                          <div class="floating-label-wrapper">
+                          <div class="floating-label-wrapper" ng-class="{'has-error': basicForm.email.$invalid && submitted }">
                             <label for="email">Enter Email</label>
-                            <input type="email" class="form-control" id="email" placeholder="Enter Email" ng-model="myAccountVm.userInfo.email"  with-floating-label ng-disabled="!myAccountVm.editBasicInfo">
+                            <input type="email" class="form-control" id="email" name="email" placeholder="Enter Email" ng-model="myAccountVm.userInfo.email"  with-floating-label ng-disabled="!myAccountVm.editBasicInfo" mongoose-error>
                           </div>
                         </div>
                         <div class="col-sm-3 form-group">

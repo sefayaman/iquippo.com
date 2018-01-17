@@ -82,17 +82,10 @@ function AuctionPaymentListingCtrl($scope, $state, $rootScope, $uibModal, Modal,
         var payTranData = {};
         payTranData.paymentMode = payScope.option.select;
         payTranData.transactionId = payScope.auctionRegPayment._id;
-        payTranData.status = transactionStatuses[1].code;
+        //payTranData.status = transactionStatuses[1].code;
         if(payScope.option.kycUploadlater)
           payTranData.kycUploadlater = "Yes";
-        if(payScope.auctionRegPayment.payments.length ===1) {
-          payTranData.payments = [];
-          var paymentObj = angular.copy(payScope.auctionRegPayment.payments[0]);
-          paymentObj.refNo = payScope.auctionRegPayment.ccAvenueRes.bank_ref_no;
-          paymentObj.bankname = payScope.auctionRegPayment.ccAvenueRes.card_name;
-          paymentObj.paymentStatus = transactionStatuses[2].code;
-          payTranData.payments[payTranData.payments.length] = paymentObj;
-        }
+
         if(payScope.auctionRegPayment.statuses.length < 1)
           payTranData.statuses = [];
         else {

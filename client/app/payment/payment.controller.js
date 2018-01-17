@@ -58,8 +58,13 @@ function PaymentCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,$location,
  			vm.prevStatus = vm.payTransaction.status;
          vm.enablePayment = vm.prevStatus != transactionStatuses[5].code && vm.prevStatus != transactionStatuses[3].code?true:false;
 
- 			if(vm.payTransaction.paymentMode == 'online')
+ 			if(vm.payTransaction.paymentMode === 'online' && vm.payTransaction.requestType !== 'Auction Request')
 	 		     PaymentSvc.updateStatus(vm.payTransaction,transactionStatuses[1].code);
+
+         if(vm.payTransaction.paymentMode === 'online' 
+            && vm.payTransaction.requestType === 'Auction Request' 
+            && vm.payTransaction.status !== transactionStatuses[5].code)
+              PaymentSvc.updateStatus(vm.payTransaction,transactionStatuses[1].code);
  		})
  		.catch(function(err){
  			$state.go("main");
