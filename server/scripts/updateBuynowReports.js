@@ -15,30 +15,11 @@ mongoose.connection.on('error', function (err) {
 
 function init(processCb) {
     findSB();
-    findGN();
-    findBN();
     function findSB() {
-        Negotiation.find({ticketId: /^SB/}, function (err, reports) {
+        Negotiation.find({ticketId: { $in: [/^SB/, /^GN/, /^BN/] } }, function (err, reports) {
             if (err)
                 return processCb(err);
-            async.eachLimit(reports, 3, processBids, function (err, result) {
-                return processCb();
-            });
-        });
-    }
-    function findGN() {
-        Negotiation.find({ticketId: /^GN/}, function (err, reports) {
-            if (err)
-                return processCb(err);
-            async.eachLimit(reports, 3, processBids, function (err, result) {
-                return processCb();
-            });
-        });
-    }
-    function findBN() {
-        Negotiation.find({ticketId: /^BN/}, function (err, reports) {
-            if (err)
-                return processCb(err);
+            //console.log(reports.ticketId); return;
             async.eachLimit(reports, 3, processBids, function (err, result) {
                 return processCb();
             });
