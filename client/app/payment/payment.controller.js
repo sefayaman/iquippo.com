@@ -61,18 +61,17 @@ function PaymentCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,$location,
  			if(vm.payTransaction.paymentMode === 'online' && vm.payTransaction.requestType !== 'Auction Request')
 	 		     PaymentSvc.updateStatus(vm.payTransaction,transactionStatuses[1].code);
 
-         if(vm.payTransaction.paymentMode === 'online' 
-            && vm.payTransaction.requestType === 'Auction Request' 
-            && vm.payTransaction.status !== transactionStatuses[5].code)
-              PaymentSvc.updateStatus(vm.payTransaction,transactionStatuses[1].code);
+         if(vm.payTransaction.requestType === 'Auction Request' ) {
+            if(vm.payTransaction.status !== transactionStatuses[5].code)
+               PaymentSvc.updateStatus(vm.payTransaction,transactionStatuses[1].code);
+            vm.payTransaction.totalAmount = vm.payTransaction.emd;
+         }
  		})
  		.catch(function(err){
  			$state.go("main");
  			Modal.alert("Unknown error occured in payment system");
  		})
-
  		LocationSvc.getAllState();
-
  	}
 
    function confirmPurchase(){

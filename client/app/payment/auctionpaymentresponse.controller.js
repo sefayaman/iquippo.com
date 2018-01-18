@@ -34,7 +34,7 @@ function AuctionPaymentResponseCtrl($scope,$rootScope,Modal,$stateParams,$state,
       else
         $scope.auctionResponse = false;
       vm.payTransaction.paymentMode = "online";
-      
+      vm.payTransaction.totalAmount = vm.payTransaction.emd;
  			if(vm.payTransaction.paymentMode == 'online' && !Auth.isAdmin() && !Auth.isAuctionRegPermission()){
 	 			if(vm.payTransaction.statusCode == 0) {
           setPayment(vm.payTransaction, vm.success);
@@ -45,7 +45,6 @@ function AuctionPaymentResponseCtrl($scope,$rootScope,Modal,$stateParams,$state,
           stsObj.userId = Auth.getCurrentUser()._id;
           stsObj.status = transactionStatuses[5].code;
           vm.payTransaction.statuses[vm.payTransaction.statuses.length] = stsObj;
-          
           vm.payTransaction.userDataSendToAuction = true;
           $rootScope.loading = true;
           PaymentSvc.update(vm.payTransaction)
@@ -65,8 +64,7 @@ function AuctionPaymentResponseCtrl($scope,$rootScope,Modal,$stateParams,$state,
           stsObj.userId = Auth.getCurrentUser()._id;
           stsObj.status = transactionStatuses[2].code;
           vm.payTransaction.statuses[vm.payTransaction.statuses.length] = stsObj;
-
-	 				PaymentSvc.update(vm.payTransaction);
+          PaymentSvc.update(vm.payTransaction);
 	 			}	
  			}
  		})
@@ -99,7 +97,7 @@ function AuctionPaymentResponseCtrl($scope,$rootScope,Modal,$stateParams,$state,
       var payTranData = {};
       payTranData.paymentMode = $scope.option.select;
       payTranData.transactionId = vm.payTransaction._id;
-
+      payTranData.totalAmount = vm.payTransaction.emd;
       if(vm.payTransaction.statuses && vm.payTransaction.statuses.length < 1)
         payTranData.statuses = [];
       else {
@@ -111,7 +109,10 @@ function AuctionPaymentResponseCtrl($scope,$rootScope,Modal,$stateParams,$state,
       stObj.createdAt = new Date();
       payTranData.statuses[payTranData.statuses.length] = stObj;
       userRegForAuctionSvc.saveOfflineRequest(payTranData).then(function(rd){
-        Modal.alert(informationMessage.auctionPaymentSuccessMsg); 
+        if(vm.payTransaction.status === 'completed')
+          Modal.alert("Please pay Rs " + vm.payTransaction.emd + " amount to increase your credit limit and inform our customer care team.");
+        else
+          Modal.alert(informationMessage.auctionPaymentSuccessMsg);
         $state.go("main");
       });
     } else {

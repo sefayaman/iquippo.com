@@ -13,6 +13,7 @@ var PaymentTransactionSchema = new Schema({
   transactionId:String,
   payments:[{}],
   totalAmount:Number,
+  emd:Number,
   requestType:String,
   ccAvenueRes:{},
   ccAvenueData:{},

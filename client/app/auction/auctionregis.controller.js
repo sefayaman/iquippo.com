@@ -184,6 +184,7 @@ function AuctionRegisCtrl($scope, $rootScope, $location, Modal, Auth,PagerSvc,$u
   }
   function save(dataObj, amount){
     dataObj.totalAmount = amount;
+    dataObj.emd = amount;
     userRegForAuctionSvc.save(dataObj)
     .then(function(result){
       $rootScope.loading = false;

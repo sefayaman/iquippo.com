@@ -82,6 +82,7 @@ function AuctionPaymentListingCtrl($scope, $state, $rootScope, $uibModal, Modal,
         var payTranData = {};
         payTranData.paymentMode = payScope.option.select;
         payTranData.transactionId = payScope.auctionRegPayment._id;
+        payTranData.totalAmount = payScope.auctionRegPayment.emd;
         //payTranData.status = transactionStatuses[1].code;
         if(payScope.option.kycUploadlater)
           payTranData.kycUploadlater = "Yes";
@@ -97,7 +98,11 @@ function AuctionPaymentListingCtrl($scope, $state, $rootScope, $uibModal, Modal,
         stObj.createdAt = new Date();
         payTranData.statuses[payTranData.statuses.length] = stObj;
         userRegForAuctionSvc.saveOfflineRequest(payTranData).then(function(rd){
-          Modal.alert(informationMessage.auctionPaymentSuccessMsg);
+          if(payScope.auctionRegPayment.status === 'completed')
+            Modal.alert("Please pay Rs " + payScope.auctionRegPayment.emd + " amount to increase your credit limit and inform our customer care team.");
+          else
+            Modal.alert(informationMessage.auctionPaymentSuccessMsg);
+          
           paymentModal.dismiss('cancel');
           $rootScope.$broadcast('refreshPaymentHistroyList');
         });
