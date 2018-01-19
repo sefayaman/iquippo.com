@@ -90,6 +90,10 @@ function ProductListingCtrl($scope, $location, $rootScope, $http, productSvc, Au
     dataObj.auctionId = auctionReq.auctionId;
     dataObj.lot_id = auctionReq.lot_id;
     dataObj.assetDir = product.assetDir;
+    dataObj.operatingHour = product.operatingHour;
+    dataObj.mileage = product.mileage;
+    dataObj.mfgYear = product.mfgYear;
+    dataObj.city = product.city;
     dataObj.primaryImg = $rootScope.uploadImagePrefix + product.assetDir + "/" + product.primaryImg;
     //dataObj.static_increment = $scope.lot.static_increment;
     product.images.forEach(function(x) {
