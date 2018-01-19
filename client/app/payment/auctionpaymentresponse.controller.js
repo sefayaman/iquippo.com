@@ -87,6 +87,7 @@ function AuctionPaymentResponseCtrl($scope,$rootScope,Modal,$stateParams,$state,
     paymentObj.trans_fee = payTran.ccAvenueData.trans_fee;
     paymentObj.service_tax = payTran.ccAvenueData.service_tax;
     paymentObj.totAmount = payTran.ccAvenueData.amount;
+    paymentObj.tracking_id = payTran.ccAvenueRes.tracking_id;
     if(success)
       paymentObj.paymentStatus = "success";
     else
