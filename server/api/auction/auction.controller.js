@@ -268,7 +268,7 @@ exports.create = function(req, res, next) {
         if(req.body.isDeleted)
           options.dataToSend.isDeleted = true;
         options.dataToSend._id = req.body._id;
-        if(!proResult.external)
+        if(!proResult[0].external)
           options.dataToSend._id = req.body.product._id;
         options.dataToSend.assetId = req.body.product.assetId;
         options.dataToSend.assetDesc = req.body.product.description;
@@ -285,7 +285,7 @@ exports.create = function(req, res, next) {
           }
         } else
           options.dataToSend.images = [];
-        if(proResult.external) {
+        if(proResult[0].external) {
           options.dataToSend.seller = {};
           options.dataToSend.seller.contactNumber = req.body.product.contactNumber;
           options.dataToSend.seller.contactName = req.body.product.contactName;
