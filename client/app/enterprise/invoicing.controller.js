@@ -253,7 +253,7 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth,
       function generateInvoice(){
 
         if(!$scope.selectedTax || $scope.selectedTax.length == 0){
-            Modal.confirm("It seems you have not selected any taxes.Would you like to proceed?.",function(ret){
+            Modal.confirm("It seems you have not selected any taxes, Please add taxes.",function(ret){
               if(ret == 'Yes')
                 calculateInvoice();                 
             })
