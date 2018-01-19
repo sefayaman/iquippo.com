@@ -3,12 +3,14 @@
 'use strict';
 angular.module('sreizaoApp').controller('AuctionPaymentListingCtrl',AuctionPaymentListingCtrl);
 
-function AuctionPaymentListingCtrl($scope, $state, $rootScope, $uibModal, Modal, Auth, PaymentSvc, PagerSvc, userRegForAuctionSvc) {
+function AuctionPaymentListingCtrl($scope, $state, $rootScope, $uibModal, Modal, Auth, PaymentSvc, PagerSvc, userRegForAuctionSvc, AuctionMasterSvc, EmdSvc) {
 	var vm = this;
 	vm.transactions = [];
 	var filter = {};
   var initFilter = {};
   vm.searchStr = "";
+  $scope.OverAll = "overall";
+  $scope.LotWist = "lotwise";
   $scope.pager = PagerSvc.getPager();
   $scope.transactionStatuses = transactionStatuses;
 
@@ -56,6 +58,31 @@ function AuctionPaymentListingCtrl($scope, $state, $rootScope, $uibModal, Modal,
     payScope.auctionRegPayment = paymentData;
     payScope.option = {};
     payScope.option.select = paymentData.paymentMode;
+    if(angular.isUndefined(payScope.auctionRegPayment.emd)) {
+      if(payScope.auctionRegPayment.emdTax === $scope.OverAll) {
+        var serData = {};
+        serData._id = paymentData.auction_id;
+        AuctionMasterSvc.get(serData)
+        .then(function(result) {
+          if(!result)
+            return;
+          payScope.auctionRegPayment.emd = result[0].emdAmount;
+          PaymentSvc.update(payScope.auctionRegPayment);
+        });
+      } else {
+        var serData = {};
+        serData.auction_id = paymentData.auction_id;
+        serData.selectedLots = paymentData.selectedLots;
+        EmdSvc.getAmount(serData).then(function(result){
+          if(!result)
+            return;
+          payScope.auctionRegPayment.emd = result.emdAmount;
+          PaymentSvc.update(payScope.auctionRegPayment);
+        }).catch(function(err){
+        });
+      }
+    }
+
     var paymentModal = $uibModal.open({
       animation: true,
         templateUrl: "paymentOption.html",
