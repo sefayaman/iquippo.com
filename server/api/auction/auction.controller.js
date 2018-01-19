@@ -164,6 +164,8 @@ function _create(data, cb) {
         options.dataToSend.auctionId = auctionAsset.auctionId;
         options.dataToSend.lot_id = auctionAsset.lot_id;
         options.dataToSend.assetDir = auctionAsset.product.assetDir;
+        options.dataToSend.city = auctionAsset.product.city;
+        
         options.dataToSend.primaryImg = config.awsUrl + config.awsBucket + "/assets/uploads/" + auctionAsset.product.assetDir + "/" + auctionAsset.product.primaryImg;
         if(auctionAsset.product.otherImages) {
           options.dataToSend.images = [];
@@ -266,12 +268,15 @@ exports.create = function(req, res, next) {
         if(req.body.isDeleted)
           options.dataToSend.isDeleted = true;
         options.dataToSend._id = req.body._id;
+        if(!proResult.external)
+          options.dataToSend._id = req.body.product._id;
         options.dataToSend.assetId = req.body.product.assetId;
         options.dataToSend.assetDesc = req.body.product.description;
         options.dataToSend.auction_id = req.body.dbAuctionId;
         options.dataToSend.auctionId = req.body.auctionId;
         options.dataToSend.lot_id = req.body.lot_id;
         options.dataToSend.assetDir = req.body.product.assetDir;
+        options.dataToSend.city = req.body.product.city;
         options.dataToSend.primaryImg = config.awsUrl + config.awsBucket + "/assets/uploads/" + req.body.product.assetDir + "/" + req.body.product.primaryImg;
         if(req.body.product.otherImages) {
           options.dataToSend.images = [];
@@ -280,12 +285,13 @@ exports.create = function(req, res, next) {
           }
         } else
           options.dataToSend.images = [];
-        
-        options.dataToSend.seller = {};
-        options.dataToSend.seller.contactNumber = req.body.product.contactNumber;
-        options.dataToSend.seller.contactName = req.body.product.contactName;
+        if(proResult.external) {
+          options.dataToSend.seller = {};
+          options.dataToSend.seller.contactNumber = req.body.product.contactNumber;
+          options.dataToSend.seller.contactName = req.body.product.contactName;
+        }
         options.dataType = "assetData";
-        
+
         Utility.sendCompiledData(options, function(err, result) {
           if (err || (result && result.err)) {
             options.dataToSend.reqSubmitStatus = ReqSubmitStatuses[1];
@@ -335,15 +341,11 @@ exports.create = function(req, res, next) {
 
       Utility.sendCompiledData(options, function(err, result) {
         if (err || (result && result.err)) {
-          //options.dataToSend.reqSubmitStatus = ReqSubmitStatuses[1];
           Product.findOneAndUpdate({_id: productId}, {$set: {"reqSubmitStatus":ReqSubmitStatuses[1]}}).exec();
           AuctionRequest.findOneAndUpdate({_id: auctionReqId}, {$set: {"reqSubmitStatus":ReqSubmitStatuses[1]}}).exec();
           return res.status(201).json({errorCode: 1,message: "Unable to post asset request. Please contact support team."});
         }
         if(result){
-          //options.dataToSend.reqSubmitStatus = ReqSubmitStatuses[0];
-          //options.dataToSend.status = true;
-          //update(options.dataToSend);
           Product.findOneAndUpdate({_id: productId}, {$set: {"reqSubmitStatus":ReqSubmitStatuses[0]}}).exec();
           AuctionRequest.findOneAndUpdate({_id: auctionReqId}, {$set: {"reqSubmitStatus":ReqSubmitStatuses[0]}}).exec();
           return res.status(201).json({errorCode: 0,message: "Asset request submitted successfully"});
