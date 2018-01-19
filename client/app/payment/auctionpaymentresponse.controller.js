@@ -84,6 +84,9 @@ function AuctionPaymentResponseCtrl($scope,$rootScope,Modal,$stateParams,$state,
     paymentObj.createdAt = new Date();
     paymentObj.refNo = payTran.ccAvenueRes.bank_ref_no;
     paymentObj.bankname = payTran.ccAvenueRes.card_name;
+    paymentObj.trans_fee = payTran.ccAvenueData.trans_fee;
+    paymentObj.service_tax = payTran.ccAvenueData.service_tax;
+    paymentObj.totAmount = payTran.ccAvenueData.amount;
     if(success)
       paymentObj.paymentStatus = "success";
     else
