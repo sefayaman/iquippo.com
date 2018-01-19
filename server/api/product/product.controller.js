@@ -2516,7 +2516,7 @@ exports.validateExcelData = function(req, res, next) {
       }
 
       var assetStatus = row.assetStatus;
-      if (assetStatus && row.tradeType) {
+      if (assetStatus) {
         assetStatus = trim(assetStatus).toLowerCase();
         if (['listed', 'sold', 'rented', 'not_available'].indexOf(assetStatus) == -1) {
           errorList.push({
@@ -2525,6 +2525,7 @@ exports.validateExcelData = function(req, res, next) {
           });
           return callback('Error');
         }
+        /*
         var ret = checkValidTransition(row.tradeType, assetStatus);
 
         if (!ret) {
@@ -2533,14 +2534,14 @@ exports.validateExcelData = function(req, res, next) {
             rowCount: row.rowCount
           });
           return callback('Error');
-        } else {
+        } else { */
           obj.updatedAt = new Date();
           obj.assetStatus = assetStatus;
           if (assetStatus != 'listed') {
             //obj.featured = false;
             obj.isSold = true;
           }
-        }
+        //}
       }
 
       if (row.featured) {
