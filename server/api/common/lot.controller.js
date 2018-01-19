@@ -8,6 +8,8 @@ var async = require('async');
 var APIError = require('../../components/_error');
 var Util = require('../../components/utility');
 var validator = require('validator');
+var moment = require("moment");
+var __ = require('lodash');
 var ReqSubmitStatuses = ['Request Submitted', 'Request Failed'];
   
   exports.create = function(req, res, next) {
@@ -97,33 +99,45 @@ exports.updateLotData = function(req, res) {
 
   if (req.body.auction_id)
     req.body.auction_id = req.body.auction_id;
-  Lot.find({_id: req.params.id}, function(err, lotResult) {
-    if (err) return handleError(res, err);
-    delete req.body._id;
-    Lot.update({_id: req.params.id}, {$set: req.body}, function(err) {
-      if (err)
-        return res.status(412).send("Unable to update lot request. Please contact support team.");
-      
-      options.dataToSend = req.body;
-      options.dataToSend._id = req.params.id;
-      options.dataType = "lotData";
-      Util.sendCompiledData(options, function(err, result) {
-        if (err || (result && result.err)) {
-          //options.dataToSend = lotResult[0].toObject();
-          options.dataToSend.reqSubmitStatus =  ReqSubmitStatuses[1];
 
-          update(options.dataToSend);
-          if(result && result.err)
-            return res.status(412).send(result.err);
+  var filter = {};
+  filter.isDeleted = false;
+  if (req.body.auction_id)
+    filter.auction_id = req.body.auction_id;
+  if (req.body.lotNumber)
+    filter.lotNumber = req.body.lotNumber;
+
+  Lot.find(filter, function(err, lotResult) {
+    if (err) return handleError(res, err);
+    if(lotResult.length > 0){
+      return res.status(201).json({errorCode: 1,message: "Data already exist with same auction id and lot number!"});
+    } else {
+      delete req.body._id;
+      Lot.update({_id: req.params.id}, {$set: req.body}, function(err) {
+        if (err)
           return res.status(412).send("Unable to update lot request. Please contact support team.");
-        }
-        if(result){
-          options.dataToSend.reqSubmitStatus =  ReqSubmitStatuses[0];
-          update(options.dataToSend);
-          return res.status(201).json({errorCode: 0,message: "Lot request updated successfully !!!"});
-        }
+        
+        options.dataToSend = req.body;
+        options.dataToSend._id = req.params.id;
+        options.dataType = "lotData";
+        Util.sendCompiledData(options, function(err, result) {
+          if (err || (result && result.err)) {
+            //options.dataToSend = lotResult[0].toObject();
+            options.dataToSend.reqSubmitStatus =  ReqSubmitStatuses[1];
+
+            update(options.dataToSend);
+            if(result && result.err)
+              return res.status(412).send(result.err);
+            return res.status(412).send("Unable to update lot request. Please contact support team.");
+          }
+          if(result){
+            options.dataToSend.reqSubmitStatus =  ReqSubmitStatuses[0];
+            update(options.dataToSend);
+            return res.status(201).json({errorCode: 0,message: "Lot request updated successfully !!!"});
+          }
+        });
       });
-    });
+    }
   });
 };
 
@@ -494,6 +508,92 @@ exports.removeLotData = function(req, res) {
     return res.status(200).json(req.body);
   });
 };
+
+var LOT_HEADER = {
+  "Serial No." : {key:"serialNo"},
+  "Auction ID":{key:"auctionId"},
+  "Lot Number":{key:"lotNumber"},
+  "Start Price":{key:"startingPrice"},
+  "Reserve Price":{key:"reservePrice"},
+  "Lot Start Date" : {key : "startDate",type:"date"},
+  "Lot Start Time" : {key : "startDate",type:"time"},
+  "Lot End Date" : {key : "endDate",type:"date"},
+  "Lot End Time" : {key : "endDate",type:"time"},
+  "Last Minute Bid":{key:"lastMinuteBid"},
+  "Extended To" : {key : "extendedTo"},
+  "Bid Increment Type" : {key : "bidIncrementType"},
+  "Static" :{key : "static_increment"}
+}
+
+var  BID_HEADER = {
+  "Bid From" : "bidFrom",
+  "Bid To" : "bidTo",
+  "Bid Increment" : "bidIncrement"
+}
+
+exports.exportCSV = function(req,res){
+  var query = Lot.find({isDeleted:false}).sort({auction_id:-1,_id:-1});
+  query.exec(function(err,lots){
+    if(err) return handleError(err);
+    var csvStr = "";
+    var lotHeader = Object.keys(LOT_HEADER);
+    var dataHeader = Object.keys(BID_HEADER);
+    csvStr += lotHeader.join(",");
+    csvStr += ","
+    csvStr += dataHeader.join(",");
+    csvStr += "\r\n";
+    lots.forEach(function(lot,index){
+      var rowData = [];
+      lotHeader.forEach(function(header){
+        var key = LOT_HEADER[header]["key"];
+        var val = __.get(lot,key,"");
+        if(key === "serialNo")
+          val = (index + 1) + ".1";
+
+        if(key === "bidIncrementType")
+          val = lot.static_increment?"Static":"Bid Range";
+        if(LOT_HEADER[header]["type"] && val && LOT_HEADER[header]["type"] === 'date')
+           val = moment(val).utcOffset('+0530').format('MM/DD/YYYY');
+        if(LOT_HEADER[header]["type"]&& val && LOT_HEADER[header]["type"] === 'time'){
+           val = moment(val).utcOffset('+0530').format("h:mm a");
+        }
+          
+        val = Util.toCsvValue(val);
+        rowData.push(val);
+      });
+      if(!lot.static_increment && lot.bidIncrement && lot.bidIncrement.length){
+        lot.bidIncrement.forEach(function(bidInc,idx){
+          var row = [].concat(rowData);
+          row[0] = (index + 1 ) + "." + (idx + 1);
+          dataHeader.forEach(function(key){
+            var bidVal = __.get(bidInc,BID_HEADER[key],"");
+            bidVal = Util.toCsvValue(bidVal);
+            row.push(bidVal);
+          });
+          csvStr += row.join(",");
+          csvStr += "\r\n";
+        });
+      }else{
+        csvStr += rowData.join(",");
+        csvStr += "\r\n";
+      }
+    });
+    csvStr = csvStr.substring(0,csvStr.length -1);
+    try{
+      req.filename = "lotmaster";
+      renderCsv(req,res,csvStr);
+    }catch(e){
+
+    }
+  });
+}
+
+function renderCsv(req,res,csv){
+   var fileName = req.filename + "_" + new Date().getTime();
+  res.setHeader('Content-Type', 'application/octet-stream');
+  res.setHeader("Content-Disposition", 'attachment; filename=' + fileName + '.csv;');
+  res.end(csv, 'binary'); 
+}
 
 function handleError(res, err) {
   return res.status(404).json(err);

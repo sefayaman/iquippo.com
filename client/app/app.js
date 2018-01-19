@@ -69,6 +69,7 @@ angular.module('sreizaoApp',[
     $rootScope.auctionDir = auctionDir;
     $rootScope.manufacturerDir = manufacturerDir;
     $rootScope.avatarDir = avatarDir;
+    $rootScope.kycDocDir = kycDocDir;
     $rootScope.bannerDir = bannerDir;
     $rootScope.auctionmasterDir = auctionmasterDir;
     $rootScope.financemasterDir = financemasterDir;
@@ -132,7 +133,7 @@ angular.module('sreizaoApp',[
     .then(function(res){
         DevEnvironment = res.mode === 'production'?false:true;
         $rootScope.liveOrUatFlag = DevEnvironment;
-        setEnviormentVariables();
+        setEnviormentVariables(res);
       })
       .catch(function(stRes){
       });
@@ -274,10 +275,18 @@ angular.module('sreizaoApp',[
      }
    });
 
-    function setEnviormentVariables(){
+    function setEnviormentVariables(res){
       if(DevEnvironment){
         supportMail = "iquippo.uat@gmail.com";
-        auctionURL = "https://auctionsoftwaremarketplace.com:3007"
+        auctionURL = "https://auctionsoftwaremarketplace.com:3007";
+        ccavenueURL = "https://test.ccavenue.com";
+        if(res.mode === 'development') {
+          currentURL = "http://dev.iquippo.com";
+          accessCode = 'AVHH01FA38BL35HHLB';
+        } else {
+          currentURL = "http://uat.iquippo.com";
+          accessCode = 'AVGH01FA38BL33HGLB';
+        }
       }
     }
    

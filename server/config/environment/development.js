@@ -10,9 +10,9 @@ module.exports = {
   uploadPath: 'client/assets/uploads/',
   templatePath:'client/assets',
   //serverPath: "http://192.168.14.120", 
-  serverPath: "http://dev.iquippo.com", 
+  serverPath: "http://dev.iquippo.com",
   contactNumber: "011 66025672",
-  ccAvenueWorkingKey:"BCCD36E2D20659D5F76B99973880340D",
+  ccAvenueWorkingKey:"CC6D430E8604D39EA9EDCABADF26BE4B",
 
   seedDB: true,
   mailConfig : { MailHost: "smtp.gmail.com", MailPort: "465", Mailusername: "iquippo.uat@gmail.com", Mailpassword: "pass12345678",from:"iquippo.uat@gmail.com"},

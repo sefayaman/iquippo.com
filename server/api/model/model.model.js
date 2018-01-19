@@ -11,6 +11,7 @@ var ModelSchema = new Schema({
   brand:{},
   isForNew:{type:Boolean,default:false},
   isForUsed:{type:Boolean,default:false},
+  modelDesc:String,
   createdAt:Date,
   updatedAt:Date,
   useFor:String

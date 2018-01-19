@@ -957,7 +957,7 @@ function updateProduct(req,res){
             postRequest(req, res);
           });
         } else
-          return res.status(200).json(req.body);
+          return res.status(200).json({product:req.body});
       });
     }
   });
@@ -1033,7 +1033,7 @@ function addProduct(req, res){
       postRequest(req, res);
     }
     else
-      return res.status(201).json(product);
+      return res.status(201).json({product:product});
     });
   }
 
@@ -1947,7 +1947,7 @@ exports.validateExcelData = function(req, res, next) {
       if(row.reservePrice){
         obj.grossPrice = row.reservePrice;
         return callback(null,obj);
-      }else if(row.seller_mobile && row.valuationAmount){
+      }else if(row.valuationAmount){
         AssetSaleUtil.getMarkupOnSellerMobile(row.seller_mobile,function(err,result){
             if(err){
                errorList.push({
@@ -2471,7 +2471,7 @@ exports.validateExcelData = function(req, res, next) {
 
         if(products.length){
           errorList.push({
-            Error : 'Duplicate Asset Id present in quene',
+            Error : 'Duplicate Asset Id present in queue',
             rowCount : row.rowCount
           });
           return callback('Error');
@@ -2516,7 +2516,7 @@ exports.validateExcelData = function(req, res, next) {
       }
 
       var assetStatus = row.assetStatus;
-      if (assetStatus && row.tradeType) {
+      if (assetStatus) {
         assetStatus = trim(assetStatus).toLowerCase();
         if (['listed', 'sold', 'rented', 'not_available'].indexOf(assetStatus) == -1) {
           errorList.push({
@@ -2525,6 +2525,7 @@ exports.validateExcelData = function(req, res, next) {
           });
           return callback('Error');
         }
+        /*
         var ret = checkValidTransition(row.tradeType, assetStatus);
 
         if (!ret) {
@@ -2533,14 +2534,14 @@ exports.validateExcelData = function(req, res, next) {
             rowCount: row.rowCount
           });
           return callback('Error');
-        } else {
+        } else { */
           obj.updatedAt = new Date();
           obj.assetStatus = assetStatus;
           if (assetStatus != 'listed') {
             //obj.featured = false;
             obj.isSold = true;
           }
-        }
+        //}
       }
 
       if (row.featured) {

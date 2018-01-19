@@ -481,8 +481,14 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
       if(vm.toDate){
         filter['toDate'] = encodeURIComponent(vm.toDate);
       }
-
-      EnterpriseSvc.exportExcel("transaction",filter);
+      filter.type = "transaction";
+      filter.role = Auth.getCurrentUser().role;
+      //$scope.filter = filter;
+      var exportObj = {filter:filter};
+      exportObj.method = "GET";
+      exportObj.action = "api/enterprise/export";
+      $scope.$broadcast("submit",exportObj);
+      //EnterpriseSvc.exportExcel("transaction",filter);
     }
 
     //init();

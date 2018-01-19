@@ -1,0 +1,180 @@
+<div class="container-fluid">
+  <ol class="breadcrumb">
+    <li>
+      <a href="/main"> Home </a>
+    </li>
+    <li><a href="/new"> New Equipment </a></li>
+    <li class="active"> {{displayText || equipmentSearchFilter.brand || equipmentSearchFilter.location || equipmentSearchFilter.assetId || "New Products"}} </li>
+  </ol>
+</div>
+<div class="new-equipments-banner" ng-if="brand.homeBannerTop">
+  <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{brand.homeBannerTop}}" height="200" width="100%" alt="">
+</div>
+<section class="category-block">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-3" ng-class="{hidefilter: !filterbutton.value1}">
+        <div class="new-equipments-banner new-equipments-left form-group" ng-if="brand.homeBannerLeft">
+          <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{brand.homeBannerLeft}}" height="250" width="100%" alt="">
+        </div>
+      <button class="btn btn-danger visible-xs filter-display" ng-click="filterbutton.value1 = !filterbutton.value1"><i class="fa fa-times"></i> Close</button>
+      <h4 class="filter-heading">
+        Filter By:
+        <small><a href="javascript:void(0);" class="pull-right" ng-click="clearAll()">Clear All</a></small>
+      </h4>
+      <uib-accordion close-others="oneAtATime" class="information">
+        <!-- <uib-accordion-group is-open="status.group">
+          <uib-accordion-heading>
+            Industry<i class="pull-right fa" ng-class="{'fa-minus': status.group, 'fa-plus': !status.group}"></i>
+          </uib-accordion-heading>
+            <div class="radio" ng-repeat="group in allGroup | orderBy :'name'">
+              <input type="radio" ng-model="equipmentSearchFilter.group" ng-change="newBrandHomeVm.onGroupChange(equipmentSearchFilter.group)" name="group" value="{{group.name}}" id="gp_{{$index}}"> <label for="gp_{{$index}}">{{group.name}}</label>
+            </div>
+        </uib-accordion-group>
+
+        <uib-accordion-group is-open="status.category">
+          <uib-accordion-heading>
+            Category  <i class="pull-right fa" ng-class="{'fa-minus': status.category, 'fa-plus': !status.category}"></i>
+          </uib-accordion-heading>
+            <div>
+              <div class="radio" ng-repeat="cat in categoryList | orderBy :'name'">
+                <input type="radio" ng-model="equipmentSearchFilter.category" ng-change="newBrandHomeVm.onCategoryChange(equipmentSearchFilter.category)" name="category" value="{{cat.name}}" id="cat_{{$index}}"> <label for="cat_{{$index}}">{{cat.name}}</label>
+              </div>
+              
+            </div>
+        </uib-accordion-group>
+
+        <uib-accordion-group is-open="status.brand">
+          <uib-accordion-heading>
+            Product Brand <i class="pull-right fa" ng-class="{'fa-minus': status.brand, 'fa-plus': !status.brand}"></i>
+          </uib-accordion-heading>
+            <div>
+              <div class="radio" ng-repeat="br in brandList | unique: 'name' | orderBy :'name'">
+                <input type="radio" ng-model="equipmentSearchFilter.brand" name="brand" value="{{br.name}}" id="brand_{{$index}}" ng-change="newBrandHomeVm.fireCommand()"> <label for="brand_{{$index}}">{{br.name}}</label>
+              </div>
+              
+            </div>
+        </uib-accordion-group> -->
+        <uib-accordion-group is-open="status.brand">
+          <uib-accordion-heading>
+            Product Model <i class="pull-right fa" ng-class="{'fa-minus': status.brand, 'fa-plus': !status.brand}"></i>
+          </uib-accordion-heading>
+            <div>
+              <div class="radio" ng-repeat="ml in modelList | unique: 'name' | orderBy :'name'">
+                <input type="radio" ng-model="equipmentSearchFilter.model" name="model" value="{{ml.name}}" id="model_{{$index}}" ng-change="newBrandHomeVm.fireCommand()"> <label for="model_{{$index}}">{{ml.name}}</label>
+              </div>
+              
+            </div>
+        </uib-accordion-group>
+        <uib-accordion-group is-open="status.location">
+          <uib-accordion-heading>
+            Location <i class="pull-right fa" ng-class="{'fa-minus': status.location, 'fa-plus': !status.location}"></i>
+          </uib-accordion-heading>
+          <input type="text" class="form-control form-group" ng-model="equipmentSearchFilter.location" placeholder="Enter Country/State/Location" uib-typeahead="address for address in getLocationHelp($viewValue)"  class="form-control" typeahead-focus-first = "false" typeahead-wait-ms="200" ng-change="newBrandHomeVm.fireCommand()" typeahead-on-select="newBrandHomeVm.fireCommand()"  ng-model-options="{debounce:1000}" autocomplete="off"/>
+        </uib-accordion-group>
+              
+      </uib-accordion>
+    </div>
+      
+    <!--Grid Mode Start-->  
+      
+    <div class="col-sm-9">
+      <div class="row">
+        <div class="col-sm-10 form-group">
+          <h4 class="filter-heading">{{displayText || equipmentSearchFilter.group || equipmentSearchFilter.category || equipmentSearchFilter.brand || equipmentSearchFilter.location || equipmentSearchFilter.assetId || "New Products"}} ({{newBrandHomeVm.totalItems}} Results Found)</h4>
+        </div>
+        <div class="col-xs-12 col-sm-2 form-group">
+          <div class="btn-group filter-group">
+              <select class="btn btn-default form-control" ng-change="newBrandHomeVm.sortBy()" ng-model="newBrandHomeVm.sortByFlag">
+                <option value="">Sort By</option>
+                <option value="lh">Price : Low to High</option>
+                <option value="hl">Price : High to Low</option>
+                <option value="por">Price on Request</option>
+                <option value="exos">Exclude Out of Stock</option>
+              </select>
+               <button class="btn btn-default visible-xs" ng-click="filterbutton.value1 = !filterbutton.value1">
+                Filter
+              </button>
+          </div>
+         
+        </div>
+      </div>
+      <div class="clearfix"></div>
+      <div id="search-result_wrapper" ng-if="!searching && !noResult">
+        <div class="row">
+          <div class="col-sm-8 col-md-6 form-group padd-right">
+          </div>
+          <div class="col-sm-4 col-md-offset-3 col-md-3 form-group text-right">
+            <uib-pagination total-items="newBrandHomeVm.totalItems" ng-click="newBrandHomeVm.onPageChange()" ng-model="newBrandHomeVm.currentPage" items-per-page="newBrandHomeVm.itemsPerPage" max-size="0" boundary-links="false" rotate="false" next-text="Next >>" previous-text="<< Previous"></uib-pagination>
+          </div>
+        </div>
+        <div class="row">      
+            <div class="col-sm-6 col-md-4 form-group" ng-repeat="product in productList  | startFrom:(newBrandHomeVm.currentPage -1 )*newBrandHomeVm.itemsPerPage | limitTo:newBrandHomeVm.itemsPerPage" >
+            <div class="media text-center form-group">
+              <a ng-href="/new/{{product.category.name}}/{{product.brand.name}}/{{product.assetId}}">
+                 <img src="{{uploadImagePrefix}}{{product.assetDir}}/{{product.primaryImg}}" class="img-responsive">              
+              </a>          
+              <div class="media-body text-left"> 
+                <div class="row">
+                  <div class="col-xs-6 form-group">
+                    <h4 class="text-ellips">{{product.brand.name}} {{product.category.name}}</h4>                  
+                  </div>
+                  <div class="col-xs-6 form-group padd-left">
+                    <h6 class="text-ellips text-info text-right">Model: {{product.model.name}}</h6>                    
+                  </div>
+                </div> 
+                <div class="row" ng-repeat="techspec in product.techSpec">
+                  <div class="col-xs-6">
+                    <p class="text-ellips"><span>{{techspec.name}}</span></p>
+                  </div>
+                  <div class="col-xs-6">
+                     <p class="text-ellips text-right"><span>{{techspec.value}}</span></p>
+                  </div>
+                </div> 
+                <!-- <div class="row">
+                  <div class="col-xs-6 form-group">                    
+                    Operating Weight               
+                  </div>
+                  <div class="col-xs-6 form-group text-right padd-left">                    
+                    {{product.technicalInfo.operatingWeight}}          
+                  </div>
+                </div> 
+                <div class="row">
+                  <div class="col-xs-6 form-group">                   
+                    Bucket Capacity                  
+                  </div>
+                  <div class="col-xs-6 form-group text-right padd-left">                   
+                    {{product.technicalInfo.bucketCapacity}}                  
+                  </div>
+                </div>  -->
+        <!--    <div class="row">
+                  <div class="col-xs-12 form-group">
+                    <h5 class="text-warning">
+                      <i class="fa fa-star"></i>
+                      <i class="fa fa-star"></i>
+                      <i class="fa fa-star"></i>
+                      <i class="fa fa-star-o"></i>
+                      <i class="fa fa-star-o"></i>
+                    </h5>
+                    <span class="text-info">12 Expert Reviews</span>
+                  </div>                  
+                </div>                 -->
+                                    
+              </div> 
+              <a ng-href="/new/{{product.category.name}}/{{product.brand.name}}/{{product.assetId}}" class="btn btn-primary btn-block" >
+                View Details
+              </a>     
+            </div>
+          </div>
+          
+        </div>
+
+        <div class="text-center">
+          <uib-pagination total-items="newBrandHomeVm.totalItems" ng-click="newBrandHomeVm.onPageChange()" ng-model="newBrandHomeVm.currentPage" items-per-page="newBrandHomeVm.itemsPerPage" max-size="newBrandHomeVm.maxSize" boundary-links="true" rotate="false"></uib-pagination>
+        </div>
+      </div>
+    </div>
+    <!--Grid Mode End-->
+    </div>  
+  </div>
+</section>

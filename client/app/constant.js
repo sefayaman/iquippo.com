@@ -145,6 +145,7 @@ var importDir = "import";
 var categoryDir = "category";
 var manpowerDir = "manpower";
 var avatarDir = "avatar";
+var kycDocDir = "kyc";
 var classifiedAdDir = "classifiedad";
 var manufacturerDir = "manufacturer";
 var bannerDir = "banner";
@@ -499,6 +500,10 @@ var auctionURL = "https://auctions.iquippo.com"
 var supportMail = "info@iquippo.com";
 var DevEnvironment = false; 
 var supportContact = "011 66025672";
+/*for payment gateway */
+var ccavenueURL = "https://secure.ccavenue.com";
+var currentURL = "https://iquippo.com";
+var accessCode = 'AVSY67DJ29AL34YSLA';
 /*if(location.host.indexOf('iquippo.com') == -1){
   supportMail = "iquippo.uat@gmail.com";
   DevEnvironment = true;
@@ -544,6 +549,9 @@ informationMessage['classifiedSuccess'] = "Your request for Classified Ad has be
 /*channel partner messsage */
 informationMessage['deleteChannelPartnerConfirm'] = "Do you want to delete this user?";
 
+/*otp message*/
+informationMessage['otpMessage'] = 'Dear User, One Time Password (OTP) to verify your iQuippo account is ';
+
 /*Asset Sale messages*/
 //informationMessage['buyNowApprovalIfYes'] = "Your Bid request has been submitted successfully.";
 //informationMessage['buyNowApprovalIfNo'] = "Your Sale process is in process , you may contact us at 03366022059";
@@ -558,6 +566,11 @@ informationMessage['Fullpayment'] = "Full payment has been received.";
 informationMessage['kycUpdate'] = "KYC Documents uploaded successfully.";
 informationMessage['invoiceUpdateForSelf'] = "Invoice in your name has been submitted successfully.";
 informationMessage['invoiceUpdateForThirdParty'] = "Invoice in third party's name has been submitted successfully.";
+
+/*Auction messages*/
+informationMessage['auctionRegMsg'] = "You have already registered for this auction.";
+informationMessage['auctionPaymentPendingMsg'] = 'Your EMD payment is still pending. For paying EMD amount, go to Payment History in your dashboard.';
+informationMessage['auctionPaymentSuccessMsg'] = "You have sucessfully registered for the auction. Please pay the EMD amount and inform our customer care team.";
 
 var newsEvents = [
   {

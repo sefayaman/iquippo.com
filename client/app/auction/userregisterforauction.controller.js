@@ -95,11 +95,11 @@
             closeDialog();
             if(result.data){
               if(result.data =="done" && auctionData.emdTax === $scope.OverAll){
-                 Modal.alert("You have already registered for this auction"); 
+                 Modal.alert(informationMessage.auctionRegMsg, true); 
                  return;
                }
               if(result.data =="undone" && auctionData.emdTax === $scope.OverAll){
-                Modal.alert("Your EMD payment is still pending. Please pay the EMD amount and inform our customer care team.",true);
+                Modal.alert(informationMessage.auctionPaymentPendingMsg,true);
                 return;
               }
             }
@@ -234,7 +234,7 @@
 
     function sendOTP() {
       var dataToSend = {};
-      dataToSend['content'] = 'Dear User, One TimePassword (OTP) to verify your iQuippo account is ';
+      dataToSend['content'] = informationMessage.otpMessage;;
       dataToSend['otpOn'] = "mobile";
       dataToSend['sendToClient'] = 'y';
       if (vm.user.mobile)

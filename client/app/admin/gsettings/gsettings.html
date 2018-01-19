@@ -43,6 +43,8 @@
                         <option value="certificate">Certificate Master</option>
                         <option value="techspec">Technical Specification Master</option>
                         <option value="newEquipmentBanners">New Equipment Banners</option>
+                        <option value="legalentityTypeMaster">Legal Entity Type Master</option>
+                        <option value="bankNameMaster">Bank Name Master</option>
                     </select>
                     <i class="caret"></i>
                 </div>
@@ -524,8 +526,86 @@
                                     </div>
                                 </div>
 
-                                <div class="row form-group">						
-                                    <div class="col-sm-2 pull-right">
+                                <div class="panel panel-default" ng-if="actionAdditionalInfo">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title">Add Additional Information</h3>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <div class="col-sm-6 form-group">
+                                                <textarea placeholder="On behalf of our client" ng-model="gsettingVm.auctionData.onBehalfOfClient" style="width: 100%"></textarea>               
+                                            </div>
+                                            <div class="col-sm-6 form-group">
+                                                <input type="text" placeholder="Asset category" class="form-control" ng-model="gsettingVm.auctionData.assetCategory">               
+                                            </div>
+                                        </div>
+                                        <h4>Important Points for Buyers</h4>
+                                        <div class="row">
+                                            <div class="col-sm-3 form-group">
+                                                <label>Buyers Premium</label>
+                                                <input type="text" class="form-control" ng-model="gsettingVm.auctionData.buyersPremium" placeholder="Buyers Premium">
+                                            </div>
+                                            <div class="col-sm-3 form-group">
+                                                <label>TAX</label>
+                                                <input type="text" class="form-control" ng-model="gsettingVm.auctionData.buyersTax" placeholder="TAX">
+                                            </div>
+                                            <div class="col-sm-3 form-group">
+                                                <label>Payment date</label>
+                                                <input type="text" class="form-control" ng-model="gsettingVm.auctionData.buyersPaymentDate" placeholder="Payment date">
+                                            </div>
+                                            <div class="col-sm-3 form-group">
+                                                <label>Asset Removal Date</label>
+                                                <input type="text" class="form-control" ng-model="gsettingVm.auctionData.buyersAssetRemovelDate" placeholder="Asset Removal Date">
+                                            </div>
+                                            <div class="col-sm-3 form-group">
+                                                <label>EMD</label>
+                                                <input type="text" class="form-control" ng-model="gsettingVm.auctionData.buyersEmd" placeholder="EMD">
+                                            </div>
+                                            <div class="col-sm-3 form-group">
+                                                <label>Additional Information</label>
+                                                <input type="text" class="form-control" ng-model="gsettingVm.auctionData.buyersAdditionalInfo" placeholder="Additional Information">
+                                            </div>
+                                        </div>
+
+                                        <h4>Contact Details</h4>
+                                        <div class="row" ng-repeat="contactDetail in gsettingVm.auctionData.contactDetails">
+                                            <div class="col-sm-2 form-group">
+                                                <label>Contact Person Name</label>
+                                                <input type="text" class="form-control" ng-model="contactDetail.personName" placeholder="Contact Person Name">
+                                            </div>
+                                            <div class="col-sm-2 form-group">
+                                                <label>Contact Person Number</label>
+                                                <input type="number" class="form-control" ng-model="contactDetail.personNumber" placeholder="Contact Person Number">
+                                            </div>
+                                            <div class="col-sm-2 form-group">
+                                                <label>Email Id</label>
+                                                <input type="text" class="form-control" ng-model="contactDetail.personEmail" placeholder="Email">
+                                            </div>
+                                            <div class="col-sm-2 form-group">
+                                                <label>Location</label>
+                                                <input type="text" class="form-control" ng-model="contactDetail.personLocation" placeholder="Location">
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <div class="invisible">Action</div>
+                                                <button type="button" class="btn btn-default" ng-if="$last" ng-click="gsettingVm.auctionData.contactDetails.push({})">Add More</button>
+                                                <button type="button" class="btn btn-default" ng-if="!$last" ng-click="gsettingVm.auctionData.contactDetails.splice($index,1)">Delete</button>
+                                            </div>
+                                        </div>
+
+                                        <h4>Add Terms/Disclaimer</h4>
+                                        <div class="row">
+                                            <div class="col-sm-12 form-group">
+                                                <textarea placeholder="Terms/Disclaimer" ng-model="gsettingVm.auctionData.termDesclaimer" style="width: 100%"></textarea>               
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row form-group">	
+                                    <div class="col-sm-offset-8 col-sm-2">
+                                        <button type="button" class="btn btn-primary btn-block" ng-click="gsettingVm.showAddionalInfo()" ng-if="!actionAdditionalInfo">Add Additional Info.</button>
+                                    </div>					
+                                    <div class="col-sm-2">
                                         <button class="btn btn-primary btn-block" ng-click="gsettingVm.saveAuctionMaster(auctionDateForm)" ng-if="!gsettingVm.auctionEdit"> Save </button>
                                         <button type="button" class="btn btn-primary btn-md btn-block" ng-click="gsettingVm.updateAuctionMaster(auctionDateForm)" ng-if="gsettingVm.auctionEdit">Update</button>
                                     </div>
@@ -2894,15 +2974,15 @@
             <!--- Listing offer master  -->
             <div ng-if="gsettingVm.tabValue == 'offer_status'" ng-controller="OfferCtrl as offerVm">
 
-                <h4>Offer Master</h4>
-                <legend></legend>
-
-                <div class="row form-group">
-                    <div class="col-sm-12 text-right">
+                <div class="row">
+                    <div class="col-sm-8">
+                        <h4>Offer Master</h4>
+                    </div>
+                    <div class="col-sm-4 text-right">
                         <button class="btn btn-success" ng-click="offerVm.exportExcel()"><i class="fa fa-file-excel-o"></i> Export Excel</button>                       
                     </div>
                 </div>
-
+                <legend></legend>
                 <div class="form-group">
                     <form class="techInformationForm" name="offerform" novalidate>
                         <div class="row form-group">
@@ -3203,7 +3283,7 @@
 
                             <div class="col-sm-3" ng-class="{'has-error':emdform.auctionName.$invalid && submitted}">
                                 <label>Auction Name </label>
-                                <input type="text" class="form-control" name="auctionName" ng-model="emdVm.dataModel.auctionName" value="{{emdVm.auctionName}}" placeholder="{{emdVm.auctionName}}" disabled>
+                                <input type="text" class="form-control" name="auctionName" ng-model="emdVm.dataModel.auctionName" placeholder="Auction Name" disabled>
                             </div>
                             <div class="col-sm-3" ng-class="{'has-error':emdform.selectedLots.$invalid && submitted}">
                                 <label>Select the lot</label>
@@ -3228,11 +3308,10 @@
                 <legend></legend>			
                 <div class="row form-group">
                     <div class="col-sm-6">
-                        <!-- <p>Showing : </p> -->
+                        <p>Showing : {{emdVm.totalItems}} Records</p>
                     </div>
                     <div class="col-sm-6 tablesearch text-right">
-                        Search: <input type="text" placeholder="Search..." ng-model="emdVm.searchStr" ng-change="emdVm.searchFn()" ng-model-options="{debounce:500}">
-
+                        Search: <input type="text" placeholder="Search..." ng-model="emdVm.searchStr" ng-change="emdVm.fireCommand(true)" ng-model-options="{debounce:500}">
                     </div>
                 </div>
                 <div class="row">
@@ -3242,7 +3321,7 @@
                                 <thead>
                                     <tr>
                                         <th>Auction Id</th>
-                                        <th>Auction Name</th>
+                                        <!-- <th>Auction Name</th> -->
                                         <th>Lot ID</th>
                                         <th>EMD Amount</th>
                                         <th>Actions</th>
@@ -3251,7 +3330,7 @@
                                 <tbody>
                                     <tr ng-repeat="emddata in emdVm.filteredList">
                                         <td>{{emddata.auctionId}}</td>
-                                        <td>{{emddata.auctionName}}</td>
+                                        <!-- <td>{{emddata.auctionName}}</td> -->
                                         <td>{{emddata.selectedLots[0].lotNumber.toString()}}</td>
                                         <td>{{emddata.emdAmount}}</td>
                                         <td>
@@ -3265,13 +3344,34 @@
                                 </tbody>
                             </table>
                         </div>
-                        <uib-pagination total-items="gsettingVm.totalProductTechInfoCount" ng-model="gsettingVm.currentPage" items-per-page="gsettingVm.itemsPerPage" max-size="gsettingVm.maxSize" ng-change="gsettingVm.fireCommand(false, null, 'technical')" class="pagination-sm" rotate="false">  </uib-pagination>
+                        <uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="pager.maxSize" ng-change="emdVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
                     </div>
                 </div>
             </div>
             <!--    Lot Master-->
             <div ng-if="gsettingVm.tabValue == 'lot'" ng-controller="LotCtrl as lotVm">
-                <h4>Add Lots</h4>
+               
+                <div class="row">
+                    <div class="col-sm-6">
+                        <h4>Add Lots</h4>
+                    </div>
+                    <!-- <div class="col-sm-offset-2 col-sm-2">             
+                            <span class="btn btn-success btn-block fileinput-button">
+                                    <input type="file" name="template_update">
+                                    <span>
+                                            <i class="fa fa-file-excel-o"></i> Import Excel
+                                    </span>
+                            </span>             
+                    </div>   -->
+                    <div class="col-sm-offset-4 col-sm-2">              
+                            <button class="btn btn-success btn-block fileinput-button" ng-click="lotVm.exportCSV()">
+                                    <span>
+                                            <i class="fa fa-file-excel-o"></i> Export Excel
+                                    </span>
+                            </button> 
+                            <export-form name="lotmasterexport" method="GET" action="api/common/lot/csv"></export-form>
+                    </div>          
+                </div>
                 <legend></legend>
                 <form class="techInformationForm" name="lotform" novalidate>
                     <div class="row form-group">
@@ -3282,7 +3382,7 @@
                             </select>				
                         </div>
                         <div class="col-sm-3" ng-class="{'has-error':lotform.lotNumber.$invalid && submitted}">
-                            <input type="text" class="form-control" name="lotNumber" ng-model="lotVm.dataModel.lotNumber" ng-blur="lotVm.checkForLot(lotVm.dataModel.lotNumber, lotVm.dataModel.auction_id)" ng-disabled="!lotVm.dataModel.auction_id" placeholder="Enter Lot Number">
+                            <input type="text" class="form-control" name="lotNumber" ng-model="lotVm.dataModel.lotNumber" ng-disabled="!lotVm.dataModel.auction_id" placeholder="Enter Lot Number">
 
                         </div>
                         <div class="col-sm-3 form-group" ng-class="{'has-error':lotform.startPrice.$invalid && submitted}">
@@ -3423,26 +3523,36 @@
             <!-- dealer tab value-->
             <div ng-if="gsettingVm.tabValue == 'dealermaster'" ng-controller="DealerMasterCtrl as dealerVm">
                 <h4>Listing Dealer Data</h4>
+                <legend></legend>
                 <form class="" name="dealerForm" >			
                     <div class="row form-group">
-                        <div class="col-sm-3" ng-class="{'has-error':dealerForm.brand.$invalid && submitted}">
+                        <div class="col-sm-3 form-group" ng-class="{'has-error':dealerForm.brand.$invalid && submitted}">
                             <select class="form-control" name="brand" ng-model="dealerVm.dataModel.brand.data" required>
                                 <option value="">Select Brand</option>
                                 <option ng-repeat="brand in dealerVm.brandList| unique: 'name'" value="{{brand._id}}">{{brand.name}}</option>
                             </select>
                         </div>
-                        <div class="col-sm-3" ng-class="{'has-error':dealerForm.dealer.$invalid && submitted}">
+                        <div class="col-sm-3 form-group" ng-class="{'has-error':dealerForm.dealer.$invalid && submitted}">
                             <select class="form-control" name="dealer" ng-model="dealerVm.dataModel.dealer.data"  required>
                                 <option value="">*Select Dealer</option>
                                 <option ng-repeat="dealer in dealerVm.dealerList" value="{{dealer._id}}">{{dealer.entityName}}</option>
                             </select>
                         </div>
-                        <div class="col-sm-3" ng-class="{'has-error':dealerForm.state.$invalid && submitted}">
+                        <div class="col-sm-3 form-group" ng-class="{'has-error':dealerForm.country.$invalid && submitted}">
+                            <select class="form-control" name="country" ng-model="dealerVm.dataModel.country" ng-change="dealerVm.onCountryChange(dealerVm.dataModel.country)" required>
+                                <option value="">*Select Country</option>
+                                <option ng-repeat="country in allCountries" value="{{country.name}}">{{country.name}}</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-3 form-group" ng-class="{'has-error':dealerForm.state.$invalid && submitted}">
                             <select multiple="true" class="form-control" name="state" ng-model="dealerVm.stateIdArr" style="height:70px;" required>
                                 <option value="">*Select State</option>
                                 <option ng-repeat="state in dealerVm.stateList" value="{{state._id}}">{{state.name}}</option>
                             </select>
                         </div>
+                        
+                    </div>
+                    <div class="row">
                         <div class="col-sm-2 pull-right">
                             <button type="button" class="btn btn-block btn-primary" ng-if="isEdit" ng-click="dealerVm.update(dealerForm)">Update</button>
                             <button type="button" class="btn btn-block btn-primary" ng-if="!isEdit" ng-click="dealerVm.save(dealerForm)">Save</button>
@@ -3468,12 +3578,12 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr  ng-repeat="dealer in dealerVm.filteredList">
+                            <tr  ng-repeat="dealer in dealerVm.dataList">
                                 <td>{{dealer.brand.name}}</td>
                                 <td>{{dealer.dealer.name}}</td>
-                                <td><span ng-repeat="state in dealer.state">{{state.name}},</span></td>
-                                <td ng-if="dealer.status == 'true'"><a href="javascript:void(0);" ng-click="dealerVm.changeStatus(dealer, 'false')">Active</a></td>
-                                <td ng-if="dealer.status == 'false'"><a href="javascript:void(0);" ng-click="dealerVm.changeStatus(dealer, 'true')">Deactive</a></td>
+                                <td><span ng-repeat="state in dealer.state">{{state.name}}<span ng-if="!$last"> , </span></span></td>
+                                <td ng-if="dealer.status"><a href="javascript:void(0);" ng-click="dealerVm.changeStatus(dealer, 'false')">Deactivate</a></td>
+                                <td ng-if="!dealer.status"><a href="javascript:void(0);" ng-click="dealerVm.changeStatus(dealer, 'true')">Activate</a></td>
                                 <td>
                                     <button type="button" class="btn btn-sm btn-primary" ng-click="dealerVm.editClicked(dealer)"><i class="fa fa-pencil"></i></button>
                                     <button type="button" class="btn btn-sm btn-danger" ng-click="dealerVm.destroy(dealer._id)"><i class="fa fa-trash"></i></button>
@@ -3483,7 +3593,7 @@
                         </tbody>
                     </table>
                 </div>
-                <!--<uib-pagination total-items="dealerVm.totalItems" ng-model="dealerVm.currentPage" items-per-page="dealerVm.itemsPerPage" max-size="dealerVm.maxSize" ng-change="dealerVm.fireCommand(false,null,'dealermaster')" class="pagination-sm" rotate="false">  </uib-pagination>-->
+                <uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="pager.maxSize" ng-change="dealerVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
             </div>
             <!-- Certificate tab value-->
             <div ng-if="gsettingVm.tabValue == 'certificate'" ng-controller="CertificateMasterCtrl as certificateVm">
@@ -3557,9 +3667,18 @@
             <div ng-if="gsettingVm.tabValue == 'techspec'" ng-controller="TechSpecMasterCtrl as techspecVm">
                 <div class="col-sm-12">
                     <uib-tabset justified="true">
-                        <uib-tab heading="Category Technical Specification" select="onTabClick('techSpec')">
-                            <h4>Technical Specification Master</h4>
+                        <uib-tab heading="Category Technical Specification" select="onTabClick('techSpec')">                           
 
+                            <div class="row form-group">
+                                <div class="col-sm-8">
+                                    <h4>Technical Specification Master</h4>
+                                </div>
+                                <div class="col-sm-4 text-right">
+                                    <button class="btn btn-success" ng-click="techspecVm.exportExcel('category')"><i class="fa fa-file-excel-o"></i> Export Excel</button>                       
+                                    <export-form name="techspecexport"></export-form>
+                                </div>
+                            </div>
+                            <legend></legend>
                             <div class="form-group">
                                 <form class="techInformationForm" name="techform" novalidate>
                                     <div class="row form-group">
@@ -3644,7 +3763,15 @@
                         </uib-tab>
 
                         <uib-tab heading="Brand Technical Specification" select="onTabClick('techSpecValue')">
-                            <h4>Technical Specification Master</h4>
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    <h4>Technical Specification Master</h4>
+                                </div>
+                                <div class="col-sm-4 text-right">
+                                    <button class="btn btn-success" ng-click="techspecVm.exportExcel('brand')"><i class="fa fa-file-excel-o"></i> Export Excel</button>                       
+                                    <export-form name="techspecexportbrand"></export-form>
+                                </div>
+                            </div>                            
                             <legend></legend>
                             <div class="form-group">
                                 <form class="techInformationForm" name="techfieldform" novalidate>
@@ -3790,6 +3917,7 @@
             <!-- New Equipment Banner tab value-->
             <div ng-if="gsettingVm.tabValue == 'newEquipmentBanners'" ng-controller="NewEquipmentBannersCtrl as newBannerVm">
                 <h4>Listing New Equipment Banner Data</h4>
+                <legend></legend>
                 <form class="" name="newEquipBannerForm">			
                     <div class="row form-group">
                         <div class="col-sm-3">
@@ -3872,6 +4000,98 @@
 
             </div>
 
+            <!-- Legal Entity Type Master tab value -->
+            <div ng-if="gsettingVm.tabValue == 'legalentityTypeMaster'" ng-controller="LegalTypeMasterCtrl as legalTypeVm">
+                <h4>Add Legal Entity Type</h4>
+                <legend></legend>
+                <form class="" name="legalTypeForm" novalidate>
+                    <div class="row">
+                        <div class="col-sm-4 form-group" ng-class="{'has-error':legalTypeForm.legalType.$invalid && submitted}">
+                            <input type="text" class="form-control" name="legalType" ng-model="legalTypeVm.dataModel.legalType" placeholder="Legal Entity Type" required>
+                        </div>
+                        <div class="col-sm-2 form-group pull-right">
+                            <button type="button" class="btn btn-block btn-primary" ng-if="isEdit" ng-click="legalTypeVm.update(legalTypeForm)">Update</button>
+                            <button type="button" class="btn btn-block btn-primary" ng-if="!isEdit" ng-click="legalTypeVm.save(legalTypeForm)">Save</button>
+                        </div>
+                    </div>
+                </form>
+                <legend></legend>
+                <div class="row form-group">
+                    <div class="col-sm-6"><p class="text-left">Showing : {{legalTypeVm.totalItems}} Records</p></div>
+                    <div class="col-sm-6 tablesearch text-right">
+                        Search: <input type="text" placeholder="Search..." ng-model="legalTypeVm.searchStr" ng-change="legalTypeVm.fireCommand(true)" ng-model-options="{debounce:500}">
+                    </div>
+                </div>
+                <legend></legend>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Legal Entity Type</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="legalTypeData in legalTypeVm.filteredList">
+                                <td>{{legalTypeData.legalType}}</td>
+                                <td>
+                                    <a href="javascript:void(0);" class="btn btn-primary btn-sm" uib-popover="Edit" popover-trigger="mouseenter" ng-click="legalTypeVm.editClicked(legalTypeData)">
+                                                <i class="fa fa-pencil"></i>
+                                    </a>
+                                    <a href="javascript:void(0);" class="btn btn-danger btn-sm" uib-popover="Delete" popover-trigger="mouseenter" ng-click="legalTypeVm.destroy(legalTypeData._id)"><i class="fa fa-trash" ></i></a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="pager.maxSize" ng-change="legalTypeVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+            </div>
+            <!-- Bank Name Master tab value -->
+            <div ng-if="gsettingVm.tabValue == 'bankNameMaster'" ng-controller="BankMasterCtrl as bankVm">
+                <h4>Add Bank Name</h4>
+                <legend></legend>
+                <form class="" name="bankForm" novalidate>
+                    <div class="row">
+                        <div class="col-sm-4 form-group" ng-class="{'has-error':bankForm.bankName.$invalid && submitted}">
+                            <input type="text" class="form-control" name="bankName" ng-model="bankVm.dataModel.bankName" placeholder="Bank Name" required>
+                        </div>
+                        <div class="col-sm-2 form-group pull-right">
+                            <button type="button" class="btn btn-block btn-primary" ng-if="isEdit" ng-click="bankVm.update(bankForm)">Update</button>
+                            <button type="button" class="btn btn-block btn-primary" ng-if="!isEdit" ng-click="bankVm.save(bankForm)">Save</button>
+                        </div>
+                    </div>
+                </form>
+                <legend></legend>
+                <div class="row form-group">
+                    <div class="col-sm-6"><p class="text-left">Showing : {{bankVm.totalItems}} Records</p></div>
+                    <div class="col-sm-6 tablesearch text-right">
+                        Search: <input type="text" placeholder="Search..." ng-model="bankVm.searchStr" ng-change="bankVm.fireCommand(true)" ng-model-options="{debounce:500}">
+                    </div>
+                </div>
+                <legend></legend>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Bank Name</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="bankData in bankVm.filteredList">
+                                <td>{{bankData.bankName}}</td>
+                                <td>
+                                    <a href="javascript:void(0);" class="btn btn-primary btn-sm" uib-popover="Edit" popover-trigger="mouseenter" ng-click="bankVm.editClicked(bankData)">
+                                                <i class="fa fa-pencil"></i>
+                                    </a>
+                                    <a href="javascript:void(0);" class="btn btn-danger btn-sm" uib-popover="Delete" popover-trigger="mouseenter" ng-click="bankVm.destroy(bankData._id)"><i class="fa fa-trash" ></i></a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="pager.maxSize" ng-change="bankVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+            </div>
         </div>
     </div>
 </div>

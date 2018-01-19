@@ -22,13 +22,13 @@ NegotiationSchema.pre('save',function(next){
 		return next();
 	switch(type){
 		case 'BUY_NEGOTIATE' :
-			prefix = 'SB'
+			prefix = 'OSB';
 			break;
 		case 'FOR_RENT' : 
-			prefix = 'GN'
+			prefix = 'OGN';
 			break;
 		case 'BUY' : 
-			prefix = 'BN'
+			prefix = 'OBN';
 			break;
 	}
 	var sequence = seqGenerator.sequence();

@@ -16,12 +16,20 @@ function EmdCtrl($scope,$rootScope,$state,Modal,Auth,PagerSvc,$filter,LotSvc,Auc
   $scope.isEdit = false;
   vm.update = update;
   vm.destroy = destroy;
-  vm.searchFn = searchFn;
+  vm.fireCommand = fireCommand;
   $scope.lotList=[];
   $scope.ReqSubmitStatuses = ReqSubmitStatuses;
+  $scope.pager = PagerSvc.getPager();
+  var initFilter = {};
+  var filter = {};
+  vm.searchStr = "";
+
   function init(){
-      getAuctions();
-      getEmdData();
+    filter = {};
+    initFilter.pagination = true;
+    angular.copy(initFilter, filter);
+    getAuctions();
+    getEmdData(filter);
   }         
 
   function getLotData(filter){
@@ -31,18 +39,28 @@ function EmdCtrl($scope,$rootScope,$state,Modal,Auth,PagerSvc,$filter,LotSvc,Auc
     });
   }
 
-  function searchFn(type){
-     vm.filteredList = $filter('filter')(vm.EmdData,vm.searchStr);
+  function fireCommand(reset){
+    if (reset)
+        $scope.pager.reset();
+    filter = {};
+    angular.copy(initFilter, filter);
+    if (vm.searchStr)
+        filter.searchStr = vm.searchStr;
+    getEmdData(filter);
   }
 
   function onSelectAuction(dbAuctionId) {
-    var filter={};
+    if(!dbAuctionId) {
+      resetEMDData();
+      return;
+    }
+    filter={};
     filter.auction_id  = dbAuctionId;
     filter.isDeleted = false;
     getLotData(filter);
     for(var i=0; i < vm.auctionListing.length; i++){
       if(vm.auctionListing[i]._id == dbAuctionId){
-        vm.auctionName = vm.auctionListing[i].name;
+        vm.dataModel.auctionName = vm.auctionListing[i].name;
         vm.dataModel.auctionId = vm.auctionListing[i].auctionId;
         break;
       }
@@ -50,7 +68,7 @@ function EmdCtrl($scope,$rootScope,$state,Modal,Auth,PagerSvc,$filter,LotSvc,Auc
   }
 
   function editClicked(rowData){
-    getAuctions();
+    //getAuctions();
     vm.dataModel = {};
     angular.copy(rowData, vm.dataModel);
     vm.dataModel.auction_id = rowData.auction_id;
@@ -89,8 +107,9 @@ function EmdCtrl($scope,$rootScope,$state,Modal,Auth,PagerSvc,$filter,LotSvc,Auc
 
   function resetEMDData() {
     vm.dataModel = {};
+    $scope.lotList = [];
     $scope.submitted = false;
-    getEmdData();
+    fireCommand(true);
   }
 
   function resendEMDMasterData(emdData) {
@@ -98,7 +117,7 @@ function EmdCtrl($scope,$rootScope,$state,Modal,Auth,PagerSvc,$filter,LotSvc,Auc
     EmdSvc.sendReqToCreateEmd(emdData)
       .then(function(res) {
           if (res.errorCode == 0) {
-            getLotData();
+            fireCommand(true);
           }
           Modal.alert(res.message);
           $rootScope.loading = false;
@@ -159,13 +178,13 @@ function EmdCtrl($scope,$rootScope,$state,Modal,Auth,PagerSvc,$filter,LotSvc,Auc
     });
   }
 
-  function getEmdData(){
-    var filter={};
-    filter.isDeleted=false;
-    EmdSvc.getData()
+  function getEmdData(filter){
+    $scope.pager.copy(filter);
+    //filter.isDeleted=false;
+    EmdSvc.getData(filter)
     .then(function(result){
     vm.EmdData = result;
-    result.forEach(function(x){
+    /*result.items.forEach(function(x){
       filter._id = x.auction_id;
       AuctionMasterSvc.get(filter)
       .then(function(res){
@@ -175,18 +194,21 @@ function EmdCtrl($scope,$rootScope,$state,Modal,Auth,PagerSvc,$filter,LotSvc,Auc
         x.lots=x.selectedLots[0].lotNumber.toString();
       }
       });
-    });
-    vm.filteredList = result;
+    });*/
+
+    vm.filteredList = result.items;
+    vm.totalItems = result.totalItems;
+    $scope.pager.update(result.items, result.totalItems);
     })
     .catch(function(res){
     });
   }
 
   function getAuctions() {
-    var filter = {};
-    filter.auctionType = "upcoming";
-    filter.emdTax = "lotwise";
-    AuctionSvc.getAuctionDateData(filter).then(function(result) {
+    var auctionFilter = {};
+    auctionFilter.auctionType = "upcoming";
+    auctionFilter.emdTax = "lotwise";
+    AuctionSvc.getAuctionDateData(auctionFilter).then(function(result) {
       vm.auctionListing = result.items;
     }).catch(function(err) {
 

@@ -2,7 +2,7 @@
   'use strict';
   angular.module('sreizaoApp').controller('NewProductDetailCtrl', NewProductDetailCtrl);
 
-  function NewProductDetailCtrl($scope,AssetSaleSvc, AuctionSvc,OfferSvc, LocationSvc, TechSpecMasterSvc, AuctionMasterSvc, vendorSvc, NegotiationSvc, $stateParams, $rootScope, PaymentMasterSvc, $uibModal, $http, Auth, productSvc, notificationSvc, Modal, CartSvc, ProductTechInfoSvc, BuyContactSvc, userSvc, PriceTrendSvc, ValuationSvc, $state,$sce,commonSvc) {
+  function NewProductDetailCtrl($scope,AssetSaleSvc, AuctionSvc,OfferSvc, LocationSvc, TechSpecMasterSvc, AuctionMasterSvc, vendorSvc, NegotiationSvc, $stateParams, $rootScope, PaymentMasterSvc, $uibModal, $http, Auth, productSvc, notificationSvc, Modal, CartSvc, ProductTechInfoSvc, BuyContactSvc, userSvc, PriceTrendSvc, ValuationSvc, $state,$sce,commonSvc,NewEquipmentSvc) {
     
     var vm = this;
     $scope.currentProduct = {};
@@ -100,7 +100,7 @@
                   $scope.allTechSpecFields = result[0].fields;
                 });
             }
-
+            getOtherInfo();
             if ($scope.currentProduct.images.length > 0) {
                $scope.currentProduct.images.forEach(function(img, index, arr) {
                  img.displaySrc = $rootScope.uploadImagePrefix + $scope.currentProduct.assetDir + "/" + img.src;
@@ -113,6 +113,16 @@
         return;
       }
       
+    }
+
+    function getOtherInfo(){
+      var filter = {};
+      filter.brand = $scope.currentProduct.brand.name;
+      filter.model = $scope.currentProduct.model.name;
+      NewEquipmentSvc.getEquipmentOtherInfo(filter)
+      .then(function(result){
+        $scope.otherInfo = result;
+      });
     }
     
     init();

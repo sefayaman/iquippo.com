@@ -6,7 +6,6 @@
    var vm = this;
     $scope.lot = {};
     $scope.showWidget = false;
-    $scope.showAssetsaleBid = false;
     $scope.currentProduct = {};
     $scope.priceTrendData = null;
     $rootScope.currntUserInfo = {};
@@ -369,7 +368,6 @@
     function getLot(){
       if(!$stateParams.lot){
         $scope.showWidget = false;
-        $scope.showAssetsaleBid = true;
         return;
       }
       var lotFilter = {lotId:$stateParams.lot,assetId:$stateParams.id};
@@ -380,12 +378,10 @@
           checkWidgetAccessOnLot(lots[0]);
         }else{
            $scope.showWidget = false;
-            $scope.showAssetsaleBid = true;
         }
       })
       .catch(function(err){
          $scope.showWidget = false;
-          $scope.showAssetsaleBid = true;
       });
 
     }
@@ -396,27 +392,23 @@
         dataObj.user = {};
         dataObj.auction.dbAuctionId = lot.auction_id;
         dataObj.user._id = Auth.getCurrentUser()._id;
-        dataObj.lotNumber = lot.lotNumber;
+        dataObj.selectedLots = lot.lotNumber;
         userRegForAuctionSvc.checkUserRegis(dataObj)
         .then(function(result) {
           if (result.data) {
             if (result.data == "done") {
               lot.url = auctionURL+ "/bidwidget/" + lot.auction_id + "/" + lot._id + "/" + Auth.getCurrentUser()._id;
               lot.url = $sce.trustAsResourceUrl(lot.url);
-              $scope.showWidget = true;
-              $scope.showAssetsaleBid = false;
-            }else{
-               $scope.showWidget = false;
-              $scope.showAssetsaleBid = true;
-            }
+              if(!$scope.auctionsData.visibleBuyNow)
+                $scope.showWidget = true;
+            } else
+                $scope.showWidget = false;
           } else {
             $scope.showWidget = false;
-            $scope.showAssetsaleBid = true;
           }
         })
         .catch(function(err){
           $scope.showWidget = false;
-          $scope.showAssetsaleBid = true;
         });
     }
 
@@ -538,7 +530,6 @@
             getLot();
           else{
              $scope.showWidget = false;
-             $scope.showAssetsaleBid = true;
           }
          /* if ($scope.currentProduct.tradeType == "SELL")
             vm.showText = "To Buy"

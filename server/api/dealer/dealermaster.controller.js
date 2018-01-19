@@ -15,23 +15,11 @@ exports.get = function(req, res) {
         '$search': "\""+queryParam.searchStr+"\""
       }
   }
-
- /* if (queryParam.category)
-    filter.category = queryParam.category;
-  if (queryParam.brand)
-    filter.brand = queryParam.brand;
-  if (queryParam.model)
-    filter.model = queryParam.model;
-  if (queryParam.userId)
-    filter['user.userData'] = queryParam.userId;
-
-  if (queryParam.pagination) {
-    Utility.paginatedResult(req, res, InputFormReq, filter, {});
-    return;
-  }*/
+   if(queryParam.pagination){
+      return Utility.paginatedResult(req, res, DealerMaster, filter, {});
+    }
 
   var query = DealerMaster.find(filter);
-
   query.exec(function(err, result) {
     if (err) {
       return handleError(res, err);
@@ -40,60 +28,11 @@ exports.get = function(req, res) {
   });
 };
 
-exports.create = function(req, res) {console.log("req.body=",req.body);
+exports.create = function(req, res) {
   DealerMaster.create(req.body, function(err, respo) {
-    if(err) { return handleError(res, err); }console.log("res=",res);
-     return res.status(200).json({errorCode:0, message:"Data saved sucessfully", data:respo});
+    if(err) { return handleError(res, err); }
+     return res.status(200).send("Data saved sucessfully");
   });
-};
-
-//search based on filter
-exports.getOnFilter = function(req, res) {
-  var filter = {};
-  // if(req.body._id)
-  //   filter["_id"] = req.body._id;
-  // if(req.body.userId)
-  //   filter["user._id"] = req.body.userId;
-  // if(req.body.mobile)
-  //   filter["user.mobile"] = req.body.mobile;
-  if (req.query.searchStr) {
-    filter['$text'] = {
-      '$search': "\""+req.query.searchStr+"\""
-    }
-  }
-
-  var result = {};
-  if(req.body.pagination){
-    Utility.paginatedResult(req,res,DealerMaster,filter,{});
-    return;    
-  }
-  var sortObj = {}; 
-  if(req.body.sort)
-    sortObj = req.body.sort;
-  sortObj['createdAt'] = -1;
-
-  var query = DealerMaster.find(filter).sort(sortObj);
-  Seq()
-  .par(function(){
-    var self = this;
-    DealerMaster.count(filter,function(err, counts){
-      result.totalItems = counts;
-      self(err);
-    })
-  })
-  .par(function(){
-    var self = this;
-    query.exec(function (err, inputReq) {
-        if(err) { return handleError(res, err); }
-        result.inputReqs = inputReq;
-        self();
-       }
-    );
-
-  })
-  .seq(function(){
-    return res.status(200).json(result.inputReqs);
-  })
 };
 
 // Updates an existing input req in the DB.
@@ -105,7 +44,7 @@ exports.update = function(req, res) {
     if(!inputReq) { return res.status(404).send('Not Found'); }
     DealerMaster.update({_id:req.params.id},{$set:req.body},function(err){
         if (err) { return handleError(res, err); }
-        return res.status(200).json({errorCode:0, message:"Request updated sucessfully"});
+        return res.status(200).send("Data updated sucessfully");
     });
   });
 };
@@ -121,19 +60,26 @@ exports.delete = function(req, res) {
     });
   });
 };
-exports.check = function(req, res) {
-  var queryParam = req.query;
+
+exports.validate = function(req,res,next){
+  var bodyData = req.body;
   var filter = {};
-  var brandId = queryParam.brandId;
-  var dealerId = queryParam.dealerId;
-  var query = DealerMaster.find({"brand.data":brandId, "dealer.data":dealerId});
-  query.exec(function(err, result) {console.log(result);
+  filter['brand.data'] = bodyData.brand.data;
+  filter['dealer.data'] = bodyData.dealer.data;
+  var query = DealerMaster.find(filter);
+  query.exec(function(err, result) {
     if (err) {
       return handleError(res, err);
     }
-    return res.status(200).json(result);
+    var isUpdate = req.params.id?true:false;
+    if(!isUpdate && result && result.length)
+      return res.status(412).send("This dealer already added in this brand if you want add location than you edit this dealer and location!");
+    if(isUpdate && result.length && (result.length > 1 || result[0]._id + "" !== req.params.id))
+      return res.status(412).send("This dealer master is already exist.");
+     return next();
   });
-};
+}
+
 function handleError(res, err) {
   return res.status(500).send(err);
 }

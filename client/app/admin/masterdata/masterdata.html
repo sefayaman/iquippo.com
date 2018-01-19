@@ -49,10 +49,10 @@
                             </div>  
                           </div>
                           <div class="row">
-                          	<div class="col-sm-2 form-group">
+                          	<div class="col-sm-3 form-group">
                           		<input type="number" class="form-control"  placeholder="Priority for Used" ng-model="g.priorityForUsed">
                           	</div>
-                          	<div class="col-sm-2 form-group">
+                          	<div class="col-sm-3 form-group">
                           		<input type="number" class="form-control" placeholder="Priority for New" ng-model="g.priorityForNew">
                           	</div>
                           	<div class="form-group col-sm-2 pull-right">
@@ -61,6 +61,8 @@
                            	</div>
                           </div>
                      	</form>	
+					    <legend></legend>
+
                      	<div ng-if="refresh">
                      		<div class="row">
                      			<div class="col-sm-3">
@@ -165,6 +167,7 @@
                            	
                           </div>
                      	</form>	
+					    <legend></legend>
 
                      	<div class="row">
                      		<div class="col-sm-3">
@@ -245,13 +248,17 @@
                                             <option ng-repeat="category in categoryList" ng-selected="b.category._id == category._id" value="{{category._id}}">{{category.name}}</option>
                                         </select> 
 	                            </div>	                            
-	                            <div class="col-sm-3 form-group text-center">
-                                    <div class="checkbox"><input type="checkbox" name="brandEquipment" value="" id="Brandusedequip" placeholder="" ng-model="b.isForUsed"> <label for="Brandusedequip"> Used Equipment </label>
+	                            <div class="col-sm-2 form-group text-center">
+                                    <div class="checkbox"><input type="checkbox" name="brandEquipment" value="" id="Brandusedequip" ng-model="b.isForUsed"> <label for="Brandusedequip"> Used Equipment </label>
                                     </div>
 
                                 </div>
-                                <div class="col-sm-3 form-group text-center">
-                                    <div class="checkbox"><input type="checkbox" name="brandEquipment" value="" id="Brandnewequip" placeholder="" ng-model="b.isForNew"> <label for="Brandnewequip"> New Equipment </label>
+                                <div class="col-sm-2 form-group text-center">
+                                    <div class="checkbox"><input type="checkbox" name="brandEquipment" value="" id="Brandnewequip" ng-model="b.isForNew" ng-false-value="false"> <label for="Brandnewequip"> New Equipment </label>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2 form-group text-center" ng-if="b.isForNew">
+                                    <div class="checkbox"><input type="checkbox" name="brandEquipment" ng-model="b.enableHomeBanner" id="Brandbanner" ng-false-value="false"> <label for="Brandbanner"> Brand Promotion Banner </label>
                                     </div>
                                 </div>
                                 <div class="form-group col-sm-3" ng-class="{'has-error': form.errorBrand && submitted}">
@@ -260,15 +267,22 @@
 	                            <div class="col-sm-3 form-group">
 	                          		<input type="number" class="form-control" placeholder="Priority for Used" ng-model="b.priorityForUsed">
 	                          	</div>
+	                          	<div class="col-sm-3 form-group" ng-if="b.isForNew">
+			    	  	        	<input type="text" class="form-control" name="" ng-model="b.brandDesc" value="" placeholder="About Brand">
+			    	  	        </div> 
+			    	  	        <div class="col-sm-3 form-group" ng-if="b.isForNew">
+			    	  	        	<input type="text" class="form-control" name="" ng-model="b.dealershipNetworkDesc" value="" placeholder="Dealership Network">
+			    	  	        </div>
 	                          	<div class="col-sm-3 form-group">
 	                          		<input type="number" class="form-control" placeholder="Priority for New" ng-model="b.priorityForNew">
 	                          	</div>
-	                            <div class="form-group col-sm-2">
+	                            <div class="form-group col-sm-3">
 	                            	<span class="btn btn-warning fileinput-button">
-		                                <span>Browse image...</span>
+		                                <span>Browse Brand Logo</span>
 		                                <input type="file"   accept="image/*" ng-model ="files" ng-change="uploadImage(files,b,'Brand',0)" file>
 				                    </span>
 				                    <span>{{b.imgSrc}}</span>
+				                    <span class="invisible">image name</span>
 	                            </div>
                                     
                                    <!--  <div class="form-group col-sm-3">
@@ -280,13 +294,31 @@
                                             <option value="bottomRight">Bottom Right</option>
                                         </select>
                                     </div> -->
-                                    <div class="form-group col-sm-2">
+                                    <div class="form-group col-sm-3">
 		                            	<span class="btn btn-warning fileinput-button">
 			                                <span>Browse image...</span>
 			                                <input type="file"   accept="image/*" ng-model ="files" ng-change="uploadImage(files,b,'Brand',0,'imgNewEquipmentSrc')" file>
 					                    </span>
 					                    <span>{{b.imgNewEquipmentSrc}}</span>
-		                            </div>				    	  	                    	
+					                    <span class="invisible">image name</span>
+		                            </div>
+
+		                            <div class="col-sm-3 form-group" ng-if="b.enableHomeBanner && b.isForNew">
+		                          		<span class="btn btn-warning fileinput-button">
+			                                <span>Top banner image</span>
+			                                <input type="file" accept="image/*" ng-model ="files" ng-change="uploadImage(files,b,'Brand',0,'homeBannerTop')" file>
+					                    </span>
+					                    <span>{{b.homeBannerTop}}</span>
+					                    <span class="invisible">image name</span>
+		                          	</div>
+		                          	<div class="col-sm-3 form-group" ng-if="b.enableHomeBanner && b.isForNew">
+		                          		<span class="btn btn-warning fileinput-button">
+			                                <span>Left banner image</span>
+			                                <input type="file" accept="image/*" ng-model ="files" ng-change="uploadImage(files,b,'Brand',0,'homeBannerLeft')" file>
+					                    </span>
+					                    <span>{{b.homeBannerLeft}}</span>
+					                    <span class="invisible">image name</span>
+		                          	</div>				    	  	              	
                                     <div class="form-group col-sm-2 pull-right">
                                         <button type="button" class="btn btn-primary btn-md btn-block" ng-click="masterDataVm.Save('Brand')" ng-if="!brandEdit">Save</button>
                                         <button type="button" class="btn btn-primary btn-md btn-block" ng-click="masterDataVm.update('Brand')" ng-if="brandEdit">Update</button>
@@ -294,7 +326,7 @@
 	                           	
 	                          </div>
 	                     	</form>					      
-					    	
+					    	<legend></legend>
 					    	<div class="row">
 					    		<div class="col-sm-3">
 					              <div class="checkbox"><input type="checkbox"  id="newequipsb" placeholder="" ng-model="masterDataVm.isForNew" ng-change="masterDataVm.searchFn('brand')"> <label for="newequipsb"> New Equipment </label>
@@ -310,57 +342,59 @@
 					              </div>
 					            </div>
 					        </div>
-			               	<table class="table table-bordred table-striped">				
-	                            <thead>
-                                    <tr>
-                                    	<th>Image</th>                                    	
-                                    	<th>Brand</th>
-	                                    <th>Product Category</th>
-	                                    <th>Equipment Type</th>
-	                                    <th>Product Group</th>                                    
-	                                    <!-- <th>Top Banner Uploaded</th>     -->
-	                                    <!-- <th>Left Banner Uploaded</th>      -->
-	                                    <th>Status</th>                                    
-	                                    <th>Actions</th>
-                                    </tr>		
-                                </thead>
-                         		<tbody>
-                         		  <tr ng-repeat="brand in filteredBrand| startFrom:(masterDataVm.bCurrentPage -1 )*masterDataVm.itemsPerPage|limitTo:masterDataVm.itemsPerPage">
-                         		  	<td>
-                         		  		<span class="master-browse" tooltip-trigger="mouseenter" tooltip-placement="top" uib-tooltip="Change Image">
-											<img class="sheduleImg img-circle" ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{brand.imgSrc}}" alt="Image">
-										<input type="file" accept="image/*" ng-model ="files" ng-change="uploadImage(files,brand,'Brand',1)" file>
-										</span>
-                         		  	</td>                         		  	
-									<td>{{brand.name}}</td>
-									<td>{{brand.category.name}}</td>
-									<td>
-									<span ng-if="brand.isForUsed">For Used</span>
-										<span ng-if="brand.isForNew && brand.isForUsed">&amp;</span>
-										<span ng-if="brand.isForNew">For New</span></td>
-									<td>{{brand.group.name}}</td>
-									<!-- <td>{{}}</td> -->
-									<!-- <td>{{}}</td> -->
-									<td>{{getStatus(brand.visibleOnUsed)}}</td>
-									 <td>
-									 	<a class="btn btn-primary btn-sm" href="javascript:void(0);" ng-click="masterDataVm.editClick('Brand',brand)" ><i class="fa fa-pencil"></i> </a>
-										<a class="btn btn-danger btn-sm" href="javascript:void(0);" ng-click="masterDataVm.deleteClick('Brand',brand)"><i class="fa fa-trash"></i> </a>
-										<button class="btn btn-success" ng-model="brand.visibleOnUsed" uib-btn-checkbox ng-click="masterDataVm.makeVisibleHome(brand,'Brand',false)"><span ng-if="!brand.visibleOnUsed" uib-popover="Activate for Used" popover-trigger="mouseenter">
-											<i class="fa fa-toggle-off"></i>								
-											</span> <span ng-if="brand.visibleOnUsed" uib-popover="Deactivate for Used" popover-trigger="mouseenter">
-											<i class="fa fa-toggle-on"></i>							
+			               	<div class="table-responsive">
+			               		<table class="table table-bordred table-striped">				
+		                            <thead>
+	                                    <tr>
+	                                    	<th>Image</th>                                    	
+	                                    	<th>Brand</th>
+		                                    <th>Product Category</th>
+		                                    <th>Equipment Type</th>
+		                                    <th>Product Group</th>                                    
+		                                    <th>Top Banner Uploaded</th>    
+		                                    <th>Left Banner Uploaded</th>     
+		                                    <th>Status</th>                                    
+		                                    <th>Actions</th>
+	                                    </tr>		
+	                                </thead>
+	                         		<tbody>
+	                         		  <tr ng-repeat="brand in filteredBrand| startFrom:(masterDataVm.bCurrentPage -1 )*masterDataVm.itemsPerPage|limitTo:masterDataVm.itemsPerPage">
+	                         		  	<td>
+	                         		  		<span class="master-browse" tooltip-trigger="mouseenter" tooltip-placement="top" uib-tooltip="Change Image">
+												<img class="sheduleImg img-circle" ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{brand.imgSrc}}" alt="Image">
+											<input type="file" accept="image/*" ng-model ="files" ng-change="uploadImage(files,brand,'Brand',1)" file>
 											</span>
-										</button>
-										<button class="btn btn-success" ng-model="brand.visibleOnNew" uib-btn-checkbox ng-click="masterDataVm.makeVisibleHome(brand,'Brand',true)"><span ng-if="!brand.visibleOnNew" uib-popover="Activate for New" popover-trigger="mouseenter">
-											<i class="fa fa-toggle-off"></i>								
-											</span> <span ng-if="brand.visibleOnNew" uib-popover="Deactivate for New" popover-trigger="mouseenter">
-											<i class="fa fa-toggle-on"></i>							
-											</span>
-										</button>
-									</td> 
-								  </tr>
-                                </tbody>
-                            </table>
+	                         		  	</td>                         		  	
+										<td>{{brand.name}}</td>
+										<td>{{brand.category.name}}</td>
+										<td>
+										<span ng-if="brand.isForUsed">For Used</span>
+											<span ng-if="brand.isForNew && brand.isForUsed">&amp;</span>
+											<span ng-if="brand.isForNew">For New</span></td>
+										<td>{{brand.group.name}}</td>
+										<td><span ng-if="brand.isForNew && brand.enableHomeBanner && brand.homeBannerTop">Yes</span></td>
+										<td><span ng-if="brand.isForNew && brand.enableHomeBanner && brand.homeBannerLeft">Yes</span></td>
+										<td>{{getStatus(brand.visibleOnUsed)}}</td>
+										 <td>
+										 	<a class="btn btn-primary btn-sm" href="javascript:void(0);" ng-click="masterDataVm.editClick('Brand',brand)" ><i class="fa fa-pencil"></i> </a>
+											<a class="btn btn-danger btn-sm" href="javascript:void(0);" ng-click="masterDataVm.deleteClick('Brand',brand)"><i class="fa fa-trash"></i> </a>
+											<button class="btn btn-success" ng-model="brand.visibleOnUsed" uib-btn-checkbox ng-click="masterDataVm.makeVisibleHome(brand,'Brand',false)"><span ng-if="!brand.visibleOnUsed" uib-popover="Activate for Used" popover-trigger="mouseenter">
+												<i class="fa fa-toggle-off"></i>								
+												</span> <span ng-if="brand.visibleOnUsed" uib-popover="Deactivate for Used" popover-trigger="mouseenter">
+												<i class="fa fa-toggle-on"></i>							
+												</span>
+											</button>
+											<button class="btn btn-success" ng-model="brand.visibleOnNew" uib-btn-checkbox ng-click="masterDataVm.makeVisibleHome(brand,'Brand',true)"><span ng-if="!brand.visibleOnNew" uib-popover="Activate for New" popover-trigger="mouseenter">
+												<i class="fa fa-toggle-off"></i>								
+												</span> <span ng-if="brand.visibleOnNew" uib-popover="Deactivate for New" popover-trigger="mouseenter">
+												<i class="fa fa-toggle-on"></i>							
+												</span>
+											</button>
+										</td> 
+									  </tr>
+	                                </tbody>
+	                            </table>
+			               	</div>
                 			<uib-pagination total-items="masterDataVm.bTotalItems" ng-model="masterDataVm.bCurrentPage" items-per-page="masterDataVm.itemsPerPage" max-size="masterDataVm.maxSize" class="pagination-sm" rotate="false">  </uib-pagination>
 					    </uib-tab>
 					    <uib-tab heading="Model" select="masterDataVm.reset()">
@@ -385,12 +419,12 @@
 					                </select>
 	                            </div>                             	
                                 <div class="col-sm-3 form-group text-center">
-					    	  		<div class="checkbox"><input type="checkbox" name="brandEquipment" value="" id="modelusedequip" placeholder="" ng-model="m.isForUsed"> <label for="modelusedequip"> Used Equipment </label>
+					    	  		<div class="checkbox"><input type="checkbox" name="brandEquipment" value="" id="modelusedequip" ng-model="m.isForUsed"> <label for="modelusedequip"> Used Equipment </label>
 					    	  		</div>
 					    	  		
 					    	  	</div>
 					    	  	<div class="col-sm-3 form-group text-center">
-					    	  		<div class="checkbox"><input type="checkbox" name="brandEquipment" value="" id="modelnewequip" placeholder="" ng-model="m.isForNew"> <label for="modelnewequip"> New Equipment </label>
+					    	  		<div class="checkbox"><input type="checkbox" name="brandEquipment" value="" id="modelnewequip" ng-model="m.isForNew" ng-false-value="false"> <label for="modelnewequip"> New Equipment </label>
 					    	  		</div>
 					    	  	</div>
 					    	  	<div class="form-group col-sm-3" ng-class="{'has-error': form.errorBrand && submitted}">
@@ -401,6 +435,9 @@
                                	<div class="form-group col-sm-3" ng-class="{'has-error': form.errorModel && submitted}">
                                    <input id="modelName" ng-model="m.name" name="modelName" type="text" class="form-control" placeholder="Enter Model Name" required>
                                	</div>
+                               	<div class="form-group col-sm-3" ng-if="m.isForNew">
+                                   <input type="text" class="form-control" placeholder="About Model" ng-model="m.modelDesc">
+                               	</div>
                                	<div class="form-group col-sm-2 pull-right">
                                		<button type="button" class="btn btn-primary btn-md btn-block" ng-click="masterDataVm.Save('Model')" ng-if="!modelEdit">Save</button>
                                		<button type="button" class="btn btn-primary btn-md btn-block" ng-click="masterDataVm.update('Model')" ng-if="modelEdit">Update</button>
@@ -408,6 +445,7 @@
                                	
                               </div>
                          	</form>
+					    	<legend></legend>
 
                          	<div class="row">
                          		<div class="col-sm-3">

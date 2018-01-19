@@ -10,11 +10,11 @@ function SelectPaymentCtrl($scope, $rootScope, Modal, Auth, $uibModal, AssetSale
   //var ccavenueURL = "https://test.ccavenue.com";
 
   //ccavenue live  url
-  var ccavenueURL = " https://secure.ccavenue.com";
+  //var ccavenueURL = " https://secure.ccavenue.com";
 
   //localhost ccavennue test account crediential
-  var currentURL = "http://localhost";
-  var accessCode = 'AVSW00DJ54AN50WSNA';
+  // var currentURL = "http://localhost";
+  // var accessCode = 'AVSW00DJ54AN50WSNA';
 
   //Default parameter value
 

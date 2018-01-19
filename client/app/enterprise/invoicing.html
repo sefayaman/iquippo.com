@@ -13,7 +13,8 @@
   </div> 
   <div class="col-sm-8 text-right">
     <h4>
-    <button class="btn btn-success btn-md" ng-click="enterpriseInvoiceVm.exportExcel()" ng-if="enterpriseInvoiceVm.type == 'generated'"><i class="fa fa-file-excel-o"></i> Export Excel</button>                 
+    <button class="btn btn-success btn-md" ng-click="enterpriseInvoiceVm.exportExcel()" ng-if="enterpriseInvoiceVm.type == 'generated'"><i class="fa fa-file-excel-o"></i> Export Excel</button>
+    <export-form name="invoiceexport"></export-form>                 
     </h4>
   </div>
 </div>
@@ -205,7 +206,7 @@
         Service Fee:
       </div>
       <div class="col-md-6 form-group" ng-class="{'has-error':invoiceForm.serviceFee.$invalid && submitted}">        
-        <input type="number" class="form-control" name="serviceFee" ng-model="invoice.serviceFee" placeholder="Enter Service Fee" readonly required/>
+        <input type="number" class="form-control" name="serviceFee" ng-model="invoice.serviceFee" placeholder="Enter Service Fee" required/>
       </div>
     </div>
     <legend></legend>

@@ -126,6 +126,12 @@ exports.updateEmdData = function(req, res) {
 
 exports.getEmdData = function(req, res) {
   var filter = {};
+  filter.isDeleted=false;
+  if (req.body.searchStr) {
+       filter['$text'] = {
+        '$search': "\""+req.body.searchStr+"\""
+      }
+  }
   if (req.body._id) {
     filter["auction_id"] = req.body._id;
   }
@@ -134,7 +140,11 @@ exports.getEmdData = function(req, res) {
       $in: req.body.selectedLots.lotNumber
     }
   }
-  filter.isDeleted=false;
+
+  if (req.body.pagination) {
+    Util.paginatedResult(req, res, Emd, filter, {});
+    return;
+  }
   var query = Emd.find(filter).sort({createdAt: -1});
   query.exec(function(err, result) {
     if (err) {

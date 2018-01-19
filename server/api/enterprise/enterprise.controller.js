@@ -1917,7 +1917,7 @@ function valiadeDataType(val,type){
 var Invoice_Properties = ["invoiceNo","requestType","enterprise","agency","totalAmount","createdAt"]
 exports.exportExcel = function(req,res){
   var queryParam = req.query;
-  var filter = {};
+   var filter = {};
   if(queryParam.enterpriseId)
     filter['enterprise.enterpriseId'] = queryParam.enterpriseId;
   if(queryParam.agencyId)
@@ -1929,7 +1929,6 @@ exports.exportExcel = function(req,res){
     var ids = queryParam.ids.split(',');
     filter['_id'] = {$in:ids};
   }
-
   var dateFilter = {};
   if(queryParam.fromDate)
     dateFilter['$gte'] = new Date(decodeURIComponent(queryParam.fromDate));
@@ -2078,9 +2077,11 @@ function exportExcel(req,res,fieldMap,jsonArr){
       }
       allowedHeaders.push(hd);
   }
-  dataArr.push(allowedHeaders);
+  var str = allowedHeaders.join(",");
+  str += "\r\n";
+  //dataArr.push(allowedHeaders);
   jsonArr.forEach(function(item,idx){
-    dataArr[idx + 1] = [];
+    //dataArr[idx + 1] = [];
     if(item.deleted)
         item.status = "Deleted";
     else if(item.cancelled)
@@ -2107,20 +2108,30 @@ function exportExcel(req,res,fieldMap,jsonArr){
           val = "";
         
       }
-
-       dataArr[idx + 1].push(val);
+      val = Utility.toCsvValue(val);
+        str += val + ",";
+       //dataArr[idx + 1].push(val);
     });
-
+    str += "\r\n";
   });
 
-  var ws = Utility.excel_from_data(dataArr,allowedHeaders);
+  str = str.substring(0,str.length -1);
+  return  renderCsv(req,res,str);
+  /*var ws = Utility.excel_from_data(dataArr,allowedHeaders);
   var ws_name = "entvaluation_" + new Date().getTime();
 
   var wb = Utility.getWorkbook();
   wb.SheetNames.push(ws_name);
   wb.Sheets[ws_name] = ws;
   var wbout = xlsx.write(wb, {bookType:'xlsx', bookSST:true, type: 'binary'});
-  res.end(wbout);
+  res.end(wbout);*/
+}
+
+function renderCsv(req,res,csv){
+   var fileName = req.query.type + "_" + new Date().getTime();
+  res.setHeader('Content-Type', 'application/octet-stream');
+  res.setHeader("Content-Disposition", 'attachment; filename=' + fileName + '.csv;');
+  res.end(csv, 'binary'); 
 }
 
 function handleError(res, err) {

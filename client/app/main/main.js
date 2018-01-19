@@ -511,12 +511,26 @@ angular.module('sreizaoApp')
       //   authenticate:true,
       //   layout:' '
       // })
-       .state('paymentresponse', {
+      .state('paymentresponse', {
         url: '/paymentresponse/:tid',
         templateUrl: 'app/payment/paymentresponse.html',
         controller: 'PaymentResponseCtrl as paymentResponseVm',
         authenticate:true,
         layout:'admin'
+      })
+      .state('auctionpayment', {
+        url: '/auctionpayment/:tid',
+        templateUrl: 'app/payment/payment.html',
+        controller: 'PaymentCtrl as paymentVm',
+        authenticate:true,
+        layout:'client'
+      })
+      .state('auctionpaymentresponse', {
+        url: '/auctionpaymentresponse/:tid',
+        templateUrl: 'app/payment/paymentresponse.html',
+        controller: 'AuctionPaymentResponseCtrl as auctionPaymentResponseVm',
+        authenticate:true,
+        layout:'client'
       })
       .state('spareupload', {
         url: '/spareupload',
@@ -807,12 +821,21 @@ angular.module('sreizaoApp')
         controller: "NewEquipmentListCtrl as newequipmentlistVm",
         layout:'client'
       })
-      .state('newproductbybrand',{
+      .state('brandHome',{
+        url: "/new/brands/:brand?currentPage&group&category&model" + 
+            "&type&currencyType&currencyMin&currencyMax&" +
+            "&mfgYearMin&mfgYearMax&stateName&cityName&assetId&"+
+            "searchstr&operatingHour&mileage&productName&location&locationName",
+        templateUrl: 'app/newequipment/newbrandhome.html',
+        controller: 'NewBrandHomeCtrl as newBrandHomeVm',
+        layout:'client'
+      })
+     /* .state('newproductbybrand',{
         url: '/new/brands/:brand?currentPage',
         templateUrl: 'app/newequipment/newproducts.html',
         controller: 'NewEquipmentListCtrl as newequipmentlistVm',
         layout:'client'
-      })
+      })*/
        .state('newsplproduct',{
         url: '/new/spl/:certificationName?currentPage',
         templateUrl: 'app/newequipment/newproducts.html',

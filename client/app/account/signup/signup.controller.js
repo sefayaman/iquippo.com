@@ -183,7 +183,7 @@
     function sendOTP() {
 
       var dataToSend = {};
-      dataToSend['content'] = 'Dear User, One TimePassword (OTP) to verify your iQuippo account is ';
+      dataToSend['content'] = informationMessage.otpMessage;;
       //dataToSend['otpOn'] = vm.user.activationOTP;
       dataToSend['sendToClient'] = 'y';
       if(vm.user.email)

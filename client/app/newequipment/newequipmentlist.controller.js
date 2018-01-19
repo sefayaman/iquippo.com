@@ -3,15 +3,12 @@
 angular.module('sreizaoApp').controller('NewEquipmentListCtrl', NewEquipmentListCtrl);
 
   function NewEquipmentListCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Auth, CartSvc, productSvc,categorySvc,SubCategorySvc,LocationSvc,brandSvc,modelSvc, groupSvc,TechSpecMasterSvc ,DTOptionsBuilder,Modal,$timeout,$window) {
+    $rootScope.loading = false;
     var vm = this;
     $scope.productList = [];
     $scope.equipmentSearchFilter = {};
-    $scope.filterType = $state.current.name;
     var productList = [];
     var searchObj={};
-
-
-   console.log("The searching man",searchObj);
 
     $scope.searching = true;
     $scope.noResult = false;
@@ -29,11 +26,9 @@ angular.module('sreizaoApp').controller('NewEquipmentListCtrl', NewEquipmentList
     vm.onCategoryChange = onCategoryChange;
     vm.fireCommand = fireCommand;
     vm.getAssetIdHelp = getAssetIdHelp;
-    vm.getTechSpec = getTechSpec;
-
+    
     vm.sortBy = sortBy;
     vm.onPageChange = onPageChange;
-    vm.creatSpecification = creatSpecification;
     $scope.clearAll = clearAll;
 
     var allCategory = [];
@@ -66,15 +61,8 @@ angular.module('sreizaoApp').controller('NewEquipmentListCtrl', NewEquipmentList
         if($stateParams.category)
             onCategoryChange($stateParams.category,true);
       });
-      getTechSpec();
       restoreState();
       fireCommand(true,true);
-
-      searchObj={
-        username:Auth.getCurrentUser().customerId,
-        email:Auth.getCurrentUser().email,
-        searchStr:$stateParams.searchstr
-      }
     }
 
     function clearAll(){
@@ -227,20 +215,6 @@ angular.module('sreizaoApp').controller('NewEquipmentListCtrl', NewEquipmentList
       $scope.equipmentSearchFilter = $stateParams;
       vm.currentPage  = parseInt($stateParams.currentPage) || 1;
       $scope.equipmentSearchFilter.currentPage = vm.currentPage + "";
-  }
-
-  function getTechSpec(){
-      var filter = {};
-      //filter['mName'] = filterData.modelId;
-      TechSpecMasterSvc.getFieldData(filter)
-        .then(function(result){
-            $scope.techSpecification = result;
-            console.log($scope.techSpecification);
-      });
-  }
-
-  function creatSpecification(){
-      return;
   }
 
    init();

@@ -163,7 +163,13 @@ function EnterprisePaymentMadeCtrl($scope, $rootScope,$uibModal,Modal,Auth, $sta
             filter['fromDate'] = encodeURIComponent(vm.fromDate);
           if(vm.toDate)
             filter['toDate'] = encodeURIComponent(vm.toDate);
-          EnterpriseSvc.exportExcel("paymentmade",filter);
+          filter.type = "paymentmade";
+          filter.role = Auth.getCurrentUser().role;
+          var exportObj = {filter:filter};
+          exportObj.method = "GET";
+          exportObj.action = "api/enterprise/export";
+          $scope.$broadcast("submit",exportObj);
+          //EnterpriseSvc.exportExcel("paymentmade",filter);
      }
 
      init();

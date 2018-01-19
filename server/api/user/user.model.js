@@ -36,6 +36,9 @@ var UserSchema = new Schema({
   mobile: String,
   clientIp:String,
   agree: Boolean,
+  legalType:String,
+  companyIdentificationNo:String,
+  tradeLicense:String,
   company: String,
   imgsrc: String,
   city:String,
@@ -95,7 +98,16 @@ var UserSchema = new Schema({
   otp:{},
   personalInfo:{},
   professionalInfo:{},
-  socialInfo:{}
+  socialInfo:{},
+  kycInfo:[{}],
+  bankInfo:[{
+    bankName:String,
+    ifsc:String,
+    branch:String,
+    accountNo:String,
+    isPrimary:{type:Boolean,default:false}
+  }],
+  GSTInfo:[{}]
 });
 
 /**
