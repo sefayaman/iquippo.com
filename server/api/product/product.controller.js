@@ -1940,7 +1940,19 @@ exports.validateExcelData = function(req, res, next) {
       }
 
       if(!obj.grossPrice && !row.reservePrice && !row.valuationAmount){
-        obj.priceOnRequest = true;
+          if(type==='template_update'){
+                Product.find({
+                    assetId: row.assetId
+                }, function (err, prod) {
+                    if(prod[0].grossPrice){
+                        //console.log('prod_grossPrice',prod[0].grossPrice);
+                        obj.priceOnRequest = row.priceOnRequest.toLowerCase() === 'yes'? true:false;
+                    }
+                });
+          }
+          else{
+            obj.priceOnRequest = true;
+          }
         return callback(null,obj);
       }
 
@@ -2516,33 +2528,64 @@ exports.validateExcelData = function(req, res, next) {
       }
 
       var assetStatus = row.assetStatus;
-      if (assetStatus) {
-        assetStatus = trim(assetStatus).toLowerCase();
-        if (['listed', 'sold', 'rented', 'not_available'].indexOf(assetStatus) == -1) {
-          errorList.push({
-            Error: 'Not valid status',
-            rowCount: row.rowCount
-          });
-          return callback('Error');
-        }
-        /*
-        var ret = checkValidTransition(row.tradeType, assetStatus);
+        if (type === 'template_update') {
+            if (assetStatus) {
+                assetStatus = trim(assetStatus).toLowerCase();
+                if (['listed', 'sold', 'rented', 'not_available'].indexOf(assetStatus) == -1) {
+                    errorList.push({
+                        Error: 'Not valid status',
+                        rowCount: row.rowCount
+                    });
+                    return callback('Error');
+                }
+                /*
+                var ret = checkValidTransition(row.tradeType, assetStatus);
 
-        if (!ret) {
-          errorList.push({
-            Error: 'Invalid status transition',
-            rowCount: row.rowCount
-          });
-          return callback('Error');
-        } else { */
-          obj.updatedAt = new Date();
-          obj.assetStatus = assetStatus;
-          if (assetStatus != 'listed') {
-            //obj.featured = false;
-            obj.isSold = true;
-          }
-        //}
-      }
+                if (!ret) {
+                    errorList.push({
+                        Error: 'Invalid status transition',
+                        rowCount: row.rowCount
+                    });
+                    return callback('Error');
+                } else {
+                    */
+                    obj.updatedAt = new Date();
+                    obj.assetStatus = assetStatus;
+                    if (assetStatus != 'listed') {
+                        //obj.featured = false;
+                        obj.isSold = true;
+                    }
+                //}
+            }
+        }
+        else {
+            if (assetStatus && row.tradeType) {
+              assetStatus = trim(assetStatus).toLowerCase();
+              if (['listed', 'sold', 'rented', 'not_available'].indexOf(assetStatus) == -1) {
+                errorList.push({
+                  Error: 'Not valid status',
+                  rowCount: row.rowCount
+                });
+                return callback('Error');
+              }
+              var ret = checkValidTransition(row.tradeType, assetStatus);
+
+              if (!ret) {
+                errorList.push({
+                  Error: 'Invalid status transition',
+                  rowCount: row.rowCount
+                });
+                return callback('Error');
+              } else {
+                obj.updatedAt = new Date();
+                obj.assetStatus = assetStatus;
+                if (assetStatus != 'listed') {
+                  //obj.featured = false;
+                  obj.isSold = true;
+                }
+              }
+            }
+        }
 
       if (row.featured) {
         var featured = trim(row.featured || "").toLowerCase();
