@@ -258,22 +258,22 @@
       <h4>[ IN THE PRESS / MEDIA ]</h4>
     </div>
     <div class="row form-group press-media">
-      <div class="col-xs-4 col-sm-2 form-group">   
+      <div class="col-xs-6 col-sm-2 form-group">   
         <img src="/assets/images/financial-express logo.png" class="img-responsive">
       </div>
-      <div class="col-xs-4 col-sm-2 form-group">   
+      <div class="col-xs-6 col-sm-2 form-group">   
         <img src="/assets/images/business-standard-logo.png" class="img-responsive">
       </div>
-      <div class="col-xs-4 col-sm-2 form-group">   
+      <div class="col-xs-6 col-sm-2 form-group">   
         <img src="/assets/images/money-control.png" class="img-responsive">
       </div>
-      <div class="col-xs-4 col-sm-2 form-group">   
+      <div class="col-xs-6 col-sm-2 form-group">   
         <img src="/assets/images/india-today-logo.png" class="img-responsive">
       </div>
-      <div class="col-xs-4 col-sm-2 form-group">   
+      <div class="col-xs-6 col-sm-2 form-group">   
         <img src="/assets/images/telegraph-logo.png" class="img-responsive">
       </div> 
-      <div class="col-xs-4 col-sm-2 form-group">   
+      <div class="col-xs-6 col-sm-2 form-group">   
         <img src="/assets/images/india-techonline-logo.png" class="img-responsive">
       </div>
     </div>
@@ -345,7 +345,7 @@
       </div> -->
     </div>
 
-    <section>
+    <section class="category-block">
     <div class="container">
       <div class="heading-titles text-center">
         <h4>[ PRINT MEDIA ]</h4>
@@ -382,53 +382,53 @@
   <div>
     <div class="modal-body text-center">
        <div class="category-block">
-         <div class="col-xs-12 col-sm-offset-1 col-sm-10 search-banner search-banner-modal">        
-    <div class="search-tabs">
+         <div class="search-banner search-banner-modal">        
+          <div class="search-tabs">
 
-      <p class="text-center">I'M LOOKING FOR:</p>
+            <p class="text-center">I'M LOOKING FOR:</p>
 
-      <div class="row" ng-if="singleBox">
-        <div class="col-sm-offset-3 col-sm-6">          
-          <div class="input-group">
-            <input type="text" placeholder="Search for Assets and More" ng-model="filter.searchstr" class="form-control"/>
-            <a href="javascript:void(0);" class="input-group-addon" ng-click="toggleSearchBox(false)">Choose</a>
-          </div>
-        </div>
-      </div>
+            <div class="row" ng-if="singleBox">
+              <div class="col-xs-12">          
+                <div class="input-group">
+                  <input type="text" placeholder="Search for Assets and More" ng-model="filter.searchstr" class="form-control"/>
+                  <a href="javascript:void(0);" class="input-group-addon" ng-click="toggleSearchBox(false)">Advanced Search</a>
+                </div>
+              </div>
+            </div>
 
-      <!-- Tab panes -->
-      <div class="row" ng-if="!singleBox">
-        <div class="col-sm-offset-2 col-sm-8">
-          <div class="filter">
-            <div class="row">
-              <div class="col-sm-3 form-group">
-                <input type="text" placeholder="Industry" ng-model="filter.groupSearchText" class="form-control" uib-typeahead="address for address in getGroupHelp($viewValue)" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
+            <!-- Tab panes -->
+            <div class="row" ng-if="!singleBox">
+              <div class="col-sm-offset-2 col-sm-8">
+                <div class="filter">
+                  <div class="row">
+                    <div class="col-sm-3 form-group">
+                      <input type="text" placeholder="Industry" ng-model="filter.groupSearchText" class="form-control" uib-typeahead="address for address in getGroupHelp($viewValue)" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
+                    </div>
+                    <div class="col-sm-3 form-group">
+                      <input type="text" ng-model="filter.categorySearchText" placeholder="Category" uib-typeahead="address for address in getCategoryHelp($viewValue)"  class="form-control" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
+                    </div>
+                    <div class="col-sm-2 form-group">
+                      <input type="text" class="form-control" placeholder="Brand" ng-model="filter.brandSearchText" class="form-control" uib-typeahead="address for address in getBrandHelp($viewValue)" typeahead-wait-ms="200"/>
+                    </div>
+                    <div class="col-sm-3 form-group">
+                      <input type="text" class="form-control" ng-model="filter.locationSearchText" placeholder="Asset Location" uib-typeahead="address for address in getLocationHelp($viewValue)"  class="form-control" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
+                    </div> 
+                    
+                  </div>
+                </div>
               </div>
-              <div class="col-sm-3 form-group">
-                <input type="text" ng-model="filter.categorySearchText" placeholder="Category" uib-typeahead="address for address in getCategoryHelp($viewValue)"  class="form-control" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
-              </div>
-              <div class="col-sm-2 form-group">
-                <input type="text" class="form-control" placeholder="Brand" ng-model="filter.brandSearchText" class="form-control" uib-typeahead="address for address in getBrandHelp($viewValue)" typeahead-wait-ms="200"/>
-              </div>
-              <div class="col-sm-3 form-group">
-                <input type="text" class="form-control" ng-model="filter.locationSearchText" placeholder="Asset Location" uib-typeahead="address for address in getLocationHelp($viewValue)"  class="form-control" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
-              </div> 
-              
             </div>
           </div>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-xs-6 text-center">
-        <button type="button" class="btn btn-default" data-ng-click="doSearch(true)">New Equipment</button>
-      </div>
-      <div class="col-xs-6 text-center">
-        <button type="button" class="btn btn-default" data-ng-click="doSearch(false)">Used Equipment</button>
-      </div>
-    </div>
+          <div class="row">
+            <div class="col-xs-6 text-center">
+              <button type="button" class="btn btn-default  btn-sm" data-ng-click="doSearch(true)">New Equipment</button>
+            </div>
+            <div class="col-xs-6 text-center padd-left">
+              <button type="button" class="btn btn-default  btn-sm" data-ng-click="doSearch(false)">Used Equipment</button>
+            </div>
+          </div>
 
-  </div>
+        </div>
        </div>
     </div>
      <div class="modal-footer">
