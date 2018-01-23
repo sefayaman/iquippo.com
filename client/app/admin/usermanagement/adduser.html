@@ -38,9 +38,9 @@
                       <option value="legalentity">Legal Entity</option>
                     </select>
                   </div>
-                  <div class="form-group col-sm-4" ng-class="{'has-error': form.legalType.$invalid && submitted }">
-                    <select class="form-control" name="legalType" ng-model="newUser.legalType" ng-required= "newUser.userType == 'legalentity'" ng-disabled="newUser.userType != 'legalentity'">
-                      <option value="">*Select Type</option>
+                  <div class="form-group col-sm-4">
+                    <select class="form-control" name="legalType" ng-model="newUser.legalType" ng-disabled="newUser.userType != 'legalentity'">
+                      <option value="">Select Type</option>
                       <option value="{{legType.legalType}}" ng-repeat="legType in legalTypeList">{{legType.legalType}}</option>
                     </select>
                   </div>
@@ -248,11 +248,11 @@
                   </div>                  
                 </div> 
                 <div class="row">
-                  <div class="col-sm-6 form-group" ng-class="{'has-error': form.companyIdentificationNo.$invalid && submitted }">
-                    <input type="text" class="form-control" name="companyIdentificationNo" ng-model="newUser.companyIdentificationNo"  placeholder="*Company Identification No" ng-required= "newUser.userType == 'legalentity'" ng-disabled="newUser.userType != 'legalentity'">
+                  <div class="col-sm-6 form-group">
+                    <input type="text" class="form-control" name="companyIdentificationNo" ng-model="newUser.companyIdentificationNo"  placeholder="Company Identification No" ng-disabled="newUser.userType != 'legalentity'">
                   </div>
-                  <div class="col-sm-6 form-group" ng-class="{'has-error': form.tradeLicense.$invalid && submitted }">
-                    <input type="text" class="form-control" name="tradeLicense" ng-model="newUser.tradeLicense"  placeholder="*Trade License" ng-required= "newUser.userType == 'legalentity'" ng-disabled="newUser.userType != 'legalentity'">
+                  <div class="col-sm-6 form-group">
+                    <input type="text" class="form-control" name="tradeLicense" ng-model="newUser.tradeLicense"  placeholder="Trade License" ng-disabled="newUser.userType != 'legalentity'">
                   </div>
                 </div>  
                 <!-- <div class="row">
