@@ -792,6 +792,7 @@
       product.seller.enterpriseId = seller.enterpriseId || "";
       product.seller.countryCode = LocationSvc.getCountryCode(seller.country);
       product.seller.company = seller.company;
+      $scope.product.seller.customerId = seller.customerId;
       $scope.container.sellerName = seller.fname + " " + seller.lname;
     }
 
