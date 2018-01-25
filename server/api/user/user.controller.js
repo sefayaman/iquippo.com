@@ -928,6 +928,8 @@ exports.getUser = function(req, res) {
     filter["enterpriseId"] = req.body.enterpriseId;
   if (req.body.enterprise)
     filter["enterprise"] = req.body.enterprise;
+  if (req.body.mobile)
+    filter["mobile"] = req.body.mobile;
 
   if (req.body.mobileno) {
     var contactRegex = new RegExp(req.body.mobileno, 'i');

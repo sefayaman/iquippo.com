@@ -14,7 +14,8 @@ var CallbackSchema = new Schema({
   mobile: String,
   email: String,
   ticketId : String,
-  createdAt: Date
+  createdAt: Date,
+  customerId:String
 });
 
 CallbackSchema.pre('save',function(next){
