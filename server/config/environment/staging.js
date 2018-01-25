@@ -30,7 +30,7 @@ module.exports = {
   supportMail: "iquippo.uat@gmail.com",
   qpvalURL:"http://13.126.19.255/valuation/api.php",
   REDIRECT_URL:"http://finance-uat.iquippo.com/customer-portal-iquippo/sso",
-  MLP_REDIRECT_URL:"http://finance-uat.iquippo.com/customer-portal-iquippo/mlpsso",
+  MLP_REDIRECT_URL:"http://finance-uat.iquippo.com/customer-portal-mlp/sso",
   awsEndpoint: 's3.ap-south-1.amazonaws.com',
   awsAccessKeyId: 'AKIAIEW6UDFVW7GEQAGQ',
   awsSecretAccessKey: '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',
