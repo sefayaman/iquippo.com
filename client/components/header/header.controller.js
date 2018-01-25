@@ -147,6 +147,7 @@ angular.module('sreizaoApp')
         dataToServer['phone'] = Auth.getCurrentUser().phone;
         dataToServer['mobile'] = Auth.getCurrentUser().mobile;
         dataToServer['email'] = Auth.getCurrentUser().email;
+        dataToServer['customerId'] = Auth.getCurrentUser().customerId;
         
         $http.post('/api/callback', dataToServer);
         var data = {};

@@ -1,7 +1,7 @@
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 var _ = require('lodash');
 var UserModel = require('./../api/user/user.model');
-var Product = require('./../api/product/product.model');  
+var Callback = require('./../api/callback/callback.model');  
 var config = require('./../config/environment');
 var async = require("async");
 var util = require('util');
@@ -15,14 +15,14 @@ mongoose.connection.on('error', function (err) {
 });
 
 function init(processCb) {
-    findProductsCustomerId();
-    function findProductsCustomerId() {
-        Product.find({deleted:false,"seller.customerId": { $exists: false}}, function (err, products) {
+    findCallbackCustomerId();
+    function findCallbackCustomerId() {
+        Callback.find({"customerId": { $exists: false}}, function (err, callbacks) {
             if (err){
                 return processCb(err);
             }
-            console.log('Number of Records to update:-',products.length);
-            async.eachLimit(products, 3, updateProuductUserIds, function (err, result) {
+            console.log('Number of Records to update:-',callbacks.length);
+            async.eachLimit(callbacks, 3, updateCustomerIds, function (err, result) {
                 if (err) {
                     console.log("##########", err);
                 }
@@ -31,11 +31,11 @@ function init(processCb) {
         });
     }
 
-    function updateProuductUserIds(product, cb) {
-        sellerEmail = product.seller.email;
+    function updateCustomerIds(callback, cb) {
+        Mobile = callback.mobile;
         //console.log(sellerEmail);
-        if ( !product.seller.customerId ) {
-            UserModel.find({email:sellerEmail,deleted:false},function(err,users){
+        if ( !callback.customerId ) {
+            UserModel.find({mobile:Mobile,deleted:false},function(err,users){
                 if ( err ) {
                     return cb(); 
                 }
@@ -44,11 +44,11 @@ function init(processCb) {
                 }
                 var setUserCustomerId = users[0].customerId;
                 
-                Product.update({_id:product._id}, {$set: {"seller.customerId": setUserCustomerId}}, function (error, resultData) {
+                Callback.update({_id:callback._id}, {$set: {"customerId": setUserCustomerId}}, function (error, resultData) {
                     if (error) {
                         console.log("##########", error);
                     }
-                    console.log('Asset ID: ', product.assetId, 'User_ID: ',setUserCustomerId , 'Response: ', resultData);
+                    console.log('Ticket ID: ', callback.ticketId, 'User_ID: ',setUserCustomerId , 'Response: ', resultData);
                 });
                 return cb();
             });

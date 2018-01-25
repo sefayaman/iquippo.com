@@ -50,6 +50,7 @@
                <tr>
                   <th>Sr. No</th>
                   <th>Ticket Id</th> 
+                  <th>Customer Id</th> 
                   <th>Full Name</th>                                
                   <th>Mobile No.</th>                                
                   <th>Phone No.</th>                                
@@ -61,6 +62,7 @@
               <tr ng-repeat="callback in reportsVm.callbackListing">
                 <td>{{$index + 1 + count}}</td>
                 <td>{{callback.ticketId}}</td>
+                <td>{{callback.customerId}}</td>
                 <td>{{callback.fname}} {{callback.lname}}</td>              
                 <td>{{callback.mobile}}</td>
                 <td>{{callback.phone}}</td>

@@ -928,6 +928,8 @@ exports.getUser = function(req, res) {
     filter["enterpriseId"] = req.body.enterpriseId;
   if (req.body.enterprise)
     filter["enterprise"] = req.body.enterprise;
+  if (req.body.mobile)
+    filter["mobile"] = req.body.mobile;
 
   if (req.body.mobileno) {
     var contactRegex = new RegExp(req.body.mobileno, 'i');
@@ -1490,7 +1492,7 @@ exports.exportUsers = function(req, res) {
             val =  _.get(item,"fname","") + " " + _.get(item,"mname","") + " " + _.get(item,"lname","");
           else if(key === 'user')
             val = getRegisteredBy(item) || "";
-          else if(key === 'status')
+          else if(key === 'Status')
             val = isStatus(item.status, item.deleted);
           else if(key === 'IDUploaded')
             val = idProof?'Yes':'No';
@@ -1502,7 +1504,7 @@ exports.exportUsers = function(req, res) {
             val = adProof.name || "";
           else if(key == 'BKName' && item.bankInfo && item.bankInfo.length && item.bankInfo[0].bankName)
             val = item.bankInfo[0].bankName || "";
-          else if(key == 'BRName' && item.bankInfo && item.bankInfo.length && item.bankInfo[0].branch)
+          else if(key == 'BrName' && item.bankInfo && item.bankInfo.length && item.bankInfo[0].branch)
             val = item.bankInfo[0].branch || "";
           else if(key == 'GSTUploaded'){
             if(item.GSTInfo && item.GSTInfo.length && item.GSTInfo[0].registrationNo)
