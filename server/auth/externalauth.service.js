@@ -62,7 +62,7 @@ function getToken(req,res){
 }
 
 function getTokenAndRedirectUrl(req,res){
-  var result = {actionUrl:config.REDIRECT_URL};
+  var result = {actionUrl:config.MLP_REDIRECT_URL};
   addNoCacheHeader(res);
   if(req.query._id){
     User.findById(req.query._id,function(err,user){
@@ -70,6 +70,11 @@ function getTokenAndRedirectUrl(req,res){
         return res.status(500).send(err);
       if(!user)
         return res.status(401).send('Unauthorized');
+      if(user.role === 'enterprise'){
+        var financer = getFinancer(user);
+        if(financer && financer !== 'MLP')
+          result.actionUrl = config.REDIRECT_URL;
+      }
        var token = signToken(user._id,user.role,20);
        result.token = token;
        return res.status(200).json(result);
@@ -121,6 +126,17 @@ function isServiceAvailed(user,service){
           }
         }
         return false;
+}
+
+function getFinancer(user){
+  var financer = null;
+  if(user.availedServices && user.availedServices.length > 0){
+      for(var i=0;i<user.availedServices.length;i++){
+       if(user.availedServices[i].code === "Finance")
+        financer = user.availedServices[i].partnerId;
+      }
+    }
+    return financer;
 }
 
 function addNoCacheHeader(res) {
