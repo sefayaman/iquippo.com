@@ -667,7 +667,8 @@ exports.bulkUpload = function(req, res) {
         _id : user._id,
         email : user.email,
         mobile : user.mobile,
-        role : user.role
+        role : user.role,
+        userCustomerId: user.customerId
       };
 
       row.statuses = [{

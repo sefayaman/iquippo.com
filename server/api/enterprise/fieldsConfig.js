@@ -232,6 +232,7 @@ module.exports = {
 		"Agency Name":{key:"agency.name"},
 		"Enterprise ID":{key:"enterprise.enterpriseId"},
 		"Enterprise Owner":{key:"customerPartyName"},
+                "User Customer ID":{key:"createdBy.userCustomerId"},
 		"User":{key:"userName"},
 		"User Mobile":{key:"customerPartyNo"},
 		"User Legal Entity":{key:"legalEntityName"},

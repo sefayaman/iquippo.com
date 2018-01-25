@@ -24,6 +24,7 @@ module.exports = {
 	'State*': 'state',
 	'Location*': 'city',
 	//seller information start  need to check from user
+	'Seller Customer ID': 'seller_customerId',
 	'Seller_Mobile*': 'seller_mobile',
 	'Seller_Email_Address': 'seller_email',
 	'Seller_Name' : 'seller_name',

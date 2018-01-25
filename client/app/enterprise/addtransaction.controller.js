@@ -333,6 +333,7 @@ function AddTransactionCtrl($scope, $stateParams,$uibModal,$rootScope, Modal, Au
       vm.enterpriseValuation.createdBy = {};
       vm.enterpriseValuation.createdBy._id = Auth.getCurrentUser()._id;
       vm.enterpriseValuation.createdBy.name = Auth.getCurrentUser().fname + " " + Auth.getCurrentUser().lname;
+      vm.enterpriseValuation.createdBy.userCustomerId  = Auth.getCurrentUser().customerId;
       if(Auth.getCurrentUser().email)
         vm.enterpriseValuation.createdBy.email = Auth.getCurrentUser().email;
       vm.enterpriseValuation.createdBy.mobile = Auth.getCurrentUser().mobile;

@@ -1348,6 +1348,7 @@ exports.exportProducts = function(req, res) {
               obj[mapedFields.seller_email] = _.get(colData, 'seller.email', '');
               obj[mapedFields.seller_mobile] = _.get(colData, 'seller.mobile', '');
               obj[mapedFields.seller_role] = _.get(colData, 'seller.role', '');
+              obj[mapedFields.seller_customerId] = _.get(colData, 'seller.customerId', '');
             }
 
             //Technical Information Cols
@@ -2958,7 +2959,8 @@ exports.validateExcelData = function(req, res, next) {
           obj.seller["lname"] = seller[0]['lname'];
           obj.seller["fname"] = seller[0]['fname'];
           obj.seller["_id"] = seller[0]['_id'] + "";
-          return callback(null, obj);
+          obj.seller["customerId"] = seller[0]['customerId'];
+            return callback(null, obj);
         })
       } else
         return callback(null, obj);
