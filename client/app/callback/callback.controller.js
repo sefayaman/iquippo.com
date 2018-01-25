@@ -49,8 +49,13 @@ angular.module('sreizaoApp').controller('CallbackCtrl',CallbackCtrl);
       var userFilter = {};
         userFilter.mobile = callback.mobile;
         userSvc.getUsers(userFilter).then(function(data){
-            dataToSend['customerId'] = data[0].customerId;
-            callbackSave(dataToSend);
+            if ( data.length ){
+                dataToSend['customerId'] = data[0].customerId;
+                callbackSave(dataToSend);
+            }
+            else {
+                callbackSave(dataToSend);
+            }
         });     
   };
   
