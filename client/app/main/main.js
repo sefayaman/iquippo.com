@@ -647,7 +647,7 @@ angular.module('sreizaoApp')
         authenticate:true,
         restrict:true
       })
-        .state('enterprisevaluation.paymentreceived', {
+        .state('enterprisevaluation.paymentreceived',{
         url: '/paymentreceived',
         templateUrl: 'app/enterprise/paymentreceived.html',
         controller: 'EnterprisePaymentReceivedCtrl as enterprisePaymentReceivedVm',
@@ -663,7 +663,7 @@ angular.module('sreizaoApp')
         layout:'admin'
       })
       .state('enterprisevaluation.edittransaction', {
-        url: '/addtransaction/:id',
+        url: '/addtransaction/:id?md',
         templateUrl: 'app/enterprise/addtransaction.html',
         controller: 'AddTransactionCtrl as addTransactionVm',
         authenticate:true,

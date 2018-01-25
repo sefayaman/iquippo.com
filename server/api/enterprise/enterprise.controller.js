@@ -24,6 +24,7 @@ var purposeModel = require('../common/valuationpurpose.model');
 var AssetGroupModel = require('./assetgroup.model');
 var EnterpriseValuationStatuses = ['Request Initiated','Request Failed','Request Submitted','Inspection In Progress','Inspection In Completed','Valuation Report Failed','Valuation Report Submitted','Invoice Generated','Payment Received','Payment Made to valuation Partner','Completed'];
 //var EnterpriseValuationStatuses = ['Request Initiated','Request Failed','Request Submitted','Valuation Report Failed','Valuation Report Submitted','Invoice Generated','Payment Received','Payment Made to valuation Partner'];
+var updatableFields = ['customerTransactionId','assetDescription','engineNo','chassisNo','registrationNo','serialNo','yearOfManufacturing','yardParked','country','state','city','contactPerson','contactPersonTelNo','nameOfCustomerSeeking','rcDoc','invoiceDoc'];
 var validRequestType = ['Valuation','Inspection'];
 var UserModel = require('../user/user.model');
 var fs = require('fs');
@@ -69,9 +70,12 @@ function getValuationRequest(req,res){
    if (queryParam.statusType){
     if(queryParam.statusType === 'Request Cancelled')
       filter['cancelled'] = true;
+    else if(queryParam.statusType === 'Request Modified')
+       filter['requestModified'] = true;
     else{
       filter["status"] = queryParam.statusType;
       filter['cancelled'] = false;
+      filter['requestModified'] = false;
     }    
    }
 
@@ -669,7 +673,10 @@ exports.bulkUpload = function(req, res) {
       row.statuses = [{
         createdAt : new Date(),
         status : EnterpriseValuationStatuses[0],
-        userId : user._id
+        userId : user._id,
+        name : user.fname + " " + user.lname,
+        email : user.email,
+        mobile : user.mobile
       }];
 
       EnterpriseValuation.create(row, function(err, enterpriseData) {
@@ -1174,7 +1181,10 @@ exports.bulkModify = function(req, res) {
         row.statuses.push({
             createdAt : new Date(),
             status : EnterpriseValuationStatuses[6],
-            userId : user._id
+            userId : user._id,
+            name:user.fname + " " + user.lname,
+            email:user.email,
+            mobile:user.mobile
         });
 
         if(row.reportUrl){
@@ -1183,6 +1193,16 @@ exports.bulkModify = function(req, res) {
             filename:row.reportUrl
           }
         }
+      }else{
+        var updatedFields = [];
+        updatableFields.forEach(function(field){
+          if(row[field]&& row.valData && row[field] !== row.valData[field])
+            updatedFields.push(field);
+        });
+        if(updatedFields.length)
+          row.fieldsModified = updatedFields.join(',');
+        else
+          row.fieldsModified = "";
       }
 
       if(row.gpsInstalled){
@@ -1265,6 +1285,16 @@ exports.validateUpdate = function(req,res,next){
       }else
         return res.status(401).send('User does not have privilege to update record');  
     }else if(updateType === 'enterprise'){
+      var updatedFields = [];
+      updatableFields.forEach(function(field){
+        if(req.body.data[field] && req.body.data[field] !== enterprise[field])
+          updatedFields.push(field);
+      });
+      if(updatedFields.length)
+        req.body.data.fieldsModified = updatedFields.join(',');
+      else
+        req.body.data.fieldsModified = "";
+
       if(user.role === 'admin' || (user.role == 'enterprise' && enterpriseValidStatus.indexOf(enterprise.status) != -1 && enterprise.enterprise.enterpriseId == user.enterpriseId))
         return next();
       else
@@ -1358,6 +1388,8 @@ exports.submitRequest = function(req,res){
         if(resItem.success == "true"){
           valReq.jobId = resItem.jobId;
           valReq.submittedToAgencyDate = new Date();
+          valReq.remarks = "";
+          valReq.resubmit = false;
           setStatus(valReq,EnterpriseValuationStatuses[2]);
         }else{
           valReq.remarks = resItem.msg || "Unable to submit";
@@ -1368,10 +1400,22 @@ exports.submitRequest = function(req,res){
         return;
       }
 
-      if(type === 'Mjobupdation' && resItem.success == "true")
-        setStatus(valReq,EnterpriseValuationStatuses[2]);
-      else
-        valReq.resubmit = true;
+      if(type === 'Mjobupdation'){
+        if(resItem.success == "true"){
+            valReq.remarks = "";
+           if(valReq.status === EnterpriseValuationStatuses[6]){
+            valReq.requestModified = true;
+            valReq.resubmit = false;
+            valReq.requestModifiedDate = new Date();
+            setStatus(valReq,"Request Modified",true);
+           }else
+              setStatus(valReq,EnterpriseValuationStatuses[2]);
+        }else{
+          valReq.remarks = resItem.msg || "Unable to submit";
+          valReq.resubmit = true;
+        }
+
+      }
 
     });
     async.eachLimit(valReqs,5,update,function(err){
@@ -1404,12 +1448,16 @@ exports.submitRequest = function(req,res){
       return retVal;
   }
 
-   function setStatus(entValuation,status){
-      entValuation.status = status;
+   function setStatus(entValuation,status,doNotChangeStatus){
+      if(!doNotChangeStatus)
+        entValuation.status = status;
       var stObj = {};
       stObj.status = status;
       stObj.createdAt = new Date();
       stObj.userId = req.user._id;
+      stObj.name = req.user.fname + " " + req.user.lname;
+      stObj.mobile = req.user.mobile;
+      stObj.email = req.user.email;
       if(!entValuation.statuses)
         entValuation.statuses = [];
       entValuation.statuses.push(stObj);
@@ -1477,6 +1525,14 @@ exports.resumeRequest = function(req,res){
   function update(){
     var _id = bodyData._id;
     delete bodyData._id;
+    bodyData.resumeDate = new Date();
+    bodyData.resumedBy = {
+      userId:req.user._id,
+      name:req.user.fname || "" + " " + req.user.lname || "",
+      email:req.user.email,
+      mobile:req.user.mobile,
+      createdAt : new Date() 
+    }
     EnterpriseValuation.update({_id:_id},{$set:bodyData},function(err,retVal){
       if(err) return handleError(res, err);
       return res.status(200).send("Valuation request resumed successfully !!!");
@@ -1534,6 +1590,8 @@ exports.cancelRequest = function(req,res){
     updateData.cancelledBy = {
       userId:req.user._id,
       name:req.user.fname || "" + " " + req.user.lname || "",
+      email:req.user.email,
+      mobile:req.user.mobile,
       createdAt : new Date() 
     }
     EnterpriseValuation.update({_id:bodyData._id},{$set:updateData},function(err,retVal){
@@ -1833,6 +1891,7 @@ exports.updateFromAgency = function(req,res){
         updateObj.statuses = valReq.statuses;
         updateObj.reportDate = new Date();
         updateObj.reportSubmissionDate = new Date();
+        updateObj.requestModified = false;
         var stsObj = {};
         stsObj.createdAt = new Date();
         stsObj.userId = "IQVL";
@@ -2088,6 +2147,8 @@ function exportExcel(req,res,fieldMap,jsonArr){
       item.status = "Request Cancelled";
     else if(item.onHold)
       item.status = "Hold - " + item.onHoldMsg;
+    else if(item.requestModified)
+      item.status = "Request Modified";
 
     allowedHeaders.forEach(function(header){
       var keyObj = fieldMap[header];

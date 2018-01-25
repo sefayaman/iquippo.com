@@ -258,8 +258,8 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
       }
     } 
 
-    function editEnterpriseRequest(enterpriseData) {
-      $state.go('enterprisevaluation.edittransaction', {id:enterpriseData._id});
+    function editEnterpriseRequest(enterpriseData,isModify) {
+      $state.go('enterprisevaluation.edittransaction', {id:enterpriseData._id,md:isModify});
     }
 
     function deleteEnterprise(enterpriseValuation){

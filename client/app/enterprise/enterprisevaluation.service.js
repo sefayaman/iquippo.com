@@ -275,6 +275,9 @@ function EnterpriseSvc($http,$rootScope ,$q,$timeout, notificationSvc,Auth,UtilS
       stObj.status = status;
       stObj.createdAt = new Date();
       stObj.userId = Auth.getCurrentUser()._id;
+      stObj.mobile = Auth.getCurrentUser().mobile;
+      stObj.email = Auth.getCurrentUser().email;
+      stObj.name = Auth.getCurrentUser().fname + " " + Auth.getCurrentUser().lname;
       if(!entValuation.statuses)
         entValuation.statuses = [];
       entValuation.statuses.push(stObj);

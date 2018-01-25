@@ -30,6 +30,7 @@ angular.module('sreizaoApp')
     vm.getProductData = getProductData;
     $scope.getConcatData = [];
     $scope.userInfo = {};
+    $scope.dateFilter = {};
     vm.getUserExportFileName = getUserExportFileName;
     $scope.$on('updateUserList',function(){
       fireCommand(true);
@@ -294,16 +295,27 @@ angular.module('sreizaoApp')
     }
 
      function exportExcel(){
-      var dataToSend ={};
+      var serverData ={};
       if(Auth.getCurrentUser()._id && Auth.getCurrentUser().role == 'channelpartner') {
-        dataToSend["userId"] = Auth.getCurrentUser()._id;
+        serverData["userId"] = Auth.getCurrentUser()._id;
       }
 
       if(Auth.isEnterprise()){
-        dataToSend["enterpriseId"] = Auth.getCurrentUser().enterpriseId;
+        serverData["enterpriseId"] = Auth.getCurrentUser().enterpriseId;
       }
 
-      $http.post('/api/users/export', dataToSend)
+      if($scope.dateFilter.fromDate)
+         serverData["fromDate"] = $scope.dateFilter.fromDate;
+
+      if($scope.dateFilter.toDate)
+         serverData["toDate"] = $scope.dateFilter.toDate;
+      
+      var exportObj = {filter:serverData};
+      exportObj.method = "POST";
+      exportObj.action = "api/users/export";
+      $scope.$broadcast("submit",exportObj);
+
+      /*$http.post('/api/users/export', dataToSend)
       .then(function(res){console.log("res===",res);
       console.log("data==",res.data);
         var data = res.data;
@@ -311,8 +323,9 @@ angular.module('sreizaoApp')
       },
       function(res){
         console.log(res)
-      })
+      })*/
      }
+
     
     function deleteUser(user){
       Modal.confirm(informationMessage.deleteChannelPartnerConfirm,function(isGo){

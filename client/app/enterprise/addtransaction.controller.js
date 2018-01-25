@@ -1,7 +1,7 @@
 (function(){
 'use strict';
 angular.module('sreizaoApp').controller('AddTransactionCtrl',AddTransactionCtrl);
-function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $state, notificationSvc,uploadSvc ,vendorSvc, EnterpriseSvc, userSvc, LocationSvc, categorySvc, brandSvc, modelSvc,ValuationPurposeSvc,AssetGroupSvc) {
+function AddTransactionCtrl($scope, $stateParams,$uibModal,$rootScope, Modal, Auth, $state, notificationSvc,uploadSvc ,vendorSvc, EnterpriseSvc, userSvc, LocationSvc, categorySvc, brandSvc, modelSvc,ValuationPurposeSvc,AssetGroupSvc) {
   
   var vm = this;
   var editMode = $state.current.name == "enterprisevaluation.edittransaction"?true:false;
@@ -291,8 +291,40 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
 
       if(!$scope.isEdit)
         save(formFlag);
-      else 
-        update(formFlag);
+      else{
+
+        if($stateParams.md === 'y')
+          openCommentModal(formFlag);
+        else
+          update(formFlag);
+      } 
+        
+    }
+
+    function openCommentModal(formFlag){
+      var scope = $rootScope.$new();
+      scope.dataModel = {};
+       var commentModal = $uibModal.open({
+            animation: true,
+            templateUrl: "modificationComment.html",
+            scope: scope,
+            size: 'lg'
+        });
+
+        scope.close = function () {
+          commentModal.dismiss('cancel');
+        };
+
+        scope.submit = function(form){
+          if(form.$invalid){
+            scope.submitted = true;
+            return;
+          }
+
+          vm.enterpriseValuation.requestModifiedMsg = scope.dataModel.comment;
+          update(formFlag,scope.close);
+
+        }
     }
 
     function save(formFlag) {
@@ -313,7 +345,7 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
         });
     }
 
-    function update(formFlag) {
+    function update(formFlag,cb) {
       setData(formFlag);
       var statusIndex = EnterpriseValuationStatuses.indexOf(vm.enterpriseValuation.status);   
       if(statusIndex < 6)
@@ -326,9 +358,12 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
       
       EnterpriseSvc.update(serData)
           .then(function(res) {
+            if(cb)
+              cb();
             $state.go('enterprisevaluation.transaction');
         });
     }
+
 
     function setCustomerData(entId){
       vm.enterpriseValuation.customerPartyNo = Auth.getCurrentUser().mobile;

@@ -121,7 +121,9 @@ module.exports = {
 		    'customerSeekingFinance':'nameOfCustomerSeeking',
 		    'invoiceDate':'customerInvoiceDate',
 		    'invoiceValue':'customerInvoiceValue',
-		    'originalOwner':'originalOwner'
+		    'originalOwner':'originalOwner',
+		    'requestModifiedMsg':'requestModifiedMsg',
+		    'fieldsModified' : 'fieldsModified'
 	 },
 	'ENTERPRISE': {
 		'UPLOAD': {

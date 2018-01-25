@@ -27,6 +27,36 @@ var ValuationReq = require('../valuation/valuation.model');
 var PaymentTransaction = require('../payment/payment.model');
 var UserRegForAuction = require('../auction/userregisterforauction.model');
 
+var Export_Field_Mapping = {
+  "Customer Id" : "customerId",
+  "Name" : "name",
+  "Email" : "email",
+  "PanNumber" : "panNumber",
+  "AADHAAR Number" : "aadhaarNumber",
+  "Role" : "role",
+  "UserType":"userType",
+  "Employee Code":"employeeCode",
+  "Company" : "company",
+  "Mobile No": "mobile",
+  "Phone No.":"phone",
+  "Country":"country",
+  "State":"state",
+  "Location":"city",
+  "Registered By":"user",
+  "Product Uploaded":"user.have_products",
+  "Counts" : "user.total_products",
+  "Status":"user.status",
+  "Identity proof Uploaded":"IDUploaded",
+  "Identity Proof Type":"IDType",
+  "Address proof Uploaded":"ADUploaded",
+  "Address Proof Type":"ADType",
+  "Bank Name":"BKName",
+  "Branch Name":"BrName",
+  "GST Details Provided":"GSTUploaded",
+  "Creation Date" : "createdAt"
+}
+
+
 var validationError = function(res, err) {
   console.log(err);
   return res.status(422).json(err);
@@ -1384,239 +1414,6 @@ exports.validateOtp = function(req, res) {
   });
 }
 
-//export data into excel
-function Workbook() {
-  if (!(this instanceof Workbook)) return new Workbook();
-  this.SheetNames = [];
-  this.Sheets = {};
-}
-
-function datenum(v, date1904) {
-  if (date1904) v += 1462;
-  var epoch = Date.parse(v);
-  return (epoch - new Date(Date.UTC(1899, 11, 30))) / (24 * 60 * 60 * 1000);
-}
-
-function setType(cell) {
-  if (typeof cell.v === 'number')
-    cell.t = 'n';
-  else if (typeof cell.v === 'boolean')
-    cell.t = 'b';
-  else if (cell.v instanceof Date) {
-    cell.t = 'n';
-    cell.z = xlsx.SSF._table[14];
-    cell.v = datenum(cell.v);
-  } else cell.t = 's';
-}
-
-
-function excel_from_data(data) {
-  var ws = {};
-  var range;
-  range = {s: {c:0, r:0}, e: {c:18, r:data.length }};
-
-  for(var R = 0; R != data.length + 1 ; ++R){
-    
-    var C = 0;
-    var user = null;
-    var cell = null;
-    if(R != 0)
-      user = data[R-1];
-
-    if(R === 0)
-      cell = {v: "Customer Id"};
-    else {
-      if(user)
-        cell = {v: user.customerId || ""};
-    }
-    setType(cell);
-    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}); 
-    ws[cell_ref] = cell;
-
-    if(R == 0)
-      cell = {v: "Name"};
-    else{
-      if(user)
-        cell =  {v: (user.fname || "") + " " + (user.mname || "") + " " + (user.lname || "")};
-    }
-    setType(cell);
-    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
-    ws[cell_ref] = cell;
-
-    if(R == 0)
-      cell = {v: "Email"};
-    else {
-      if(user)
-        cell = {v: user.email || ""};
-    }
-    setType(cell);
-    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
-    ws[cell_ref] = cell;
-
-    if(R == 0)
-      cell = {v: "PAN Number"};
-    else {
-      if(user)
-        cell = {v: user.panNumber || ""};
-    }
-    setType(cell);
-    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
-    ws[cell_ref] = cell;
-
-    if(R == 0)
-      cell = {v: "AADHAAR Number"};
-    else {
-      if(user)
-        cell = {v: user.aadhaarNumber || ""};
-    }
-    setType(cell);
-    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
-    ws[cell_ref] = cell;
-
-    if(R == 0)
-      cell = {v: "Role"};
-    else {
-      if(user)
-        cell = {v: user.role || ""};
-    }
-    setType(cell);
-    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
-    ws[cell_ref] = cell;
-
-     if(R == 0)
-      cell = {v: "UserType"};
-    else {
-      if(user)
-        cell = {v: user.userType || ""};
-    }
-    setType(cell);
-    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
-    ws[cell_ref] = cell;
-
-    if(R == 0)
-      cell = {v: "Employee Code"};
-    else {
-      if(user)
-        cell = {v: user.employeeCode || "NA"};
-    }
-    setType(cell);
-    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
-    ws[cell_ref] = cell;
-
-    if(R == 0)
-      cell = {v: "Company Name"};
-    else {
-      if(user)
-        cell = {v: user.company || ""};
-    }
-    setType(cell);
-    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
-    ws[cell_ref] = cell;
-
-     if(R == 0)
-      cell = {v: "Mobile No."};
-    else {
-      if(user)
-        cell = {v: user.mobile || ""};
-    }
-    setType(cell);
-    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
-    ws[cell_ref] = cell;
-
-     if(R == 0)
-      cell = {v: "Phone No."};
-    else {
-      if(user)
-        cell = {v: user.phone || ""};
-    }
-    setType(cell);
-    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
-    ws[cell_ref] = cell;
-
-     if(R == 0)
-      cell = {v: "Country"};
-    else {
-      if(user)
-        cell = {v: user.country || ""};
-    }
-    setType(cell);
-    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
-    ws[cell_ref] = cell;
-
-    if(R == 0)
-      cell = {v: "State"};
-    else {
-      if(user)
-        cell = {v: user.state || ""};
-    }
-    setType(cell);
-    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
-    ws[cell_ref] = cell;
-
-    if(R == 0)
-      cell = {v: "Location"};
-    else {
-      if(user)
-        cell = {v: user.city || ""};
-    }
-    setType(cell);
-    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
-    ws[cell_ref] = cell;
-
-    if(R == 0)
-      cell = {v: "Registered By"};
-    else {
-      //if(user)
-        cell = {v: getRegisteredBy(user) || ""};
-    }
-    setType(cell);
-    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
-    ws[cell_ref] = cell;
-
-    if(R == 0)
-      cell = {v: "Product Uploaded"};
-    else {
-      if(user)
-        cell = {v: user.have_products};
-    }
-    setType(cell);
-    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
-    ws[cell_ref] = cell;
-
-    if(R == 0)
-      cell = {v: "Counts"};
-    else {
-      if(user)
-        cell = {v: user.total_products};
-    }
-    setType(cell);
-    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
-    ws[cell_ref] = cell; 
-
-    if(R == 0)
-      cell = {v: "Status"};
-    else {
-      if(user)
-        cell = {v: isStatus(user.status, user.deleted)};
-    }
-    setType(cell);
-    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
-    ws[cell_ref] = cell; 
-
-    if(R == 0)
-      cell = {v: "Creation Date"};
-    else {
-      if(user)
-        cell = {v: Utility.toIST(_.get(user, 'createdAt', ''))};
-    }
-    setType(cell);
-    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
-    ws[cell_ref] = cell;
-  }
-  ws['!ref'] = xlsx.utils.encode_range(range);
-  return ws;
-}
-
 function isStatus(status, deleted) {
   if (status && !deleted)
     return "Active";
@@ -1649,30 +1446,92 @@ exports.exportUsers = function(req, res) {
   if (req.body.enterpriseId) {
     filter.enterpriseId = req.body.enterpriseId;
   }
-  if (req.body.filter)
+  if(req.body.filter)
     filter = req.body.filter;
+  var dateFilter = {};
+  if(req.body.fromDate)
+    dateFilter['$gte'] = new Date(req.body.fromDate);
+  if(req.body.toDate) {
+      var toDate = new Date(req.body.toDate);
+      var nextDay = toDate.getDate() + 1;
+      toDate.setDate(nextDay);
+      dateFilter.$lt = toDate;
+  }
+  if(req.body.fromDate || req.body.toDate)
+    filter['createdAt'] = dateFilter;
   var query = User.find(filter).sort({
     createdAt: -1
-  });
+  }).limit(5000);
   query.exec(
     function(err, users) {
       if (err) {
         return handleError(res, err);
       }
-      var userIds = [];
-      users.forEach(function(item) {
-        userIds[userIds.length] = item._id + "";
+      var csvStr = "";
+      var headers = Object.keys(Export_Field_Mapping);
+      csvStr += headers.join(',');
+      csvStr += "\r\n";
+      users.forEach(function(item,idx){
+        var idProof = null;
+        var adProof = null;
+        if(item.kycInfo && item.kycInfo.length){
+          item.kycInfo.forEach(function(kyc){
+            if(kyc.type === 'Identity Proof')
+              idProof = kyc;
+            if(kyc.type === 'Address Proof')
+              adProof = kyc;
+          });
+        }
+
+        headers.forEach(function(header){
+          var key = Export_Field_Mapping[header];
+          var val = "";
+          if(key === 'name')
+            val =  _.get(item,"fname","") + " " + _.get(item,"mname","") + " " + _.get(item,"lname","");
+          else if(key === 'user')
+            val = getRegisteredBy(item) || "";
+          else if(key === 'status')
+            val = isStatus(item.status, item.deleted);
+          else if(key === 'IDUploaded')
+            val = idProof?'Yes':'No';
+          else if(key === 'IDType' && idProof)
+            val = idProof.name || "";
+           else if(key === 'ADUploaded')
+            val = adProof?'Yes':'No';
+          else if(key === 'ADType' && adProof)
+            val = adProof.name || "";
+          else if(key == 'BKName' && item.bankInfo && item.bankInfo.length && item.bankInfo[0].bankName)
+            val = item.bankInfo[0].bankName || "";
+          else if(key == 'BRName' && item.bankInfo && item.bankInfo.length && item.bankInfo[0].branch)
+            val = item.bankInfo[0].branch || "";
+          else if(key == 'GSTUploaded'){
+            if(item.GSTInfo && item.GSTInfo.length && item.GSTInfo[0].registrationNo)
+              val = 'Yes';
+            else
+              val = 'No';
+          }
+          else if(key === 'createdAt'){
+            val = Utility.toIST(_.get(item, 'createdAt', ''));
+          }
+          else
+            val = _.get(item,key,"");
+         val = Utility.toCsvValue(val);
+         csvStr += val + ",";
+        });
+        csvStr += "\r\n";
       });
-      getProductData(req, res, users, userIds);
-      // var ws_name = "users"
-      // var wb = new Workbook();
-      // var ws = excel_from_data(users);
-      // wb.SheetNames.push(ws_name);
-      // wb.Sheets[ws_name] = ws;
-      // var wbout = xlsx.write(wb, {bookType:'xlsx', bookSST:true, type: 'binary'});
-      // res.end(wbout);
+      csvStr = csvStr.substring(0,csvStr.length -1);
+      return renderCsv(req,res,csvStr);
     });
 }
+
+function renderCsv(req,res,csv){
+   var fileName =  "userslist_" + new Date().getTime();
+  res.setHeader('Content-Type', 'application/octet-stream');
+  res.setHeader("Content-Disposition", 'attachment; filename=' + fileName + '.csv;');
+  res.end(csv, 'binary'); 
+}
+
 exports.exportUsersList = function(req, res) {
   AppSetting.find({
 		key: 'user_list_file_name'
@@ -1690,6 +1549,7 @@ exports.exportUsersList = function(req, res) {
     }
   })
 }
+
 function getProductData(req, res, users, userIds) {
   var filter = {};
   filter.deleted = false;
@@ -1756,42 +1616,4 @@ function addNoCacheHeader(res) {
    res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
    res.header('Expires', '-1');
    res.header('Pragma', 'no-cache');
-}
-//create user unique number
-
-
-exports.createUniqueUserNo = function(req,res){
-   
-   User.find({}, function (err, users) {
-    //if(err) return res.status(500).send(err);
-    var i=1;
-    var customerId = 0;
-    var id = 0;
-    users.forEach(function(doc) {
-    //if (err) throw err;
-     if(doc){
-      id = 100000+i;
-      customerId = 'IQ'+id;
-       doc.update({$set:{customerId:customerId}},function(err){
-        
-        //return res.status(200).json(req.body);
-      });
-      
-      i++;
-     }
-  });
-
-   res.status(200);console.log("Customer Id created successfully.");
-    ///
-   var SeqModel = Seqgen.getSchema();
-   SeqModel.update({collectionName : "users"},{$set:{nextSeqNumber:id+1}},function(err){
-        
-        //return res.status(200).json(req.body);
-      });
-      ///
-  });
-   /*res.each(function(doc) {
-    //if (err) throw err;
-    console.log(doc);
-  });*/
 }

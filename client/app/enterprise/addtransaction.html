@@ -542,4 +542,20 @@
     </div>
         
       
-</div> 
+</div>
+<script type="text/ng-template" id="modificationComment.html">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="close()" aria-hidden="true">&times;</button>
+    <h4 class="modal-title">Comments</h4>
+  </div>
+  <form name="modificationCommentForm" novalidate>
+    <div class="modal-body">
+      <div class="col-sm-offset-1 col-sm-10" ng-class="{'has-error': modificationCommentForm.comment.$invalid && submitted}">
+        <textarea class="form-control" ng-model="dataModel.comment" name="comment" required></textarea>
+      </div>
+    </div>
+    <div class="modal-footer text-right">
+      <button class="btn btn-danger btn-md" ng-click="submit(modificationCommentForm)">Submit</button>
+    </div>
+  </form>
+</script> 
