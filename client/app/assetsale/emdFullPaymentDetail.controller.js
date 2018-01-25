@@ -65,13 +65,13 @@ function EmdFullPaymentCtrl($scope, $state, $rootScope, Modal, Auth, $uibModal, 
 				return;
 			}*/
 			
-			if($scope.bidData.emdPayment.remainingPayment == 0){
+			if($scope.bidData.emdPayment.remainingPayment === 0){
 				serverAction = "emdpayment";
 				AssetSaleSvc.setStatus($scope.bidData,dealStatuses[7],'dealStatus','dealStatuses');
 				msg = informationMessage.EMDPayment;
 			} else msg = informationMessage.partialEMD;
 
-			if($scope.bidData.fullPayment && $scope.bidData.fullPayment.remainingPayment === 0){
+			if($scope.bidData.fullPayment && $scope.bidData.emdPayment.remainingPayment === 0 && $scope.bidData.fullPayment.remainingPayment === 0){
 				serverAction = "fullpayment";
 				AssetSaleSvc.setStatus($scope.bidData,dealStatuses[8],'dealStatus','dealStatuses');
 				msg = informationMessage.Fullpayment;
