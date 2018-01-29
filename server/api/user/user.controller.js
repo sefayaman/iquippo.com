@@ -45,7 +45,7 @@ var Export_Field_Mapping = {
   "Registered By":"user",
   "Product Uploaded":"user.have_products",
   "Counts" : "user.total_products",
-  "Status":"user.status",
+  "Status":"status",
   "Identity proof Uploaded":"IDUploaded",
   "Identity Proof Type":"IDType",
   "Address proof Uploaded":"ADUploaded",
@@ -1492,7 +1492,7 @@ exports.exportUsers = function(req, res) {
             val =  _.get(item,"fname","") + " " + _.get(item,"mname","") + " " + _.get(item,"lname","");
           else if(key === 'user')
             val = getRegisteredBy(item) || "";
-          else if(key === 'Status')
+          else if(key === 'status')
             val = isStatus(item.status, item.deleted);
           else if(key === 'IDUploaded')
             val = idProof?'Yes':'No';
