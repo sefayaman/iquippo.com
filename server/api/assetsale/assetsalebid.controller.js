@@ -556,6 +556,22 @@ function pushNotification(bidsArr) {
 		AssetSaleUtil.sendNotification(bids);
 }
 
+exports.verifyCalculation = function(req,res,next){
+	var totalAmount = 0;
+	var tcs = 0
+	totalAmount = Math.round(req.body.gst + parseInt(req.body.actualBidAmount));
+	if (Number(totalAmount) > 1000000)
+	    tcs = Number(totalAmount) * 0.01;
+	req.body.tcs = Math.round(tcs || 0);
+	req.body.bidAmount = Math.round((totalAmount + req.body.tcs + req.body.parkingCharge) || 0);
+	req.body.fullPaymentAmount = Number(req.body.bidAmount) - Number(req.body.emdAmount);
+	if(req.body.parkingPaymentTo === 'Yard')
+        req.body.fullPaymentAmount = Number(req.body.fullPaymentAmount) - Number(req.body.parkingCharge);
+    req.body.emdPayment = {remainingPayment: req.body.emdAmount || 0};
+    req.body.fullPayment = {remainingPayment: req.body.fullPaymentAmount || 0};
+    return next();
+}
+
 exports.submitBid = function(req, res) {
 	async.series([newBidData,updateBidAndProduct],function(err){
 		if(err) return res.status(500).send(err);
@@ -641,6 +657,7 @@ exports.submitBid = function(req, res) {
 			return callback();
 		});
 	}
+
 };
 
 exports.withdrawBid = function(req, res) {

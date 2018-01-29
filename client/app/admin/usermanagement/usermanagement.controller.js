@@ -398,8 +398,13 @@ angular.module('sreizaoApp')
     $scope.onChangeHandler = onChangeHandler;
 
     function init(){
+      $scope.roles = [];
       if($scope.isEdit) {
         angular.copy($scope.userInfo, $scope.newUser);
+        $scope.roles.push($scope.newUser.role);
+        if(Auth.isAdmin() && $scope.newUser.role === 'customer')
+          $scope.roles.push('enterprise');
+
         if($scope.newUser.isOtherCountry == true){
           $scope.newUser.otherCountry = $scope.newUser.country;
           $scope.newUser.country = "Other"
@@ -707,8 +712,12 @@ angular.module('sreizaoApp')
 
       $rootScope.loading = true;
       setLocationData();
-      if($scope.newUser.role == 'enterprise')
-          updateServices();
+      if($scope.newUser.role == 'enterprise'){
+        if($scope.newUser.enterprise && !$scope.newUser.enterpriseId)
+          $scope.newUser.enterpriseId = "E" + $scope.newUser.mobile + "" + Math.floor(Math.random() *10);
+        updateServices();
+      }
+          
       userSvc.updateUser($scope.newUser).then(function(result){
         $rootScope.loading = false;
         $scope.closeDialog();

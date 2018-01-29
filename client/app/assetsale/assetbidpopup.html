@@ -10,7 +10,7 @@
               <div class="col-xs-6 form-group text-left" ng-class="{'has-error': bidPopup.bidAmount.$invalid && submitted}">
                 <label>Base plus GST <small>(as applicable)</small></label>
                 <div class="floating-label-wrapper">                      
-                  <input  type="text" ng-disabled="params.bid == 'buynow'" class="form-control" name="bidAmount" ng-model="assetBidPopUpVm.bidAmount" ng-value="" ng-keyup="assetBidPopUpVm.calculateBid(assetBidPopUpVm.bidAmount)" typeahead-focus-first = "false" typeahead-wait-ms="200"  autocomplete="off" placeholder="Enter Bid Amount" required>
+                  <input  type="text" ng-disabled="params.bid == 'buynow'" class="form-control" name="bidAmount" ng-model="assetBidPopUpVm.bidAmount" ng-value="" ng-keyup="assetBidPopUpVm.calculateBid(assetBidPopUpVm.bidAmount)" ng-model-options="{debounce:20}"  autocomplete="off" placeholder="Enter Bid Amount" required>
                 </div>
                 
               </div>

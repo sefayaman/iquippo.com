@@ -248,6 +248,7 @@
                 <tr>
                   <th>Sr. No</th> 
                   <th>Ticket Id</th>
+                  <th>Customer Id</th>
                   <th>Full Name</th>                                
                   <th>Country</th>
                   <th>Location</th>  
@@ -266,6 +267,7 @@
               <tr  ng-repeat="addSvc in reportsVm.shippingListing">
                 <td>{{$index + 1+count}}</td>
                 <td>{{addSvc.ticketId}}</td>
+                <td>{{addSvc.quote.customerId}}</td>
                 <td>{{addSvc.quote.fname}} {{addSvc.quote.lname}}</td> 
                 <td>{{addSvc.quote.country}}</td>
                 <td>{{addSvc.quote.city}}</td> 
@@ -292,6 +294,7 @@
                 <tr>
                   <th>Sr. No</th> 
                   <th>Ticket Id</th>
+                  <th>Customer Id</th>
                   <th>Full Name</th> 
                   <th>Country</th>  
                   <th>Location</th>  
@@ -318,6 +321,7 @@
               <tr  ng-repeat="addSvc in reportsVm.valuationListing">
                 <td>{{$index + 1+count}}</td>
                 <td>{{addSvc.ticketId}}</td>
+                <td>{{addSvc.quote.customerId}}</td>
                 <td>{{addSvc.quote.fname}} {{addSvc.quote.lname}}</td>              
                 <td>{{addSvc.quote.country}}</td>                    
                 <td>{{addSvc.quote.city}}</td>                    
@@ -415,6 +419,7 @@
                  <tr>
                   <th>Sr. No</th> 
                   <th>Ticket Id</th>
+                  <th>Customer Id</th>
                   <th>Full Name</th> 
                   <th>Country</th>                                
                   <th>Location</th>                                
@@ -439,6 +444,7 @@
                 <tr ng-repeat="addSvc in reportsVm.insuranceListing">
                   <td>{{$index + 1+count}}</td>   
                   <td>{{addSvc.ticketId}}</td>         
+                  <td>{{addSvc.quote.customerId}}</td>         
                   <td>{{addSvc.quote.fname}} {{addSvc.quote.lname}}</td>              
                   <td>{{addSvc.quote.country}}</td>
                   <td>{{addSvc.quote.city}}</td>
@@ -771,7 +777,8 @@
                <table class="table table-bordred table-striped">
                 <thead>
                   <tr>
-                    <th>Auction ID</th>                                
+                    <th>Auction ID</th>
+                    <th>Customer ID</th>
                     <th>Auction Name</th>                                
                     <th>EMD Amount</th>                                
                     <th>User Name</th>                                
@@ -782,7 +789,8 @@
                 </thead>
                 <tbody>
                   <tr ng-repeat="regUser in reportsVm.registerUser">
-                    <td>{{regUser.auction.auctionId}}</td>              
+                    <td>{{regUser.auction.auctionId}}</td>
+                    <td>{{regUser.user.customerId}}</td>
                     <td>{{regUser.auction.name}}</td>
                     <td>{{regUser.auction.emdAmount}}</td>
                     <td>{{regUser.user.fname}} {{regUser.user.lname}}</td>

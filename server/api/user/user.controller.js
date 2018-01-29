@@ -627,7 +627,7 @@ exports.validateExcel = function(req, res, next) {
           data = {};
           data = {
             name: 'Financing',
-            code: 'Financing',
+            code: 'Finance',
             sequence: 3,
             checked: true,
           };
@@ -711,7 +711,7 @@ exports.validateExcel = function(req, res, next) {
           data = {};
           data = {
             name: 'Financing',
-            code: 'Financing',
+            code: 'Finance',
             sequence: 3,
             checked: true,
           };

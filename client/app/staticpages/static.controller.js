@@ -14,7 +14,7 @@
   }
 
   //Shipping controller function
-  function ShippingCtrl($scope, $rootScope, Auth, $http, Modal, notificationSvc, LocationSvc, MarketingSvc, UtilSvc) {
+  function ShippingCtrl($scope, $rootScope, Auth, $http, Modal, notificationSvc, LocationSvc, MarketingSvc, UtilSvc, userSvc) {
     //NJ start:set current time
     $scope.shippingStartTime = new Date();
     //End
@@ -40,6 +40,7 @@
         $scope.shippingQuote.country = currUser.country;
         $scope.shippingQuote.city = currUser.city;
         $scope.shippingQuote.state = currUser.state;
+        $scope.shippingQuote.customerId = currUser.customerId;
         onCountryChange(currUser.country, true);
         onStateChange(currUser.state, true);
       }
@@ -98,8 +99,25 @@
       }
 
       $scope.shippingService.type = "shipping";
-      $scope.shippingService.quote = $scope.shippingQuote;
-      $http.post('/api/services', $scope.shippingService).then(function(res) {
+      
+      var userFilter = {};
+        userFilter.mobile = $scope.shippingQuote.mobile;
+        userSvc.getUsers(userFilter).then(function(data){
+            if ( data.length ){
+                $scope.shippingQuote.customerId = data[0].customerId;
+                $scope.shippingService.quote = $scope.shippingQuote;
+                shippingSave($scope.shippingService);
+            }
+            else {
+                $scope.shippingService.quote = $scope.shippingQuote;
+                shippingSave($scope.shippingService);
+            }
+        });
+      return;
+    }
+    
+    function shippingSave ( shippingService ) {
+        $http.post('/api/services', shippingService).then(function(res) {
 
           //Start NJ : push shippingSubmit object in GTM dataLayer
           dataLayer.push(gaMasterObject.shippingSubmit);
@@ -284,6 +302,7 @@
         $scope.valuationQuote.country = currUser.country;
         $scope.valuationQuote.state = currUser.state;
         $scope.valuationQuote.city = currUser.city;
+        $scope.valuationQuote.customerId = currUser.customerId;
         onCountryChange(currUser.country, true);
         onStateChange(currUser.state, true);
       }
@@ -755,7 +774,7 @@
   }
 
   //Valuation controller function
-  function InsuranceCtrl($scope, $rootScope, Auth, $http, Modal, notificationSvc, LocationSvc, categorySvc, brandSvc, modelSvc, MarketingSvc, UtilSvc) {
+  function InsuranceCtrl($scope, $rootScope, Auth, $http, Modal, notificationSvc, LocationSvc, categorySvc, brandSvc, modelSvc, MarketingSvc, UtilSvc, userSvc) {
     var facebookConversionSent = false;
     $scope.addInsuranceQuote = addInsuranceQuote;
     $scope.resetClick = resetClick;
@@ -798,6 +817,7 @@
         $scope.insuranceQuote.country = currUser.country;
         $scope.insuranceQuote.state = currUser.state;
         $scope.insuranceQuote.city = currUser.city;
+        $scope.insuranceQuote.customerId = currUser.customerId;
         onCountryChange(currUser.country, true);
         onStateChange(currUser.state, true);
       }
@@ -909,8 +929,25 @@
       }
 
       insuranceService.type = "insurance";
-      insuranceService.quote = $scope.insuranceQuote;
-      $http.post('/api/services', insuranceService).then(function(res) {
+      
+      var userFilter = {};
+        userFilter.mobile = $scope.insuranceQuote.mobile;
+        userSvc.getUsers(userFilter).then(function(data){
+            if ( data.length ){
+                $scope.insuranceQuote.customerId = data[0].customerId;
+                insuranceService.quote = $scope.insuranceQuote;
+                insuranceSave(insuranceService);
+            }
+            else {
+                insuranceService.quote = $scope.insuranceQuote;
+                insuranceSave(insuranceService);
+            }
+        });
+        return;
+    }
+    
+    function insuranceSave (insuranceService) {
+        $http.post('/api/services', insuranceService).then(function(res) {
           var data = {};
           data['to'] = supportMail;
           data['subject'] = 'Request for a Quote: Insurance';
