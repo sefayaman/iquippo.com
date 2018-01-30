@@ -45,6 +45,7 @@
                         <option value="newEquipmentBanners">New Equipment Banners</option>
                         <option value="legalentityTypeMaster">Legal Entity Type Master</option>
                         <option value="bankNameMaster">Bank Name Master</option>
+                        <option value="iquippogst">iQuippo GST Master</option>
                     </select>
                     <i class="caret"></i>
                 </div>
@@ -4091,6 +4092,61 @@
                     </table>
                 </div>
                 <uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="pager.maxSize" ng-change="bankVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+            </div>
+            <!-- iquippo gst tax master -->
+            <div ng-if="gsettingVm.tabValue == 'iquippogst'" ng-controller="BankMasterCtrl as bankVm">
+                <h4>Add iQuippo GST</h4>
+                <legend></legend>
+                <form class="" name="iquippo_gst" novalidate>
+                    <div class="row">
+                        <div class="col-sm-4 form-group">
+                            <label>Select State</label>
+                            <select class="form-control" required>
+                                <option>Select State</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-4 form-group">
+                            <label>Registration Number</label>
+                            <input type="text" class="form-control" placeholder="Registration Number " required>
+                        </div>
+                        <div class="col-sm-2 form-group pull-right">
+                            <button type="button" class="btn btn-block btn-primary" ng-if="false" >Update</button>
+                            <button type="button" class="btn btn-block btn-primary" ng-if="true">Save</button>
+                        </div>
+                    </div>
+                </form>
+                <legend></legend>
+                <div class="row form-group">
+                    <div class="col-sm-6"><p class="text-left">Showing : {{}} Records</p></div>
+                    <div class="col-sm-6 tablesearch text-right">
+                        Search: <input type="text" placeholder="Search..." ng-model-options="{debounce:500}">
+                    </div>
+                </div>
+                <legend></legend>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>State</th>
+                                <th>Registration Number</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{}}</td>
+                                <td>{{}}</td>
+                                <td>
+                                    <a href="javascript:void(0);" class="btn btn-primary btn-sm" uib-popover="Edit" popover-trigger="mouseenter">
+                                        <i class="fa fa-pencil"></i>
+                                    </a>
+                                    <a href="javascript:void(0);" class="btn btn-danger btn-sm" uib-popover="Delete" popover-trigger="mouseenter"><i class="fa fa-trash" ></i></a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="pager.maxSize" class="pagination-sm" rotate="false">  </uib-pagination>
             </div>
         </div>
     </div>

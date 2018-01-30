@@ -246,16 +246,42 @@
         <input type="text" class="form-control" placeholder="Invoice in favour of" name="invcInFavourOf" required>
       </div>
     </div>
-    <div class="row">
-      <div class="col-sm-5 form-group">
-        <label>State</label>
-        <select class="form-control" name="gstRate" required>
-          <option value="">Select State</option>
-        </select>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">User GST Details</h3>
       </div>
-      <div class="col-sm-7 form-group">
-        <label>Registration Number</label>
-        <input type="text" class="form-control" placeholder="Registration Number" name="registrationName" required>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-sm-6 form-group">
+            <label>State</label>
+            <select class="form-control" name="gstRate" required>
+              <option value="">Select State</option>
+            </select>
+          </div>
+          <div class="col-sm-6 form-group">
+            <label>Registration Number</label>
+            <input type="text" class="form-control" placeholder="Registration Number" name="registrationNo" required>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">iQuippo GST Details</h3>
+      </div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-sm-6 form-group">
+            <label>State</label>
+            <select class="form-control" name="iquippogstRate" required>
+              <option value="">Select State</option>
+            </select>
+          </div>
+          <div class="col-sm-6 form-group">
+            <label>Registration Number</label>
+            <input type="text" class="form-control" placeholder="Registration Number" name="iquipporegistrationNo" required>
+          </div>
+        </div>
       </div>
     </div>
 
