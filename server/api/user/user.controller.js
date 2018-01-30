@@ -101,7 +101,6 @@ exports.fetchSingleUser = function(req,res){
  */
 exports.signUp = function(req, res) {
   var newUser = new User(req.body);
-  console.log("username::::" + req.body.name);
   newUser.createdAt = new Date();
   newUser.updatedAt = new Date();
   newUser.clientIp=req.connection.remoteAddress;
@@ -921,6 +920,9 @@ exports.getUser = function(req, res) {
     arr[arr.length] = { state: { $regex: searchStrReg }};
     arr[arr.length] = { userType: { $regex: searchStrReg }};
   }
+
+  if (req.body._id)
+    filter._id = req.body._id;
 
   if (req.body.userId)
     filter["createdBy._id"] = req.body.userId;
