@@ -152,7 +152,13 @@ angular.module('sreizaoApp')
         url:"/myaccount",
         templateUrl: 'app/account/myaccount/myaccount.html',
         controller: 'MyAccountCtrl as myAccountVm',
-         layout:'client'
+        layout:'client'
+      })
+      .state('useraccountedit', {
+        url: '/useraccountedit/:id',
+        templateUrl: 'app/account/myaccount/myaccount.html',
+        controller: 'MyAccountCtrl as myAccountVm',
+        layout:'client'
       })
       .state('viewproduct', {
         url:"/used/viewproducts?currentPage&group&category&brand&model" + 
@@ -343,7 +349,7 @@ angular.module('sreizaoApp')
         restrict:true
       })
       .state('usermanagment', {
-        url: '/usermanagement',
+        url: '/usermanagement?first_id&last_id&currentPage&prevPage&searchstr',
         templateUrl: 'app/admin/usermanagement/usermanagement.html',
         controller: 'UserManagementCtrl as userManagementVm',
         authenticate:true,
