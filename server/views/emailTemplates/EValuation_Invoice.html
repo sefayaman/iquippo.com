@@ -3,228 +3,292 @@
 </head>
 <body>
 <div style="page-break-inside: avoid;">
-  <table cellpadding="0" cellspacing="0" align="center" style="width:90%;border:1px solid #ccc;font-family:Verdana, Geneva, sans-serif;font-size:12px;padding: 5px;">
-   <tr>
-      <td width="60%"><img src="{{awsBaseImagePath}}/assets/images/srei-logo-img.png" width="150px"></td>
-      <td align="left">
-        <table cellpadding="0" cellspacing="0" style="font-family:Verdana, Geneva, sans-serif;font-size:12px;">
-          <tr>
-            <td style="padding-bottom:6px;"><strong><i>QUIPPO VALUERS AND AUCTIONEERS PVT LTD</i></strong></td>
-          </tr>
-          <tr>
-            <td>D-2, 5th floor, Southern Park,</td>
-          </tr>
-          <tr>
-            <td>Saket Place, Saket</td>
-          </tr>
-          <tr>
-            <td>New Delhi</td>
-          </tr>
-          <tr>
-            <td>Delhi - 110017</td>
-          </tr>
-          <tr>
-            <td>India</td>
-          </tr>
-        </table>
-      </td>
-   </tr>
-   <tr><td height="20"></td></tr>
-   <tr>
-      <td align="center" colspan="2" style="font-size:16px;"><strong>INVOICE</strong></td>
-   </tr>
+  <table cellpadding="0" cellspacing="0" align="center" style="width:80%;font-family:arial, sans-serif;font-size:13px;">
     <tr>
-      <td colspan="2" style="border-top:1px solid #ccc;">
-        <table cellspacing="0" cellpadding="2" style="font-family:Verdana, Geneva, sans-serif;font-size:12px;width:90%;">
-          <tr>
-            <td width="70%">
-
-            <table cellpadding="0" cellspacing="0" style="font-family:Verdana, Geneva, sans-serif;font-size:12px;">
-                <tr>
-                  <td><strong>To, SREI Equipment Finance Limited</strong></td>
-                </tr>
-                <tr>
-                  <td style="padding-left:25px;"><strong>(On A/c of Eswar Enterprises)</strong></td>
-                </tr>
-                <tr>
-                  <td style="padding-left:25px;"><strong>Y-10, Block-EP, Sector V, Salt Lake City</strong></td>
-                </tr>
-                <tr>
-                  <td style="padding-left:25px;"><strong>Kolkata</strong></td>
-                </tr>
-                <tr>
-                  <td style="padding-left:25px;"><strong>West-Bengal - 700091</strong></td>
-                </tr>
-              </table>
-                
-            <td align="left">
-              <table cellpadding="2" cellspacing="0" style="font-family:Verdana, Geneva, sans-serif;font-size:12px;">
-                <tr>
-                  <td><strong>Invoice No.:</strong><span style="text-decoration:underline;">{{this.invoiceData.invoiceNo}}</span>
-                  </td>
-                </tr>
-                <tr>
-                  <td><strong>Date:</strong><span style="text-decoration:underline;">{{invoiceDate}}</span>
-                  </td>
-                </tr>
-                <tr>
-                  <td><strong>Reference:</strong><span style="text-decoration:underline;">{{invoiceData.referenceNo}}</span>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-          
-        </table>
+      <td colspan="2" align="center">
+        <img src="{{awsBaseImagePath}}/assets/images/srei-logo-img.png" width="100px">
       </td>
     </tr>
-    
-  </table>
-    <table cellpadding="5" cellspacing="0" style="font-family:Verdana, Geneva, sans-serif;font-size:12px;width:90%;border:1px solid #ccc;" align="center">
-      <tr>
-        <td>
-          <table cellpadding="2" cellspacing="0" style="font-family:Verdana, Geneva, sans-serif;font-size:12px;width:90%;">
+    <tr><td colspan="2" height="20"></td></tr> 
+    <tr>
+      <td align="center" colspan="2" style="font-size:16px;"><h3>TAX INVOICE</h3></td>
+   </tr>
+   <tr>
+      <td width="50%">
+        <table cellpadding="5" cellspacing="0" width="100%" style="font-family:arial, sans-serif;font-size:13px; border:2px solid #333;  height: 160px; padding-left: 10px;">
+          <tr>
+            <td><strong>Service Provider / Billed from</strong></td>
+          </tr>
+          <tr>
+            <td>IQUIPPO Services Pvt. Ltd.</td>
+          </tr>
+          <tr>
+            <td>Ground Floor, Plot No. X-1,2 &amp; 3, IPCL Bulding</td>
+          </tr>
+          <tr>
+            <td>Block-EP, Sector-V, Salt Lake City, Kolkata</td>
+          </tr>
+          <tr>
+            <td>State - West Bengal</td>
+          </tr>
+          <tr>
+            <td><a href="https://iquippo.com">www.iquippo.com</a></td>
+          </tr>
+        </table>
+      </td>
+      <td width="50%">
+        <table cellpadding="5" cellspacing="0" width="100%" style="font-family:arial, sans-serif;font-size:13px; border:2px solid #333; border-left: 0;  height: 160px; padding-left: 10px;">
+          <tr>
+            <td>Invoice No.</td>
+            <td>{{}}</td>
+          </tr>
+          <tr>
+            <td>Invoice Date</td>
+            <td>{{}}</td>
+          </tr>
+          <tr>
+            <td>Service Type</td>
+            <td>{{}}</td>
+          </tr>
+          <tr><td></td></tr> 
+          <tr>
+            <td>PAN</td>
+            <td>{{}}</td>
+          </tr>
+          <tr>
+            <td>GSTIN</td>
+            <td>{{}}</td>
+          </tr>
           
-            <tr>
-              <td style="border-right: 1px solid #ccc;font-size:10px;">
-                <h4>Valuation Report No.</h4>
-                  {{#each invoiceData.uniqueControlNos}}
-                    <p style="display:inline;margin-right: 15px;">{{this}},</p>
-                   {{/each}}
-              </td>
-            </tr>
-            <tr>
-              <td style="border-right: 1px solid #ccc;">
-                Valuation fee towards the valuation of {{invoiceData.requestCount}} nos Various Assets
-              </td>
-              <td>
-               <strong>{{invoiceData.invoiceAmount}}</strong>
-              </td>
-            </tr>
-             <tr>
-              <td height="100" style="border-right: 1px solid #ccc;">
-              </td>
-            </tr>
-            <tr>
-              <td style="border-right: 1px solid #ccc;">
-                <table cellpadding="2" cellspacing="0" style="font-family:Verdana, Geneva, sans-serif;font-size:12px;font-weight:bold;float: right;padding: 25px;">
-                  {{#each invoiceData.selectedTaxes}}
-                  <tr>
-                    <td align="right">
-                     <strong>{{type}} @{{rate}} %</strong>
-                    </td>
-                  </tr>
-                  {{/each}}
-                   <tr>
-                    <td height="20">
-                     
-                    </td>
-                  </tr>
-                  <tr>
-                    <td align="left" style="border-top:2px solid #ccc;">
-                     <strong>Total</strong>
-                    </td>
-                  </tr>
-                </table>
-              </td>
-              <td align="right">
-                <table cellpadding="2" cellspacing="0" style="font-family:Verdana, Geneva, sans-serif;font-size:12px;font-weight:bold;">
-                  <tr>
-                      <td>
-                        {{#each invoiceData.selectedTaxes}}
-                        <tr>
-                          <td>
-                           {{calculatedTax}}
-                          </td>
-                        </tr>
-                        {{/each}}
-                          <tr>
-                            <td height="20">
-                             
-                            </td>
-                          </tr>
-                        <tr>
-                          <td style="border-top:2px solid #000;">
-                           {{invoiceData.totalAmount}}
-                          </td>
-                        </tr>
-                      </td>
-                  </tr>
-                </table>
-            </td>
+        </table>
+      </td>
+   </tr>
+   <tr><td colspan="2" height="20"></td></tr>   
+   <tr>
+      <td width="50%">
+        <table cellpadding="5" cellspacing="0" width="100%" style="font-family:arial, sans-serif;font-size:13px; border:2px solid #333;  height: 180px; padding-left: 10px;">
+          <tr>
+            <td colspan="2"><strong>Billed To:</strong></td>
           </tr>
           <tr>
-            <td height="300" style="border-right: 1px solid #ccc;"></td>
+            <td colspan="2">Mr. Sarabjot Singh Saini</td>
           </tr>
           <tr>
-          <td style="border-right: 1px solid #ccc;"> 
-            <table cellpadding="2" cellspacing="0" style="font-family:Verdana, Geneva, sans-serif;font-size:12px;width:90%;">
+            <td width="50%">Poonam Bunglow, Sector-5, Plot No. 9, Shree Nagar, Thane(W)-400604, Maharashtra</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>PAN</td>
+            <td>BJJPS4963H</td>
+          </tr>
+          <tr>
+            <td>GSTIN / Unique Id</td>
+            <td>126732vjhbjhh</td>
+          </tr>
+        </table>
+      </td>
+      <td width="50%">
+        <table cellpadding="5" cellspacing="0" width="100%" style="font-family:arial, sans-serif;font-size:13px; border:2px solid #333; border-left:0;  height: 180px; padding-left: 10px;">
+          <tr>
+            <td colspan="2"><strong>Service Rendered:</strong></td>
+          </tr>
+          <tr>
+            <td colspan="2">Mr. Sarabjot Singh Saini</td>
+          </tr>
+          <tr>
+            <td width="50%">Poonam Bunglow, Sector-5, Plot No. 9, Shree Nagar, Thane(W)-400604, Maharashtra</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>PAN</td>
+            <td>BJJPS4963H</td>
+          </tr>
+          <tr>
+            <td>GSTIN / Unique Id</td>
+            <td>126732vjhbjhh</td>
+          </tr>
+        </table>
+      </td>
+   </tr>
+   <tr><td colspan="2" height="20"></td></tr> 
+   <tr>
+     <td colspan="2">
+       <table cellspacing="0" cellpadding="10" border="1" style="font-family:arial, sans-serif;font-size:13px;width:100%; border-color: #333; text-align: center;" align="center">
+        <tr>
+          <th>S.No.</th>
+          <th>Description of Services</th>
+          <th>SAC</th>
+          <th>Taxable Amount</th>
+          <th colspan="2">
+            CGST
+            <table cellspacing="0" cellpadding="5" style="font-family:arial, sans-serif;font-size:13px;width:100%;text-align: center;">
               <tr>
-                <td colspan="2"><strong>With Further Credit Favoring:</strong></td>
-              </tr>
-              <tr>
-                <td width="30%">Account Name:</td>
-                <td>QUIPPO VALUERS AND AUCTIONEERS PVT LTD </td>
-              </tr>
-              <tr>
-                <td width="30%">Account Number:</td>
-                <td>00032560001434 </td>
-              </tr>
-              <tr>
-                <td width="30%">Bank Name:</td>
-                <td>HDFC Bank Ltd.</td>
-              </tr>
-              <tr>
-                <td width="30%">Bank Address:</td>
-                <td>xyz </td>
-              </tr>
-              <tr>
-                <td width="30%">RTGS/NEFT IFSC:</td>
-                <td>HDFC0000003</td>
-              </tr>
-              <tr>
-                <td style="padding-bottom: 20px;"></td>
-              </tr>
-              <tr>
-                <td colspan="2">Please make all payments in the name of</td>
-              </tr>
-              <tr>
-                <td colspan="2"><strong>QUIPPO VALUERS AND AUCTIONEERS PVT LTD</strong></td>
-              </tr>
-              <tr>
-                <td style="padding-bottom: 20px;"></td>
-              </tr>
-              <tr>
-                <td width="30%">Service Tax Code:</td>
-                <td>AABCH5726JST001</td>
-              </tr>
-              <tr>
-                <td width="30%">Pan No:</td>
-                <td>AABCH5726J</td>
-              </tr>
-              <tr>
-                <td style="padding-bottom: 25px;"></td>
-              </tr>
-              <tr>
-                <td>For and behalf of:</td>
-              </tr>
-              <tr>
-              <td colspan="2">QUIPPO VALUERS AND AUCTIONEERS PVT LTD</td>
-              </tr>
-              <tr>
-                <td style="padding-bottom: 50px;"></td>
-              </tr>
-              <tr>
-              <td style="padding-bottom: 90px;">Authorised Signatory</td>
+                <th>Rate</th>
+                <th align="right">Amount</th>
               </tr>
             </table>
+          </th>
+          <th colspan="2">
+            SGST
+            <table cellspacing="0" cellpadding="5" style="font-family:arial, sans-serif;font-size:13px;width:100%;text-align: center;">
+              <tr>
+                <th>Rate</th>
+                <th>Amount</th>
+              </tr>
+            </table>
+          </th>
+          <th colspan="2">
+            IGST
+            <table cellspacing="0" cellpadding="5" style="font-family:arial, sans-serif;font-size:13px;width:100%;text-align: center;">
+              <tr>
+                <th>Rate</th>
+                <th>Amount</th>
+              </tr>
+            </table>
+          </th>
+          <th>Total Amount(Inc. Tax)</th>
+        </tr>
+        <tr>
+          <td height="200" valign="top">1</td>
+          <td valign="top">zsdfsd sdfds afdsf</td>
+          <td valign="top">54654321</td>
+          <td valign="top">51121</td>
+          <td valign="top"></td>
+          <td valign="top"></td>
+          <td valign="top"></td>
+          <td valign="top"></td>
+          <td valign="top"></td>
+          <td valign="top"></td>
+          <td valign="top">55500</td>
+        </tr>
+       
+
+        <tr>
+          <th colspan="10" align="left">Total Invoice Value (in Figures)  </th>
+          <th>55500</th>
+        </tr>
+        <tr><td colspan="11"></td></tr>
+        <tr>
+          <td colspan="3" align="left">
+            Total Invoice Value (in Words)
           </td>
-          </tr>  
+          <td colspan="8">{{}}</td>
+        </tr>
+      </table>
+     </td>
+   </tr>
+   <tr><td colspan="2" height="20"></td></tr> 
+   <tr>
+     <td colspan="2">
+       <table cellspacing="0" cellpadding="10" border="1" style="font-family:arial, sans-serif;font-size:13px;width:100%; border-color: #333; text-align: left;" align="center">
+        <tr>
+          <th>Particulars</th>
+          <th>Invoice Value/Taxable Value</th>
+          <th>CGST</th>
+          <th>SGST</th>
+          <th>IGST</th>
+        </tr>
+        <tr>
+          <td>Total Invoice Amount</td>
+          <td>{{}}</td>
+          <td>{{}}</td>
+          <td>{{}}</td>
+          <td>{{}}</td>
+        </tr>
+        <tr>
+          <td>Advance already received</td>
+          <td>{{}}</td>
+          <td>{{}}</td>
+          <td>{{}}</td>
+          <td>{{}}</td>
+        </tr>
+        <tr>
+          <td>Balance</td>
+          <td>{{}}</td>
+          <td>{{}}</td>
+          <td>{{}}</td>
+          <td>{{}}</td>
+        </tr>
+
+       </table>
+     </td>
+   </tr>
+   <tr><td colspan="2" height="20"></td></tr> 
+  </table>
+
+  <table cellpadding="5" cellspacing="0" style="font-family:arial, sans-serif;font-size:13px;width:80%;border:0" align="center">
+    <tr>
+      <td width="70%" valign="top">
+        <table cellpadding="2" cellspacing="0" style="font-family:arial, sans-serif;font-size:13px;width:100%;">
+            <tr>
+              <td><strong>Description of Service</strong></td>
+              <td><strong>Engineering Advisory Service</strong></td>
+            </tr>
+            <tr>
+              <td colspan="2" height="10"></td>
+            </tr>
+            <tr>
+              <td colspan="2"><strong>With Further Credit Favoring:</strong></td>
+            </tr>
+            <tr>
+              <td width="30%">Account Name:</td>
+              <td>IQUIPPO Services Pvt. Ltd.</td>
+            </tr>
+            <tr>
+              <td width="30%">Account Number:</td>
+              <td>917020058796837 </td>
+            </tr>
+            <tr>
+              <td width="30%">Account Type:</td>
+              <td> Current </td>
+            </tr>
+            <tr>
+              <td width="30%">Bank Name:</td>
+              <td>Axis Bank Ltd.</td>
+            </tr>
+            <tr>
+              <td width="30%">Bank Branch:</td>
+              <td>Electronic Complex, Salt Lake City </td>
+            </tr>
+            <tr>
+              <td width="30%">RTGS/NEFT IFSC:</td>
+              <td>UTIB0000319</td>
+            </tr>
+            <tr>
+              <td style="padding-bottom: 20px;"></td>
+            </tr>            
         </table>
       </td>
-        
+      
+      <td>
+        <table cellpadding="5" cellspacing="0" style="font-family:arial, sans-serif;font-size:13px;width:100%;border:0; padding-top: 30px;" align="center">
+          <tr>
+            <td>For and behalf of:</td>
+          </tr>
+          <tr>
+          <td colspan="2"><strong>IQUIPPO Services Pvt. Ltd.</strong></td>
+          </tr>
+          <tr>
+            <td style="padding-bottom: 50px;"></td>
+          </tr>
+          <tr>
+            <td style="padding-bottom: 90px;"><strong>Authorised Signatory</strong></td>
+          </tr>
+        </table>
+      </td>
     </tr>
+        
+    <tr>
+      <td colspan="2" align="center">
+        <h1>IQUIPPO SERVICES PRIVATE LIMITED</h1>
+        <h3 style="margin: 5px;">CIN-U74999WB2017PTC221672</h3>
+        <h3 style="margin: 5px;">Registered Office: "IPCL Bulding", Plot No. X-1,2 &amp; 3, Block-EP, Sector-V, Salt Lake City, Kolkata - 700091</h3>
+        <h3 style="margin: 5px;">
+          Phone: +913366067858, Fax: +913366067823
+        </h3>
           
+      </td>
+    </tr>
   </table> 
 </div>   
 </body>
