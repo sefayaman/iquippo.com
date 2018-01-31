@@ -8,8 +8,10 @@ module.exports = {
 		"MFG Year": {key :"product.mfgYear"},
 		"Asset Country": {key :"product.country"},
 		"Asset Location" :{key :"product.city"},
+                "Seller Customer ID": {key:"sellerCustomerId"},
 		"Seller Name" :{key :"product.seller.name"},
 		"Seller Contact No.":{key :"product.seller.mobile"},
+                "Buyer Customer ID": {key:"buyerCustomerId"},
 		"Buyer Name" :{key :"buyerName"},
 		"Buyer Mobile No.":{key :"user.mobile"},
 		"Buyer Email Id":{key :"user.email"},
@@ -36,7 +38,13 @@ module.exports = {
 		"Request Time":{key:"createdAt",type:'datetime'},
 		"Last Modified Date":{key:"updatedAt",type:'date'},
 		"Last Modified Time":{key:"updatedAt",type:'datetime'},
-		"Feedback" : {key :"comment"}
+		"Feedback" : {key :"comment"},
+		"Payment Mode" : {key :"paymentMode"},
+		"Bank Name" : {key :"bankName"},
+		"Instrument No" : {key :"instrumentNo"},
+		"Amount" : {key :"amount"},
+		"Payment Date" : {key:"paymentDate",type:'date'},
+		"Date of Payment Entry" : {key:"createdAt",type:'date'}
 	},
 	'SELLER_FIELDS':{
 		"Ticket Id":{key :"ticketId"},
