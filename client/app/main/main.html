@@ -24,7 +24,7 @@
       <div class="row" ng-if="singleBox">
         <div class="col-sm-offset-3 col-sm-6">          
           <div class="input-group">
-            <input type="text" placeholder="Search for Assets and More" ng-model="filter.searchstr" class="form-control"/>
+            <input type="text" placeholder="Search for Assets and More" ng-model="filter.searchstr" class="form-control"  ng-keypress="checkIfEnterKeyWasPressed($event)" />
             <a href="javascript:void(0);" class="input-group-addon" ng-click="toggleSearchBox(false)">Choose</a>
           </div>
         </div>

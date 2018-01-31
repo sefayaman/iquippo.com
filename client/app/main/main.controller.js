@@ -297,10 +297,19 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
       }
     }
  
+ $scope.checkIfEnterKeyWasPressed = function($event){
+    var keyCode = $event.which || $event.keyCode;
+    if (keyCode === 13) {
+        // Do that thing you finally wanted to do
+        doSearch(false);
+    }
+
+  };
 
     function doSearch(isNew){
 
       if(!$scope.filter.searchstr && !$scope.filter.categorySearchText && !$scope.filter.locationSearchText && !$scope.filter.groupSearchText && !$scope.filter.brandSearchText){
+          Modal.alert('Please specify your search criteria.');
         return;
       }
       var filter = {};
