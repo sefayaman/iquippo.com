@@ -2,6 +2,7 @@
 
 var _ = require('lodash');
 var Seq = require("seq");
+var writtenFrom = require('written-number');
 var request = require('request');
 var EnterpriseValuation = require('./enterprisevaluation.model');
 var EnterpriseValuationInvoice = require('./enterprisevaluationinvoice.model');
@@ -1665,11 +1666,20 @@ exports.createInvoice = function(req,res){
 }
 
 exports.generateInvoice = function(req,res){
-  var invoiceNo = req.params.invoiceNo;
+   var invoiceNo = req.params.invoiceNo;
   if(!invoiceNo){
     return res.status(412).json({Err:'Invalid invoice Number'});
   }
-    
+
+  try{
+     generateInvoice(req,res);
+  }catch(e){
+    return handleError(res, err);
+  };
+}
+
+function generateInvoice(req,res){
+ var invoiceNo = req.params.invoiceNo;   
   EnterpriseValuationInvoice.find({invoiceNo: invoiceNo},function(err,invoiceData){
     if(err || !invoiceData)
       return res.send(err || new APIError(400,'Error while fetching invoice'));
@@ -1686,12 +1696,36 @@ exports.generateInvoice = function(req,res){
       //source += '</body></html>';
       var template = Handlebars.compile(source);
 
+      var descriptionD = invoiceData[0].requestType + " of";
+      if(invoiceData[0].requestCount == 1){
+        descriptionD += " " + invoiceData[0].assetCategory;
+      }else
+        descriptionD += " various assets as per annexure."
+      var invoiceInWords = "";
+      invoiceInWords = writtenFrom(invoiceData[0].totalAmount,{lang:'enIndian'});
+      if(invoiceInWords)
+        invoiceInWords += " only."
+      if(invoiceInWords && invoiceInWords.length > 4){
+        invoiceInWords = invoiceInWords.charAt(0).toUpperCase() + invoiceInWords.slice(1)
+      }
+
       var data = {
+        descriptionD:descriptionD,
+        invoiceInWords:invoiceInWords,
+        descriptionHd: invoiceData[0].requestType + " fee towards",
         invoiceData : invoiceData[0],
-        invoiceDate : Utility.dateUtil.validateAndFormatDate(invoiceData[0].createdAt,'MM/DD/YYYY'),
+        invoiceDate : Utility.dateUtil.validateAndFormatDate(invoiceData[0].invoiceDate,'DD-MM-YYYY'),
         serverPath:config.serverPath,
         awsBaseImagePath:config.awsUrl + '/' + config.awsBucket
       };
+
+       var taxColms = ['CGST','SGST','IGST'];
+      if(invoiceData[0].selectedTaxes && invoiceData[0].selectedTaxes.length){
+        invoiceData[0].selectedTaxes.forEach(function(tax){
+          if(taxColms.indexOf(tax.type) !== -1)
+            data[tax.type] = tax;
+        });
+      }
 
       var result = template(data);
       var pdfInput = minify(result, {
@@ -1715,6 +1749,7 @@ exports.generateInvoice = function(req,res){
           res.setHeader('Content-type', 'application/pdf');
           pdfOutput.pipe(res);
         } else {
+          console.log('err',err);
           res.send(new APIError(400,'Error while creating invoice'));
         }
       });

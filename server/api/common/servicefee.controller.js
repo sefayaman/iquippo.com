@@ -20,7 +20,6 @@ exports.get = function(req, res) {
      filter["effectiveToDate"] = {$gte:new Date()};
   }
   
-  //console.log("@@@@@@",filter);
   var query = Model.find(filter);
   query.exec(function (err, result) {
     if(err) { return handleError(res, err); }
