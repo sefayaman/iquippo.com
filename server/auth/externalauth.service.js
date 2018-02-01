@@ -70,14 +70,19 @@ function getTokenAndRedirectUrl(req,res){
         return res.status(500).send(err);
       if(!user)
         return res.status(401).send('Unauthorized');
-      if(user.role === 'enterprise'){
-        var financer = getFinancer(user);
-        if(financer && financer !== 'MLP')
-          result.actionUrl = config.REDIRECT_URL;
-      }
        var token = signToken(user._id,user.role,20);
        result.token = token;
-       return res.status(200).json(result);
+      if(user.role === 'enterprise'&& isServiceAvailed(user,'Finance')){
+        User.find({enterpriseId:user.enterpriseId,enterprise:true,deleted:false},function(err,enterprises){
+           if(err || !enterprises.length)
+              return res.status(500).send(err);
+            var financer = getFinancer(enterprises[0]);
+            if(financer && financer !== 'MLP')
+                result.actionUrl = config.REDIRECT_URL;
+            return res.status(200).json(result);
+        });
+      }else
+        return res.status(200).json(result);
     });
   }else
     return res.status(200).json(result);

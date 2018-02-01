@@ -754,23 +754,24 @@
 
   }
   //CME controller
-  function FinanceCmeCtrl($state, $scope, $rootScope, $http,$location, Auth,$uibModal,Modal,notificationSvc, AuctionSvc,$window) {
-  
-    var userId = "";
-      Auth.removeCookies();
+  function FinanceCmeCtrl($state, $scope, $rootScope,$document,Auth) {
       function init(){
-        if(Auth.getCurrentUser()._id)
-        userId = Auth.getCurrentUser()._id;
-        $http.get("/api/common/redirecttorapid?_id=" + userId)
+         Auth.getTokenAndUrl()
         .then(function(res){
-          $window.location.href = res.data;
-          //$window.open(res.data,"_blank");
+          angular.element("#financeauto").attr('action',res.actionUrl);
+          if(res.token)
+            angular.element("#access_token_auto").attr('value',res.token);
+          $document[0].forms.financeauto.submit();
+        })
+        .catch(function(){
+
         });
       }
+
+      //Entry point
      Auth.isLoggedInAsync(function(loggedIn){
        init();
-     })
-      
+     });
   }
 
   //Valuation controller function

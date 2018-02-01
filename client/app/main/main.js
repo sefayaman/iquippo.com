@@ -304,13 +304,9 @@ angular.module('sreizaoApp')
       })
       .state('cme', {
         url:"/financing/CME",
-        //templateUrl: 'app/staticpages/financingcme.html',
+        templateUrl: 'app/staticpages/financecme.html',
         controller:"FinanceCmeCtrl",
-        layout:'client',
-        onEnter:function($rootScope){
-          $rootScope.choosenTitle=pagesTitles.financing.title;
-          $rootScope.metaDescription=pagesTitles.financing.meta;
-        }
+        layout:'client'
       })
       .state('insurance', {
         url:"/insurance",
