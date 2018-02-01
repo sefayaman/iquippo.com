@@ -17,7 +17,7 @@ module.exports = {
   seedDB: true,
   mailConfig : { MailHost: "smtp.gmail.com", MailPort: "465", Mailusername: "iquippo.uat@gmail.com", Mailpassword: "pass12345678",from:"iquippo.uat@gmail.com"},
   supportMail: "iquippo.uat@gmail.com",
-  qpvalURL:"http://13.126.19.255/valuation/api.php",
+  qpvalURL:"http://13.126.19.255/Valuers/admin/api.php",
   REDIRECT_URL:"http://finance-uat.iquippo.com/customer-portal-iquippo/sso",
 
   awsEndpoint: 's3.ap-south-1.amazonaws.com',
