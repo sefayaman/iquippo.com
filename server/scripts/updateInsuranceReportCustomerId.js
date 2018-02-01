@@ -35,7 +35,7 @@ function init(processCb) {
         Mobile = callback.quote.mobile;
         //console.log(callback.quote.mobile);console.log(Mobile);return;
         if ( !callback.quote.customerId ) {
-            UserModel.find({mobile:Mobile,deleted:false},function(err,users){
+            UserModel.find({mobile:Mobile},function(err,users){
                 if ( err ) {
                     return cb(); 
                 }

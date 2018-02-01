@@ -32,10 +32,10 @@ function init(processCb) {
     }
 
     function updateProuductUserIds(product, cb) {
-        sellerEmail = product.seller.email;
+        Mobile = product.seller.mobile;
         //console.log(sellerEmail);
         if ( !product.seller.customerId ) {
-            UserModel.find({email:sellerEmail,deleted:false},function(err,users){
+            UserModel.find({mobile:Mobile},function(err,users){
                 if ( err ) {
                     return cb(); 
                 }
