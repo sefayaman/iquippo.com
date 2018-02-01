@@ -49,8 +49,8 @@ function init(processCb) {
                         console.log("##########", error);
                     }
                     console.log('Asset ID: ', product.assetId, 'User_ID: ',setUserCustomerId , 'Response: ', resultData);
+                    return cb();
                 });
-                return cb();
             });
         }
         else {

@@ -48,8 +48,9 @@ function init(processCb) {
                         console.log("##########", error);
                     }
                     console.log('UC Number: ', valuation.uniqueControlNo, 'User_ID: ',setUserCustomerId , 'Response: ', resultData);
+                    return cb();
                 });
-                return cb();
+                
             });
         }
         else {
