@@ -34,7 +34,7 @@ function init(processCb) {
     function updateEnterpriceUserIds(valuation, cb) {
         userMobile = valuation.createdBy.mobile;
         if ( !valuation.createdBy.userCustomerId ) {
-            UserModel.find({mobile:userMobile,deleted:false},function(err,users){
+            UserModel.find({mobile:userMobile},function(err,users){
                 if ( err ) {
                     return cb(); 
                 }

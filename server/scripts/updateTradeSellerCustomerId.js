@@ -35,7 +35,7 @@ function init(processCb) {
         Mobile = callback.product.seller.mobile; 
         //console.log(callback.quote.mobile);console.log(Mobile);return;
         if ( !callback.product.seller.customerId ) {
-            UserModel.find({mobile:Mobile,deleted:false},function(err,users){
+            UserModel.find({mobile:Mobile},function(err,users){
                 if ( err ) {
                     return cb(); 
                 }
