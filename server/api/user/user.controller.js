@@ -1465,7 +1465,7 @@ exports.exportUsers = function(req, res) {
     filter['createdAt'] = dateFilter;
   var query = User.find(filter).sort({
     createdAt: -1
-  }).limit(5000);
+  });//.limit(5000);
   query.exec(
     function(err, users) {
       if (err) {
@@ -1525,9 +1525,13 @@ exports.exportUsers = function(req, res) {
         csvStr += "\r\n";
       });
       csvStr = csvStr.substring(0,csvStr.length -1);
-      return renderCsv(req,res,csvStr);
+      try{
+        return renderCsv(req,res,csvStr);
+      }catch(e){
+       //return handleError(res, e);   
+      }
     });
-}
+};
 
 function renderCsv(req,res,csv){
    var fileName =  "userslist_" + new Date().getTime();
