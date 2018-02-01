@@ -24,6 +24,7 @@ var inputFormCtrl = require('./inputformmaster.controller');
 var bookADemoCtrl = require('./bookademo.controller');
 var legalEntityTypeCtrl = require('./legalentitytype.controller');
 var bankMasterCtrl = require('./bankmaster.controller');
+var IquippoGstMasterCtrl = require('./iquippogstmaster.controller');
 var json2xls = require('json2xls');
 var router = express.Router();
 
@@ -204,6 +205,11 @@ router.get('/bank', bankMasterCtrl.get);
 router.post('/bank', auth.hasRole('admin'),bankMasterCtrl.create);
 router.put('/bank/:id', auth.hasRole('admin'),bankMasterCtrl.update);
 router.delete('/bank/:id',auth.hasRole('admin'), bankMasterCtrl.destroy);
+
+router.get('/iquippogst', IquippoGstMasterCtrl.get);
+router.post('/iquippogst', auth.hasRole('admin'),IquippoGstMasterCtrl.create);
+router.put('/iquippogst/:id', auth.hasRole('admin'),IquippoGstMasterCtrl.update);
+router.delete('/iquippogst/:id',auth.hasRole('admin'), IquippoGstMasterCtrl.destroy);
 
 router.get('/newequipmentotherinfo', controller.getNewEquipmentOtherInfo);
 

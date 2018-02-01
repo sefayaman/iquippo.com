@@ -45,7 +45,7 @@ var Export_Field_Mapping = {
   "Registered By":"user",
   "Product Uploaded":"user.have_products",
   "Counts" : "user.total_products",
-  "Status":"user.status",
+  "Status":"status",
   "Identity proof Uploaded":"IDUploaded",
   "Identity Proof Type":"IDType",
   "Address proof Uploaded":"ADUploaded",
@@ -101,7 +101,6 @@ exports.fetchSingleUser = function(req,res){
  */
 exports.signUp = function(req, res) {
   var newUser = new User(req.body);
-  console.log("username::::" + req.body.name);
   newUser.createdAt = new Date();
   newUser.updatedAt = new Date();
   newUser.clientIp=req.connection.remoteAddress;
@@ -627,7 +626,7 @@ exports.validateExcel = function(req, res, next) {
           data = {};
           data = {
             name: 'Financing',
-            code: 'Financing',
+            code: 'Finance',
             sequence: 3,
             checked: true,
           };
@@ -711,7 +710,7 @@ exports.validateExcel = function(req, res, next) {
           data = {};
           data = {
             name: 'Financing',
-            code: 'Financing',
+            code: 'Finance',
             sequence: 3,
             checked: true,
           };
@@ -921,6 +920,9 @@ exports.getUser = function(req, res) {
     arr[arr.length] = { state: { $regex: searchStrReg }};
     arr[arr.length] = { userType: { $regex: searchStrReg }};
   }
+
+  if (req.body._id)
+    filter._id = req.body._id;
 
   if (req.body.userId)
     filter["createdBy._id"] = req.body.userId;
@@ -1492,7 +1494,7 @@ exports.exportUsers = function(req, res) {
             val =  _.get(item,"fname","") + " " + _.get(item,"mname","") + " " + _.get(item,"lname","");
           else if(key === 'user')
             val = getRegisteredBy(item) || "";
-          else if(key === 'Status')
+          else if(key === 'status')
             val = isStatus(item.status, item.deleted);
           else if(key === 'IDUploaded')
             val = idProof?'Yes':'No';

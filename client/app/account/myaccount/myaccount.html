@@ -1,14 +1,17 @@
 <div class="container-fluid">
   <!-- <ol class="breadcrumb">
     <li>
-      <a href="/main">Home</a>
+      <a href="javascript:void(0);" ng-click="myAccountVm.backToData()" ng-if="showBackButton">Back</a>
     </li>
-    <li class="active">Used Equipments</li>
   </ol> -->
 </div>
 
 <section class="category-block">
   <div class="container">
+    <div class="myprofile-tabs">
+      <div class="text-right">
+      <button type="button" class="btn btn-default" ng-click="myAccountVm.backToData()" ng-if="showBackButton">Back</button>
+    </div>
     <uib-tabset active="activePill" vertical="true" type="pills" class="myprofile-tabs">
       <uib-tab index="0">
         <uib-tab-heading>
@@ -32,8 +35,11 @@
                   <div class="row">
                     <div class="col-sm-3">
                       <div class="profilePic-button">
-                        <img class="media-object img-rounded" ng-if="getCurrentUser().imgsrc" ng-src="{{uploadImagePrefix}}{{avatarDir}}/{{getCurrentUser().imgsrc}}" alt="Image">
-                        <img class="media-object img-rounded" ng-if="!getCurrentUser().imgsrc" src="assets/images/profile.png" alt="Image">
+                        <img class="media-object img-rounded" ng-if="getCurrentUser().imgsrc && !showBackButton" ng-src="{{uploadImagePrefix}}{{avatarDir}}/{{getCurrentUser().imgsrc}}" alt="Image">
+
+                        <img class="media-object img-rounded" ng-if="myAccountVm.userInfo.imgsrc && showBackButton" ng-src="{{uploadImagePrefix}}{{avatarDir}}/{{myAccountVm.userInfo.imgsrc}}" alt="Image">
+
+                        <img class="media-object img-rounded" ng-if="!(getCurrentUser().imgsrc && !showBackButton) && !(myAccountVm.userInfo.imgsrc && showBackButton)" src="assets/images/profile.png" alt="Image">
                         <span class="btn btn-default fileinput-button">
                           <input type="file" name="file" onchange="angular.element(this).scope().updateAvatar(this.files,this)"  class="ng-scope">
                           <span><i class="fa fa-camera"></i></span>
@@ -86,10 +92,9 @@
                       </div>
                       <div class="row">
                         <div class="col-sm-5 form-group">
-                          <label for="aadhaar">AADHAAR Number</label>
                           <div class="floating-label-wrapper" ng-class="{'has-error':basicForm.aadhaarNumber.$invalid && submitted}">
-                            
-                            <input type="text" class="form-control" id="aadhaar" name="aadhaarNumber" placeholder="AADHAAR Number" ng-model="myAccountVm.userInfo.aadhaarNumber" ng-disabled="!myAccountVm.editBasicInfo" uib-tooltip="9999 9999 9999" tooltip-trigger="focus" ng-keyup="myAccountVm.validateAadhaar(myAccountVm.userInfo.aadhaarNumber)" tooltip-placement="top" with-floating-label>
+                            <label for="aadhaar">AADHAAR Number</label>
+                            <input type="text" class="form-control" id="aadhaar" name="aadhaarNumber" placeholder="AADHAAR Number" ng-model="myAccountVm.userInfo.aadhaarNumber" ng-disabled="!myAccountVm.editBasicInfo" uib-tooltip="9999 9999 9999" tooltip-trigger="focus" ng-keyup="myAccountVm.validateAadhaar(myAccountVm.userInfo.aadhaarNumber)" tooltip-placement="top">
                           </div>
                         </div>
                         <div class="col-sm-5 form-group">
@@ -102,7 +107,7 @@
                             </div>
                         </div>
                       </div>
-                      <div class="row">                        
+                      <div class="row">
                         <div class="col-sm-5 form-group">
                            <div class="floating-label-wrapper" ng-class="{'has-error':basicForm.state.$invalid && submitted}">
                           <label>State</label>
@@ -426,4 +431,6 @@
         </div>
       </uib-tab>
     </uib-tabset>
+    </div>
+  </div>
 </section>

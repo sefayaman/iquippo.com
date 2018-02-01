@@ -7,8 +7,9 @@ function ViewProductOrRequestDetailCtrl($scope, Auth, productSvc, $uibModalInsta
     var vm = this;
 	vm.closeDialog = closeDialog;
 	var filter = {};
-
+	vm.kycList = [];
 	function init() {
+		getKycInfo($scope.bidData);
 		if($scope.bidData && $scope.bidData.product && $scope.bidData.product.proData) {
 			filter._id = $scope.bidData.product.proData;
 		
@@ -18,6 +19,16 @@ function ViewProductOrRequestDetailCtrl($scope, Auth, productSvc, $uibModalInsta
 		    $scope.currentProduct = result[0];
 		  });
 		}	
+	}
+
+	function getKycInfo(kycData) {
+		if(kycData.user && kycData.user.kycInfo.length > 0) {
+			$scope.kycUploadDir = kycDocDir;
+	        angular.copy(kycData.user.kycInfo, vm.kycList);
+      	} else if(kycData.kyc.length > 0){
+      		$scope.kycUploadDir = kycData.product.assetDir;
+	        angular.copy(kycData.kyc, vm.kycList);
+      	}
 	}
 
 	init();
