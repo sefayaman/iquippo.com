@@ -3,7 +3,7 @@
 </head>
 <body>
 <div style="page-break-inside: avoid;">
-  <table cellpadding="0" cellspacing="0" align="center" style="width:80%;font-family:arial, sans-serif;font-size:10px;">
+  <table cellpadding="0" cellspacing="0" align="center" style="width:90%;font-family:arial, sans-serif;font-size:10px;">
     <tr>
       <td colspan="2" align="center">
         <img src="{{awsBaseImagePath}}/assets/images/srei-logo-img.png" width="100px">
@@ -15,7 +15,7 @@
    </tr>
    <tr>
       <td width="50%">
-        <table cellpadding="1" cellspacing="0" width="100%" style="font-family:arial, sans-serif;font-size:10px; border:2px solid #333;  height: 160px; padding-left: 10px;">
+        <table cellpadding="1" cellspacing="0" width="100%" style="font-family:arial, sans-serif;font-size:10px; border:2px solid #333;  height: 120px; padding-left: 10px;">
           <tr>
             <td><strong>Service Provider / Billed from</strong></td>
           </tr>
@@ -37,7 +37,7 @@
         </table>
       </td>
       <td width="50%">
-        <table cellpadding="1" cellspacing="0" width="100%" style="font-family:arial, sans-serif;font-size:10px; border:2px solid #333; border-left: 0;  height: 160px; padding-left: 10px;">
+        <table cellpadding="1" cellspacing="0" width="100%" style="font-family:arial, sans-serif;font-size:10px; border:2px solid #333; border-left: 0;  height: 120px; padding-left: 10px;">
           <tr>
             <td>Invoice No.</td>
             <td>{{invoiceData.iqInvoiceNo}}</td>
@@ -66,7 +66,7 @@
    <tr><td colspan="2" height="10"></td></tr>   
    <tr>
       <td width="50%">
-        <table cellpadding="1" cellspacing="0" width="100%" style="font-family:arial, sans-serif;font-size:10px; border:2px solid #333;  height: 180px; padding-left: 10px;">
+        <table cellpadding="1" cellspacing="0" width="100%" style="font-family:arial, sans-serif;font-size:10px; border:2px solid #333;  height: 120px; padding-left: 10px;">
           <tr>
             <td colspan="2"><strong>Billed To:</strong></td>
           </tr>
@@ -74,7 +74,7 @@
             <td colspan="2">Mr. {{invoiceData.invoiceInFavour}}</td>
           </tr>
           <tr>
-            <td width="50%">{{invoiceData.userAddress}}{{#if invoiceData.userAddress}}<span>,</span>{{/if}}{{invoiceData.userCity}},{{invoiceData.userState}},{{invoiceData.userCountry}}</td>
+            <td width="50%">{{invoiceData.userAddress}}{{#if invoiceData.userAddress}}<span><br/></span>{{/if}}{{invoiceData.userCity}}<br/>{{invoiceData.userState}}<br/>{{invoiceData.userCountry}}</td>
             <td></td>
           </tr>
           <tr>
@@ -88,7 +88,7 @@
         </table>
       </td>
       <td width="50%">
-        <table cellpadding="1" cellspacing="0" width="100%" style="font-family:arial, sans-serif;font-size:10px; border:2px solid #333; border-left:0;  height: 180px; padding-left: 10px;">
+        <table cellpadding="1" cellspacing="0" width="100%" style="font-family:arial, sans-serif;font-size:10px; border:2px solid #333; border-left:0;  height: 120px; padding-left: 10px;">
           <tr>
             <td colspan="2"><strong>Service Rendered:</strong></td>
           </tr>
@@ -96,7 +96,7 @@
             <td colspan="2">Mr. {{invoiceData.invoiceInFavour}}</td>
           </tr>
           <tr>
-            <td width="50%">{{invoiceData.userAddress}}{{#if invoiceData.userAddress}}<span>,</span>{{/if}}{{invoiceData.userCity}},{{invoiceData.userState}},{{invoiceData.userCountry}}</td>
+            <td width="50%">{{invoiceData.userAddress}}{{#if invoiceData.userAddress}}<span><br/></span>{{/if}}{{invoiceData.userCity}}<br/>{{invoiceData.userState}}<br/>{{invoiceData.userCountry}}</td>
             <td></td>
           </tr>
           <tr>
