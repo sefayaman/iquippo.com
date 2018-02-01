@@ -17,7 +17,7 @@ mongoose.connection.on('error', function (err) {
 function init(processCb) {
     findEnterpriceUserId();
     function findEnterpriceUserId() {
-        Enterprice.find({deleted:false,"createdBy.userCustomerId": { $exists: false}}, function (err, enterprice) {
+        Enterprice.find({"createdBy.userCustomerId": { $exists: false}}, function (err, enterprice) {
             if (err){
                 return processCb(err);
             }

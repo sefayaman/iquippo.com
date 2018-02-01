@@ -17,7 +17,7 @@ mongoose.connection.on('error', function (err) {
 function init(processCb) {
     findProductsCustomerId();
     function findProductsCustomerId() {
-        Product.find({deleted:false,"seller.customerId": { $exists: false}}, function (err, products) {
+        Product.find({"seller.customerId": { $exists: false}}, function (err, products) {
             if (err){
                 return processCb(err);
             }
