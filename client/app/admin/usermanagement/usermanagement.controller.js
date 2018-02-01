@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('sreizaoApp')
-  .controller('UserManagementCtrl', ['$scope', '$rootScope', 'DTOptionsBuilder','Auth','uploadSvc','notificationSvc','userSvc', 'Modal','$http', function ($scope, $rootScope, DTOptionsBuilder, Auth,uploadSvc,notificationSvc, userSvc, Modal,$http) {
+  .controller('UserManagementCtrl', ['$scope', '$rootScope', '$stateParams', '$state', 'DTOptionsBuilder','Auth','uploadSvc','notificationSvc','userSvc', 'Modal','$http', function ($scope, $rootScope, $stateParams, $state, DTOptionsBuilder, Auth, uploadSvc, notificationSvc, userSvc, Modal,$http) {
    	var vm = this;
     //pagination variables
     var prevPage = 0;
@@ -30,6 +30,7 @@ angular.module('sreizaoApp')
     vm.getProductData = getProductData;
     $scope.getConcatData = [];
     $scope.userInfo = {};
+    $scope.dateFilter = {};
     vm.getUserExportFileName = getUserExportFileName;
     $scope.$on('updateUserList',function(){
       fireCommand(true);
@@ -124,6 +125,7 @@ angular.module('sreizaoApp')
       userScope.userInfo = $scope.userInfo;
       userScope.isEdit = true;
       Modal.openDialog('adduser', userScope);
+      //$state.go('useraccountedit', {id:userData._id});
     }
 
     function openAddUserDialog() {
@@ -162,7 +164,9 @@ angular.module('sreizaoApp')
 
           dataToSend.pagination = true;
           dataToSend.itemsPerPage = vm.itemsPerPage;
-          getUser(dataToSend);
+          restoreState();
+          //getUser(dataToSend);
+          fireCommand(false);
         }
          //getUserExportFileName();
       });
@@ -171,11 +175,15 @@ angular.module('sreizaoApp')
     init();
     
      function getUser(filter){
+      if(vm.currentPage == prevPage)
+      return;
+
       filter.prevPage = prevPage;
       filter.currentPage = vm.currentPage;
       filter.first_id = first_id;
       filter.last_id = last_id;
       filter.notManpower = true;
+      saveState();
       userSvc.getUsers(filter).then(function(result){
         getProductsCountWithUser(result);
         vm.userList  = result.users;
@@ -190,6 +198,35 @@ angular.module('sreizaoApp')
         Modal.alert("Error in geting user");
       })
     }
+
+    function restoreState(){
+    if($stateParams.searchstr)
+      vm.userSearchFilter.searchStr = $stateParams.searchstr;
+    if($stateParams.first_id)
+      first_id = $stateParams.first_id;
+    if($stateParams.last_id)
+      last_id = $stateParams.last_id;
+    if($stateParams.currentPage){
+      var currentPage = parseInt($stateParams.currentPage);
+      prevPage = parseInt($stateParams.prevPage);
+      vm.totalItems = vm.itemsPerPage * currentPage;
+      vm.currentPage = currentPage;
+    }
+  }
+
+  function saveState(){
+    var statObj = {};
+    statObj['first_id'] = first_id;
+    statObj['last_id'] = last_id;
+    statObj['currentPage'] = vm.currentPage;
+    statObj['prevPage'] = prevPage;
+    if(vm.userSearchFilter.searchStr)
+      statObj['searchstr'] = vm.userSearchFilter.searchStr;
+    else
+      statObj['searchstr'] = "";
+
+    $state.go("usermanagment",statObj,{location:'replace',notify:false});
+  }
 
     function getUserExportFileName(){
 
@@ -294,16 +331,27 @@ angular.module('sreizaoApp')
     }
 
      function exportExcel(){
-      var dataToSend ={};
+      var serverData ={};
       if(Auth.getCurrentUser()._id && Auth.getCurrentUser().role == 'channelpartner') {
-        dataToSend["userId"] = Auth.getCurrentUser()._id;
+        serverData["userId"] = Auth.getCurrentUser()._id;
       }
 
       if(Auth.isEnterprise()){
-        dataToSend["enterpriseId"] = Auth.getCurrentUser().enterpriseId;
+        serverData["enterpriseId"] = Auth.getCurrentUser().enterpriseId;
       }
 
-      $http.post('/api/users/export', dataToSend)
+      if($scope.dateFilter.fromDate)
+         serverData["fromDate"] = $scope.dateFilter.fromDate;
+
+      if($scope.dateFilter.toDate)
+         serverData["toDate"] = $scope.dateFilter.toDate;
+      
+      var exportObj = {filter:serverData};
+      exportObj.method = "POST";
+      exportObj.action = "api/users/export";
+      $scope.$broadcast("submit",exportObj);
+
+      /*$http.post('/api/users/export', dataToSend)
       .then(function(res){console.log("res===",res);
       console.log("data==",res.data);
         var data = res.data;
@@ -311,8 +359,9 @@ angular.module('sreizaoApp')
       },
       function(res){
         console.log(res)
-      })
+      })*/
      }
+
     
     function deleteUser(user){
       Modal.confirm(informationMessage.deleteChannelPartnerConfirm,function(isGo){
@@ -350,8 +399,8 @@ angular.module('sreizaoApp')
 
 }])
 
-  .controller('AddUserCtrl', ['$scope', '$rootScope','LocationSvc', '$http', 'Auth', 'Modal', 'uploadSvc', 'notificationSvc','vendorSvc', 'KYCSvc','userSvc', '$uibModalInstance', 'UtilSvc', 'LegalTypeSvc',
-   function ($scope, $rootScope,LocationSvc, $http, Auth, Modal, uploadSvc ,notificationSvc,vendorSvc,KYCSvc, userSvc, $uibModalInstance, UtilSvc, LegalTypeSvc) {
+  .controller('AddUserCtrl', ['$scope', '$rootScope', '$state', 'LocationSvc', '$http', 'Auth', 'Modal', 'uploadSvc', 'notificationSvc','vendorSvc', 'KYCSvc','userSvc', '$uibModalInstance', 'UtilSvc', 'LegalTypeSvc',
+   function ($scope, $rootScope, $state, LocationSvc, $http, Auth, Modal, uploadSvc ,notificationSvc,vendorSvc,KYCSvc, userSvc, $uibModalInstance, UtilSvc, LegalTypeSvc) {
     $scope.newUser ={};
     $scope.newUser.isOtherCountry=false;
     $scope.newUser.isOtherState=false;
@@ -383,6 +432,7 @@ angular.module('sreizaoApp')
     $scope.validateAadhaar = validateAadhaar;
     $scope.updateKyc = updateKyc;
     $scope.onChangeHandler = onChangeHandler;
+    $scope.gotoProfile = gotoProfile;
 
     function init(){
       $scope.roles = [];
@@ -487,8 +537,12 @@ angular.module('sreizaoApp')
       }
     }
 
-    function getServices(isNew,isChanged){
+    function gotoProfile(userId){
+      $scope.closeDialog();
+      $state.go('useraccountedit', {id:userId});
+    }
 
+    function getServices(isNew,isChanged){
       $scope.availedServices = [];
       if($scope.newUser.role != 'enterprise')
         return;

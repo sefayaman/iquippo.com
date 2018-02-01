@@ -299,6 +299,7 @@ var USER_REQUEST_FOR_AUCTION_FIELD_MAP = {
   'Auction Id': 'auction.auctionId',
   'Auction Name': 'auction.name',
   'EMD Amount': 'auction.emdAmount',
+  'Customer ID': 'user.customerId',
   'User Name': 'fullName',
   'Mobile': 'mobileNo',
   'Email': 'user.email',

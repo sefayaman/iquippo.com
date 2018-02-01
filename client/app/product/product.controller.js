@@ -792,6 +792,7 @@
       product.seller.enterpriseId = seller.enterpriseId || "";
       product.seller.countryCode = LocationSvc.getCountryCode(seller.country);
       product.seller.company = seller.company;
+      $scope.product.seller.customerId = seller.customerId;
       $scope.container.sellerName = seller.fname + " " + seller.lname;
     }
 
@@ -1267,6 +1268,8 @@
       $scope.auctionReq.product.primaryImg = productObj.primaryImg;
       $scope.auctionReq.product.isSold = productObj.isSold;
       $scope.auctionReq.product.city = productObj.city;
+      $scope.auctionReq.product.operatingHour = productObj.operatingHour;
+      $scope.auctionReq.product.mileage = productObj.mileage;
       if(productObj.reqSubmitStatus === ReqSubmitStatuses[0])
         $scope.auctionReq.reqSubmitStatus = ReqSubmitStatuses[0];
       else
@@ -1682,6 +1685,11 @@
     function sendAssetInfoToAuction() {
       $scope.setAssetMapData.assetId = $scope.product.assetId;
       $scope.setAssetMapData.assetDesc = $scope.product.name;
+      $scope.setAssetMapData.operatingHour = $scope.product.operatingHour;
+      $scope.setAssetMapData.mileage = $scope.product.mileage;
+      $scope.setAssetMapData.mfgYear = $scope.product.mfgYear;
+      $scope.setAssetMapData.city = $scope.product.city;
+      
       $scope.setAssetMapData.auction_id = $scope.auctionReq.dbAuctionId;
       for (var i = 0; i < $scope.auctions.length; i++) {
         if ($scope.auctions[i]._id == $scope.auctionReq.dbAuctionId) {

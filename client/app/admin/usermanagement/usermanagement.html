@@ -9,31 +9,37 @@
             <div class="col-sm-8"> 
               <h3>User Management</h3>
             </div>
-            <div class="col-xs-6 col-sm-2">
+            <div class="col-xs-6 col-sm-offset-2 col-sm-2">
               <h3><button class="btn btn-success btn-md btn-block" ng-click="userManagementVm.openAddUserDialog()"><i class="fa fa-plus"></i> Add User</button></h3>
             </div>
-            <div class="col-xs-6 col-sm-2">
-             <!-- <h3><button class="btn btn-success btn-md btn-block" ng-click="userManagementVm.exportExcel()"><i class="fa fa-file-excel-o"></i> Export</button></h3>-->
-               <h3 ng-if="isAdmin()"><a class="btn btn-success btn-md btn-block" target="_blank">Export</a></h3>
-              <h3 ng-if="!isAdmin()"><button class="btn btn-success btn-md btn-block" ng-click="userManagementVm.exportExcel()"><i class="fa fa-file-excel-o"></i> Export</button></h3>
-            </div>
+            <!-- <div class="col-xs-6 col-sm-2">
+              <h3><button class="btn btn-success btn-md btn-block" ng-click="userManagementVm.exportExcel()"><i class="fa fa-file-excel-o"></i> Export</button></h3>               
+            </div> -->
           </div>
-            <div class="row">
-            <div class="form-group col-sm-offset-1 col-sm-10" ng-if="isAdmin()" >
-                          <ul class="list-instrct">
-                            <li>Download the <a href="{{templateDir}}/{{bulkUserUpload.template}}" target="_blank">template</a> for creating customers/channel partners using bulk upload and fill all fields. (*) mark fields are mandatory.</li>
-                           <li>System will accept only 100 records in a single file.</li>  
-                          </ul>
-                        <div class="col-sm-9">
-                            <input type="text" class="form-control input-md" disabled placeholder="Upload Excel">                          
-                        </div>
-                        <div class="col-sm-3">
-                          <span class="btn btn-warning fileinput-button bulk-browse">
-                            <span>Browse</span>
-                            <input type="file" name="doc" data-filetype="doc" file-upload="" class="ng-scope">
-                          </span>
-                        </div>
-            </div>
+            <div class="form-group" ng-if="isAdmin()" >
+              <ul class="list-instrct">
+                <li>Download the <a href="{{templateDir}}/{{bulkUserUpload.template}}" target="_blank">template</a> for creating customers/channel partners using bulk upload and fill all fields. (*) mark fields are mandatory.</li>
+               <li>System will accept only 100 records in a single file.</li>  
+              </ul>
+              <div class="row">
+                <div class="col-sm-3">
+                  <span class="btn btn-warning fileinput-button bulk-browse">
+                    <span>Upload Excel</span>
+                    <input type="file" name="doc" data-filetype="doc" file-upload="" class="ng-scope">
+                  </span>
+                </div>
+                <div class="col-sm-3">
+                  <custom-datepicker placeholder="*Effective From Date" name="effectiveFromDate" ng-model="dateFilter.fromDate" myid="fromdate" required></custom-datepicker>
+                </div>
+                <div class="col-sm-3">
+                  <custom-datepicker placeholder="*Effective To Date" name="effectiveToDate" ng-model="dateFilter.toDate" myid="todate" required></custom-datepicker>
+                </div>
+                <div class="col-sm-offset-1 col-sm-2">
+                 <!--  <a class="btn btn-success btn-md btn-block" ng-if="isAdmin()" target="_blank">Export</a> -->
+                  <button class="btn btn-success btn-md btn-block" ng-click="userManagementVm.exportExcel()"><i class="fa fa-file-excel-o"></i> Export</button>
+                  <export-form name="userexport"></export-form>
+                </div>
+              </div>
             </div>
 
           <legend></legend>

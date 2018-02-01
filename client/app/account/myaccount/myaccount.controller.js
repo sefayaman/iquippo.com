@@ -4,7 +4,7 @@
 angular.module('account').controller('MyAccountCtrl',MyAccountCtrl);
 
 //controller function
-function MyAccountCtrl($scope,$rootScope,Auth,$state,Modal,commonSvc,LegalTypeSvc,BankSvc,KYCSvc,LocationSvc,userSvc,User,uploadSvc,productSvc, UtilSvc, ManpowerSvc, InvitationSvc, SubCategorySvc, categorySvc) {
+function MyAccountCtrl($scope,$rootScope,Auth,$state,$stateParams,Modal,commonSvc,LegalTypeSvc,BankSvc,KYCSvc,LocationSvc,userSvc,User,uploadSvc,productSvc, UtilSvc, ManpowerSvc, InvitationSvc, SubCategorySvc, categorySvc, AppStateSvc) {
     var vm = this;
     vm.editClicked = editClicked;
     vm.cancelClicked = cancelClicked;
@@ -12,7 +12,7 @@ function MyAccountCtrl($scope,$rootScope,Auth,$state,Modal,commonSvc,LegalTypeSv
     $scope.updateAvatar = updateAvatar;
     vm.onCountryChange = onCountryChange;
     vm.onStateChange = onStateChange;
-    
+    vm.backToData = backToData;
     vm.editBasicInfo = false;
     vm.editAdditionalInfo = false;
     vm.editKYCInfo = false;
@@ -32,6 +32,7 @@ function MyAccountCtrl($scope,$rootScope,Auth,$state,Modal,commonSvc,LegalTypeSv
     $scope.kycInfo = {};
     $scope.kycList = [];
     $scope.bankNameList = [];
+    $scope.copyUserData = {};
     $scope.type = ['Address Proof', 'Identity Proof'];
     var FIELDS_MAPPING = {
                             basicInfo:['fname','lname','email','mobile', 'aadhaarNumber','country','state','city'],
@@ -42,7 +43,28 @@ function MyAccountCtrl($scope,$rootScope,Auth,$state,Modal,commonSvc,LegalTypeSv
                         };
 
     function init(){
-      vm.userInfo = angular.copy(Auth.getCurrentUser());
+      if ($stateParams.id) {
+        $scope.showBackButton = true;
+        var userFilter = {};
+        userFilter._id = $stateParams.id;
+        userSvc.getUsers(userFilter).then(function(data){
+          if(!data)
+            return;
+          vm.userInfo = angular.copy(data[0]);
+          $scope.copyUserData = angular.copy(vm.userInfo);
+          setUserData();
+        })
+        .catch(function(err){
+          //Modal.alert("Error in geting user");
+        })
+      } else {
+        $scope.showBackButton = false;
+        vm.userInfo = angular.copy(Auth.getCurrentUser());
+        setUserData();
+      }
+    }
+
+    function setUserData(){
       if(vm.userInfo.bankInfo.length < 1)
         vm.userInfo.bankInfo = [{}];
       if(vm.userInfo.GSTInfo.length < 1)
@@ -70,6 +92,10 @@ function MyAccountCtrl($scope,$rootScope,Auth,$state,Modal,commonSvc,LegalTypeSv
       loadAllState();
       getKYCData();
       getBankList();
+    }
+
+    function backToData() {
+      $state.go('usermanagment', AppStateSvc.get('usermanagment'));
     }
 
     function loadLegalTypeData() {
@@ -127,7 +153,11 @@ function MyAccountCtrl($scope,$rootScope,Auth,$state,Modal,commonSvc,LegalTypeSv
             vm.submit = false;
             break;
         case 'reset':
-            vm.userInfo = angular.copy(Auth.getCurrentUser());
+            if(!$scope.showBackButton)
+              vm.userInfo = angular.copy(Auth.getCurrentUser());
+            else
+              vm.userInfo = angular.copy($scope.copyUserData);
+            setUserData();
             vm.edit = true;
             break;
       }
@@ -140,13 +170,21 @@ function MyAccountCtrl($scope,$rootScope,Auth,$state,Modal,commonSvc,LegalTypeSv
       Auth.validateSignup(dataToSend).then(function(data){
         if (data.errorCode == 1) {
           Modal.alert("Mobile number already in use. Please use another mobile number", true);
-          vm.userInfo = angular.copy(Auth.getCurrentUser());
+          if(!$scope.showBackButton)
+            vm.userInfo = angular.copy(Auth.getCurrentUser());
+          else
+              vm.userInfo = angular.copy($scope.copyUserData);
+          setUserData();
           vm.verify = false;
           vm.edit = true;
           return;
         } else {
-          vm.verify = true;
-          sendOTP();
+          if(Auth.isAdmin() && $scope.showBackButton) {
+            veryfiyAndUpdate();
+          } else {
+            vm.verify = true;
+            sendOTP();
+          }
         }
       });
     }
@@ -190,16 +228,20 @@ function MyAccountCtrl($scope,$rootScope,Auth,$state,Modal,commonSvc,LegalTypeSv
         return;
       }
       if (!angular.isUndefined(vm.otpCode) && !angular.isUndefined(vm.userInfo.otp) && vm.otpCode == vm.userInfo.otp){
-        var userData = {_id:vm.userInfo._id};
-        userData.mobile = vm.userInfo.mobile;
-        userData.oldMobile = vm.oldMobile;
-        userData.mobileUpdate = true;
-        updateUser(userData,false);
-        vm.edit = true;
-        vm.verify = false;
+        veryfiyAndUpdate();
       }else{
         Modal.alert("Incorrect OTP please enter correct OTP.", true);
       }
+    }
+
+    function veryfiyAndUpdate() {
+      var userData = {_id:vm.userInfo._id};
+      userData.mobile = vm.userInfo.mobile;
+      userData.oldMobile = vm.oldMobile;
+      userData.mobileUpdate = true;
+      updateUser(userData,false);
+      vm.edit = true;
+      vm.verify = false;
     }
 
     function editClicked(prop){
@@ -228,7 +270,10 @@ function MyAccountCtrl($scope,$rootScope,Auth,$state,Modal,commonSvc,LegalTypeSv
       vm.editKYCInfo = false;
       vm.editBankInfo = false;
       vm.editGstInfo = false;
-      vm.userInfo = angular.copy(Auth.getCurrentUser());
+      if(!$scope.showBackButton)
+        vm.userInfo = angular.copy(Auth.getCurrentUser());
+      else
+        vm.userInfo = angular.copy($scope.copyUserData);
       if(!vm.userInfo.bankInfo || vm.userInfo.bankInfo.length < 1)
         vm.userInfo.bankInfo = [{}];
       if(!vm.userInfo.kycInfo || vm.userInfo.kycInfo.length < 1){
@@ -344,6 +389,7 @@ function MyAccountCtrl($scope,$rootScope,Auth,$state,Modal,commonSvc,LegalTypeSv
       }
       if(userData._id) 
         dataToSend['userid'] = userData._id;
+
       if(!checkUser)
         return updateUser(userData);
 
@@ -358,11 +404,14 @@ function MyAccountCtrl($scope,$rootScope,Auth,$state,Modal,commonSvc,LegalTypeSv
       });
     }
 
-     function updateUser(userData,noAlert){
-        $rootScope.loading = true;
-       userSvc.updateUser(userData).then(function(result){
+    function updateUser(userData,noAlert){
+      $rootScope.loading = true;
+      userSvc.updateUser(userData).then(function(result){
         $rootScope.loading = false;
-        Auth.refreshUser(init);
+        if(!$scope.showBackButton)
+          Auth.refreshUser(init);
+        else
+          init();
         vm.editBasicInfo = false;
         vm.editAdditionalInfo = false;
         vm.editKYCInfo = false;

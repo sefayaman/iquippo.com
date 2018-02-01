@@ -202,10 +202,13 @@ function getValReqByUniqueCtrlNo(list,unCtrlNo){
             return;
         if(item.success == "true"){
           valReq.jobId = item.jobId;
+          valReq.remarks = "";
+          valReq.resubmit = false;
           valReq.submittedToAgencyDate = new Date();
           setStatus(valReq,EnterpriseValuationStatuses[2]);
         }else{
           valReq.remarks = item.msg || "Unable to submit";
+          valReq.resubmit = true;
           setStatus(valReq,EnterpriseValuationStatuses[1]);
         }
       });

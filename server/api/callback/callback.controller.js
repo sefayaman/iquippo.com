@@ -153,6 +153,16 @@ function excel_from_data(data) {
     ws[cell_ref] = cell;
     
     if(R == 0)
+      cell = {v: "Customer ID"};
+    else{
+      if(user)
+        cell =  {v: (user.customerId || "")};
+    }
+    setType(cell);
+    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R})
+    ws[cell_ref] = cell;
+    
+    if(R == 0)
       cell = {v: "Full Name"};
     else{
       if(user)

@@ -1670,6 +1670,8 @@
             vm.auctionProduct = {};
             getUpcomingAuctions();
             angular.copy(assetInAuct, vm.auctionProduct);
+            if(angular.isUndefined(assetInAuct.product.description))
+                vm.auctionProduct.product.description = assetInAuct.product.name;
             onCategoryChange(vm.auctionProduct.product.category, false);
             onBrandChange(vm.auctionProduct.product.brand, false);
             //LotData();
@@ -1797,6 +1799,10 @@
                 dataObj.auctionId = reqData.auctionId;
                 dataObj.lot_id = reqData.lot_id;
                 dataObj.assetDir = product.assetDir;
+                dataObj.city = product.city;
+                dataObj.mfgYear = product.mfgYear;
+                dataObj.operatingHour = product.operatingHour;
+                dataObj.mileage = product.mileage;
                 dataObj.primaryImg = $rootScope.uploadImagePrefix + product.assetDir + "/" + product.primaryImg;
                 product.images.forEach(function(x) {
                   dataObj.images[dataObj.images.length] = $rootScope.uploadImagePrefix + product.assetDir + "/" + x.src;
