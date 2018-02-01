@@ -98,6 +98,10 @@ var Modals = {
   OfflinePaymentPopup:{
     tplUrl:'app/payment/offlinepayment.html',
     Ctrl:'OfflinePaymentCtrl as offlinePaymentVm'
+  },
+  valuationInvoiceCalcuation:{
+    tplUrl:'app/enterprise/invoicecalculation.html',
+    Ctrl:'InvoiceCalculationCtrl as invoiceCalculationVm'
   }
 };
 

@@ -1,7 +1,7 @@
 (function(){
 'use strict';
 angular.module('sreizaoApp').controller('EnterpriseInvoiceCtrl',EnterpriseInvoiceCtrl);
-function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth, $state,ServiceTaxSvc,ServiceFeeSvc,notificationSvc, EnterpriseSvc, userSvc,PagerSvc,vendorSvc,UtilSvc,$window) {
+function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth, $state,ServiceTaxSvc,ServiceFeeSvc,notificationSvc, EnterpriseSvc, userSvc,PagerSvc,vendorSvc,UtilSvc,$window,LocationSvc,IquippoGSTSvc) {
  	var vm = this;
 
   var INVOICE_TEMPLATE = "EValuation_Invoice"
@@ -14,15 +14,11 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth,
   $scope.EnterpriseValuationStatuses = EnterpriseValuationStatuses;
   $scope.selectedTax = [];
   $scope.currentTax = null;
+  $scope.allState = [];
 
   $scope.selPageSize = "100";
   $scope.pager = PagerSvc.getPager(null,null,100);
   $scope.changePageSize = changePageSize;
-  //$scope.getServiceFee  = getServiceFee;
-  $scope.generateInvoice = generateInvoice;
-  $scope.addTaxToken = addTaxToken;
-  $scope.deleteTaxToken = deleteTaxToken;
-  $scope.getTax = getTax;
 
   vm.type = "generated";
   vm.invoice = {};
@@ -48,10 +44,6 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth,
 
  	function init(){
     vm.type = Auth.isAdmin()?'tobegenerate':"generated";
- 		ServiceFeeSvc.get()
- 		.then(function(res){
- 			$scope.serviceFees = res;
- 		})
 
     if(Auth.isAdmin()){
       var userFilter = {};
@@ -62,9 +54,6 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth,
         vm.enterprises = data;
       })
       vendorSvc.getAllVendors();
-      /*.then(function(){
-         vm.agencies = vendorSvc.getVendorsOnCode("Valuation");
-      });*/
     }
     if(Auth.isAdmin())
       getEnterpriseData({});
@@ -193,9 +182,6 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth,
 
      function openInvoiceModal(){
       
-      $scope.currentTax = "";
-      $scope.selectedTax = [];
-
       if(!vm.enterpriseId|| !vm.agencyId || !vm.reqType){
         Modal.alert('Please filter record based on enterprise,service type and agency.');
         return;
@@ -205,180 +191,15 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth,
      		Modal.alert('No record selected');
      		return;
      	}
-
-      var serData = {
-        agencyId:vm.agencyId,
-        enterpriseId:vm.enterpriseId,
-        requestType:vm.reqType,
-        current:"y"
-      }
-
-      ServiceFeeSvc.get(serData)
-      .then(function(result){
-        if(result.length == 0){
-          Modal.alert('Service fee not found.Please check service fee master data');
-          return;
-        }
-        $scope.invoice = {};
-        $scope.invoice.requestCount = selectedItems.length;
-        $scope.invoice.serviceFee = result[0].amount;
-        $scope.invoice.chargeBasis = result[0].chargeBasis;
-        openModal();
-      })
-      .catch(function(err){
-        Modal.alert("Unknown error occured during fetching service fee.Please try again.");
-      })
-
-       ServiceTaxSvc.get({current:'y'})
-      .then(function(res){
-        $scope.serviceTaxes = res;
-      });
-
-
+      var invoiceScope = $rootScope.$new();
+      invoiceScope.enterprises = vm.enterprises;
+      invoiceScope.selectedItems = selectedItems;
+      invoiceScope.agencyId = vm.agencyId;
+      invoiceScope.enterpriseId = vm.enterpriseId;
+      invoiceScope.reqType = vm.reqType;
+      invoiceScope.callback = fireCommand;
+      Modal.openDialog('valuationInvoiceCalcuation',invoiceScope);
      }
-
-     function openModal(){
-       var invoiceModal = $uibModal.open({
-        animation: true,
-          templateUrl: "invoiceForm.html",
-          scope: $scope,
-          size: 'lg'
-      });
-
-        $scope.close = function () {
-          invoiceModal.dismiss('cancel');
-        };
-     }
-
-      function generateInvoice(){
-
-        if(!$scope.selectedTax || $scope.selectedTax.length == 0){
-            Modal.confirm("It seems you have not selected any taxes, Please add taxes.",function(ret){
-              if(ret == 'Yes')
-                calculateInvoice();                 
-            })
-         }else
-            calculateInvoice();
-      }
-
-      function updateInvoice(){
-
-        $scope.invoice.enterprise = selectedItems[0].enterprise;
-        $scope.invoice.agency = selectedItems[0].agency;
-        $scope.invoice.requestType = selectedItems[0].requestType;
-        
-        $scope.invoice.createdBy = {};
-        $scope.invoice.createdBy._id = Auth.getCurrentUser()._id;
-        $scope.invoice.createdBy.name = Auth.getCurrentUser().fname + " " + Auth.getCurrentUser().lname;
-        
-        var checkdetailObj = {
-          bankName:"",
-          branchName:"",
-          chequeNo:"",
-          chequeDate:"",
-          chequeValue:"",
-          deductedTds:"",
-          attached:false
-        };
-
-        $scope.invoice.paymentReceivedDetail = {remainingAmount:$scope.invoice.totalAmount,paymentDetails:[checkdetailObj]};
-        $scope.invoice.paymentMadeDetail = {remainingAmount:$scope.invoice.totalAmount,paymentDetails:[checkdetailObj]};
-
-        EnterpriseSvc.setStatus($scope.invoice,EnterpriseValuationStatuses[7]);
-        $scope.invoice.uniqueControlNos = [];
-        selectedItems.forEach(function(item){
-          $scope.invoice.uniqueControlNos.push(item.uniqueControlNo);
-        });
-        
-        $scope.invoice.selectedTaxes = $scope.selectedTax;
-
-        EnterpriseSvc.generateInvoice($scope.invoice)
-        .then(function(genInvoice){
-           selectedItems.forEach(function(item){
-              EnterpriseSvc.setStatus(item,EnterpriseValuationStatuses[7]);
-              item.invoiceNo =  genInvoice.invoiceNo;
-              item.generateInvoiceDate = true;
-              item.invoiceDate =  new Date();
-          });
-          updateValuationRequest();
-        })
-        .catch(function(err){
-          if(err.data)
-            Modal.alert(err.data);
-        })
-      }
-
-      function updateValuationRequest(){
-         EnterpriseSvc.bulkUpdate(selectedItems)
-          .then(function(res){
-            selectedItems = [];
-            vm.selectAllInv = "";
-            vm.selectAllReq = "";
-            fireCommand(true);
-            if($scope.close)
-              $scope.close();
-          });
-      }
-
-      function calculateInvoice(){
-        
-        switch($scope.invoice.chargeBasis){
-          case "flat":
-            $scope.invoice.invoiceAmount = $scope.invoice.requestCount*$scope.invoice.serviceFee;
-          break;
-          case 'percent':
-            $scope.invoice.invoiceAmount = $scope.invoice.requestCount*$scope.invoice.serviceFee;
-          break;
-        }
-        var totalTax = 0;
-        $scope.selectedTax.forEach(function(item){
-          var calAmt = ($scope.invoice.invoiceAmount *item.rate)/100;
-          item.calculatedTax = calAmt || 0;
-          totalTax = totalTax + (calAmt || 0);
-        });
-        
-        $scope.invoice.totalAmount = ($scope.invoice.invoiceAmount || 0) + (totalTax || 0);
-        updateInvoice();
-      }
-
-      function getTax(_id){
-        $scope.currentTax = null;
-         if(!_id)
-            return;
-        for(var i = 0; i < $scope.serviceTaxes.length; i++){
-          if($scope.serviceTaxes[i]._id == _id){
-             $scope.currentTax = $scope.serviceTaxes[i];
-             break;
-          }
-        }
-      }
-
-      function addTaxToken(srvcTax){
-        if(!srvcTax){
-          Modal.alert("No master data present for your selection");
-          return;
-        }
-        var filteredArr = [];
-        filteredArr = $scope.selectedTax.filter(function(item){
-            return item._id == srvcTax._id;
-        })
-        if(filteredArr.length > 0){
-          Modal.alert(srvcTax.type + " is already selected");
-          return;
-        }
-
-        var taxObj = {
-          _id:srvcTax['_id'],
-          type : srvcTax['type'],
-          rate : srvcTax['taxRate']
-        }
-
-        $scope.selectedTax.push(taxObj);
-      }
-
-       function deleteTaxToken(idx){
-        $scope.selectedTax.splice(idx,1);
-      }
 
       function printInvoice(){
         UtilSvc.compileTemplate(INVOICE_TEMPLATE,{})
