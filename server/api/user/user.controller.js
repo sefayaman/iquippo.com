@@ -36,7 +36,7 @@ var Export_Field_Mapping = {
   "Role" : "role",
   "UserType":"userType",
   "Employee Code":"employeeCode",
-  "Company" : "company",
+  "Company Name" : "company",
   "Mobile No": "mobile",
   "Phone No.":"phone",
   "Country":"country",
