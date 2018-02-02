@@ -33,7 +33,7 @@ function init(processCb) {
 
     function updateCustomerIds(callback, cb) {
         Mobile = callback.user.mobile;
-        console.log(callback.user.mobile);//console.log(Mobile);return;
+        //console.log(callback.user.mobile);//console.log(Mobile);return;
         if ( !callback.user.customerId ) {
             UserModel.find({mobile:Mobile},function(err,users){
                 if ( err ) {
