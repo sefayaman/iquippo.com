@@ -227,8 +227,7 @@
                   <td>{{valuation.paymentReceived}}</td>
                 </tr>     -->                 
               </table>
-              <table class="table table-bordred" ng-if="isAdmin()">
-              
+              <table class="table table-bordred" ng-if="isAdmin()">              
                 <tr>
                   <td class="col-sm-3"><b>Invoiced to Customer:</b></td>
                   <td class="col-sm-3">
@@ -249,7 +248,21 @@
                     <span ng-if="valuation.paymentMade">Yes</span>
                     <span ng-if="!valuation.paymentMade">No</span>
                   </td>
+                </tr>
               </table>
+
+              <table class="table table-bordred">
+                <tr>
+                  <td><b>Modification Comment</b></td>
+                  <td>
+                    {{}}
+                  </td>
+                  <td><b>Modified Fields</b></td>
+                  <td>
+                    {{}}
+                  </td>
+                </tr>
+              </table>  
             </div>
             
 </div>
