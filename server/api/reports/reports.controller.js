@@ -121,7 +121,7 @@ var reports = {
 				headers: ['Ticket Id', 'Customer Id', 'Full Name', 'Country', 'Location', 'Company Name', 'Designation', 'Phone No', 'Mobile No', 'Email Address', 'Shipment Allowed', 'Packaging', 'Comments', 'Date of Request']
 			},
 			'valuation': {
-				headers: ['Ticket Id', 'Customer Id', 'Full Name', 'Country', 'Location', 'Company Name', 'Designation', 'Phone No', 'Mobile No', 'Email Address', 'Category', 'Brand', 'Modal', 'Location of Asset', 'Manufacturing Year', 'Asset Description', 'Contact Person', 'Contact Number', 'Purpose of Valutaion', 'Schedule a Call', 'Comments', 'Date of Request']
+				headers: ['Ticket Id', 'Request Type' , 'Customer Id', 'Full Name', 'Country', 'Location', 'Company Name', 'Designation', 'Phone No', 'Mobile No', 'Email Address', 'Category', 'Brand', 'Modal', 'Location of Asset', 'Manufacturing Year', 'Asset Description', 'Contact Person', 'Contact Number', 'Purpose of Valutaion', 'Schedule a Call', 'Comments', 'Date of Request']
 			},
 			'finance': {
 				headers: ['Ticket Id','Full Name', 'Country', 'Location', 'Company Name', 'Designation', 'Phone No', 'Mobile No', 'Email Address', 'Category', 'Brand', 'Modal', 'Location of Asset', 'Manufacturing Year', 'Asset Description', 'Amount to be Financed', 'Indicative Rate', 'Tenure\(in Months\)', 'Method Of Contact', 'Comments', 'Date of Request']
@@ -162,6 +162,7 @@ var reports = {
 					arr = [];
 					arr.push(
 						_.get(x, 'ticketId', ''),
+                                                _.get(x, 'type', ''),
                                                 _.get(x, 'quote.customerId', ''),
 						_.get(x, 'quote.fname', '') + ' ' + _.get(x, 'quote.lname', ''),
 						_.get(x, 'quote.country', ''),
