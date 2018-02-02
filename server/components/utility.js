@@ -526,6 +526,7 @@ function toCsvValue(valStr){
   valStr = valStr + "";
    if(valStr){
       valStr = valStr.replace(/,|\n|\r\n|\t|\u202c/g, ' ');
+      valStr = valStr.replace(/"/g, '');
       valStr = _.trim(valStr);
     }
     if(valStr == "null" || valStr == "undefined")
