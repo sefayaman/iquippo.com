@@ -4,17 +4,17 @@
       <h4 class="modal-title">Financing</h4>
     </div>
     <div class="modal-body">
-      <form class="form" name="form" novalidate>      
+      <form class="form" name="financeoption" novalidate>      
         <div class="row">
           <div class="form-group col-sm-6">
         	<div class="radio radio-info">
-        		<input type="radio" id="sreidashboard" name="" value="" placeholder="">
+        		<input type="radio" id="sreidashboard" name="financeoptioninput" value="srei" placeholder="" ng-model="optionModel.urlkey">
         		<label for="sreidashboard">SREI Dashboard</label>
         	</div>
           </div>
           <div class="form-group col-sm-6">
             <div class="radio radio-info">
-        		<input type="radio" id="multidashboard" name="" value="" placeholder="">
+        		<input type="radio" id="multidashboard" name="financeoptioninput" value="mlp" placeholder="" ng-model="optionModel.urlkey">
         		<label for="multidashboard">Multi-Lender Dashboard</label>
         	</div>
           </div>
@@ -22,6 +22,6 @@
       </form>
     </div>
     <div class="modal-footer">
-      <button type="submit" class="btn btn-lg btn-warning">Proceed</button>
+      <button type="submit" class="btn btn-lg btn-warning" ng-click="proceed()">Proceed</button>
     </div>
 </div>

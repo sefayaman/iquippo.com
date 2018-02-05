@@ -72,6 +72,17 @@ function getTokenAndRedirectUrl(req,res){
         return res.status(401).send('Unauthorized');
        var token = signToken(user._id,user.role,20);
        result.token = token;
+       var cpDesk = checkCpDesk(user.email || "");
+       if(cpDesk && cpDesk === 'srei'){
+          result.actionUrl = config.REDIRECT_URL;
+          return res.status(200).json(result);
+       }
+       if(user.role === 'admin'){
+         result.mlp = config.MLP_REDIRECT_URL;
+         result.srei = config.REDIRECT_URL;
+         result.openOptionPopup = true;
+         return res.status(200).json(result);
+       }
       if(user.role === 'enterprise'&& isServiceAvailed(user,'Finance')){
         User.find({enterpriseId:user.enterpriseId,enterprise:true,deleted:false},function(err,enterprises){
            if(err || !enterprises.length)
@@ -121,6 +132,22 @@ function validate(req,res){
     resData.dealership_name = user.company || "";
     addNoCacheHeader(res);
     return res.status(200).json(resData);
+}
+
+function checkCpDesk(email){
+  var cpDesk = "";
+  if(!email)
+    return cpDesk;
+  var emailParts = email.split('@');
+  if(!emailParts || emailParts.length !== 2 || emailParts[1] !== 'iquippo.com')
+    return;
+  if(emailParts[0].indexOf('cpdeskmlp') !== -1)
+    cpDesk = "mlp";
+  else if(emailParts[0].indexOf('cpdesk') !== -1)
+    cpDesk = "srei";
+  else
+    cpDesk = "";
+  return cpDesk;
 }
 
 function isServiceAvailed(user,service){
