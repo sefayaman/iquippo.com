@@ -292,7 +292,8 @@
     {{#each valReqs}}
     <tr>
       <td>{{this.uniqueControlNo}}</td>
-      <td>{{this.assetCategory}}</td>
+      <td>
+        {{this.assetCategory}} {{#if this.otherBrand}} {{this.otherBrand}} {{else}} {{this.brand}} {{/if}} {{#if this.otherModel}} {{this.otherModel}} {{else}} {{this.model}} {{/if}} </td>
       <td>{{this.assetId}}</td>
       <td>{{this.jobId}}</td>
       <td>{{this.reportNo}}</td>
