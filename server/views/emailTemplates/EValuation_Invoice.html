@@ -197,7 +197,7 @@
    </tr>
   </table>
 
-  <table cellpadding="0" cellspacing="0" align="center" width="90%" style="margin-bottom: 50px;">
+  <table cellpadding="0" cellspacing="0" align="center" width="90%" style="margin-bottom: 100px;">
     <tr>
       <td width="70%" valign="top">
         <table cellpadding="2" cellspacing="0" style="font-family:arial, sans-serif;font-size:10px;width:100%;">
@@ -206,7 +206,7 @@
             </tr>
             <tr>
               <td width="50%"><strong>Description of Service</strong></td>
-              <td><strong>Engineering Advisory Services</strong></td>
+              <td><strong>{{invoiceData.requestType}}</strong></td>
             </tr>
             <tr>
               <td colspan="2" height="15"></td>
@@ -286,13 +286,15 @@
       <th>Job Id</th>
       <th>Report No.</th>
     </tr>
+    {{#each valReqs}}
     <tr>
-      <td>{{}}</td>
-      <td>{{}}</td>
-      <td>{{}}</td>
-      <td>{{}}</td>
-      <td>{{}}</td>
+      <td>{{this.uniqueControlNo}}</td>
+      <td>{{this.assetCategory}}</td>
+      <td>{{this.assetId}}</td>
+      <td>{{this.jobId}}</td>
+      <td>{{this.reportNo}}</td>
     </tr>
+    {{/each}}
   </table>
 </div>   
 </body>

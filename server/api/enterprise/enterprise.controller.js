@@ -1672,21 +1672,42 @@ exports.generateInvoice = function(req,res){
   }
 
   try{
-     generateInvoice(req,res);
+    var getInvoiceDetail =  async.seq(getInvoice,getTransactions);
+    getInvoiceDetail(function(err,result){
+      if(err) return res.send(err);
+      generateInvoice(req,res);
+    });
   }catch(e){
     return handleError(res, err);
   };
+
+  function getInvoice(callback){
+    var invoiceNo = req.params.invoiceNo;   
+    EnterpriseValuationInvoice.find({invoiceNo: invoiceNo},function(err,invoiceData){
+      if(err || !invoiceData)
+        return callback(err || new APIError(400,'Error while fetching invoice'));
+      if(invoiceData.length == 0)
+          return callback(new APIError(404,'Invoice detail not found'));
+      req.invoiceData = invoiceData[0];
+      return callback(null,req.invoiceData);
+    });
+  }
+
+  function getTransactions(invoiceData,callback){
+    var ucns = invoiceData.uniqueControlNos || [];
+    EnterpriseValuation.find({uniqueControlNo:{$in:ucns}},function(err,valReqs){
+      if(err || !valReqs)
+        return callback(err || new APIError(400,'Error while fetching valuation requests'));
+       if(valReqs.length == 0)
+          return callback(new APIError(404,'Valuation requests not found'));
+      req.valReqs = valReqs;
+      callback(null,valReqs);
+    });
+  }
 }
 
 function generateInvoice(req,res){
- var invoiceNo = req.params.invoiceNo;   
-  EnterpriseValuationInvoice.find({invoiceNo: invoiceNo},function(err,invoiceData){
-    if(err || !invoiceData)
-      return res.send(err || new APIError(400,'Error while fetching invoice'));
-    
-    if(invoiceData.length == 0)
-      res.status(412).json({Err:'Invalid invoice Number'});
-
+    var invoiceData =  req.invoiceData;
     fs.readFile(__dirname + '/../../views/emailTemplates/EValuation_Invoice.html', 'utf8', function(err, source) {
      if (err) {
         return handleError(res, err);
@@ -1696,13 +1717,13 @@ function generateInvoice(req,res){
       //source += '</body></html>';
       var template = Handlebars.compile(source);
 
-      var descriptionD = invoiceData[0].requestType + " of";
-      if(invoiceData[0].requestCount == 1){
-        descriptionD += " " + invoiceData[0].assetCategory;
+      var descriptionD = invoiceData.requestType + " of";
+      if(invoiceData.requestCount == 1){
+        descriptionD += " " + invoiceData.assetCategory;
       }else
         descriptionD += " various assets as per annexure."
       var invoiceInWords = "";
-      invoiceInWords = writtenFrom(invoiceData[0].totalAmount,{lang:'enIndian'});
+      invoiceInWords = writtenFrom(invoiceData.totalAmount,{lang:'enIndian'});
       if(invoiceInWords)
         invoiceInWords += " only."
       if(invoiceInWords && invoiceInWords.length > 4){
@@ -1710,18 +1731,19 @@ function generateInvoice(req,res){
       }
 
       var data = {
+        valReqs : req.valReqs,
         descriptionD:descriptionD,
         invoiceInWords:invoiceInWords,
-        descriptionHd: invoiceData[0].requestType + " fee towards",
-        invoiceData : invoiceData[0],
-        invoiceDate : Utility.dateUtil.validateAndFormatDate(invoiceData[0].invoiceDate,'DD-MM-YYYY'),
+        descriptionHd: invoiceData.requestType + " fee towards",
+        invoiceData : invoiceData,
+        invoiceDate : Utility.dateUtil.validateAndFormatDate(invoiceData.invoiceDate,'DD-MM-YYYY'),
         serverPath:config.serverPath,
         awsBaseImagePath:config.awsUrl + '/' + config.awsBucket
       };
 
        var taxColms = ['CGST','SGST','IGST'];
-      if(invoiceData[0].selectedTaxes && invoiceData[0].selectedTaxes.length){
-        invoiceData[0].selectedTaxes.forEach(function(tax){
+      if(invoiceData.selectedTaxes && invoiceData.selectedTaxes.length){
+        invoiceData.selectedTaxes.forEach(function(tax){
           if(taxColms.indexOf(tax.type) !== -1)
             data[tax.type] = tax;
         });
@@ -1754,7 +1776,6 @@ function generateInvoice(req,res){
         }
       });
     });
-  });
 }
 
 // Updates an existing enterprise valuation in the DB.
