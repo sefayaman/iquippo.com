@@ -54,7 +54,8 @@ function InvoiceCalculationCtrl($scope, $rootScope,$uibModalInstance,Modal,Auth,
           return;
         }
         $scope.invoice.requestCount =$scope.selectedItems.length;
-        $scope.invoice.serviceFee = result[0].amount;
+        $scope.invoice.serviceFee = result[0].amount || 0;
+        $scope.invoice.invoiceAmount = ($scope.invoice.requestCount || 0)*$scope.invoice.serviceFee;
         $scope.invoice.chargeBasis = result[0].chargeBasis;
         setModelData();
       })
@@ -135,12 +136,10 @@ function InvoiceCalculationCtrl($scope, $rootScope,$uibModalInstance,Modal,Auth,
       function generateInvoice(){
 
         if(!$scope.selectedTax || $scope.selectedTax.length == 0){
-            Modal.confirm("It seems you have not selected any taxes, Please add taxes.",function(ret){
-              if(ret == 'Yes')
-                calculateInvoice();                 
-            })
-         }else
-            calculateInvoice();
+            Modal.alert("It seems you have not selected any taxes, Please add taxes.");
+            return;
+         }
+        calculateInvoice();
       }
 
       function updateInvoice(){
@@ -206,14 +205,14 @@ function InvoiceCalculationCtrl($scope, $rootScope,$uibModalInstance,Modal,Auth,
 
       function calculateInvoice(){
         
-        switch($scope.invoice.chargeBasis){
+        /*switch($scope.invoice.chargeBasis){
           case "flat":
             $scope.invoice.invoiceAmount = $scope.invoice.requestCount*$scope.invoice.serviceFee;
           break;
           case 'percent':
             $scope.invoice.invoiceAmount = $scope.invoice.requestCount*$scope.invoice.serviceFee;
           break;
-        }
+        }*/
         var totalTax = 0;
         $scope.selectedTax.forEach(function(item){
           var calAmt = ($scope.invoice.invoiceAmount *item.rate)/100;

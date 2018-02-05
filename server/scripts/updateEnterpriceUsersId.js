@@ -17,7 +17,7 @@ mongoose.connection.on('error', function (err) {
 function init(processCb) {
     findEnterpriceUserId();
     function findEnterpriceUserId() {
-        Enterprice.find({deleted:false,"createdBy.userCustomerId": { $exists: false}}, function (err, enterprice) {
+        Enterprice.find({"createdBy.userCustomerId": { $exists: false}}, function (err, enterprice) {
             if (err){
                 return processCb(err);
             }
@@ -34,7 +34,7 @@ function init(processCb) {
     function updateEnterpriceUserIds(valuation, cb) {
         userMobile = valuation.createdBy.mobile;
         if ( !valuation.createdBy.userCustomerId ) {
-            UserModel.find({mobile:userMobile,deleted:false},function(err,users){
+            UserModel.find({mobile:userMobile},function(err,users){
                 if ( err ) {
                     return cb(); 
                 }
@@ -48,8 +48,9 @@ function init(processCb) {
                         console.log("##########", error);
                     }
                     console.log('UC Number: ', valuation.uniqueControlNo, 'User_ID: ',setUserCustomerId , 'Response: ', resultData);
+                    return cb();
                 });
-                return cb();
+                
             });
         }
         else {

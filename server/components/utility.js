@@ -58,14 +58,14 @@ exports.getListObjectS3 = getListObjectS3;
 exports.deleteS3File = deleteS3File;
 
 Date.prototype.addDays = function(days) {
-  //this.setDate(this.getDate() + parseInt(days));
-  this.setMinutes(this.getMinutes() + parseInt(days));
+  this.setDate(this.getDate() + parseInt(days));
+  //this.setMinutes(this.getMinutes() + parseInt(days));
   return this;
 };
 
 Date.prototype.addHours = function(hours) {
-  this.setMinutes(this.getMinutes() + parseInt(hours));
-  //this.setHours(this.getHours() + parseInt(hours));
+  //this.setMinutes(this.getMinutes() + parseInt(hours));
+  this.setHours(this.getHours() + parseInt(hours));
   return this;
 };
 
@@ -526,6 +526,7 @@ function toCsvValue(valStr){
   valStr = valStr + "";
    if(valStr){
       valStr = valStr.replace(/,|\n|\r\n|\t|\u202c/g, ' ');
+      valStr = valStr.replace(/"/g, '');
       valStr = _.trim(valStr);
     }
     if(valStr == "null" || valStr == "undefined")

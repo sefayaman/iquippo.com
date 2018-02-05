@@ -16,15 +16,16 @@
       </uib-slide>
     </uib-carousel>
   </div>
-  <div class="col-xs-12 col-sm-offset-1 col-sm-10 search-banner hidden-xs">        
+  <div class="col-xs-12 col-sm-offset-1 col-sm-10 search-banner hidden-xs">  
+      <form name="searchHome" class="form" novalidate>
     <div class="search-tabs">
 
       <p class="text-center">I'M LOOKING FOR:</p>
 
       <div class="row" ng-if="singleBox">
         <div class="col-sm-offset-3 col-sm-6">          
-          <div class="input-group">
-            <input type="text" placeholder="Search for Assets and More" ng-model="filter.searchstr" class="form-control"  ng-keypress="checkIfEnterKeyWasPressed($event)" />
+          <div class="input-group" ng-class="{'has-error': searchHome.searchstr.$invalid && submitted}">
+            <input type="text" name="searchstr" placeholder="Search for Assets and More" ng-model="filter.searchstr" class="form-control"  ng-keypress="checkIfEnterKeyWasPressed($event,searchHome)" required/>
             <a href="javascript:void(0);" class="input-group-addon" ng-click="toggleSearchBox(false)">Choose</a>
           </div>
         </div>
@@ -34,23 +35,23 @@
       <div class="row" ng-if="!singleBox">
         <div class="col-sm-offset-2 col-sm-8">
           <div class="filter">
-            <div class="row">
+            <div class="row" ng-class="{'has-error-filter': (searchHome.industry.$invalid || searchHome.category.$invalid || searchHome.brand.$invalid || searchHome.assetloc.$invalid) && submitted}">
               <div class="col-sm-1 padd-left padd-right select-text">
                 <div class="form-control text-center back-tohome">
                   <a href="javascript:void(0);" ng-click="toggleSearchBox(true)"><i class="fa fa-angle-left fa-2x"></i></a>
                 </div>
               </div>
               <div class="col-sm-3 padd-left padd-right select-text">
-                <input type="text" placeholder="Industry" ng-model="filter.groupSearchText" class="form-control" uib-typeahead="address for address in getGroupHelp($viewValue)" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
+                <input type="text" placeholder="Industry" name="industry" ng-model="filter.groupSearchText" class="form-control" uib-typeahead="address for address in getGroupHelp($viewValue)" typeahead-focus-first = "false" typeahead-wait-ms="200" ng-keypress="checkIfEnterKeyWasPressed($event,searchHome)" ng-required="!filter.categorySearchText&&!filter.brandSearchText&&!filter.locationSearchText"/>
               </div>
               <div class="col-sm-3 padd-left padd-right select-text">
-                <input type="text" ng-model="filter.categorySearchText" placeholder="Category" uib-typeahead="address for address in getCategoryHelp($viewValue)"  class="form-control" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
+                <input type="text" ng-model="filter.categorySearchText" name="category" placeholder="Category" uib-typeahead="address for address in getCategoryHelp($viewValue)"  class="form-control" typeahead-focus-first = "false" typeahead-wait-ms="200" ng-keypress="checkIfEnterKeyWasPressed($event,searchHome)" ng-required="!filter.groupSearchText&&!filter.brandSearchText&&!filter.locationSearchText"/>
               </div>
               <div class="col-sm-2 padd-left padd-right select-text">
-                <input type="text" class="form-control" placeholder="Brand" ng-model="filter.brandSearchText" class="form-control" uib-typeahead="address for address in getBrandHelp($viewValue)" typeahead-wait-ms="200"/>
+                <input type="text" class="form-control" name="brand" placeholder="Brand" ng-model="filter.brandSearchText" class="form-control" uib-typeahead="address for address in getBrandHelp($viewValue)" typeahead-wait-ms="200" ng-keypress="checkIfEnterKeyWasPressed($event,searchHome)" ng-required="!filter.groupSearchText&&!filter.categorySearchText&&!filter.locationSearchText"/>
               </div>
               <div class="col-sm-3 padd-left padd-right select-text">
-                <input type="text" class="form-control" ng-model="filter.locationSearchText" placeholder="Asset Location" uib-typeahead="address for address in getLocationHelp($viewValue)"  class="form-control" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
+                <input type="text" class="form-control" name="assetloc" ng-model="filter.locationSearchText" placeholder="Asset Location" uib-typeahead="address for address in getLocationHelp($viewValue)"  class="form-control" typeahead-focus-first = "false" typeahead-wait-ms="200" ng-keypress="checkIfEnterKeyWasPressed($event,searchHome)" ng-required="!filter.groupSearchText&&!filter.categorySearchText&&!filter.brandSearchText"/>
               </div> 
               
             </div>
@@ -59,10 +60,10 @@
       </div>
     </div>
     <div class="col-sm-offset-3 col-sm-6 text-center">
-      <button type="button" class="btn btn-default" data-ng-click="doSearch(true)">New Equipment</button>
-      <button type="button" class="btn btn-default" data-ng-click="doSearch(false)">Used Equipment</button>
+      <button type="button" class="btn btn-default" data-ng-click="doSearch(true,searchHome)">New Equipment</button>
+      <button type="button" class="btn btn-default" data-ng-click="doSearch(false,searchHome)">Used Equipment</button>
     </div>
-
+    </form>
   </div>
 </section>
 

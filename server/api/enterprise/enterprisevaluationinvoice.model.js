@@ -29,7 +29,7 @@ var EnterpriseValuationInvoiceSchema = new Schema({
     paymentDetails :[]
   },
   iqInvoiceNo:String,
-  invoiceDate:Date,
+  invoiceDate:{type:Date,default:Date.now},
   invoiceInFavour:String,
   userPanNumber:String,
   userAadhaarNumber:String,
@@ -54,27 +54,14 @@ var EnterpriseValuationInvoiceSchema = new Schema({
 EnterpriseValuationInvoiceSchema.pre('save',function(next){
   var self = this;
   var sequence = seqGenerator.sequence();
-  async.parallel([setInvoiceNumber,setIQSInvoiceNumber],function(err){
-    return next(err);
-  });
-  function setInvoiceNumber(cb){
-    var prefix = 'EVRINV';
-    var prefixRef = "QVA-";
-    sequence.next(function(seqnum){
-      self.invoiceNo = prefix+seqnum;
-      self.referenceNo = prefixRef + seqnum;
-      return cb();
-    },'EnterpriseValuationInvoice',100002);
-  }
-  function setIQSInvoiceNumber(cb){
-    var prefix = 'IQS';
-    sequence.next(function(seqnum){
+  var prefix = 'IQS';
+  var prefixRef = "QVA-";
+  sequence.next(function(seqnum){
       var invcDate = new Date(self.invoiceDate || new Date());
-      self.iqInvoiceNo = prefix+ "-"+ getFiscalYearByDate(invcDate) + "-" + seqnum;
-      return cb();
-    },'IQSValuationInvoice',100002);
-  }
-
+      self.invoiceNo = prefix+ "-"+ getFiscalYearByDate(invcDate) + "-" + seqnum;
+      self.referenceNo = prefixRef + seqnum;
+      return next();
+    },'EnterpriseValuationInvoice_2018',100002);
 });
 
 function getFiscalYearByDate(date) {
@@ -82,7 +69,7 @@ function getFiscalYearByDate(date) {
     var currentYear = date.getFullYear().toString();
     currYrPart = currentYear.charAt(2) + currentYear.charAt(3);
     var fiscalYr = "";
-    if (curMonth > 3) {
+    if (curMonth > 2) {
         var nextYr1 = (date.getFullYear() + 1).toString();
         fiscalYr = currYrPart + "" + nextYr1.charAt(2) + nextYr1.charAt(3);
     } else {

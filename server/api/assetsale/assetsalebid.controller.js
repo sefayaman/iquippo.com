@@ -1174,59 +1174,27 @@ exports.exportExcel = function(req,res){
 				val = item.fullPaymentAmount;
                         
                         //for payment headers
-                        if ( keyObj.key && keyObj.key === 'paymentMode' && item.fullPayment  || keyObj.key && keyObj.key === 'paymentMode' && item.emdPayment ) {
+                        if ( keyObj.key && keyObj.key === 'fullPayment' && item.fullPayment) {
                             if ( item.fullPayment.paymentsDetail.length ) {
-                                val = item.fullPayment.paymentsDetail[item.fullPayment.paymentsDetail.length-1].paymentMode ;
+                                val = 'Yes' ;
                             }
                             else {
-                                val = item.emdPayment.paymentsDetail.paymentMode ;
-                            } 
+                                val = 'No' ;
+                            }
                         }
-                        if ( keyObj.key && keyObj.key === 'bankName' && item.fullPayment || keyObj.key && keyObj.key === 'bankName' && item.emdPayment ) {
+                        if ( keyObj.key && keyObj.key === 'emdReceived' && item.emdPayment ) {
                             if ( item.fullPayment.paymentsDetail.length ) {
-                                val = item.fullPayment.paymentsDetail[item.fullPayment.paymentsDetail.length-1].bankName ;
+                                val = 'Yes' ;
                             }
                             else {
-                                val = item.emdPayment.paymentsDetail.bankName ;
+                                val = 'No' ;
                             }
                         }
-                        if ( keyObj.key && keyObj.key === 'instrumentNo' && item.fullPayment || keyObj.key && keyObj.key === 'instrumentNo' && item.emdPayment ) {
-                            if ( item.fullPayment.paymentsDetail.length ) {
-                                val = item.fullPayment.paymentsDetail[item.fullPayment.paymentsDetail.length-1].instrumentNo ;
-                            }
-                            else {
-                                val = item.emdPayment.paymentsDetail.instrumentNo ;
-                            }
+                        
+                        if ( keyObj.key && keyObj.key === 'totalAmountReceive') {
+                            val = ( item.fullPaymentAmount + item.emdAmount ) - ( item.fullPayment.remainingPayment + item.emdPayment.remainingPayment );
                         }
-                        if ( keyObj.key && keyObj.key === 'amount' && item.fullPayment || keyObj.key && keyObj.key === 'amount' && item.emdPayment) {
-                            if ( item.fullPayment.paymentsDetail.length ) {
-                                val = item.fullPaymentAmount;
-                            }
-                            else {
-                                val = item.fullPaymentAmount - item.emdPayment.paymentsDetail.amount;
-                            }
-                        }
-                        if ( keyObj.key && keyObj.key === 'paymentDate' && keyObj.type === 'date' && item.fullPayment || keyObj.key && keyObj.key === 'paymentDate' && item.emdPayment) {
-                            if ( item.fullPayment.paymentsDetail.length ) {
-                                var dateVal = item.fullPayment.paymentsDetail.paymentDate;
-                                val = moment(dateVal).utcOffset('+0530').format('MM/DD/YYYY') ;
-                            }
-                            else if (item.emdPayment.paymentsDetail.paymentDate) {
-                                dateVal = item.emdPayment.paymentsDetail.paymentDate ;
-                                val = moment(dateVal).utcOffset('+0530').format('MM/DD/YYYY') ;
-                            }
-                            
-                        }
-                        if ( keyObj.key && keyObj.key === 'createdAt' && keyObj.type === 'date' && item.fullPayment || keyObj.key && keyObj.key === 'createdAt' && item.emdPayment) {
-                            if ( item.fullPayment.paymentsDetail.length ) {
-                                var dateVal = item.fullPayment.paymentsDetail.createdAt; 
-                                val = moment(dateVal).utcOffset('+0530').format('MM/DD/YYYY') ;
-                            }
-                            else if (item.emdPayment.paymentsDetail.createdAt) {
-                                var dateVal = item.emdPayment.paymentsDetail.createdAt ;
-                                val = moment(dateVal).utcOffset('+0530').format('MM/DD/YYYY') ;
-                            }
-                        }
+                        
                         //
 			if(keyObj.type && keyObj.type == 'url' && val){
 			if(val.filename)

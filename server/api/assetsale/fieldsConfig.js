@@ -39,12 +39,9 @@ module.exports = {
 		"Last Modified Date":{key:"updatedAt",type:'date'},
 		"Last Modified Time":{key:"updatedAt",type:'datetime'},
 		"Feedback" : {key :"comment"},
-		"Payment Mode" : {key :"paymentMode"},
-		"Bank Name" : {key :"bankName"},
-		"Instrument No" : {key :"instrumentNo"},
-		"Amount" : {key :"amount"},
-		"Payment Date" : {key:"paymentDate",type:'date'},
-		"Date of Payment Entry" : {key:"createdAt",type:'date'}
+		"EMD Received" : {key :"emdReceived"},
+		"Full Payment Received" : {key :"fullPayment"},
+		"Total Amount Received" : {key :"totalAmountReceive"}
 	},
 	'SELLER_FIELDS':{
 		"Ticket Id":{key :"ticketId"},

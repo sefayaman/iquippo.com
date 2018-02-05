@@ -28,13 +28,13 @@
                     <input type="file" name="doc" data-filetype="doc" file-upload="" class="ng-scope">
                   </span>
                 </div>
-                <div class="col-sm-3">
+                <div class="col-sm-offset-1 col-sm-3">
                   <custom-datepicker placeholder="*Effective From Date" name="effectiveFromDate" ng-model="dateFilter.fromDate" myid="fromdate" required></custom-datepicker>
                 </div>
                 <div class="col-sm-3">
                   <custom-datepicker placeholder="*Effective To Date" name="effectiveToDate" ng-model="dateFilter.toDate" myid="todate" required></custom-datepicker>
                 </div>
-                <div class="col-sm-offset-1 col-sm-2">
+                <div class="col-sm-2">
                  <!--  <a class="btn btn-success btn-md btn-block" ng-if="isAdmin()" target="_blank">Export</a> -->
                   <button class="btn btn-success btn-md btn-block" ng-click="userManagementVm.exportExcel()"><i class="fa fa-file-excel-o"></i> Export</button>
                   <export-form name="userexport"></export-form>
@@ -96,7 +96,7 @@
                     <span ng-if="user.role == 'customer'">Customer</span>
                     <!-- <span ng-if="user.role == 'admin'">Admin</span> -->
                     <span ng-if="user.role == 'channelpartner'">Channel Partner</span>
-                     <span ng-if="user.role == 'enterprise'">Enterprise Valuation</span>
+                     <span ng-if="user.role == 'enterprise'">Enterprise</span>
                   </td>
                   <td>
                     <span ng-if="user.userType == 'individual'">Individual</span>

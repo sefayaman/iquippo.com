@@ -890,9 +890,13 @@ body{font-family: Lato-Regular ,sans-serif;}
 .search-banner p{text-shadow: 1px 2px 3px #666; font-weight: bold; letter-spacing: 2px;}
 .search-banner .input-group{width: 100%;}
 .search-banner .input-group .form-control{height: 50px; border-color: #eee; border-radius: 4px;}
+.search-banner .input-group.has-error .form-control{border:1px solid #ef100c; background: #f5e7e6;}
+.search-banner .input-group.has-error .input-group-addon{background: transparent;}
 .filter{background: #fff; border-radius: 4px;}
-.filter .form-control{height: 50px; border-color: #eee; margin-left: -1px; border-radius: 0px;}
-.filter .select-text{margin-left: -1px;}
+.filter .form-control{height: 50px; border-color: #eee; margin-left: 0px; border-radius: 0px;}
+.filter .select-text{margin-left: 0px;}
+.filter .has-error-filter{border:1px solid #ef100c; border-radius: 4px; background: #f5e7e6;}
+.filter .has-error-filter .form-control{background: transparent;}
 .filter .select-text .back-tohome a{line-height: 46px; text-shadow: none; color: #666; display: block;}
 .filter .select-text:nth-of-type(1) .form-control{border-radius: 4px 0 0 4px;}
 .filter .select-text:nth-of-type(5) .form-control{border-radius: 0 4px 4px 0;}
@@ -1013,6 +1017,7 @@ body{font-family: Lato-Regular ,sans-serif;}
   background: url('../assets/images/back-border.png'); background-size: 100% 100%; background-repeat: no-repeat;
   
 }
+.word-break{word-break: break-word;}
 .text-ellips{white-space: nowrap;overflow: hidden;text-overflow: ellipsis; font-size: 13px;} 
 .category-name{text-transform: uppercase; font-weight: bold; margin: 1.3em 0 2em; font-size: 16px; color: #2F2F2F;}
 .category-name h5{margin-bottom: 2px; font-weight: bold; font-size: 16px; color: #2F2F2F;height:40px;}
