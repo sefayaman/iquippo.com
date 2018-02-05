@@ -333,12 +333,13 @@ var EXPORT_PAYMENT = {
                       'Full Name' : 'fullName',
                       'Mobile No.' : 'mobile',
                       'Email Address' : 'email',
+                      'Payment Type':'paymentMode',
                       'Payment Mode Type': 'paymentModeType',
                       'Bank Name': 'bankName',
                       'Branch': 'branch',
                       'Ref No': 'refNo',
                       'Amount': 'amount',
-                      'Payment Status': 'paymentStatus',
+                      'Request Status': 'paymentStatus',
                       'Payment Date': 'paymentDate',
                       'Date of Entry': 'createdAt'
                     };
@@ -352,14 +353,19 @@ function _formatPayments(item,innerItem,jsonArr){
     obj['fullName'] = item.user.fname + " " + item.user.lname || "";
     obj['mobile'] = item.user.mobile|| "" ;
     obj['email'] = item.user.email || "" ;
-    obj['paymentModeType'] = innerItem.paymentModeType || "";
-    obj['bankName'] = innerItem.bankname || "";
-    obj['branch'] = innerItem.branch || "";
-    obj['refNo'] = innerItem.refNo || "";
-    obj['amount'] = innerItem.amount || 0;
-    obj['paymentStatus'] = innerItem.paymentStatus || 'success';
-    obj['paymentDate'] = moment(new Date(innerItem.paymentDate)).utcOffset('+0530').format('MM/DD/YYYY') || "";
-    obj['createdAt'] = innerItem.createdAt || ""
+    obj['paymentMode'] = item.paymentMode || "" ;
+    if(innerItem){
+      obj['paymentModeType'] = innerItem.paymentModeType || "";
+      obj['bankName'] = innerItem.bankname || "";
+      obj['branch'] = innerItem.branch || "";
+      obj['refNo'] = innerItem.refNo || "";
+      obj['amount'] = innerItem.amount || 0;
+      obj['paymentStatus'] = innerItem.paymentStatus === 'failed' ? 'Failed' : 'Completed';
+      obj['paymentDate'] = moment(new Date(innerItem.paymentDate)).utcOffset('+0530').format('MM/DD/YYYY') || "";
+      obj['createdAt'] = innerItem.createdAt || ""
+    }
+
+   
     jsonArr.push(obj);
   }
 

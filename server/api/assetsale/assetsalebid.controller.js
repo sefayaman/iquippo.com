@@ -1173,27 +1173,27 @@ exports.exportExcel = function(req,res){
 			if(keyObj.key && keyObj.key == 'fullPaymentAmount')
 				val = item.fullPaymentAmount;
                         
-                        //for payment headers
-                        if ( keyObj.key && keyObj.key === 'fullPayment' && item.fullPayment) {
-                            if ( item.fullPayment.paymentsDetail.length ) {
-                                val = 'Yes' ;
-                            }
-                            else {
-                                val = 'No' ;
-                            }
-                        }
-                        if ( keyObj.key && keyObj.key === 'emdReceived' && item.emdPayment ) {
-                            if ( item.fullPayment.paymentsDetail.length ) {
-                                val = 'Yes' ;
-                            }
-                            else {
-                                val = 'No' ;
-                            }
-                        }
-                        
-                        if ( keyObj.key && keyObj.key === 'totalAmountReceive') {
-                            val = ( item.fullPaymentAmount + item.emdAmount ) - ( item.fullPayment.remainingPayment + item.emdPayment.remainingPayment );
-                        }
+            //for payment headers
+            if ( keyObj.key && keyObj.key === 'fullPayment' && item.fullPayment) {
+                if ( item.fullPayment.remainingPayment === 0 ) {
+                    val = 'Yes' ;
+                }
+                else {
+                    val = 'No' ;
+                }
+            }
+            if ( keyObj.key && keyObj.key === 'emdReceived' && item.emdPayment ) {
+                if ( item.emdPayment.remainingPayment === 0 ) {
+                    val = 'Yes' ;
+                }
+                else {
+                    val = 'No' ;
+                }
+            }
+            
+            if ( keyObj.key && keyObj.key === 'totalAmountReceive') {
+                val = ( item.fullPaymentAmount + item.emdAmount ) - ( item.fullPayment.remainingPayment + item.emdPayment.remainingPayment );
+            }
                         
                         //
 			if(keyObj.type && keyObj.type == 'url' && val){
