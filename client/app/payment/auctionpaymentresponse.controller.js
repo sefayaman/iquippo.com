@@ -9,7 +9,6 @@ function AuctionPaymentResponseCtrl($scope,$rootScope,Modal,$stateParams,$state,
  	vm.payTransaction = null;
  	var auctionReq = null;
  	vm.success = true;
-  $scope.auctionResponse = false;
   $scope.option = {};
   vm.submit = submit;
 
@@ -29,10 +28,6 @@ function AuctionPaymentResponseCtrl($scope,$rootScope,Modal,$stateParams,$state,
  				Modal.alert("Invalid payment access");
  			}
  			vm.payTransaction = result[0];
-      if(vm.payTransaction.requestType === 'Auction Request')
-        $scope.auctionResponse = true;
-      else
-        $scope.auctionResponse = false;
       vm.payTransaction.paymentMode = "online";
       vm.payTransaction.totalAmount = vm.payTransaction.emd;
  			if(vm.payTransaction.paymentMode == 'online' && !Auth.isAdmin() && !Auth.isAuctionRegPermission()){

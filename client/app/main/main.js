@@ -529,7 +529,7 @@ angular.module('sreizaoApp')
       })
       .state('auctionpaymentresponse', {
         url: '/auctionpaymentresponse/:tid',
-        templateUrl: 'app/payment/paymentresponse.html',
+        templateUrl: 'app/payment/auctionpaymentresponse.html',
         controller: 'AuctionPaymentResponseCtrl as auctionPaymentResponseVm',
         authenticate:true,
         layout:'client'

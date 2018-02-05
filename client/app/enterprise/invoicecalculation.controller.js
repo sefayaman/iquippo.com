@@ -200,6 +200,7 @@ function InvoiceCalculationCtrl($scope, $rootScope,$uibModalInstance,Modal,Auth,
               $scope.callback(true);
             if($scope.close)
               $scope.close();
+            Modal.alert("Invoice Generated! Please refer to Invoice Generated tab.");
           });
       }
 
