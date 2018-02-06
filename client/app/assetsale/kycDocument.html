@@ -56,7 +56,9 @@
           <tr ng-repeat="kyc in kycDocumentVm.kycList">
             <td>{{kyc.type}}</td>
             <td>{{kyc.name}}</td>
-            <td><a href="{{uploadImagePrefix}}{{bidData.product.assetDir}}/{{kyc.docName}}" target="_blank">{{kyc.docName}}</a></td>
+            <td>
+            <span><a href="{{uploadImagePrefix}}{{kycUploadDir}}/{{kyc.docName}}" target="_blank">{{kyc.docName}}</a></span>
+            </td>
           </tr>
         </tbody>
       </table>

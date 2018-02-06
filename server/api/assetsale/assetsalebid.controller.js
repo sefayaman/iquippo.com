@@ -383,7 +383,7 @@ exports.validateUpdate = function(req,res,next){
 
 	function validateBid(callback){
 		AssetSaleBid.findById(req.params.id, function (err, bid) {
-		    if (err || !bid) {return callback({statusCode:404,message:"Bid not found"});}
+			if (err || !bid) {return callback({statusCode:404,message:"Bid not found"});}
 		    req.bid = bid;
 		    return callback();
 		  });		
@@ -395,6 +395,7 @@ exports.validateUpdate = function(req,res,next){
 			productId = req.body.product.proData;
 		if(!productId)
 			return callback({statusCode:404,message:"Bad Request"});
+
 		AssetSaleBid.find({'product.proData':productId,status:true,_id:{$ne:req.params.id},dealStatus:dealStatuses[0]}, function (err, bids) {
 		    if (err) {return callback({statusCode:404,message:"Bid not found"});}
 		    req.otherBids = bids;
@@ -419,7 +420,6 @@ exports.validateUpdate = function(req,res,next){
 }
 
 exports.postUpdate = function(req,res,next){
-
 	var postAction = req.query.action;
 	if(req.updateProduct)
 		updateProduct();
@@ -556,6 +556,22 @@ function pushNotification(bidsArr) {
 		AssetSaleUtil.sendNotification(bids);
 }
 
+exports.verifyCalculation = function(req,res,next){
+	var totalAmount = 0;
+	var tcs = 0
+	totalAmount = Math.round(req.body.gst + parseInt(req.body.actualBidAmount));
+	if (Number(totalAmount) > 1000000)
+	    tcs = Number(totalAmount) * 0.01;
+	req.body.tcs = Math.round(tcs || 0);
+	req.body.bidAmount = Math.round((totalAmount + req.body.tcs + req.body.parkingCharge) || 0);
+	req.body.fullPaymentAmount = Number(req.body.bidAmount) - Number(req.body.emdAmount);
+	if(req.body.parkingPaymentTo === 'Yard')
+        req.body.fullPaymentAmount = Number(req.body.fullPaymentAmount) - Number(req.body.parkingCharge);
+    req.body.emdPayment = {remainingPayment: req.body.emdAmount || 0};
+    req.body.fullPayment = {remainingPayment: req.body.fullPaymentAmount || 0};
+    return next();
+}
+
 exports.submitBid = function(req, res) {
 	async.series([newBidData,updateBidAndProduct],function(err){
 		if(err) return res.status(500).send(err);
@@ -641,6 +657,7 @@ exports.submitBid = function(req, res) {
 			return callback();
 		});
 	}
+
 };
 
 exports.withdrawBid = function(req, res) {
@@ -1097,16 +1114,6 @@ exports.exportExcel = function(req,res){
 				val = moment(val).utcOffset('+0530').format('MM/DD/YYYY');
 			if(keyObj.type && keyObj.type == 'datetime' && val)
 				val = moment(val).utcOffset('+0530').format('hh:mm a');
-			/*if(keyObj.key && queryParam.seller === 'y' && (keyObj.key === 'buyerName' || keyObj.key === 'buyerMobile' || keyObj.key === 'buyerEmail')) {
-				if(item.user && keyObj.key === 'buyerName' &&  dealStatuses.indexOf(item.dealStatus) > 8)
-				    val = item.user.fname + " " + item.user.lname;
-				else if(item.user && item.user.mobile && keyObj.key === 'buyerMobile' && dealStatuses.indexOf(item.dealStatus) > 8)
-				    val = item.user.mobile;
-				else if(item.user && item.user.email && keyObj.key === 'buyerEmail' && dealStatuses.indexOf(item.dealStatus) > 8)
-					val = item.user.email;
-				else
-					val = "";
-			}*/
 
 			if(keyObj.key && (keyObj.key === 'approvedBy' || keyObj.key === 'approvalDate' || keyObj.key === 'approvalTime') && item.bidStatuses.length > 0) {
 				for(var i = item.bidStatuses.length - 1; i > 0; i--) {
@@ -1115,7 +1122,9 @@ exports.exportExcel = function(req,res){
 							if(item.bidStatuses[i].userId === 'SYSTEM')
 								val = 'System';
 							else if(item.product && item.product.seller && item.bidStatuses[i].userId === item.product.seller._id)
-								val = 'Seller';
+								val = item.product.seller.name;
+							// else if(item.bidStatuses[item.bidStatuses.length - 1].userId === item.user._id + "")
+							// 	val = '';
 							else
 								val = 'Admin';
 						} else if( keyObj.key === 'approvalDate')
@@ -1131,7 +1140,9 @@ exports.exportExcel = function(req,res){
 				if(item.bidStatuses[item.bidStatuses.length - 1].userId === 'SYSTEM')
 					val = 'System';
 				else if(item.product && item.product.seller && item.bidStatuses[item.bidStatuses.length - 1].userId === item.product.seller._id)
-					val = 'Seller';
+					val = item.product.seller.name;
+				// else if(item.bidStatuses[item.bidStatuses.length - 1].userId === item.user._id + "")
+				// 	val = '';
 				else
 					val = 'Admin';
 			}
@@ -1140,16 +1151,49 @@ exports.exportExcel = function(req,res){
 				if(item.dealStatuses[item.dealStatuses.length - 1].userId === 'SYSTEM')
 					val = 'System';
 				else if(item.product && item.product.seller && item.dealStatuses[item.dealStatuses.length - 1].userId === item.product.seller._id)
-					val = 'Seller';
+					val = item.product.seller.name;
+				// else if(item.dealStatuses[item.dealStatuses.length - 1].userId === item.user._id + "")
+				// 	val = '';
 				else
 					val = 'Admin';
 			}
+                        
+            if(keyObj.key && keyObj.key === 'sellerCustomerId' && item.user)
+                val = item.product.seller.customerId;
+            
+            if(keyObj.key && keyObj.key === 'buyerCustomerId' && item.user)
+                val = item.user.customerId;
 
 			if(keyObj.key && keyObj.key === 'buyerName' && item.user)
 				val = item.user.fname + " " + item.user.lname;
 			if(keyObj.key && keyObj.key == 'fullPaymentAmount')
 				val = item.fullPaymentAmount;
+            
+            if (keyObj.key && keyObj.key === 'emdReceived') {
+                val = 'No';
+                for(var i = 0; i < item.dealStatuses.length; i++) {
+					if (item.dealStatuses[i].status === dealStatuses[7]) {
+						val = 'Yes';
+						break;
+					}
+				}
+            }
 
+            if (keyObj.key && keyObj.key === 'fullPayment') {
+            	val = 'No';
+                for(var i = 0; i < item.dealStatuses.length; i++) {
+					if (item.dealStatuses[i].status === dealStatuses[8]) {
+						val = 'Yes';
+						break;
+					}
+				}
+            }
+            
+            if ( keyObj.key && keyObj.key === 'totalAmountReceive') {
+                val = ( item.fullPaymentAmount + item.emdAmount ) - ( item.fullPayment.remainingPayment + item.emdPayment.remainingPayment );
+            }
+                        
+                        //
 			if(keyObj.type && keyObj.type == 'url' && val){
 			if(val.filename)
 			    val =  req.protocol + "://" + req.headers.host + "/download/"+ item.assetDir + "/" + val.filename || "";
@@ -1176,6 +1220,7 @@ function _formatPayments(item,innerItem,jsonArr){
     obj['ticketId'] = item.ticketId || "";
     obj['assetId'] = item.product.assetId || "";
     obj['assetName'] = item.product.name || "";
+    obj['customerId'] = item.user.customerId + " " + item.user.customerId || "";
     obj['buyerName'] = item.user.fname + " " + item.user.lname || "";
     obj['buyerMobile'] = item.user.mobile|| "" ;
     obj['buyerEmail'] = item.user.email || "" ;
@@ -1184,7 +1229,7 @@ function _formatPayments(item,innerItem,jsonArr){
     obj['instrumentNo'] = innerItem.instrumentNo || "";
     obj['amount'] = innerItem.amount || 0;
     obj['paymentDate'] = innerItem.paymentDate || "";
-    obj['createdAt'] = innerItem.createdAt || ""
+    obj['createdAt'] = innerItem.createdAt || "";
     jsonArr.push(obj);
   }
 

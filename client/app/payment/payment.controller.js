@@ -10,7 +10,7 @@ function PaymentCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,$location,
    //var ccavenueURL = "https://test.ccavenue.com";
 
    //ccavenue live  url
-   var ccavenueURL = " https://secure.ccavenue.com";
+   //var ccavenueURL = " https://secure.ccavenue.com";
 
    //localhost ccavennue test account crediential
    //var currentURL = "http://localhost";
@@ -23,8 +23,8 @@ function PaymentCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,$location,
   
 
    //iquippo.com ccavenue detail 
-   var currentURL = " http://iquippo.com";
-   var accessCode = 'AVSY67DJ29AL34YSLA';
+   // var currentURL = "https://iquippo.com";
+   // var accessCode = 'AVSY67DJ29AL34YSLA';
 
  	//Default parameter value
 
@@ -58,16 +58,20 @@ function PaymentCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,$location,
  			vm.prevStatus = vm.payTransaction.status;
          vm.enablePayment = vm.prevStatus != transactionStatuses[5].code && vm.prevStatus != transactionStatuses[3].code?true:false;
 
- 			if(vm.payTransaction.paymentMode == 'online')
+ 			if(vm.payTransaction.paymentMode === 'online' && vm.payTransaction.requestType !== 'Auction Request')
 	 		     PaymentSvc.updateStatus(vm.payTransaction,transactionStatuses[1].code);
+
+         if(vm.payTransaction.requestType === 'Auction Request' ) {
+            if(vm.payTransaction.status !== transactionStatuses[5].code)
+               PaymentSvc.updateStatus(vm.payTransaction,transactionStatuses[1].code);
+            vm.payTransaction.totalAmount = vm.payTransaction.emd;
+         }
  		})
  		.catch(function(err){
  			$state.go("main");
  			Modal.alert("Unknown error occured in payment system");
  		})
-
  		LocationSvc.getAllState();
-
  	}
 
    function confirmPurchase(){
@@ -92,11 +96,11 @@ function PaymentCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,$location,
       confirmPayment();
       return;
    }
- 	  var bodyRequest = "";
- 	  bodyRequest = "merchant_id=111628&order_id=" + vm.payTransaction._id;
+ 	   var bodyRequest = "";
+      bodyRequest = "merchant_id=111628&order_id=" + vm.payTransaction._id;
       bodyRequest += "&currency=INR&amount=" + vm.payTransaction.totalAmount;
-      bodyRequest += "&redirect_url=" + encodeURIComponent(currentURL + '/api/payment/paymentresponse') 
-      bodyRequest += "&cancel_url=" + encodeURIComponent(currentURL + '/api/payment/paymentresponse');
+      bodyRequest += "&redirect_url=" + encodeURIComponent(serverPath + '/api/payment/paymentresponse')
+      bodyRequest += "&cancel_url=" + encodeURIComponent(serverPath + '/api/payment/paymentresponse');
       bodyRequest += "&language=en";
       bodyRequest += "&integration_type=iframe_normal";
 
@@ -130,7 +134,8 @@ function PaymentCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,$location,
       bodyRequest += "&merchant_param1="+ encodeURIComponent($location.host());
       bodyRequest += "&merchant_param2="+ vm.payTransaction.user._id;
       bodyRequest += "&merchant_param3=main";
-      
+      if(vm.payTransaction.requestType === 'Auction Request')
+         bodyRequest += "&merchant_param4=auction_request";
       PaymentSvc.encrypt({ 'rawstr' : bodyRequest})
       .then(function(encrytedData){
       	 $scope.ccAvenue = true;

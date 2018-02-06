@@ -7,7 +7,7 @@ var productCtrl = require('./../product/product.controller');
 var router = express.Router();
 
 router.post('/bidproduct',auth.isAuthenticated(),controller.getSellers,controller.getBidProduct,productCtrl.search);
-router.post('/submitbid',auth.isAuthenticated(),controller.validateSubmitBid,controller.submitBid);
+router.post('/submitbid',auth.isAuthenticated(),controller.validateSubmitBid,controller.verifyCalculation,controller.submitBid);
 router.put('/:id',auth.isAuthenticated(),controller.validateUpdate,controller.update,controller.postUpdate);
 router.get('/',controller.getSellers,controller.fetchBid);
 //router.get('/count/:productId');

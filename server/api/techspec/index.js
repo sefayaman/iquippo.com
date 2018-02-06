@@ -16,6 +16,6 @@ router.get('/fielddata', controller.getFieldData);
 router.put('/fieldupdate/:id', controller.fieldUpdate);
 router.delete('/fieldvalue/:id', controller.fieldDelete);
 router.delete('/fieldvalue/:id', controller.fieldDelete);
-router.get('/export',controller.exportExcel);
+router.get('/export',auth.hasRole('admin'),controller.exportExcel);
 //router.get('/groupbydata', controller.getGroupByData);
 module.exports = router;

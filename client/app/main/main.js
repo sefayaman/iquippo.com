@@ -152,7 +152,13 @@ angular.module('sreizaoApp')
         url:"/myaccount",
         templateUrl: 'app/account/myaccount/myaccount.html',
         controller: 'MyAccountCtrl as myAccountVm',
-         layout:'client'
+        layout:'client'
+      })
+      .state('useraccountedit', {
+        url: '/useraccountedit/:id',
+        templateUrl: 'app/account/myaccount/myaccount.html',
+        controller: 'MyAccountCtrl as myAccountVm',
+        layout:'client'
       })
       .state('viewproduct', {
         url:"/used/viewproducts?currentPage&group&category&brand&model" + 
@@ -343,7 +349,7 @@ angular.module('sreizaoApp')
         restrict:true
       })
       .state('usermanagment', {
-        url: '/usermanagement',
+        url: '/usermanagement?first_id&last_id&currentPage&prevPage&searchstr',
         templateUrl: 'app/admin/usermanagement/usermanagement.html',
         controller: 'UserManagementCtrl as userManagementVm',
         authenticate:true,
@@ -511,12 +517,26 @@ angular.module('sreizaoApp')
       //   authenticate:true,
       //   layout:' '
       // })
-       .state('paymentresponse', {
+      .state('paymentresponse', {
         url: '/paymentresponse/:tid',
         templateUrl: 'app/payment/paymentresponse.html',
         controller: 'PaymentResponseCtrl as paymentResponseVm',
         authenticate:true,
         layout:'admin'
+      })
+      .state('auctionpayment', {
+        url: '/auctionpayment/:tid',
+        templateUrl: 'app/payment/payment.html',
+        controller: 'PaymentCtrl as paymentVm',
+        authenticate:true,
+        layout:'client'
+      })
+      .state('auctionpaymentresponse', {
+        url: '/auctionpaymentresponse/:tid',
+        templateUrl: 'app/payment/auctionpaymentresponse.html',
+        controller: 'AuctionPaymentResponseCtrl as auctionPaymentResponseVm',
+        authenticate:true,
+        layout:'client'
       })
       .state('spareupload', {
         url: '/spareupload',
@@ -633,7 +653,7 @@ angular.module('sreizaoApp')
         authenticate:true,
         restrict:true
       })
-        .state('enterprisevaluation.paymentreceived', {
+        .state('enterprisevaluation.paymentreceived',{
         url: '/paymentreceived',
         templateUrl: 'app/enterprise/paymentreceived.html',
         controller: 'EnterprisePaymentReceivedCtrl as enterprisePaymentReceivedVm',
@@ -649,7 +669,7 @@ angular.module('sreizaoApp')
         layout:'admin'
       })
       .state('enterprisevaluation.edittransaction', {
-        url: '/addtransaction/:id',
+        url: '/addtransaction/:id?md',
         templateUrl: 'app/enterprise/addtransaction.html',
         controller: 'AddTransactionCtrl as addTransactionVm',
         authenticate:true,

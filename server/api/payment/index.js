@@ -2,7 +2,7 @@
 
 var express = require('express');
 var controller = require('./payment.controller');
-
+var auth = require('../../auth/auth.service');
 var router = express.Router();
 
 router.get('/', controller.getAll);
@@ -15,6 +15,6 @@ router.post('/onfilter', controller.getOnFilter);
 router.post('/export', controller.exportPayment);
 router.post('/encrypt', controller.encrypt);
 router.post('/paymentresponse', controller.paymentResponse);
-router.post('/sendreqtocreateuser', controller.sendReqToCreateUser);
+router.post('/sendreqtocreateuser', auth.isAuthenticated(), controller.sendReqToCreateUser);
 
 module.exports = router;

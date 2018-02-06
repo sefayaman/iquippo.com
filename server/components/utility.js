@@ -1,4 +1,5 @@
 'use strict';
+var _ = require('lodash');
 var Seq = require('seq');
 var xlsx = require('xlsx');
 var trim = require('trim');
@@ -38,6 +39,7 @@ var client = s3.createClient(options);
 var request = require('request');
 
 exports.toIST = toIST;
+exports.toCsvValue = toCsvValue;
 exports.convertQVAPLStatus = convertQVAPLStatus;
 exports.paginatedResult = paginatedResult;
 exports.getWorkbook = getWorkbook;
@@ -517,6 +519,19 @@ function convertQVAPLStatus(qvaplStatus) {
     cancel: 'Cancelled'
   }
   return statusMapping[qvaplStatus];
+}
+var csvRegEx = /,|\n|\r\n|\t|\u202c/g;
+
+function toCsvValue(valStr){
+  valStr = valStr + "";
+   if(valStr){
+      valStr = valStr.replace(/,|\n|\r\n|\t|\u202c/g, ' ');
+      valStr = valStr.replace(/"/g, '');
+      valStr = _.trim(valStr);
+    }
+    if(valStr == "null" || valStr == "undefined")
+      valStr = "";
+    return valStr;
 }
 
 function toIST(value) {

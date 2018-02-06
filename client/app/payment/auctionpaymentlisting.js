@@ -3,12 +3,14 @@
 'use strict';
 angular.module('sreizaoApp').controller('AuctionPaymentListingCtrl',AuctionPaymentListingCtrl);
 
-function AuctionPaymentListingCtrl($scope, $rootScope, Modal, Auth, PaymentSvc, PagerSvc) {
+function AuctionPaymentListingCtrl($scope, $state, $rootScope, $uibModal, Modal, Auth, PaymentSvc, PagerSvc, userRegForAuctionSvc, AuctionMasterSvc, EmdSvc) {
 	var vm = this;
 	vm.transactions = [];
 	var filter = {};
   var initFilter = {};
   vm.searchStr = "";
+  $scope.OverAll = "overall";
+  $scope.LotWist = "lotwise";
   $scope.pager = PagerSvc.getPager();
   $scope.transactionStatuses = transactionStatuses;
 
@@ -18,6 +20,7 @@ function AuctionPaymentListingCtrl($scope, $rootScope, Modal, Auth, PaymentSvc, 
 	$scope.ReqSubmitStatuses = ReqSubmitStatuses;
 	vm.resendUserData = resendUserData;
   vm.fireCommand = fireCommand;
+  vm.openPaymentOptionModal = openPaymentOptionModal;
 
 	$scope.$on('refreshPaymentHistroyList',function(){
     fireCommand(true);
@@ -39,13 +42,109 @@ function AuctionPaymentListingCtrl($scope, $rootScope, Modal, Auth, PaymentSvc, 
 	 		if(loggedIn){
         filter ={};
         initFilter.pagination = true;
+        if(!Auth.isAdmin() && !Auth.isAuctionRegPermission()){
+          initFilter['userId'] = Auth.getCurrentUser()._id;
+        }
         angular.copy(initFilter, filter);
 	 			getTrasactions(filter);	
 	 		}
 	 	})
 	 }
 
-	 init();
+	init();
+
+  function openPaymentOptionModal(paymentData){
+    var payScope = $rootScope.$new();
+    payScope.auctionRegPayment = paymentData;
+    payScope.option = {};
+    payScope.option.select = paymentData.paymentMode;
+    if(angular.isUndefined(payScope.auctionRegPayment.emd)) {
+      if(payScope.auctionRegPayment.emdTax === $scope.OverAll) {
+        var serData = {};
+        serData._id = paymentData.auction_id;
+        AuctionMasterSvc.get(serData)
+        .then(function(result) {
+          if(!result)
+            return;
+          payScope.auctionRegPayment.emd = result[0].emdAmount;
+          PaymentSvc.update(payScope.auctionRegPayment);
+        });
+      } else {
+        var serData = {};
+        serData.auction_id = paymentData.auction_id;
+        serData.selectedLots = paymentData.selectedLots;
+        EmdSvc.getAmount(serData).then(function(result){
+          if(!result)
+            return;
+          payScope.auctionRegPayment.emd = result.emdAmount;
+          PaymentSvc.update(payScope.auctionRegPayment);
+        }).catch(function(err){
+        });
+      }
+    }
+
+    var paymentModal = $uibModal.open({
+      animation: true,
+        templateUrl: "paymentOption.html",
+        scope: payScope,
+        size: 'lg'
+    });
+
+    payScope.submit = function () {
+      if(!payScope.option.select) {
+        Modal.alert("Please select your preferred payment method", true);
+        return;
+      }
+      if(!payScope.kycExist) {
+        payScope.kycExist = false;
+        if(!Auth.getCurrentUser().kycInfo || Auth.getCurrentUser().kycInfo.length < 1){
+          payScope.kycExist = true;
+          return;
+        }
+      }
+      if(payScope.kycExist && !payScope.option.kycUploadlater)
+        return;
+
+      if(payScope.option.select === 'offline') {
+        var payTranData = {};
+        payTranData.paymentMode = payScope.option.select;
+        payTranData.transactionId = payScope.auctionRegPayment._id;
+        payTranData.totalAmount = payScope.auctionRegPayment.emd;
+        //payTranData.status = transactionStatuses[1].code;
+        if(payScope.option.kycUploadlater)
+          payTranData.kycUploadlater = "Yes";
+
+        if(payScope.auctionRegPayment.statuses.length < 1)
+          payTranData.statuses = [];
+        else {
+          payTranData.statuses = angular.copy(payScope.auctionRegPayment.statuses);
+        }
+        var stObj = {};
+        stObj.userId = Auth.getCurrentUser()._id;
+        stObj.status = transactionStatuses[1].code;
+        stObj.createdAt = new Date();
+        payTranData.statuses[payTranData.statuses.length] = stObj;
+        userRegForAuctionSvc.saveOfflineRequest(payTranData).then(function(rd){
+          if(payScope.auctionRegPayment.status === 'completed')
+            Modal.alert("Please pay Rs " + payScope.auctionRegPayment.emd + " amount to increase your credit limit and inform our customer care team.");
+          else
+            Modal.alert(informationMessage.auctionPaymentSuccessMsg);
+          
+          paymentModal.dismiss('cancel');
+          $rootScope.$broadcast('refreshPaymentHistroyList');
+        });
+      } else {
+        $state.go("auctionpayment", {
+          tid: payScope.auctionRegPayment._id
+        });
+        paymentModal.dismiss('cancel');
+      }
+    };
+
+    payScope.close = function () {
+      paymentModal.dismiss('cancel');
+    };
+  }
 
   function fireCommand(reset){
     if (reset)
@@ -72,6 +171,9 @@ function AuctionPaymentListingCtrl($scope, $rootScope, Modal, Auth, PaymentSvc, 
 
 	function exportExcel(){
     var dataToSend ={};
+    if(!Auth.isAdmin() && !Auth.isAuctionRegPermission()){
+      dataToSend['userId'] = Auth.getCurrentUser()._id;
+    }
     dataToSend.auctionPaymentHistory = true;
     dataToSend.auctionPaymentReq = "Auction Request";
     PaymentSvc.export(dataToSend)
@@ -85,7 +187,7 @@ function AuctionPaymentListingCtrl($scope, $rootScope, Modal, Auth, PaymentSvc, 
     PaymentSvc.sendReqToCreateUser(data)
       .then(function(res) {
           if (res.errorCode == 0) {
-            getTrasactions(filter);
+            fireCommand(true);
           }
           Modal.alert(res.message);
           $rootScope.loading = false;

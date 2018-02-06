@@ -23,6 +23,8 @@ var valuationCancellationCtrl = require('./valuationcancellationfee.controller')
 var inputFormCtrl = require('./inputformmaster.controller');
 var bookADemoCtrl = require('./bookademo.controller');
 var legalEntityTypeCtrl = require('./legalentitytype.controller');
+var bankMasterCtrl = require('./bankmaster.controller');
+var IquippoGstMasterCtrl = require('./iquippogstmaster.controller');
 var json2xls = require('json2xls');
 var router = express.Router();
 
@@ -158,16 +160,17 @@ router.get('/emd/amount',emdCtrl.getEmdAmountData);
 router.put('/emd/:id', auth.hasRole('admin'),emdCtrl.updateEmdData);
 //router.delete('/emd/:id',auth.hasRole('admin'), emdCtrl.destroy);
 router.put('/emd/delete/:id',auth.hasRole('admin'), emdCtrl.destroy);
-router.post('/sendreqtocreateemd', emdCtrl.sendReqToCreateEmd);
+router.post('/sendreqtocreateemd', auth.hasRole('admin'), emdCtrl.sendReqToCreateEmd);
 router.get('/lot',lotCtrl.getLotData);
+router.get('/lot/csv',auth.hasRole('admin'),lotCtrl.exportCSV);
 router.get('/lotdata',lotCtrl.getLots);
 //router.delete('/lot/:id',auth.hasRole('admin'), lotCtrl.destroy);
 router.put('/lot/delete/:id',auth.hasRole('admin'), lotCtrl.destroy);
-router.post('/lot',lotCtrl.create);
+router.post('/lot', auth.hasRole('admin'), lotCtrl.create);
 router.put('/lot/:id', auth.hasRole('admin'),lotCtrl.updateLotData);
 router.put('/lot/updateproductlot/:id', auth.hasRole('admin'),lotCtrl.updateProductLotData);
 router.get('/lot/lotsinauction',lotCtrl.getLotsInAuction);
-router.post('/sendreqtocreatelot', lotCtrl.sendReqToCreateLot);
+router.post('/sendreqtocreatelot', auth.hasRole('admin'), lotCtrl.sendReqToCreateLot);
 //Valuation Cancellation Fee master
 router.get('/valuationcancellationfee',auth.hasRole('admin'),valuationCancellationCtrl.get);
 router.get('/findcancellationfee',valuationCancellationCtrl.getValuationRequest,valuationCancellationCtrl.getCancellationFee);
@@ -197,6 +200,16 @@ router.get('/legaltype', legalEntityTypeCtrl.get);
 router.post('/legaltype', auth.hasRole('admin'),legalEntityTypeCtrl.create);
 router.put('/legaltype/:id', auth.hasRole('admin'),legalEntityTypeCtrl.update);
 router.delete('/legaltype/:id',auth.hasRole('admin'), legalEntityTypeCtrl.destroy);
+
+router.get('/bank', bankMasterCtrl.get);
+router.post('/bank', auth.hasRole('admin'),bankMasterCtrl.create);
+router.put('/bank/:id', auth.hasRole('admin'),bankMasterCtrl.update);
+router.delete('/bank/:id',auth.hasRole('admin'), bankMasterCtrl.destroy);
+
+router.get('/iquippogst', IquippoGstMasterCtrl.get);
+router.post('/iquippogst', auth.hasRole('admin'),IquippoGstMasterCtrl.create);
+router.put('/iquippogst/:id', auth.hasRole('admin'),IquippoGstMasterCtrl.update);
+router.delete('/iquippogst/:id',auth.hasRole('admin'), IquippoGstMasterCtrl.destroy);
 
 router.get('/newequipmentotherinfo', controller.getNewEquipmentOtherInfo);
 

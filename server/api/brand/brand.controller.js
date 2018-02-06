@@ -70,7 +70,6 @@ exports.getBrandOnFilter = function(req,res){
   if(data.categoryName)
     tempFilter['category.name'] = data.categoryName;
   filter['$or'].push(tempFilter);
-
   if(data.searchStr){
      var term = new RegExp(data.searchStr, 'i');
       filter['name'] = { $regex: term };

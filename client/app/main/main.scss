@@ -815,9 +815,13 @@ body{font-family: Lato-Regular ,sans-serif;}
 .search-banner p{text-shadow: 1px 2px 3px #666; font-weight: bold; letter-spacing: 2px; margin-bottom: 15px;}
 .search-banner .input-group{width: 100%;}
 .search-banner .input-group .form-control{height: 50px; border-color: #eee; border-radius: 4px;}
+.search-banner .input-group.has-error .form-control{border:1px solid #ef100c; background: #f5e7e6;}
+.search-banner .input-group.has-error .input-group-addon{background: transparent;}
 .filter{background: #fff; border-radius: 4px;}
-.filter .form-control{height: 50px; border-color: #eee; margin-left: -1px; border-radius: 0px;}
-.filter .select-text{margin-left: -1px;}
+.filter .form-control{height: 50px; border-color: #eee; margin-left: 0px; border-radius: 0px;}
+.filter .select-text{margin-left: 0px;}
+.filter .has-error-filter{border:1px solid #ef100c; border-radius: 4px; background: #f5e7e6;}
+.filter .has-error-filter .form-control{background: transparent;}
 .filter .select-text .back-tohome a{line-height: 46px; text-shadow: none; color: #666; display: block;}
 .filter .select-text:nth-of-type(1) .form-control{border-radius: 4px 0 0 4px;}
 .filter .select-text:nth-of-type(5) .form-control{border-radius: 0 4px 4px 0;}
@@ -938,6 +942,7 @@ body{font-family: Lato-Regular ,sans-serif;}
   background: url('../assets/images/back-border.png'); background-size: 100% 100%; background-repeat: no-repeat;
   
 }
+.word-break{word-break: break-word;}
 .text-ellips{white-space: nowrap;overflow: hidden;text-overflow: ellipsis; font-size: 13px;} 
 .category-name{text-transform: uppercase; font-weight: bold; margin: 1.1em 0 2em; font-size: 16px; color: #2F2F2F;}
 .category-name h5{margin-bottom: 2px; font-weight: bold; font-size: 16px; color: #2F2F2F;min-height:30px; max-height: 30px;}
@@ -1192,6 +1197,7 @@ footer .subscribe{height: 40px;}
 .bulk-more a{font-weight: bold; display: block; padding: 2.5em 0 0;}
 .bulk-order .btn{border-radius: 4px; font-size: 1em; letter-spacing: 2px; text-transform: uppercase; padding: 0.9em 2em; margin-top: 2.5em;}
 .filter-heading{font-weight: bold; font-size:14px; letter-spacing: 0.5px; color: #2F2F2F; text-transform: uppercase;}
+.auctionName{font-weight: bold; font-size:18px; letter-spacing: 0.5px; color: #2F2F2F; text-transform: uppercase;}
 .filter-heading small a{line-height: 22px; color: #e31e24;text-transform: capitalize;}
 /*stylish radio and checkbox*/
 .checkbox {
@@ -1408,6 +1414,7 @@ footer .subscribe{height: 40px;}
 .new-equipment-brand li:first-child{height: 630px;}
 .new-equipment-brand li:nth-child(2){margin-bottom: 30px;}
 .new-equipment-brand li img{width: 100%; height: 100%;}
+.new-equipments-left img{border:1px solid #00429A; border-radius: 5px; margin-bottom: 15px;}
 .rcupload img{opacity:0.4;}
 .freecost{line-height: 4em;}
 

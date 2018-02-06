@@ -8,11 +8,15 @@
               <div class="">
                 <div class="row">
                   <div class="form-group col-sm-12" ng-class="{'has-error': form.role.$invalid && submitted }">
-                    <select class="form-control" name="role" ng-model="newUser.role" ng-disabled="isEdit" required>
+                    <select class="form-control" name="role" ng-model="newUser.role" required ng-if="!isEdit">
                       <option value="" disabled>*Role</option>
                       <option value="customer" ng-if="isChannelPartner() || isAdmin()">Customer</option>
                       <option value="channelpartner" ng-if="isAdmin()">Channel Partner</option>
                       <option value="enterprise" ng-if="isEnterprise() || isAdmin()">Enterprise</option>
+                    </select>
+                    <select class="form-control" name="role" ng-model="newUser.role" required ng-if="isEdit">
+                      <option value="" disabled>*Role</option>
+                      <option value="{{role}}" ng-repeat="role in roles">{{role}}</option>
                     </select>
                     <i class="caret"></i>
                   </div>
@@ -31,32 +35,25 @@
 
                 <div class="row">
                   <div class="form-group col-sm-4" ng-class="{'has-error': form.userType.$invalid && submitted }">
-                    <select class="form-control" name="userType" ng-model="newUser.userType" required>
+                    <select class="form-control" name="userType" ng-model="newUser.userType" ng-change="onChangeHandler()" required>
                       <option value="" disabled>*Type</option>
                       <option value="individual">Individual</option>
                       <option value="private">Private Entrepreneur</option>
                       <option value="legalentity">Legal Entity</option>
                     </select>
-                    <i class="caret"></i>
+                  </div>
+                  <div class="form-group col-sm-4">
+                    <select class="form-control" name="legalType" ng-model="newUser.legalType" ng-disabled="newUser.userType != 'legalentity'">
+                      <option value="">Select Type</option>
+                      <option value="{{legType.legalType}}" ng-repeat="legType in legalTypeList">{{legType.legalType}}</option>
+                    </select>
                   </div>
                   <div class="form-group col-sm-4" ng-class="{'has-error': form.company.$invalid && submitted }">
                     <input type="text" class="form-control" name="company" ng-model="newUser.company" placeholder="*Legal Entity Name" ng-required= "newUser.userType == 'legalentity'" ng-disabled="newUser.userType != 'legalentity'">
                   </div>
-                  <div class="form-group col-sm-4" ng-class="{'has-error': form.email.$invalid && submitted }">
-                  <input type="email" class="form-control" name="email" ng-model="newUser.email" value="" placeholder="Email Address" mongoose-error/>
-                  <p class="help-block" ng-show="form.email.$error.email&& submitted">
-                  Doesn't look like a valid email.
-                  </p>
-                  <p class="help-block" ng-show="form.email.$error.required && submitted">
-                  What's your email address?
-                  </p>
-                  <p class="help-block" ng-show="form.email.$error.mongoose">
-                    {{ errors.email }}
-                  </p>
-                  </div>
                 </div>
                 <div class="row" ng-if="newUser.role == 'enterprise'">
-                  <div class="col-sm-4 form-group" ng-if="isAdmin() && !isEdit">
+                  <div class="col-sm-4 form-group" ng-if="isAdmin()">
                     <input type="checkbox" name="isnew" ng-model="newUser.enterprise" ng-disabled="newUser.enterpriseId" ng-click="getServices(true)"> New
                   </div>
                   <div class="col-sm-8 form-group" ng-class="{'has-error': form.enterprise_name.$invalid && submitted }">
@@ -72,11 +69,23 @@
                     <input type="text" class="form-control" name="" value="" placeholder="*Address" required/>
                   </div> -->
                   <div class="form-group col-sm-12" ng-class="{'has-error': form.employeeCode.$invalid && submitted }" ng-if="newUser.role == 'enterprise'">
-                    <input type="text" class="form-control" name="employeeCode"  placeholder="*Employee Code" ng-model="newUser.employeeCode" ng-required="newUser.role == 'enterprise'" ng-disabled="isEdit">
+                    <input type="text" class="form-control" name="employeeCode"  placeholder="*Employee Code" ng-model="newUser.employeeCode" ng-required="newUser.role == 'enterprise'">
                   </div>
                 </div>
-                <div class="row">                  
-                  <div class="form-group col-sm-6" ng-class="{'has-error': form.password.$invalid && submitted }">
+                <div class="row">
+                  <div class="form-group col-sm-4" ng-class="{'has-error': form.email.$invalid && submitted }">
+                  <input type="email" class="form-control" name="email" ng-model="newUser.email" value="" placeholder="Email Address" mongoose-error/>
+                  <p class="help-block" ng-show="form.email.$error.email&& submitted">
+                  Doesn't look like a valid email.
+                  </p>
+                  <p class="help-block" ng-show="form.email.$error.required && submitted">
+                  What's your email address?
+                  </p>
+                  <p class="help-block" ng-show="form.email.$error.mongoose">
+                    {{ errors.email }}
+                  </p>
+                  </div>
+                  <div class="form-group col-sm-4" ng-class="{'has-error': form.password.$invalid && submitted }">
                   <input type="password" name="password" class="form-control" ng-model="newUser.password" ng-disabled="isEdit"
                   placeholder="*Password" 
                      ng-minlength="4"
@@ -90,7 +99,7 @@
                       {{ errors.password }}
                     </p>
                   </div>
-                  <div class="form-group col-sm-6" ng-class="{'has-error': form.passwordCompare.$invalid && submitted }">
+                  <div class="form-group col-sm-4" ng-class="{'has-error': form.passwordCompare.$invalid && submitted }">
                   <input type="password" name="passwordCompare" class="form-control" ng-model="newUser.passwordConfirm" valid-password-c="newUser.password" ng-disabled="isEdit"
                   placeholder="*Confirm Password" 
                      ng-minlength="4"
@@ -241,7 +250,15 @@
                   <div class="form-group col-sm-6" ng-class="{'has-error':form.aadhaarNumber.$invalid && submitted}">
                     <input type="text" class="form-control" name="aadhaarNumber"  placeholder="AADHAAR Number" uib-tooltip="9999 9999 9999" tooltip-trigger="focus" ng-keyup="validateAadhaar(newUser.aadhaarNumber)" tooltip-placement="top" ng-model="newUser.aadhaarNumber">
                   </div>                  
-                </div>   
+                </div> 
+                <div class="row">
+                  <div class="col-sm-6 form-group">
+                    <input type="text" class="form-control" name="companyIdentificationNo" ng-model="newUser.companyIdentificationNo"  placeholder="Company Identification No" ng-disabled="newUser.userType != 'legalentity'">
+                  </div>
+                  <div class="col-sm-6 form-group">
+                    <input type="text" class="form-control" name="tradeLicense" ng-model="newUser.tradeLicense"  placeholder="Trade License" ng-disabled="newUser.userType != 'legalentity'">
+                  </div>
+                </div>  
                 <!-- <div class="row">
                   <div class="col-sm-6 form-group">
                     <span class="btn btn-warning fileinput-button">
@@ -253,20 +270,62 @@
                     </div>
                   </div>
                  </div>  -->
-                <div class="form-group">
+
                   <div class="row">
-                    <div class="col-sm-3 text-left" >
+                    <div class="col-sm-3 form-group text-left">
+                        <div class="floating-label-wrapper">
+                            <label>Identity Proof</label>                          
+                        </div>
+                    </div>
+                    <div class="col-sm-6 form-group text-left" ng-class="{'has-error': form.idProof.$invalid && submitted }">
+                      <select class="form-control" ng-model="kycInfo.idProof" name="idProof" ng-required="kycInfo.idProofDocName">
+                        <option value="">Select Identity Proof</option>
+                        <option ng-repeat="idProof in idProofList | orderBy:'name'" value="{{idProof.docName}}">{{idProof.docName}}</option>
+                      </select>
+                      <div class="text-ellips"><a href="{{uploadImagePrefix}}{{kycDocDir}}/{{kycInfo.idProofDocName}}" target="_blank">{{kycInfo.idProofDocName}}</a></div>
+                    </div>
+                    <div class="col-sm-3 form-group">
+                        <span class="btn btn-warning fileinput-button">
+                          <input type="file" name="doc" data-filetype="doc" onchange="angular.element(this).scope().updateKyc(this.files,this,'idProof')"  class="ng-scope">
+                          <span class="fa fa-upload"></span>
+                        </span>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-3 form-group text-left">
+                      <div class="floating-label-wrapper">
+                        <label for="JobProfile">Address Proof</label>
+                      </div>
+                    </div>
+                    <div class="col-sm-6 form-group text-left" ng-class="{'has-error': form.addressProof.$invalid && submitted }">
+                      <select class="form-control" ng-model="kycInfo.addressProof" name="addressProof" ng-required="kycInfo.addressProofDocName">
+                        <option value="">Select Address Proof</option>
+                        <option ng-repeat="addProof in addressProofList | orderBy:'name'" value="{{addProof.docName}}">{{addProof.docName}}</option>
+                      </select>
+                      <div class="text-ellips"><a href="{{uploadImagePrefix}}{{kycDocDir}}/{{kycInfo.addressProofDocName}}" target="_blank">{{kycInfo.addressProofDocName}}</a></div>
+                    </div>
+                    <div class="col-sm-3 form-group">
+                        <span class="btn btn-warning fileinput-button">
+                          <input type="file" name="doc" data-filetype="doc" onchange="angular.element(this).scope().updateKyc(this.files,this,'addressProof')"  class="ng-scope">
+                          <span class="fa fa-upload"></span>
+                        </span>
+                    </div>
+                  </div>
+
+                  <div class="row form-group">
+                    <div class="col-sm-3 text-right" >
                       <input type="checkbox" name="agree" ng-model="newUser.agree" value=""> I Agree
                     </div>
                     <div class="col-sm-9 text-left">
                       <small>By clicking submit, you agree to the Terms &amp; Conditions.</small>
                     </div>
                   </div>
-                </div>
-
-                <div class="form-group text-center">
-                      <button type="button" class="btn btn-lg btn-warning" ng-click="register($event)">Submit</button>
-                </div>
+                  <p class="form-group">
+                    <a href="javascript:void(0);" ng-click="gotoProfile(newUser._id)">Click here to edit more information</a>
+                  </p>
+                  <div class="form-group text-center">
+                        <button type="button" class="btn btn-lg btn-warning" ng-click="register($event)">Submit</button>
+                  </div>
               </div>
               <!-- </div> -->
 

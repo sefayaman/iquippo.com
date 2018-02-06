@@ -27,16 +27,17 @@
 
     var allCategory = [];
     var allBrand = [];
+    $scope.regLotForUser = [];
 
     $scope.auctionData = null;
 
     $scope.lotsArr = [];
+    vm.lotListing = [];
     $scope.OverAll = "overall";
     $scope.LotWist = "lotwise";
     $scope.redirectToLiveAuction = false;
 
     function init(){
-
       var filter = {};
       filter._id = dbAuctionId;
       $rootScope.loading = true;
@@ -45,7 +46,12 @@
           $rootScope.loading = false;
           if(result && result.items && result.items.length) {
             $scope.auctionData = result.items[0];
+            $scope.contactDetailsVisible = false;
+            if($scope.auctionData.contactDetails && $scope.auctionData.contactDetails.length > 0)
+              $scope.contactDetailsVisible = true;
             openLiveAuctionURL(false);
+            if(Auth.getCurrentUser()._id)
+              checkWidgetAccessOnLot();
           }
           else
             return backButton();
@@ -77,6 +83,22 @@
       });
       restoreState();
       fireCommand(false,true);
+    }
+
+    function checkWidgetAccessOnLot(){
+      var dataObj = {};
+      dataObj.auction = {};
+      dataObj.user = {};
+      dataObj.auction.dbAuctionId = dbAuctionId;
+      dataObj.user._id = Auth.getCurrentUser()._id;
+      dataObj.emdTax = $scope.auctionData.emdTax;
+      if($scope.auctionData.emdTax === $scope.LotWist)
+        dataObj.checkRegUser = true;
+      dataObj.onlyRegLotForUser = true;
+      userRegForAuctionSvc.checkUserRegis(dataObj)
+      .then(function(result) {
+        $scope.regLotForUser = result.regLot;
+      });
     }
 
    function clearAll(){
@@ -202,17 +224,16 @@
             vm.totalItems = res.length;
             vm.lotListing = res;
             vm.lotListing.forEach(function(lot){
-              lot.isVisible = false;
+              //lot.isVisible = false;
               if(lot.assets.length && lot.assets[0].product)
                 lot.primaryImg= $rootScope.uploadImagePrefix + lot.assets[0].product.assetDir +"/" + lot.assets[0].product.primaryImg;
               if(!Auth.getCurrentUser()._id)
                 return;
-              //lot.isVisible = false;
               if($scope.auctionData.auctionType == 'L')
                 return;
               var url = auctionURL+ "/bidwidget/" + dbAuctionId + "/" + lot._id + "/" + Auth.getCurrentUser()._id + "?random=" + Math.random();
               lot.url = $sce.trustAsResourceUrl(url);
-              checkWidgetAccessOnLot(lot);
+              //checkWidgetAccessOnLot(lot);
             });
           }else{
             $scope.noResult = true;
@@ -220,11 +241,13 @@
           }
         })
         .catch(function(err) {
+          $scope.noResult = true;
+          $scope.searching = false;
           throw err;
         });
     }
 
-    function checkWidgetAccessOnLot(lot){
+    /*function checkWidgetAccessOnLot(lot){
       $timeout(function() {
        var lotObj = lot;
         var dataObj = {};
@@ -247,7 +270,7 @@
           }
         });
       },0);
-    }
+    }*/
 
   //Register Now
     function openRegisterNow(){
@@ -270,9 +293,11 @@
           //else 
           if($scope.auctionData.emdTax === $scope.OverAll) {
             dataObj.selectedLots = [];
-            vm.lotListing.forEach(function(item){
-              dataObj.selectedLots[dataObj.selectedLots.length] = item.lotNumber;
-            });
+            if(vm.lotListing) {
+              vm.lotListing.forEach(function(item){
+                dataObj.selectedLots[dataObj.selectedLots.length] = item.lotNumber;
+              });
+            }
           } else {
             dataObj.emdTax = $scope.LotWist;
           }
@@ -281,11 +306,11 @@
             console.log("the registration",result);
             if(result.data){
               if(result.data =="done" && $scope.auctionData.emdTax === $scope.OverAll){
-                 Modal.alert("You have already registered for this auction"); 
+                 Modal.alert(informationMessage.auctionRegMsg, true); 
                  return;
                }
               if(result.data =="undone" && $scope.auctionData.emdTax === $scope.OverAll){
-                Modal.alert("Your EMD payment is still pending. Please pay the EMD amount and inform our customer care team.",true);
+                Modal.alert(informationMessage.auctionPaymentPendingMsg,true);
                 return;
               }
             }
@@ -340,7 +365,7 @@
           brand:asset.brand,
           id:asset.assetId
         };
-        if(Auth.isLoggedIn() && lot.isVisible)
+        if(Auth.isLoggedIn() && $scope.regLotForUser.indexOf(lot.lotNumber) !== -1)
           statParam.lot = lot._id;
         $state.go('productdetail',statParam);
       }

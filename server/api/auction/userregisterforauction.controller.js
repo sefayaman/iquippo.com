@@ -108,7 +108,6 @@ exports.checkUserRegis = function(req, res) {
       $in: arr
     }
   }
-  
   var query = Model.find(filter);
   query.exec(
     function(err, data) {
@@ -127,12 +126,22 @@ exports.checkUserRegis = function(req, res) {
           if(data[0].transactionId)
             filter._id = data[0].transactionId;
         }
-        
         PaymentTransaction.find(filter, function(err, payment) {
           if (err) {return handleError(res, err);}
           var message = {};
           if(!payment.length)
             return res.status(200).json({errorCode: 2, message: "No Data Found"});
+          if(req.body.onlyRegLotForUser) {
+            var regResult = {};
+            regResult.regLot = [];
+            for(var i = 0; i < payment.length; i++) {
+              if (payment[i].status === "completed") {
+                for(var j = 0; j < payment[i].selectedLots.length; j++)
+                  regResult.regLot.push(payment[i].selectedLots[j]);
+              }
+            }
+            return res.status(200).json(regResult);
+          }
           if(req.body.emdTax === 'lotwise') {
             var flag = false;
             for(var i = 0; i < payment.length; i++) {
@@ -290,6 +299,7 @@ var USER_REQUEST_FOR_AUCTION_FIELD_MAP = {
   'Auction Id': 'auction.auctionId',
   'Auction Name': 'auction.name',
   'EMD Amount': 'auction.emdAmount',
+  'Customer ID': 'user.customerId',
   'User Name': 'fullName',
   'Mobile': 'mobileNo',
   'Email': 'user.email',

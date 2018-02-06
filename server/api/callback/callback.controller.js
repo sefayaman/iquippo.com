@@ -122,7 +122,7 @@ function setType(cell){
 function excel_from_data(data) {
   var ws = {};
   var range;
-  range = {s: {c:0, r:0}, e: {c:6, r:data.length }};
+  range = {s: {c:0, r:0}, e: {c:7, r:data.length }};
 
   for(var R = 0; R != data.length + 1 ; ++R){
     
@@ -147,6 +147,16 @@ function excel_from_data(data) {
     else{
       if(user)
         cell =  {v: (user.ticketId || "")};
+    }
+    setType(cell);
+    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R})
+    ws[cell_ref] = cell;
+    
+    if(R == 0)
+      cell = {v: "Customer ID"};
+    else{
+      if(user)
+        cell =  {v: (user.customerId || "")};
     }
     setType(cell);
     var cell_ref = xlsx.utils.encode_cell({c:C++,r:R})

@@ -13,7 +13,6 @@ function PaymentResponseCtrl($scope,Modal,$stateParams,$state,notificationSvc,Pa
  	vm.success = true;
 
  	function init(){
- 		console.log("getting loaded");
  		var tid = $stateParams.tid;
  		var tidFromCookie = $cookieStore.get("tid");
  		if(!tidFromCookie || tid != tidFromCookie){
@@ -29,39 +28,6 @@ function PaymentResponseCtrl($scope,Modal,$stateParams,$state,notificationSvc,Pa
  				Modal.alert("Invalid payment access");
  			}
  			vm.payTransaction = result[0];
-       /*if(vm.payTransaction.status == "completed")
-       {
-            filter={};
-            filter.transactionId=vm.payTransaction._id;
-          userRegForAuctionSvc.get(filter)
-          .then(function(userdata){
-            console.log("userData",userdata);
-            if(userdata.length > 0){
-            dataToSendToAs.user={};
-            dataToSendToAs.user={
-            user_id:userdata[0].user._id,
-            lname:userdata[0].user.lname,
-            fname:userdata[0].user.fname,
-            email:userdata[0].user.email,
-            iq_id:userdata[0].user.customerId,
-            mobile:userdata[0].user.mobile
-          };
-          dataToSendToAs.amountPaid=vm.payTransaction.totalAmount;
-          dataToSendToAs.auction_id=userdata[0].auction.dbAuctionId;
-          dataToSendToAs.selectedLots=userdata[0].lotNumber;
-          return userRegForAuctionSvc.sendUserData(dataToSendToAs);
-        }
-        else{
-          return;
-        }
-          })
-          .then(function(datasent){
-            return datasent;
-          })
-          .catch(function(err){
-            throw err;
-          });
-       }*/
 
  			if(vm.payTransaction.paymentMode == 'online' && !Auth.isAdmin()){
 	 			if(vm.payTransaction.statusCode == 0)

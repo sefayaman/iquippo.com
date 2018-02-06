@@ -42,6 +42,7 @@ function OfflinePaymentCtrl($scope,$rootScope,Modal,$stateParams,$state,$uibModa
     if($scope.viewMode === 'paymentView') {
       $scope.totalPaidAmount = 0;
       $scope.offlinePayment.payments.forEach(function(item) {
+        if(item.paymentStatus !== 'failed')
         $scope.totalPaidAmount = Number($scope.totalPaidAmount) + Number(item.amount);
       });
     }
@@ -53,6 +54,7 @@ function OfflinePaymentCtrl($scope,$rootScope,Modal,$stateParams,$state,$uibModa
       return;
     }
     vm.dataModel.totalAmount = vm.dataModel.amount;
+    vm.dataModel.paymentMode = "offline";
     if(!vm.dataModel.payments)
       vm.dataModel.payments = [];
     var stsObj = {};
@@ -63,6 +65,7 @@ function OfflinePaymentCtrl($scope,$rootScope,Modal,$stateParams,$state,$uibModa
     stsObj.bankname = vm.dataModel.bankname;
     stsObj.branch = vm.dataModel.branch;
     stsObj.createdAt = new Date();
+    stsObj.paymentStatus = "success";
     vm.dataModel.payments[vm.dataModel.payments.length] = stsObj;
     vm.dataModel.userDataSendToAuction = true;
     $rootScope.loading = true;

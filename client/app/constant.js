@@ -98,13 +98,18 @@ var Modals = {
   OfflinePaymentPopup:{
     tplUrl:'app/payment/offlinepayment.html',
     Ctrl:'OfflinePaymentCtrl as offlinePaymentVm'
+  },
+  valuationInvoiceCalcuation:{
+    tplUrl:'app/enterprise/invoicecalculation.html',
+    Ctrl:'InvoiceCalculationCtrl as invoiceCalculationVm'
   }
 };
 
 var s3Detais = {
     baseURL : "https://s3.ap-south-1.amazonaws.com",
     s3bucket : "iquippo-image-upload-dev"
-};
+  };
+
 
 var priceRange = [
 {
@@ -499,6 +504,10 @@ var auctionURL = "https://auctions.iquippo.com"
 var supportMail = "info@iquippo.com";
 var DevEnvironment = false; 
 var supportContact = "011 66025672";
+/*for payment gateway */
+var ccavenueURL = "https://secure.ccavenue.com";
+var currentURL = "https://iquippo.com";
+var accessCode = 'AVSY67DJ29AL34YSLA';
 /*if(location.host.indexOf('iquippo.com') == -1){
   supportMail = "iquippo.uat@gmail.com";
   DevEnvironment = true;
@@ -561,6 +570,11 @@ informationMessage['Fullpayment'] = "Full payment has been received.";
 informationMessage['kycUpdate'] = "KYC Documents uploaded successfully.";
 informationMessage['invoiceUpdateForSelf'] = "Invoice in your name has been submitted successfully.";
 informationMessage['invoiceUpdateForThirdParty'] = "Invoice in third party's name has been submitted successfully.";
+
+/*Auction messages*/
+informationMessage['auctionRegMsg'] = "You have already registered for this auction.";
+informationMessage['auctionPaymentPendingMsg'] = 'Your EMD payment is still pending. For paying EMD amount, go to Payment History in your dashboard.';
+informationMessage['auctionPaymentSuccessMsg'] = "You have sucessfully registered for the auction. Please pay the EMD amount and inform our customer care team.";
 
 var newsEvents = [
   {

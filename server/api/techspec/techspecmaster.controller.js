@@ -207,94 +207,160 @@ exports.fieldDelete = function(req, res) {
   });
 };
 
-
-exports.exportExcel = function(req,res){
-  var queryParam = req.query;
-   var filter = {};
-  
-
-  var dateFilter = {};
-  switch(queryParam.type){
-    case "techspec":
-
-      var fieldMap = fieldsConfig["EXPORT_TECHSPEC_CATEGORY"];
-      var query = TechSpecMaster.find(filter).sort({createdAt:-1});
-      query.exec(function(err,dataArr){
-          if(err) { return handleError(res, err); }
-          exportExcel(req,res,fieldMap,dataArr);
-      });
-      break;
-    case 'techspecbrand':
-
-      var fieldMap = fieldsConfig["EXPORT_TECHSPEC_BRAND"];
-      var query = TechSpecValMaster.find(filter).sort({createdAt:-1});
-       query.exec(function(err,dataArr){
-          if(err) { return handleError(res, err); }
-          console.log('brand_______________',dataArr);
-          exportExcel(req,res,fieldMap,dataArr);
-      });
-      break;
-      default:
-  }
-
-
-  
-  
+var EXPORT_TECHSPEC_BRAND = {
+    "Serial No.": "serialNumber",
+    "Category": "category.name",
+    "Brand": "brand.name",
+    "Model": "model.name"
 };
 
-function exportExcel(req,res,fieldMap,jsonArr){
-  var queryParam = req.query;
-  var role = queryParam.role;
-  var headers = Object.keys(fieldMap);
-  var allowedHeaders = [];
-  for(var i=0;i < headers.length;i++){
-      var hd = headers[i];
-      var obj = fieldMap[hd];
-      if(obj.allowedRoles && obj.allowedRoles.indexOf(role) == -1){
-        continue;
-      }
-      allowedHeaders.push(hd);
-  }
-  var str = allowedHeaders.join(",");
-  str += "\r\n";
-  //dataArr.push(allowedHeaders);
-  jsonArr.forEach(function(item,idx){
-    //dataArr[idx + 1] = [];
+var EXPORT_TECHSPEC_BRAND_FIELD = {
+    "Field Name": "name",
+    "Field Type": "type",
+    "Field Value": "value",
+    "Visible on Front": "isFront",
+    "Created At": "createdAt",
+    "Updated At": "updatedAt"
+};
 
-    allowedHeaders.forEach(function(header){
-      var keyObj = fieldMap[header];
-      var val = _.get(item,keyObj.key,"");
-      if(keyObj.type && keyObj.type == 'boolean')
-          val = val?'YES':'NO';
-      if(keyObj.type && keyObj.type == 'date' && val)
-        val = moment(val).utcOffset('+0530').format('MM/DD/YYYY');
-      if(keyObj.type && keyObj.type == 'datetime' && val)
-        val = moment(val).utcOffset('+0530').format('MM/DD/YYYY HH:mm');
-      if(keyObj.type && keyObj.type == 'url' && val){
-        if(val.filename){
-          if(val.external === true)
-          val = val.filename;
-          else
-            val =  req.protocol + "://" + req.headers.host + "/download/"+ item.assetDir + "/" + val.filename || "";
-        }else
-          val = "";
-        
-      }
-        val = val + "";
-        if(val)
-          val = val.replace(/,|\n/g, ' ') ;
-        str += val + ",";
-       //dataArr[idx + 1].push(val);
-    });
+exports.exportExcel = function (req, res) {
+    var queryParam = req.query;
+    var filter = {};
+    switch (queryParam.type) {
+        case "techspec":
+
+            var fieldMap = fieldsConfig["EXPORT_TECHSPEC_CATEGORY"];
+            var query = TechSpecMaster.find(filter).sort({createdAt: -1});
+            query.exec(function (err, dataArr) {
+                if (err) {
+                    return handleError(res, err);
+                }
+                exportExcel(req, res, fieldMap, dataArr);
+            });
+            break;
+        case 'techspecbrand':
+
+            var fieldMap = EXPORT_TECHSPEC_BRAND;
+            var query = TechSpecValMaster.find(filter).sort({createdAt: -1});
+            query.exec(function (err, dataArr) {
+                if (err) {
+                    return handleError(res, err);
+                }
+                exportExcelBrand(req, res, fieldMap, dataArr);
+            });
+            break;
+        default:
+    }
+
+};
+
+function exportExcel(req, res, fieldMap, jsonArr) {
+    var queryParam = req.query;
+    var role = queryParam.role;
+    var headers = Object.keys(fieldMap);
+    var allowedHeaders = [];
+    for (var i = 0; i < headers.length; i++) {
+        var hd = headers[i];
+        var obj = fieldMap[hd];
+        if (obj.allowedRoles && obj.allowedRoles.indexOf(role) == -1) {
+            continue;
+        }
+        allowedHeaders.push(hd);
+    }
+    var str = allowedHeaders.join(",");
     str += "\r\n";
-  });
+    //dataArr.push(allowedHeaders);
+    jsonArr.forEach(function (item, idx) {
+        //dataArr[idx + 1] = [];
 
-  str = str.substring(0,str.length -1);
-  return  renderCsv(req,res,str);
+        allowedHeaders.forEach(function (header) {
+            var keyObj = fieldMap[header];
+            var val = _.get(item, keyObj.key, "");
+            if (keyObj.type && keyObj.type == 'boolean')
+                val = val ? 'YES' : 'NO';
+            if (keyObj.type && keyObj.type == 'date' && val)
+                val = moment(val).utcOffset('+0530').format('MM/DD/YYYY');
+            if (keyObj.type && keyObj.type == 'datetime' && val)
+                val = moment(val).utcOffset('+0530').format('MM/DD/YYYY HH:mm');
+            if (keyObj.type && keyObj.type == 'url' && val) {
+                if (val.filename) {
+                    if (val.external === true)
+                        val = val.filename;
+                    else
+                        val = req.protocol + "://" + req.headers.host + "/download/" + item.assetDir + "/" + val.filename || "";
+                } else
+                    val = "";
+
+            }
+            val = val + "";
+            if (val)
+                val = val.replace(/,|\n/g, ' ');
+            str += val + ",";
+            //dataArr[idx + 1].push(val);
+        });
+        str += "\r\n";
+    });
+
+    str = str.substring(0, str.length - 1);
+        req.filename = "techspec_category_";
+    return  renderCsv(req, res, str);
 }
 
+
+function exportExcelBrand(req, res, fieldMap, jsonArr) {
+    var headers = Object.keys(EXPORT_TECHSPEC_BRAND);
+    var dataKeys = Object.keys(EXPORT_TECHSPEC_BRAND_FIELD);
+    var csvStr = "";
+    csvStr = headers.join(",");
+    csvStr += ",";
+    csvStr += dataKeys.join(",");
+    csvStr += "\r\n";
+    jsonArr.forEach(function (item, idx) {
+        var rowData = [];
+        headers.forEach(function (key) {
+            var val = _.get(item, EXPORT_TECHSPEC_BRAND[key], "");
+
+            if (EXPORT_TECHSPEC_BRAND[key] === 'serialNumber') {
+                val = (idx + 1) + 1;
+            }
+            rowData.push(val);
+        });
+
+        var fieldsArr = item.fields;
+        if (fieldsArr && fieldsArr.length) {
+            fieldsArr.forEach(function (field, index) {
+                var row = [].concat(rowData);
+                row[0] = (idx + 1) + "." + (index + 1);
+                dataKeys.forEach(function (key) {
+                    var val = _.get(field, EXPORT_TECHSPEC_BRAND_FIELD[key], "");
+                    if (EXPORT_TECHSPEC_BRAND_FIELD[key] === "updatedAt") {
+                        val = moment(item.updatedAt).utcOffset('+0530').format('MM/DD/YYYY');
+                    }
+                    if (EXPORT_TECHSPEC_BRAND_FIELD[key] === "createdAt") {
+                        val = moment(item.createdAt).utcOffset('+0530').format('MM/DD/YYYY');
+                    }
+
+                    val = Utility.toCsvValue(val);
+                    row.push(val);
+                });
+                csvStr += row.join(",");
+                csvStr += "\r\n";
+            });
+        } else {
+            csvStr += rowData.join(",");
+            csvStr += "\r\n";
+        }
+
+    });
+
+    csvStr = csvStr.substring(0, csvStr.length - 1);
+    req.filename = "techspec_brands_";
+    return  renderCsv(req, res, csvStr);
+}
+
+
 function renderCsv(req,res,csv){
-   var fileName = req.query.type + "_" + new Date().getTime();
+   var fileName = req.filename + "_" + new Date().getTime();
   res.setHeader('Content-Type', 'application/octet-stream');
   res.setHeader("Content-Disposition", 'attachment; filename=' + fileName + '.csv;');
   res.end(csv, 'binary'); 

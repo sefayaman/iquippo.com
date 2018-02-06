@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('sreizaoApp')
-  .controller('UserManagementCtrl', ['$scope', '$rootScope', 'DTOptionsBuilder','Auth','uploadSvc','notificationSvc','userSvc', 'Modal','$http', function ($scope, $rootScope, DTOptionsBuilder, Auth,uploadSvc,notificationSvc, userSvc, Modal,$http) {
+  .controller('UserManagementCtrl', ['$scope', '$rootScope', '$stateParams', '$state', 'DTOptionsBuilder','Auth','uploadSvc','notificationSvc','userSvc', 'Modal','$http', function ($scope, $rootScope, $stateParams, $state, DTOptionsBuilder, Auth, uploadSvc, notificationSvc, userSvc, Modal,$http) {
    	var vm = this;
     //pagination variables
     var prevPage = 0;
@@ -30,6 +30,7 @@ angular.module('sreizaoApp')
     vm.getProductData = getProductData;
     $scope.getConcatData = [];
     $scope.userInfo = {};
+    $scope.dateFilter = {};
     vm.getUserExportFileName = getUserExportFileName;
     $scope.$on('updateUserList',function(){
       fireCommand(true);
@@ -124,6 +125,7 @@ angular.module('sreizaoApp')
       userScope.userInfo = $scope.userInfo;
       userScope.isEdit = true;
       Modal.openDialog('adduser', userScope);
+      //$state.go('useraccountedit', {id:userData._id});
     }
 
     function openAddUserDialog() {
@@ -162,7 +164,9 @@ angular.module('sreizaoApp')
 
           dataToSend.pagination = true;
           dataToSend.itemsPerPage = vm.itemsPerPage;
-          getUser(dataToSend);
+          restoreState();
+          //getUser(dataToSend);
+          fireCommand(false);
         }
          //getUserExportFileName();
       });
@@ -171,11 +175,15 @@ angular.module('sreizaoApp')
     init();
     
      function getUser(filter){
+      if(vm.currentPage == prevPage)
+      return;
+
       filter.prevPage = prevPage;
       filter.currentPage = vm.currentPage;
       filter.first_id = first_id;
       filter.last_id = last_id;
       filter.notManpower = true;
+      saveState();
       userSvc.getUsers(filter).then(function(result){
         getProductsCountWithUser(result);
         vm.userList  = result.users;
@@ -190,6 +198,35 @@ angular.module('sreizaoApp')
         Modal.alert("Error in geting user");
       })
     }
+
+    function restoreState(){
+    if($stateParams.searchstr)
+      vm.userSearchFilter.searchStr = $stateParams.searchstr;
+    if($stateParams.first_id)
+      first_id = $stateParams.first_id;
+    if($stateParams.last_id)
+      last_id = $stateParams.last_id;
+    if($stateParams.currentPage){
+      var currentPage = parseInt($stateParams.currentPage);
+      prevPage = parseInt($stateParams.prevPage);
+      vm.totalItems = vm.itemsPerPage * currentPage;
+      vm.currentPage = currentPage;
+    }
+  }
+
+  function saveState(){
+    var statObj = {};
+    statObj['first_id'] = first_id;
+    statObj['last_id'] = last_id;
+    statObj['currentPage'] = vm.currentPage;
+    statObj['prevPage'] = prevPage;
+    if(vm.userSearchFilter.searchStr)
+      statObj['searchstr'] = vm.userSearchFilter.searchStr;
+    else
+      statObj['searchstr'] = "";
+
+    $state.go("usermanagment",statObj,{location:'replace',notify:false});
+  }
 
     function getUserExportFileName(){
 
@@ -294,16 +331,27 @@ angular.module('sreizaoApp')
     }
 
      function exportExcel(){
-      var dataToSend ={};
+      var serverData ={};
       if(Auth.getCurrentUser()._id && Auth.getCurrentUser().role == 'channelpartner') {
-        dataToSend["userId"] = Auth.getCurrentUser()._id;
+        serverData["userId"] = Auth.getCurrentUser()._id;
       }
 
       if(Auth.isEnterprise()){
-        dataToSend["enterpriseId"] = Auth.getCurrentUser().enterpriseId;
+        serverData["enterpriseId"] = Auth.getCurrentUser().enterpriseId;
       }
 
-      $http.post('/api/users/export', dataToSend)
+      if($scope.dateFilter.fromDate)
+         serverData["fromDate"] = $scope.dateFilter.fromDate;
+
+      if($scope.dateFilter.toDate)
+         serverData["toDate"] = $scope.dateFilter.toDate;
+      
+      var exportObj = {filter:serverData};
+      exportObj.method = "POST";
+      exportObj.action = "api/users/export";
+      $scope.$broadcast("submit",exportObj);
+
+      /*$http.post('/api/users/export', dataToSend)
       .then(function(res){console.log("res===",res);
       console.log("data==",res.data);
         var data = res.data;
@@ -311,8 +359,9 @@ angular.module('sreizaoApp')
       },
       function(res){
         console.log(res)
-      })
+      })*/
      }
+
     
     function deleteUser(user){
       Modal.confirm(informationMessage.deleteChannelPartnerConfirm,function(isGo){
@@ -350,13 +399,18 @@ angular.module('sreizaoApp')
 
 }])
 
-  .controller('AddUserCtrl', ['$scope', '$rootScope','LocationSvc', '$http', 'Auth', 'Modal', 'uploadSvc', 'notificationSvc','vendorSvc', 'userSvc', '$uibModalInstance', 'UtilSvc',
-   function ($scope, $rootScope,LocationSvc, $http, Auth, Modal, uploadSvc ,notificationSvc,vendorSvc, userSvc, $uibModalInstance, UtilSvc) {
+  .controller('AddUserCtrl', ['$scope', '$rootScope', '$state', 'LocationSvc', '$http', 'Auth', 'Modal', 'uploadSvc', 'notificationSvc','vendorSvc', 'KYCSvc','userSvc', '$uibModalInstance', 'UtilSvc', 'LegalTypeSvc',
+   function ($scope, $rootScope, $state, LocationSvc, $http, Auth, Modal, uploadSvc ,notificationSvc,vendorSvc,KYCSvc, userSvc, $uibModalInstance, UtilSvc, LegalTypeSvc) {
     $scope.newUser ={};
     $scope.newUser.isOtherCountry=false;
     $scope.newUser.isOtherState=false;
     $scope.newUser.isOtherCity=false;
     $scope.errors = {};
+    $scope.addressProofList = [];
+    $scope.idProofList = [];
+    $scope.kycInfo = {};
+    $scope.kycList = [];
+    $scope.type = ['Address Proof', 'Identity Proof'];
 
       var services = [
                       {name:"Valuation",code:"Valuation",sequence:1,approvalRequired:"No"},
@@ -376,10 +430,18 @@ angular.module('sreizaoApp')
     $scope.getServices = getServices;
     $scope.getVendors=getVendors;
     $scope.validateAadhaar = validateAadhaar;
-    
+    $scope.updateKyc = updateKyc;
+    $scope.onChangeHandler = onChangeHandler;
+    $scope.gotoProfile = gotoProfile;
+
     function init(){
+      $scope.roles = [];
       if($scope.isEdit) {
         angular.copy($scope.userInfo, $scope.newUser);
+        $scope.roles.push($scope.newUser.role);
+        if(Auth.isAdmin() && $scope.newUser.role === 'customer')
+          $scope.roles.push('enterprise');
+
         if($scope.newUser.isOtherCountry == true){
           $scope.newUser.otherCountry = $scope.newUser.country;
           $scope.newUser.country = "Other"
@@ -397,6 +459,24 @@ angular.module('sreizaoApp')
           $scope.newUser.city = "Other"
         }
         $scope.headerName = "Edit User";
+
+        if($scope.newUser.kycInfo.length < 1) {
+          $scope.newUser.kycInfo = [{}];
+          $scope.kycInfo = {};
+        }
+        else {
+          $scope.kycList = [];
+          angular.copy($scope.newUser.kycInfo, $scope.kycList);
+          $scope.kycList.forEach(function(item){
+            if(item.type == $scope.type[0]){
+              $scope.kycInfo.addressProof = item.name;
+              $scope.kycInfo.addressProofDocName = item.docName;
+            } else if(item.type == $scope.type[1]){
+              $scope.kycInfo.idProof = item.name;
+              $scope.kycInfo.idProofDocName = item.docName;
+            }
+          });
+        }
       }
       else {
         $scope.newUser = {};
@@ -407,15 +487,38 @@ angular.module('sreizaoApp')
         $scope.headerName = "Add User";
       }
       getEnterprises();
+      loadLegalTypeData();
+      getKYCData();
     }
 
     loadVendors();
     init();
-    
+
     function loadVendors(){
       vendorSvc.getAllVendors()
          .then(function(res){
          })
+    }
+
+    function loadLegalTypeData() {
+      LegalTypeSvc.get()
+        .then(function(result){
+          $scope.legalTypeList = result;
+      });
+    }
+
+    function getKYCData() {
+      KYCSvc.get().then(function(result) {
+        if(!result)
+          return;
+        
+        result.forEach(function(item){
+          if(item.kycType == $scope.type[0])
+            $scope.addressProofList[$scope.addressProofList.length] = item;
+          if(item.kycType == $scope.type[1])
+            $scope.idProofList[$scope.idProofList.length] = item; 
+        });
+      });
     }
 
     function getVendors(code){
@@ -425,8 +528,21 @@ angular.module('sreizaoApp')
       //console.log("ListVendor",$scope.vendorList);
     }
     
-    function getServices(isNew,isChanged){
+    function onChangeHandler(){
+      if($scope.newUser.userType !== 'legalentity'){
+        $scope.newUser.legalType = "";
+        $scope.newUser.company = "";
+        $scope.newUser.companyIdentificationNo = "";
+        $scope.newUser.tradeLicense = "";
+      }
+    }
 
+    function gotoProfile(userId){
+      $scope.closeDialog();
+      $state.go('useraccountedit', {id:userId});
+    }
+
+    function getServices(isNew,isChanged){
       $scope.availedServices = [];
       if($scope.newUser.role != 'enterprise')
         return;
@@ -554,6 +670,41 @@ angular.module('sreizaoApp')
       $scope.form.aadhaarNumber.$invalid = validFlag;
       ret = validFlag;
     }
+    $scope.newUser.kycInfo = [{}];
+    if($scope.kycInfo.addressProof) {
+      var addProofObj = {};
+      addProofObj.type = $scope.type[0];
+      addProofObj.name = $scope.kycInfo.addressProof;
+      addProofObj.isActive = false;
+      if($scope.kycInfo.addressProofDocName)
+       addProofObj.docName = $scope.kycInfo.addressProofDocName;
+      else {
+        Modal.alert("Please upload address proof document.", true);
+        return;
+      }
+      $scope.newUser.kycInfo[$scope.newUser.kycInfo.length] = addProofObj;
+    }
+    
+    if($scope.kycInfo.idProof) {
+      var idProofObj = {};
+      idProofObj.type = $scope.type[1];
+      idProofObj.name = $scope.kycInfo.idProof;
+      idProofObj.isActive = false;
+      if($scope.kycInfo.idProofDocName)
+       idProofObj.docName = $scope.kycInfo.idProofDocName;
+      else {
+        Modal.alert("Please upload ID proof document.", true);
+        return;
+      }
+      $scope.newUser.kycInfo[$scope.newUser.kycInfo.length] = idProofObj;
+    }
+    $scope.newUser.kycInfo = $scope.newUser.kycInfo.filter(function(item, idx) {
+      if (item && item.docName)
+        return true;
+      else
+        return false;
+    });
+
     if($scope.form.$invalid || ret) {
         $scope.submitted = true;
         return;
@@ -602,8 +753,12 @@ angular.module('sreizaoApp')
 
       $rootScope.loading = true;
       setLocationData();
-      if($scope.newUser.role == 'enterprise')
-          updateServices();
+      if($scope.newUser.role == 'enterprise'){
+        if($scope.newUser.enterprise && !$scope.newUser.enterpriseId)
+          $scope.newUser.enterpriseId = "E" + $scope.newUser.mobile + "" + Math.floor(Math.random() *10);
+        updateServices();
+      }
+          
       userSvc.updateUser($scope.newUser).then(function(result){
         $rootScope.loading = false;
         $scope.closeDialog();
@@ -640,6 +795,22 @@ angular.module('sreizaoApp')
         if(item.checked)
           $scope.newUser.availedServices[$scope.newUser.availedServices.length] = item;
       });
+    }
+
+    function updateKyc(files, _this, type){
+      if(files.length == 0)
+        return;
+      $rootScope.loading = true;
+      uploadSvc.upload(files[0], kycDocDir).then(function(result){
+          $rootScope.loading = false;
+            if(type == 'addressProof')
+              $scope.kycInfo.addressProofDocName = result.data.filename;
+            if(type == 'idProof')
+                $scope.kycInfo.idProofDocName = result.data.filename;
+        })
+        .catch(function(err){
+          $rootScope.loading = false;
+        });
     }
 
   function saveNewUser(){

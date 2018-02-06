@@ -13,9 +13,11 @@ var PaymentTransactionSchema = new Schema({
   transactionId:String,
   payments:[{}],
   totalAmount:Number,
+  emd:Number,
   requestType:String,
   ccAvenueRes:{},
   ccAvenueData:{},
+  kycUploadlater:String,
   paymentMode : {type:String,default:'online'},
   statusCode : {type:Number,default:-1},
   selectedLots:[],
@@ -28,6 +30,8 @@ var PaymentTransactionSchema = new Schema({
 
 PaymentTransactionSchema.pre('save', function(next){
   var doc = this;
+  if(doc.transactionId)
+    return next();
   // get the next sequence
   sequence.next(function(nextSeq){
     doc.transactionId = nextSeq;

@@ -150,7 +150,7 @@ exports.compileTemplate = function(dataObj, serverPath, tplName, cb) {
 		return cb(false, "");
 	fs.readFile(__dirname + '/../../views/emailTemplates/' + tplName + ".html", 'utf8', function(err, data) {
 		if (err) {
-			//console.log(err);
+			console.log(err);
 			return cb(false, "");
 		}
 		var tempFun = handlebars.compile(data);
@@ -170,7 +170,7 @@ exports.getHelp = function(req, res) {
 			$regex: term
 		}
 	});
-	//console.log(req.body.txt);
+	console.log(req.body.txt);
 	query.exec(
 		function(err, searchs) {
 			if (err) {
@@ -2698,7 +2698,6 @@ exports.updateMasterData = function(req, res) {
 				function isValid(d) {
 					return d.getTime() === d.getTime();
 				}
-
 
 exports.getNewEquipmentOtherInfo = function(req,res){
 	var queryParam = req.query;

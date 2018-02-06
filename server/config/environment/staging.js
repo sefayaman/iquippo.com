@@ -25,10 +25,10 @@ module.exports = {
   contactNumber: "011 66025672",
   //serverPath: "http://54.255.186.7:9010"
   serverPath: "http://uat.iquippo.com",
-  ccAvenueWorkingKey:"BCCD36E2D20659D5F76B99973880340D",
+  ccAvenueWorkingKey:"9BC820D58992A17D46EFC1A59A9AF9E5",
   mailConfig : { MailHost: "smtp.gmail.com", MailPort: "465", Mailusername: "iquippo.uat@gmail.com", Mailpassword: "pass12345678",from:"iquippo.uat@gmail.com"},
   supportMail: "iquippo.uat@gmail.com",
-  qpvalURL:"http://13.126.19.255/valuation/api.php",
+  qpvalURL:"http://13.126.19.255/Valuers/api.php",
   REDIRECT_URL:"http://finance-uat.iquippo.com/customer-portal-iquippo/sso",
   awsEndpoint: 's3.ap-south-1.amazonaws.com',
   awsAccessKeyId: 'AKIAIEW6UDFVW7GEQAGQ',
