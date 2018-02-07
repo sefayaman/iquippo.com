@@ -490,7 +490,7 @@ function auctionReportAll(req, res) {
                         var val = "";
                         if (successObj)
                             val = _.get(successObj, Export_Field_Mapping_InnerData[innerKey], "");
-                        if ( innerKey==='paymentDate' && val)
+                        if ( Export_Field_Mapping_InnerData[innerKey] ==='paymentDate' && val)
                             val = moment(val).utcOffset('+0530').format('MM/DD/YYYY');
                         val = Util.toCsvValue(val);
                         csvStr += val + ",";
