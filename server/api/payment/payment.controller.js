@@ -478,6 +478,8 @@ function auctionReportAll(req, res) {
                             val = _.get(item.user, "email", "");
                         } else if (key === 'paymentMode') {
                             val = _.get(item, "paymentMode", "");
+                        } else if (key === 'createdAt') {
+                            val = Util.toIST(_.get(item, 'createdAt', ''));
                         } else {
                             val = _.get(item, key, "");
                         }
@@ -487,7 +489,11 @@ function auctionReportAll(req, res) {
                     dataKeys.forEach(function (innerKey) {
                         var val = "";
                         if (successObj)
+                            if ( innerKey==='paymentDate') {
+                                val = Util.toIST(_.get(successObj, Export_Field_Mapping_InnerData[innerKey], ''));
+                            }
                             val = _.get(successObj, Export_Field_Mapping_InnerData[innerKey], "");
+                         
                         val = Util.toCsvValue(val);
                         csvStr += val + ",";
                     });
