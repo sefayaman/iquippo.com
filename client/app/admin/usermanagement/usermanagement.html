@@ -22,7 +22,7 @@
                <li>System will accept only 100 records in a single file.</li>  
               </ul>
               <div class="row">
-                <div class="col-sm-3">
+                <div class="col-sm-2">
                   <span class="btn btn-warning fileinput-button bulk-browse">
                     <span>Upload Excel</span>
                     <input type="file" name="doc" data-filetype="doc" file-upload="" class="ng-scope">
@@ -34,12 +34,18 @@
                 <div class="col-sm-3">
                   <custom-datepicker placeholder="*Effective To Date" name="effectiveToDate" ng-model="dateFilter.toDate" myid="todate" required></custom-datepicker>
                 </div>
-                <div class="col-sm-2">
-                 <!--  <a class="btn btn-success btn-md btn-block" ng-if="isAdmin()" target="_blank">Export</a> -->
-                  <button class="btn btn-success btn-md btn-block" ng-click="userManagementVm.exportExcel()"><i class="fa fa-file-excel-o"></i> Export</button>
+                  <div class="col-sm-1 padd-right">
+                 <!--  <a class="btn btn-success btn-md" ng-if="isAdmin()" target="_blank">Export</a> -->
+                  <button class="btn btn-success btn-md btn-block" ng-click="userManagementVm.exportExcel('userdata')"><i class="fa fa-file-excel-o"></i> Export</button>
                   <export-form name="userexport"></export-form>
                 </div>
-              </div>
+
+                  <div class="col-sm-2">
+                 <!--  <a class="btn btn-success btn-md" ng-if="isAdmin()" target="_blank">Export</a> -->
+                  <button class="btn btn-success btn-md btn-block" ng-click="userManagementVm.exportExcel('gstinfo')"><i class="fa fa-file-excel-o"></i> Export GST</button>
+                  <export-form name="usergstexport"></export-form>
+                </div>
+                              </div>
             </div>
 
           <legend></legend>

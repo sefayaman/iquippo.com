@@ -330,8 +330,9 @@ angular.module('sreizaoApp')
       fireCommand(true);
     }
 
-     function exportExcel(){
+     function exportExcel(data) {
       var serverData ={};
+      serverData["exportType"] = data;
       if(Auth.getCurrentUser()._id && Auth.getCurrentUser().role == 'channelpartner') {
         serverData["userId"] = Auth.getCurrentUser()._id;
       }
