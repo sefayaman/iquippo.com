@@ -491,8 +491,8 @@ function auctionReportAll(req, res) {
                         if (successObj)
                             if ( innerKey==='paymentDate') {
                                 val = Util.toIST(_.get(successObj, Export_Field_Mapping_InnerData[innerKey], ''));
-                            }
-                            val = _.get(successObj, Export_Field_Mapping_InnerData[innerKey], "");
+                            }else
+                              val = _.get(successObj, Export_Field_Mapping_InnerData[innerKey], "");
                          
                         val = Util.toCsvValue(val);
                         csvStr += val + ",";
