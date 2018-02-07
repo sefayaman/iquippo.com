@@ -359,7 +359,7 @@ var Export_Field_Mapping = {
 };
 var Export_Field_Mapping_InnerData = {
         "Payment Mode Type": "paymentModeType",
-        "Bank Name": "bankName",
+        "Bank Name": "bankname",
         "Branch": "branch",
         "Ref No": "refNo",
         "Amount": "amount",
