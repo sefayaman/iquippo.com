@@ -489,11 +489,9 @@ function auctionReportAll(req, res) {
                     dataKeys.forEach(function (innerKey) {
                         var val = "";
                         if (successObj)
-                            if ( innerKey==='paymentDate') {
-                                val = Util.toIST(_.get(successObj, Export_Field_Mapping_InnerData[innerKey], ''));
-                            }else
-                              val = _.get(successObj, Export_Field_Mapping_InnerData[innerKey], "");
-                         
+                            val = _.get(successObj, Export_Field_Mapping_InnerData[innerKey], "");
+                        if ( innerKey==='paymentDate' && val)
+                            val = moment(val).utcOffset('+0530').format('MM/DD/YYYY');
                         val = Util.toCsvValue(val);
                         csvStr += val + ",";
                     });
