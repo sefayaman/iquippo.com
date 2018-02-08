@@ -111,7 +111,7 @@ function AuctionRegisCtrl($scope, $rootScope, $location, Modal, Auth,PagerSvc,KY
       };
        if($scope.kycInfo.addressProofDocName){
         var obj = {
-                    type:"Identity Proof",
+                    type:"Address Proof",
                     name : $scope.kycInfo.addressProof,
                     docName:$scope.kycInfo.addressProofDocName,
                     isActive:false
