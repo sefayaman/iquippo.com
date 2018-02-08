@@ -52,6 +52,8 @@
             openLiveAuctionURL(false);
             if(Auth.getCurrentUser()._id)
               checkWidgetAccessOnLot();
+            restoreState();
+            fireCommand(false,true);
           }
           else
             return backButton();
@@ -81,8 +83,8 @@
         if($stateParams.category)
             onCategoryChange($stateParams.category,true); 
       });
-      restoreState();
-      fireCommand(false,true);
+      //restoreState();
+      //fireCommand(false,true);
     }
 
     function checkWidgetAccessOnLot(){
