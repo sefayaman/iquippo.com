@@ -1,6 +1,7 @@
 'use strict';
 
 var _ = require('lodash');
+var trim = require('trim');
 var Seq = require('seq');
 var User = require('./user.model');
 var passport = require('passport');
@@ -183,7 +184,7 @@ exports.validateSignup = function(req, res) {
 exports.parseImportExcel = function(req, res, next) {
   var body = req.body;
   var ret;
-  ['filename', 'user'].forEach(function(x) {
+  ['excelData', 'user'].forEach(function(x) {
     if (!body[x]) {
       ret = x;
     }
@@ -191,13 +192,19 @@ exports.parseImportExcel = function(req, res, next) {
 
   if (ret)
     return next(new APIError(412, 'Missing mandatory parameter: ' + ret));
-  var options = {
-    file: body.filename,
-    headers: Object.keys(userFieldsMap),
-    mapping: userFieldsMap,
-    notValidateHeaders: true
-  };
-  req.excelData = Utillity.toJSON(options);
+  if(!body.excelData.length)
+    return next(new APIError(412, 'No data found to upload'));
+   req.excelData = body.excelData.filter(function(x) {
+    Object.keys(x).forEach(function(key) {
+      if (userFieldsMap[key]) {
+        x[userFieldsMap[key]] = trim(x[key] || "");
+      }
+      delete x[key];
+    })
+    x.rowCount = x.__rowNum__;
+    return x;
+  });
+
   req.reqType = 'Upload';
   return next();
 };

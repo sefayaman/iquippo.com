@@ -25,7 +25,7 @@
                 <div class="col-sm-2">
                   <span class="btn btn-warning fileinput-button bulk-browse">
                     <span>Upload Excel</span>
-                    <input type="file" name="doc" data-filetype="doc" file-upload="" class="ng-scope">
+                    <input type="file" name="doc" import-excel ng-model="excelData" class="ng-scope" ng-change="userManagementVm.uploadExcel(excelData)">
                   </span>
                 </div>
                 <div class="col-sm-offset-1 col-sm-3">
