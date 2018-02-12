@@ -21,6 +21,27 @@ function AuctionPaymentListingCtrl($scope, $state, $rootScope, $uibModal, Modal,
 	vm.resendUserData = resendUserData;
   vm.fireCommand = fireCommand;
   vm.openPaymentOptionModal = openPaymentOptionModal;
+  vm.generateKit = generateKit;
+
+  function generateKit(auctionId,transactionId,userId){
+    if(!auctionId || !transactionId || !userId)
+      return;
+    var filter = {
+      auctionId:auctionId,
+      transactionId:transactionId,
+      userId:userId
+    };
+    userRegForAuctionSvc.generateKit(filter)
+    .then(function(res){
+      Modal.alert("Kit generated successfully!");
+      fireCommand(true);
+    })
+    .catch(function(err){
+      if(err.data)
+        Modal.alert(err.data);
+      console.log("Error in kit generation",err);
+    })
+  }
 
 	$scope.$on('refreshPaymentHistroyList',function(){
     fireCommand(true);

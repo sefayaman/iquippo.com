@@ -2,6 +2,7 @@
 
 var express = require('express');
 var controller = require('./auction.controller');
+var kitCtrl = require('./auctionkit.controller');
 var userRegForAuction = require('./userregisterforauction.controller');
 var auth = require('../../auth/auth.service');
 //var auctionDateController=require('./auctiondate.controller');
@@ -42,6 +43,7 @@ router.post('/userregforauction/checkUserRegis',userRegForAuction.checkUserRegis
 router.post('/userregforauction/saveOfflineRequest',userRegForAuction.saveOfflineRequest);
 router.post('/userregforauction/filterregisteruser', userRegForAuction.getFilterOnRegisterUser);
 router.post('/userregforauction/senddata',userRegForAuction.sendUserToAs);
+router.post('/userregforauction/generatekit', auth.hasRole('admin'),kitCtrl.generateKit);
 //router.put('/userregforauction/:id', userRegForAuction.update);
 //router.delete('/userregforauction/:id', userRegForAuction.destroy);
 ////router.post('/userregforauction/validateuser', userRegForAuction.validateUser);

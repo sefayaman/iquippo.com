@@ -479,16 +479,16 @@
                                     <div class="col-sm-3 form-group">
                                          <span class="btn btn-warning btn-block fileinput-button">
                                             <span>Upload Registration Form</span>
-                                            <input type="file" name="file" data-filetype="doc" onchange="angular.element(this).scope().uploadDoc(this.files, this, 2)"  accept=".doc, .docx, .pdf" class="ng-scope">
+                                            <input type="file" name="file" data-filetype="doc" onchange="angular.element(this).scope().uploadDoc(this.files, this, 3)"  accept=".docx" class="ng-scope">
                                         </span>
-                                        <span>{{gsettingVm.auctionData.registrationForm}}</span>
+                                        <span>{{gsettingVm.auctionData.registrationTemplate}}</span>
                                     </div>
                                     <div class="col-sm-3 form-group">
                                          <span class="btn btn-warning btn-block fileinput-button">
                                             <span>Upload Undertaking Form</span>
-                                            <input type="file" name="file" data-filetype="doc" onchange="angular.element(this).scope().uploadDoc(this.files, this, 2)"  accept=".doc, .docx, .pdf" class="ng-scope">
+                                            <input type="file" name="file" data-filetype="doc" onchange="angular.element(this).scope().uploadDoc(this.files, this, 4)"  accept=".docx" class="ng-scope">
                                         </span>
-                                        <span>{{gsettingVm.auctionData.undertakingForm}}</span>
+                                        <span>{{gsettingVm.auctionData.undertakingTemplate}}</span>
                                     </div>
                                 </div>
                                 <div class="panel panel-default">

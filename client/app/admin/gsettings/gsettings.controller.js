@@ -197,6 +197,12 @@
                 if(flag==2){
                     vm.auctionData.docNameProxy = result.data.filename;
                 }
+                if(flag==3){
+                    vm.auctionData.registrationTemplate = result.data.filename;
+                }
+                if(flag==4){
+                    vm.auctionData.undertakingTemplate = result.data.filename;
+                }
             })
             .catch(function(){
                 $rootScope.loading = false;

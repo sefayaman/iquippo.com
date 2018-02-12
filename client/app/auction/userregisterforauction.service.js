@@ -14,9 +14,20 @@ angular.module('admin').factory("userRegForAuctionSvc", userRegForAuctionSvc);
     //svc.update = update;
     //svc.destroy = destroy;
     svc.checkUserRegis = checkUserRegis;
+    svc.generateKit = generateKit;
     
    function sendUserData(filter){
      return $http.post(svcPath + '/senddata',filter)
+     .then(function(res){
+       return res.data;
+     })
+     .catch(function(err){
+       throw err;
+     });
+   }
+
+   function generateKit(filter){
+     return $http.post(svcPath + '/generatekit',filter)
      .then(function(res){
        return res.data;
      })

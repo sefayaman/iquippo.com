@@ -14,6 +14,8 @@ var PaymentTransactionSchema = new Schema({
   payments:[{}],
   totalAmount:Number,
   emd:Number,
+  registrationKit:String,
+  undertakingKit:String,
   requestType:String,
   ccAvenueRes:{},
   ccAvenueData:{},

@@ -7,6 +7,8 @@ var UserRegForAuctionSchema = new Schema({
   auction:{},
   user:{},
   selectedLots:[],
+  registrationKit:String,
+  undertakingKit:String,
   transactionId:String,
   status:{type:Boolean,default:true},
   createdAt: {type:Date,default:Date.now},
