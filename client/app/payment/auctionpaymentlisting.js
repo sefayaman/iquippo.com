@@ -40,7 +40,7 @@ function AuctionPaymentListingCtrl($scope, $state, $rootScope, $uibModal, Modal,
       if(err.data)
         Modal.alert(err.data);
       console.log("Error in kit generation",err);
-    })
+    });
   }
 
 	$scope.$on('refreshPaymentHistroyList',function(){
