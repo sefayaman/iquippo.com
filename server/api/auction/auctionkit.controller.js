@@ -273,6 +273,9 @@ function generateKit(data,paymentData,userData,tplContent,cb){
         else if (header==='buyerName') {
             setDataValue.buyerName = _.get(userData.user, "fname", "") + " " + _.get(userData.user, "lname", "");
         }
+        else if (header==='buyerAge') {
+            setDataValue.buyerAge = _.get(userData.user, "buyerAge", "") ;
+        }
         else if (header==='buyerAdd') {
             setDataValue.buyerAdd = setDataValue.bidderAddress = _.get(userData.user, "bidderAddress", "");
         }
