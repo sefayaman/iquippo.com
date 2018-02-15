@@ -22,6 +22,7 @@ angular.module('sreizaoApp')
     vm.fireCommand = fireCommand;
     vm.getRegisteredBy = getRegisteredBy;
     vm.editUserClick = editUserClick;
+    vm.uploadExcel = uploadExcel;
     vm.openAddUserDialog = openAddUserDialog;
     $scope.bulkUserUpload={};
     $scope.bulkUserUpload.template="BulkUserUpload.xlsx";
@@ -35,43 +36,25 @@ angular.module('sreizaoApp')
     $scope.$on('updateUserList',function(){
       fireCommand(true);
    });
-
-      //listen for the file selected event
-  $scope.$on("fileSelected", function (event, args) {
-      if(args.files.length === 0)
-        return;
-      $scope.$apply(function () { 
-          uploadExcel(args.files[0]);       
-      });
-  });
-    
-     function uploadExcel(file){
-    if(!file)
+ 
+  function uploadExcel(excelData){
+    if(!excelData || !excelData.length)
       return;
-     if(file.name.indexOf('.xlsx') == -1){
-        Modal.alert('Please upload a valid file');
-        return;
-      }
-    uploadSvc.upload(file,importDir)
-    .then(function(result){
-      var fileName = result.data.filename;
+      var user = {};
+      user._id = Auth.getCurrentUser()._id;
+      user.fname = Auth.getCurrentUser().fname;
+      user.mname = Auth.getCurrentUser().mname;
+      user.lname = Auth.getCurrentUser().lname;
+      user.role = Auth.getCurrentUser().role;
+      user.userType = Auth.getCurrentUser().userType;
+      user.phone = Auth.getCurrentUser().phone;
+      user.mobile = Auth.getCurrentUser().mobile;
+      user.email = Auth.getCurrentUser().email;
+      user.country = Auth.getCurrentUser().country;
+      user.company = Auth.getCurrentUser().company;
       $rootScope.loading = true;
-       var user = {};
-        user._id = Auth.getCurrentUser()._id;
-        user.fname = Auth.getCurrentUser().fname;
-        user.mname = Auth.getCurrentUser().mname;
-        user.lname = Auth.getCurrentUser().lname;
-        user.role = Auth.getCurrentUser().role;
-        user.userType = Auth.getCurrentUser().userType;
-        user.phone = Auth.getCurrentUser().phone;
-        user.mobile = Auth.getCurrentUser().mobile;
-        user.email = Auth.getCurrentUser().email;
-        user.country = Auth.getCurrentUser().country;
-        user.company = Auth.getCurrentUser().company;
-      userSvc.parseExcel(fileName,user)
+      userSvc.parseExcel(excelData,user)
       .then(function(res){
-
-         // loadIncomingProduct();
           $rootScope.loading = false;
           var totalRecord = res.totalCount;
           var message =  res.successCount + " out of "+ totalRecord  + " records are  processed successfully.";
@@ -101,22 +84,18 @@ angular.module('sreizaoApp')
             filter.status = true;
             userSvc.getUsers(filter).then(function(data){
               vm.enterprises = data;
-          dataToSend.pagination = true;
-          dataToSend.itemsPerPage = vm.itemsPerPage;
-          getUser(dataToSend);  
+            dataToSend.pagination = true;
+            dataToSend.itemsPerPage = vm.itemsPerPage;
+            getUser(dataToSend);  
           })
-            .catch(function(err){
-              Modal.alert("Error in geting user");
-            });      
+          .catch(function(err){
+            Modal.alert("Error in geting user");
+          });      
       })
       .catch(function(res){
         $rootScope.loading = false;
-        Modal.alert("error in parsing data",true);
+        console.log("Error response ",res);
       });
-    })
-    .catch(function(res){
-       Modal.alert("error in file upload",true);
-    });
   }
 
     function editUserClick(userData) {

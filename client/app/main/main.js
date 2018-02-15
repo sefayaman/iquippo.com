@@ -303,7 +303,7 @@ angular.module('sreizaoApp')
         }
       })
      .state('cme', {
-        url:"/financing/CME",
+        url:"/financing",
         templateUrl: 'app/staticpages/financecme.html',
         controller:"FinanceCmeCtrl",
         layout:'client'
