@@ -836,7 +836,12 @@ body{font-family: Lato-Regular ,sans-serif;}
 .search-banner.search-banner-modal .btn.btn-default{text-transform: uppercase; font-size: 0.8em; padding:10px; color: #00429A; margin-top: 25px; border-radius: 3px; box-shadow: 0px 2px 3px #ccc; font-weight: bold; word-spacing: 1px;}
 
 .or-devided{padding: 15px; color: #fff;}
-
+.upcoming-auction-glyphs{background-image: url('/assets/images/upcoming-auction-bg.png'); background-position: left top; background-repeat: no-repeat;}
+.brand-glyphs{background-image: url('/assets/images/brand-bg.png'); background-position: right center; background-repeat: no-repeat;}
+.category-glyphs{background-image: url('/assets/images/category-bg.png'); background-position: left center; background-repeat: no-repeat;}
+.spacial-glyphs{background-image: url('/assets/images/spacial-bg.png'); background-position: right center; background-repeat: no-repeat;}
+.industry-glyphs{background-image: url('/assets/images/industry-bg.png'); background-position: left center; background-repeat: no-repeat;}
+.how-works .container-fluid.text-center{background-image: url('/assets/images/industry-bg.png'); background-position: right center; background-repeat: no-repeat;}
 .upcoming-auction .main-auction{
   display: -webkit-box; display: -moz-box; display: -ms-flexbox; display: -webkit-flex; display: flex; align-items: center; justify-content: center; 
 }
