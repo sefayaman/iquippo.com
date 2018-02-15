@@ -45,8 +45,12 @@
                   <button class="btn btn-success btn-md btn-block" ng-click="userManagementVm.exportExcel('gstinfo')"><i class="fa fa-file-excel-o"></i> Export GST</button>
                   <export-form name="usergstexport"></export-form>
                 </div>
-                              </div>
+              </div>
             </div>
+          <div class="col-sm-2" ng-if="!isAdmin()">
+              <button class="btn btn-success btn-md btn-block" ng-click="userManagementVm.exportExcel('userdata')"><i class="fa fa-file-excel-o"></i> Export</button>
+              <export-form name="userexport"></export-form>
+          </div>
 
           <legend></legend>
           {{successMessage}}
