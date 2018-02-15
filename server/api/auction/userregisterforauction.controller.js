@@ -10,7 +10,7 @@ var Seq = require('seq');
 var xlsx = require('xlsx');
 var ReqSubmitStatuses = ['Request Submitted', 'Request Failed'];
 
-exports.getFilterOnRegisterUser = function(req, res) {
+exports.getFilterOnRegisterUser = function (req, res) {
   var filter = {};
   var orFilter = [];
   if (req.body.searchstr) {
@@ -69,7 +69,7 @@ exports.getFilterOnRegisterUser = function(req, res) {
     createdAt: -1
   });
   query.exec(
-    function(err, auctions) {
+    function (err, auctions) {
       if (err) {
         return handleError(res, err);
       }
@@ -79,7 +79,7 @@ exports.getFilterOnRegisterUser = function(req, res) {
   );
 };
 
-exports.checkUserRegis = function(req, res) {
+exports.checkUserRegis = function (req, res) {
   var arr = [];
   var filter = {};
 
@@ -88,18 +88,18 @@ exports.checkUserRegis = function(req, res) {
 
   if (req.body.user._id)
     filter['user._id'] = req.body.user._id;
-  
+
   if (req.body.user.mobile)
     filter['user.mobile'] = req.body.user.mobile;
-  
+
   if (req.body.paymentMode)
     filter['user.mobile'] = req.body.paymentMode;
 
-  if(req.body.emdTax)
+  if (req.body.emdTax)
     filter['auction.emdTax'] = req.body.emdTax;
 
   if (req.body.selectedLots) {
-    if(!Array.isArray(req.body.selectedLots))
+    if (!Array.isArray(req.body.selectedLots))
       arr = req.body.selectedLots.split(',');
     else
       arr = req.body.selectedLots;
@@ -110,41 +110,41 @@ exports.checkUserRegis = function(req, res) {
   }
   var query = Model.find(filter);
   query.exec(
-    function(err, data) {
+    function (err, data) {
       var filter = {};
       if (data && data.length > 0) {
-        if(req.body.emdTax === 'lotwise') {
-          if(req.body.checkRegUser) {
+        if (req.body.emdTax === 'lotwise') {
+          if (req.body.checkRegUser) {
             var ids = [];
-            data.forEach(function(item){
+            data.forEach(function (item) {
               ids.push(item.transactionId);
             });
-            filter._id = {$in: ids}
+            filter._id = { $in: ids }
           } else
             return res.status(200).json(data);
         } else {
-          if(data[0].transactionId)
+          if (data[0].transactionId)
             filter._id = data[0].transactionId;
         }
-        PaymentTransaction.find(filter, function(err, payment) {
-          if (err) {return handleError(res, err);}
+        PaymentTransaction.find(filter, function (err, payment) {
+          if (err) { return handleError(res, err); }
           var message = {};
-          if(!payment.length)
-            return res.status(200).json({errorCode: 2, message: "No Data Found"});
-          if(req.body.onlyRegLotForUser) {
+          if (!payment.length)
+            return res.status(200).json({ errorCode: 2, message: "No Data Found" });
+          if (req.body.onlyRegLotForUser) {
             var regResult = {};
             regResult.regLot = [];
-            for(var i = 0; i < payment.length; i++) {
+            for (var i = 0; i < payment.length; i++) {
               if (payment[i].status === "completed") {
-                for(var j = 0; j < payment[i].selectedLots.length; j++)
+                for (var j = 0; j < payment[i].selectedLots.length; j++)
                   regResult.regLot.push(payment[i].selectedLots[j]);
               }
             }
             return res.status(200).json(regResult);
           }
-          if(req.body.emdTax === 'lotwise') {
+          if (req.body.emdTax === 'lotwise') {
             var flag = false;
-            for(var i = 0; i < payment.length; i++) {
+            for (var i = 0; i < payment.length; i++) {
               if (payment[i].status === "completed") {
                 message.data = "done";
                 message.errorCode = 0;
@@ -152,7 +152,7 @@ exports.checkUserRegis = function(req, res) {
                 break;
               }
             }
-            if(!flag) {
+            if (!flag) {
               message.data = "undone";
               message.errorCode = 1;
             }
@@ -171,29 +171,29 @@ exports.checkUserRegis = function(req, res) {
           }
         });
       } else {
-        return res.status(200).json({errorCode: 2, message: "No Data Found"});
+        return res.status(200).json({ errorCode: 2, message: "No Data Found" });
       }
     });
 };
 
-exports.saveOfflineRequest = function(req, res) {
+exports.saveOfflineRequest = function (req, res) {
   var trnId = req.body.transactionId;
 
-  if(req.body.transactionId)
+  if (req.body.transactionId)
     delete req.body.transactionId;
 
-  PaymentTransaction.findOneAndUpdate({_id:trnId},{$set:req.body},function(err,dt){
-    if(err) { return handleError(res, err); }
-    if(!dt){return res.status(404).json({errorCode:1});}
+  PaymentTransaction.findOneAndUpdate({ _id: trnId }, { $set: req.body }, function (err, dt) {
+    if (err) { return handleError(res, err); }
+    if (!dt) { return res.status(404).json({ errorCode: 1 }); }
     return res.status(200).json(dt);
   })
 };
 
-exports.sendUserToAs = function(req, res) {
+exports.sendUserToAs = function (req, res) {
   var options = {};
   options.dataToSend = req.body;
   options.dataType = "userInfo";
-  Utility.sendCompiledData(options, function(err, result) {
+  Utility.sendCompiledData(options, function (err, result) {
     if (err) return handleError(res, err);
     if (result) {
       return res.status(200).json(result);
@@ -204,11 +204,11 @@ exports.sendUserToAs = function(req, res) {
 };
 
 
-exports.get = function(req, res) {
+exports.get = function (req, res) {
   var filter = {};
   if (req.query.transactionId)
     filter.transactionId = req.query.transactionId;
-  Model.find(filter, function(err, userdata) {
+  Model.find(filter, function (err, userdata) {
     if (err) return handleError(res, err);
     if (userdata.length > 0) {
       return res.status(200).json(userdata);
@@ -220,8 +220,8 @@ exports.get = function(req, res) {
   });
 };
 
-exports.create = function(req, res, next) {
-  _getRecord(req.body, function(err, result) {
+exports.create = function (req, res, next) {
+  _getRecord(req.body, function (err, result) {
     if (err) {
       return handleError(res, err);
     }
@@ -234,7 +234,7 @@ exports.create = function(req, res, next) {
   function create() {
     ///
     Seq()
-      .seq(function() {
+      .seq(function () {
         var self = this;
         /*if(!req.body.payment){
           self()
@@ -243,7 +243,7 @@ exports.create = function(req, res, next) {
         // req.body.payment.createdAt = new Date();
         //req.body.payment.updatedAt = new Date();
         //req.body.payment.totalAmount = req.body.totalAmount;
-        PaymentTransaction.create(req.body, function(err, payment) {
+        PaymentTransaction.create(req.body, function (err, payment) {
           if (err) {
             return handleError(res, err);
           } else {
@@ -252,13 +252,13 @@ exports.create = function(req, res, next) {
           }
         });
       })
-      .seq(function() {
+      .seq(function () {
         var self = this;
         req.body.auction.createdAt = new Date();
         req.body.auction.updatedAt = new Date();
         req.body.transactionId = req.transactionId;
         var model = new Model(req.body);
-        model.save(function(err, st) {
+        model.save(function (err, st) {
           if (err) {
             return handleError(res, err);
           }
@@ -287,90 +287,54 @@ function _getRecord(data, cb) {
       $in: data.selectedLots
     }
   }
-  Model.find(filter, function(err, result) {
+  Model.find(filter, function (err, result) {
     if (err) cb(err);
     return cb(null, result);
   });
 }
 
-//data export
-
-var USER_REQUEST_FOR_AUCTION_FIELD_MAP = {
-  'Auction Id': 'auction.auctionId',
-  'Auction Name': 'auction.name',
-  'EMD Amount': 'auction.emdAmount',
-  'Customer ID': 'user.customerId',
-  'User Name': 'fullName',
-  'Mobile': 'mobileNo',
-  'Email': 'user.email',
-  'Date of Request': 'createdAt'
-};
-exports.exportData = function(req, res) {
+exports.exportData = function (req, res) {
   var filter = {};
-  if (req.body.auctionOwnerMobile)
+  if (req.body.auctionOwnerMobile) {
     filter['auction.auctionOwnerMobile'] = req.body.auctionOwnerMobile;
+  }
 
-  var query = Model.find(filter).sort({
-    createdAt: -1
-  });
-  query.exec(
-    function(err, data) {
+  Model.find(filter).sort({ createdAt: -1 }).lean().exec(
+    function (err, data) {
       if (err) {
         return handleError(res, err);
       }
-      var dataArr = [];
-      var headers = Object.keys(USER_REQUEST_FOR_AUCTION_FIELD_MAP);
-      dataArr.push(headers);
-      data.forEach(function(item, idx) {
-        dataArr[idx + 1] = [];
-        headers.forEach(function(header) {
-          if (USER_REQUEST_FOR_AUCTION_FIELD_MAP[header] == 'fullName')
-            dataArr[idx + 1].push(_.get(item, 'user.fname', '') + ' ' + _.get(item, 'user.lname', ''));
-          else if (USER_REQUEST_FOR_AUCTION_FIELD_MAP[header] == 'mobileNo') {
-            if (item.user.mobile)
-              dataArr[idx + 1].push('+' + _.get(item, 'user.countryCode', '') + '-' + _.get(item, 'user.mobile', ''));
-            else
-              dataArr[idx + 1].push('');
-          } else if (USER_REQUEST_FOR_AUCTION_FIELD_MAP[header] == 'createdAt') {
-            dataArr[idx + 1].push(Utility.toIST(_.get(item, 'createdAt', '')));
-          } else
-            dataArr[idx + 1].push(_.get(item, USER_REQUEST_FOR_AUCTION_FIELD_MAP[header], ''));
-        });
-
-      });
-
-      var ws = Utility.excel_from_data(dataArr, headers);
-      var ws_name = "User_Request_For_Auction_Report_" + new Date().getTime();
-      var wb = Utility.getWorkbook();
-      wb.SheetNames.push(ws_name);
-      wb.Sheets[ws_name] = ws;
-      var wbout = xlsx.write(wb, {
-        bookType: 'xlsx',
-        bookSST: true,
-        type: 'binary'
-      });
-      res.end(wbout);
+      try {
+        return _prepareResponse(res, data);
+      } catch (exp) {
+        return handleError(res, exp);
+      }
     });
 };
-/*exports.update = function(req, res) {
-  if(req.body._id) { delete req.body._id; }
-  req.body.updatedAt = new Date();
-  Model.update({_id:req.params.id},{$set:req.body},function(err){
-    if (err) { return handleError(res, err); }
-    return res.status(200).json(req.body);
-  });
-};
 
-exports.destroy = function(req, res,next) {
-  Model.findById(req.params.id, function (err, oneRow) {
-    if(err) { return handleError(res, err); }
-    if(!oneRow) { return next(new ApiError(404,"Not found")); }
-    oneRow.remove(function(err) {
-      if(err) { return handleError(res, err); }
-      return res.status(204).send({message:"Record deleted sucessfully!!!"});
+function _prepareResponse(res, data) {
+  var tempData = [];
+  data.forEach(function (item, key, array) {
+    delete array[key]._id;
+    tempData.push({
+      "Sr. No": key + 1,
+      "Auction Id": _.get(item, 'auction.auctionId', ''),
+      "Auction Name": _.get(item, 'auction.name', ''),
+      "EMD Amount": _.get(item, 'auction.emdAmount', ''),
+      "Customer ID": _.get(item, 'user.customerId', ''),
+      "User Name": item.user['fname'] + ' ' + item.user['lname'],
+      "Mobile": _.get(item, 'user.mobile', ''),
+      "Email": _.get(item, 'user.email', ''),
+      "Date of Request": _.get(item, 'createdAt')
     });
   });
-};*/
+
+  try {
+    Utility.convertToCSV(res, tempData);
+  } catch (excp) {
+    throw excp;
+  }
+}
 
 function handleError(res, err) {
   return res.status(500).send(err);

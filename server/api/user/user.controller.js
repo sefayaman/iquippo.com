@@ -1481,7 +1481,7 @@ exports.exportUsers = function(req, res) {
     createdAt: -1
   });//.limit(5000);
   if ( req.body.exportType === 'gstinfo') {
-      exportUsersGSTData(query, req, res);
+    exportUsersGSTData(query, req, res);
   }
   else {
       exportUsersData(query, req, res);
@@ -1644,6 +1644,7 @@ function exportUsersGSTData( query, req, res ) {
 }
 
 function renderCsv(req,res,csv,csvName){
+  console.log(csv);
    var fileName =  csvName + new Date().getTime();
   res.setHeader('Content-Type', 'application/octet-stream');
   res.setHeader("Content-Disposition", 'attachment; filename=' + fileName + '.csv;');

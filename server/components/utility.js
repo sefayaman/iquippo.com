@@ -9,6 +9,7 @@ var debug = require('debug')('server.components.utility');
 var async = require('async');
 var moment = require('moment');
 var fs = require('fs');
+var jsonexport = require('jsonexport');
 var AuctionMaster = require('../api/auction/auctionmaster.model');
 var AWS = require('aws-sdk');
 var util = require('util');
@@ -44,6 +45,7 @@ exports.convertQVAPLStatus = convertQVAPLStatus;
 exports.paginatedResult = paginatedResult;
 exports.getWorkbook = getWorkbook;
 exports.excel_from_data = excel_from_data;
+exports.convertToCSV = convertToCSV;
 exports.validateExcelHeader = validateExcelHeader;
 exports.toJSON = toJSON;
 exports.uploadFileS3 = uploadFileS3;
@@ -787,5 +789,25 @@ var dateUtil = {
     return moment(dateTimeString.toString(), format);
   }
 }
+
+/**
+ *  Added By Mohit Khalkho for CSV export - Start
+ */
+function convertToCSV(res, csv, filename) {
+  jsonexport(csv, function(err, csv) {
+    if(err) {
+      throw err;
+    }
+    return _renderCSV(res, csv, filename);
+  });
+}
+
+function _renderCSV(res, csv) {
+  var fileName = 'file_' + new Date().getTime();
+  res.setHeader('Content-Type', 'application/octet-stream');
+  res.setHeader("Content-Disposition", 'attachment; filename='+'\"' + fileName + '.csv' + '\"');
+  res.send(new Buffer(csv, 'binary'));
+}
+// Added By Mohit Khalkho for CSV export - End
 
 exports.dateUtil = dateUtil;

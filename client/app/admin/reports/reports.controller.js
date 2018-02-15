@@ -655,14 +655,12 @@
       //filter.role=Auth.getCurrentUser().role;
       ReportsSvc.exportData(filter, vm.tabValue)
         .then(function(res) {
-
             saveAs(new Blob([s2ab(res)], {
               type: "application/octet-stream"
-            }), fileName + new Date().getTime() + ".xlsx")
-          },
-          function(res) {
-            console.log(res)
-          })
+            }), fileName + new Date().getTime() + ".csv")
+          }).catch(function(excp) {
+            console.log(excp);
+          });
     }
 
     function itemsSet(filter){
