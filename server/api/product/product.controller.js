@@ -10,6 +10,7 @@ var lwip = require('lwip');
 var Product = require('./product.model');
 var ProductHistory = require('./producthistory.model');
 var json2xls = require('json2xls');
+var Utility = require('./../../components/utility.js');
 
 var User = require('./../user/user.model');
 var Group = require('./../group/group.model');
@@ -1462,11 +1463,25 @@ exports.exportProducts = function (req, res) {
             responseData.push(obj);
           }
         });
-        var xls = json2xls(responseData, {
-          fields: Object.keys(productFieldsMap)
+
+        var fields = Object.keys(productFieldsMap);
+        var tempObj = {};
+        var tempArr = [];
+
+        responseData.forEach(function (x) {
+          fields.forEach(function (key) {
+            tempObj[key] = x[key] !== undefined ? x[key] : '';
+          });
+          tempArr.push(tempObj);
+          tempObj = {};
         });
 
-        res.end(xls);
+        try {
+          Utility.convertToCSV(res, tempArr);
+        } catch (excp) {
+          throw excp;
+        }
+
       });
   }
 }

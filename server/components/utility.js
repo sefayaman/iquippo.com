@@ -793,12 +793,12 @@ var dateUtil = {
 /**
  *  Added By Mohit Khalkho for CSV export - Start
  */
-function convertToCSV(res, csv, filename) {
+function convertToCSV(res, csv) {
   jsonexport(csv, function(err, csv) {
     if(err) {
       throw err;
     }
-    return _renderCSV(res, csv, filename);
+    return _renderCSV(res, csv);
   });
 }
 

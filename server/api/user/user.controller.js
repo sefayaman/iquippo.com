@@ -1651,7 +1651,6 @@ function exportUsersGSTData( query, req, res ) {
 }
 
 function renderCsv(req,res,csv,csvName){
-  console.log(csv);
    var fileName =  csvName + new Date().getTime();
   res.setHeader('Content-Type', 'application/octet-stream');
   res.setHeader("Content-Disposition", 'attachment; filename=' + fileName + '.csv;');
