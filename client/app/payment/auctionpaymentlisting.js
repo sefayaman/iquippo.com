@@ -26,6 +26,7 @@ function AuctionPaymentListingCtrl($scope, $state, $rootScope, $uibModal, Modal,
   function generateKit(auctionId,transactionId,userId){
     if(!auctionId || !transactionId || !userId)
       return;
+    $rootScope.loading = true;
     var filter = {
       auctionId:auctionId,
       transactionId:transactionId,
@@ -33,12 +34,14 @@ function AuctionPaymentListingCtrl($scope, $state, $rootScope, $uibModal, Modal,
     };
     userRegForAuctionSvc.generateKit(filter)
     .then(function(res){
+      $rootScope.loading = false;
       Modal.alert("Kit generated successfully!");
       fireCommand(true);
     })
     .catch(function(err){
       if(err.data)
         Modal.alert(err.data);
+      $rootScope.loading = false;
       console.log("Error in kit generation",err);
     });
   }
