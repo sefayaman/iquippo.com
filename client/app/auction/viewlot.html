@@ -96,8 +96,13 @@
           <button class="btn btn-default visible-xs" ng-click="filterbutton.value1 = !filterbutton.value1">
             Filter
           </button>
-        </div>        
-        <div class="col-xs-6 col-sm-2 padd-left form-group asset-sale">          
+        </div>
+        <div class="col-xs-6 col-sm-2 padd-left form-group asset-sale" ng-if="auctionData.auctionType === 'A'">
+           <button type="button" class="btn btn-primary btn-block" ng-if="!redirectToLiveAuction && auctionData.auctionType === 'A'" ng-disabled="auctionData.auctionValue === 'upcomingAuctions'" ng-click="viewLotVm.openLiveAuctionURL(true)">View Online Auction</button>
+
+           <a ng-href="{{liveAuctionURLSCE}}" target="_blank" class="btn btn-primary btn-block" ng-if="redirectToLiveAuction && auctionData.auctionType === 'A'" ng-disabled="auctionData.auctionValue === 'upcomingAuctions'">View Online Auction</a>
+        </div>
+        <div class="col-xs-6 col-sm-2 padd-left form-group asset-sale" ng-if="auctionData.auctionType === 'L'">
            <button type="button" class="btn btn-primary btn-block" ng-if="!redirectToLiveAuction && auctionData.auctionType === 'L'" ng-disabled="auctionData.auctionValue === 'upcomingAuctions'" ng-click="viewLotVm.openLiveAuctionURL(true)">View Live Auction</button>
 
            <a ng-href="{{liveAuctionURLSCE}}" target="_blank" class="btn btn-primary btn-block" ng-if="redirectToLiveAuction && auctionData.auctionType === 'L'" ng-disabled="auctionData.auctionValue === 'upcomingAuctions'">View Live Auction</a>
