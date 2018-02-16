@@ -49,7 +49,7 @@
 				dataToSend['ids'] = selectedIds;
 			PaymentSvc.export(dataToSend)
 				.then(function (buffData) {
-					saveAs(new Blob([s2ab(buffData)], { type: "application/octet-stream" }), "payment_" + new Date().getTime() + ".xlsx")
+					saveAs(new Blob([s2ab(buffData)], { type: "application/octet-stream" }), "payment_" + new Date().getTime() + ".csv")
 				});
 		}
 

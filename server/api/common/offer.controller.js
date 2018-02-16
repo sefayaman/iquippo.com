@@ -104,7 +104,7 @@ exports.get = function (req, res) {
   }
 
   var query = Offer.find(filter);
-  query.exec(function (err, result) {
+  query.lean().exec(function (err, result) {
     if (err) {
       return handleError(res, err);
     }
@@ -199,13 +199,26 @@ function renderOfferMasterExcel(req, res) {
     //if(rowData.length)
     //dataArr.push(rowData)
   });
-  var ws = Utility.excel_from_data(dataArr, dataArr[0]);
-  var ws_name = "Offer_master_" + new Date().getTime();
-  var wb = Utility.getWorkbook();
-  wb.SheetNames.push(ws_name);
-  wb.Sheets[ws_name] = ws;
-  var wbout = xlsx.write(wb, { bookType: 'xlsx', bookSST: true, type: 'binary' });
-  res.end(wbout);
+
+  _transformResponse(res, dataArr, keys, dataKeys);
+}
+
+function _transformResponse(res, dataArr, keys, dataKeys) {
+  var accumulatedHeaders = keys.concat(dataKeys);
+  var tempData = [];
+  dataArr.forEach(function (data) {
+    var obj = {};
+    accumulatedHeaders.forEach(function (item, index) {
+      obj[accumulatedHeaders[accumulatedHeaders.length - (accumulatedHeaders.length - index)]] = data[accumulatedHeaders.length - (accumulatedHeaders.length - index)];
+    });
+    tempData.push(obj);
+  });
+  tempData.splice(0, 1);
+  try {
+    Utility.convertToCSV(res, tempData);
+  } catch (e) {
+    throw e;
+  }
 }
 
 
@@ -358,7 +371,7 @@ function formatData(resultArr, isOfferMaster) {
   if (!resultArr || !resultArr.length)
     return dataArr;
   resultArr.forEach(function (item) {
-    item = item.toObject();
+    // item = item.toObject();
     item.orders = [];
     if (item.cashOffer && item.cashOffer.length && !isOfferMaster) {
       item.cashOffer.forEach(function (cash) {
