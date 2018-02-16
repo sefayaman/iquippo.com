@@ -1441,7 +1441,11 @@ exports.exportProducts = function (req, res) {
               obj.Listing_Date = Utillity.toIST(colData.createdAt) || '';
             }
 
-            extraCols.forEach(function (x) {
+            if(colData.repoDate){
+              obj.Parked_Since = moment(colData.repoDate).utcOffset('+0530').format('MM/DD/YYYY') || '';
+            }
+
+            extraCols.forEach(function(x) {
               if (colData[x]) {
                 obj[mapedFields[x]] = 'Yes';
               } else
@@ -1804,7 +1808,6 @@ exports.validateExcelData = function (req, res, next) {
   }
 
   function intialize(row, cb) {
-
     if (!row.assetId) {
       errorList.push({
         Error: 'Asset Id missing',
