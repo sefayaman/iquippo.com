@@ -5,6 +5,7 @@ var trim = require('trim');
 var AuctionMaster = require('./auctionmaster.model');
 var UserRegForAuctionModel = require('./userregisterforauction.model');
 var PaymentModel = require('./../payment/payment.model');
+var UserModel = require('./../user/user.model');
 var cache = require('memory-cache');
 
 var xlsx = require('xlsx');
@@ -23,36 +24,68 @@ var registartion_cache_prefix = "registrationtemplate";
 var undertaking_cache_prefix = "undertakingtemplate";
 var cache_ttl = 1000*60*60*24*7;
 
-exports.generateKit = function(req,res){
+
+exports.populateData = function(req,res,next){
   var bodyData = req.body;
   if(!bodyData.auctionId || !bodyData.transactionId || !bodyData.userId)
     return res.status(412).send("Invalid kit generation request");
-  AuctionMaster.find({_id:bodyData.auctionId},function(err,aucData){
-    if(err) return handleError(res,err);
-    if(!aucData || !aucData.length)
-      return res.status(404).send("Auction not found");
-    if(!aucData[0].registrationTemplate || !aucData[0].undertakingTemplate)
-      return res.status(404).send("Registration or undertaking form template is not found");
-    
-    UserRegForAuctionModel.find({"auction.dbAuctionId":bodyData.auctionId},function(err,userData){
-        if (userData.length) {
-            req.userData = userData[0];
-        }
+   async.parallel([getAuctionData,getUserRegistrationData,getPaymentData,getUserData],function(err){
+      if(err) return res.status(err.status || 500).send(err.message || err.data);
+      next();
+   });
+  
+  function getAuctionData(cb){
+    AuctionMaster.find({_id:bodyData.auctionId},function(err,aucData){
+      if(err) return cb(err);
+      if(!aucData || !aucData.length)
+        return cb(new ApiError(404, "Auction not found"));
+      if(!aucData[0].registrationTemplate || !aucData[0].undertakingTemplate)
+      return cb(new ApiError(404, "Registration or undertaking form template is not found"));
+      req.auctionData = aucData[0];
+      return cb();
     });
+  }
+
+  function getUserRegistrationData(cb){
+    UserRegForAuctionModel.find({"auction.dbAuctionId":bodyData.auctionId,"user._id":bodyData.userId},function(err,userData){
+        if(err) return cb(err);
+        if(!userData || !userData.length)
+          return cb(new ApiError(400, "User registration data not found"));
+        req.userData = userData[0];
+        return cb();
+    });
+  }
+
+  function getPaymentData(cb){
     var payObjId = new mongo.ObjectID(bodyData.transactionId);
     PaymentModel.find({"_id":payObjId},function(err,paymentData){
-        if (paymentData.payments) {
-            req.paymentData = paymentData[0].payments[0];
-        }
+       if(err) return cb(err);
+       if(!paymentData || !paymentData.length)
+          return cb(new ApiError(404, "Payment not found"));
+        if(!paymentData[0].payments.length)
+          return cb(new ApiError(404, "Payment not found"));
+        req.paymentData =  paymentData[0].payments[0];
+        return cb();
     });
-      
-    req.auctionData = aucData[0];
-    async.parallel([generateRegistrationKit,generateUndertakingKit],onKitGenerated);
-  });
+  }
 
+  function getUserData(cb){
+    UserModel.find({"_id":bodyData.userId},function(err,users){
+       if(err) return cb(err);
+       if(!users || !users.length)
+          return cb(new ApiError(404, "Customer not found"));     
+        req.user =  users[0];
+        return cb();
+    });
+  }
+}
+
+exports.generateKit = function(req,res){
+  var bodyData = req.body;
+  async.parallel([generateRegistrationKit,generateUndertakingKit],onKitGenerated);
   function onKitGenerated(err){
     if(err)
-      return handleError(res,err);
+      return res.status(err.status || 500).send(err.message || err.data);//handleError(res,err);
     var transactionData = {
       registrationKit:req.regKitName,
       undertakingKit:req.undKitName
@@ -66,16 +99,14 @@ exports.generateKit = function(req,res){
   }
   
  function generateRegistrationKit(callback){
-      var tplContent = cache.get(registartion_cache_prefix+"_" + bodyData.auctionId);
-      if(!tplContent){
-        downloadFile(req.auctionData.registrationTemplate,function(err,resCont){
-          cache.put(registartion_cache_prefix+"_" + bodyData.auctionId,resCont,cache_ttl);
-          generateKit(req.auctionData,req.paymentData,req.userData,resCont,onRegComplete);
-        });
-        return;
-      }else
-        generateKit(req.auctionData,req.paymentData,req.userData,tplContent,onRegComplete);
-
+    downloadFile(req.auctionData.registrationTemplate,function(err,resCont){
+        var data = {};
+        setUserData(req.user,req.userData,data);
+        setAuctionData(req.auctionData,data);
+        setPaymentData(req.paymentData,data);
+        generateKit(data,resCont,onRegComplete);
+    });
+    
     function onRegComplete(err,buff){
       if(err)
         return callback(err);
@@ -100,15 +131,13 @@ exports.generateKit = function(req,res){
 
 
 function generateUndertakingKit(callback){
-  var tplContent = cache.get(undertaking_cache_prefix+"_" + bodyData.auctionId);
-  if(!tplContent){
     downloadFile(req.auctionData.undertakingTemplate,function(err,resCont){
-      cache.put(undertaking_cache_prefix+"_" + bodyData.auctionId,resCont,cache_ttl);
-      generateKit(req.auctionData,req.paymentData,req.userData,resCont,onUndertakingComplete);
+      var data = {};
+      setUserData(req.user,req.userData,data);
+      setAuctionData(req.auctionData,data);
+      setPaymentData(req.paymentData,data);
+      generateKit(data,resCont,onUndertakingComplete);
     });
-    return;
-  }else
-    generateKit(req.auctionData,req.paymentData,req.userData,tplContent,onUndertakingComplete);
 
    function onUndertakingComplete(err,buff){
       if(err)
@@ -132,6 +161,11 @@ function generateUndertakingKit(callback){
 }
 
 function downloadFile(file,cb){
+      var localFilePath = config.uploadPath + "auction/" + file;
+      if(fs.existsSync(localFilePath)){
+        readFile();
+        return; 
+      }
       var opts = {
         localFile: config.uploadPath + "auction/" + file,
         key: "assets/uploads/auction/" + file
@@ -142,15 +176,17 @@ function downloadFile(file,cb){
           debug(err);
           return cb(err);
         }
+        return readFile();
+      });
 
+      function readFile(){
         try{
-          var content = fs.readFileSync(config.uploadPath + "auction/" + file, 'binary');
+          var content = fs.readFileSync(localFilePath, 'binary');
           return cb(null,content);
         }catch(ex){
           return cb(ex);
         }
-        
-      });
+      }
   }
 
   function uploadFile(file,cb){
@@ -166,6 +202,28 @@ function downloadFile(file,cb){
       });
   }
 };
+
+function generateKit(data,tplContent,cb){
+  try {
+      var zip = new JSZip(tplContent);
+      var doc = new Docxtemplater();
+      doc.loadZip(zip);
+      doc.setData(data);
+      doc.render();
+      var buf = doc.getZip().generate({type: 'nodebuffer'});
+      return cb(null,buf);
+  }
+  catch (error) {
+      var e = {
+          message: error.message,
+          name: error.name,
+          stack: error.stack,
+          properties: error.properties
+      };
+      return cb(e);
+  }
+}
+
 var Export_Data_Field = {
   "startDate" : "startDate",
   "city" : "city",
@@ -191,128 +249,103 @@ var Export_Data_Field = {
   "bidCardNo":"bidCardNo",
   "buyerContactNo":"buyerContactNo"
 };
-function generateKit(data,paymentData,userData,tplContent,cb){
-    var headers = Object.keys(Export_Data_Field);
-    var setDataValue = {} ; 
-    //console.log(paymentData); return;
-    headers.forEach(function (header) {
-        //console.log(header); 
-        if(header==='startDate') {
-            setDataValue.startDate = moment(data.startDate).utcOffset('+0530').format('MM/DD/YYYY');
-        }
-        else if (header==='city') {
-            setDataValue.city = _.get(data, 'city', '');
-        }
-        else if (header==='userName') {
-            setDataValue.userName = _.get(userData.user, "fname", "") + " " + _.get(userData.user, "lname", "");
-        }
-        else if (header==='mobile') {
-            setDataValue.mobile = _.get(userData.user, "mobile", "");
-        }
-        else if (header==='batonNo') {
-            setDataValue.batonNo = _.get(userData.user, "batonNo", "");
-        }
-        else if (header==='email') {
-            setDataValue.email = _.get(userData.user, "email", "");
-        }
-        else if (header==='bidderAddress') {
-            setDataValue.bidderAddress = _.get(userData.user, "state", "") + " "+ _.get(userData.user, "city", "") + " "+ _.get(userData.user, "country", "");
-        }
-        else if (header==='pinCode') {
-            setDataValue.pinCode = _.get(userData.user, "pinCode", "");
-        }
-        else if (header==='panNumber') {
-            setDataValue.panNumber = _.get(userData.user, "panNumber", "");
-        }
-        else if (header==='kycInfo') {
-            setDataValue.kycType = _.get(userData.user, "type", "");
-            setDataValue.kycName = _.get(userData.user, "name", "");
-        }
-        else if (header==='payee') {
-            setDataValue.payee = _.get(userData.user, "fname", "") + " " + _.get(userData.user, "lname", "");
-        }
-        
-        else if (header==='depositAmount') {
-          if (paymentData) {
-            setDataValue.depositAmount = _.get(paymentData, "amount", "");
-          }
-          else setDataValue.depositAmount = '';
-        }
-        else if (header==='cash') {
-          if(paymentData && paymentData.paymentModeType==='Cash'){
-            setDataValue.cash = 'Cash';
-          }
-          else
-            setDataValue.cash = '';  
-        }
-        else if (header==='bankName') {
-          if (paymentData) {
-            setDataValue.bankName = _.get(paymentData, "bankname", "");
-          }
-          else setDataValue.bankName = '';
-        }
-        else if (header==='refNo') {
-          if (paymentData) {
-            setDataValue.refNo = _.get(paymentData, "refNo", "");
-          }
-          else setDataValue.refNo = '';
-        }
-        else if (header==='paymentDate') {
-          if (paymentData) {
-            setDataValue.paymentDate = moment(paymentData.paymentDate).utcOffset('+0530').format('MM/DD/YYYY');
-          }
-          else setDataValue.paymentDate = '';
-        }
-        else if (header==='neftRtgsNo') {
-          if (paymentData) {
-            setDataValue.neftRtgsNo = _.get(paymentData, "neftRtgsNo", "");
-          }
-          else setDataValue.neftRtgsNo = '';
-        }
-        
-        else if (header==='buyerName') {
-            setDataValue.buyerName = _.get(userData.user, "fname", "") + " " + _.get(userData.user, "lname", "");
-        }
-        else if (header==='buyerAge') {
-            setDataValue.buyerAge = _.get(userData.user, "buyerAge", "") ;
-        }
-        else if (header==='buyerAdd') {
-            setDataValue.buyerAdd = setDataValue.bidderAddress = _.get(userData.user, "bidderAddress", "");
-        }
-        else if (header==='bidCardNo') {
-            setDataValue.bidCardNo = _.get(userData.user, "batonNo", "");
-        }
-        else if (header==='buyerContactNo') {
-            setDataValue.buyerContactNo = _.get(userData.user, "mobile", "");
-        }
-        //startDate , city, userName, attendee, mobile,batonNo,email,bidderAddress,pinCode,panNo,kycName,docNo,payee,depositAmount,cash,bankName,refNo,paymentDate,neftRtgsNo,buyerName,buyerAge,buyerAdd,bidCardNo,buyerContactNo
-        else
-           setDataValue.header = '';
-    } );
-    
-    
-  try {
-      var zip = new JSZip(tplContent);
-      var doc = new Docxtemplater();
-      doc.loadZip(zip);
-      doc.setData(setDataValue);
-      doc.render();
-      var buf = doc.getZip().generate({type: 'nodebuffer'});
-      return cb(null,buf);
-  }
-  catch (error) {
-      var e = {
-          message: error.message,
-          name: error.name,
-          stack: error.stack,
-          properties: error.properties
-      };
-      console.log(JSON.stringify({error: e}));
-      return cb(e);
-  }
+
+var User_Variable = {
+  "fname" : "fname",
+  "lname" : "lname",
+  "mobile" : "mobile",
+  "batonNo" : "batonNo",
+  "email" : "email",
+  "bidderCity" : "city",
+  "bidderState" : "state",
+  "bidderCountry" : "country",
+  //"bidderAddress" : "bidderAddress",
+  "pinCode" : "pinCode",
+  "panNumber" : "panNumber",
+  "kycInfo" : "kycInfo",
+  "payeeFname" : "fname",
+  "payeeLname" : "lname",
+  "buyerFname" : "fname",
+  "buyerLname" : "lname",
+  "buyerAge":"buyerAge",
+  "buyerCity":"city",
+  "buyerState":"state",
+  "buyerCountry":"country",
+  //"bidCardNo":"batonNo",
+  "buyerContactNo":"mobile"
 }
 
-/* end of auctionmaster */
+var Payment_Variable = {
+  "depositAmount" : "amount",
+  "cash" : "cash",
+  "bankName" : "bankname",
+  "refNo" : "refNo",
+  "paymentDate" : "paymentDate",
+  "neftRtgsNo":"neftRtgsNo"
+}
+
+var Auction_Variable = {
+  "startDate" : "startDate",
+  "city" : "city",
+}
+
+ function setUserData(user,userData,data){
+    Object.keys(User_Variable).forEach(function(key){
+      var val = _.get(user,User_Variable[key],"");
+      
+      if (key==='kycInfo') {
+        if(user.kycInfo && user.kycInfo.length){
+          data.kycType = _.get(user.kycInfo[0],"type", "");
+          data.kycName = _.get(user.kycInfo[0],"name", "");
+        }else{
+           data.kycType = "";
+          data.kycName = "";
+        }
+        return;
+      }
+      if(key ==='batonNo') {
+        data.batonNo = _.get(userData.user, "batonNo", "");
+        data.bidCardNo = data.batonNo;
+        return;  
+      }
+      if(!val)
+        val = "";
+      data[key] = val;
+    });
+ }
+
+ function setPaymentData(payment,data){
+    Object.keys(Payment_Variable).forEach(function(key){
+      var val = _.get(payment,Payment_Variable[key],"");
+      if (key==='cash') {
+        if(payment && payment.paymentModeType==='Cash'){
+          val = 'Cash';
+        }
+        else
+          val = '';
+      }
+
+      if(key ==='paymentDate') {
+          val = moment(payment.paymentDate).utcOffset('+0530').format('MM/DD/YYYY');
+      }
+       if(!val)
+        val = "";
+      data[key] = val;
+    });
+ }
+
+ function setAuctionData(auctionData,data){
+    Object.keys(Auction_Variable).forEach(function(key){
+      var val = _.get(auctionData,Auction_Variable[key]);
+      if(key==='startDate') {
+          val = moment(auctionData.startDate).utcOffset('+0530').format('MM/DD/YYYY');
+      }
+      if(!val)
+        val = "";
+      data[key] = val;
+    });
+ }
+
 function handleError(res, err) {
   console.log("err",err);
   return res.status(500).send(err);

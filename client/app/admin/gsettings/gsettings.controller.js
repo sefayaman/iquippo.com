@@ -187,6 +187,11 @@
         function uploadDoc(files,_this,flag) {
             if (files.length == 0)
                 return;
+            if ([3,4].indexOf(flag) !== -1 && files[0].name.indexOf('.docx') == -1) {
+                Modal.alert("Please upload a valid '.docx' file");
+                $(_this).val('')
+                return;
+            }
             $rootScope.loading = true;
             uploadSvc.upload(files[0], auctionDir).then(function(result) {
                 //vm.auctionData.docDir = result.data.assetDir;
