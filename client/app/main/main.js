@@ -302,15 +302,11 @@ angular.module('sreizaoApp')
           $rootScope.metaDescription=pagesTitles.financing.meta;
         }
       })
-      .state('cme', {
-        url:"/financing/CME",
-        //templateUrl: 'app/staticpages/financingcme.html',
+     .state('cme', {
+        url:"/financing",
+        templateUrl: 'app/staticpages/financecme.html',
         controller:"FinanceCmeCtrl",
-        layout:'client',
-        onEnter:function($rootScope){
-          $rootScope.choosenTitle=pagesTitles.financing.title;
-          $rootScope.metaDescription=pagesTitles.financing.meta;
-        }
+        layout:'client'
       })
       .state('insurance', {
         url:"/insurance",

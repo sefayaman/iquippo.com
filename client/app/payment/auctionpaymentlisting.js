@@ -168,14 +168,23 @@ function AuctionPaymentListingCtrl($scope, $state, $rootScope, $uibModal, Modal,
 	 	.catch(function(err){
 	 	});
 	}
-
-	function exportExcel(){
+function exportExcel(data){
     var dataToSend ={};
+    dataToSend['exportType'] = data; 
     if(!Auth.isAdmin() && !Auth.isAuctionRegPermission()){
       dataToSend['userId'] = Auth.getCurrentUser()._id;
     }
     dataToSend.auctionPaymentHistory = true;
     dataToSend.auctionPaymentReq = "Auction Request";
+    
+    if (data === 'all') {
+      var exportObj = {filter:dataToSend};
+      exportObj.method = "POST";
+      exportObj.action = "api/payment/export";
+      $scope.$broadcast("submit",exportObj);
+        return;
+    }
+    
     PaymentSvc.export(dataToSend)
     .then(function(buffData){
       saveAs(new Blob([s2ab(buffData)],{type:"application/octet-stream"}), "Payment_"+ new Date().getTime() +".xlsx")

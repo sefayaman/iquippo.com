@@ -302,7 +302,8 @@ exports.exportPayment = function(req,res){
   var filter = {};
   var isAdmin = true;
   if(req.body.auctionPaymentHistory) {
-    auctionReport(req, res);
+    //auctionReport(req, res);
+    auctionReportAll(req, res);
     return;
   }
   if(req.body.userid){
@@ -323,26 +324,47 @@ exports.exportPayment = function(req,res){
       var wbout = xlsx.write(wb, {bookType:'xlsx', bookSST:true, type: 'binary'});
       res.end(wbout);
    });
-}
+};
 
 var EXPORT_PAYMENT = {
-                      'Transaction Id' : 'transactionId',
-                      'Auction Id' : 'auctionId',
-                      'Lots' : 'lots',
-                      'Customer Id' : 'customerId',
-                      'Full Name' : 'fullName',
-                      'Mobile No.' : 'mobile',
-                      'Email Address' : 'email',
-                      'Payment Type':'paymentMode',
-                      'Payment Mode Type': 'paymentModeType',
-                      'Bank Name': 'bankName',
-                      'Branch': 'branch',
-                      'Ref No': 'refNo',
-                      'Amount': 'amount',
-                      'Request Status': 'paymentStatus',
-                      'Payment Date': 'paymentDate',
-                      'Date of Entry': 'createdAt'
-                    };
+        'Transaction Id' : 'transactionId',
+        'Auction Id' : 'auctionId',
+        'Lots' : 'lots',
+        'Customer Id' : 'customerId',
+        'Full Name' : 'fullName',
+        'Mobile No.' : 'mobile',
+        'Email Address' : 'email',
+        'Payment Type':'paymentMode',
+        'Payment Mode Type': 'paymentModeType',
+        'Bank Name': 'bankName',
+        'Branch': 'branch',
+        'Ref No': 'refNo',
+        'Amount': 'amount',
+        'Request Status': 'paymentStatus',
+        'Payment Date': 'paymentDate',
+        'Date of Entry': 'createdAt'
+      };
+                    
+var Export_Field_Mapping = {
+        "Transaction Id" : "transactionId",
+        "Auction Id" : "auctionId",
+        "Lots" : "lots",
+        "Customer Id" : "customerId",
+        "Full Name" : "fullName",
+        "Mobile No" : "mobile",
+        "Email Address" : "email",
+        "Payment Type": "paymentMode",
+        "Request Status": "status",
+        "Date of Entry": "createdAt"  
+};
+var Export_Field_Mapping_InnerData = {
+        "Payment Mode Type": "paymentModeType",
+        "Bank Name": "bankname",
+        "Branch": "branch",
+        "Ref No": "refNo",
+        "Amount": "amount",
+        "Payment Date": "paymentDate"
+};
 
 function _formatPayments(item,innerItem,jsonArr){
     var obj = {};
@@ -412,6 +434,98 @@ function auctionReport(req, res) {
       var wbout = xlsx.write(wb, {bookType:'xlsx', bookSST:true, type: 'binary'});
       res.end(wbout);
    });
+}
+function auctionReportAll(req, res) {
+    var filter = {};
+    if (req.body.auctionPaymentReq)
+        filter.requestType = req.body.auctionPaymentReq;
+    if (req.body.userId)
+        filter["user._id"] = req.body.userId;
+
+    var query = Payment.find(filter).sort({createdAt: -1});
+    query.exec(
+            function (err, resList) {
+                if (err) {
+                    return handleError(res, err);
+                }
+                var csvStr = "";
+                var headers = Object.keys(Export_Field_Mapping);
+                var dataKeys = Object.keys(Export_Field_Mapping_InnerData);
+                csvStr += headers.join(',');
+                csvStr += "," + dataKeys.join(',');
+                csvStr += "\r\n";
+                resList.forEach(function (item, idx) {
+                    var successObj = null;
+                    if (item.status === 'completed')
+                        successObj = getSuccessPayment(item.payments, "success");
+                    else if (item.payments.length)
+                        successObj = item.payments[0];
+                    else
+                        successObj = {};
+                    headers.forEach(function (header) {
+                        var key = Export_Field_Mapping[header];
+                        var val = "";
+                        //console.log(item.payments.paymentStatus);
+                        if (key === 'lots') {
+                            val = _.get(item, "selectedLots", "");
+                        } else if (key === 'customerId') {
+                            val = _.get(item.user, "customerId", "");
+                        } else if (key === 'fullName') {
+                            val = _.get(item.user, "fname", "") + " " + _.get(item.user, "lname", "");
+                        } else if (key === 'mobile') {
+                            val = _.get(item.user, "mobile", "");
+                        } else if (key === 'email') {
+                            val = _.get(item.user, "email", "");
+                        } else if (key === 'paymentMode') {
+                            val = _.get(item, "paymentMode", "");
+                        } else if (key === 'createdAt') {
+                            val = Util.toIST(_.get(item, 'createdAt', ''));
+                        } else {
+                            val = _.get(item, key, "");
+                        }
+                        val = Util.toCsvValue(val);
+                        csvStr += val + ",";
+                    });
+                    dataKeys.forEach(function (innerKey) {
+                        var val = "";
+                        if (successObj)
+                            val = _.get(successObj, Export_Field_Mapping_InnerData[innerKey], "");
+                        if ( Export_Field_Mapping_InnerData[innerKey] ==='paymentDate' && val)
+                            val = moment(val).utcOffset('+0530').format('MM/DD/YYYY');
+                        val = Util.toCsvValue(val);
+                        csvStr += val + ",";
+                    });
+                    csvStr += "\r\n";
+                });
+                var csvName = "PaymentAll_";
+
+                csvStr = csvStr.substring(0, csvStr.length - 1);
+                try {
+                    return renderCsv(req, res, csvStr, csvName);
+                } catch (e) {
+                    //return handleError(res, e);   
+                }
+            });
+}
+
+function getSuccessPayment(payments,status){
+    var retVal = null;
+    if(!payments || !payments.length)
+        return retVal;
+    for(var i=0;i < payments.length;i++){
+        if((payments[i].paymentStatus && payments[i].paymentStatus === status) || !payments[i].paymentStatus){
+            retVal = payments[i];
+        }           
+    }
+    return retVal;
+}
+
+
+function renderCsv(req,res,csv,csvName){
+   var fileName =  csvName + new Date().getTime();
+  res.setHeader('Content-Type', 'application/octet-stream');
+  res.setHeader("Content-Disposition", 'attachment; filename=' + fileName + '.csv;');
+  res.end(csv, 'binary'); 
 }
 
 //ccavenue payment keys

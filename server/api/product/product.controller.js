@@ -1932,8 +1932,9 @@ exports.validateExcelData = function(req, res, next) {
       if(row.grossPrice){
         obj.grossPrice = row.grossPrice;
       }
-        
       obj.priceOnRequest = row.priceOnRequest.toLowerCase() === 'yes'? true:false;
+      if(type==='template_update' && !row.priceOnRequest)
+        delete obj.priceOnRequest;
       if(isCustomer){
          if(!obj.grossPrice)
             obj.priceOnRequest = true;
@@ -1946,15 +1947,17 @@ exports.validateExcelData = function(req, res, next) {
                     assetId: row.assetId
                 }, function (err, prod) {
                     if(prod[0].grossPrice){
-                        //console.log('prod_grossPrice',prod[0].grossPrice);
-                        obj.priceOnRequest = row.priceOnRequest.toLowerCase() === 'yes'? true:false;
+                        if(row.priceOnRequest)
+                          obj.priceOnRequest = row.priceOnRequest.toLowerCase() === 'yes'? true:false;
                     }
+                  return callback(null,obj);
                 });
+            return;
           }
           else{
             obj.priceOnRequest = true;
+            return callback(null,obj);
           }
-        return callback(null,obj);
       }
 
       if(row.reservePrice){

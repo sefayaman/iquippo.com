@@ -5,9 +5,13 @@
         <div class="col-sm-6">
           <h3> Auction Transactions</h3>
         </div>
-        <div class="col-sm-6 text-right">
+<!--        <div class="col-sm-6 text-right">
           <h3><button class="btn btn-success btn-md" ng-click="auctionPaymentListingVm.exportExcel()"><i class="fa fa-file-excel-o"></i> Export</button></h3>
-        </div>     
+        </div>-->
+        <div class="col-sm-6 text-right">
+          <h3><button class="btn btn-success btn-md" ng-click="auctionPaymentListingVm.exportExcel('all')"><i class="fa fa-file-excel-o"></i> Export All</button></h3>
+          <export-form name="paymentexport"></export-form>
+        </div>
       </div>
       <hr>
       <p class="text-right"></p>

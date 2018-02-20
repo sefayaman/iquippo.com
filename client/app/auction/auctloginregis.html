@@ -7,10 +7,6 @@
       <div>
         <form class="form" name="form" novalidate>
           <div class="row">
-            <div class="col-xs-offset-1 col-xs-4"></div>
-            <div class="col-xs-offset-1 col-xs-4"></div>
-          </div>
-          <div class="row">
             <div class="col-sm-offset-2 col-sm-8 form-group" ng-class="{'has-error': form.userId.$invalid && form.submitted }">
               <select class="form-control form-group" name="selectedLots" id="selectedLots" style="height: 80px;" ng-options="lots.selectedLots[0].lotNumber as lots.selectedLots[0].lotNumber for lots in auctionRegisVm.lotListEmd" ng-model="auctionRegisVm.dataToSend.selectedLots" multiple>
                 <!-- <select class="form-control form-group" name="selectedLots" id="selectedLots" style="height: 80px;" ng-options="lots.lotNumber as lots.lotNumber for lots in auctionRegisVm.lotList" ng-model="auctionRegisVm.dataToSend.selectedLots" multiple> -->
@@ -45,10 +41,68 @@
           </div>
           <div class="row" ng-if="kycExist">
             <div class="col-sm-offset-1 col-sm-10">
-              <div class="checkbox text-left">
+              <h4>Your KYC details are not uploaded.</h4>
+              <!-- <div class="checkbox text-left">
                 <input type="checkbox" id="kycFlag" name="kycUploadlater" ng-model="kyc.kycUploadlater"> 
                 <label for="kycFlag">Your KYC details are not uploaded. Check here to upload later and proceed for payment.</label>
+              </div> -->
+              <div class="row">
+                <div class="col-xs-6 col-sm-6 form-group">
+                  <div class="radio radio-info">
+                    <input type="radio" id="updateNow" name="update" ng-model="kycUpdateNow" ng-value="true" ng-click="onRadioClick(true)">
+                    <label for="updateNow"> Update Now </label>
+                  </div>
+                </div>
+                <div class="col-xs-6 col-sm-6 form-group">
+                  <div class="radio radio-info">
+                    <input type="radio" id="updateLater" name="update" ng-model="kycUpdateNow" ng-value="false" ng-click="onRadioClick(false)">
+                    <label for="updateLater"> Update Later</label>
+                  </div>
+                </div>
               </div>
+              <div ng-if="kycUpdateNow">
+                <div class="row">
+                  <div class="col-sm-4 form-group">
+                      <div class="floating-label-wrapper">
+                          <label>Identity Proof</label>                          
+                      </div>
+                  </div>
+                  <div class="col-sm-4 form-group" ng-class="{'has-error': paymentForm.idProof.$invalid && submitted }">
+                    <select class="form-control" ng-model="kycInfo.idProof" name="idProof" required>
+                      <option value="">Select Identity Proof</option>
+                      <option value="{{idProof.docName}}" ng-repeat="idProof in idProofList | orderBy:'name'">{{idProof.docName}}</option>
+                    </select>
+                  </div>
+                  <div class="col-sm-4 form-group">
+                      <span class="btn btn-warning fileinput-button">
+                        <input type="file" name="doc" data-filetype="doc" onchange="angular.element(this).scope().uploadKyc(this.files,this,'idProof')"  class="ng-scope">
+                        <span class="fa fa-upload"></span>
+                      </span>
+                       <p class="text-ellips"><a href="{{uploadImagePrefix}}{{kycDocDir}}/{{kycInfo.idProofDocName}}" target="_blank">{{kycInfo.idProofDocName}}</a></p>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-4 form-group">
+                    <div class="floating-label-wrapper">
+                      <label for="JobProfile">Address Proof</label>
+                    </div>
+                  </div>
+                  <div class="col-sm-4 form-group" ng-class="{'has-error': paymentForm.addressProof.$invalid && submitted }">
+                    <select class="form-control" ng-model="kycInfo.addressProof" name="addressProof" required>
+                      <option value="">Select Address Proof</option>
+                      <option value="{{addProof.docName}}" ng-repeat="addProof in addressProofList | orderBy:'name'">{{addProof.docName}}</option>
+                    </select>
+                  </div>
+                  <div class="col-sm-4 form-group">
+                      <span class="btn btn-warning fileinput-button">
+                        <input type="file" name="doc" data-filetype="doc" onchange="angular.element(this).scope().uploadKyc(this.files,this,'addressProof')"  class="ng-scope">
+                        <span class="fa fa-upload"></span>
+                      </span>
+                       <p class="text-ellips"><a href="{{uploadImagePrefix}}{{kycDocDir}}/{{kycInfo.addressProofDocName}}" target="_blank">{{kycInfo.addressProofDocName}}</a></p>
+                  </div>
+                </div>
+              </div>
+
             </div>
           </div>
         <div class="modal-footer asset-sale">
