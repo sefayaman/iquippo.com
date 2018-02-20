@@ -22,7 +22,7 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
   $scope.uploadType = '';
   
   vm.requestTypeList = [{name:"Valuation"},{name:"Inspection"}];
-
+  $scope.getStatusText = getStatusText;
   vm.submitUploadTemp = submitUploadTemp;
 
   vm.editEnterpriseRequest = editEnterpriseRequest;
@@ -489,6 +489,15 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
       exportObj.action = "api/enterprise/export";
       $scope.$broadcast("submit",exportObj);
       //EnterpriseSvc.exportExcel("transaction",filter);
+    }
+
+    function getStatusText(valReq){
+      if(valReq.paymentReceived && !valReq.paymentMade)
+        return "Payment Received";
+      else if(valReq.paymentMade && !valReq.paymentReceived)
+        return "Payment Made";
+      else
+        return valReq.status;
     }
 
     //init();
