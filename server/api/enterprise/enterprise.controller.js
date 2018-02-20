@@ -73,10 +73,19 @@ function getValuationRequest(req,res){
       filter['cancelled'] = true;
     else if(queryParam.statusType === 'Request Modified')
        filter['requestModified'] = true;
+     else if(queryParam.statusType === 'Request On Hold')
+      filter['onHold'] = true;
+      else if(queryParam.statusType === 'Payment Received')
+      filter['paymentReceived'] = true;
+    else if(queryParam.statusType === 'Payment Made')
+      filter['paymentMade'] = true;
     else{
       filter["status"] = queryParam.statusType;
       filter['cancelled'] = false;
       filter['requestModified'] = false;
+      filter['onHold'] = false;
+      filter['paymentReceived'] = false;
+      filter['paymentMade'] = false;
     }    
    }
 
