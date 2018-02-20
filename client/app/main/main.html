@@ -72,7 +72,7 @@
 <!-- Upcoming Auction -->
 <section class="category-block upcoming-auction upcoming-auction-glyphs">
   <div class="heading-titles text-center">
-    <h4>[ Upcoming Auctions ]</h4>
+    <h1>[ Upcoming Auctions ]</h1>
     <a href="/viewauctions?type=upcoming">View All Auctions ({{upcomingCount}})</a>
   </div>
 
@@ -101,14 +101,14 @@
 <section class="category-block brand-glyphs">
   <div class="container text-center">
     <div class="heading-titles">
-      <h4>[ Browse By Brands ]</h4>
+      <h1>[ Browse By Brands ]</h1>
       <a href="/used/brands" ng-if="!mainVm.newBrand">View All ({{mainVm.brandCount || 0}})</a>
       <a href="/new/brands" ng-if="mainVm.newBrand">View All ({{mainVm.brandCountForNew || 0}})</a>
     </div>
     <uib-tabset justified="false">
       <uib-tab heading="Used Equipment" select="mainVm.toggleTab(0,false)">
         <div class="row">
-          <div class="col-xs-4 col-sm-4 form-group text-center" ng-repeat="brand in mainVm.brands" ng-if="$index < 3">   
+          <div class="col-xs-12 col-sm-4 form-group text-center" ng-repeat="brand in mainVm.brands" ng-if="$index < 3">   
             <div class="brand-logo">
               <a href="/used/brands/{{brand.name}}?currentPage=1" class="brand-name">
                 <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{brand.imgSrc}}">
@@ -119,7 +119,7 @@
       </uib-tab>
       <uib-tab heading="New Equipment" select="mainVm.toggleTab(0,true)">
         <div class="row">
-          <div class="col-xs-4 col-sm-4 form-group text-center" ng-repeat="brand in mainVm.brandsForNew" ng-if="$index < 3">   
+          <div class="col-xs-12 col-sm-4 form-group text-center" ng-repeat="brand in mainVm.brandsForNew" ng-if="$index < 3">   
             <div class="brand-logo">
               <a href="/new/brands/{{brand.name}}?currentPage=1" class="brand-name">
                 <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{brand.imgSrc}}">
@@ -137,7 +137,7 @@
 <section class="category-block category-glyphs">
   <div class="container text-center">
     <div class="heading-titles">
-      <h4>[ Browse By Category ]</h4>
+      <h1>[ Browse By Category ]</h1>
       <a href="/used/allcategories" ng-if="!mainVm.newCategory">View All ({{mainVm.categoryCount || 0}})</a>
       <a href="/new/allcategories" ng-if="mainVm.newCategory">View All ({{mainVm.categoryCountForNew || 0}})</a>
     </div>
@@ -174,7 +174,7 @@
 <section class="category-block spacial-glyphs">
   <div class="container text-center">
     <div class="heading-titles">
-      <h4>[ Special Products ]</h4>
+      <h1>[ Special Products ]</h1>
     </div>
     <div class="row">
       <div class="col-sm-6 form-group text-center" ng-repeat="cert in mainVm.certificationList" ng-if="$index < 2">   
@@ -191,7 +191,7 @@
 <section class="category-block industry-glyphs">
   <div class="container text-center">
     <div class="heading-titles">
-      <h4>[ Browse By Industry ]</h4>
+      <h1>[ Browse By Industry ]</h1>
     </div>
     <uib-tabset justified="false">
        <uib-tab heading="Used Equipment" select="mainVm.toggleTab(2,true)">
@@ -229,7 +229,7 @@
 <section class="category-block how-works">
   <div class="container-fluid text-center">
     <div class="heading-titles">
-      <h4>[ HOW <span>iQUIPPO</span> WORKS? ]</h4>     
+      <h1>[ HOW <span>iQUIPPO</span> WORKS? ]</h1> 
     </div>
     <div class="row">
       <div class="col-sm-offset-2 col-sm-8">
@@ -257,7 +257,7 @@
 <section class="category-block">
   <div class="container text-center">
     <div class="heading-titles media-headings">
-      <h4>[ IN THE PRESS / MEDIA ]</h4>
+      <h1>[ IN THE PRESS / MEDIA ]</h1>
     </div>
     <div class="row form-group press-media">
       <div class="col-xs-6 col-sm-2 form-group">   
@@ -350,7 +350,7 @@
     <section class="category-block">
     <div class="container">
       <div class="heading-titles text-center">
-        <h4>[ PRINT MEDIA ]</h4>
+        <h1>[ PRINT MEDIA ]</h1>
       </div>
       <div class="medianame">
        <ul>
