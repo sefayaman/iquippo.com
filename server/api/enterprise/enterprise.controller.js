@@ -88,8 +88,11 @@ function getValuationRequest(req,res){
       filter['cancelled'] = false;
       filter['requestModified'] = false;
       filter['onHold'] = false;
-      filter['paymentReceived'] = false;
-      filter['paymentMade'] = false;
+      if(queryParam.statusType !== EnterpriseValuationStatuses[10]){
+         filter['paymentReceived'] = false;
+         filter['paymentMade'] = false;
+      }
+     
     }    
    }
 
