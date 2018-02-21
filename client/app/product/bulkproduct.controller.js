@@ -128,7 +128,6 @@
         var workbook = xlsx.read(bstr, { type: 'binary' });
         var worksheet = workbook.Sheets[workbook.SheetNames[0]];
         var data = xlsx.utils.sheet_to_json(worksheet);
-
         data.forEach(function (x) {
           x.Row_Count = x.__rowNum__;
         });
