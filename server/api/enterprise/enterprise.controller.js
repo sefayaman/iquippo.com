@@ -2222,6 +2222,10 @@ function exportExcel(req,res,fieldMap,jsonArr){
       item.status = "Hold - " + item.onHoldMsg;
     else if(item.requestModified)
       item.status = "Request Modified";
+    else if(item.paymentReceived && !item.paymentMade)
+        item.status = "Payment Received";
+    else if(item.paymentMade && !item.paymentReceived)
+        item.status = "Payment Made";
 
     allowedHeaders.forEach(function(header){
       var keyObj = fieldMap[header];
