@@ -228,7 +228,6 @@ angular.module('sreizaoApp')
     link:function(scope,el,attrs,ngModel){
       el.on('change', function (changeEvent) {
         var reader = new FileReader();
-
         reader.onload = function (e) {
           /* read workbook */
           var bstr = e.target.result;
@@ -236,14 +235,21 @@ angular.module('sreizaoApp')
             var workbook = XLSX.read(bstr, {type:'binary'});
             var worksheet = workbook.Sheets[workbook.SheetNames[0]];
             var data = XLSX.utils.sheet_to_json(worksheet);
-             ngModel.$setViewValue(data);
-            //scope.onChange(data); 
-
+             ngModel.$setViewValue(data); 
+             $rootScope.loading = false;
+             angular.element(el).val(null);
           }catch(e){
+            $rootScope.loading = false;
             console.log("Error in reading ",e);
           } 
         };
-
+        if(!changeEvent.target.files || !changeEvent.target.files.length || !changeEvent.target.files[0].name)
+          return;
+        if(changeEvent.target.files[0].name && changeEvent.target.files[0].name.indexOf('.xlsx') == -1){
+          Modal.alert('Please upload a valid file');
+          return;
+        }
+        $rootScope.loading = true;
         reader.readAsBinaryString(changeEvent.target.files[0]);
       });
     }

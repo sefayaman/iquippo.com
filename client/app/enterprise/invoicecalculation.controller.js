@@ -72,7 +72,10 @@ function InvoiceCalculationCtrl($scope, $rootScope,$uibModalInstance,Modal,Auth,
             $scope.enterprise = ent;
       });
 
-      $scope.invoice.invoiceInFavour = $scope.enterprise.fname + " " + $scope.enterprise.mname;
+      $scope.invoice.invoiceInFavour = $scope.enterprise.fname;
+      if($scope.enterprise.mname)
+        $scope.invoice.invoiceInFavour  += " " + $scope.enterprise.mname;
+      $scope.invoice.invoiceInFavour  += " " + $scope.enterprise.lname;
       $scope.invoice.userPanNumber = $scope.enterprise.panNumber;
       $scope.invoice.userAadhaarNumber = $scope.enterprise.aadhaarNumber;
       $scope.invoice.userCountry = $scope.enterprise.country;
