@@ -481,14 +481,15 @@
                                             <span>Upload Registration Form</span>
                                             <input type="file" name="file" data-filetype="doc" onchange="angular.element(this).scope().uploadDoc(this.files, this, 3)"  accept=".docx" class="ng-scope">
                                         </span>
-                                        <span>{{gsettingVm.auctionData.registrationTemplate}}</span>
+                                        <span><a ng-href="{{uploadImagePrefix}}auction/{{gsettingVm.auctionData.registrationTemplate}}" target="_blank">{{gsettingVm.auctionData.registrationTemplate}}
+                                        </a></span>
                                     </div>
                                     <div class="col-sm-3 form-group">
                                          <span class="btn btn-warning btn-block fileinput-button">
                                             <span>Upload Undertaking Form</span>
                                             <input type="file" name="file" data-filetype="doc" onchange="angular.element(this).scope().uploadDoc(this.files, this, 4)"  accept=".docx" class="ng-scope">
                                         </span>
-                                        <span>{{gsettingVm.auctionData.undertakingTemplate}}</span>
+                                        <span><a ng-href="{{uploadImagePrefix}}auction/{{gsettingVm.auctionData.undertakingTemplate}}" target="_blank">{{gsettingVm.auctionData.undertakingTemplate}}</a></span>
                                     </div>
                                 </div>
                                 <div class="panel panel-default">
