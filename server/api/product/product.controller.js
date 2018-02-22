@@ -863,6 +863,22 @@ function updateProduct(req,res){
     req.body.featured = false;
     delete req.body.featured;
     req.proData = product.toObject();
+    if ( req.body.tradeType==='SELL' ) {
+            console.log(req.body.assetId);
+            var filter = {};
+            filter['product.assetId'] = req.body.assetId;
+            filter['bidStatus'] = 'Accepted';
+            AssetSaleModel.find(filter,function(err,bids){
+                if(err || !bids.length){
+                    return handleError(res, err);
+                };
+
+                if(bids && bids.length){
+                    return res.status(404).send("Asset Trade Type can't be modified as there is an active bid on it");    
+                }
+            });
+        }
+    else {
     if(req.body.featured){
       var imgPath = config.uploadPath + req.body.assetDir + "/" + req.body.primaryImg;
       var featureFilePath=config.uploadPath+"featured/"+req.body.primaryImg;
@@ -934,6 +950,7 @@ function updateProduct(req,res){
       } else {
         updateProductData();
       }
+    }
 
     function updateProductData(){
       Product.update({_id:req.params.id},{$set:req.body},function(err){
@@ -1825,6 +1842,7 @@ exports.validateExcelData = function(req, res, next) {
             validateServiceInfo: validateServiceInfo,
             //validateCity : validateCity,
             //validateRentInfo: validateRentInfo,
+            validateTradetype: validateTradetype,
             validateAdditionalInfo: validateAdditionalInfo,
             validateOnlyAdminCols: validateOnlyAdminCols,
             validateForBid:validateForBid,
@@ -2887,6 +2905,31 @@ exports.validateExcelData = function(req, res, next) {
 
       }
       return callback(null, obj);
+    }
+    
+    //validate Trade Type
+    function validateTradetype ( callback ) {
+        if ( row.tradeType==='SELL' ) {
+            var filter = {};
+            filter['product.assetId'] = row.assetId;
+            filter['bidStatus'] = 'Accepted';
+            AssetSaleModel.find(filter,function(err,bids){
+                if(err || !bids.length){
+                    return callback();
+                };
+                
+                if(bids && bids.length){
+                    errorList.push({
+                        Error: "Asset Trade Type can't be modified as there is an active bid on it",
+                        rowCount: row.rowCount
+                    });
+                    return callback('Error');
+                }
+                else
+                    return callback();
+            });
+        }
+        else return callback();
     }
 
     //validate Technical information
