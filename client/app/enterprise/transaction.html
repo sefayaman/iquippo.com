@@ -69,6 +69,10 @@
                       <option value="Inspection Completed">Inspection Completed</option>
                       <option value="Invoice Generated">Invoice Generated</option>
                       <option value="Valuation Report Submitted">Valuation Report Submitted</option>
+                      <option value="Payment Received">Payment Received</option>
+                      <option value="Payment Made">Payment Made</option>
+                      <option value="Completed">Request Completed</option>
+                      <option value="Request On Hold">Request On Hold</option>
                       <option value="Request Cancelled">Request Cancelled</option>
                       <option value="Request Modified">Request Modified</option>
                     </select>
@@ -125,7 +129,7 @@
             <td><a href="javascript:void(0);" title=""> {{enterpriseValuation.assetId}}</a></td>
             <td>{{enterpriseValuation.requestDate | date:'MM/dd/yyyy'}}</td>
             <td>
-              <span ng-if="!enterpriseValuation.onHold && !enterpriseValuation.cancelled && !enterpriseValuation.requestModified">{{enterpriseValuation.status}}</span>
+              <span ng-if="!enterpriseValuation.onHold && !enterpriseValuation.cancelled && !enterpriseValuation.requestModified">{{getStatusText(enterpriseValuation)}}</span>
               <span ng-if="enterpriseValuation.onHold && !enterpriseValuation.cancelled">Hold - {{enterpriseValuation.onHoldMsg}}</span>
               <span ng-if="enterpriseValuation.cancelled">Request Cancelled</span>
                <span ng-if="!enterpriseValuation.cancelled && !enterpriseValuation.onHold && enterpriseValuation.requestModified">Request Modified</span>

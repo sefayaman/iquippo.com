@@ -97,9 +97,6 @@ exports.updateLotData = function(req, res) {
   var options = {};
   req.body.updatedAt = new Date();
 
-  if (req.body.auction_id)
-    req.body.auction_id = req.body.auction_id;
-
   var filter = {};
   filter.isDeleted = false;
   if (req.body.auction_id)
@@ -109,9 +106,7 @@ exports.updateLotData = function(req, res) {
 
   Lot.find(filter, function(err, lotResult) {
     if (err) return handleError(res, err);
-    if(lotResult.length > 0){
-      return res.status(201).json({errorCode: 1,message: "Data already exist with same auction id and lot number!"});
-    } else {
+    if (lotResult.length === 0 || (lotResult.length === 1 && lotResult[0]._id.toString() === req.params.id)) {
       delete req.body._id;
       Lot.update({_id: req.params.id}, {$set: req.body}, function(err) {
         if (err)
@@ -137,6 +132,8 @@ exports.updateLotData = function(req, res) {
           }
         });
       });
+    } else {
+      return res.status(201).json({errorCode: 1,message: "Data already exist with same auction id and lot number!"});
     }
   });
 };

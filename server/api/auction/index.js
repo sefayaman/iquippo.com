@@ -43,7 +43,7 @@ router.post('/userregforauction/checkUserRegis',userRegForAuction.checkUserRegis
 router.post('/userregforauction/saveOfflineRequest',userRegForAuction.saveOfflineRequest);
 router.post('/userregforauction/filterregisteruser', userRegForAuction.getFilterOnRegisterUser);
 router.post('/userregforauction/senddata',userRegForAuction.sendUserToAs);
-router.post('/userregforauction/generatekit', auth.hasRole('admin'),kitCtrl.generateKit);
+router.post('/userregforauction/generatekit', auth.hasRole('admin'),kitCtrl.populateData,kitCtrl.generateKit);
 //router.put('/userregforauction/:id', userRegForAuction.update);
 //router.delete('/userregforauction/:id', userRegForAuction.destroy);
 ////router.post('/userregforauction/validateuser', userRegForAuction.validateUser);
