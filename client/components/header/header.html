@@ -2,8 +2,8 @@
   <nav class="navbar navbar-client navbar-fixed-top" role="navigation">
     <div class="container-fluid"> 
       <ul class="top-menu visible-xs">            
-        <li ng-click="navCollapsed = true"><a href="javascript:void(0);" ng-click="sendCallback()" class="text-danger"><i class="fa fa-phone"></i></a></li>
-        <li ng-click="navCollapsed = true" ng-hide="isLoggedIn()"><a href="/signin"><i class="fa fa-sign-in"></i> <span class="hidden-xs">Login</span></a></li>
+        <!-- <li ng-click="navCollapsed = true"><a href="javascript:void(0);" ng-click="sendCallback()"><i class="fa fa-phone"></i></a></li> -->
+        <!-- <li ng-click="navCollapsed = true" ng-hide="isLoggedIn()"><a href="/signin"><i class="fa fa-sign-in"></i> <span class="hidden-xs">Login</span></a></li> -->
         <li ng-click="navCollapsed = true" ng-if="isLoggedIn()" class="dropdown" >
           <a href class="dropdown-toggle" data-toggle="dropdown">
              <i class="fa fa-user" style="background-color:#ccc;color:#fff; padding:3px 5px; border-radius:50%;height:25px;width:25px;" ng-if="!getCurrentUser().imgsrc"></i>
@@ -37,37 +37,37 @@
       <!-- Collect the nav links, forms, and other content for toggling -->
       <div class="collapse navbar-collapse navbar-ex1-collapse" ng-class="!navCollapsed && 'in'">
         <ul class="nav navbar-nav navbar-right">
-            <li class="submenu dropdown">
-              <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">Equipment <i class="fa fa-caret-down"></i></a>
-                <ul class="dropdown-menu" role="menu" ng-click="navCollapsed = true">
-                  <li role="menuitem"><a href="/new"> New Equipment</a></li>                  
-                  <li role="menuitem"><a href="/used"> Used Equipment</a></li>
+            <li uib-dropdown on-toggle="toggled(open)">
+              <a href="javascript:void(0);" id="equipment-dropdown" uib-dropdown-toggle>Equipment <i class="fa fa-caret-down"></i></a>
+                <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="equipment-dropdown">
+                  <li role="menuitem" ng-click="navCollapsed = true"><a href="/new"> New Equipment</a></li>                  
+                  <li role="menuitem" ng-click="navCollapsed = true"><a href="/used"> Used Equipment</a></li>
                 </ul>
             </li>
             <li ng-click="navCollapsed = true"><a href="/viewauctions?type=upcoming">Auctions</a></li>
-             <li class="submenu dropdown">
-                <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">Finance <i class="fa fa-caret-down"></i></a>
+             <li uib-dropdown on-toggle="toggled(open)">
+                <a href="javascript:void(0);" id="finance-dropdown" uib-dropdown-toggle>Finance <i class="fa fa-caret-down"></i></a>
 
-                <ul class="dropdown-menu" role="menu" ng-click="navCollapsed = true">
-                  <li role="menuitem"><a href="javascript:void(0);" ng-click="submitToRapid()">Equipment Finance</a></li>
-                  <li role="menuitem"><a href="https://sarv.iquippo.com/" target="_blank">SARV</a></li>
+                <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="finance-dropdown">
+                  <li role="menuitem" ng-click="navCollapsed = true"><a href="javascript:void(0);" ng-click="submitToRapid()">Equipment Finance</a></li>
+                  <li role="menuitem" ng-click="navCollapsed = true"><a href="https://sarv.iquippo.com/" target="_blank">SARV</a></li>
                 </ul>
 
              </li>
              <finance-integration class="hide"></finance-integration>
              <li ng-click="navCollapsed = true" ng-class="{active: isActive(['valuation'])}"><a href="/valuation">Valuation</a></li>
              <!-- <li ng-click="navCollapsed = true"><a href="https://sarv.iquippo.com/" target="_blank">Sarv</a></li> -->
-             <li class="submenu dropdown">
-                <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" id="single-button" >Other Services <i class="fa fa-caret-down"></i></a>
-                <ul ng-click="navCollapsed = true" class="dropdown-menu" role="menu" aria-labelledby="single-button">
-                  <li role="menuitem"><a href="/shipping"> Shipping</a></li>
-                  <li role="menuitem"><a href="/insurance">Insurance</a></li>
-                  <li role="menuitem"><a href="/manpower"> Manpower</a></li>
+             <li uib-dropdown on-toggle="toggled(open)">
+                <a href="javascript:void(0);" uib-dropdown-toggle id="single-button" >Other Services <i class="fa fa-caret-down"></i></a>
+                <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="single-button">
+                  <li role="menuitem" ng-click="navCollapsed = true"><a href="/shipping"> Shipping</a></li>
+                  <li role="menuitem" ng-click="navCollapsed = true"><a href="/insurance">Insurance</a></li>
+                  <li role="menuitem" ng-click="navCollapsed = true"><a href="/manpower"> Manpower</a></li>
                 </ul>
              </li>
-             <li ng-click="navCollapsed = true" ng-hide="isLoggedIn()" class="hidden-xs"><a href="/signin">Login</a></li>
-             <li ng-click="navCollapsed = true" ng-hide="isLoggedIn()" class="hidden-xs"><a href="/signup">Signup</a></li>
-             <li class="hidden-xs" ng-click="navCollapsed = true"><a href="javascript:void(0);" ng-click="sendCallback()" class="text-danger"><i class="fa fa-phone"></i></a></li>
+             <li ng-click="navCollapsed = true" ng-hide="isLoggedIn()"><a href="/signin">Login</a></li>
+             <li ng-click="navCollapsed = true" ng-hide="isLoggedIn()"><a href="/signup">Signup</a></li>
+             <li class="hidden-xs" ng-click="navCollapsed = true"><a href="javascript:void(0);" ng-click="sendCallback()"><i class="fa fa-phone"></i></a></li>
              <li ng-if="isLoggedIn()" class="dropdown hidden-xs" >
                 <a href class="dropdown-toggle" data-toggle="dropdown">
                    <i class="fa fa-user" style="background-color:#ccc;color:#fff; padding:4px 5px; border-radius:50%;height:25px;width:25px;" ng-if="!getCurrentUser().imgsrc"></i>
