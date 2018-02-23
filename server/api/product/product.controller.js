@@ -2911,15 +2911,17 @@ exports.validateExcelData = function(req, res, next) {
     
     //validate Trade Type
     function validateTradetype ( callback ) {
+        console.log('TRADE_TYPE',row.tradeType.toLowerCase());
         if ( row.tradeType.toLowerCase()==='sell' ) {
             var filter = {};
             filter['product.assetId'] = row.assetId;
             filter['bidStatus'] = 'Accepted';
+            console.log('filterss',filter);
             AssetSaleModel.find(filter,function(err,bids){
                 if(err || !bids.length){
                     return callback();
                 };
-                
+                console.log(bids);
                 if(bids && bids.length){
                     errorList.push({
                         Error: "Asset Trade Type can't be modified as there is an active bid on it",
