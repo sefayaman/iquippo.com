@@ -864,7 +864,7 @@ function updateProduct(req,res){
     delete req.body.featured;
     req.proData = product.toObject();
     
-    if ( req.body.tradeType==='SELL' ) {
+    if ( req.body.tradeType.toLowerCase()==='sell' ) {
             console.log(req.body.assetId);
             var filter = {};
             filter['product.assetId'] = req.body.assetId;
@@ -2911,7 +2911,7 @@ exports.validateExcelData = function(req, res, next) {
     
     //validate Trade Type
     function validateTradetype ( callback ) {
-        if ( row.tradeType==='SELL' ) {
+        if ( row.tradeType.toLowerCase()==='sell' ) {
             var filter = {};
             filter['product.assetId'] = row.assetId;
             filter['bidStatus'] = 'Accepted';
