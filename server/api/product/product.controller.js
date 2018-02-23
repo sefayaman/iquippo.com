@@ -863,7 +863,7 @@ function updateProduct(req,res){
     req.body.featured = false;
     delete req.body.featured;
     req.proData = product.toObject();
-    if ( req.body.tradeType==='SELL' ) {
+    if ( req.body.tradeType.toLowerCase()==='sell' ) {
             console.log(req.body.assetId);
             var filter = {};
             filter['product.assetId'] = req.body.assetId;
@@ -879,6 +879,7 @@ function updateProduct(req,res){
             });
         }
     else {
+    
     if(req.body.featured){
       var imgPath = config.uploadPath + req.body.assetDir + "/" + req.body.primaryImg;
       var featureFilePath=config.uploadPath+"featured/"+req.body.primaryImg;
@@ -2909,7 +2910,7 @@ exports.validateExcelData = function(req, res, next) {
     
     //validate Trade Type
     function validateTradetype ( callback ) {
-        if ( row.tradeType==='SELL' ) {
+        if ( row.tradeType.toLowerCase()==='sell' ) {
             var filter = {};
             filter['product.assetId'] = row.assetId;
             filter['bidStatus'] = 'Accepted';

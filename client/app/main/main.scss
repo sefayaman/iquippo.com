@@ -1405,7 +1405,7 @@ footer .subscribe{height: 40px;}
 .navbar .nav.navbar-nav.navbar-right{margin-left: 0px; margin-top: 50px; margin-right: 0;}
 .navbar .nav.navbar-nav.navbar-right li{display: block;}
 .navbar .nav.navbar-nav.navbar-right li a{padding: 10px; display: block; text-transform: uppercase; font-size: 14px;}
-.navbar .nav.navbar-nav.navbar-right .dropdown:hover .dropdown-menu{display: none;}
+.navbar .nav.navbar-nav.navbar-right .dropdown:hover .dropdown-menu{display: block; left: -30em;}
 .navbar-fixed-top{top:0px; z-index: 99;}
 .navbar-fixed-top .navbar-collapse{max-height: 100vh; position: fixed; z-index: auto;
     top: 35px;
@@ -1495,5 +1495,8 @@ footer .subscribe{height: 40px;}
 .myprofile-tabs > .tab-content{width: 85%;}
 .brand-list li{width: 50%; display: inline-block;}
 .table-responsive{border:0;}
+.shipps{width: 100%;}
+.new-equipment-brand li:first-child{height: 300px;}
+.search-manpower .padd-left{padding-left: 15px;}
 
 }
