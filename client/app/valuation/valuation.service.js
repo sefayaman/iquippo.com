@@ -215,6 +215,15 @@ function ValuationSvc($http,$q,$rootScope, notificationSvc,Auth,LocationSvc){
           }
         }
       break;
+      case 'REPORTDOWNLOAD':
+        retVal = false;
+        for(var i=0; i<valuation.statuses.length; i++) {
+          if(valuation.statuses[i].status === IndividualValuationStatuses[6]) {
+            retVal = true;
+            break;
+          }
+        }
+      break;
       default:
         retVal = false;
       break;
