@@ -163,9 +163,18 @@ function setIquippoGstin(state){
     $scope.valuation.invoiceData = $scope.invoice;
     $scope.valuation.invoiceDate = $scope.invoice.invoiceDate;
     $scope.invoice.invoiceNo = $scope.valuation.invoiceNo;
+
+    var stsObj = {};
+    stsObj.createdAt = new Date();
+    stsObj.userId = Auth.getCurrentUser()._id;
+    stsObj.status = IndividualValuationStatuses[4];
+    $scope.valuation.statuses[$scope.valuation.statuses.length] = stsObj;
+    $scope.valuation.status = IndividualValuationStatuses[4];
+
     ValuationSvc.update($scope.valuation)
     .then(function(genInvoice){
-      ValuationSvc.updateStatus($scope.valuation,IndividualValuationStatuses[4]);
+      //ValuationSvc.updateStatus($scope.valuation,IndividualValuationStatuses[4]);
+      updateStatusComplete($scope.valuation);
       if($scope.valuation.payOption)
         sendNotification($scope.valuation, IndividualValuationStatuses[4]);
       if($scope.callback)
@@ -176,6 +185,15 @@ function setIquippoGstin(state){
       if(err.data)
         Modal.alert(err.data);
     })
+  }
+
+  function updateStatusComplete(valData) {
+    var statusesObj = [];
+    for(var i=0; i < valData.statuses.length; i++) {
+      statusesObj.push(valData.statuses[i].status);
+    }
+    if(statusesObj.indexOf(IndividualValuationStatuses[6]) > -1 && Auth.isAdmin())
+      ValuationSvc.updateStatus(valData,IndividualValuationStatuses[7]);
   }
 
   function sendNotification(valData, status) {

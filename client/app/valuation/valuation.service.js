@@ -174,81 +174,37 @@ function ValuationSvc($http,$q,$rootScope, notificationSvc,Auth,LocationSvc){
           retVal = true;
         if(statusesObj.indexOf(IndividualValuationStatuses[4]) > -1)
           retVal = false;
-        /*for(var i=0; i<valuation.statuses.length; i++) {
-          if(valuation.statuses[i].status === IndividualValuationStatuses[4]) {
-            retVal = false;
-            break;
-          }
-        }*/
       break;
       case 'ADDPAYMENT':
         if(Auth.isAdmin())
           retVal = true;
         if(statusesObj.indexOf(IndividualValuationStatuses[1]) > -1)
           retVal = false;
-        /*for(var i=0; i<valuation.statuses.length; i++) {
-          if(valuation.statuses[i].status === IndividualValuationStatuses[1]) {
-            retVal = false;
-            break;
-          }
-        }*/
       break;
       case 'PAYNOW':
         if(valuation.user._id == Auth.getCurrentUser()._id)
           retVal = true;
         if(statusesObj.indexOf(IndividualValuationStatuses[1]) > -1)
           retVal = false;
-        /*for(var i=0; i<valuation.statuses.length; i++) {
-          if(valuation.statuses[i].status === IndividualValuationStatuses[1]) {
-            retVal = false;
-            break;
-          }
-        }*/
         break;
       break;
       case 'INVOICEDOWNLOAD':
         retVal = false;
         if(statusesObj.indexOf(IndividualValuationStatuses[4]) > -1)
           retVal = true;
-        /*for(var i=0; i<valuation.statuses.length; i++) {
-          if(valuation.statuses[i].status === IndividualValuationStatuses[4]) {
-            retVal = true;
-            break;
-          }
-        }*/
         break;
       case 'SUBMITTOAGENCY':
         if(Auth.isAdmin())
           retVal = true;
         if(statusesObj.indexOf(IndividualValuationStatuses[3]) > -1)
           retVal = false;
-        /*for(var i=0; i<valuation.statuses.length; i++) {
-          if(valuation.statuses[i].status === IndividualValuationStatuses[3]) {
-            retVal = false;
-            break;
-          }
-        }*/
       break;
       case 'REPORTDOWNLOAD':
         retVal = false;
         if(statusesObj.indexOf(IndividualValuationStatuses[6]) > -1)
           retVal = true;
-        /*for(var i=0; i<valuation.statuses.length; i++) {
-          if(valuation.statuses[i].status === IndividualValuationStatuses[6]) {
-            retVal = true;
-            break;
-          }
-        }*/
       break;
       case 'STATUSCOMPLETED':
-        // retVal = false;
-        // for(var i=0; i<valuation.statuses.length; i++) {
-        //   if(valuation.statuses[i].status === IndividualValuationStatuses[6]) {
-        //     retVal = true;
-        //     break;
-        //   }
-        // }
-
         if(statusesObj.indexOf(IndividualValuationStatuses[1]) > -1 
           && statusesObj.indexOf(IndividualValuationStatuses[4]) > -1 
           && statusesObj.indexOf(IndividualValuationStatuses[6]) > -1 
