@@ -246,6 +246,7 @@ function AuctionRegisCtrl($scope, $rootScope, $location, Modal, Auth,PagerSvc,KY
       paymentObj.paymentMode = $scope.option.select;
     paymentObj.transactionId = result.transactionId;
     paymentObj.auctionId = dataObj.auction.auctionId;
+    paymentObj.auctionName = dataObj.auction.name;
     paymentObj.auction_id = dataObj.auction.dbAuctionId;
     paymentObj.emdTax = dataObj.auction.emdTax;
     paymentObj.requestType = "Auction Request";
@@ -283,6 +284,7 @@ function AuctionRegisCtrl($scope, $rootScope, $location, Modal, Auth,PagerSvc,KY
         paymentObj.paymentMode = $scope.option.select;
         paymentObj.transactionId = result.transactionId;
         paymentObj.auctionId = dataObj.auction.auctionId;
+        paymentObj.auctionName = dataObj.auction.name;
         paymentObj.auction_id = dataObj.auction.dbAuctionId;
         paymentObj.emdTax = dataObj.auction.emdTax;
         paymentObj.requestType = "Auction Request";
