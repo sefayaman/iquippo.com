@@ -2910,12 +2910,15 @@ exports.validateExcelData = function(req, res, next) {
     
     //validate Trade Type
     function validateTradetype ( callback ) {
+        console.log('TRADE_TYPE',row.tradeType.toLowerCase());
         if ( row.tradeType.toLowerCase()==='sell' ) {
             var filter = {};
             filter['product.assetId'] = row.assetId;
             filter['bidStatus'] = 'Accepted';
+            console.log('Filtersss',row.tradeType.toLowerCase());
             AssetSaleModel.find(filter,function(err,bids){
                 if(err || !bids.length){
+                    console.log(err);
                     return callback();
                 };
                 
