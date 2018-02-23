@@ -45,6 +45,8 @@
                   <!-- <th width="50"><input type="checkbox" ng-model="valuationListingVm.master"> All</th> -->
                   <th>Request ID</th>
                   <th>Request Type</th>
+                  <th>Job ID</th>
+                  <th>Report No</th>
                   <th>Category</th>
                   <th>Asset Name</th>
                   <th>Asset Status</th>
@@ -62,6 +64,8 @@
                 <!-- <td><input type="checkbox" ng-checked="valuationListingVm.master" ng-click="valuationListingVm.updateSelection($event,valuation._id)"></td> -->
                 <td>{{valuation.requestId}}</td>
                 <td>{{valuation.requestType}}</td>
+                <td>{{valuation.jobId}}</td>
+                <td>{{valuation.reportNo}}</td>
                 <td>{{valuation.product.category}}</td>
                 <td>
                   <span ng-if="valuation.product.name">{{valuation.product.name}}</span>
