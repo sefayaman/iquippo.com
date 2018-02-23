@@ -2915,7 +2915,7 @@ exports.validateExcelData = function(req, res, next) {
             var filter = {};
             filter['product.assetId'] = row.assetId;
             filter['bidStatus'] = 'Accepted';
-            console.log('Filtersss',row.tradeType.toLowerCase());
+            console.log('Filters',row.tradeType.toLowerCase());
             AssetSaleModel.find(filter,function(err,bids){
                 if(err || !bids.length){
                     console.log(err);
