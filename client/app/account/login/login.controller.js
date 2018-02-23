@@ -80,8 +80,14 @@ angular.module('account').controller('LoginCtrl', LoginCtrl);
 
     function init(){
         Auth.isLoggedInAsync(function(loggedIn){
-         if(loggedIn)
-           $state.go("main");
+         if(loggedIn) {
+            if($stateParams.state){
+              var state = $stateParams.state;
+              delete $stateParams.state;
+              $state.go(state,$stateParams);
+            } else
+            $state.go("main");
+         }
        });
     }
 

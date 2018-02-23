@@ -26,7 +26,7 @@ angular.module('sreizaoApp')
         }
       })
       .state('signin', {
-        url: '/signin?state&brand&category&id&dbAuctionId&lot',
+        url: '/signin?state&brand&category&id&dbAuctionId&lot&tid',
         templateUrl: 'app/account/login/login-new.html',
         controller: 'LoginCtrl as loginVm',
         layout:'client'
@@ -479,7 +479,7 @@ angular.module('sreizaoApp')
         layout:'client'
       })
       .state('valuationrequests', {
-        url: '/valuationrequests/:mode',
+        url: '/valuationrequests',
         templateUrl: 'app/valuation/valuationlisting.html',
         controller: 'ValuationListingCtrl as valuationListingVm',
         authenticate:true,

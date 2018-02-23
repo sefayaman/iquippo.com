@@ -1,134 +1,112 @@
 (function(){
 'use strict';
 angular.module('sreizaoApp').controller('ValuationListingCtrl',ValuationListingCtrl);
-function ValuationListingCtrl($scope,$stateParams,$state,Modal,Auth,ValuationSvc,AuctionSvc,UtilSvc,$rootScope,uploadSvc) {
+function ValuationListingCtrl($scope,$window,$stateParams,$state,Modal,Auth,PagerSvc,userSvc, ValuationSvc,AuctionSvc,UtilSvc,$rootScope,uploadSvc) {
  	 var vm = this;
 	 vm.valuations = [];
 	 var reqSent = [];
 	 var reqReceived = [];
 	 var filter = {};
+  	 var initFilter = {};
 	 $scope.valuationStatuses = valuationStatuses;
+	 $scope.IndividualValuationStatuses = IndividualValuationStatuses;
 	 $scope.valType = "sent";
 	 vm.master = false;
 	 vm.searchStr = "";
-
-	 //pagination variables
-	  var prevPage = 0;
-	  vm.itemsPerPage = 50;
-	  vm.currentPage = 1;
-	  vm.totalItems = 0;
-	  vm.maxSize = 6;
-	  var first_id = null;
-	  var last_id = null;
+	 $scope.pager = PagerSvc.getPager();
 
 	  vm.fireCommand = fireCommand;
-
-	 vm.onValuationReqTypeChange = onValuationReqTypeChange;
-	 vm.updateSelection = updateSelection;
+	  vm.openInvoiceModal = openInvoiceModal;
+	 //vm.onValuationReqTypeChange = onValuationReqTypeChange;
+	 //vm.updateSelection = updateSelection;
 	 vm.exportExcel = exportExcel;
 	 vm.updateStatus = updateStatus;
-	 $scope.uploadReport = uploadReport;
-	 vm.isUserMode = isUserMode;
+	 //$scope.uploadReport = uploadReport;
+	 vm.downloadInvoice = downloadInvoice;
+	 vm.openPaymentModel = openPaymentModel;
+	 vm.validateAction = ValuationSvc.validateAction;
 	 var selectedIds = [];
+	 vm.submitToAgency = submitToAgency;
 
-	 var mode = "user";
+	 //var mode = "user";
 
 	 function init(){
 	 	Auth.isLoggedInAsync(function(loggedIn){
 	 		if(loggedIn){
+	 			filter ={};
+		        initFilter.pagination = true;
+		        if(!Auth.isAdmin() && !Auth.isValuationPartner()){
+		          initFilter['userId'] = Auth.getCurrentUser()._id;
+		        }
 
-	 			if($stateParams.mode=="myrequest"){
-	 				mode = "user";
-	 			}else if($stateParams.mode == "valuationpartner" && Auth.isValuationPartner()){
-	 				mode = "agency";
-	 			}else{
-	 				goToUserMode();
-	 			}
-
-	 			if(isUserMode()){
-	 				filter = formFilter("sent");
-	 				getValuations(filter,"sent");
-	 			}else{
-	 				filter = formFilter();
-	 				getValuations(filter); 
-	 			}
+		        if(Auth.isValuationPartner())
+		        	initFilter['partnerId'] = Auth.getCurrentUser().partnerInfo._id;
+				
+		        angular.copy(initFilter, filter);
+			 	getValuations(filter);	
 	 			
 	 		}
 	 	});
 	 }
-	 
-	 function goToUserMode(){
-	 	$state.go("valuationrequests",{mode:"myrequest"});
-	 }
-
-	 function isUserMode(){
-	 	return mode == "user";
-	 }
 
 	 init();
 
-	 function fireCommand(rstPagination){
-	 	
-	 	if(rstPagination)
-	 		resetPagination();
-	 	var fltr = formFilter($scope.valType);
-	 	if(vm.searchStr)
-	 		fltr.searchstr = vm.searchStr;
-	 	if(isUserMode())
-	 		getValuations(fltr,$scope.valType);
-	 	else
-	 		getValuations(fltr);
+	function downloadInvoice(ivNo){
+		openWindow(ValuationSvc.generateInvoice(ivNo));    
+	}
+
+	function openWindow(url) {
+		$window.open(url);
+	}
+
+	function openInvoiceModal(valuation){
+		var filter = {};
+        filter._id = valuation.user._id;
+        filter.status = true;
+        userSvc.getUsers(filter).then(function(userData){
+	        var invoiceScope = $rootScope.$new();
+			invoiceScope.valuation = valuation;
+			invoiceScope.user = userData[0];
+			invoiceScope.reqType = valuation.requestType;
+			invoiceScope.individualValuation = true;
+			invoiceScope.callback = fireCommand;
+			Modal.openDialog('individualValuationInvoiceCalcuation',invoiceScope);
+        })
+        .catch(function(err){
+          Modal.alert("Error in geting user");
+        });
+	}
+
+	function openPaymentModel(valuation, openDialog){
+		var OfflinePaymentScope = $rootScope.$new();
+		OfflinePaymentScope.offlinePayment = valuation.transactionIdRef;
+		OfflinePaymentScope.valuation = valuation;
+		OfflinePaymentScope.viewMode = openDialog;
+		OfflinePaymentScope.iValuationFlag = true;
+		OfflinePaymentScope.callback = fireCommand;
+		Modal.openDialog('OfflinePaymentPopup',OfflinePaymentScope);
+	}
+
+	function fireCommand(rstPagination){
+	 	if (rstPagination)
+        	$scope.pager.reset();
+	    filter = {};
+	    angular.copy(initFilter, filter);
+	    if (vm.searchStr)
+	        filter.searchStr = vm.searchStr;
+	    getValuations(filter);
 	 }
 
 	 function getValuations(filter,valType){
-	 	
-	 	filter.pagination = true;
-	 	filter.prevPage = prevPage;
-	    filter.currentPage = vm.currentPage;
-	    filter.first_id = first_id;
-	    filter.last_id = last_id;
-	    filter.itemsPerPage = vm.itemsPerPage;
-
-	 	ValuationSvc.getOnFilter(filter)
+	 	$scope.pager.copy(filter);
+		ValuationSvc.getOnFilter(filter)
 	 	.then(function(result){
-	 		if(valType && valType == 'sent'){
-	 			$scope.valType = 'sent';
-	 			vm.valuations = result.items;
-	 		}else if(valType && valType == 'received'){
-	 			$scope.valType = 'received';
-	 			vm.valuations = result.items;
-	 		}else{
-	 			vm.valuations = result.items;
-	 		}
-	 		vm.totalItems = result.totalItems;
-        	prevPage = vm.currentPage;
-        	if(result.items.length > 0){
-        		 first_id = result.items[0]._id;
-          		 last_id = result.items[result.items.length - 1]._id;
-        	}
-
+	 		vm.valuations = result.items;
+	        vm.totalItems = result.totalItems;
+	        $scope.pager.update(result.items, result.totalItems);
 	 	})
-
-	 }
-
-	 function onValuationReqTypeChange(val){
-	 		resetPagination();
-	 		getValuations(formFilter(val),val);
-	 }
-
-	 function formFilter(val){
-
-	 	var filter = {};
-	 	if(!isUserMode()){
-			filter['partnerId'] = Auth.getCurrentUser().partnerInfo._id;
-			filter['statuses'] = ['request_submitted','request_in_process','request_completed']; 
-		}else if(isUserMode() && val && val == "sent"){
-			filter['userId'] = Auth.getCurrentUser()._id;
-		}else if(isUserMode() && val && val == "received"){
-			filter['sellerId'] = Auth.getCurrentUser()._id;
-		}
-
-		return filter;
+	 	.catch(function(err){
+	 	});
 	 }
 
 	 function exportExcel(){
@@ -147,7 +125,7 @@ function ValuationListingCtrl($scope,$stateParams,$state,Modal,Auth,ValuationSvc
         });
     }
 
-  function updateSelection(event,id){
+  /*function updateSelection(event,id){
   		if(vm.master)
   			vm.master = false;
         var checkbox = event.target;
@@ -156,23 +134,23 @@ function ValuationListingCtrl($scope,$stateParams,$state,Modal,Auth,ValuationSvc
           selectedIds.push(id)
         if(action == 'remove' && selectedIds.indexOf(id) != -1)
           selectedIds.splice(selectedIds.indexOf(id),1);
-    }
+    }*/
 
     function updateStatus(valuationReq,toStatus,intermediateStatus){
     	if(!toStatus)
     		return;
-    	if(toStatus == 'request_completed' && !valuationReq.report){
-    		Modal.alert("Please upload report.");
-    		return;
-    	}
+    	// if(toStatus == 'request_completed' && !valuationReq.report){
+    	// 	Modal.alert("Please upload report.");
+    	// 	return;
+    	// }
     	ValuationSvc.updateStatus(valuationReq,toStatus,intermediateStatus)
     	.then(function(){
-    		if(valuationReq.isAuction)
-    			updateAuction(valuationReq,toStatus);
+    		// if(valuationReq.isAuction)
+    		// 	updateAuction(valuationReq,toStatus);
 
-    		ValuationSvc.sendNotification(valuationReq,$scope.getStatusOnCode($scope.valuationStatuses,toStatus).notificationText,'customer');
-    		if(intermediateStatus)
-    			ValuationSvc.sendNotification(valuationReq,$scope.getStatusOnCode($scope.valuationStatuses,toStatus).notificationText,'valagency');
+    		ValuationSvc.sendNotification(valuationReq,toStatus,'customer');
+    		// if(intermediateStatus)
+    		// 	ValuationSvc.sendNotification(valuationReq,toStatus,'valagency');
     	})
     }
 
@@ -187,7 +165,7 @@ function ValuationListingCtrl($scope,$stateParams,$state,Modal,Auth,ValuationSvc
 		});
     }
 
-    function uploadReport(files,_this){
+    /*function uploadReport(files,_this){
     	if(!files[0])
 	 		return;
 	 	var index = parseInt($(_this).data('index'));
@@ -203,16 +181,19 @@ function ValuationListingCtrl($scope,$stateParams,$state,Modal,Auth,ValuationSvc
 	    .catch(function(err){
 	    	$rootScope.loading = false;
 	    })
-	}
+	}*/
 
- function resetPagination(){
-     prevPage = 0;
-     vm.currentPage = 1;
-     vm.totalItems = 0;
-     first_id = null;
-     last_id = null;
-  }
-
+	function submitToAgency(valuation,type){
+        //api integration
+        ValuationSvc.submitToAgency(valuation,type)
+        .then(function(resList){
+          fireCommand(true);    
+        })
+        .catch(function(err){
+          if(err)
+            Modal.alert("Error occured in integration");
+        }) 
+    }
 }
 
 })();

@@ -2,7 +2,7 @@
 'use strict';
 
 angular.module('sreizaoApp').factory("ValuationSvc",ValuationSvc);
-function ValuationSvc($http,$q,notificationSvc,Auth,LocationSvc){
+function ValuationSvc($http,$q,$rootScope, notificationSvc,Auth,LocationSvc){
   var svc = {};
   var path = "/api/valuation";
   svc.getAll = getAll;
@@ -14,6 +14,13 @@ function ValuationSvc($http,$q,notificationSvc,Auth,LocationSvc){
   svc.export = exportValuation;
   svc.sendNotification = sendNotification;
   svc.updateStatus = updateStatus;
+  svc.generateInvoice = generateInvoice;
+  svc.validateAction = validateAction;
+  svc.submitToAgency = submitToAgency;
+  
+   function generateInvoice(ivNo){
+    return path + "/generateinvoice/" + ivNo;
+   }
 
   function getAll(){
         return $http.get(path)
@@ -136,8 +143,85 @@ function ValuationSvc($http,$q,notificationSvc,Auth,LocationSvc){
       }else if(sendTo == "seller"){
         //need to send to seller 
       }
-      
     }
+
+    function submitToAgency(valReqs,type, deferred){
+      var deferred = $q.defer();
+      $rootScope.loading = true;
+      $http.post(path + "/submitrequest?type=" + type,valReqs)
+      .then(function(res){
+        $rootScope.loading = false;
+        return deferred.resolve(res.data);
+      })
+      .catch(function(err){
+        $rootScope.loading = false;
+        deferred.reject(err);
+      });
+
+      return deferred.promise;
+  }
+  
+  function validateAction(valuation, action){
+    var retVal = false;
+    switch(action){
+      case 'GENERATEINVOICE':
+        if(Auth.isAdmin())
+          retVal = true;
+        for(var i=0; i<valuation.statuses.length; i++) {
+          if(valuation.statuses[i].status === IndividualValuationStatuses[4]) {
+            retVal = false;
+            break;
+          }
+        }
+      break;
+      case 'ADDPAYMENT':
+        if(Auth.isAdmin())
+          retVal = true;
+        for(var i=0; i<valuation.statuses.length; i++) {
+          if(valuation.statuses[i].status === IndividualValuationStatuses[1]) {
+            retVal = false;
+            break;
+          }
+        }
+      break;
+      case 'PAYNOW':
+        if(valuation.user._id == Auth.getCurrentUser()._id)
+          retVal = true;
+        
+        for(var i=0; i<valuation.statuses.length; i++) {
+          if(valuation.statuses[i].status === IndividualValuationStatuses[1]) {
+            retVal = false;
+            break;
+          }
+        }
+        break;
+      break;
+      case 'INVOICEDOWNLOAD':
+        retVal = false;
+        for(var i=0; i<valuation.statuses.length; i++) {
+          if(valuation.statuses[i].status === IndividualValuationStatuses[4]) {
+            retVal = true;
+            break;
+          }
+        }
+        break;
+      case 'SUBMITTOAGENCY':
+        if(Auth.isAdmin())
+          retVal = true;
+        for(var i=0; i<valuation.statuses.length; i++) {
+          if(valuation.statuses[i].status === IndividualValuationStatuses[3]) {
+            retVal = false;
+            break;
+          }
+        }
+      break;
+      default:
+        retVal = false;
+      break;
+    }
+    return retVal;
+  }
+
   return svc;
 }
 })();

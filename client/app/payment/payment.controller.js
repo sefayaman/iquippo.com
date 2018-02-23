@@ -48,7 +48,7 @@ function PaymentCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,$location,
  		var tid = $stateParams.tid;
  		PaymentSvc.getOnFilter({_id:tid})
  		.then(function(result){
- 			if(result.length == 0){
+ 			if(result.length == 0 || Auth.getCurrentUser()._id !== result[0].user._id){
  				$state.go("main");
  				Modal.alert("Invalid payment access");
             return;

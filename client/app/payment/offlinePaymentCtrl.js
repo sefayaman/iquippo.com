@@ -3,7 +3,7 @@
 'use strict';
 angular.module('sreizaoApp').controller('OfflinePaymentCtrl',OfflinePaymentCtrl);
 
-function OfflinePaymentCtrl($scope,$rootScope,Modal,$stateParams,$state,$uibModalInstance, PaymentSvc,Auth) {
+function OfflinePaymentCtrl($scope,$rootScope,Modal,$stateParams,$state,$uibModalInstance, ValuationSvc, PaymentSvc,Auth) {
    
   var vm = this;
   vm.dataModel = {};
@@ -67,14 +67,22 @@ function OfflinePaymentCtrl($scope,$rootScope,Modal,$stateParams,$state,$uibModa
     stsObj.createdAt = new Date();
     stsObj.paymentStatus = "success";
     vm.dataModel.payments[vm.dataModel.payments.length] = stsObj;
-    vm.dataModel.userDataSendToAuction = true;
+    if(!$scope.iValuationFlag)
+      vm.dataModel.userDataSendToAuction = true;
     $rootScope.loading = true;
     PaymentSvc.updateStatus(vm.dataModel, transactionStatuses[5].code)
     .then(function(res){
         vm.dataModel = {};
         $scope.submitted = false;
         $rootScope.loading = false;
-        $rootScope.$broadcast('refreshPaymentHistroyList');
+        if(!$scope.iValuationFlag)
+          $rootScope.$broadcast('refreshPaymentHistroyList');
+        else {
+          ValuationSvc.updateStatus($scope.valuation, IndividualValuationStatuses[1]);
+          submitToAgency($scope.valuation,'Mjobcreation');
+          if($scope.callback)
+            $scope.callback(true);
+        }
         Modal.alert(res.message);
         closeDialog();
     })
@@ -83,6 +91,18 @@ function OfflinePaymentCtrl($scope,$rootScope,Modal,$stateParams,$state,$uibModa
       Modal.alert(err.data); 
     $rootScope.loading = false;
     });
+  }
+
+  function submitToAgency(valuation,type){
+    //api integration
+    ValuationSvc.submitToAgency(valuation,type)
+    .then(function(resList){
+      //Modal.alert("Valuation request submitted successfully !!!");
+    })
+    .catch(function(err){
+      if(err)
+        Modal.alert("Error occured in integration");
+    }) 
   }
 
   function closeDialog() {

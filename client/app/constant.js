@@ -102,6 +102,14 @@ var Modals = {
   valuationInvoiceCalcuation:{
     tplUrl:'app/enterprise/invoicecalculation.html',
     Ctrl:'InvoiceCalculationCtrl as invoiceCalculationVm'
+  },
+  paymentOption : {
+    tplUrl : "app/valuation/paymentoption.html",
+    Ctrl : 'PaymentOptionCtrl as paymentOptVm'
+  },
+  individualValuationInvoiceCalcuation:{
+    tplUrl:'app/enterprise/invoicecalculation.html',
+    Ctrl:'IndividualInvoiceCalculationCtrl as invoiceCalculationVm'
   }
 };
 
@@ -265,7 +273,8 @@ var auctionStatuses = [
     notificationText : "listed"
   }
 ];
-
+var IndividualValuationStatuses = ['Request Initiated','Payment Completed','Request Failed','Request Submitted','Invoice Generated','Report Failed','Report Submitted','Completed', 'Cancelled'];
+var iqvlOtherGroupId = 6;
 var valuationStatuses = [
 {
     name:"Payment Pending",

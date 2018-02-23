@@ -45,7 +45,7 @@
     };
     //$scope.negotiate = negotiate;
 
-    vm.addProductQuote = addProductQuote;
+    //vm.addProductQuote = addProductQuote;
     vm.requestForFinance = requestForFinance;
     vm.getDateFormat = getDateFormat;
     vm.calculateRent = calculateRent;
@@ -145,7 +145,7 @@
 
 
 
-    $scope.changedCertified = function(mytime) {
+    /*$scope.changedCertified = function(mytime) {
       if (mytime) {
         var hours = mytime.getHours();
         var minutes = mytime.getMinutes();
@@ -159,17 +159,17 @@
 
     $scope.toggleMode = function() {
       $scope.isShow = !$scope.isShow;
-    };
+    };*/
 
 
     //date picker
-    $scope.today = function() {
-      $scope.scheduleDate = new Date();
+    /*$scope.today = function() {
+      vm.valuationReq.scheduleDate = new Date();
     };
     $scope.today();
 
     $scope.clear = function() {
-      $scope.scheduleDate = null;
+      vm.valuationReq.scheduleDate = null;
     };
 
     $scope.toggleMin = function() {
@@ -189,7 +189,7 @@
     };
 
     $scope.setDate = function(year, month, day) {
-      $scope.scheduleDate = new Date(year, month, day);
+      vm.valuationReq.scheduleDate = new Date(year, month, day);
     };
 
     $scope.dateOptions = {
@@ -206,9 +206,9 @@
 
     $scope.popup2 = {
       opened: false
-    };
+    };*/
 
-    function addProductQuote(form) {
+    /*function addProductQuote(form) {
 
 
       if (!Auth.getCurrentUser()._id) {
@@ -264,7 +264,7 @@
             });
         }
       });
-    }
+    }*/
 
 
     function loadUserDetail() {

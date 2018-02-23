@@ -39,11 +39,14 @@ function PaymentResponseCtrl($scope,Modal,$stateParams,$state,notificationSvc,Pa
  				
  			}
  			
+      if(vm.payTransaction.requestType === "Valuation Request")
+        getValuatonReqDetail(vm.payTransaction);
+
  			for(var i = 0;i< vm.payTransaction.payments.length;i++){
  				if(vm.payTransaction.payments[i].type == "auctionreq")
  					getAuctionReqDetail(vm.payTransaction._id);
- 				else if(vm.payTransaction.payments[i].type == "valuationreq")
- 					getValuatonReqDetail(vm.payTransaction._id);
+ 				// else if(vm.payTransaction.payments[i].type == "valuationreq")
+ 				// 	getValuatonReqDetail(vm.payTransaction);
  				else if(vm.payTransaction.payments[i].type == "valuationEnquiries")
  					getValuatonEnquiryDetail(vm.payTransaction._id);
  				else if(vm.payTransaction.payments[i].type == "sparebuy")
@@ -114,31 +117,67 @@ function PaymentResponseCtrl($scope,Modal,$stateParams,$state,notificationSvc,Pa
  		})
  	}
 
- 	function getValuatonReqDetail(transactionId){
- 		if(!transactionId)
+ 	function getValuatonReqDetail(transaction){
+ 		if(!transaction._id)
  			return;
- 		ValuationSvc.getOnFilter({tid :transactionId})
+ 		ValuationSvc.getOnFilter({tid :transaction._id})
  		.then(function(result){
  			if(result.length > 0){
  				valuationReq = result[0];
- 				if(valuationReq.initiatedBy == "seller"){
-	 				ValuationSvc.updateStatus(valuationReq,valuationStatuses[3].code);
-	 				//ValuationSvc.sendNotification(valuationReq,valuationStatuses[3].notificationText,'customer');
-	 				ValuationSvc.sendNotification(valuationReq,valuationStatuses[3].notificationText,'valagency');
- 				}
-
- 				if(valuationReq.initiatedBy == "buyer"){
- 					ValuationSvc.updateStatus(valuationReq,valuationStatuses[1].code);
-	 				//ValuationSvc.sendNotification(valuationReq,valuationStatuses[1].notificationText,'customer');
-	 				ValuationSvc.sendNotification(valuationReq,valuationStatuses[1].notificationText,'seller');
-	 				//need to send seller also
- 				}
-
- 				PaymentSvc.sendNotification(vm.payTransaction,valuationReq,2);
+        if(vm.success) {
+          ValuationSvc.updateStatus(valuationReq, IndividualValuationStatuses[1]);
+          submitToAgency(valuationReq,'Mjobcreation');
+        }
+        setPayment(transaction, vm.success);
+        ValuationSvc.sendNotification(valuationReq,IndividualValuationStatuses[1],'customer');
+ 				PaymentSvc.sendNotification(vm.payTransaction, valuationReq, 2);
 		
  			}
  		});
  	}
+
+  function submitToAgency(valuation,type){
+    //api integration
+    ValuationSvc.submitToAgency(valuation,type)
+    .then(function(resList){
+      //Modal.alert("Valuation request submitted successfully !!!");
+    })
+    .catch(function(err){
+      if(err)
+        Modal.alert("Error occured in integration");
+    }) 
+  }
+
+  function setPayment(payTran, success) {
+    if(payTran.payments.length < 1)
+      payTran.payments = [];
+    var paymentObj = {};
+    paymentObj.paymentModeType = "Net Banking";
+    paymentObj.amount = payTran.totalAmount;
+    paymentObj.paymentDate = new Date();
+    paymentObj.createdAt = new Date();
+    paymentObj.refNo = payTran.ccAvenueRes.bank_ref_no;
+    paymentObj.bankname = payTran.ccAvenueRes.card_name;
+    paymentObj.trans_fee = payTran.ccAvenueData.trans_fee;
+    paymentObj.service_tax = payTran.ccAvenueData.service_tax;
+    paymentObj.totAmount = payTran.ccAvenueData.amount;
+    paymentObj.tracking_id = payTran.ccAvenueRes.tracking_id;
+    if(success)
+      paymentObj.paymentStatus = "success";
+    else
+      paymentObj.paymentStatus = transactionStatuses[2].code;
+    vm.payTransaction.payments[vm.payTransaction.payments.length] = paymentObj;
+    vm.payTransaction.paymentMode = "online";
+    var stsObj = {};
+    stsObj.createdAt = new Date();
+    stsObj.userId = Auth.getCurrentUser()._id;
+    if(success)
+      stsObj.status = transactionStatuses[5].code;
+    else
+      stsObj.status = transactionStatuses[2].code;
+    vm.payTransaction.statuses[vm.payTransaction.statuses.length] = stsObj;
+    PaymentSvc.update(vm.payTransaction);
+  }
 
  	function getBuyReqDetail(transactionId){
  		if(!transactionId)
