@@ -714,56 +714,55 @@ exports.updateFromAgency = function(req,res){
   });
 
   function update(valReq){
+    var keys = Object.keys(parameters);
+    var updateObj = {};
+    keys.forEach(function(key){
+      var val = bodyData[key];
+      if(!parameters[key].type == 'boolean')
+        val = val == 'YES' || val == 'yes'?true:false;
+      if(parameters[key].type == 'file'){
+        var valObj = {external:true};
+        valObj.filename = val;
+        val = valObj;
+       }
+       if(val)
+        updateObj[parameters[key].key] = val;
+    });
 
-      var keys = Object.keys(parameters);
-      var updateObj = {};
-      keys.forEach(function(key){
-        var val = bodyData[key];
-        if(!parameters[key].type == 'boolean')
-          val = val == 'YES' || val == 'yes'?true:false;
-        if(parameters[key].type == 'file'){
-          var valObj = {external:true};
-          valObj.filename = val;
-          val = valObj;
-         }
-         if(val)
-          updateObj[parameters[key].key] = val;
-      });
+    updateObj.status = IndividualValuationStatuses[6];
+    updateObj.statuses = valReq.statuses;
+    updateObj.reportDate = new Date();
+    var stsObj = {};
+    stsObj.createdAt = new Date();
+    stsObj.userId = "IQVL";
+    stsObj.status = IndividualValuationStatuses[6];
+    if(updateObj.statuses)
+      updateObj.statuses[updateObj.statuses.length] = stsObj;
 
-      updateObj.status = IndividualValuationStatuses[6];
-      updateObj.statuses = valReq.statuses;
-      updateObj.reportDate = new Date();
+    var statusesArr = [];
+    updateObj.statuses.forEach(function(item){
+        statusesArr.push(item.status);
+    });
+    
+    if(statusesArr.indexOf(IndividualValuationStatuses[1]) > -1 
+      && statusesArr.indexOf(IndividualValuationStatuses[3]) > -1 
+      && statusesArr.indexOf(IndividualValuationStatuses[4]) > -1) {
       var stsObj = {};
       stsObj.createdAt = new Date();
       stsObj.userId = "IQVL";
-      stsObj.status = IndividualValuationStatuses[6];
-      if(updateObj.statuses)
-        updateObj.statuses[updateObj.statuses.length] = stsObj;
+      stsObj.status = IndividualValuationStatuses[7];
+      updateObj.statuses[updateObj.statuses.length] = stsObj;
+    }
 
-      var statusesArr = [];
-      updateObj.statuses.forEach(function(item){
-          statusesArr.push(item.status);
-      });
-      console.log("statusesArr###", statusesArr);
-      if(statusesArr.indexOf(IndividualValuationStatuses[1]) > -1 
-        && statusesArr.indexOf(IndividualValuationStatuses[3]) > -1 
-        && statusesArr.indexOf(IndividualValuationStatuses[4]) > -1) {
-        var stsObj = {};
-        stsObj.createdAt = new Date();
-        stsObj.userId = "IQVL";
-        stsObj.status = IndividualValuationStatuses[7];
-        updateObj.statuses[updateObj.statuses.length] = stsObj;
-      }
-
-      ValuationReq.update({_id:valReq._id},{$set:updateObj},function(err){
-          if(err){
-             result['success'] = false;
-             result['msg'] = "System error at iQuippo";
-          }
-          //if(action === 'reportupload')
-            //pushNotification(valReq);
-          return sendResponse();
-      });
+    ValuationReq.update({_id:valReq._id},{$set:updateObj},function(err){
+        if(err){
+           result['success'] = false;
+           result['msg'] = "System error at iQuippo";
+        }
+        //if(action === 'reportupload')
+          //pushNotification(valReq);
+        return sendResponse();
+    });
   }
 
   function sendResponse(){
@@ -775,7 +774,7 @@ exports.updateFromAgency = function(req,res){
       var msg = "";
       if(err){
          msg = "System error at iQuippo";
-      }else if(valArr.length == 0){
+      }else if(valArr.length === 0){
           msg = "Record not found at iQuippo";
       }
       if(msg)
@@ -792,7 +791,6 @@ exports.updateFromAgency = function(req,res){
 
       var key = keys[i];
       var keyObj = parameters[key];
-
       var value = reqData[key];
       if(keyObj.required && !value){
         msg = key + " is missing";
@@ -809,7 +807,18 @@ exports.updateFromAgency = function(req,res){
     return msg;
   }
 }
-
+function valiadeDataType(val,type){
+  var ret = true; 
+  switch(type){
+    case"numeric":
+      ret = !isNaN(val);
+    break;
+    case "file":
+      ret = true;
+    break;
+  }
+  return ret;
+}
 function handleError(res, err) {
   return res.status(500).send(err);
 }
