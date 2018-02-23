@@ -2911,7 +2911,7 @@ exports.validateExcelData = function(req, res, next) {
     
     //validate Trade Type
     function validateTradetype ( callback ) {
-        if ( row.tradeType.toLowerCase()==='sell' ) {
+        if ( row.tradeType && row.tradeType.toLowerCase()==='sell' ) {
             var filter = {};
             filter['product.assetId'] = row.assetId;
             filter['bidStatus'] = 'Accepted';
