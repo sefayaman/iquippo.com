@@ -246,7 +246,7 @@ function sendNotification(kitObj,auctionData,userData){
       return cb();
     var emailData = {};
     emailData.subject = "Successful registration for Auction - " + auctionData.name;
-    emailData.to = "subhash.patel@varaunited.com";//userData.email;
+    emailData.to = userData.email;
     emailData.notificationType = "email";
     commonController.compileTemplate(tplData, config.serverPath,"auctionRegistraionForms", function(success,retData){
       if(success){
@@ -263,7 +263,7 @@ function sendNotification(kitObj,auctionData,userData){
      if(!userData.mobile)
       return cb();
     var smsData = {};
-    smsData.to = "8826080044"//userData.mobile;
+    smsData.to = userData.mobile;
     smsData.notificationType = "sms";
     commonController.compileTemplate(tplData,config.serverPath,"auctionRegistraionFormSms", function(success,retData){
       if(success){
