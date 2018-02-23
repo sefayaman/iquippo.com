@@ -103,6 +103,8 @@
                   
                   <a class="btn btn-default btn-md" ng-if="valuationListingVm.validateAction(valuation,'REPORTDOWNLOAD')" href="{{valuation.valuationReport.filename}}" uib-popover="Download Report" popover-trigger="mouseenter" target="_blank"><i class="fa fa-download"></i> </a>
 
+                  <a class="btn btn-default btn-md" ng-if="valuationListingVm.validateAction(valuation,'STATUSCOMPLETED')" ng-click="valuationListingVm.updateStatus(valuation, IndividualValuationStatuses[7])" uib-popover="Completed" popover-trigger="mouseenter"><i class="fa fa-check"></i></a>
+
                   <a class="btn btn-info btn-md" href="javascript:void(0);" ng-if="isAdmin()" ng-click="valuationListingVm.updateStatus(valuation, IndividualValuationStatuses[8])" uib-popover="Cancel" popover-trigger="mouseenter"><i class="fa fa-close"></i> </a>
                 </td>
                
