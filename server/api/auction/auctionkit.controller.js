@@ -5,6 +5,8 @@ var trim = require('trim');
 var AuctionMaster = require('./auctionmaster.model');
 var UserRegForAuctionModel = require('./userregisterforauction.model');
 var PaymentModel = require('./../payment/payment.model');
+var commonController = require('./../common/common.controller');
+var notification = require('./../../components/notification.js');
 var UserModel = require('./../user/user.model');
 var cache = require('memory-cache');
 
@@ -85,7 +87,7 @@ exports.generateKit = function(req,res){
   async.parallel([generateRegistrationKit,generateUndertakingKit],onKitGenerated);
   function onKitGenerated(err){
     if(err)
-      return res.status(err.status || 500).send(err.message || err.data);//handleError(res,err);
+      return res.status(err.status || 500).send(err.message || err.data);
     var transactionData = {
       registrationKit:req.regKitName,
       undertakingKit:req.undKitName
@@ -94,7 +96,9 @@ exports.generateKit = function(req,res){
     PaymentModel.update({_id:bodyData.transactionId},{$set:transactionData},function(errRes){
       if(err) return handleError(res,errRes);
       UserRegForAuctionModel.update({transactionId:bodyData.transactionId},{$set:transactionData}).exec();
-      return res.status(200).send("Registartion and undertakit kit generated successfully");
+      sendNotification(transactionData,req.auctionData,req.user);
+      return res.status(200).json(transactionData);
+      //return res.status(200).send("Registartion and undertakit kit generated successfully");
     });
   }
   
@@ -224,31 +228,54 @@ function generateKit(data,tplContent,cb){
   }
 }
 
-var Export_Data_Field = {
-  "startDate" : "startDate",
-  "city" : "city",
-  "userName" : "userName",
-//  "attendee" : "attendee",
-  "mobile" : "mobile",
-  "batonNo" : "batonNo",
-  "email" : "email",
-  "bidderAddress" : "bidderAddress",
-  "pinCode" : "pinCode",
-  "panNumber" : "panNumber",
-  "kycInfo" : "kycInfo",
-  "payee" : "payee",
-  "depositAmount" : "depositAmount",
-  "cash" : "cash",
-  "bankName" : "bankName",
-  "refNo" : "refNo",
-  "paymentDate" : "paymentDate",
-  "neftRtgsNo":"neftRtgsNo",
-  "buyerName":"buyerName",
-  "buyerAge":"buyerAge",
-  "buyerAdd":"buyerAdd",
-  "bidCardNo":"bidCardNo",
-  "buyerContactNo":"buyerContactNo"
-};
+function sendNotification(kitObj,auctionData,userData){
+  var tplData = {
+    registrationKit : kitObj.registrationKit,
+    undertakingKit : kitObj.undertakingKit
+  };
+  tplData.auctionName = auctionData.name;
+  tplData.userName =  userData.fname + " " + userData.lname;
+  tplData.auctionLocation = auctionData.city;
+  tplData.auctionDate = moment(auctionData.startDate).utcOffset('+0530').format('MM/DD/YYYY');
+  async.parallel([sendEmail,sendSms],function(err){
+    console.log("",err);
+  })
+
+  function sendEmail(cb){
+    if(!userData.email)
+      return cb();
+    var emailData = {};
+    emailData.subject = "Successful registration for Auction - " + auctionData.name;
+    emailData.to = "subhash.patel@varaunited.com";//userData.email;
+    emailData.notificationType = "email";
+    commonController.compileTemplate(tplData, config.serverPath,"auctionRegistraionForms", function(success,retData){
+      if(success){
+        emailData.content =  retData;
+        notification.pushNotification(emailData);
+      }
+      console.log("mail success",success);
+      if(cb)
+        cb();
+    });
+  }
+
+  function sendSms(cb){
+     if(!userData.mobile)
+      return cb();
+    var smsData = {};
+    smsData.to = "8826080044"//userData.mobile;
+    smsData.notificationType = "sms";
+    commonController.compileTemplate(tplData,config.serverPath,"auctionRegistraionFormSms", function(success,retData){
+      if(success){
+        smsData.content =  retData;
+        notification.pushNotification(smsData);
+      }
+      console.log("sms success",success);
+      if(cb)
+        cb();
+    });
+  }
+}
 
 var User_Variable = {
   "fname" : "fname",

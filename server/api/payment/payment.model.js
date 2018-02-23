@@ -6,6 +6,7 @@ var sequence = require('./../../components/seqgenerator').sequence();
 var PaymentTransactionSchema = new Schema({
   product: {},
   auctionId:String,
+  auctionName:String,
   auction_id:{type:Schema.Types.ObjectId,ref:'AuctionMaster'},
   emdTax:String,
   entityName : String,
@@ -14,6 +15,7 @@ var PaymentTransactionSchema = new Schema({
   payments:[{}],
   totalAmount:Number,
   emd:Number,
+  agreeOnUndertaking:{type:Boolean,default:false},
   registrationKit:String,
   undertakingKit:String,
   requestType:String,

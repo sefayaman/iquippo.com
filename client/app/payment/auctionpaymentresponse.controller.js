@@ -45,6 +45,7 @@ function AuctionPaymentResponseCtrl($scope,$rootScope,Modal,$stateParams,$state,
           PaymentSvc.update(vm.payTransaction)
             .then(function(res) {
                 $rootScope.loading = false;
+                generateKit(vm.payTransaction);
             })
           .catch(function(err){
             $rootScope.loading = false;
@@ -68,6 +69,20 @@ function AuctionPaymentResponseCtrl($scope,$rootScope,Modal,$stateParams,$state,
  			Modal.alert("Unknown error occured");
  		})
  	}
+
+  function generateKit(paymentObj){
+    $rootScope.loading = true;
+   userRegForAuctionSvc.generateKit(paymentObj)
+    .then(function(res){
+      $rootScope.loading = false;
+      $scope.kitObj = res;
+    })
+    .catch(function(err){
+        Modal.alert("Error in registration and undertaking form generation.Please contact support team.");
+      $rootScope.loading = false;
+      console.log("Error in kit generation",err);
+    });
+  }
 
   function setPayment(payTran, success) {
     if(payTran.payments.length < 1)

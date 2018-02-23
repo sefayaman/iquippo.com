@@ -72,7 +72,7 @@
 
                  <a class="btn btn-success btn-md" href="{{uploadImagePrefix}}{{auctionDir}}/{{tns.undertakingKit}}" popover-trigger="mouseenter" uib-popover="Undertaking Form" ng-if="tns.undertakingKit"><i class="fa fa-download"></i> </a>
 
-                 <a class="btn btn-info btn-md" href="javascript:void(0);" popover-trigger="mouseenter" uib-popover="Generate Kit" ng-click="auctionPaymentListingVm.generateKit(tns.auction_id,tns._id,tns.user._id)" ng-if="!tns.registrationKit && !tns.undertakingKit && tns.status === 'completed'"><i class="fa fa-medkit"></i> </a>
+                 <a class="btn btn-info btn-md" href="javascript:void(0);" popover-trigger="mouseenter" uib-popover="Generate Kit" ng-click="auctionPaymentListingVm.generateKit(tns)" ng-if="!tns.registrationKit && !tns.undertakingKit && tns.status === 'completed' && isAdmin()"><i class="fa fa-medkit"></i> </a>
                 <!--  <a class="btn btn-info btn-md" href="javascript:void(0);" popover-trigger="mouseenter" uib-popover="Generate Kit" ng-if="tns.registrationKit && tns.undertakingKit" Disabled><i class="fa fa-medkit"></i> </a> -->
 
                 </td>
@@ -116,7 +116,7 @@
         </div>
       </div>
       <div class="checkbox text-left">
-        <input type="checkbox" id="terms" required> 
+        <input type="checkbox" id="terms"  ng-model="option.agreeOnUndertaking"> 
         <label for="terms">I agree to accept the terms &amp; conditions and undertaking of auction.</label>
       </div>
     <div class="modal-footer asset-sale">

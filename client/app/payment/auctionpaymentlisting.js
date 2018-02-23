@@ -23,19 +23,13 @@ function AuctionPaymentListingCtrl($scope, $state, $rootScope, $uibModal, Modal,
   vm.openPaymentOptionModal = openPaymentOptionModal;
   vm.generateKit = generateKit;
 
-  function generateKit(auctionId,transactionId,userId){
-    if(!auctionId || !transactionId || !userId)
+  function generateKit(tns){
+    if(!tns)
       return;
-    $rootScope.loading = true;
-    var filter = {
-      auctionId:auctionId,
-      transactionId:transactionId,
-      userId:userId
-    };
-    userRegForAuctionSvc.generateKit(filter)
+   $rootScope.loading = true;
+    userRegForAuctionSvc.generateKit(tns)
     .then(function(res){
       $rootScope.loading = false;
-      Modal.alert("Kit generated successfully!");
       fireCommand(true);
     })
     .catch(function(err){
@@ -54,6 +48,7 @@ function AuctionPaymentListingCtrl($scope, $state, $rootScope, $uibModal, Modal,
 		Auth.isLoggedInAsync(function(loggedIn) {
 		    if (loggedIn) {
           var OfflinePaymentScope = $rootScope.$new();
+          OfflinePaymentScope.generateKitCallback = generateKit;
           OfflinePaymentScope.offlinePayment = paymentData;
           OfflinePaymentScope.viewMode = openDialog;
           Modal.openDialog('OfflinePaymentPopup',OfflinePaymentScope);
@@ -118,6 +113,10 @@ function AuctionPaymentListingCtrl($scope, $state, $rootScope, $uibModal, Modal,
       if(!payScope.option.select) {
         Modal.alert("Please select your preferred payment method", true);
         return;
+      }
+      if(!payScope.option.agreeOnUndertaking) {
+         Modal.alert("Please accept the terms & conditions and undertaking of auction.");
+      return;
       }
       if(!payScope.kycExist) {
         payScope.kycExist = false;

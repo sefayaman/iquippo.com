@@ -11,7 +11,7 @@
             <th>Price(Rs.)</th>
           </tr>
           <tr>
-            <td>{{paymentVm.payTransaction.auctionId}}</td>
+            <td>{{paymentVm.payTransaction.auctionName || paymentVm.payTransaction.auctionId}}({{paymentVm.payTransaction.auctionId}})</td>
             <td class="text-capitalize">{{paymentVm.payTransaction.emdTax}}</td>
             <td>Rs. {{paymentVm.payTransaction.totalAmount}}</td>
           </tr>

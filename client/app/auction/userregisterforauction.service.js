@@ -26,14 +26,31 @@ angular.module('admin').factory("userRegForAuctionSvc", userRegForAuctionSvc);
      });
    }
 
-   function generateKit(filter){
-     return $http.post(svcPath + '/generatekit',filter)
-     .then(function(res){
-       return res.data;
-     })
-     .catch(function(err){
-       throw err;
-     });
+   function generateKit(tns){
+     var deferred = $q.defer();
+      var filter = {
+        auctionId:tns.auction_id,
+        transactionId:tns._id,
+        userId:tns.user._id
+      };
+
+      if(tns.registrationKit && tns.undertakingKit){
+        deferred.resolve({
+          registrationKit:tns.registrationKit,
+          undertakingKit : tns.undertakingKit
+        });
+      }else{
+          $http.post(svcPath + '/generatekit',filter)
+         .then(function(res){
+            deferred.resolve(res.data);
+         })
+         .catch(function(err){
+          deferred.reject(err);
+         });
+      }
+      
+
+       return deferred.promise;
    }
 
 

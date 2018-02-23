@@ -71,10 +71,13 @@ function OfflinePaymentCtrl($scope,$rootScope,Modal,$stateParams,$state,$uibModa
     $rootScope.loading = true;
     PaymentSvc.updateStatus(vm.dataModel, transactionStatuses[5].code)
     .then(function(res){
-        vm.dataModel = {};
         $scope.submitted = false;
         $rootScope.loading = false;
-        $rootScope.$broadcast('refreshPaymentHistroyList');
+        if($scope.generateKitCallback)
+          $scope.generateKitCallback(vm.dataModel);
+        else
+          $rootScope.$broadcast('refreshPaymentHistroyList');
+         vm.dataModel = {};
         Modal.alert(res.message);
         closeDialog();
     })
