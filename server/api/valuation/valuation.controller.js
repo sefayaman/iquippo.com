@@ -752,6 +752,7 @@ exports.updateFromAgency = function(req,res){
       stsObj.userId = "IQVL";
       stsObj.status = IndividualValuationStatuses[7];
       updateObj.statuses[updateObj.statuses.length] = stsObj;
+      updateObj.status = IndividualValuationStatuses[7];
     }
 
     ValuationReq.update({_id:valReq._id},{$set:updateObj},function(err){
