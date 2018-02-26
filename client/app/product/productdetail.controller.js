@@ -5,7 +5,7 @@
   function ProductDetailCtrl($scope, $sce, $location, AssetSaleSvc, AuctionSvc, LocationSvc, AuctionMasterSvc, vendorSvc, NegotiationSvc, $stateParams, $rootScope, PaymentMasterSvc, $uibModal, $http, Auth, productSvc, notificationSvc, Modal, CartSvc, ProductTechInfoSvc, BuyContactSvc, userSvc, PriceTrendSvc, ValuationSvc, $state,LotSvc,userRegForAuctionSvc) {
    var vm = this;
     $scope.lot = {};
-    $scope.showWidget = false;
+    //$scope.showWidget = false;
     $scope.currentProduct = {};
     $scope.priceTrendData = null;
     $rootScope.currntUserInfo = {};
@@ -365,7 +365,7 @@
       });
     }
 
-    function getLot(){
+    /*function getLot(){
       if(!$stateParams.lot){
         $scope.showWidget = false;
         return;
@@ -410,7 +410,7 @@
         .catch(function(err){
           $scope.showWidget = false;
         });
-    }
+    }*/
 
     function init() {
       vendorSvc.getAllVendors()
@@ -526,11 +526,11 @@
           countBid();
           getLastBidForUser();
           getPriceTrendData();
-          if(Auth.getCurrentUser()._id && $stateParams.lot)
+          /*if(Auth.getCurrentUser()._id && $stateParams.lot)
             getLot();
           else{
              $scope.showWidget = false;
-          }
+          }*/
          /* if ($scope.currentProduct.tradeType == "SELL")
             vm.showText = "To Buy"
           else if ($scope.currentProduct.tradeType == "RENT")

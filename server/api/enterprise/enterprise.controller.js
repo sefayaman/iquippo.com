@@ -73,10 +73,26 @@ function getValuationRequest(req,res){
       filter['cancelled'] = true;
     else if(queryParam.statusType === 'Request Modified')
        filter['requestModified'] = true;
+     else if(queryParam.statusType === 'Request On Hold')
+      filter['onHold'] = true;
+      else if(queryParam.statusType === 'Payment Received'){
+        filter['paymentReceived'] = true;
+        filter["status"] = EnterpriseValuationStatuses[7]; 
+      }
+    else if(queryParam.statusType === 'Payment Made'){
+      filter['paymentMade'] = true;
+      filter["status"] = EnterpriseValuationStatuses[7];
+    }
     else{
       filter["status"] = queryParam.statusType;
       filter['cancelled'] = false;
       filter['requestModified'] = false;
+      filter['onHold'] = false;
+      if(queryParam.statusType !== EnterpriseValuationStatuses[10]){
+         filter['paymentReceived'] = false;
+         filter['paymentMade'] = false;
+      }
+     
     }    
    }
 
@@ -2206,6 +2222,10 @@ function exportExcel(req,res,fieldMap,jsonArr){
       item.status = "Hold - " + item.onHoldMsg;
     else if(item.requestModified)
       item.status = "Request Modified";
+    else if(item.paymentReceived && !item.paymentMade)
+        item.status = "Payment Received";
+    else if(item.paymentMade && !item.paymentReceived)
+        item.status = "Payment Made";
 
     allowedHeaders.forEach(function(header){
       var keyObj = fieldMap[header];
