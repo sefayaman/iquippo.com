@@ -78,7 +78,6 @@ function AuctionPaymentResponseCtrl($scope,$rootScope,Modal,$stateParams,$state,
       $scope.kitObj = res;
     })
     .catch(function(err){
-        Modal.alert("Error in registration and undertaking form generation.Please contact support team.");
       $rootScope.loading = false;
       console.log("Error in kit generation",err);
     });

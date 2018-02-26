@@ -33,9 +33,9 @@ function AuctionPaymentListingCtrl($scope, $state, $rootScope, $uibModal, Modal,
       fireCommand(true);
     })
     .catch(function(err){
+      $rootScope.loading = false;
       if(err.data)
         Modal.alert(err.data);
-      $rootScope.loading = false;
       console.log("Error in kit generation",err);
     });
   }
@@ -48,7 +48,6 @@ function AuctionPaymentListingCtrl($scope, $state, $rootScope, $uibModal, Modal,
 		Auth.isLoggedInAsync(function(loggedIn) {
 		    if (loggedIn) {
           var OfflinePaymentScope = $rootScope.$new();
-          OfflinePaymentScope.generateKitCallback = generateKit;
           OfflinePaymentScope.offlinePayment = paymentData;
           OfflinePaymentScope.viewMode = openDialog;
           Modal.openDialog('OfflinePaymentPopup',OfflinePaymentScope);

@@ -3,7 +3,7 @@
 'use strict';
 angular.module('sreizaoApp').controller('OfflinePaymentCtrl',OfflinePaymentCtrl);
 
-function OfflinePaymentCtrl($scope,$rootScope,Modal,$stateParams,$state,$uibModalInstance, PaymentSvc,Auth) {
+function OfflinePaymentCtrl($scope,$rootScope,Modal,$stateParams,$state,$uibModalInstance, PaymentSvc,Auth,userRegForAuctionSvc) {
    
   var vm = this;
   vm.dataModel = {};
@@ -73,10 +73,11 @@ function OfflinePaymentCtrl($scope,$rootScope,Modal,$stateParams,$state,$uibModa
     .then(function(res){
         $scope.submitted = false;
         $rootScope.loading = false;
-        if($scope.generateKitCallback)
+       /* if($scope.generateKitCallback)
           $scope.generateKitCallback(vm.dataModel);
         else
-          $rootScope.$broadcast('refreshPaymentHistroyList');
+          $rootScope.$broadcast('refreshPaymentHistroyList');*/
+         generateKit(vm.dataModel);
          vm.dataModel = {};
         Modal.alert(res.message);
         closeDialog();
@@ -85,6 +86,22 @@ function OfflinePaymentCtrl($scope,$rootScope,Modal,$stateParams,$state,$uibModa
     if(err.data)
       Modal.alert(err.data); 
     $rootScope.loading = false;
+    });
+  }
+
+  function generateKit(tns){
+    if(!tns)
+      return;
+   $rootScope.loading = true;
+    userRegForAuctionSvc.generateKit(tns)
+    .then(function(res){
+      $rootScope.loading = false;
+       $rootScope.$broadcast('refreshPaymentHistroyList');
+    })
+    .catch(function(err){
+      $rootScope.$broadcast('refreshPaymentHistroyList');
+      $rootScope.loading = false;
+      console.log("Error in kit generation",err);
     });
   }
 
