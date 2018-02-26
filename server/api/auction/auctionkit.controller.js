@@ -245,7 +245,7 @@ function sendNotification(kitObj,auctionData,userData){
     if(!userData.email)
       return cb();
     var emailData = {};
-    emailData.subject = "Successful registration for Auction - " + auctionData.name;
+    emailData.subject = "Successful registration for Auction - " + auctionData.name + ".";
     emailData.to = userData.email;
     emailData.notificationType = "email";
     commonController.compileTemplate(tplData, config.serverPath,"auctionRegistraionForms", function(success,retData){
