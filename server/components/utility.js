@@ -50,6 +50,7 @@ exports.uploadFileS3 = uploadFileS3;
 //exports.uploadDirToS3 = uploadDirToS3;
 //exports.uploadZipFileToS3 = uploadZipFileToS3;
 exports.downloadFromS3 = downloadFromS3;
+exports.downloadFileFromS3 = downloadFileFromS3;
 exports.deleteFromS3 = deleteFromS3;
 exports.uploadMultipartFileOnS3 = uploadMultipartFileOnS3;
 
@@ -237,6 +238,31 @@ function downloadFromS3(opts, cb) {
   });
 
   downloader.on('end', function() {
+    return cb();
+  });
+
+}
+
+function downloadFileFromS3(opts, cb) {
+  var params = {
+    localFile: opts.localFile,
+
+    s3Params: {
+      Bucket: config.awsBucket,
+      Key: opts.key
+    }
+  };
+  //var s3 = new AWS.S3();
+  var downloader = client.downloadFile(params);
+
+  downloader.on('error', function(err) {
+    if (err) {
+       debug(err);
+      return cb(err);
+    }
+  });
+
+  downloader.on('end', function(res) {
     return cb();
   });
 

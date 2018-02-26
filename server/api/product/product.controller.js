@@ -863,6 +863,24 @@ function updateProduct(req,res){
     req.body.featured = false;
     delete req.body.featured;
     req.proData = product.toObject();
+    
+    if ( req.body.tradeType.toLowerCase()==='sell' ) {
+            console.log(req.body.assetId);
+            var filter = {};
+            filter['product.assetId'] = req.body.assetId;
+            filter['bidStatus'] = 'Accepted';
+            AssetSaleModel.find(filter,function(err,bids){
+                if(err){
+                    return handleError(res, err);
+                };
+                if(bids && bids.length){
+                    return res.status(404).send("Asset Trade Type can't be modified as there is an active bid on it");    
+                }
+                updateProductData();
+            });
+        }
+    else {
+    
     if(req.body.featured){
       var imgPath = config.uploadPath + req.body.assetDir + "/" + req.body.primaryImg;
       var featureFilePath=config.uploadPath+"featured/"+req.body.primaryImg;
@@ -934,6 +952,7 @@ function updateProduct(req,res){
       } else {
         updateProductData();
       }
+    }
 
     function updateProductData(){
       Product.update({_id:req.params.id},{$set:req.body},function(err){
@@ -1825,6 +1844,7 @@ exports.validateExcelData = function(req, res, next) {
             validateServiceInfo: validateServiceInfo,
             //validateCity : validateCity,
             //validateRentInfo: validateRentInfo,
+            validateTradetype: validateTradetype,
             validateAdditionalInfo: validateAdditionalInfo,
             validateOnlyAdminCols: validateOnlyAdminCols,
             validateForBid:validateForBid,
@@ -1919,7 +1939,8 @@ exports.validateExcelData = function(req, res, next) {
       });
 
       fieldsToBeCopied.forEach(function(x){
-        obj[x] = row[x];
+        if(row[x])
+          obj[x] = row[x];
       });
       //console.log("object generic",obj);
       return callback(null,obj);
@@ -2887,6 +2908,32 @@ exports.validateExcelData = function(req, res, next) {
 
       }
       return callback(null, obj);
+    }
+    
+    //validate Trade Type
+    function validateTradetype ( callback ) {
+        if ( row.tradeType && row.tradeType.toLowerCase()==='sell' ) {
+            var filter = {};
+            filter['product.assetId'] = row.assetId;
+            filter['bidStatus'] = 'Accepted';
+            console.log(filter);
+            AssetSaleModel.find(filter,function(err,bids){
+                if(err || !bids.length){
+                    return callback();
+                };
+                
+                if(bids && bids.length){
+                    errorList.push({
+                        Error: "Asset Trade Type can't be modified as there is an active bid on it",
+                        rowCount: row.rowCount
+                    });
+                    return callback('Error');
+                }
+                else
+                    return callback();
+            });
+        }
+        else return callback();
     }
 
     //validate Technical information
