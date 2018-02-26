@@ -17,6 +17,7 @@
                         <option value="paymnt">Payment Master</option>
                         <option value="manu">Manufacturer</option>
                         <option value="banner">Banner Setting</option>
+                        <option value="bannerproductmapping">Banner Product Mapping</option>
                         <option value="inputform">Input Form Master</option>
                         <option value="technical">Technical Information</option>
                         <option value="svcfeemaster">Service Fee Master</option>
@@ -1096,19 +1097,19 @@
 
                     <div class="row">
                         <div class="form-group col-sm-3" ng-class="{'has-error': bannerForm.name.$invalid && submitted}">
-                            Promo Name
+                            <label>Promo Name</label>
                             <input id="" name="name" ng-model="gsettingVm.banner.name" type="text" class="form-control" placeholder="Enter Promo Name">
                         </div>
                         <div class="form-group col-sm-3" ng-class="{'has-error': bannerForm.code.$invalid && submitted}">
-                            Promo Code
+                            <label>Promo Code</label>
                             <input id="" name="code" type="text" class="form-control" placeholder="Enter Promo Code" ng-model="gsettingVm.banner.code">
                         </div>
                         <div class="form-group col-sm-3" ng-class="{'has-error': bannerForm.regCharge.$invalid && submitted}">
-                            Registration Charge
+                            <label>Registration Charge</label>
                             <input id="" name="regCharge" type="number" class="form-control" placeholder="Enter Registration Charge" ng-model="gsettingVm.banner.regCharge">
                         </div>
                         <div class="form-group col-sm-3" ng-class="{'has-error': bannerForm.sequence.$invalid && submitted}">
-                            Sequence
+                            <label>Sequence</label>
                             <input id="" name="sequence" type="number" ng-model="gsettingVm.banner.sequence" class="form-control" placeholder="Enter Sequence" ng-model="gsettingVm.banner.sequence" required>
                         </div>
 
@@ -1116,7 +1117,7 @@
 
                     <div class="row">
                         <div class="col-sm-3 form-group" ng-class="{'has-error': bannerForm.sDate.$invalid && submitted}">
-                            Start Date :
+                            <label>Start Date:</label>
                             <div class="input-group">
                                 <input type="text" class="form-control" ng-model="gsettingVm.banner.sDate" uib-datepicker-popup="{{format}}" name="sDate" ng-value="" is-open="popup1.opened" min-date="minDate" datepicker-options="datepickerOptions" date-disabled="disabled(date, mode)" close-text="Close" alt-input-formats="altInputFormats" placeholder="dd/mm/yyyy"/>
                                 <span class="input-group-addon">
@@ -1126,7 +1127,7 @@
                         </div>
 
                         <div class=" col-sm-3 form-group" ng-class="{'has-error': bannerForm.eDate.$invalid && submitted}">
-                            End Date :
+                            <label>End Date:</label>
                             <div class="input-group">
                                 <input type="text" class="form-control" ng-model="gsettingVm.banner.eDate" uib-datepicker-popup="{{format}}" name="eDate" ng-value="" is-open="popup2.opened" min-date="minDate" datepicker-options="datepickerOptions" date-disabled="disabled(date, mode)" close-text="Close" alt-input-formats="altInputFormats" placeholder="dd/mm/yyyy" />
                                 <span class="input-group-addon">
@@ -1135,28 +1136,38 @@
                             </div>
                         </div>
                         <div class="form-group col-sm-2">
-                            Express Interest / Input Form:
+                            <label>Ticker:</label>
                             <div class="row">
                                 <div class="col-xs-6 col-sm-6">
-                                    <input type="radio" name="hyperlink" ng-model="gsettingVm.banner.hyperlink" value="Yes"> Yes
+                                    <div class="radio radio-info">
+                                        <input type="radio" name="ticker" id="tickerY" ng-model="gsettingVm.banner.ticker" value="Yes"> <label for="tickerY">Yes</label>
+                                    </div>
                                 </div>
                                 <div class="col-xs-6 col-sm-6">
-                                    <input type="radio" name="hyperlink" ng-model="gsettingVm.banner.hyperlink" value="No"> No
+                                    <div class="radio radio-info">
+                                        <input type="radio" name="ticker" id="tickerN" ng-model="gsettingVm.banner.ticker" value="No"> <label for="tickerN">No</label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group col-sm-2">
-                            Ticker :
+                            <label>Show in mobile:</label>
                             <div class="row">
                                 <div class="col-xs-6 col-sm-6">
-                                    <input type="radio" name="ticker" ng-model="gsettingVm.banner.ticker" value="Yes"> Yes
+                                    <div class="radio radio-info">
+                                        <input type="radio" name="showInMobile" id="forMobileY" ng-model="gsettingVm.banner.showInMobile" value="Yes"> <label for="forMobileY">Yes</label>
+                                    </div>
                                 </div>
                                 <div class="col-xs-6 col-sm-6">
-                                    <input type="radio" name="ticker" ng-model="gsettingVm.banner.ticker" value="No"> No
+                                    <div class="radio radio-info">
+                                        <input type="radio" name="showInMobile" id="forMobileN" ng-model="gsettingVm.banner.showInMobile" value="No"> 
+                                        <label for="forMobileN">No</label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group col-sm-2">
+                            <label>Upload Banner</label>
                             <span class="btn btn-warning fileinput-button">
                                 <span>Browse image...</span>
                                 <input type="file" name="file" onchange="angular.element(this).scope().updateBannerImage(this.files, this)" accept="image/*" class="ng-scope">
@@ -1165,21 +1176,8 @@
                                 {{gsettingVm.banner.webImg}}
                             </div>
                         </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="form-group col-sm-2">
-                            Show in mobile :
-                            <div class="row form-group">
-                                <div class="col-xs-6 col-sm-6">
-                                    <input type="radio" name="showInMobile" ng-model="gsettingVm.banner.showInMobile" value="Yes"> Yes
-                                </div>
-                                <div class="col-xs-6 col-sm-6">
-                                    <input type="radio" name="showInMobile" ng-model="gsettingVm.banner.showInMobile" value="No"> No
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group col-sm-offset-1 col-sm-2" ng-if="gsettingVm.banner.showInMobile == 'Yes'">
+                        <div class="form-group col-sm-2" ng-if="gsettingVm.banner.showInMobile == 'Yes'">
+                            <label>Mobile Banner</label>
                             <span class="btn btn-warning fileinput-button">
                                 <span>Browse image...</span>
                                 <input type="file" name="file" onchange="angular.element(this).scope().updateMobBannerImage(this.files, this)" accept="image/*" class="ng-scope">
@@ -1187,10 +1185,33 @@
                             <div class="col-sm-2">
                                 {{gsettingVm.banner.mobileImg}}
                             </div>
-                        </div>
-                        <div class="form-group col-sm-offset-1 col-sm-3">
-                            <div>Hyperlink</div>
-                            <input type="checkbox" name="Bannerhyperlink" ng-model="gsettingVm.banner.isClickable" ng-true-value="'Yes'"> Yes
+                        </div>                        
+                        
+                        <div class="form-group col-sm-8">
+                            <label>Express Interest/Input Form or Hyperlink or Lead Capture:</label>
+                            <div class="row">
+                                <div class="col-xs-6 col-sm-3">
+                                    <div class="radio radio-info">
+                                        <input type="radio" name="hyperlink" id="exInterest" ng-model="gsettingVm.banner.hyperlink" value="Yes"> 
+                                        <label for="exInterest">Express Interest</label>
+                                    </div>
+                                </div>
+                                <div class="col-xs-6 col-sm-3">
+                                    <div class="radio radio-info">
+                                        <input type="radio" name="hyperlink" id="HyperL" ng-model="gsettingVm.banner.isClickable" ng-true-value="'Yes'"> 
+                                        <label for="HyperL">Hyperlink</label>   
+                                    </div>
+                                </div>
+                                <div class="col-xs-6 col-sm-3">
+                                    <div class="radio radio-info">
+                                        <input type="radio" name="hyperlink" id="leadCapture" ng-model="gsettingVm.banner.isClickable" ng-true-value="'Yes'"> 
+                                        <label for="leadCapture">Lead Capture</label>
+                                    </div>
+                                </div>
+                                <div class="col-xs-6 col-sm-3 radio">
+                                    <a href="javascript:void(0);">Clear Selection</a>
+                                </div>
+                            </div>
                         </div>
                         <div class="form-group col-sm-3" ng-class="{'has-error': bannerForm.linkUrl.$invalid && submitted}">
                             <input type="url" name="linkUrl" ng-model="gsettingVm.banner.linkUrl" ng-if="gsettingVm.banner.isClickable === 'Yes'" ng-required="gsettingVm.banner.isClickable === 'Yes'" class="form-control" placeholder="Enter url">
@@ -1202,8 +1223,24 @@
                             <button type="button" class="btn btn-primary btn-md btn-block" ng-click="gsettingVm.updateBanner(bannerForm)" ng-if="gsettingVm.bannerEdit">Update</button>
                         </div>
                     </div>
+                    <legend></legend>
+
+                    <div class="row form-group">
+                        <div class="col-sm-5"><p class="text-left">Showing : {{}} Records</p></div>
+                        <div class="col-sm-3">
+                            <div class="checkbox checkbox-info">
+                                <input type="checkbox" id="Sequence" value="">
+                                <label for="Sequence">Active Banners</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-4 tablesearch text-right">
+                            Search: <input type="text" placeholder="Search..." ng-model-options="{debounce:500}">
+                        </div>
+                    </div>
+                    <legend></legend>
+
                     <div class="table-responsive">
-                        <table datatable="ng" dt-options="dtOptions" class="table table-bordred table-striped">
+                        <table class="table table-bordred table-striped">
                             <thead>
                                 <tr>
                                     <th>Image</th>
@@ -1238,7 +1275,7 @@
                             </tbody>
                         </table>
                     </div>
-
+                    <uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" ng-change="inputFormMastetVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
                 </form>
             </div>
             <!-- Input Form Master -->
@@ -4138,6 +4175,61 @@
                             <tr ng-repeat="gst in iqgstVm.filteredList">
                                 <td>{{gst.state}}</td>
                                 <td>{{gst.gstin}}</td>
+                                <td>
+                                    <a href="javascript:void(0);" class="btn btn-primary btn-sm" uib-popover="Edit" popover-trigger="mouseenter" ng-click="iqgstVm.editClicked(gst)">
+                                        <i class="fa fa-pencil"></i>
+                                    </a>
+                                    <a href="javascript:void(0);" class="btn btn-danger btn-sm" uib-popover="Delete" popover-trigger="mouseenter"><i class="fa fa-trash" ng-click="iqgstVm.destroy(gst._id)"></i></a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="pager.maxSize" class="pagination-sm" rotate="false">  </uib-pagination>
+            </div>
+            <!-- iquippo gst tax master -->
+            <div ng-if="gsettingVm.tabValue == 'bannerproductmapping'" ng-controller="IquippoGSTMasterCtrl as iqgstVm">
+                <h4>Add Banner Product Mapping</h4>
+                <legend></legend>
+                <form class="" novalidate>
+                    <div class="row">
+                        <div class="col-sm-4 form-group">
+                            <label>Product Name</label>
+                            <input type="text" class="form-control" placeholder="Product Name">
+                        </div>
+                        <div class="col-sm-2 form-group pull-right">
+                            <button type="button" class="btn btn-block btn-default">Delete</button>
+                            <button type="button" class="btn btn-block btn-default">Add More</button>
+                        </div>
+                    </div>
+                </form>
+                <legend></legend>
+                <div class="row form-group">
+                    <div class="col-sm-6"><p class="text-left">Showing : {{}} Records</p></div>
+                    <div class="col-sm-6 tablesearch text-right">
+                        Search: <input type="text" placeholder="Search..." ng-model-options="{debounce:500}" ng-model="iqgstVm.searchStr" ng-change="iqgstVm.searchFn()">
+                    </div>
+                </div>
+                <legend></legend>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Banner Start Date</th>
+                                <th>Banner End Date</th>
+                                <th>Sequence</th>
+                                <th>Product Name</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                                 <td>
                                     <a href="javascript:void(0);" class="btn btn-primary btn-sm" uib-popover="Edit" popover-trigger="mouseenter" ng-click="iqgstVm.editClicked(gst)">
                                         <i class="fa fa-pencil"></i>
