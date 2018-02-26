@@ -1939,7 +1939,8 @@ exports.validateExcelData = function(req, res, next) {
       });
 
       fieldsToBeCopied.forEach(function(x){
-        obj[x] = row[x];
+        if(row[x])
+          obj[x] = row[x];
       });
       //console.log("object generic",obj);
       return callback(null,obj);
