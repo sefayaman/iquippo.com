@@ -25,6 +25,8 @@ module.exports = {
   awsSecretAccessKey: 'ZnsSM+I8TzN31nBHo+8XfjDArWqlRm68+8hA7do9',
   awsBucket: 'iquippo-image-upload-dev',
   awsUrl: 'https://s3.ap-south-1.amazonaws.com/',
+  S3_HEADER_EXPIRES: new Date(Date.now() + 604800000).toISOString(),
+  S3_HEADER_CACHE_CONTROL: 'maxAge=2592000',
 
   auctionURL:"https://auctionsoftwaremarketplace.com:3007/api_call/"
 };
