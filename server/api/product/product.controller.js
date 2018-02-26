@@ -870,13 +870,13 @@ function updateProduct(req,res){
             filter['product.assetId'] = req.body.assetId;
             filter['bidStatus'] = 'Accepted';
             AssetSaleModel.find(filter,function(err,bids){
-                if(err || !bids.length){
+                if(err){
                     return handleError(res, err);
                 };
-
                 if(bids && bids.length){
                     return res.status(404).send("Asset Trade Type can't be modified as there is an active bid on it");    
                 }
+                updateProductData();
             });
         }
     else {
@@ -1939,7 +1939,8 @@ exports.validateExcelData = function(req, res, next) {
       });
 
       fieldsToBeCopied.forEach(function(x){
-        obj[x] = row[x];
+        if(row[x])
+          obj[x] = row[x];
       });
       //console.log("object generic",obj);
       return callback(null,obj);
@@ -2911,7 +2912,7 @@ exports.validateExcelData = function(req, res, next) {
     
     //validate Trade Type
     function validateTradetype ( callback ) {
-        if ( row.tradeType.toLowerCase()==='sell' ) {
+        if ( row.tradeType && row.tradeType.toLowerCase()==='sell' ) {
             var filter = {};
             filter['product.assetId'] = row.assetId;
             filter['bidStatus'] = 'Accepted';

@@ -3,6 +3,8 @@
 var bulkProductUpload = {};
 
 var fs = require('fs');
+var async = require("async");
+var debug = require('debug')("bulkProductUpload");
 var fsExtra = require('fs.extra');
 var gm = require('gm').subClass({
   imageMagick: true
@@ -15,13 +17,34 @@ var Model = require('./../api/model/model.model');
 var appNotificationCtrl = require('../api/appnotification/appnotification.controller');
 var utility = require('./utility');
 
+bulkProductUpload.initTask = function(taskData, cb){
+    var filename = "";
+      if (taskData && taskData.taskInfo && taskData.taskInfo.filename) {
+          filename = taskData.taskInfo.filename;
+        } else {
+          return cb(new Error('Invalid taskinfo/file'), taskData);
+        }
+      var opts = {
+        localFile: config.uploadPath + "temp/" + filename,
+        key: "assets/uploads/temp/" + filename
+      };
+      utility.downloadFileFromS3(opts, function(err, s3res) {
+        if (err) {
+          debug("Error in downloading file > " + filename);
+          return cb(err);
+        }
+        bulkProductUpload.commitProduct(taskData, cb);
+      });
+}
+
 bulkProductUpload.commitProduct = function(taskData, cb) {
-  var filename;
-  if (taskData && taskData.taskInfo && taskData.taskInfo.filename) {
+  var filename = taskData.taskInfo.filename; 
+  /*if (taskData && taskData.taskInfo && taskData.taskInfo.filename) {
     filename = taskData.taskInfo.filename;
   } else {
     return cb(new Error('Invalid taskinfo/file'), taskData);
   }
+  filename = "";*/
   var zip = new AdmZip(config.uploadPath + "temp/" + filename);
   taskData.zip = zip;
   var zipEntries = zip.getEntries();
@@ -143,25 +166,42 @@ function placeWaterMark(assetIds, product, zipEntryObj, taskData, cb) {
       placeWaterMark(assetIds, product, zipEntryObj, taskData, cb);
     }
   } else {
-    var localFilePath = config.uploadPath + product.assetDir;
+   /* var localFilePath = config.uploadPath + product.assetDir;
     var dirName = product.assetDir;
     utility.uploadFileS3(localFilePath, dirName, function(err, data) {
       if (err) {
-        console.log("Error : Moveing images directory to s3", err);
-       /* IncomingProduct.update({
-        _id: product._id
-        }, {
-          $set: {
-            lock: false
-          }
-        }).exec();*/
+        console.log("Error : Moving images directory to s3", err);
         assetIds.splice(0, 1);
         getProduct(assetIds, zipEntryObj, taskData, cb);
         return;
         //return cb(true, taskData);
       }
       return commitProduct(assetIds, product, zipEntryObj, taskData, cb);
+    });*/
+    async.eachLimit(product.images,1,moveFileToS3,function(uploadError){
+      if(uploadError){
+          debug("Error in uploading file for assetdId" + product.assetId + " " + uploadError);
+        }
+        return commitProduct(assetIds, product, zipEntryObj, taskData, cb);
     });
+  }
+
+  function moveFileToS3(img,callback){
+    if(!img.src)
+      return callback();
+    var opts = {
+        localFile: config.uploadPath +  product.assetDir + "/" + img.src,
+        key: "assets/uploads/" + product.assetDir +  "/"+ img.src,
+      };
+      var files = [{
+        path:config.uploadPath +  product.assetDir + "/" + img.src
+      }];
+      utility.uploadMultipartFileOnS3(opts.localFile,opts.key,files,function(err, s3res) {
+        if(err){
+          debug("Error in uploading file for assetdId" + product.assetId + " " + err);
+        }
+        return callback();
+      });
   }
 }
 
