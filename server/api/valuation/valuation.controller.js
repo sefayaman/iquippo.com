@@ -7,6 +7,7 @@ var PaymentTransaction = require('./../payment/payment.model');
 var Seq = require('seq');
 var  xlsx = require('xlsx');
 var async = require('async');
+var moment = require('moment');
 var writtenFrom = require('written-number');
 var Utility = require('./../../components/utility.js');
 var config = require('./../../config/environment');
@@ -326,237 +327,86 @@ exports.destroy = function(req, res) {
   });
 };
 
-function Workbook() {
-  if(!(this instanceof Workbook)) return new Workbook();
-  this.SheetNames = [];
-  this.Sheets = {};
-}
-
-
-
-function datenum(v, date1904) {
-  if(date1904) v+=1462;
-  var epoch = Date.parse(v);
-  return (epoch - new Date(Date.UTC(1899, 11, 30))) / (24 * 60 * 60 * 1000);
-}
- 
-function setType(cell){
-  if(typeof cell.v === 'number')
-    cell.t = 'n';
-  else if(typeof cell.v === 'boolean')
-      cell.t = 'b';
-  else if(cell.v instanceof Date)
-   {
-        cell.t = 'n'; cell.z = xlsx.SSF._table[14];
-        cell.v = datenum(cell.v);
-    }
-    else cell.t = 's';
-}
-
-function setCell(ws,cell,R,C){
-    setType(cell);
-    var cell_ref = xlsx.utils.encode_cell({c:C,r:R}) 
-    ws[cell_ref] = cell;
-}
-
-function excel_from_data(data, isAdmin) {
-  var ws = {};
-  var range;
-  range = {s: {c:0, r:0}, e: {c:18, r:data.length }};
-
-  for(var R = 0; R != data.length + 1 ; ++R){
-    var C = 0;
-    var valuation = null;
-    if(R != 0)
-      valuation = data[R-1];
-    var cell = null;
-
-    if(R == 0)
-      cell = {v: "Full Name"};
-    else{
-      if(valuation)
-        cell =  {v: (valuation.user && valuation.user.fname || "") + " " + (valuation.user && valuation.user.lname || "")};
-    }
-    setCell(ws,cell,R,C++);
-
-    if(R == 0)
-      cell = {v: "Country"};
-    else{
-      if(valuation)
-        cell =  {v: valuation.user && valuation.user.country || ""};
-    }
-    setCell(ws,cell,R,C++);
-
-    if(R == 0)
-      cell = {v: "Location"};
-    else{
-      if(valuation)
-        cell =  {v: valuation.user && valuation.user.city || ""};
-    }
-    setCell(ws,cell,R,C++);
-
-    if(R == 0)
-      cell = {v: "Phone No."};
-    else{
-      if(valuation)
-        cell =  {v: valuation.user && valuation.user.phone || ""};
-    }
-    setCell(ws,cell,R,C++);
-
-    if(R == 0)
-      cell = {v: "Mobile No."};
-    else{
-      if(valuation)
-        cell =  {v: valuation.user && valuation.user.mobile || ""};
-    }
-    setCell(ws,cell,R,C++);
-
-    if(R == 0)
-      cell = {v: "Email Address"};
-    else{
-      if(valuation)
-        cell =  {v: valuation.user && valuation.user.email || ""};
-    }
-    setCell(ws,cell,R,C++);
-
-    if(R == 0)
-      cell = {v: "Valuation Request Id"};
-    else{
-      if(valuation)
-        cell =  {v: valuation.requestId};
-    }
-
-    setCell(ws,cell,R,C++);
-
-    if(R == 0)
-      cell = {v: "Category"};
-    else{
-      if(valuation && typeof valuation.product.category === 'string')
-        cell =  {v: valuation.product.category || ""};
-      else
-        cell =  {v: valuation.product.category.name || ""};
-    }
-    setCell(ws,cell,R,C++);
-
-
-    if(R == 0)
-      cell = {v: "Asset Id"};
-    else{
-      if(valuation)
-        cell =  {v: valuation.product.assetId};
-    }
-    setCell(ws,cell,R,C++);
-
-    if(R == 0)
-      cell = {v: "Asset Name"};
-    else{
-      if(valuation)
-        cell =  {v: valuation.product.name};
-    }
-    setCell(ws,cell,R,C++);
-
-     if(R == 0)
-      cell = {v: "Asset Status"};
-    else{
-      if(valuation)
-        cell =  {v: valuation.product.status};
-    }
-    setCell(ws,cell,R,C++);
-
-    /*if(R == 0)
-      cell = {v: "Model"};
-    else{
-      if(valuation)
-        cell =  {v: valuation.product.model};
-    }
-    setCell(ws,cell,R,C++);*/
-
-    if(R == 0)
-      cell = {v: "Manufaturing Year"};
-    else{
-      if(valuation)
-        cell =  {v: valuation.product.mfgYear};
-    }
-    setCell(ws,cell,R,C++);
-
-    if(R == 0)
-      cell = {v: "Asset Location"};
-    else{
-      if(valuation)
-        cell =  {v: valuation.product.city};
-    }
-    setCell(ws,cell,R,C++);
-
-    if(R == 0)
-      cell = {v: "Machine Serial No."};
-    else{
-      if(valuation)
-        cell =  {v: valuation.product.serialNumber || ""};
-    }
-    setCell(ws,cell,R,C++);
-
-    if(R == 0)
-      cell = {v: "Agency Name"};
-    else{
-      if(valuation)
-        cell =  {v: valuation.valuationAgency.name};
-    }
-
-    setCell(ws,cell,R,C++);
-    if(R == 0)
-      cell = {v: "Request Date"};
-    else{
-      if(valuation)
-        cell =  {v: Utility.toIST(_.get(valuation, 'createdAt', ''))};
-    }
-    setCell(ws,cell,R,C++);
-
-    if(R == 0)
-      cell = {v: "Request Purpose"};
-    else{
-      if(valuation)
-        cell =  {v: valuation.purpose};
-    }
-    setCell(ws,cell,R,C++);
-
-    if(R == 0)
-      cell = {v: "Request Status"};
-    else{
-      if(valuation)
-        cell =  {v: valuation.status};
-    }
-    setCell(ws,cell,R,C++);
-    
-  }
-  ws['!ref'] = xlsx.utils.encode_range(range);
-  return ws;
-}
-
-exports.exportValuation = function(req,res){
-  var filter = {};
-  var isAdmin = true;
-  if(req.body.userid){
-    filter["user._id"] = req.body.userid;
-    isAdmin = false;
-  }
-  if(req.body.ids)
-    filter['_id'] = {$in:req.body.ids};
-
-  if(req.body.userMobileNos)
-    filter['user.mobile'] = {$in: req.body.userMobileNos.split(',')};
-
-  var query = ValuationReq.find(filter).sort({auctionId:1});
-  query.exec(
-     function (err, valuatios) {
+  exports.exportValuation = function(req,res){
+    var filter = {};
+    if(req.body.userid)
+      filter["user._id"] = req.body.userid;
+    if(req.body.userMobileNos)
+      filter['user.mobile'] = {$in: req.body.userMobileNos.split(',')};
+    if(req.body.agencyId)
+      filter['valuationAgency._id'] = req.body.agencyId;
+    var fieldMap = fieldsConfig["EXPORT"];
+    var query = ValuationReq.find(filter).sort({createdAt:-1});
+    query.exec(function(err,dataArr){
         if(err) { return handleError(res, err); }
-        var ws_name = "valuation"
-        var wb = new Workbook();
-        var ws = excel_from_data(valuatios,isAdmin);
-        wb.SheetNames.push(ws_name);
-        wb.Sheets[ws_name] = ws;
-        var wbout = xlsx.write(wb, {bookType:'xlsx', bookSST:true, type: 'binary'});
-        res.end(wbout);
-     });
+        exportExcel(req,res,fieldMap,dataArr);
+    })
+}
+
+function exportExcel(req,res,fieldMap,jsonArr){
+  //var queryParam = req.query;
+  //var role = queryParam.role;
+  var dataArr = [];
+  var headers = Object.keys(fieldMap);
+  /*var allowedHeaders = [];
+  for(var i=0;i < headers.length;i++){
+      var hd = headers[i];
+      var obj = fieldMap[hd];
+      if(obj.allowedRoles && obj.allowedRoles.indexOf(role) == -1){
+        continue;
+      }
+      allowedHeaders.push(hd);
+  }*/
+  var str = headers.join(",");
+  str += "\r\n";
+  //dataArr.push(allowedHeaders);
+  jsonArr.forEach(function(item,idx){
+    //dataArr[idx + 1] = [];
+    headers.forEach(function(header){
+      var keyObj = fieldMap[header];
+      var val = _.get(item,keyObj.key,"");
+      if(keyObj.type && keyObj.type == 'boolean')
+          val = val?'YES':'NO';
+      if(keyObj.type && keyObj.type == 'date' && val)
+        val = moment(val).utcOffset('+0530').format('MM/DD/YYYY');
+      if(keyObj.type && keyObj.type == 'datetime' && val)
+        val = moment(val).utcOffset('+0530').format('MM/DD/YYYY HH:mm');
+      if(keyObj.type && keyObj.type == 'url' && val){
+        if(val.filename){
+          if(val.external === true)
+          val = val.filename;
+          else
+            val =  req.protocol + "://" + req.headers.host + "/download/"+ item.assetDir + "/" + val.filename || "";
+        }else
+          val = "";
+      }
+
+      if(keyObj.key === 'paymentReceived' && keyObj.type && keyObj.type == 'boolean') {
+        var statusesArr = [];
+        item.statuses.forEach(function(item){
+            statusesArr.push(item.status);
+        });
+        if(statusesArr.indexOf(IndividualValuationStatuses[1]) > -1)
+          val = 'YES'
+        else
+          val = 'NO';
+      }
+      val = Utility.toCsvValue(val);
+        str += val + ",";
+       //dataArr[idx + 1].push(val);
+    });
+    str += "\r\n";
+  });
+
+  str = str.substring(0,str.length -1);
+  return  renderCsv(req,res,str);
+}
+
+function renderCsv(req,res,csv){
+   var fileName = req.query.type + "_" + new Date().getTime();
+  res.setHeader('Content-Type', 'application/octet-stream');
+  res.setHeader("Content-Disposition", 'attachment; filename=' + fileName + '.csv;');
+  res.end(csv, 'binary'); 
 }
 
 exports.submitRequest = function(req,res){
@@ -608,7 +458,7 @@ exports.submitRequest = function(req,res){
 
     if(!dataArr.length)
       return res.status(200).send("There is no request to post.");
-    console.log("dataArr####",dataArr);
+    //console.log("dataArr####",dataArr);
     request({
         url: config.qpvalURL + "?type=" + type,
         method: "POST",
@@ -628,7 +478,7 @@ exports.submitRequest = function(req,res){
 
   function requestPostProcessing(valReqs,resList){
     var resObj = resList[0];
-    console.log("response.body####",resObj);
+    //console.log("response.body####",resObj);
     if(type === 'Mjobcreation'){
       if(resObj.success === 'true'){
         valReqs.jobId = resObj.jobId;
@@ -676,7 +526,7 @@ exports.updateFromAgency = function(req,res){
   var validActions = ['reportupload'];  
   var bodyData = req.body;
   var action = req.query.action;
-  console.log("reportupload req##", bodyData);
+  //console.log("reportupload req##", bodyData);
   var result = {};
   result['success'] = true;
   result['jobID'] = bodyData.jobID;
