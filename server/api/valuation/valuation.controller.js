@@ -133,10 +133,10 @@ exports.getOnFilter = function(req, res) {
   }
 
   if(req.body.statuses)
-       filter['status'] = {$in:req.body.statuses};
+    filter['status'] = {$in:req.body.statuses};
 
-    if(req.body.partnerId)
-       filter['valuationAgency._id'] = req.body.partnerId;
+  if(req.body.partnerId)
+    filter['valuationAgency._id'] = req.body.partnerId;
 
   if(req.body.tid)
        filter['transactionId'] = req.body.tid;
@@ -333,8 +333,8 @@ exports.destroy = function(req, res) {
       filter["user._id"] = req.body.userid;
     if(req.body.userMobileNos)
       filter['user.mobile'] = {$in: req.body.userMobileNos.split(',')};
-    if(req.body.agencyId)
-      filter['valuationAgency._id'] = req.body.agencyId;
+    if(req.body.partnerId)
+      filter['valuationAgency._id'] = req.body.partnerId;
     var fieldMap = fieldsConfig["EXPORT"];
     var query = ValuationReq.find(filter).sort({createdAt:-1});
     query.exec(function(err,dataArr){

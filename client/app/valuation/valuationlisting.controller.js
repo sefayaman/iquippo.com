@@ -109,21 +109,23 @@ function ValuationListingCtrl($scope,$window,$stateParams,$state,Modal,Auth,Page
 	 	});
 	 }
 
-	 function exportExcel(){
-        var dataToSend ={};
-        if(Auth.getCurrentUser()._id && Auth.getCurrentUser().role != 'admin') 
-        dataToSend["userid"] = Auth.getCurrentUser()._id;
-    	if(!vm.master && selectedIds.length == 0){
-    		Modal.alert("Please select valuation request to export.");
-    		return;
-    	}
-    	if(!vm.master)
-    		dataToSend['ids'] = selectedIds;
-        ValuationSvc.export(dataToSend)
-        .then(function(buffData){
-          saveAs(new Blob([s2ab(buffData)],{type:"application/octet-stream"}), "valuations_"+ new Date().getTime() +".xlsx")
-        });
-    }
+	function exportExcel(){
+		var dataToSend ={};
+		if(Auth.getCurrentUser()._id && !Auth.isAdmin() && !Auth.isValuationPartner())
+			dataToSend["userid"] = Auth.getCurrentUser()._id;
+		if(Auth.isValuationPartner())
+			dataToSend['partnerId'] = Auth.getCurrentUser().partnerInfo._id;
+		// if(!vm.master && selectedIds.length == 0){
+		// 	Modal.alert("Please select valuation request to export.");
+		// 	return;
+		// }
+		// if(!vm.master)
+		// 	dataToSend['ids'] = selectedIds;
+		ValuationSvc.export(dataToSend)
+		.then(function(buffData){
+		  saveAs(new Blob([s2ab(buffData)],{type:"application/octet-stream"}), "valuations_"+ new Date().getTime() +".xlsx")
+		});
+	}
 
   /*function updateSelection(event,id){
   		if(vm.master)
