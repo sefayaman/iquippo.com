@@ -152,7 +152,7 @@ function PaymentResponseCtrl($scope,Modal,$stateParams,$state,notificationSvc,Pa
     if(payTran.payments.length < 1)
       payTran.payments = [];
     var paymentObj = {};
-    paymentObj.paymentModeType = "Net Banking";
+    paymentObj.paymentModeType = payTran.ccAvenueRes.payment_mode; //"Net Banking";
     paymentObj.amount = payTran.totalAmount;
     paymentObj.paymentDate = new Date();
     paymentObj.createdAt = new Date();
@@ -162,6 +162,8 @@ function PaymentResponseCtrl($scope,Modal,$stateParams,$state,notificationSvc,Pa
     paymentObj.service_tax = payTran.ccAvenueData.service_tax;
     paymentObj.totAmount = payTran.ccAvenueData.amount;
     paymentObj.tracking_id = payTran.ccAvenueRes.tracking_id;
+    paymentObj.ccAvenueData = payTran.ccAvenueData;
+    paymentObj.ccAvenueRes = payTran.ccAvenueRes;
     if(success)
       paymentObj.paymentStatus = "success";
     else
