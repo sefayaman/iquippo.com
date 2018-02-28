@@ -15,7 +15,7 @@
         <div class="row">
           <div class="col-sm-8 col-sm-offset-2 form-group" ng-class="{'has-error': leadsCaptureForm.mobile.$invalid && submitted }">
             <label>Mobile No.</label>
-            <input type="number" min="0" class="form-control" name="mobile" ng-model="offerReq.mobile" value="" placeholder="Enter Mobile No."required>
+            <input type="number" min="0" ng-minlength="10" ng-maxlength="10" class="form-control" name="mobile" ng-model="offerReq.mobile" value="" placeholder="Enter Mobile No."required>
           </div>
         </div>
         <div class="row">
