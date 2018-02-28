@@ -21,10 +21,11 @@
     $scope.decreaseQuantity = decreaseQuantity;
     
     function viewOffer(location){
+      /*  
       if (!Auth.getCurrentUser()._id) {
           Auth.goToLogin();
           return;
-      }
+      }*/
 
       if(!location){
         Modal.alert('Please select location.');
@@ -347,6 +348,9 @@
           }
         });
       }
+      if (!Auth.getCurrentUser()._id) {
+        openLeadPopup(offerReq);
+      }
       else{
         setCustomerDetail(offerReq)
         saveOfferReq(offerReq);
@@ -354,6 +358,28 @@
 
     }
 
+    function openLeadPopup (offerReq) {
+        var leadCaptureScope = $rootScope.$new();
+        leadCaptureScope.offerReq = offerReq;
+        var leadCaptureModal = $uibModal.open({
+          templateUrl: "app/newequipment/leadscapture.html",
+          scope: leadCaptureScope,
+          size: 'lg'
+        });
+
+        leadCaptureScope.close = function() {
+          leadCaptureModal.close();
+        };
+        
+        leadCaptureScope.save = function(form){
+        if(form.$invalid){
+          leadCaptureScope.submitted = true;
+          return;
+        }
+        leadCaptureScope.offerReq.isForSelf = true;
+        saveOfferReq(leadCaptureScope.offerReq,leadCaptureModal);
+      };
+    }
     function openCustomerDetailPopup(offerReq){
       var customerDetailScope = $rootScope.$new();
       customerDetailScope.offerReq = offerReq;

@@ -16,7 +16,8 @@
       <tr>
         <td>Recieved Payment :</td>
         <td ng-if="formType == 'EMD'">{{(bidData.emdAmount - bidData.emdPayment.remainingPayment) || 0}}</td>
-        <td ng-if="formType != 'EMD'">{{(bidData.bidAmount - bidData.fullPayment.remainingPayment) || 0}}</td>
+        <!-- <td ng-if="formType != 'EMD'">{{(bidData.bidAmount - bidData.fullPayment.remainingPayment) || 0}}</td> -->
+        <td ng-if="formType != 'EMD'">{{receivedAmount || 0}}</td>
       </tr>
       <tr>
         <td>Remaining Payment :</td>

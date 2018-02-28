@@ -189,7 +189,7 @@ router.post('/offer',auth.hasRole('admin'),offerCtrl.create);
 router.get('/offer/get', offerCtrl.get);
 router.put('/offer/:id', auth.hasRole('admin'),offerCtrl.update);
 router.delete('/offer/:id',auth.hasRole('admin'), offerCtrl.destroy);
-router.post('/offerrequest',auth.isAuthenticated(),offerCtrl.createOfferRequest);
+router.post('/offerrequest',offerCtrl.createOfferRequest);
 router.get('/offerrequest',auth.hasRole('admin'),offerCtrl.getOfferRequest);
 //router.get('/offer/getfilterdata', offerCtrl.getFilterData);
 
