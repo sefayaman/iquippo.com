@@ -158,8 +158,8 @@ function PaymentResponseCtrl($scope,Modal,$stateParams,$state,notificationSvc,Pa
     paymentObj.createdAt = new Date();
     paymentObj.refNo = payTran.ccAvenueRes.bank_ref_no;
     paymentObj.bankname = payTran.ccAvenueRes.card_name;
-    paymentObj.trans_fee = payTran.ccAvenueData.trans_fee;
-    paymentObj.service_tax = payTran.ccAvenueData.service_tax;
+    paymentObj.trans_fee = payTran.ccAvenueData.trans_fee || 0;
+    paymentObj.service_tax = payTran.ccAvenueData.service_tax || 0;
     paymentObj.totAmount = payTran.ccAvenueData.amount;
     paymentObj.tracking_id = payTran.ccAvenueRes.tracking_id;
     paymentObj.ccAvenueData = payTran.ccAvenueData;

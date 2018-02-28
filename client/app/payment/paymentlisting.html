@@ -44,8 +44,8 @@
                   <td>{{tns.paymentMode}}</td>
                 <td>{{tns.createdAt | date:'MM/dd/yyyy'}}</td>
                 <td>
-                 <a class="btn btn-primary" ng-if="tns.status != 'completed' && tns.paymentMode == 'online'" href="/payment/{{tns._id}}">Pay Now</a>
-                 <a class="btn btn-primary" ng-if="tns.status != 'completed' && tns.paymentMode != 'online' && isAdmin()" href="/payment/{{tns._id}}">Confirm Payment</a>
+                 <a class="btn btn-primary" ng-if="tns.status != 'completed' && tns.paymentMode == 'online' && tns.requestType !== 'Valuation Request'" href="/payment/{{tns._id}}">Pay Now</a>
+                 <a class="btn btn-primary" ng-if="tns.status != 'completed' && tns.paymentMode != 'online' && isAdmin() && tns.requestType !== 'Valuation Request'" href="/payment/{{tns._id}}">Confirm Payment</a>
                   <!-- <a class="btn btn-info btn-md" href="javascript:void(0);" ng-click="gsettingVm.editState($index)"><i class="fa fa-pencil"></i> </a>
                   <a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deleteState($index)"><i class="fa fa-trash"></i> </a> -->
                 </td>
