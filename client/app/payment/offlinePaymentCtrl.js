@@ -100,6 +100,7 @@ function OfflinePaymentCtrl($scope,$rootScope,Modal,$stateParams,$state,$uibModa
     })
     .catch(function(err){
       $rootScope.$broadcast('refreshPaymentHistroyList');
+      userRegForAuctionSvc.generateKit(tns)
       $rootScope.loading = false;
       console.log("Error in kit generation",err);
     });

@@ -60,7 +60,7 @@ exports.populateData = function(req,res,next){
 
   function getPaymentData(cb){
     var payObjId = new mongo.ObjectID(bodyData.transactionId);
-    PaymentModel.find({"_id":payObjId},function(err,paymentData){
+    PaymentModel.find({"_id":payObjId,status:"completed"},function(err,paymentData){
        if(err) return cb(err);
        if(!paymentData || !paymentData.length)
           return cb(new ApiError(404, "Payment not found"));
