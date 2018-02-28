@@ -11,7 +11,6 @@ var Subscribe = require('./subscribe.model');
 var AppSetting = require('./setting.model');
 var PaymentMaster = require('./paymentmaster.model');
 var ManufacturerMaster = require('./manufacturer.model');
-var Banner = require('./banner.model');
 var email = require('./../../components/sendEmail.js');
 var sms = require('./../../components/sms.js');
 var handlebars = require('handlebars');
@@ -2519,124 +2518,6 @@ exports.updateMasterData = function(req, res) {
 						});
 					});
 				};
-
-				// Get list of banner master
-				exports.getAllBanner = function(req, res) {
-					Banner.find(function(err, banner) {
-						if (err) {
-							return handleError(res, err);
-						}
-						return res.status(200).json(banner);
-					});
-				};
-
-
-				// Creates a new banner master in the DB.
-				exports.createBanner = function(req, res) {
-					var seq = req.body.sequence;
-					Banner.find({
-						sequence: seq
-					}, function(errObj, bns) {
-						if (errObj) {
-							return handleError(res, err);
-						}
-						if (bns.length > 0) {
-							return res.status(200).json({
-								errorCode: 1,
-								message: "Duplicate sequence find"
-							});
-						}
-						Banner.create(req.body, function(err, banner) {
-							if (err) {
-								return handleError(res, err);
-							}
-							return res.status(200).json({
-								errorCode: 0,
-								message: "Banner saved sucessfully"
-							});
-						});
-					})
-
-				};
-
-				// Updates an existing banner master in the DB.
-				exports.updateBanner = function(req, res) {
-					if (req.body._id) {
-						delete req.body._id;
-					}
-					req.body.updatedAt = new Date();
-					Banner.find({
-						sequence: req.body.sequence
-					}, function(err, banners) {
-						if (err) {
-							return handleError(res, err);
-						}
-						if (banners.length > 1 || (banners.length == 1 && banners[0]._id != req.params.id)) {
-							return res.status(200).json({
-								errorCode: 1,
-								message: "Duplicate sequence find"
-							});
-						}
-						Banner.update({
-							_id: req.params.id
-						}, {
-							$set: req.body
-						}, function(err) {
-							if (err) {
-								return handleError(res, err);
-							}
-							return res.status(200).json({
-								errorCode: 0,
-								message: "Banner updated sucessfully"
-							});
-						});
-					});
-				};
-
-				// Deletes a banner master from the DB.
-				exports.deleteBanner = function(req, res) {
-					Banner.findById(req.params.id, function(err, banner) {
-						if (err) {
-							return handleError(res, err);
-						}
-						if (!banner) {
-							return res.status(404).send('Not Found');
-						}
-						banner.remove(function(err) {
-							if (err) {
-								return handleError(res, err);
-							}
-							return res.status(204).send('No Content');
-						});
-					});
-				};
-
-				exports.getBannerOnFilter = function(req, res) {
-					var bodyData = req.body;
-					var filter = {};
-					filter['deleted'] = false;
-					filter['status'] = "active";
-					if (bodyData.valid && bodyData.valid == 'y') {
-						filter['eDate'] = {
-							$gte: new Date()
-						};
-						filter['sDate'] = {
-							$lte: new Date()
-						};
-					}
-
-					var query = Banner.find(filter).sort({
-						sequence: 1
-					});
-					query.exec(
-						function(err, banners) {
-							if (err) {
-								return handleError(res, err);
-							}
-							res.setHeader('Cache-Control', 'private, max-age=2592000');
-							return res.status(200).json(banners);
-						});
-				}
 
 				exports.renderXLSX = function(req, res) {
 					if (req.query.type == "state") {
