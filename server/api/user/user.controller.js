@@ -1485,7 +1485,7 @@ exports.exportUsers = function(req, res) {
           filter["GSTInfo"] = { $exists: true};//"GSTInfo": { $exists: true}
     }
   var query = User.find(filter).sort({
-    createdAt: -1
+    _id: -1
   });//.limit(5000);
   if ( req.body.exportType === 'gstinfo') {
       exportUsersGSTData(query, req, res);
