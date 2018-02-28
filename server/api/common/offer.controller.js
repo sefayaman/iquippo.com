@@ -438,8 +438,14 @@ var Offer_Master_Data_Excel_Header = {
       var rowData = [];
       keys.forEach(function(key){
         var val = _.get(item,Excel_Header[key],"");
-        if(Excel_Header[key] == 'customerName')
-          val = item.fname + " " + item.lname;
+        if(Excel_Header[key] == 'customerName') {
+          if(item.lname) {
+            val = item.fname + " " + item.lname;
+          }
+          else {
+            val = item.fname;
+          }
+        }
         if(Excel_Header[key] == "requestRaisedBy"){
           if(item.isForSelf)
             val = "Self";
