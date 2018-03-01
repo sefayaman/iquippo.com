@@ -7,6 +7,7 @@
         </div>
         <div class="col-xs-6 col-sm-6 text-right">
             <h3><button class="btn btn-success btn-md" ng-click="reportsVm.exportExcel()"><i class="fa fa-file-excel-o"></i> Export</button></h3>
+             <export-form name="reportexport"></export-form>
         </div>     
       </div>
       <hr>
@@ -34,7 +35,7 @@
                 <option value="offerreq" ng-if="isAdmin()">Offer Request History</option>
                 <option value="bulkorder" ng-if="isAdmin()">Bulk Order Request</option>
                 <option value="bookademo" ng-if="isAdmin()">Book A Demo</option>
-                <option value="bannerleadshistory" ng-if="isAdmin()">Banner Leads History</option>
+                <option value="bannerleads" ng-if="isAdmin()">Banner Leads History</option>
               </select>
             </div>
           </div>             
@@ -956,12 +957,12 @@
             </div>
             <uib-pagination total-items="reportsVm.totalItems" ng-model="reportsVm.currentPage" items-per-page="reportsVm.itemsPerPage" max-size="reportsVm.maxSize" ng-change="reportsVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
           </div>
-          <div ng-if="reportsVm.tabValue == 'bannerleadshistory'">
+          <div ng-if="reportsVm.tabValue == 'bannerleads'">
             <div class="table-responsive">
                <table class="table table-bordred table-striped">
                 <thead>
                   <tr>
-                    <th>Sr.</th>                               
+                    <th>Ticket Id</th>                               
                     <th>Name</th>                                
                     <th>Mobile</th>                                
                     <th>Email</th>                                
@@ -971,14 +972,14 @@
                   </tr>           
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>1</td>   
-                    <td>Skekhar</td>
-                    <td>6421154889</td>              
-                    <td>hbjnk</td>
-                    <td>ergdg</td>
-                    <td>sgfv j</td>
-                    <td>gnhgg trhn</td>
+                  <tr ng-repeat="bannerLead in reportsVm.bannerLeads">
+                    <td>{{bannerLead.ticketId}}</td>   
+                    <td>{{bannerLead.fname}} {{bannerLead.lname}}</td>
+                    <td>{{bannerLead.mobile}}</td>              
+                    <td>{{bannerLead.email}}</td>
+                    <td>{{bannerLead.state}}</td>
+                    <td>{{bannerLead.product}}</td>
+                    <td>{{bannerLead.comment}}</td>
                                                                      
                   </tr>
                 </tbody>

@@ -3,7 +3,7 @@
   angular.module('report').controller('ReportsCtrl', ReportsCtrl);
 
   //controller function
-  function ReportsCtrl($scope, $rootScope, $http, Auth, ReportsSvc,OfferSvc,NewEquipmentSvc,$window, $uibModal, userSvc, ValuationSvc, userRegForAuctionSvc,commonSvc) {
+  function ReportsCtrl($scope, $rootScope, $http, Auth, ReportsSvc,OfferSvc,NewEquipmentSvc,$window, $uibModal, userSvc, ValuationSvc, userRegForAuctionSvc,commonSvc,BannerLeadSvc) {
     var vm = this;
     vm.tabValue = "callback";
 
@@ -197,6 +197,9 @@
           break;
         case 'bookademo':
           getReportData(filter, 'bookademo');
+          break;
+          case 'bannerleads':
+          getReportData(filter, 'bannerleads');
           break;
       }
     }
@@ -591,6 +594,18 @@
                 last_id = vm.bookademoListing[vm.bookademoListing.length - 1]._id;
               }
             });
+          case 'bannerleads':
+          resetCount();
+          BannerLeadSvc.get(filter)
+            .then(function(result) {
+              vm.bannerLeads = result.items;
+              vm.totalItems = result.totalItems;
+              prevPage = vm.currentPage;
+              if (vm.bannerLeads.length > 0) {
+                first_id = vm.bannerLeads[0]._id;
+                last_id = vm.bannerLeads[vm.bannerLeads.length - 1]._id;
+              }
+            });
           break;
       }
     }
@@ -653,6 +668,14 @@
        //else
         //fileName = "AdditionalServices_";
       //filter.role=Auth.getCurrentUser().role;
+       if(['bannerleads'].indexOf(vm.tabValue) !== -1){
+         var exportObj = {filter:filter};
+          exportObj.method = "GET";
+          exportObj.action = "api/bannerlead/export";
+          $scope.$broadcast("submit",exportObj); 
+          return;
+      }
+
       ReportsSvc.exportData(filter, vm.tabValue)
         .then(function(res) {
 
