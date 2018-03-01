@@ -1114,6 +1114,10 @@ exports.exportExcel = function(req,res){
 				val = moment(val).utcOffset('+0530').format('MM/DD/YYYY');
 			if(keyObj.type && keyObj.type == 'datetime' && val)
 				val = moment(val).utcOffset('+0530').format('hh:mm a');
+                        if(keyObj.key && keyObj.key === 'emdEndDate' && val)
+				val = moment(val).utcOffset('+0530').format('MM/DD/YYYY h:mm a');
+                        if(keyObj.key && keyObj.key === 'fullPaymentEndDate' && val)
+				val = moment(val).utcOffset('+0530').format('MM/DD/YYYY h:mm a');
 			/*if(keyObj.key && queryParam.seller === 'y' && (keyObj.key === 'buyerName' || keyObj.key === 'buyerMobile' || keyObj.key === 'buyerEmail')) {
 				if(item.user && keyObj.key === 'buyerName' &&  dealStatuses.indexOf(item.dealStatus) > 8)
 				    val = item.user.fname + " " + item.user.lname;
