@@ -384,6 +384,19 @@ exports.exportValuation = function (req, res) {
     filter['user.mobile'] = { $in: req.body.userMobileNos.split(',') };
   }
 
+  var dateFilter = {};
+ 
+  if(req.body.fromDate)
+  dateFilter['$gte'] = new Date(req.body.fromDate);
+  if(req.body.toDate) {
+      var toDate = new Date(req.body.toDate);
+      var nextDay = toDate.getDate() + 1;
+      toDate.setDate(nextDay);
+      dateFilter.$lt = toDate;
+  }
+  if(req.body.fromDate || req.body.toDate)
+    filter['createdAt'] = dateFilter;
+
   ValuationReq.find(filter).sort({ auctionId: 1 }).lean().exec(
     function (err, valuations) {
       if (err) {

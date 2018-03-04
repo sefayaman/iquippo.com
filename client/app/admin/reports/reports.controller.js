@@ -7,6 +7,9 @@
     var vm = this;
     vm.tabValue = "callback";
 
+    vm.toDate = null;
+    vm.fromDate = null;
+
     //pagination variables
     var prevPage = 0;
     vm.itemsPerPage = 50;
@@ -614,6 +617,12 @@
       if(userMobileNos.length > 0 && !Auth.isAdmin())
         filter.userMobileNos = userMobileNos.join();
       
+      if(vm.fromDate)
+        filter.fromDate = vm.fromDate;
+
+      if(vm.toDate)
+        filter.toDate = vm.toDate;
+
       if (vm.tabValue == "callback")
         fileName = "Callback_";
       else if (vm.tabValue == "contactUs")
