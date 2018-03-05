@@ -43,6 +43,10 @@ var Modals = {
     tplUrl:"app/inputform/inputformpopup.html",
     Ctrl:'InputFormCtrl as inputFormVm'
   },
+  bannerLeads:{
+    tplUrl:"app/main/bannerleads.html",
+    Ctrl:'BannerLeadCtrl as bannerLeadVm'
+  },
   locationList : {
     tplUrl : "app/spare/locationList.html",
     Ctrl : 'SpareUploadCtrl as spareVm'

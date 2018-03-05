@@ -87,16 +87,18 @@ function AuctionPaymentResponseCtrl($scope,$rootScope,Modal,$stateParams,$state,
     if(payTran.payments.length < 1)
       payTran.payments = [];
     var paymentObj = {};
-    paymentObj.paymentModeType = "Net Banking";
+    paymentObj.paymentModeType = payTran.ccAvenueRes.payment_mode; //"Net Banking";
     paymentObj.amount = payTran.totalAmount;
     paymentObj.paymentDate = new Date();
     paymentObj.createdAt = new Date();
     paymentObj.refNo = payTran.ccAvenueRes.bank_ref_no;
     paymentObj.bankname = payTran.ccAvenueRes.card_name;
-    paymentObj.trans_fee = payTran.ccAvenueData.trans_fee;
-    paymentObj.service_tax = payTran.ccAvenueData.service_tax;
+    paymentObj.trans_fee = payTran.ccAvenueData.trans_fee || 0;
+    paymentObj.service_tax = payTran.ccAvenueData.service_tax || 0;
     paymentObj.totAmount = payTran.ccAvenueData.amount;
     paymentObj.tracking_id = payTran.ccAvenueRes.tracking_id;
+    paymentObj.ccAvenueData = payTran.ccAvenueData;
+    paymentObj.ccAvenueRes = payTran.ccAvenueRes;
     if(success)
       paymentObj.paymentStatus = "success";
     else
