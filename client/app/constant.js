@@ -43,6 +43,10 @@ var Modals = {
     tplUrl:"app/inputform/inputformpopup.html",
     Ctrl:'InputFormCtrl as inputFormVm'
   },
+  bannerLeads:{
+    tplUrl:"app/main/bannerleads.html",
+    Ctrl:'BannerLeadCtrl as bannerLeadVm'
+  },
   locationList : {
     tplUrl : "app/spare/locationList.html",
     Ctrl : 'SpareUploadCtrl as spareVm'
@@ -98,6 +102,10 @@ var Modals = {
   OfflinePaymentPopup:{
     tplUrl:'app/payment/offlinepayment.html',
     Ctrl:'OfflinePaymentCtrl as offlinePaymentVm'
+  },
+  valuationInvoiceCalcuation:{
+    tplUrl:'app/enterprise/invoicecalculation.html',
+    Ctrl:'InvoiceCalculationCtrl as invoiceCalculationVm'
   }
 };
 

@@ -1,6 +1,7 @@
 'use strict';
 
 var _ = require('lodash');
+var trim = require('trim');
 var Seq = require('seq');
 var User = require('./user.model');
 var passport = require('passport');
@@ -36,7 +37,7 @@ var Export_Field_Mapping = {
   "Role" : "role",
   "UserType":"userType",
   "Employee Code":"employeeCode",
-  "Company" : "company",
+  "Company Name" : "company",
   "Mobile No": "mobile",
   "Phone No.":"phone",
   "Country":"country",
@@ -45,7 +46,7 @@ var Export_Field_Mapping = {
   "Registered By":"user",
   "Product Uploaded":"user.have_products",
   "Counts" : "user.total_products",
-  "Status":"user.status",
+  "Status":"status",
   "Identity proof Uploaded":"IDUploaded",
   "Identity Proof Type":"IDType",
   "Address proof Uploaded":"ADUploaded",
@@ -54,8 +55,19 @@ var Export_Field_Mapping = {
   "Branch Name":"BrName",
   "GST Details Provided":"GSTUploaded",
   "Creation Date" : "createdAt"
-}
+};
 
+var Export_GST_Field_Mapping = {
+  "Customer Id" : "customerId",
+  "Name" : "name",
+  "Email" : "email",
+  "GST Details Provided":"GSTUploaded"
+};
+var Export_GST_Field_Mapping_Data = {
+  "GST - State" : "state",
+  "GST Number" : "registrationNo",
+  "Date of Modification" : "updatedAt"
+};
 
 var validationError = function(res, err) {
   console.log(err);
@@ -101,7 +113,6 @@ exports.fetchSingleUser = function(req,res){
  */
 exports.signUp = function(req, res) {
   var newUser = new User(req.body);
-  console.log("username::::" + req.body.name);
   newUser.createdAt = new Date();
   newUser.updatedAt = new Date();
   newUser.clientIp=req.connection.remoteAddress;
@@ -173,7 +184,7 @@ exports.validateSignup = function(req, res) {
 exports.parseImportExcel = function(req, res, next) {
   var body = req.body;
   var ret;
-  ['filename', 'user'].forEach(function(x) {
+  ['excelData', 'user'].forEach(function(x) {
     if (!body[x]) {
       ret = x;
     }
@@ -181,13 +192,19 @@ exports.parseImportExcel = function(req, res, next) {
 
   if (ret)
     return next(new APIError(412, 'Missing mandatory parameter: ' + ret));
-  var options = {
-    file: body.filename,
-    headers: Object.keys(userFieldsMap),
-    mapping: userFieldsMap,
-    notValidateHeaders: true
-  };
-  req.excelData = Utillity.toJSON(options);
+  if(!body.excelData.length)
+    return next(new APIError(412, 'No data found to upload'));
+   req.excelData = body.excelData.filter(function(x) {
+    Object.keys(x).forEach(function(key) {
+      if (userFieldsMap[key]) {
+        x[userFieldsMap[key]] = trim(x[key] || "");
+      }
+      delete x[key];
+    })
+    x.rowCount = x.__rowNum__;
+    return x;
+  });
+
   req.reqType = 'Upload';
   return next();
 };
@@ -922,6 +939,9 @@ exports.getUser = function(req, res) {
     arr[arr.length] = { userType: { $regex: searchStrReg }};
   }
 
+  if (req.body._id)
+    filter._id = req.body._id;
+
   if (req.body.userId)
     filter["createdBy._id"] = req.body.userId;
   if (req.body.enterpriseId)
@@ -1461,74 +1481,177 @@ exports.exportUsers = function(req, res) {
   }
   if(req.body.fromDate || req.body.toDate)
     filter['createdAt'] = dateFilter;
+    if ( req.body.exportType === 'gstinfo') {
+          filter["GSTInfo"] = { $exists: true};//"GSTInfo": { $exists: true}
+    }
   var query = User.find(filter).sort({
-    createdAt: -1
-  }).limit(5000);
-  query.exec(
-    function(err, users) {
-      if (err) {
-        return handleError(res, err);
-      }
-      var csvStr = "";
-      var headers = Object.keys(Export_Field_Mapping);
-      csvStr += headers.join(',');
-      csvStr += "\r\n";
-      users.forEach(function(item,idx){
-        var idProof = null;
-        var adProof = null;
-        if(item.kycInfo && item.kycInfo.length){
-          item.kycInfo.forEach(function(kyc){
-            if(kyc.type === 'Identity Proof')
-              idProof = kyc;
-            if(kyc.type === 'Address Proof')
-              adProof = kyc;
-          });
-        }
+    _id: -1
+  });//.limit(5000);
+  if ( req.body.exportType === 'gstinfo') {
+      exportUsersGSTData(query, req, res);
+  }
+  else {
+      exportUsersData(query, req, res);
+  } 
+};
 
-        headers.forEach(function(header){
-          var key = Export_Field_Mapping[header];
-          var val = "";
-          if(key === 'name')
-            val =  _.get(item,"fname","") + " " + _.get(item,"mname","") + " " + _.get(item,"lname","");
-          else if(key === 'user')
-            val = getRegisteredBy(item) || "";
-          else if(key === 'Status')
-            val = isStatus(item.status, item.deleted);
-          else if(key === 'IDUploaded')
-            val = idProof?'Yes':'No';
-          else if(key === 'IDType' && idProof)
-            val = idProof.name || "";
-           else if(key === 'ADUploaded')
-            val = adProof?'Yes':'No';
-          else if(key === 'ADType' && adProof)
-            val = adProof.name || "";
-          else if(key == 'BKName' && item.bankInfo && item.bankInfo.length && item.bankInfo[0].bankName)
-            val = item.bankInfo[0].bankName || "";
-          else if(key == 'BrName' && item.bankInfo && item.bankInfo.length && item.bankInfo[0].branch)
-            val = item.bankInfo[0].branch || "";
-          else if(key == 'GSTUploaded'){
-            if(item.GSTInfo && item.GSTInfo.length && item.GSTInfo[0].registrationNo)
-              val = 'Yes';
-            else
-              val = 'No';
-          }
-          else if(key === 'createdAt'){
-            val = Utility.toIST(_.get(item, 'createdAt', ''));
-          }
-          else
-            val = _.get(item,key,"");
-         val = Utility.toCsvValue(val);
-         csvStr += val + ",";
+function exportUsersData(query, req, res) {
+    //user export start
+    query.exec(
+        function (err, users) {
+            if (err) {
+                return handleError(res, err);
+            }
+            var csvStr = "";
+            var headers = Object.keys(Export_Field_Mapping);
+            csvStr += headers.join(',');
+            csvStr += "\r\n";
+            users.forEach(function (item, idx) {
+                var idProof = null;
+                var adProof = null;
+                if (item.kycInfo && item.kycInfo.length) {
+                    item.kycInfo.forEach(function (kyc) {
+                        if (kyc.type === 'Identity Proof')
+                            idProof = kyc;
+                        if (kyc.type === 'Address Proof')
+                            adProof = kyc;
+                    });
+                }
+
+                headers.forEach(function (header) {
+                    var key = Export_Field_Mapping[header];
+                    var val = "";
+                    if (key === 'name')
+                        val = _.get(item, "fname", "") + " " + _.get(item, "mname", "") + " " + _.get(item, "lname", "");
+                    else if (key === 'user')
+                        val = getRegisteredBy(item) || "";
+                    else if (key === 'status')
+                        val = isStatus(item.status, item.deleted);
+                    else if (key === 'IDUploaded')
+                        val = idProof ? 'Yes' : 'No';
+                    else if (key === 'IDType' && idProof)
+                        val = idProof.name || "";
+                    else if (key === 'ADUploaded')
+                        val = adProof ? 'Yes' : 'No';
+                    else if (key === 'ADType' && adProof)
+                        val = adProof.name || "";
+                    else if (key == 'BKName' && item.bankInfo && item.bankInfo.length && item.bankInfo[0].bankName)
+                        val = item.bankInfo[0].bankName || "";
+                    else if (key == 'BrName' && item.bankInfo && item.bankInfo.length && item.bankInfo[0].branch)
+                        val = item.bankInfo[0].branch || "";
+                    else if (key == 'GSTUploaded') {
+                        if (item.GSTInfo && item.GSTInfo.length && item.GSTInfo[0].registrationNo)
+                            val = 'Yes';
+                        else
+                            val = 'No';
+                    } else if (key === 'createdAt') {
+                        val = Utility.toIST(_.get(item, 'createdAt', ''));
+                    } else
+                        val = _.get(item, key, "");
+                    val = Utility.toCsvValue(val);
+                    csvStr += val + ",";
+                });
+                csvStr += "\r\n";
+            });
+            var csvName = "userslist_";
+            csvStr = csvStr.substring(0, csvStr.length - 1);
+            try {
+                return renderCsv(req, res, csvStr, csvName);
+            } catch (e) {
+                //return handleError(res, e);   
+            }
         });
-        csvStr += "\r\n";
-      });
-      csvStr = csvStr.substring(0,csvStr.length -1);
-      return renderCsv(req,res,csvStr);
-    });
+    //user export end
 }
 
-function renderCsv(req,res,csv){
-   var fileName =  "userslist_" + new Date().getTime();
+function exportUsersGSTData( query, req, res ) {
+    //user GST export start
+    query.exec(
+        function (err, users) {
+            if (err) {
+                return handleError(res, err);
+            }
+            var csvStr = "";
+            var headers = Object.keys(Export_GST_Field_Mapping);
+            var dataKeys = Object.keys(Export_GST_Field_Mapping_Data);
+            csvStr += headers.join(',');
+            csvStr += ",";
+            csvStr += dataKeys.join(",");
+            csvStr += "\r\n";
+            users.forEach(function (item, idx) {
+                var rowData = [];
+                var idProof = null;
+                var adProof = null;
+                if (item.kycInfo && item.kycInfo.length) {
+                    item.kycInfo.forEach(function (kyc) {
+                        if (kyc.type === 'Identity Proof')
+                            idProof = kyc;
+                        if (kyc.type === 'Address Proof')
+                            adProof = kyc;
+                    });
+                }
+
+                headers.forEach(function (header) {
+                    var key = Export_GST_Field_Mapping[header];
+                    var val = "";
+                    if (key === 'name')
+                        val = _.get(item, "fname", "") + " " + _.get(item, "mname", "") + " " + _.get(item, "lname", "");
+                    
+                    else if (key === 'GSTUploaded') {
+                        if (item.GSTInfo && item.GSTInfo.length && item.GSTInfo[0].registrationNo)
+                            val = 'Yes';
+                        else
+                            val = 'No';
+                    } else if (key === 'updatedAt') {
+                        val = Utility.toIST(_.get(item, 'updatedAt', ''));
+                    } else
+                        val = _.get(item, key, "");
+                    
+                    rowData.push(val);
+                });
+                
+                //
+                var fieldsArr = item.GSTInfo;
+                if (fieldsArr && fieldsArr.length) {
+                    fieldsArr.forEach(function (field, index) {
+                        var row = [].concat(rowData);
+                        dataKeys.forEach(function (key) {
+                            var val = _.get(field, Export_GST_Field_Mapping_Data[key], "");
+                            if (Export_GST_Field_Mapping_Data[key] === "state") {
+                                val = field.state;
+                            }
+                            if (Export_GST_Field_Mapping_Data[key] === "registrationNo") {
+                                val = field.registrationNo;
+                            }
+                            if (Export_GST_Field_Mapping_Data[key] === "updatedAt") {
+                                val = Utility.toIST(_.get(item, 'updatedAt', ''));
+                            }
+                            val = Utility.toCsvValue(val);
+                            row.push(val);
+                        });
+                        csvStr += row.join(",");
+                        csvStr += "\r\n";
+                    });
+                }
+                else {
+                    csvStr += rowData.join(",");
+                    csvStr += "\r\n";
+                }
+                //
+            });
+            var csvName = "usersGSTList_";
+            csvStr = csvStr.substring(0, csvStr.length - 1);
+            try {
+                return renderCsv(req, res, csvStr, csvName);
+            } catch (e) {
+                //return handleError(res, e);   
+            }
+        });
+    //user GST export end
+}
+
+function renderCsv(req,res,csv,csvName){
+   var fileName =  csvName + new Date().getTime();
   res.setHeader('Content-Type', 'application/octet-stream');
   res.setHeader("Content-Disposition", 'attachment; filename=' + fileName + '.csv;');
   res.end(csv, 'binary'); 

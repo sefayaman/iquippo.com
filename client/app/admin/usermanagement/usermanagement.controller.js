@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('sreizaoApp')
-  .controller('UserManagementCtrl', ['$scope', '$rootScope', 'DTOptionsBuilder','Auth','uploadSvc','notificationSvc','userSvc', 'Modal','$http', function ($scope, $rootScope, DTOptionsBuilder, Auth,uploadSvc,notificationSvc, userSvc, Modal,$http) {
+  .controller('UserManagementCtrl', ['$scope', '$rootScope', '$stateParams', '$state', 'DTOptionsBuilder','Auth','uploadSvc','notificationSvc','userSvc', 'Modal','$http', function ($scope, $rootScope, $stateParams, $state, DTOptionsBuilder, Auth, uploadSvc, notificationSvc, userSvc, Modal,$http) {
    	var vm = this;
     //pagination variables
     var prevPage = 0;
@@ -22,6 +22,7 @@ angular.module('sreizaoApp')
     vm.fireCommand = fireCommand;
     vm.getRegisteredBy = getRegisteredBy;
     vm.editUserClick = editUserClick;
+    vm.uploadExcel = uploadExcel;
     vm.openAddUserDialog = openAddUserDialog;
     $scope.bulkUserUpload={};
     $scope.bulkUserUpload.template="BulkUserUpload.xlsx";
@@ -35,43 +36,25 @@ angular.module('sreizaoApp')
     $scope.$on('updateUserList',function(){
       fireCommand(true);
    });
-
-      //listen for the file selected event
-  $scope.$on("fileSelected", function (event, args) {
-      if(args.files.length === 0)
-        return;
-      $scope.$apply(function () { 
-          uploadExcel(args.files[0]);       
-      });
-  });
-    
-     function uploadExcel(file){
-    if(!file)
+ 
+  function uploadExcel(excelData){
+    if(!excelData || !excelData.length)
       return;
-     if(file.name.indexOf('.xlsx') == -1){
-        Modal.alert('Please upload a valid file');
-        return;
-      }
-    uploadSvc.upload(file,importDir)
-    .then(function(result){
-      var fileName = result.data.filename;
+      var user = {};
+      user._id = Auth.getCurrentUser()._id;
+      user.fname = Auth.getCurrentUser().fname;
+      user.mname = Auth.getCurrentUser().mname;
+      user.lname = Auth.getCurrentUser().lname;
+      user.role = Auth.getCurrentUser().role;
+      user.userType = Auth.getCurrentUser().userType;
+      user.phone = Auth.getCurrentUser().phone;
+      user.mobile = Auth.getCurrentUser().mobile;
+      user.email = Auth.getCurrentUser().email;
+      user.country = Auth.getCurrentUser().country;
+      user.company = Auth.getCurrentUser().company;
       $rootScope.loading = true;
-       var user = {};
-        user._id = Auth.getCurrentUser()._id;
-        user.fname = Auth.getCurrentUser().fname;
-        user.mname = Auth.getCurrentUser().mname;
-        user.lname = Auth.getCurrentUser().lname;
-        user.role = Auth.getCurrentUser().role;
-        user.userType = Auth.getCurrentUser().userType;
-        user.phone = Auth.getCurrentUser().phone;
-        user.mobile = Auth.getCurrentUser().mobile;
-        user.email = Auth.getCurrentUser().email;
-        user.country = Auth.getCurrentUser().country;
-        user.company = Auth.getCurrentUser().company;
-      userSvc.parseExcel(fileName,user)
+      userSvc.parseExcel(excelData,user)
       .then(function(res){
-
-         // loadIncomingProduct();
           $rootScope.loading = false;
           var totalRecord = res.totalCount;
           var message =  res.successCount + " out of "+ totalRecord  + " records are  processed successfully.";
@@ -101,22 +84,18 @@ angular.module('sreizaoApp')
             filter.status = true;
             userSvc.getUsers(filter).then(function(data){
               vm.enterprises = data;
-          dataToSend.pagination = true;
-          dataToSend.itemsPerPage = vm.itemsPerPage;
-          getUser(dataToSend);  
+            dataToSend.pagination = true;
+            dataToSend.itemsPerPage = vm.itemsPerPage;
+            getUser(dataToSend);  
           })
-            .catch(function(err){
-              Modal.alert("Error in geting user");
-            });      
+          .catch(function(err){
+            Modal.alert("Error in geting user");
+          });      
       })
       .catch(function(res){
         $rootScope.loading = false;
-        Modal.alert("error in parsing data",true);
+        console.log("Error response ",res);
       });
-    })
-    .catch(function(res){
-       Modal.alert("error in file upload",true);
-    });
   }
 
     function editUserClick(userData) {
@@ -125,6 +104,7 @@ angular.module('sreizaoApp')
       userScope.userInfo = $scope.userInfo;
       userScope.isEdit = true;
       Modal.openDialog('adduser', userScope);
+      //$state.go('useraccountedit', {id:userData._id});
     }
 
     function openAddUserDialog() {
@@ -163,7 +143,9 @@ angular.module('sreizaoApp')
 
           dataToSend.pagination = true;
           dataToSend.itemsPerPage = vm.itemsPerPage;
-          getUser(dataToSend);
+          restoreState();
+          //getUser(dataToSend);
+          fireCommand(false);
         }
          //getUserExportFileName();
       });
@@ -172,11 +154,15 @@ angular.module('sreizaoApp')
     init();
     
      function getUser(filter){
+      if(vm.currentPage == prevPage)
+      return;
+
       filter.prevPage = prevPage;
       filter.currentPage = vm.currentPage;
       filter.first_id = first_id;
       filter.last_id = last_id;
       filter.notManpower = true;
+      saveState();
       userSvc.getUsers(filter).then(function(result){
         getProductsCountWithUser(result);
         vm.userList  = result.users;
@@ -191,6 +177,35 @@ angular.module('sreizaoApp')
         Modal.alert("Error in geting user");
       })
     }
+
+    function restoreState(){
+    if($stateParams.searchstr)
+      vm.userSearchFilter.searchStr = $stateParams.searchstr;
+    if($stateParams.first_id)
+      first_id = $stateParams.first_id;
+    if($stateParams.last_id)
+      last_id = $stateParams.last_id;
+    if($stateParams.currentPage){
+      var currentPage = parseInt($stateParams.currentPage);
+      prevPage = parseInt($stateParams.prevPage);
+      vm.totalItems = vm.itemsPerPage * currentPage;
+      vm.currentPage = currentPage;
+    }
+  }
+
+  function saveState(){
+    var statObj = {};
+    statObj['first_id'] = first_id;
+    statObj['last_id'] = last_id;
+    statObj['currentPage'] = vm.currentPage;
+    statObj['prevPage'] = prevPage;
+    if(vm.userSearchFilter.searchStr)
+      statObj['searchstr'] = vm.userSearchFilter.searchStr;
+    else
+      statObj['searchstr'] = "";
+
+    $state.go("usermanagment",statObj,{location:'replace',notify:false});
+  }
 
     function getUserExportFileName(){
 
@@ -294,8 +309,9 @@ angular.module('sreizaoApp')
       fireCommand(true);
     }
 
-     function exportExcel(){
+     function exportExcel(data) {
       var serverData ={};
+      serverData["exportType"] = data;
       if(Auth.getCurrentUser()._id && Auth.getCurrentUser().role == 'channelpartner') {
         serverData["userId"] = Auth.getCurrentUser()._id;
       }
@@ -363,8 +379,8 @@ angular.module('sreizaoApp')
 
 }])
 
-  .controller('AddUserCtrl', ['$scope', '$rootScope','LocationSvc', '$http', 'Auth', 'Modal', 'uploadSvc', 'notificationSvc','vendorSvc', 'KYCSvc','userSvc', '$uibModalInstance', 'UtilSvc', 'LegalTypeSvc',
-   function ($scope, $rootScope,LocationSvc, $http, Auth, Modal, uploadSvc ,notificationSvc,vendorSvc,KYCSvc, userSvc, $uibModalInstance, UtilSvc, LegalTypeSvc) {
+  .controller('AddUserCtrl', ['$scope', '$rootScope', '$state', 'LocationSvc', '$http', 'Auth', 'Modal', 'uploadSvc', 'notificationSvc','vendorSvc', 'KYCSvc','userSvc', '$uibModalInstance', 'UtilSvc', 'LegalTypeSvc',
+   function ($scope, $rootScope, $state, LocationSvc, $http, Auth, Modal, uploadSvc ,notificationSvc,vendorSvc,KYCSvc, userSvc, $uibModalInstance, UtilSvc, LegalTypeSvc) {
     $scope.newUser ={};
     $scope.newUser.isOtherCountry=false;
     $scope.newUser.isOtherState=false;
@@ -396,6 +412,7 @@ angular.module('sreizaoApp')
     $scope.validateAadhaar = validateAadhaar;
     $scope.updateKyc = updateKyc;
     $scope.onChangeHandler = onChangeHandler;
+    $scope.gotoProfile = gotoProfile;
 
     function init(){
       $scope.roles = [];
@@ -500,8 +517,12 @@ angular.module('sreizaoApp')
       }
     }
 
-    function getServices(isNew,isChanged){
+    function gotoProfile(userId){
+      $scope.closeDialog();
+      $state.go('useraccountedit', {id:userId});
+    }
 
+    function getServices(isNew,isChanged){
       $scope.availedServices = [];
       if($scope.newUser.role != 'enterprise')
         return;

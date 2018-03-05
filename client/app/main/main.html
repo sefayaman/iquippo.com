@@ -5,52 +5,57 @@
   <div id="slides_control">
     <uib-carousel interval="mainVm.myInterval" no-wrap="noWrapSlides">
       <uib-slide data-ng-repeat="slide in mainVm.slides">      
-      <a ng-href="{{slide.linkUrl}}" target="_blank" data-ng-if="slide.isClickable == 'Yes'">
-        <img  data-ng-src="{{uploadImagePrefix}}banner/{{slide.webImg}}" data-ng-if="!slide.default">
+      <a ng-href="{{slide.linkUrl}}" target="_blank" ng-if="!slide.default && slide.bannerClick == 'hyper_link'">
+        <img  data-ng-src="{{uploadImagePrefix}}banner/{{slide.webImg}}">
       </a>
-      <a ng-href="javascript:void(0);" data-ng-if="slide.hyperlink == 'Yes'" data-ng-click="mainVm.openBidModal(slide)">
-        <img  data-ng-src="{{uploadImagePrefix}}banner/{{slide.webImg}}" data-ng-if="!slide.default">
+      <a ng-href="javascript:void(0);" ng-if="!slide.default && slide.bannerClick == 'exp_interest'" ng-click="mainVm.openBidModal(slide)">
+        <img  data-ng-src="{{uploadImagePrefix}}banner/{{slide.webImg}}">
       </a>
-      <img  data-ng-src="{{uploadImagePrefix}}banner/{{slide.webImg}}" data-ng-if="!slide.default && slide.hyperlink != 'Yes' && slide.isClickable != 'Yes'">
+      <a ng-href="javascript:void(0);" ng-if="!slide.default && slide.bannerClick == 'lead_capture'" ng-click="mainVm.openLeadCaptureModal(slide)">
+        <img  data-ng-src="{{uploadImagePrefix}}banner/{{slide.webImg}}">
+      </a>
+      <img  data-ng-src="{{uploadImagePrefix}}banner/{{slide.webImg}}" ng-if="!slide.default && !slide.bannerClick">
       <img  data-ng-src="assets/images/{{slide.webImg}}" data-ng-if="slide.default">        
       </uib-slide>
     </uib-carousel>
   </div>
-  <div class="col-xs-12 col-sm-offset-1 col-sm-10 search-banner hidden-xs">        
+  <div class="col-xs-12 col-sm-12 col-md-offset-1 col-md-10 search-banner hidden-xs">        
+      <form name="searchHome" class="form" novalidate>
     <div class="search-tabs">
 
       <p class="text-center">I'M LOOKING FOR:</p>
 
       <div class="row" ng-if="singleBox">
-        <div class="col-sm-offset-3 col-sm-6">          
-          <div class="input-group">
-            <input type="text" placeholder="Search for Assets and More" ng-model="filter.searchstr" class="form-control"/>
-            <a href="javascript:void(0);" class="input-group-addon" ng-click="toggleSearchBox(false)">Choose</a>
+
+        <div class="col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-6">          
+          <div class="input-group" ng-class="{'has-error': searchHome.searchstr.$invalid && submitted}">
+            <input type="text" name="searchstr" placeholder="Search for Assets and More" ng-model="filter.searchstr" class="form-control"  ng-keypress="checkIfEnterKeyWasPressed($event,searchHome)" required/>
+            <a href="javascript:void(0);" class="input-group-addon" ng-click="toggleSearchBox(false)">Advanced Search</a>
           </div>
         </div>
       </div>
 
       <!-- Tab panes -->
       <div class="row" ng-if="!singleBox">
-        <div class="col-sm-offset-2 col-sm-8">
+        <div class="col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8">
           <div class="filter">
-            <div class="row">
+            <div class="row" ng-class="{'has-error-filter': (searchHome.industry.$invalid || searchHome.category.$invalid || searchHome.brand.$invalid || searchHome.assetloc.$invalid) && submitted}">
               <div class="col-sm-1 padd-left padd-right select-text">
                 <div class="form-control text-center back-tohome">
                   <a href="javascript:void(0);" ng-click="toggleSearchBox(true)"><i class="fa fa-angle-left fa-2x"></i></a>
                 </div>
               </div>
               <div class="col-sm-3 padd-left padd-right select-text">
-                <input type="text" placeholder="Industry" ng-model="filter.groupSearchText" class="form-control" uib-typeahead="address for address in getGroupHelp($viewValue)" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
+                <input type="text" placeholder="Industry" name="industry" ng-model="filter.groupSearchText" class="form-control" uib-typeahead="address for address in getGroupHelp($viewValue)" typeahead-focus-first = "false" typeahead-wait-ms="200" ng-keypress="checkIfEnterKeyWasPressed($event,searchHome)" ng-required="!filter.categorySearchText&&!filter.brandSearchText&&!filter.locationSearchText"/>
               </div>
               <div class="col-sm-3 padd-left padd-right select-text">
-                <input type="text" ng-model="filter.categorySearchText" placeholder="Category" uib-typeahead="address for address in getCategoryHelp($viewValue)"  class="form-control" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
+                <input type="text" ng-model="filter.categorySearchText" name="category" placeholder="Category" uib-typeahead="address for address in getCategoryHelp($viewValue)"  class="form-control" typeahead-focus-first = "false" typeahead-wait-ms="200" ng-keypress="checkIfEnterKeyWasPressed($event,searchHome)" ng-required="!filter.groupSearchText&&!filter.brandSearchText&&!filter.locationSearchText"/>
               </div>
               <div class="col-sm-2 padd-left padd-right select-text">
-                <input type="text" class="form-control" placeholder="Brand" ng-model="filter.brandSearchText" class="form-control" uib-typeahead="address for address in getBrandHelp($viewValue)" typeahead-wait-ms="200"/>
+                <input type="text" class="form-control" name="brand" placeholder="Brand" ng-model="filter.brandSearchText" class="form-control" uib-typeahead="address for address in getBrandHelp($viewValue)" typeahead-wait-ms="200" ng-keypress="checkIfEnterKeyWasPressed($event,searchHome)" ng-required="!filter.groupSearchText&&!filter.categorySearchText&&!filter.locationSearchText"/>
               </div>
               <div class="col-sm-3 padd-left padd-right select-text">
-                <input type="text" class="form-control" ng-model="filter.locationSearchText" placeholder="Asset Location" uib-typeahead="address for address in getLocationHelp($viewValue)"  class="form-control" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
+                <input type="text" class="form-control" name="assetloc" ng-model="filter.locationSearchText" placeholder="Asset Location" uib-typeahead="address for address in getLocationHelp($viewValue)"  class="form-control" typeahead-focus-first = "false" typeahead-wait-ms="200" ng-keypress="checkIfEnterKeyWasPressed($event,searchHome)" ng-required="!filter.groupSearchText&&!filter.categorySearchText&&!filter.brandSearchText"/>
               </div> 
               
             </div>
@@ -58,19 +63,19 @@
         </div>
       </div>
     </div>
-    <div class="col-sm-offset-3 col-sm-6 text-center">
-      <button type="button" class="btn btn-default" data-ng-click="doSearch(true)">New Equipment</button>
-      <button type="button" class="btn btn-default" data-ng-click="doSearch(false)">Used Equipment</button>
+    <div class="col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 text-center">
+      <button type="button" class="btn btn-default" data-ng-click="doSearch(true,searchHome)">New Equipment</button>
+      <button type="button" class="btn btn-default" data-ng-click="doSearch(false,searchHome)">Used Equipment</button>
     </div>
-
+    </form>
   </div>
 </section>
 
 
 <!-- Upcoming Auction -->
-<section class="category-block upcoming-auction">
+<section class="category-block upcoming-auction upcoming-auction-glyphs">
   <div class="heading-titles text-center">
-    <h4>[ Upcoming Auctions ]</h4>
+    <h1>[ Upcoming Auctions ]</h1>
     <a href="/viewauctions?type=upcoming">View All Auctions ({{upcomingCount}})</a>
   </div>
 
@@ -96,17 +101,17 @@
 </section>
 
 <!-- Browse Brand -->
-<section class="category-block">
+<section class="category-block brand-glyphs">
   <div class="container text-center">
     <div class="heading-titles">
-      <h4>[ Browse By Brands ]</h4>
+      <h1>[ Browse By Brands ]</h1>
       <a href="/used/brands" ng-if="!mainVm.newBrand">View All ({{mainVm.brandCount || 0}})</a>
       <a href="/new/brands" ng-if="mainVm.newBrand">View All ({{mainVm.brandCountForNew || 0}})</a>
     </div>
     <uib-tabset justified="false">
       <uib-tab heading="Used Equipment" select="mainVm.toggleTab(0,false)">
         <div class="row">
-          <div class="col-xs-4 col-sm-4 form-group text-center" ng-repeat="brand in mainVm.brands" ng-if="$index < 3">   
+          <div class="col-xs-12 col-sm-4 form-group text-center" ng-repeat="brand in mainVm.brands" ng-if="$index < 3">   
             <div class="brand-logo">
               <a href="/used/brands/{{brand.name}}?currentPage=1" class="brand-name">
                 <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{brand.imgSrc}}">
@@ -117,7 +122,7 @@
       </uib-tab>
       <uib-tab heading="New Equipment" select="mainVm.toggleTab(0,true)">
         <div class="row">
-          <div class="col-xs-4 col-sm-4 form-group text-center" ng-repeat="brand in mainVm.brandsForNew" ng-if="$index < 3">   
+          <div class="col-xs-12 col-sm-4 form-group text-center" ng-repeat="brand in mainVm.brandsForNew" ng-if="$index < 3">   
             <div class="brand-logo">
               <a href="/new/brands/{{brand.name}}?currentPage=1" class="brand-name">
                 <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{brand.imgSrc}}">
@@ -132,10 +137,10 @@
 </section>
 
 <!-- Browse Category -->
-<section class="category-block">
+<section class="category-block category-glyphs">
   <div class="container text-center">
     <div class="heading-titles">
-      <h4>[ Browse By Category ]</h4>
+      <h1>[ Browse By Category ]</h1>
       <a href="/used/allcategories" ng-if="!mainVm.newCategory">View All ({{mainVm.categoryCount || 0}})</a>
       <a href="/new/allcategories" ng-if="mainVm.newCategory">View All ({{mainVm.categoryCountForNew || 0}})</a>
     </div>
@@ -169,10 +174,10 @@
 </section>
 
 <!-- Spacial Products -->
-<section class="category-block">
+<section class="category-block spacial-glyphs">
   <div class="container text-center">
     <div class="heading-titles">
-      <h4>[ Special Products ]</h4>
+      <h1>[ Special Products ]</h1>
     </div>
     <div class="row">
       <div class="col-sm-6 form-group text-center" ng-repeat="cert in mainVm.certificationList" ng-if="$index < 2">   
@@ -186,10 +191,10 @@
   </section>
 
 <!-- Browse Industry -->
-<section class="category-block">
+<section class="category-block industry-glyphs">
   <div class="container text-center">
     <div class="heading-titles">
-      <h4>[ Browse By Industry ]</h4>
+      <h1>[ Browse By Industry ]</h1>
     </div>
     <uib-tabset justified="false">
        <uib-tab heading="Used Equipment" select="mainVm.toggleTab(2,true)">
@@ -227,7 +232,7 @@
 <section class="category-block how-works">
   <div class="container-fluid text-center">
     <div class="heading-titles">
-      <h4>[ HOW <span>iQUIPPO</span> WORKS? ]</h4>     
+      <h1>[ HOW <span>iQUIPPO</span> WORKS? ]</h1> 
     </div>
     <div class="row">
       <div class="col-sm-offset-2 col-sm-8">
@@ -255,25 +260,25 @@
 <section class="category-block">
   <div class="container text-center">
     <div class="heading-titles media-headings">
-      <h4>[ IN THE PRESS / MEDIA ]</h4>
+      <h1>[ IN THE PRESS / MEDIA ]</h1>
     </div>
     <div class="row form-group press-media">
-      <div class="col-xs-4 col-sm-2 form-group">   
+      <div class="col-xs-6 col-sm-2 form-group">   
         <img src="/assets/images/financial-express logo.png" class="img-responsive">
       </div>
-      <div class="col-xs-4 col-sm-2 form-group">   
+      <div class="col-xs-6 col-sm-2 form-group">   
         <img src="/assets/images/business-standard-logo.png" class="img-responsive">
       </div>
-      <div class="col-xs-4 col-sm-2 form-group">   
+      <div class="col-xs-6 col-sm-2 form-group">   
         <img src="/assets/images/money-control.png" class="img-responsive">
       </div>
-      <div class="col-xs-4 col-sm-2 form-group">   
+      <div class="col-xs-6 col-sm-2 form-group">   
         <img src="/assets/images/india-today-logo.png" class="img-responsive">
       </div>
-      <div class="col-xs-4 col-sm-2 form-group">   
+      <div class="col-xs-6 col-sm-2 form-group">   
         <img src="/assets/images/telegraph-logo.png" class="img-responsive">
       </div> 
-      <div class="col-xs-4 col-sm-2 form-group">   
+      <div class="col-xs-6 col-sm-2 form-group">   
         <img src="/assets/images/india-techonline-logo.png" class="img-responsive">
       </div>
     </div>
@@ -345,10 +350,10 @@
       </div> -->
     </div>
 
-    <section>
+    <section class="category-block">
     <div class="container">
       <div class="heading-titles text-center">
-        <h4>[ PRINT MEDIA ]</h4>
+        <h1>[ PRINT MEDIA ]</h1>
       </div>
       <div class="medianame">
        <ul>
@@ -382,53 +387,53 @@
   <div>
     <div class="modal-body text-center">
        <div class="category-block">
-         <div class="col-xs-12 col-sm-offset-1 col-sm-10 search-banner search-banner-modal">        
-    <div class="search-tabs">
+         <div class="search-banner search-banner-modal">        
+          <div class="search-tabs">
 
-      <p class="text-center">I'M LOOKING FOR:</p>
+            <p class="text-center">I'M LOOKING FOR:</p>
 
-      <div class="row" ng-if="singleBox">
-        <div class="col-sm-offset-3 col-sm-6">          
-          <div class="input-group">
-            <input type="text" placeholder="Search for Assets and More" ng-model="filter.searchstr" class="form-control"/>
-            <a href="javascript:void(0);" class="input-group-addon" ng-click="toggleSearchBox(false)">Choose</a>
-          </div>
-        </div>
-      </div>
+            <div class="row" ng-if="singleBox">
+              <div class="col-xs-12">          
+                <div class="input-group">
+                  <input type="text" placeholder="Search for Assets and More" ng-model="filter.searchstr" class="form-control"/>
+                  <a href="javascript:void(0);" class="input-group-addon" ng-click="toggleSearchBox(false)">Advanced Search</a>
+                </div>
+              </div>
+            </div>
 
-      <!-- Tab panes -->
-      <div class="row" ng-if="!singleBox">
-        <div class="col-sm-offset-2 col-sm-8">
-          <div class="filter">
-            <div class="row">
-              <div class="col-sm-3 form-group">
-                <input type="text" placeholder="Industry" ng-model="filter.groupSearchText" class="form-control" uib-typeahead="address for address in getGroupHelp($viewValue)" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
+            <!-- Tab panes -->
+            <div class="row" ng-if="!singleBox">
+              <div class="col-sm-offset-2 col-sm-8">
+                <div class="filter">
+                  <div class="row">
+                    <div class="col-sm-3 form-group">
+                      <input type="text" placeholder="Industry" ng-model="filter.groupSearchText" class="form-control" uib-typeahead="address for address in getGroupHelp($viewValue)" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
+                    </div>
+                    <div class="col-sm-3 form-group">
+                      <input type="text" ng-model="filter.categorySearchText" placeholder="Category" uib-typeahead="address for address in getCategoryHelp($viewValue)"  class="form-control" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
+                    </div>
+                    <div class="col-sm-2 form-group">
+                      <input type="text" class="form-control" placeholder="Brand" ng-model="filter.brandSearchText" class="form-control" uib-typeahead="address for address in getBrandHelp($viewValue)" typeahead-wait-ms="200"/>
+                    </div>
+                    <div class="col-sm-3 form-group">
+                      <input type="text" class="form-control" ng-model="filter.locationSearchText" placeholder="Asset Location" uib-typeahead="address for address in getLocationHelp($viewValue)"  class="form-control" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
+                    </div> 
+                    
+                  </div>
+                </div>
               </div>
-              <div class="col-sm-3 form-group">
-                <input type="text" ng-model="filter.categorySearchText" placeholder="Category" uib-typeahead="address for address in getCategoryHelp($viewValue)"  class="form-control" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
-              </div>
-              <div class="col-sm-2 form-group">
-                <input type="text" class="form-control" placeholder="Brand" ng-model="filter.brandSearchText" class="form-control" uib-typeahead="address for address in getBrandHelp($viewValue)" typeahead-wait-ms="200"/>
-              </div>
-              <div class="col-sm-3 form-group">
-                <input type="text" class="form-control" ng-model="filter.locationSearchText" placeholder="Asset Location" uib-typeahead="address for address in getLocationHelp($viewValue)"  class="form-control" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
-              </div> 
-              
             </div>
           </div>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-xs-6 text-center">
-        <button type="button" class="btn btn-default" data-ng-click="doSearch(true)">New Equipment</button>
-      </div>
-      <div class="col-xs-6 text-center">
-        <button type="button" class="btn btn-default" data-ng-click="doSearch(false)">Used Equipment</button>
-      </div>
-    </div>
+          <div class="row">
+            <div class="col-xs-6 text-center">
+              <button type="button" class="btn btn-default  btn-sm" data-ng-click="doSearch(true)">New Equipment</button>
+            </div>
+            <div class="col-xs-6 text-center padd-left">
+              <button type="button" class="btn btn-default  btn-sm" data-ng-click="doSearch(false)">Used Equipment</button>
+            </div>
+          </div>
 
-  </div>
+        </div>
        </div>
     </div>
      <div class="modal-footer">

@@ -39,6 +39,7 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
     $scope.doSearch = doSearch;
     $scope.myFunct = myFunct;
     vm.openBidModal = openBidModal;
+    vm.openLeadCaptureModal = openLeadCaptureModal;
     $scope.openPrintMedia = openPrintMedia;
     $scope.toggleSearchBox = toggleSearchBox;
     vm.getBrandCount = getBrandCount;
@@ -73,6 +74,7 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
     }
 
     function toggleSearchBox(showSingleBox){
+       $scope.submitted = false;
       $scope.singleBox = showSingleBox;
     }
 
@@ -140,7 +142,12 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
       Modal.openDialog('inputFormReq', inputFormScope);
     }
 
-
+    function openLeadCaptureModal(currentSlide){
+      var leadCaptureScope = $rootScope.$new();
+      leadCaptureScope.slideInfo = currentSlide;
+       vm.myInterval = 1*2*60*60*1000;
+      Modal.openDialog('bannerLeads', leadCaptureScope);
+    }
 
     function getCategories(){
       var filter = angular.copy(usedFilter);
@@ -297,10 +304,21 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
       }
     }
  
+ $scope.checkIfEnterKeyWasPressed = function($event,searchHome){
+    $scope.submitted = false;
+    var keyCode = $event.which || $event.keyCode;
+    if (keyCode === 13) {
+        doSearch(false,searchHome);
+    }
 
-    function doSearch(isNew){
+  };
 
-      if(!$scope.filter.searchstr && !$scope.filter.categorySearchText && !$scope.filter.locationSearchText && !$scope.filter.groupSearchText && !$scope.filter.brandSearchText){
+    function doSearch(isNew,searchHome){
+
+      if((searchHome && searchHome.$invalid) ||(!$scope.filter.searchstr && !$scope.filter.categorySearchText && !$scope.filter.locationSearchText && !$scope.filter.groupSearchText && !$scope.filter.brandSearchText)){
+          //$scope.filter.searchstr.$invalid = true;
+        $scope.submitted = true;
+        Modal.alert('Please specify your search criteria.');
         return;
       }
       var filter = {};

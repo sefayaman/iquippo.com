@@ -3,6 +3,7 @@
 var express = require('express');
 var auth = require('../../auth/auth.service');
 var controller = require('./common.controller');
+var bannerCtrl = require('./banner.controller');
 var valuationPurposeCtrl = require('./valuationpurpose.controller');
 var servicefeeCtrl = require('./servicefee.controller');
 var servicetaxCtrl = require('./servicetax.controller');
@@ -24,6 +25,7 @@ var inputFormCtrl = require('./inputformmaster.controller');
 var bookADemoCtrl = require('./bookademo.controller');
 var legalEntityTypeCtrl = require('./legalentitytype.controller');
 var bankMasterCtrl = require('./bankmaster.controller');
+var IquippoGstMasterCtrl = require('./iquippogstmaster.controller');
 var json2xls = require('json2xls');
 var router = express.Router();
 
@@ -80,11 +82,11 @@ router.post('/manufacturer/save', controller.createManufacturer);
 router.put('/manufacturer/:id', controller.updateManufacturer);
 router.delete('/manufacturer/:id', controller.destroyManufacturer);
 
-router.get('/banner', controller.getAllBanner);
-router.post('/banner', controller.createBanner);
-router.put('/banner/:id', controller.updateBanner);
-router.delete('/banner/:id', controller.deleteBanner);
-router.post('/banner/onfilter', controller.getBannerOnFilter);
+router.get('/banner', bannerCtrl.get);
+router.post('/banner', bannerCtrl.createBanner);
+router.put('/banner/:id', bannerCtrl.updateBanner);
+router.delete('/banner/:id', bannerCtrl.deleteBanner);
+//router.post('/banner/onfilter', controller.getBannerOnFilter);
 router.post('/importLocation',controller.importLocation);
 
 router.get('/valuationpurpose', valuationPurposeCtrl.get);
@@ -188,7 +190,7 @@ router.post('/offer',auth.hasRole('admin'),offerCtrl.create);
 router.get('/offer/get', offerCtrl.get);
 router.put('/offer/:id', auth.hasRole('admin'),offerCtrl.update);
 router.delete('/offer/:id',auth.hasRole('admin'), offerCtrl.destroy);
-router.post('/offerrequest',auth.isAuthenticated(),offerCtrl.createOfferRequest);
+router.post('/offerrequest',offerCtrl.createOfferRequest);
 router.get('/offerrequest',auth.hasRole('admin'),offerCtrl.getOfferRequest);
 //router.get('/offer/getfilterdata', offerCtrl.getFilterData);
 
@@ -204,6 +206,11 @@ router.get('/bank', bankMasterCtrl.get);
 router.post('/bank', auth.hasRole('admin'),bankMasterCtrl.create);
 router.put('/bank/:id', auth.hasRole('admin'),bankMasterCtrl.update);
 router.delete('/bank/:id',auth.hasRole('admin'), bankMasterCtrl.destroy);
+
+router.get('/iquippogst', IquippoGstMasterCtrl.get);
+router.post('/iquippogst', auth.hasRole('admin'),IquippoGstMasterCtrl.create);
+router.put('/iquippogst/:id', auth.hasRole('admin'),IquippoGstMasterCtrl.update);
+router.delete('/iquippogst/:id',auth.hasRole('admin'), IquippoGstMasterCtrl.destroy);
 
 router.get('/newequipmentotherinfo', controller.getNewEquipmentOtherInfo);
 

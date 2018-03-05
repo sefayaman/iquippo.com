@@ -11,62 +11,65 @@
   <div class="container">
     <div class="row">
       <div class="col-sm-offset-1 col-sm-4">
-        <h3>Contact Us</h3>
+        <div class="heading-titles">
+          <h1>[ Contact Us ]</h1>
+        </div>
+
         <form class="form" name="form" novalidate>
-                <div class="form-group fill-info">
-                  <div class="row">
-                    <div class="col-md-12 form-group" ng-class="{'has-error': form.name.$invalid && form.submitted }">
-                      <input type="text" name="name" ng-model="contact.name" value="" class="form-control" placeholder="Enter Full Name" required>
-                    </div>
-                    <div class="col-md-12 form-group" ng-class="{'has-error': form.email.$invalid && form.submitted }">
-                      <input type="email" name="email" ng-model="contact.email" value="" class="form-control" placeholder="Email Address">
-                      <p class="help-block" ng-show="form.email.$error.email && form.submitted">
-                      Doesn't look like a valid email.
-                      </p>
-                      <p class="help-block" ng-show="form.email.$error.required && form.submitted">
-                      What's your email address?
-                      </p>
-                      <p class="help-block" ng-show="form.email.$error.mongoose">
-                        {{ errors.email }}
-                      </p>
-                    </div>
-                    <div class="col-md-12 " ng-class="{'has-error': form.mobile.$invalid && form.submitted }">
-                      <div class="row">
-                        <div class="col-xs-3 col-sm-3 padd-right search-field">
-                          <select class="form-control" ng-model="contact.countryCode" ng-change="onCodeChange(contact.countryCode)" required>
-                            <option value="" disabled>*Code</option>
-                            <option  ng-repeat ="country in allCountries | orderBy:'name'" value="{{country.countryCode}}">+{{country.countryCode}}</option>
-                          </select>
-                          <i class="caret"></i>
-                        </div>                      
-                        <div class="col-xs-9 col-sm-9 padd-left">
-                          <input type="text" name="mobile" ng-model="contact.mobile" value="" class="form-control" placeholder="Mobile No." uib-tooltip="XX-XXXX-XXXX" tooltip-trigger="focus" tooltip-placement="top" required>
-                        </div>                      
-                      </div>
-                      
-                      
-                      <!-- <p class="help-block"
-                       ng-show="(form.mobile.$error.maxlength || form.mobile.$error.required) && 
-                       form.submitted">
-                      Mobile should not blank and 10 digit.
-                      </p> -->
-                    </div>
-                  </div>
+          <div class="form-group fill-info">
+            <div class="row">
+              <div class="col-md-12 form-group" ng-class="{'has-error': form.name.$invalid && form.submitted }">
+                <input type="text" name="name" ng-model="contact.name" value="" class="form-control" placeholder="Enter Full Name" required>
+              </div>
+              <div class="col-md-12 form-group" ng-class="{'has-error': form.email.$invalid && form.submitted }">
+                <input type="email" name="email" ng-model="contact.email" value="" class="form-control" placeholder="Email Address">
+                <p class="help-block" ng-show="form.email.$error.email && form.submitted">
+                Doesn't look like a valid email.
+                </p>
+                <p class="help-block" ng-show="form.email.$error.required && form.submitted">
+                What's your email address?
+                </p>
+                <p class="help-block" ng-show="form.email.$error.mongoose">
+                  {{ errors.email }}
+                </p>
+              </div>
+              <div class="col-md-12 " ng-class="{'has-error': form.mobile.$invalid && form.submitted }">
+                <div class="row">
+                  <div class="col-xs-3 col-sm-3 padd-right search-field">
+                    <select class="form-control" ng-model="contact.countryCode" ng-change="onCodeChange(contact.countryCode)" required>
+                      <option value="" disabled>*Code</option>
+                      <option  ng-repeat ="country in allCountries | orderBy:'name'" value="{{country.countryCode}}">+{{country.countryCode}}</option>
+                    </select>
+                    <i class="caret"></i>
+                  </div>                      
+                  <div class="col-xs-9 col-sm-9 padd-left">
+                    <input type="text" name="mobile" ng-model="contact.mobile" value="" class="form-control" placeholder="Mobile No." uib-tooltip="XX-XXXX-XXXX" tooltip-trigger="focus" tooltip-placement="top" required>
+                  </div>                      
                 </div>
-                <div class="form-group" ng-class="{'has-error': form.message.$invalid && form.submitted }">
-                  <textarea class="form-control" name="message" ng-model="contact.message"  placeholder="*Comments" required></textarea>
-                </div>
-                <div class="form-group text-right">
-                  <input type="button" name="" ng-click="sendContact(contact)" class="btn btn-warning" value="Send">
-                </div>
-              </form>
-              <address>
-                <h4>Contact iQuippo:</h4>
-                <!-- <p>You can contact us in number of ways:</p> -->
-                <p><strong><i class="fa fa-phone"></i> Telephone:</strong> 033 66022059 / 66245500</p>
-                <!-- <p><strong><i class="fa fa-fax"></i> Fax:</strong> 040 23354574</p> -->
-                <p><strong><i class="fa fa-envelope"></i> Email:</strong> customercare@iquippo.com</p>
-              </address>
+                
+                
+                <!-- <p class="help-block"
+                 ng-show="(form.mobile.$error.maxlength || form.mobile.$error.required) && 
+                 form.submitted">
+                Mobile should not blank and 10 digit.
+                </p> -->
+              </div>
+            </div>
+          </div>
+          <div class="form-group" ng-class="{'has-error': form.message.$invalid && form.submitted }">
+            <textarea class="form-control" name="message" ng-model="contact.message"  placeholder="*Comments" required></textarea>
+          </div>
+          <div class="form-group text-right">
+            <input type="button" name="" ng-click="sendContact(contact)" class="btn btn-warning" value="Send">
+          </div>
+        </form>
+        <address>
+          <h4>Contact iQuippo:</h4>
+          <!-- <p>You can contact us in number of ways:</p> -->
+          <p><strong><i class="fa fa-phone"></i> Telephone:</strong> 033 66022059 / 66245500</p>
+          <!-- <p><strong><i class="fa fa-fax"></i> Fax:</strong> 040 23354574</p> -->
+          <p><strong><i class="fa fa-envelope"></i> Email:</strong> customercare@iquippo.com</p>
+        </address>
       </div>
       <div class="col-sm-6">
         <div class="form-group"></div>

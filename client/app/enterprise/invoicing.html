@@ -189,7 +189,7 @@
 </div>
 
  <!-- for popup -->
- <script type="text/ng-template" id="invoiceForm.html">
+ <!-- <script type="text/ng-template" id="invoiceForm.html">
    <div class="modal-header">
     <button  type="button"  class="close" ng-click="close()">&times;</button>
     <h4 class="modal-title">Invoicing</h4>
@@ -228,17 +228,85 @@
         </select>
       </div>
    		<div class="col-md-5 form-group" ng-class="{'has-error':invoiceForm.servicetax.$invalid && submitted}">
-   			<!--<select class="form-control" name="servicetax" ng-model="invoice.taxRate" required>
-          <option value="">Select Rate for Invoice</option>
-          <option value="{{tax.taxRate}}" ng-repeat="tax in serviceTaxes">{{tax.taxRate}}</option>
-        </select>  -->
         <input type="number" class="form-control" placeholder="Enter Rate" ng-model="currentTax.taxRate" disabled>     
    		</div>
       <div class="col-md-2">
       <button class="btn btn-primary" ng-click="addTaxToken(currentTax)"> Add</button>
       </div>
-   	</div>
-    
+   	</div>    
+    <div class="row">
+      <div class="col-sm-6 form-group">
+        <label>Date of Invoice</label>
+        <custom-datepicker placeholder="Date of Invoice"  ng-model="invoice.invoiceDate" required></custom-datepicker>
+      </div>
+      <div class="col-sm-6 form-group" ng-class="{'has-error':invoiceForm.invcInFavourOf.$invalid && submitted}">
+        <label>Invoice in favour of</label>
+        <input type="text" class="form-control" placeholder="Invoice in favour of" name="invcInFavourOf" ng-model="invoice.invoiceInFavour" required>
+      </div>
+    </div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">User GST Details</h3>
+      </div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-sm-12 form-group" ng-class="{'has-error':invoiceForm.userAddress.$invalid && submitted}">
+            <label>Address</label>
+            <input type="text" class="form-control" ng-model="invoice.userAddress" placeholder="Address" name="userAddress" required>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6 form-group" ng-class="{'has-error':invoiceForm.userCountry.$invalid && submitted}">            
+            <label>Country</label>
+            <select class="form-control" name="userCountry" ng-model="invoice.userCountry" ng-change="getCountryWiseState(invoice.userCountry)" required>
+              <option value="">Select Country</option>
+              <option value="{{country.name}}" ng-repeat="country in allCountries">{{country.name}}</option>
+            </select>
+          </div>
+          <div class="col-sm-6 form-group" ng-class="{'has-error':invoiceForm.userState.$invalid && submitted}">
+            <label>State</label>
+            <select class="form-control" name="userState" ng-model="invoice.userState" ng-change="getStateWiseLocation(invoice.userState)" required>
+              <option value="">Select State</option>
+               <option value="{{state.name}}" ng-repeat="state in stateList">{{state.name}}</option>
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6 form-group" ng-class="{'has-error':invoiceForm.userCity.$invalid && submitted}">
+            <label>City</label>
+            <select class="form-control" name="userCity" ng-model="invoice.userCity" required>
+              <option value="">Select City</option>
+               <option value="{{city.name}}" ng-repeat="city in cityList">{{city.name}}</option>
+            </select>
+          </div>
+          <div class="col-sm-6 form-group" ng-class="{'has-error':invoiceForm.registrationNo.$invalid && submitted}">
+            <label>Registration Number</label>
+            <input type="text" class="form-control" placeholder="Registration Number" name="registrationNo" ng-model="invoice.userGstin" required>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">iQuippo GST Details</h3>
+      </div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-sm-6 form-group" ng-class="{'has-error':invoiceForm.iquippoState.$invalid && submitted}">
+            <label>State</label>
+            <select class="form-control" name="iquippoState" ng-model="invoice.iquippoGstState" ng-change="setIquippoGstin(invoice.iquippoGstState)" required>
+              <option value="">Select State</option>
+              <option value="{{state.name}}" ng-repeat="state in allState">{{state.name}}</option>
+            </select>
+          </div>
+          <div class="col-sm-6 form-group" ng-class="{'has-error':invoiceForm.iquipporegistrationNo.$invalid && submitted}">
+            <label>Registration Number</label>
+            <input type="text" class="form-control" placeholder="Registration Number" name="iquipporegistrationNo" ng-model="invoice.iquippoGstin" required>
+          </div>
+        </div>
+      </div>
+    </div>
+
    	<div class="row">
    		<div class="col-md-12 text-right">
    			<button type="button" class="btn btn-danger" ng-click="generateInvoice(invoiceForm)">Generate</button>
@@ -247,7 +315,7 @@
   </form>
   </div>
 </script>
-
+ -->
 <script type="text/ng-template" id="invDetail.html">
   <div class="modal-header">
     <button type="button" class="close" ng-click="close()" aria-hidden="true">&times;</button>

@@ -9,12 +9,16 @@
             <div class="col-sm-8"> 
               <h3>User Management</h3>
             </div>
-            <div class="col-xs-6 col-sm-offset-2 col-sm-2">
+            
+              <div class="col-xs-6 col-sm-2" ng-if="!isAdmin()">
+                  <h3>
+                    <button class="btn btn-success btn-md btn-block" ng-click="userManagementVm.exportExcel('userdata')"><i class="fa fa-file-excel-o"></i> Export</button>
+                  </h3>
+                  <export-form name="userexport"></export-form>
+              </div>
+              <div class="col-xs-6 col-sm-2 pull-right">
               <h3><button class="btn btn-success btn-md btn-block" ng-click="userManagementVm.openAddUserDialog()"><i class="fa fa-plus"></i> Add User</button></h3>
             </div>
-            <!-- <div class="col-xs-6 col-sm-2">
-              <h3><button class="btn btn-success btn-md btn-block" ng-click="userManagementVm.exportExcel()"><i class="fa fa-file-excel-o"></i> Export</button></h3>               
-            </div> -->
           </div>
             <div class="form-group" ng-if="isAdmin()" >
               <ul class="list-instrct">
@@ -22,25 +26,32 @@
                <li>System will accept only 100 records in a single file.</li>  
               </ul>
               <div class="row">
-                <div class="col-sm-3">
+                <div class="col-sm-2">
                   <span class="btn btn-warning fileinput-button bulk-browse">
                     <span>Upload Excel</span>
-                    <input type="file" name="doc" data-filetype="doc" file-upload="" class="ng-scope">
+                    <input type="file" name="doc" import-excel ng-model="excelData" class="ng-scope" ng-change="userManagementVm.uploadExcel(excelData)">
                   </span>
                 </div>
-                <div class="col-sm-3">
+                <div class="col-sm-offset-1 col-sm-3">
                   <custom-datepicker placeholder="*Effective From Date" name="effectiveFromDate" ng-model="dateFilter.fromDate" myid="fromdate" required></custom-datepicker>
                 </div>
                 <div class="col-sm-3">
                   <custom-datepicker placeholder="*Effective To Date" name="effectiveToDate" ng-model="dateFilter.toDate" myid="todate" required></custom-datepicker>
                 </div>
-                <div class="col-sm-offset-1 col-sm-2">
-                 <!--  <a class="btn btn-success btn-md btn-block" ng-if="isAdmin()" target="_blank">Export</a> -->
-                  <button class="btn btn-success btn-md btn-block" ng-click="userManagementVm.exportExcel()"><i class="fa fa-file-excel-o"></i> Export</button>
+                  <div class="col-sm-1 padd-right">
+                 <!--  <a class="btn btn-success btn-md" ng-if="isAdmin()" target="_blank">Export</a> -->
+                  <button class="btn btn-success btn-md btn-block" ng-click="userManagementVm.exportExcel('userdata')"><i class="fa fa-file-excel-o"></i> Export</button>
                   <export-form name="userexport"></export-form>
+                </div>
+
+                  <div class="col-sm-2">
+                 <!--  <a class="btn btn-success btn-md" ng-if="isAdmin()" target="_blank">Export</a> -->
+                  <button class="btn btn-success btn-md btn-block" ng-click="userManagementVm.exportExcel('gstinfo')"><i class="fa fa-file-excel-o"></i> Export GST</button>
+                  <export-form name="usergstexport"></export-form>
                 </div>
               </div>
             </div>
+          
 
           <legend></legend>
           {{successMessage}}
@@ -96,7 +107,7 @@
                     <span ng-if="user.role == 'customer'">Customer</span>
                     <!-- <span ng-if="user.role == 'admin'">Admin</span> -->
                     <span ng-if="user.role == 'channelpartner'">Channel Partner</span>
-                     <span ng-if="user.role == 'enterprise'">Enterprise Valuation</span>
+                     <span ng-if="user.role == 'enterprise'">Enterprise</span>
                   </td>
                   <td>
                     <span ng-if="user.userType == 'individual'">Individual</span>

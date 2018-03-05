@@ -137,10 +137,10 @@
           				<th>Name</th>
                   <th>Link</th>
           			</tr>
-          			<tr ng-repeat="kyc in bidData.kyc">
+          			<tr ng-repeat="kyc in reqDetailVm.kycList">
           				<td>{{kyc.type}}</td>
           				<td>{{kyc.name}}</td>
-                  <td><a href="{{uploadImagePrefix}}{{bidData.product.assetDir}}/{{kyc.docName}}" target="_blank">{{kyc.docName}}</a></td>
+                  <td><a href="{{uploadImagePrefix}}{{kycUploadDir}}/{{kyc.docName}}" target="_blank">{{kyc.docName}}</a></td>
           			</tr>
           		</table>
           	</td>
