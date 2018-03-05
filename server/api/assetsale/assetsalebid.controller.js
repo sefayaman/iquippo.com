@@ -1114,7 +1114,11 @@ exports.exportExcel = function(req,res){
 				val = moment(val).utcOffset('+0530').format('MM/DD/YYYY');
 			if(keyObj.type && keyObj.type == 'datetime' && val)
 				val = moment(val).utcOffset('+0530').format('hh:mm a');
-
+                        if(keyObj.key && keyObj.key === 'emdEndDate' && val)
+				val = moment(val).utcOffset('+0530').format('MM/DD/YYYY h:mm a');
+                        if(keyObj.key && keyObj.key === 'fullPaymentEndDate' && val)
+				val = moment(val).utcOffset('+0530').format('MM/DD/YYYY h:mm a');
+			
 			if(keyObj.key && (keyObj.key === 'approvedBy' || keyObj.key === 'approvalDate' || keyObj.key === 'approvalTime') && item.bidStatuses.length > 0) {
 				for(var i = item.bidStatuses.length - 1; i > 0; i--) {
 					if (item.bidStatuses[i].status === bidStatuses[7]) {
