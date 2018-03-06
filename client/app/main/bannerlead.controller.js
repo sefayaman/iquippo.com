@@ -38,13 +38,13 @@
     		vm.bannerLead.user.mobile = Auth.getCurrentUser().mobile;
     		vm.bannerLead.user.name = Auth.getCurrentUser().fname + " " + Auth.getCurrentUser().lname;
     	}
-    	console.log("vm.bannerLead",vm.bannerLead);
+
     	vm.bannerLead.country = country(vm.bannerLead.state);
     	BannerLeadSvc.save(vm.bannerLead)
-    	.then(function(){
+    	.then(function(response){
     		close();
     		$scope.loading = false;
-    		Modal.alert("Your request has been submitted successfully.");
+    		Modal.alert("Your request - " + response.ticketId + " has been submitted successfully.");
 
     	})
     	.catch(function(err){
