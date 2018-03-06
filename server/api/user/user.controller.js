@@ -54,7 +54,8 @@ var Export_Field_Mapping = {
   "Bank Name":"BKName",
   "Branch Name":"BrName",
   "GST Details Provided":"GSTUploaded",
-  "Creation Date" : "createdAt"
+  "Creation Date" : "createdAt",
+  "Availed Services" : "availedServices"
 };
 
 var Export_GST_Field_Mapping = {
@@ -1546,6 +1547,8 @@ function exportUsersData(query, req, res) {
                             val = 'No';
                     } else if (key === 'createdAt') {
                         val = Utility.toIST(_.get(item, 'createdAt', ''));
+                    } else if (key === 'availedServices') {
+                        val = Array.prototype.map.call(item.availedServices, function(item) { return item.name; }).join("-");
                     } else
                         val = _.get(item, key, "");
                     val = Utility.toCsvValue(val);
