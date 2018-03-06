@@ -44,7 +44,7 @@
     	.then(function(response){
     		close();
     		$scope.loading = false;
-    		Modal.alert("Your request has been submitted successfully - " + response.ticketId);
+    		Modal.alert("Your request - " + response.ticketId + " has been submitted successfully.");
 
     	})
     	.catch(function(err){
