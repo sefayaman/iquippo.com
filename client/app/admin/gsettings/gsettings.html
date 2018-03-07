@@ -47,6 +47,7 @@
                         <option value="legalentityTypeMaster">Legal Entity Type Master</option>
                         <option value="bankNameMaster">Bank Name Master</option>
                         <option value="iquippogst">iQuippo GST Master</option>
+                        <option value="evaluation_report">Enterprise Valuation Report</option>
                     </select>
                     <i class="caret"></i>
                 </div>
@@ -4276,6 +4277,42 @@
                                     <a href="javascript:void(0);" class="btn btn-primary btn-sm" uib-popover="Edit" popover-trigger="mouseenter" ng-click="bannerProductMappingVm.editBanner(banner)">
                                         <i class="fa fa-pencil"></i>
                                     </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="pager.maxSize" class="pagination-sm" rotate="false">  </uib-pagination>
+            </div>
+
+            <!-- iquippo Enterprise Valuation Report  -->
+            <div ng-if="gsettingVm.tabValue == 'evaluation_report'" >
+                <h4>Add Enterprise Valuation Report</h4>
+                <legend></legend>
+                <div class="text-right form-group">
+                    <button type="button" class="btn btn-success"> <i class="fa fa-download"></i> Download</button>
+                </div>
+
+                <legend></legend>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>User ID</th>
+                                <th>Enterprise ID</th>
+                                <th>Enterprise Name</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                               
+                                <td>iq1234</td>
+                                <td>e2365</td>
+                                <td>Shekhar</td>
+                                
+                                <td>
+                                    <input type="checkbox" name="" value="">
                                 </td>
                             </tr>
                         </tbody>
