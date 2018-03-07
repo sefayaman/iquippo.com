@@ -12,6 +12,15 @@
                 Your Payment has been received successfully. Your transaction reference number is <span>{{auctionPaymentResponseVm.payTransaction.ccAvenueRes.bank_ref_no}}</span>. You can now participate in the auction. 
 
             </h4>
+            <div ng-if="kitObj.registrationKit || kitObj.undertakingKit">
+               <h4>Please carry a print of the Registration Form and Bidder Undertaking form at the auction venue</h4>
+            <a href="{{uploadImagePrefix}}auction/{{kitObj.registrationKit}}" class="btn btn-primary" ng-if="kitObj.registrationKit">
+              Download Registration Form
+            </a>
+            <a href="{{uploadImagePrefix}}auction/{{kitObj.undertakingKit}}" class="btn btn-primary" ng-if="kitObj.undertakingKit">
+              Download Bidder Undertaking Form
+            </a>
+            </div>
           </div>
       </div>
       <div class="col-sm-offset-2 col-sm-8" ng-if="!auctionPaymentResponseVm.success">

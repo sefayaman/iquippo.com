@@ -59,7 +59,7 @@
       AuctionSvc.getOnFilter(filter)
         .then(function(result) {
           vm.auctions = result.items;
-          console.log("+++++---+++",vm.auctions);
+          
           vm.totalItems = result.totalItems;
           prevPage = vm.currentPage;
           if (result.items.length > 0) {
@@ -102,7 +102,7 @@
         .then(function(buffData) {
           saveAs(new Blob([s2ab(buffData)], {
             type: "application/octet-stream"
-          }), "auctions_" + new Date().getTime() + ".xlsx")
+          }), "auctions_" + new Date().getTime() + ".csv")
         });
     }
 

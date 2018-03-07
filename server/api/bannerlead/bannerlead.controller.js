@@ -52,10 +52,11 @@ exports.create = function(req,res){
   if(!retVal)
     return res.status(412).send("Missing parameter");
   var model = new Model(bodyData);
-  model.save(function(err){
-    if(err)
+  model.save(function(err, bannerLead){
+    if(err) {
       return handleError(res,err);
-    return res.status(200).send("Request saved successfully.");
+    }
+    return res.status(200).json(bannerLead);
   });
 }
 

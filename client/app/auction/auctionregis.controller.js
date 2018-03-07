@@ -140,6 +140,11 @@ function AuctionRegisCtrl($scope, $rootScope, $location, Modal, Auth,PagerSvc,KY
       }
     }
 
+    if(paymentProcess && !$scope.option.agreeOnUndertaking){
+      Modal.alert("Please accept the terms & conditions and undertaking of auction.");
+      return;
+    }
+
    if(paymentProcess && $scope.kycExist && $scope.kycUpdateNow)
       updateUser(lotData,function(){
         proceedToSubmit(paymentProcess);
@@ -244,6 +249,7 @@ function AuctionRegisCtrl($scope, $rootScope, $location, Modal, Auth,PagerSvc,KY
     var paymentObj = {};
     if($scope.option.select)
       paymentObj.paymentMode = $scope.option.select;
+    paymentObj.agreeOnUndertaking = $scope.option.agreeOnUndertaking;
     paymentObj.transactionId = result.transactionId;
     paymentObj.auctionId = dataObj.auction.auctionId;
     paymentObj.auctionName = dataObj.auction.name;
@@ -282,6 +288,7 @@ function AuctionRegisCtrl($scope, $rootScope, $location, Modal, Auth,PagerSvc,KY
       } else {
         var paymentObj = {};
         paymentObj.paymentMode = $scope.option.select;
+        paymentObj.agreeOnUndertaking = $scope.option.agreeOnUndertaking;
         paymentObj.transactionId = result.transactionId;
         paymentObj.auctionId = dataObj.auction.auctionId;
         paymentObj.auctionName = dataObj.auction.name;

@@ -7,6 +7,9 @@
     var vm = this;
     vm.tabValue = "callback";
 
+    vm.toDate = null;
+    vm.fromDate = null;
+
     //pagination variables
     var prevPage = 0;
     vm.itemsPerPage = 50;
@@ -629,6 +632,12 @@
       if(userMobileNos.length > 0 && !Auth.isAdmin())
         filter.userMobileNos = userMobileNos.join();
       
+      if(vm.fromDate)
+        filter.fromDate = vm.fromDate;
+
+      if(vm.toDate)
+        filter.toDate = vm.toDate;
+
       if (vm.tabValue == "callback")
         fileName = "Callback_";
       else if (vm.tabValue == "contactUs")
@@ -678,14 +687,12 @@
 
       ReportsSvc.exportData(filter, vm.tabValue)
         .then(function(res) {
-
             saveAs(new Blob([s2ab(res)], {
               type: "application/octet-stream"
-            }), fileName + new Date().getTime() + ".xlsx")
-          },
-          function(res) {
-            console.log(res)
-          })
+            }), fileName + new Date().getTime() + ".csv")
+          }).catch(function(excp) {
+            console.log(excp);
+          });
     }
 
     function itemsSet(filter){

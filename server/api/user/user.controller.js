@@ -1488,7 +1488,7 @@ exports.exportUsers = function(req, res) {
     _id: -1
   });//.limit(5000);
   if ( req.body.exportType === 'gstinfo') {
-      exportUsersGSTData(query, req, res);
+    exportUsersGSTData(query, req, res);
   }
   else {
       exportUsersData(query, req, res);
