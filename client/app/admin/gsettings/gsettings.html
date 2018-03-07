@@ -4286,7 +4286,7 @@
             </div>
 
             <!-- iquippo Enterprise Valuation Report  -->
-            <div ng-if="gsettingVm.tabValue == 'evaluation_report'" >
+            <div ng-if="gsettingVm.tabValue == 'evaluation_report'"  ng-controller="EnterpriseValuationReportCtrl as eValuationReportVm">
                 <h4>Add Enterprise Valuation Report</h4>
                 <legend></legend>
                 <div class="text-right form-group">
@@ -4305,14 +4305,14 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
+                            <tr ng-repeat="user in eValuationReportVm.filteredList | startFrom:(pager.currentPage - 1) * pager.itemsPerPage | limitTo:pager.itemsPerPage"">
                                
-                                <td>iq1234</td>
-                                <td>e2365</td>
-                                <td>Shekhar</td>
+                                <td>{{user.customerId}}</td>
+                                <td>{{user.enterpriseId}}</td>
+                                <td>{{user.fname}} {{user.lname}}</td>
                                 
                                 <td>
-                                    <input type="checkbox" name="" value="">
+                                    <input type="checkbox" name="user_right_{{$index}}" ng-model="user.valuationReport" ng-change="eValuationReportVm.update(user)">
                                 </td>
                             </tr>
                         </tbody>
