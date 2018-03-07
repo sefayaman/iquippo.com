@@ -595,7 +595,14 @@
                       <option ng-repeat="valuation in valuationList" value="{{valuation.name}}">{{valuation.name}}</option>
                     </select>
                   </div>
+                  
                 </div>
+                <div class="col-sm-3 form-group" ng-class="{'has-error': valReqForm.otherName.$invalid && valSubmitted}">
+                      <div class="floating-label-wrapper">
+                        <label>Others</label>
+                        <input class="form-control" type="text" name="otherName" ng-model="valuationVm.valuationReq.otherName" ng-disabled ="valuationVm.valuationReq.purpose != 'Other'" placeholder="*Other" ng-required= "valuationVm.valuationReq.purpose == 'Other'">
+                      </div>
+                    </div>
               </div>
               <button type="submit" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE'" ng-click="valuationVm.submitValuationReq(valReqForm, 'Valuation')" class="btn btn-primary pull-right">Submit</button>
               <!-- <small>

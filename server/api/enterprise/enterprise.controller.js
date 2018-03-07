@@ -1563,7 +1563,7 @@ exports.cancelRequest = function(req,res){
   var bodyData = req.body;
   if(!bodyData._id)
     return res.status(400).send("Invalid cancel request !!!");
-  if(req.user.role == 'admin')
+  if(req.user.role === 'admin')
     return cancelRequestAtQVAPL();
 
   EnterpriseValuation.findById(bodyData._id,function(err,entReq){

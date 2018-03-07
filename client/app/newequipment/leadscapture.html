@@ -1,21 +1,21 @@
 <div id="callback-modal">
     <div class="modal-header">
       <button type="button" class="close" ng-click="close()" aria-hidden="true">&times;</button>
-      <h4 class="modal-title">User Details</h4>
+      <h4 class="modal-title">Please enter your details to submit the request</h4>
     </div>
     <div class="modal-body">
       <form class="form text-left" name="leadsCaptureForm" novalidate>
       
         <div class="row">
           <div class="col-sm-8 col-sm-offset-2 form-group" ng-class="{'has-error': leadsCaptureForm.fname.$invalid && submitted }">
-            <label>Name</label>
+            <label>* Name</label>
             <input type="text" class="form-control" name="fname" ng-model="offerReq.fname" value="" placeholder="Enter Name" required>
           </div>
         </div>
         <div class="row">
           <div class="col-sm-8 col-sm-offset-2 form-group" ng-class="{'has-error': leadsCaptureForm.mobile.$invalid && submitted }">
-            <label>Mobile No.</label>
-            <input type="number" min="0" ng-minlength="10" ng-maxlength="10" class="form-control" name="mobile" ng-model="offerReq.mobile" value="" placeholder="Enter Mobile No."required>
+            <label>* Mobile No.</label>
+            <input type="number" min="0" ng-minlength="10" ng-maxlength="10" class="form-control" name="mobile" ng-model="offerReq.mobile" value="" placeholder="Enter Mobile No." required>
           </div>
         </div>
         <div class="row">

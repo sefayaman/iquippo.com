@@ -365,7 +365,7 @@
       serPath = serPath + "/export" + "?" + queryParam;
     return $http.get(serPath)
     .then(function(res){
-       saveAs(new Blob([s2ab(res.data)],{type:"application/octet-stream"}),reportType+"_"+ new Date().getTime() +".xlsx");
+       saveAs(new Blob([s2ab(res.data)],{type:"application/octet-stream"}),reportType+"_"+ new Date().getTime() +".csv");
       //return res.data
     })
     .catch(function(err){

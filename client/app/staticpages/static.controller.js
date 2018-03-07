@@ -451,7 +451,7 @@
 
       //payObj.type = "valuationreq";
       //payObj.amount = pyMaster.fees || 5000;
-      paymentTransaction.totalAmount = pyMaster.fees || 5000;
+      paymentTransaction.totalAmount = pyMaster.fees;
       //paymentTransaction.payments[paymentTransaction.payments.length] = payObj;
       paymentTransaction.product = $scope.valuationReq.product;
       paymentTransaction.user = {};

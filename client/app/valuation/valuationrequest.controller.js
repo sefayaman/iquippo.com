@@ -179,10 +179,10 @@
 
 					var payObj = {};
 
-					var pyMaster = PaymentMasterSvc.getPaymentMasterOnSvcCode("Valuation", vm.valuationReq.valuationAgency._id);
+					var pyMaster = PaymentMasterSvc.getPaymentMasterOnSvcCode(valType, vm.valuationReq.valuationAgency._id);
 					// payObj.type = "valuationreq";
 					// payObj.amount = pyMaster.fees;
-					paymentTransaction.totalAmount = pyMaster.fees;
+					paymentTransaction.totalAmount = pyMaster.fees || 0;
 					//paymentTransaction.payments[paymentTransaction.payments.length] = payObj;
 
 					paymentTransaction.product = {};

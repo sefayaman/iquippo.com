@@ -17,6 +17,7 @@ function ValuationListingCtrl($scope,$window,$stateParams,$state,Modal,Auth,Page
 
 	  vm.fireCommand = fireCommand;
 	  vm.openInvoiceModal = openInvoiceModal;
+	  vm.cancelledHandler = cancelledHandler;
 	 //vm.onValuationReqTypeChange = onValuationReqTypeChange;
 	 //vm.updateSelection = updateSelection;
 	 vm.exportExcel = exportExcel;
@@ -137,6 +138,27 @@ function ValuationListingCtrl($scope,$window,$stateParams,$state,Modal,Auth,Page
         if(action == 'remove' && selectedIds.indexOf(id) != -1)
           selectedIds.splice(selectedIds.indexOf(id),1);
     }*/
+
+    function cancelledHandler(valuationReq,toStatus) {
+		Modal.confirm("Do you really want to Cancel this Valuation/Inspection Request?",function(ret){
+	    if(ret == "yes")
+	        proceedToCancel(valuationReq,toStatus);
+	    });
+    }
+
+    function proceedToCancel(valReq,toStatus){
+      $rootScope.loading = true;
+      ValuationSvc.cancelIndValuation(valReq)
+      .then(function(res){
+        $rootScope.loading = false;
+        fireCommand(true);
+        Modal.alert("Request cancelled succesfully", true);
+      })
+      .catch(function(err){
+        $rootScope.loading = false;
+        Modal.alert("There are some issue in request cancellation.Please try again or contact support team.");
+      });
+    }
 
     function updateStatus(valuationReq,toStatus,intermediateStatus){
     	if(!toStatus)

@@ -11,10 +11,10 @@ var async = require('async');
 var validator = require('validator');
 
 // Get list of services
-exports.getAll = function(req, res, next) {
+exports.getAll = function (req, res, next) {
   var filter = {};
   filter['deleted'] = false;
-  ManpowerUser.find(filter, function(err, users) {
+  ManpowerUser.find(filter, function (err, users) {
     if (err) {
       return handleError(res, err);
     }
@@ -22,20 +22,20 @@ exports.getAll = function(req, res, next) {
   });
 };
 
-exports.renderXlsx = function(req, res, next) {
+exports.renderXlsx = function (req, res, next) {
   var filter = {};
   filter['deleted'] = false;
-  ManpowerUser.find(filter, function(err, users) {
+  ManpowerUser.find(filter).lean().exec(function (err, users) {
     if (err) {
       return handleError(res, err);
     }
 
     var xlsxHeaders = ['Name', 'Mobile Number', 'Email id', 'Product', 'Status']
 
-    var xlsxData = [];
+    var csvData = [];
     var json = {};
     var arr = [];
-    users.forEach(function(x) {
+    users.forEach(function (x) {
       json = {};
       arr = [];
       arr.push((x.user.fname || '') + ' ' + (x.user.mname || '') + ' ' + (x.user.lname || ''),
@@ -47,44 +47,47 @@ exports.renderXlsx = function(req, res, next) {
       for (var i = 0; i < xlsxHeaders.length; i++) {
         json[xlsxHeaders[i]] = arr[i];
       }
-      xlsxData.push(json);
+      csvData.push(json);
     });
 
-    res.xls('manpowerData.xlsx', xlsxData);
-    //res.end();
+    try {
+      Utility.convertToCSV(res, csvData, 'manpowerData');
+    } catch (excp) {
+      throw excp;
+    }
 
   });
 };
 
-exports.delete = function(req,res,next){
+exports.delete = function (req, res, next) {
   var id = req.params && req.params.id;
-  if(!id){
-    return res.send(404).json({res:'No id sent for delete'});
+  if (!id) {
+    return res.send(404).json({ res: 'No id sent for delete' });
   }
 
-  if(!validator.isMongoId(id))
-    return res.send(400).json({res:'Invalid mongo id'});
+  if (!validator.isMongoId(id))
+    return res.send(400).json({ res: 'Invalid mongo id' });
 
   var updateData = {
-    deleted : true,
-    status:false
+    deleted: true,
+    status: false
   }
 
-  ManpowerUser.findByIdAndUpdate(id,{$set:updateData}).exec(updateManPower);
-    function updateManPower(err,doc){
-      if(err){
-        if(err || !doc){
-          return res.send(500).json({res:'Unable to update...Please try again after some time'});
-        }   
+  ManpowerUser.findByIdAndUpdate(id, { $set: updateData }).exec(updateManPower);
+  function updateManPower(err, doc) {
+    if (err) {
+      if (err || !doc) {
+        return res.send(500).json({ res: 'Unable to update...Please try again after some time' });
       }
-    User.findByIdAndUpdate(doc.user.userId,{$set:{status:{isManpower : false}}}).exec(updateUser);
+    }
+    User.findByIdAndUpdate(doc.user.userId, { $set: { status: { isManpower: false } } }).exec(updateUser);
 
-    function updateUser(err,doc){
-      if(err || !doc){
-        return res.send(500).json({res:'Unable to update...Please try again after some time'});
+    function updateUser(err, doc) {
+      if (err || !doc) {
+        return res.send(500).json({ res: 'Unable to update...Please try again after some time' });
       }
 
-      return res.json({res:'Deleted Successfully...'});
+      return res.json({ res: 'Deleted Successfully...' });
     }
   }
 
@@ -101,12 +104,12 @@ exports.delete = function(req,res,next){
   });
 };*/
 
-exports.statusWiseCount = function(req, res) {
+exports.statusWiseCount = function (req, res) {
   var filter = {};
   filter['deleted'] = false;
   ManpowerUser.aggregate({
-      $match: filter
-    }, {
+    $match: filter
+  }, {
       $group: {
         _id: '$status',
         count: {
@@ -118,7 +121,7 @@ exports.statusWiseCount = function(req, res) {
         count: -1
       }
     },
-    function(err, result) {
+    function (err, result) {
       if (err) return handleError(err);
       res.setHeader('Cache-Control', 'private, max-age=2592000');
       return res.status(200).json(result);
@@ -126,10 +129,10 @@ exports.statusWiseCount = function(req, res) {
   );
 }
 
-exports.getOnId = function(req, res) {
+exports.getOnId = function (req, res) {
   ManpowerUser.findOne({
     'user.userId': req.params.id
-  }, function(err, data) {
+  }, function (err, data) {
     if (err) {
       return handleError(res, err);
     }
@@ -146,8 +149,8 @@ exports.getOnId = function(req, res) {
 // Creates a new service in the DB.
 //var ADMIN_EMAIL = "bharat.hinduja@bharatconnect.com";
 
-exports.create = function(req, res) {
-  ManpowerUser.create(req.body, function(err, user) {
+exports.create = function (req, res) {
+  ManpowerUser.create(req.body, function (err, user) {
     if (err) {
       return handleError(res, err);
     }
@@ -156,12 +159,12 @@ exports.create = function(req, res) {
 };
 
 // Updates an existing user in the DB.
-exports.update = function(req, res) {
+exports.update = function (req, res) {
   if (req.body._id) {
     delete req.body._id;
   }
   req.body.updatedAt = new Date();
-  ManpowerUser.findById(req.params.id, function(err, user) {
+  ManpowerUser.findById(req.params.id, function (err, user) {
     if (err) {
       return handleError(res, err);
     }
@@ -171,100 +174,100 @@ exports.update = function(req, res) {
     ManpowerUser.update({
       _id: req.params.id
     }, {
-      $set: req.body
-    }, function(err) {
-      if (err) {
-        return handleError(res, err);
-      }
-      updateUser(req, res);
+        $set: req.body
+      }, function (err) {
+        if (err) {
+          return handleError(res, err);
+        }
+        updateUser(req, res);
 
-      return res.status(200).json(req.body);
-    });
+        return res.status(200).json(req.body);
+      });
   });
 };
 
-exports.bulkUpdate = function(req,res){
-  if(!req.body || !req.body.ids)
-    return res.status(404).json({res:'Nothing to update'}); 
-  
+exports.bulkUpdate = function (req, res) {
+  if (!req.body || !req.body.ids)
+    return res.status(404).json({ res: 'Nothing to update' });
+
   var updateIds;
-  
-  if(Array.isArray(req.body.ids)){
+
+  if (Array.isArray(req.body.ids)) {
     updateIds = req.body.ids;
-  }else{
+  } else {
     updateIds = req.body.ids.split(',');
   }
 
-  if(!updateIds.length)
-    return res.status(404).json({res:'Nothing to update'}); 
+  if (!updateIds.length)
+    return res.status(404).json({ res: 'Nothing to update' });
 
   var updateStatus = req.body.status || false;
   var updatedBy = req.body && req.body.updatedBy;
   var totalRecords = updateIds.length;
-  
+
   var successIds = [],
     failed_ids = [],
     statusMap = {};
-  
+
   var searchFilter = {
-    '_id' : {
-      '$in' : updateIds
+    '_id': {
+      '$in': updateIds
     },
-    deleted : false
+    deleted: false
   };
 
-  ManpowerUser.find(searchFilter,function(err,docs){
-    if(err || !docs){
+  ManpowerUser.find(searchFilter, function (err, docs) {
+    if (err || !docs) {
       console.log(err);
-      return res.status(500).json({res:'Error while fetching records...Please try again'});
+      return res.status(500).json({ res: 'Error while fetching records...Please try again' });
     }
 
-    if(!docs.length)
-      return res.status(404).json({res:'No Records found to update'});
+    if (!docs.length)
+      return res.status(404).json({ res: 'No Records found to update' });
 
-    docs.forEach(function(x){
+    docs.forEach(function (x) {
       statusMap[x._id] = x.status;
     })
 
-    updateIds = updateIds.filter(function(x){
-      if(statusMap[x] !== updateStatus)
+    updateIds = updateIds.filter(function (x) {
+      if (statusMap[x] !== updateStatus)
         return x;
     })
 
-    if(!updateIds.length)
-      return res.status(200).json({res:'Nothing to update.Updated Status is same'}); 
+    if (!updateIds.length)
+      return res.status(200).json({ res: 'Nothing to update.Updated Status is same' });
 
 
-    async.eachLimit(updateIds,10,intialize,finalize); 
+    async.eachLimit(updateIds, 10, intialize, finalize);
   })
 
 
-  function finalize(err){
-    if(err){
+  function finalize(err) {
+    if (err) {
       console.log(err);
-      return res.status(500).json({res:'Error while updating...Please try again'});
+      return res.status(500).json({ res: 'Error while updating...Please try again' });
     }
 
-    res.json({res:successIds.length + ' records updated from ' + totalRecords + ' records'});
+    res.json({ res: successIds.length + ' records updated from ' + totalRecords + ' records' });
   }
 
-  function intialize(id,cb){
-    ManpowerUser.findByIdAndUpdate(id,{$set:{status:updateStatus,updatedBy : updatedBy,updatedAt:new Date()}}).exec(updateManPower);
-    function updateManPower(err,doc){
-      if(err || !doc){
+  function intialize(id, cb) {
+    ManpowerUser.findByIdAndUpdate(id, { $set: { status: updateStatus, updatedBy: updatedBy, updatedAt: new Date() } }).exec(updateManPower);
+    function updateManPower(err, doc) {
+      if (err || !doc) {
         failed_ids.push(id);
-        return cb(); 
+        return cb();
       }
 
-      User.findByIdAndUpdate(doc.user.userId,{$set:{status:updateStatus,isManpower :updateStatus,updatedAt : new Date()}}).exec(updateUserCollec);
+      User.findByIdAndUpdate(doc.user.userId, { $set: { status: updateStatus, isManpower: updateStatus, updatedAt: new Date() } }).exec(updateUserCollec);
 
-      function updateUserCollec(err,userDoc){
-        if(err || !userDoc){
+      function updateUserCollec(err, userDoc) {
+        if (err || !userDoc) {
           failed_ids.push(id);
           return cb();
         }
-        
-        if(doc.status !== req.body.status)
+
+        if (doc.status !== req.body.status)
           successIds.push(id);
 
         return cb();
@@ -282,7 +285,7 @@ function updateUser(req, res) {
   var userId = req.body.user.userId
   var dataObj = {};
   dataObj.updatedAt = new Date();
-  User.findById(userId, function(err, user) {
+  User.findById(userId, function (err, user) {
     if (err) {
       return handleError(res, err);
     }
@@ -312,16 +315,16 @@ function updateUser(req, res) {
     User.update({
       _id: userId
     }, {
-      $set: dataObj
-    }, function(err, userObj) {
-      if (err) {
-        return handleError(res, err);
-      }
-    });
+        $set: dataObj
+      }, function (err, userObj) {
+        if (err) {
+          return handleError(res, err);
+        }
+      });
   });
 }
 // Get concat list
-exports.getConcatCatSubCat = function(req, res) {
+exports.getConcatCatSubCat = function (req, res) {
   var filter = {};
   var arr = [];
 
@@ -344,7 +347,7 @@ exports.getConcatCatSubCat = function(req, res) {
   //console.log("Filter###", filter);
   var query = SubCategory.find(filter);
   query.exec(
-    function(err, categories) {
+    function (err, categories) {
       if (err) {
         return handleError(res, err);
       }
@@ -354,7 +357,7 @@ exports.getConcatCatSubCat = function(req, res) {
 };
 
 //search based on service type
-exports.getSearchedUser = function(req, res) {
+exports.getSearchedUser = function (req, res) {
   var searchStrReg = new RegExp(req.body.searchstr, 'i');
   var filter = {};
   if (req.body.status)
@@ -458,7 +461,7 @@ exports.getSearchedUser = function(req, res) {
 
   var query = ManpowerUser.find(filter).sort(sortObj);
   query.exec(
-    function(err, users) {
+    function (err, users) {
       if (err) {
         return handleError(res, err);
       }

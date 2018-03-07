@@ -3,7 +3,7 @@
 'use strict';
 angular.module('sreizaoApp').controller('OfflinePaymentCtrl',OfflinePaymentCtrl);
 
-function OfflinePaymentCtrl($scope,$rootScope,Modal,$stateParams,$state,$uibModalInstance, ValuationSvc, PaymentSvc,Auth) {
+function OfflinePaymentCtrl($scope,$rootScope,Modal,$stateParams,$state,$uibModalInstance, ValuationSvc,PaymentSvc,Auth,userRegForAuctionSvc) {
    
   var vm = this;
   vm.dataModel = {};
@@ -75,7 +75,11 @@ function OfflinePaymentCtrl($scope,$rootScope,Modal,$stateParams,$state,$uibModa
         vm.dataModel = {};
         $scope.submitted = false;
         $rootScope.loading = false;
-        if(!$scope.iValuationFlag)
+       /* if($scope.generateKitCallback)
+          $scope.generateKitCallback(vm.dataModel);
+        else
+          $rootScope.$broadcast('refreshPaymentHistroyList');*/
+		    if(!$scope.iValuationFlag)
           $rootScope.$broadcast('refreshPaymentHistroyList');
         else {
           ValuationSvc.updateStatus($scope.valuation, IndividualValuationStatuses[1]);
@@ -83,13 +87,17 @@ function OfflinePaymentCtrl($scope,$rootScope,Modal,$stateParams,$state,$uibModa
           if($scope.callback)
             $scope.callback(true);
         }
+        generateKit(vm.dataModel);
+        vm.dataModel = {};
         Modal.alert(res.message);
         closeDialog();
     })
     .catch(function(err){
-    if(err.data)
-      Modal.alert(err.data); 
-    $rootScope.loading = false;
+      if(err.data)
+        Modal.alert(err.data); 
+      $rootScope.loading = false;
+      userRegForAuctionSvc.generateKit(vm.dataModel);
+
     });
   }
 
@@ -102,7 +110,23 @@ function OfflinePaymentCtrl($scope,$rootScope,Modal,$stateParams,$state,$uibModa
     .catch(function(err){
       if(err)
         Modal.alert("Error occured in integration");
-    }) 
+    });
+  }
+
+  function generateKit(tns){
+    if(!tns)
+      return;
+   $rootScope.loading = true;
+    userRegForAuctionSvc.generateKit(tns)
+    .then(function(res){
+      $rootScope.loading = false;
+       $rootScope.$broadcast('refreshPaymentHistroyList');
+    })
+    .catch(function(err){
+      $rootScope.$broadcast('refreshPaymentHistroyList');
+      $rootScope.loading = false;
+      console.log("Error in kit generation",err);
+    });
   }
 
   function closeDialog() {

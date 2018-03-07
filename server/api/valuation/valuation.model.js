@@ -32,6 +32,11 @@ var ValuationRequestSchema = new Schema({
   scheduledTime:String,
   payOption:String,
   /*Admin update field*/
+
+  cancelled:{type:Boolean,default:false},
+  //cancellationFee:Number,
+  cancelledBy:{},
+
   invoiceNo:String,
   reportDate:Date,
 

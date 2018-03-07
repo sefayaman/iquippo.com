@@ -3,6 +3,7 @@
 var express = require('express');
 var auth = require('../../auth/auth.service');
 var controller = require('./common.controller');
+var bannerCtrl = require('./banner.controller');
 var valuationPurposeCtrl = require('./valuationpurpose.controller');
 var servicefeeCtrl = require('./servicefee.controller');
 var servicetaxCtrl = require('./servicetax.controller');
@@ -81,11 +82,11 @@ router.post('/manufacturer/save', controller.createManufacturer);
 router.put('/manufacturer/:id', controller.updateManufacturer);
 router.delete('/manufacturer/:id', controller.destroyManufacturer);
 
-router.get('/banner', controller.getAllBanner);
-router.post('/banner', controller.createBanner);
-router.put('/banner/:id', controller.updateBanner);
-router.delete('/banner/:id', controller.deleteBanner);
-router.post('/banner/onfilter', controller.getBannerOnFilter);
+router.get('/banner', bannerCtrl.get);
+router.post('/banner', bannerCtrl.createBanner);
+router.put('/banner/:id', bannerCtrl.updateBanner);
+router.delete('/banner/:id', bannerCtrl.deleteBanner);
+//router.post('/banner/onfilter', controller.getBannerOnFilter);
 router.post('/importLocation',controller.importLocation);
 
 router.get('/valuationpurpose', valuationPurposeCtrl.get);

@@ -3,9 +3,12 @@
   angular.module('report').controller('ReportsCtrl', ReportsCtrl);
 
   //controller function
-  function ReportsCtrl($scope, $rootScope, $http, Auth, ReportsSvc,OfferSvc,NewEquipmentSvc,$window, $uibModal, userSvc, ValuationSvc, userRegForAuctionSvc,commonSvc) {
+  function ReportsCtrl($scope, $rootScope, $http, Auth, ReportsSvc,OfferSvc,NewEquipmentSvc,$window, $uibModal, userSvc, ValuationSvc, userRegForAuctionSvc,commonSvc,BannerLeadSvc) {
     var vm = this;
     vm.tabValue = "callback";
+
+    vm.toDate = null;
+    vm.fromDate = null;
 
     //pagination variables
     var prevPage = 0;
@@ -197,6 +200,9 @@
           break;
         case 'bookademo':
           getReportData(filter, 'bookademo');
+          break;
+          case 'bannerleads':
+          getReportData(filter, 'bannerleads');
           break;
       }
     }
@@ -591,6 +597,18 @@
                 last_id = vm.bookademoListing[vm.bookademoListing.length - 1]._id;
               }
             });
+          case 'bannerleads':
+          resetCount();
+          BannerLeadSvc.get(filter)
+            .then(function(result) {
+              vm.bannerLeads = result.items;
+              vm.totalItems = result.totalItems;
+              prevPage = vm.currentPage;
+              if (vm.bannerLeads.length > 0) {
+                first_id = vm.bannerLeads[0]._id;
+                last_id = vm.bannerLeads[vm.bannerLeads.length - 1]._id;
+              }
+            });
           break;
       }
     }
@@ -614,6 +632,12 @@
       if(userMobileNos.length > 0 && !Auth.isAdmin())
         filter.userMobileNos = userMobileNos.join();
       
+      if(vm.fromDate)
+        filter.fromDate = vm.fromDate;
+
+      if(vm.toDate)
+        filter.toDate = vm.toDate;
+
       if (vm.tabValue == "callback")
         fileName = "Callback_";
       else if (vm.tabValue == "contactUs")
@@ -653,16 +677,22 @@
        //else
         //fileName = "AdditionalServices_";
       //filter.role=Auth.getCurrentUser().role;
+       if(['bannerleads'].indexOf(vm.tabValue) !== -1){
+         var exportObj = {filter:filter};
+          exportObj.method = "GET";
+          exportObj.action = "api/bannerlead/export";
+          $scope.$broadcast("submit",exportObj); 
+          return;
+      }
+
       ReportsSvc.exportData(filter, vm.tabValue)
         .then(function(res) {
-
             saveAs(new Blob([s2ab(res)], {
               type: "application/octet-stream"
-            }), fileName + new Date().getTime() + ".xlsx")
-          },
-          function(res) {
-            console.log(res)
-          })
+            }), fileName + new Date().getTime() + ".csv")
+          }).catch(function(excp) {
+            console.log(excp);
+          });
     }
 
     function itemsSet(filter){

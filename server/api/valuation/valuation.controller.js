@@ -1,4 +1,4 @@
-  'use strict';
+'use strict';
 
 var _ = require('lodash');
 var request = require('request');
@@ -22,18 +22,18 @@ var fieldsConfig = require('./fieldsConfig');
 var IndividualValuationStatuses = ['Request Initiated','Payment Completed','Request Failed','Request Submitted','Invoice Generated','Report Failed','Report Submitted','Completed', 'Cancelled'];
 
 // Get list of Valuation
-exports.getAll = function(req, res) {
+exports.getAll = function (req, res) {
   ValuationReq.find(function (err, valuations) {
-    if(err) { return handleError(res, err); }
+    if (err) { return handleError(res, err); }
     return res.status(200).json(valuations);
   });
 };
 
 // Get a single valuation
-exports.getOnId = function(req, res) {
+exports.getOnId = function (req, res) {
   ValuationReq.findById(req.params.id, function (err, valuation) {
-    if(err) { return handleError(res, err); }
-    if(!valuation) { return res.status(404).send('Not Found'); }
+    if (err) { return handleError(res, err); }
+    if (!valuation) { return res.status(404).send('Not Found'); }
     return res.json(valuation);
   });
 };
@@ -90,12 +90,12 @@ function createValuationReq(req,res) {
 }
 
 //search based on filter
-exports.getOnFilter = function(req, res) {
+exports.getOnFilter = function (req, res) {
 
   var filter = {};
   var orFilter = [];
-  if(req.body.userMobileNos)
-    filter['user.mobile'] = {$in:req.body.userMobileNos};
+  if (req.body.userMobileNos)
+    filter['user.mobile'] = { $in: req.body.userMobileNos };
 
   /*if(req.body.searchstr){
      var term = new RegExp(req.body.searchstr, 'i');
@@ -120,22 +120,22 @@ exports.getOnFilter = function(req, res) {
     }
   }
 
-  if(orFilter.length > 0){
+  if (orFilter.length > 0) {
     filter['$or'] = orFilter;
   }
 
-  if(req.body.userId){
+  if (req.body.userId) {
     filter['user._id'] = req.body.userId;
   }
-  if(req.body.sellerId){
+  if (req.body.sellerId) {
     filter['seller._id'] = req.body.sellerId;
-    filter['user._id'] = {$ne:req.body.sellerId};
+    filter['user._id'] = { $ne: req.body.sellerId };
   }
 
-  if(req.body.statuses)
-    filter['status'] = {$in:req.body.statuses};
+  if (req.body.statuses)
+    filter['status'] = { $in: req.body.statuses };
 
-  if(req.body.partnerId)
+  if (req.body.partnerId)
     filter['valuationAgency._id'] = req.body.partnerId;
 
   if(req.body.tid)
@@ -218,18 +218,93 @@ function paginatedResult(req, res, modelRef, filter) {
 }
 
 // Updates an existing valuation in the DB.
-exports.update = function(req, res) {
-  if(req.body._id) { delete req.body._id; }
+exports.update = function (req, res) {
+  if (req.body._id) { delete req.body._id; }
   req.body.updatedAt = new Date();
   ValuationReq.findById(req.params.id, function (err, valuation) {
     if (err) { return handleError(res, err); }
-    if(!valuation) { return res.status(404).send('Not Found'); }
-     ValuationReq.update({_id:req.params.id},{$set:req.body},function(err){
-        if (err) { return handleError(res, err); }
-        return res.status(200).json(req.body);
+    if (!valuation) { return res.status(404).send('Not Found'); }
+    ValuationReq.update({ _id: req.params.id }, { $set: req.body }, function (err) {
+      if (err) { return handleError(res, err); }
+      return res.status(200).json(req.body);
     });
   });
 };
+
+exports.cancelRequest = function(req,res){
+  var bodyData = req.body;
+  if(!bodyData._id)
+    return res.status(400).send("Invalid cancel request !!!");
+  if(req.user.role === 'admin')
+    return cancelRequestAtQVAPL();
+
+  // ValuationReq.findById(bodyData._id,function(err,entReq){
+  //   if(err) return handleError(res, err);
+  //   if(!entReq)
+  //     return res.status(404).send("Valuation request not found !!!");
+  //   if(entReq.enterprise.enterpriseId === req.user.enterpriseId)
+  //     cancelRequestAtQVAPL();
+  //   else
+  //     return res.status(401).send("Invalid cancel request !!!");
+  // });
+
+  function cancelRequestAtQVAPL(){
+    if(!bodyData.jobId || bodyData.cancelled)
+      return update();
+
+    var serverData = {};
+    serverData.uniqueControlNo = bodyData.uniqueControlNo;
+    serverData.jobId = bodyData.jobId;
+    //serverData.cancellationFee = bodyData.cancellationFee || 0; 
+    request({
+        url: config.qpvalURL + "?type=cancel",
+        method: "POST",
+        json: true, 
+        body: [serverData]
+    }, function (error, response, body){
+      if(error)
+        return res.status(412).send("Unable to cancel request.Please contact support team");  
+      if(response.statusCode == 200 && response.body.length && response.body[0] && response.body[0].success === 'true'){
+          update();
+      }else
+        return res.status(412).send("Unable to cancel request.Please contact support team");
+    });
+  }
+
+  function update(){
+    ValuationReq.findById(bodyData._id,function(err,result){
+      //var updateData = {};
+      result.cancelled = true;
+      //updateData.cancellationFee = bodyData.cancellationFee || 0; 
+      result.cancelledBy = {
+        userId:req.user._id,
+        name:req.user.fname || "" + " " + req.user.lname || "",
+        email:req.user.email,
+        mobile:req.user.mobile,
+        createdAt : new Date() 
+      }
+      result.status = IndividualValuationStatuses[8];
+      var stObj = {};
+      stObj.status = IndividualValuationStatuses[8];
+      stObj.createdAt = new Date();
+      stObj.userId = req.user._id;
+      stObj.name = req.user.fname + " " + req.user.lname;
+      stObj.mobile = req.user.mobile;
+      stObj.email = req.user.email;
+      if(!result.statuses)
+        result.statuses = [];
+      result.statuses[result.statuses.length] = stObj;
+      result.updatedAt = new Date();
+      delete result._id;
+      ValuationReq.update({_id:bodyData._id},{$set:result},function(err,retVal){
+        if(err) return handleError(res, err);
+        return res.status(200).send("Valuation request cancelled successfully !!!");
+      });
+    });
+  }
+
+}
+
 //generate invoice
 exports.generateInvoice = function(req,res){
   var ivNo = req.params.ivNo;
@@ -316,12 +391,12 @@ function generateInvoice(req,res,indvReq){
 }
 
 // Deletes a valuation from the DB.
-exports.destroy = function(req, res) {
+exports.destroy = function (req, res) {
   ValuationReq.findById(req.params.id, function (err, valuation) {
-    if(err) { return handleError(res, err); }
-    if(!valuation) { return res.status(404).send('Not Found'); }
-    valuation.remove(function(err) {
-      if(err) { return handleError(res, err); }
+    if (err) { return handleError(res, err); }
+    if (!valuation) { return res.status(404).send('Not Found'); }
+    valuation.remove(function (err) {
+      if (err) { return handleError(res, err); }
       return res.status(204).send('No Content');
     });
   });
@@ -670,6 +745,7 @@ function valiadeDataType(val,type){
   }
   return ret;
 }
+
 function handleError(res, err) {
   return res.status(500).send(err);
 }

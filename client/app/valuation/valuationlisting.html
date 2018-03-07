@@ -105,7 +105,7 @@
 
                   <a class="btn btn-default btn-md" ng-if="valuationListingVm.validateAction(valuation,'STATUSCOMPLETED')" ng-click="valuationListingVm.updateStatus(valuation, IndividualValuationStatuses[7])" uib-popover="Completed" popover-trigger="mouseenter"><i class="fa fa-check"></i></a>
 
-                  <a class="btn btn-info btn-md" href="javascript:void(0);" ng-if="isAdmin()" ng-click="valuationListingVm.updateStatus(valuation, IndividualValuationStatuses[8])" uib-popover="Cancel" popover-trigger="mouseenter"><i class="fa fa-close"></i> </a>
+                  <a class="btn btn-info btn-md" href="javascript:void(0);" ng-if="isAdmin()" ng-click="valuationListingVm.cancelledHandler(valuation, IndividualValuationStatuses[8])" uib-popover="Cancel" popover-trigger="mouseenter"><i class="fa fa-close"></i> </a>
                 </td>
                
                </tr>

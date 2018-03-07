@@ -706,21 +706,26 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
   }
 
    angular.module('admin').factory("BannerSvc",BannerSvc);
-  function BannerSvc($http,$q){
+  function BannerSvc($http,$q,$httpParamSerializer){
     var bannerService = {};
     var path = "/api/common/banner";
     var HomeBannerCache = [];
     
-    bannerService.getAll = getAll;
+    bannerService.get = get;
     bannerService.save = save;
     bannerService.update = update;
     bannerService.deleteBanner = deleteBanner;
     bannerService.getHomeBanner = getHomeBanner;
     bannerService.getBannerOnId =getBannerOnId;
     
-    function getAll(){
-
-        return $http.get(path)
+    function get(filter){
+      var serPath = path;
+        var queryParam = "";
+        if(filter && Object.keys(filter).length)
+          queryParam = $httpParamSerializer(filter)
+        if(queryParam)
+          serPath = path + "?" + queryParam;
+        return $http.get(serPath)
         .then(function(res){
           return res.data;
         })
@@ -737,7 +742,7 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
         }else{
           var filter = {};
           filter.valid = 'y';
-          $http.post(path + "/onfilter",filter)
+          $http.get(path + "?valid=y",filter)
           .then(function(res){
             var resLen = res.data.length;
             HomeBannerCache = res.data;

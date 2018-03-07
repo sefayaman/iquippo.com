@@ -29,31 +29,31 @@
                     <!-- <li ng-if="isAdmin()">
                         <a href="/dashboard"><i class="fa fa-dashboard"></i> Dashboard</a>
                     </li> -->
-                    <li >
-                        <a href="/productlisting"><i class="fa fa-list"></i>    
-                            Product Listing</a>
+                    <li class="dropdown">
+                      <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-product-hunt"></i> Product </a>
+                        <ul class="dropdown-menu" role="menu">     
+                            <li role="menuitem">
+                                <a href="/productlisting"><i class="fa fa-list"></i> Product Listing</a>
+                            </li>
+                            <li role="menuitem"> 
+                                <a href="/product" ng-show="isLoggedIn()"><i class="fa fa-upload"></i>  Product Upload</a>
+                            </li>
+                            <li role="menuitem">
+                                <a href="/uploadnewequipment" ng-show="isLoggedIn()"><i class="fa fa-upload"></i>  New Equipment Upload</a>
+                            </li>
+                            <li role="menuitem">
+                                <a href="/newequipmentlisting"><i class="fa fa-list"></i>    
+                                    New Equipment Listing</a>
+                            </li>                          
+
+                        </ul>
                     </li>
-                    <li >
-                        <a href="/sparelisting"><i class="fa fa-list"></i>    
-                            Spare Listing</a>
-                    </li>           
+                           
                     <!-- <li >
                         <a href="/yardlisting" ng-show="isLoggedIn()"><i class="fa fa-list"></i>    
                             Yard Listing</a>
-                    </li>  -->        
-                    <li>
-                        <a href="/product" ng-show="isLoggedIn()"><i class="fa fa-upload"></i>  Product Upload</a>
-                    </li>
-                    <li>
-                        <a href="/uploadnewequipment" ng-show="isLoggedIn()"><i class="fa fa-upload"></i>  New Equipment Upload</a>
-                    </li>
-                    <li >
-                        <a href="/newequipmentlisting"><i class="fa fa-list"></i>    
-                            New Equipment Listing</a>
-                    </li>
-                    <li>
-                        <a href="/spareupload" ng-show="isLoggedIn()"><i class="fa fa-upload"></i>  Spare Upload</a>
-                    </li>
+                    </li>  -->  
+                    
                     <!-- <li >
                         <a href="/yardupload" ng-show="isLoggedIn()"><i class="fa fa-upload"></i>    
                             Yard &amp; Workshop Upload</a>
@@ -81,6 +81,15 @@
                     <li ng-if="isFAgencyPartner()">
                         <a href="/assetsale/fulfilmentagency?t=1"><i class="fa fa-gavel"></i> TRADE DETAILS</a>
                     </li>
+                    <!-- <li ng-if="isValuationPartner()">
+                        <a href="/valuationrequests/valuationpartner"><i class="fa fa-tags"></i> Valuation Request</a>
+                    </li>
+                    <li>
+                        <a href="/valuationrequests/myrequest"><i class="fa fa-tags"></i> My Valuation Request</a>
+                    </li> -->
+                    <li>
+                        <a href="/valuationrequests"><i class="fa fa-tags"></i>Valuation Request</a>
+                    </li>
                    <!--  <li ng-if="!isFAgencyPartner() && !isAdmin()">
                         <a href="/assetsale/seller"><i class="fa fa-gavel"></i> Asset Sale</a>
                     </li> -->
@@ -90,14 +99,7 @@
                     <li ng-if="isAdmin()">
                         <a href="javascript:void(0);"><i class="fa fa-user"></i>About Us</a>
                     </li>-->
-                     <li ng-if="isAdmin()">
-                        <a href="/classifiedadlisting"><i class="fa fa-newspaper-o"></i>  Classified Ad</a>
-                    </li>
-
-                    <li>
-                        <a ng-if="liveOrUatFlag" ng-href="https://auctionsoftwaremarketplace.com:3007/buyer/{{getCurrentUser()._id}}" target="_blank"><i class="fa fa-gavel"></i> Auction Dashboard</a>
-                        <a ng-if="!liveOrUatFlag" ng-href="https://auctions.iquippo.com/buyer/{{getCurrentUser()._id}}" target="_blank"><i class="fa fa-gavel"></i> Auction Dashboard</a>
-                    </li>
+                   
                      <!-- <li ng-if="isAdmin()">
                         <a href="/classifiedadlisting"><i class="fa fa-history"></i>History</a>
                     </li> -->
@@ -105,69 +107,83 @@
                         <a href="/services"><i class="fa fa-users"></i> Services</a>
                          
                     </li>  -->
-                    <li ng-if="isAdmin()">
-                        <a href="/emailer"><i class="fa fa-envelope-o"></i>
-                            Emailer</a>
-                         
-                    </li>
-                     
-                    <li ng-if="isAdmin()">
-                        <a href="/policies"><i class="fa fa-pencil-square-o"></i>
-                            General Editor</a>
-                         
-                    </li>
+                   
 
+                    
+                    <li>
+                        <a ng-if="liveOrUatFlag" ng-href="https://auctionsoftwaremarketplace.com:3007/buyer/{{getCurrentUser()._id}}" target="_blank"><i class="fa fa-gavel"></i> Auction Dashboard</a>
+                        <a ng-if="!liveOrUatFlag" ng-href="https://auctions.iquippo.com/buyer/{{getCurrentUser()._id}}" target="_blank"><i class="fa fa-gavel"></i> Auction Dashboard</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/auctionpaymenthistory"><i class="fa fa-cc"></i> Auction Payment History</a>
+                    </li>  
+                    
+                    
+                    <!-- <li ng-if="isAuctionPartner() || isAdmin()">
+                        <a href="/auctionregreport"><i class="fa fa-gavel"></i>Auction Registration Report</a>
+                    </li> -->
+                    
+                    <li>
+                        <a href="/paymenthistory"><i class="fa fa-cc"></i> Payment History</a>
+                    </li> 
                     <li ng-if="isAdmin()">
                         <a href="/gsettings"><i class="fa fa-cogs"></i>
                             General Settings</a>
                          
                     </li>
-                    <li ng-if="isAdmin()">
-                        <a href="/pricetrend"><i class="fa fa-inr"></i>
-                            Price Trend</a>
-                         
-                    </li>
-                     <li ng-if="isAdmin()">
-                        <a href="/pricetrendcomment"><i class="fa fa-comment"></i>
-                            Price Trend Comments</a>
-                    </li>
-                    
-                    <li >
-                        <a href="/bidValue"><i class="fa fa-tag"></i>
-                            Promo Transaction Summary </a>
-                    </li>
-                    <li ng-if="isAdmin()">
-                        <a href="/inputform"><i class="fa fa-tag"></i>
-                            Input Form Request </a>
-                    </li>
-                    <li ng-if="isAdmin()">
-                        <a href="/manpowerlisting"><i class="fa fa-list"></i>Manpower Listing</a>
-                    </li>
                     <li>
-                        <a href="/auctionrequets"><i class="fa fa-gavel"></i>Auction Request</a>
-                    </li>
-                    <!-- <li ng-if="isAuctionPartner() || isAdmin()">
-                        <a href="/auctionregreport"><i class="fa fa-gavel"></i>Auction Registration Report</a>
-                    </li> -->
-                    <li>
-                        <a href="/valuationrequests"><i class="fa fa-tags"></i>Valuation Request</a>
-                    </li>
-                    <!-- <li ng-if="isValuationPartner()">
-                        <a href="/valuationrequests/valuationpartner"><i class="fa fa-tags"></i>Valuation Request</a>
-                    </li>
-                    <li>
-                        <a href="/valuationrequests/myrequest"><i class="fa fa-tags"></i>My Valuation Request</a>
-                    </li> -->
-                    <li>
-                        <a href="/paymenthistory"><i class="fa fa-cc"></i>Payment History</a>
+                        <a href="/reports"><i class="fa fa-file-text"></i> Reports</a>
                     </li> 
-                    
-                    <li>
-                        <a href="/auctionpaymenthistory"><i class="fa fa-cc"></i>Auction Payment History</a>
-                    </li>  
-                    <li>
-                        <a href="/reports"><i class="fa fa-cc"></i>Reports</a>
-                    </li>                
+                    <li class="dropdown">
+                      <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-info"></i> Others </a>
+                        <ul class="dropdown-menu" role="menu">     
+                            <li> 
+                                <a href="/sparelisting"><i class="fa fa-list"></i> Spare Listing</a>
+                            </li>
+                            <li>
+                                <a href="/spareupload" ng-show="isLoggedIn()"><i class="fa fa-upload"></i>  Spare Upload</a>
+                            </li>
+                            <li ng-if="isAdmin()">
+                                <a href="/manpowerlisting"><i class="fa fa-list"></i>Manpower Listing</a>
+                            </li>
+                            <li>
+                                <a href="/auctionrequets"><i class="fa fa-gavel"></i> Auction Request</a>
+                            </li>
+                            <li ng-if="isAdmin()">
+                                <a href="/inputform"><i class="fa fa-tag"></i>
+                                    Input Form Request </a>
+                            </li>  
+                            <li ng-if="isAdmin()">
+                                <a href="/classifiedadlisting"><i class="fa fa-newspaper-o"></i>  Classified Ad</a>
+                            </li>    
+                             <li ng-if="isAdmin()">
+                                <a href="/emailer"><i class="fa fa-envelope-o"></i>
+                                    Emailer</a>
+                                 
+                            </li>
+                             
+                            <li ng-if="isAdmin()">
+                                <a href="/policies"><i class="fa fa-pencil-square-o"></i>
+                                    General Editor</a>
+                                 
+                            </li>                    
+                            <li ng-if="isAdmin()">
+                                <a href="/pricetrend"><i class="fa fa-inr"></i>
+                                    Price Trend</a>
+                                 
+                            </li>
+                             <li ng-if="isAdmin()">
+                                <a href="/pricetrendcomment"><i class="fa fa-comment"></i>
+                                    Price Trend Comments</a>
+                            </li>
+                            
+                            <li >
+                                <a href="/bidValue"><i class="fa fa-tag"></i>
+                                    Promo Transaction Summary </a>
+                            </li>
+                        </ul>
+                    </li>               
                 </ul>
             </div>
         </div>

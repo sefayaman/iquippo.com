@@ -17,7 +17,7 @@ function ValuationSvc($http,$q,$rootScope, notificationSvc,Auth,LocationSvc){
   svc.generateInvoice = generateInvoice;
   svc.validateAction = validateAction;
   svc.submitToAgency = submitToAgency;
-  
+  svc.cancelIndValuation = cancelIndValuation;
    function generateInvoice(ivNo){
     return path + "/generateinvoice/" + ivNo;
    }
@@ -108,6 +108,21 @@ function ValuationSvc($http,$q,$rootScope, notificationSvc,Auth,LocationSvc){
 
       return deferred.promise;
 
+    }
+
+    function cancelIndValuation(valReq){
+      var dataToSend = {_id:valReq._id};
+      dataToSend.uniqueControlNo = valReq.requestId;
+      dataToSend.jobId = valReq.jobId;
+      // dataToSend.cancellationFee = cancelFee.cancellationFee;
+      //dataToSend.cancelled = true;
+      return $http.post(path + "/cancel",dataToSend)
+            .then(function(res){
+              return res.data;
+            })
+            .catch(function(err){
+              throw err;
+            });
     }
 
     function delValuation(data){
