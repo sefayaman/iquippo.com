@@ -414,19 +414,20 @@ function _prepareResponse(res, valuations) {
   var tempData = [];
   valuations.forEach(function (item, key, array) {
     delete array[key]._id;
+
     tempData.push({
       "Sr. No": key + 1,
-      "Fullname": item.user['fname'] + ' ' + item.user['lname'],
-      "Country": item.user['country'],
-      "Location": item.user['city'],
-      "Mobile No": item.user['mobile'],
-      "Phone No": item.user['phone'],
-      "Email Address": item.user['email'],
+      "Fullname": item.user ? item.user['fname'] + ' ' + item.user['lname'] : '',
+      "Country": item.user ? item.user['country'] : '',
+      "Location": item.user ? item.user['city'] : '',
+      "Mobile No": item.user ? item.user['mobile'] : '',
+      "Phone No": item.user ? item.user['phone'] : '',
+      "Email Address": item.user ? item.user['email'] : '',
       "Valuation Request Id": item.requestId,
-      "Asset Name": item.product['name'],
-      "Manufacturing Year": item.product['mfgYear'],
-      "Asset Location": item.product['city'],
-      "Machine Serial No.": item.product['serialNumber'],
+      "Asset Name": item.product ? item.product['name'] : '',
+      "Manufacturing Year": item.product ? item.product['mfgYear'] : '',
+      "Asset Location": item.product ? item.product['city'] : '',
+      "Machine Serial No.": item.product ? item.product['serialNumber'] : '',
       "Agency Name": item.valuationAgency['name'],
       "Request Date": item.createdAt,
       "Request Purpose": item.purpose,

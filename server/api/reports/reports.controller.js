@@ -252,7 +252,7 @@ var reports = {
 		})
 
 		try {
-			utility.convertToCSV(res, xlsxData);
+			utility.convertToCSV(res, xlsxData, type + '_' +  new Date().getTime());
 		} catch (excp) {
 			throw excp;
 		}
