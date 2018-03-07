@@ -11,7 +11,6 @@ var Subscribe = require('./subscribe.model');
 var AppSetting = require('./setting.model');
 var PaymentMaster = require('./paymentmaster.model');
 var ManufacturerMaster = require('./manufacturer.model');
-var Banner = require('./banner.model');
 var email = require('./../../components/sendEmail.js');
 var sms = require('./../../components/sms.js');
 var handlebars = require('handlebars');
@@ -2440,6 +2439,7 @@ exports.getAllManufacturer = function (req, res) {
 };
 
 
+<<<<<<< HEAD
 // Creates a new manufacturer in the DB.
 exports.createManufacturer = function (req, res) {
 	var filter = {};
@@ -2630,6 +2630,14 @@ exports.getBannerOnFilter = function (req, res) {
 			$lte: new Date()
 		};
 	}
+=======
+				exports.renderXLSX = function(req, res) {
+					if (req.query.type == "state") {
+						var headers = ['Country', 'State'];
+						var json = {};
+						var xlsxData = [];
+						var arr = [];
+>>>>>>> master
 
 	var query = Banner.find(filter).sort({
 		sequence: 1

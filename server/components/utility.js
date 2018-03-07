@@ -52,12 +52,14 @@ exports.uploadFileS3 = uploadFileS3;
 //exports.uploadDirToS3 = uploadDirToS3;
 //exports.uploadZipFileToS3 = uploadZipFileToS3;
 exports.downloadFromS3 = downloadFromS3;
+exports.downloadFileFromS3 = downloadFileFromS3;
 exports.deleteFromS3 = deleteFromS3;
 exports.uploadMultipartFileOnS3 = uploadMultipartFileOnS3;
 
 exports.uploadFileOnS3 = uploadFileOnS3;
 exports.getListObjectS3 = getListObjectS3;
 exports.deleteS3File = deleteS3File;
+exports.addNoCacheHeader = addNoCacheHeader;
 
 Date.prototype.addDays = function (days) {
   this.setDate(this.getDate() + parseInt(days));
@@ -140,9 +142,10 @@ function uploadMultipartFileOnS3(localFilePath, dirName, files, cb) {
   var multipartParams = {
     Bucket: config.awsBucket,
     Key: dirName,
-    ContentType: file.mimetype
+    ContentType: file.mimetype,
+    Expires: config.S3_HEADER_EXPIRES,
+    CacheControl: config.S3_HEADER_CACHE_CONTROL
   };
-
   var multipartMap = {
     Parts: []
   };
@@ -236,6 +239,31 @@ function downloadFromS3(opts, cb) {
   });
 
   downloader.on('end', function () {
+    return cb();
+  });
+
+}
+
+function downloadFileFromS3(opts, cb) {
+  var params = {
+    localFile: opts.localFile,
+
+    s3Params: {
+      Bucket: config.awsBucket,
+      Key: opts.key
+    }
+  };
+  //var s3 = new AWS.S3();
+  var downloader = client.downloadFile(params);
+
+  downloader.on('error', function(err) {
+    if (err) {
+       debug(err);
+      return cb(err);
+    }
+  });
+
+  downloader.on('end', function(res) {
     return cb();
   });
 
@@ -788,6 +816,12 @@ var dateUtil = {
       }
     return moment(dateTimeString.toString(), format);
   }
+}
+
+function addNoCacheHeader(res) {
+  res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+  res.header('Expires', '-1');
+  res.header('Pragma', 'no-cache');
 }
 
 /**

@@ -91,6 +91,8 @@ module.exports = function(app) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Content-type,Accept,X-Access-Token,X-Key');
+    res.setHeader('Expires', new Date(Date.now() + 86400000).toISOString());
+    res.setHeader('Cache-Control', 'private, max-age=2592000');
     if (req.method == 'OPTIONS') {
       res.status(200).end();
     } else {

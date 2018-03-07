@@ -21,6 +21,24 @@ function AuctionPaymentListingCtrl($scope, $state, $rootScope, $uibModal, Modal,
 	vm.resendUserData = resendUserData;
   vm.fireCommand = fireCommand;
   vm.openPaymentOptionModal = openPaymentOptionModal;
+  vm.generateKit = generateKit;
+
+  function generateKit(tns){
+    if(!tns)
+      return;
+   $rootScope.loading = true;
+    userRegForAuctionSvc.generateKit(tns)
+    .then(function(res){
+      $rootScope.loading = false;
+      fireCommand(true);
+    })
+    .catch(function(err){
+      $rootScope.loading = false;
+      if(err.data)
+        Modal.alert(err.data);
+      console.log("Error in kit generation",err);
+    });
+  }
 
 	$scope.$on('refreshPaymentHistroyList',function(){
     fireCommand(true);
@@ -94,6 +112,10 @@ function AuctionPaymentListingCtrl($scope, $state, $rootScope, $uibModal, Modal,
       if(!payScope.option.select) {
         Modal.alert("Please select your preferred payment method", true);
         return;
+      }
+      if(!payScope.option.agreeOnUndertaking) {
+         Modal.alert("Please accept the terms & conditions and undertaking of auction.");
+      return;
       }
       if(!payScope.kycExist) {
         payScope.kycExist = false;

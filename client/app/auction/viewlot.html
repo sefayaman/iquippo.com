@@ -10,7 +10,7 @@
   </ol>
 </div>
 
-<section class="category-block">
+<section class="category-block productlisting-background">
   <div class="container-fluid">
     <div class="col-sm-3" ng-class="{hidefilter: !filterbutton.value1}">
       <button class="btn btn-danger visible-xs filter-display" ng-click="filterbutton.value1 = !filterbutton.value1">
@@ -216,6 +216,11 @@
             <div class="panel-body">
               {{auctionData.termDesclaimer}}
             </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-7" ng-if="auctionData.onBehalfOfClient">
+            <h5><strong>On behalf of our client:</strong></h5>
+              {{auctionData.onBehalfOfClient}}
           </div>
         </uib-accordion>
 
