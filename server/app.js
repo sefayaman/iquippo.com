@@ -430,7 +430,7 @@ function handleError(res, err) {
 server.listen(config.port, config.ip, function () {
   console.log('Express server listening on %d, in %s mode', config.port, app.get('env'));
   // notification.startNotification();
-  // taskRunner.startTaskRunner();
+  //  taskRunner.startTaskRunner();
   // valReqSubmitter.start();
   //assetSaleTracker.start();
   // checkQuickQueryNotificationService.start();

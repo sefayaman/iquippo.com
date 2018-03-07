@@ -344,7 +344,7 @@ function ProductListingCtrl($scope, $location, $rootScope, $http, productSvc, Au
         dataToSend['productCondition'] = "used";
         productSvc.exportProduct(dataToSend)
         .then(function(buffData){
-          saveAs(new Blob([s2ab(buffData)],{type:"application/octet-stream"}), "productlist_"+ new Date().getTime() +".xlsx")
+          saveAs(new Blob([s2ab(buffData)],{type:"application/octet-stream"}), "productlist_"+ new Date().getTime() +".csv")
         });
      }
 
