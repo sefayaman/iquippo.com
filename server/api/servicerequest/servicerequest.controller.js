@@ -157,14 +157,26 @@ exports.exportData = function (req, res) {
         });
 
       });
-
-      try {
-        Utility.convertToCSV(res, dataArr);
-      } catch (excp) {
-        throw excp;
-      }
+      _transformResponse(res, dataArr, headers);
     });
 
+}
+
+function _transformResponse(res, dataArr, keys) {
+  var tempData = [];
+  dataArr.forEach(function (data) {
+    var obj = {};
+    keys.forEach(function (item, index) {
+      obj[keys[keys.length - (keys.length - index)]] = data[keys.length - (keys.length - index)];
+    });
+    tempData.push(obj);
+  });
+  tempData.splice(0, 1);
+  try {
+    Utility.convertToCSV(res, tempData);
+  } catch (e) {
+    throw e;
+  }
 }
 
 function handleError(res, err) {
