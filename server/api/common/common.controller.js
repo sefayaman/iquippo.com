@@ -2439,7 +2439,6 @@ exports.getAllManufacturer = function (req, res) {
 };
 
 
-<<<<<<< HEAD
 // Creates a new manufacturer in the DB.
 exports.createManufacturer = function (req, res) {
 	var filter = {};
@@ -2630,14 +2629,6 @@ exports.getBannerOnFilter = function (req, res) {
 			$lte: new Date()
 		};
 	}
-=======
-				exports.renderXLSX = function(req, res) {
-					if (req.query.type == "state") {
-						var headers = ['Country', 'State'];
-						var json = {};
-						var xlsxData = [];
-						var arr = [];
->>>>>>> master
 
 	var query = Banner.find(filter).sort({
 		sequence: 1
