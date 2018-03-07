@@ -113,10 +113,9 @@
              <!-- <div class="col-sm-6 form-group">
                 <input type="text" class="form-control" name="" value="" placeholder="Location">
               </div>-->
-              <div class="col-sm-6 form-group">
+              <div class="col-sm-6 form-group" ng-class="{'has-error': reqForm.panNumber.$invalid && reqForm.submitted}">
                <input type="text" class="form-control" name="panNumber"  placeholder="PAN Number" ng-model="auctionRegVm.user.panNumber" uib-tooltip="XXXXX9999X" tooltip-trigger="focus" pattern="^[A-Z]{5}[0-9]{4}[A-Z]{1}$" tooltip-placement="top">
-              </div>
-               
+              </div>               
              <div class="col-sm-6 form-group" ng-class="{'has-error': reqForm.password.$invalid && reqForm.submitted}" ng-if="!isAdmin() && !isAuctionRegPermission()">
               <input type="password" class="form-control" ng-model="auctionRegVm.user.password" placeholder="*Password" name="password" ng-minlength="4"
                        required
