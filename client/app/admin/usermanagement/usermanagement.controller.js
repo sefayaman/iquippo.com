@@ -117,18 +117,19 @@ angular.module('sreizaoApp')
         if (loggedIn) {
           if (Auth.isAdmin()) {
             var filter = {};
-            filter.role = "channelpartner";
-            userSvc.getUsers(filter).then(function (data) {
-              vm.getUsersOnRole = data;
+            filter.isAdminRole = true;
+            userSvc.getUsers(filter).then(function(data){
+            vm.getUsersOnRole = data;
             })
-              .catch(function (err) {
-                Modal.alert("Error in geting user");
-              })
+            .catch(function(err){
+              Modal.alert("Error in geting user");
+            })
+            var entFilter = {};
 
-            filter.role = "enterprise";
-            filter.enterprise = true;
-            filter.status = true;
-            userSvc.getUsers(filter).then(function (data) {
+            entFilter.role = "enterprise";
+            entFilter.enterprise = true;
+            entFilter.status = true;
+            userSvc.getUsers(entFilter).then(function(data){
               vm.enterprises = data;
             })
           }
@@ -280,32 +281,39 @@ angular.module('sreizaoApp')
       var filter = {};
       if (!filterObj)
         angular.copy(dataToSend, filter);
-      else
-        filter = filterObj;
-      if (vm.userSearchFilter.createdBy)
-        filter['userId'] = vm.userSearchFilter.createdBy;
+    else
+      filter = filterObj;
 
-      if (vm.userSearchFilter.searchStr)
-        filter['searchstr'] = vm.userSearchFilter.searchStr;
-      getUser(filter);
-    }
+    if(vm.userSearchFilter.createdBy)
+       filter['userId'] = vm.userSearchFilter.createdBy;
 
-    function resetPagination() {
-      prevPage = 0;
-      vm.currentPage = 1;
-      vm.totalItems = 0;
-      first_id = null;
-      last_id = null;
-    }
+    if(vm.userSearchFilter.enterpriseId)
+      filter['enterpriseId'] = vm.userSearchFilter.enterpriseId;
 
-    function onUserChange(user) {
-      if (!user) {
-        delete vm.userSearchFilter.createdBy;
+    if(vm.userSearchFilter.searchStr)
+      filter['searchstr'] = vm.userSearchFilter.searchStr;
+    getUser(filter);
+  }
+
+  function resetPagination(){
+     prevPage = 0;
+     vm.currentPage = 1;
+     vm.totalItems = 0;
+     first_id = null;
+     last_id = null;
+  }
+
+    function onUserChange(user){
+      delete vm.userSearchFilter.enterpriseId;
+      delete vm.userSearchFilter.createdBy;
+      if(!user) {
         fireCommand(true);
         return;
       }
-
-      vm.userSearchFilter.createdBy = user._id;
+      if(user.role == 'enterprise')
+        vm.userSearchFilter.enterpriseId = user.enterpriseId;
+      else
+        vm.userSearchFilter['createdBy'] = user._id;
       fireCommand(true);
     }
 
