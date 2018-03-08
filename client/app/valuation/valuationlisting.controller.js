@@ -28,7 +28,12 @@ function ValuationListingCtrl($scope,$window,$stateParams,$state,Modal,Auth,Page
 	 vm.validateAction = ValuationSvc.validateAction;
 	 var selectedIds = [];
 	 vm.submitToAgency = submitToAgency;
+	 vm.openPaymentOptionModel = openPaymentOptionModel;
 
+	 $scope.$on('refreshValuationList',function(){
+	    fireCommand(true);
+	  });
+	 
 	 //var mode = "user";
 
 	 function init(){
@@ -86,6 +91,14 @@ function ValuationListingCtrl($scope,$window,$stateParams,$state,Modal,Auth,Page
 		OfflinePaymentScope.iValuationFlag = true;
 		OfflinePaymentScope.callback = fireCommand;
 		Modal.openDialog('OfflinePaymentPopup',OfflinePaymentScope);
+	}
+
+	function openPaymentOptionModel(valuation) {
+		var paymentScope = $rootScope.$new();
+        paymentScope.tid = valuation.transactionId;
+        paymentScope.valuation = valuation;
+        paymentScope.offlineOption = true;
+        Modal.openDialog('paymentOption',paymentScope);
 	}
 
 	function fireCommand(rstPagination){

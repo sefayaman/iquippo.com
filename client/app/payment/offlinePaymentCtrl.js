@@ -79,16 +79,15 @@ function OfflinePaymentCtrl($scope,$rootScope,Modal,$stateParams,$state,$uibModa
           $scope.generateKitCallback(vm.dataModel);
         else
           $rootScope.$broadcast('refreshPaymentHistroyList');*/
-		    if(!$scope.iValuationFlag)
+		    if(!$scope.iValuationFlag) {
           $rootScope.$broadcast('refreshPaymentHistroyList');
+          generateKit(vm.dataModel);
+        }
         else {
           ValuationSvc.updateStatus($scope.valuation, IndividualValuationStatuses[1]);
           submitToAgency($scope.valuation,'Mjobcreation');
-          if($scope.callback)
-            $scope.callback(true);
         }
-        generateKit(vm.dataModel);
-        vm.dataModel = {};
+        //generateKit(vm.dataModel);
         Modal.alert(res.message);
         closeDialog();
     })
@@ -105,11 +104,14 @@ function OfflinePaymentCtrl($scope,$rootScope,Modal,$stateParams,$state,$uibModa
     //api integration
     ValuationSvc.submitToAgency(valuation,type)
     .then(function(resList){
-      //Modal.alert("Valuation request submitted successfully !!!");
+      if($scope.callback)
+        $scope.callback(true);
     })
     .catch(function(err){
       if(err)
         Modal.alert("Error occured in integration");
+      if($scope.callback)
+        $scope.callback(true);
     });
   }
 

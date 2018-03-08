@@ -182,6 +182,10 @@
 					var pyMaster = PaymentMasterSvc.getPaymentMasterOnSvcCode(valType, vm.valuationReq.valuationAgency._id);
 					// payObj.type = "valuationreq";
 					// payObj.amount = pyMaster.fees;
+					if(!pyMaster || !pyMaster.fees) {
+						Modal.alert("Valuation fee is not define for this vendor.", true);
+						return;
+					}
 					paymentTransaction.totalAmount = pyMaster.fees || 0;
 					//paymentTransaction.payments[paymentTransaction.payments.length] = payObj;
 
@@ -222,7 +226,7 @@
 						})
 						.then(function(result) {
 							if(result && result.errorCode != 0) {
-					          //Modal.alert(result.message, true);  
+					          //Modal.alert(result.message, true);
 					          $state.go('main');
 					          return;
 					        }

@@ -75,7 +75,10 @@
                 <td>{{valuation.product.serialNumber}}</td>
                 <td>{{valuation.status}}</td>
                 <td>{{valuation.purpose}}</td>
-                <td>{{valuation.transactionIdRef.paymentMode}}</td>
+                <td>
+                  <span ng-if="valuation.transactionIdRef.paymentMode">{{valuation.transactionIdRef.paymentMode}}</span>
+                  <span ng-if="!valuation.transactionIdRef.paymentMode">{{valuation.payOption}}</span>
+                </td>
                 <td>{{valuation.createdAt | date:'MM/dd/yyyy'}}</td>
                 <td>
                   <!-- <button class="btn btn-default fileinput-button" ng-if="isPartner() && (valuation.status == 'request_in_process' || valuation.status == 'request_completed')" uib-popover="Upload" popover-trigger="mouseenter">
@@ -95,7 +98,8 @@
 
                   <a class="btn btn-primary" ng-if="valuationListingVm.validateAction(valuation,'ADDPAYMENT')" href="javascript:void(0);" ng-click="valuationListingVm.openPaymentModel(valuation, 'paymentAdd')" uib-popover="Add Payment" popover-trigger="mouseenter"><i class="fa fa-money"></i></a>
 
-                  <a class="btn btn-primary" href="/payment/{{valuation.transactionId}}" ng-if="valuationListingVm.validateAction(valuation,'PAYNOW')">Pay Now</a>
+                  <!-- <a class="btn btn-primary" href="/payment/{{valuation.transactionId}}" ng-if="valuationListingVm.validateAction(valuation,'PAYNOW')">Pay Now</a> -->
+                  <a class="btn btn-primary" href="javascript:void(0);" ng-click="valuationListingVm.openPaymentOptionModel(valuation)" ng-if="valuationListingVm.validateAction(valuation,'PAYNOW')">Pay Now</a>
 
                   <a href="javascript:void(0);" ng-if="valuation.transactionIdRef.payments.length > 0" ng-click="valuationListingVm.openPaymentModel(valuation, 'paymentView')" class="btn btn-sm btn-primary" uib-popover="View Payment" popover-trigger="mouseenter"><i class="fa fa-eye"></i></a>
 

@@ -448,7 +448,10 @@
       var pyMaster = PaymentMasterSvc.getPaymentMasterOnSvcCode($scope.valuationReq.requestType, $scope.valuationReq.valuationAgency._id);
       if(!pyMaster)
         pyMaster = PaymentMasterSvc.getPaymentMasterOnSvcCode($scope.valuationReq.requestType);
-
+      if(!pyMaster || !pyMaster.fees) {
+        Modal.alert("Valuation fee is not define for this vendor.", true);
+        return;
+      }
       //payObj.type = "valuationreq";
       //payObj.amount = pyMaster.fees || 5000;
       paymentTransaction.totalAmount = pyMaster.fees;
