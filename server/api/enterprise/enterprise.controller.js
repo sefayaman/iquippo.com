@@ -2266,7 +2266,11 @@ function exportExcel(req,res,fieldMap,jsonArr){
 }
 
 function renderCsv(req,res,csv){
-   var fileName = req.query.type + "_" + new Date().getTime();
+  if(req.query.type == "transaction") {
+    // change name of file in case of transaction
+    req.query.type = "Ent_Valuation";
+  }
+  var fileName = req.query.type + "_" + new Date().getTime();
   res.setHeader('Content-Type', 'application/octet-stream');
   res.setHeader("Content-Disposition", 'attachment; filename=' + fileName + '.csv;');
   res.end(csv, 'binary'); 
