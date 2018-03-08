@@ -12,8 +12,8 @@
         <div class="col-xs-2 col-sm-2" style="margin-top: 15px;">
           <custom-datepicker placeholder="To Date" name="effectiveToDate" ng-model="reportsVm.toDate" myid="todate" required></custom-datepicker>
         </div>
-        <div class="col-xs-2 col-sm-2 text-right">
-            <h3><button class="btn btn-success btn-md" ng-click="reportsVm.exportExcel()"><i class="fa fa-file-excel-o"></i> Export</button></h3>
+        <div class="col-xs-2 col-sm-2 text-right" style="margin-top: 15px;">
+            <button class="btn btn-success btn-md" ng-click="reportsVm.exportExcel()"><i class="fa fa-file-excel-o"></i> Export</button>
              <export-form name="reportexport"></export-form>
         </div>     
       </div>

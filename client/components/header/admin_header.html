@@ -1,4 +1,4 @@
-<nav class="navbar navbar-default navbar-fixed-top" role="navigation" ng-conroller="AdminHeaderCtrl">
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation" ng-controller="AdminHeaderCtrl">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" ng-init="navCollapsed = true" ng-click="navCollapsed = !navCollapsed" data-target=".navbar-ex1-collapse">
@@ -29,19 +29,19 @@
                     <!-- <li ng-if="isAdmin()">
                         <a href="/dashboard"><i class="fa fa-dashboard"></i> Dashboard</a>
                     </li> -->
-                    <li class="dropdown">
-                      <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-product-hunt"></i> Product </a>
+                    <li uib-dropdown auto-close="disabled" is-open="menu.productMenu" ng-click="closeMenu(['otherMenu'])" ng-class="{active: isActive(['productMenu'])}">
+                      <a href="javascript:void(0);" uib-dropdown-toggle><i class="fa fa-product-hunt"></i> Product </a>
                         <ul class="dropdown-menu" role="menu">     
-                            <li role="menuitem">
+                            <li role="menuitem" ng-class="{active: isActive(['productlisting'])}">
                                 <a href="/productlisting"><i class="fa fa-list"></i> Product Listing</a>
                             </li>
-                            <li role="menuitem"> 
+                            <li role="menuitem" ng-class="{active: isActive(['product'])}"> 
                                 <a href="/product" ng-show="isLoggedIn()"><i class="fa fa-upload"></i>  Product Upload</a>
                             </li>
-                            <li role="menuitem">
+                            <li role="menuitem" ng-class="{active: isActive(['uploadnewequipment'])}">
                                 <a href="/uploadnewequipment" ng-show="isLoggedIn()"><i class="fa fa-upload"></i>  New Equipment Upload</a>
                             </li>
-                            <li role="menuitem">
+                            <li role="menuitem" ng-class="{active: isActive(['newequipmentlisting'])}">
                                 <a href="/newequipmentlisting"><i class="fa fa-list"></i>    
                                     New Equipment Listing</a>
                             </li>                          
@@ -58,33 +58,33 @@
                         <a href="/yardupload" ng-show="isLoggedIn()"><i class="fa fa-upload"></i>    
                             Yard &amp; Workshop Upload</a>
                     </li> -->
-                     <li ng-if="isAdmin()">
+                    <li ng-if="isAdmin()" ng-class="{active: isActive(['masterdata'])}" ng-click="closeMenu(['productMenu', 'otherMenu'])">
                         <a href="/masterdata"><i class="fa fa-database"></i> Master Data</a>
-                        </li>
-                    <li ng-if="isAdmin() || isChannelPartner() || isEnterprise()">
+                    </li>
+                    <li ng-if="isAdmin() || isChannelPartner() || isEnterprise()" ng-class="{active: isActive(['usermanagment'])}" ng-click="closeMenu(['productMenu', 'otherMenu'])">
                         <a href="/usermanagement"><i class="fa fa-user"></i>
                         User Management</a>
                          
                     </li>
-                    <li ng-if="isAdmin()">
+                    <li ng-class="{active: isActive(['partnermanagement'])}" ng-if="isAdmin()" ng-click="closeMenu(['productMenu', 'otherMenu'])">
                         <a href="/partnermanagement"><i class="fa fa-users"></i> Partner Management</a>
                     </li>                    
-                    <li ng-if="isAdmin() || isEnterprise() || isEnterpriseUser() || isValuationPartner()">
+                    <li ng-class="{active: isActive(['enterprisevaluation', 'enterprisevaluation.transaction', 'enterprisevaluation.invoicing', 'enterprisevaluation.paymentmade', 'enterprisevaluation.paymentreceived', 'enterprisevaluation.addtransaction', 'enterprisevaluation.edittransaction'])}" ng-if="isAdmin() || isEnterprise() || isEnterpriseUser() || isValuationPartner()" ng-click="closeMenu(['productMenu', 'otherMenu'])">
                         <a href="/enterprisevaluation/transaction"><i class="fa fa-user-plus"></i> Enterprise Valuation</a>
                     </li>
                     <!-- <li>
                         <a href="javascript:void(0);" ng-click="redirectToUrl()"><i class="fa fa-gavel"></i> Asset Sale</a>
                     </li> -->
-                    <li ng-if="!isFAgencyPartner() && isBuySaleViewOnly()">
+                    <li ng-class="{active: isActive(['assetsale', 'assetsale.bidproduct', 'assetsale.bidrequests', 'assetsale.buyer', 'assetsale.fulfilmentagency', 'assetbidhistory'])}" ng-if="!isFAgencyPartner() && isBuySaleViewOnly()" ng-click="closeMenu(['productMenu', 'otherMenu'])">
                         <a href="/assetsale/bidproduct?t=1"><i class="fa fa-gavel"></i> TRADE DETAILS </a>
                     </li>
-                    <li ng-if="isFAgencyPartner()">
+                    <li ng-class="{active: isActive(['assetsale', 'assetsale.bidproduct', 'assetsale.bidrequests', 'assetsale.buyer', 'assetsale.fulfilmentagency', 'assetbidhistory'])}" ng-if="isFAgencyPartner()" ng-click="closeMenu(['productMenu', 'otherMenu'])">
                         <a href="/assetsale/fulfilmentagency?t=1"><i class="fa fa-gavel"></i> TRADE DETAILS</a>
                     </li>
-                    <li ng-if="isValuationPartner()">
+                    <li ng-class="{active: isActive(['valuationrequests'])}" ng-if="isValuationPartner()" ng-click="closeMenu(['productMenu', 'otherMenu'])">
                         <a href="/valuationrequests/valuationpartner"><i class="fa fa-tags"></i> Valuation Request</a>
                     </li>
-                    <li>
+                    <li ng-class="{active: isActive(['valuationrequests'])}" ng-click="closeMenu(['productMenu', 'otherMenu'])">
                         <a href="/valuationrequests/myrequest"><i class="fa fa-tags"></i> My Valuation Request</a>
                     </li>
                    <!--  <li ng-if="!isFAgencyPartner() && !isAdmin()">
@@ -107,12 +107,12 @@
                    
 
                     
-                    <li>
+                    <li ng-click="closeMenu(['productMenu', 'otherMenu'])">
                         <a ng-if="liveOrUatFlag" ng-href="https://auctionsoftwaremarketplace.com:3007/buyer/{{getCurrentUser()._id}}" target="_blank"><i class="fa fa-gavel"></i> Auction Dashboard</a>
                         <a ng-if="!liveOrUatFlag" ng-href="https://auctions.iquippo.com/buyer/{{getCurrentUser()._id}}" target="_blank"><i class="fa fa-gavel"></i> Auction Dashboard</a>
                     </li>
                     
-                    <li>
+                    <li ng-class="{active: isActive(['auctionpaymenthistory'])}" ng-click="closeMenu(['productMenu', 'otherMenu'])">
                         <a href="/auctionpaymenthistory"><i class="fa fa-cc"></i> Auction Payment History</a>
                     </li>  
                     
@@ -121,61 +121,61 @@
                         <a href="/auctionregreport"><i class="fa fa-gavel"></i>Auction Registration Report</a>
                     </li> -->
                     
-                    <li>
+                    <li ng-class="{active: isActive(['paymenthistory'])}" ng-click="closeMenu(['productMenu', 'otherMenu'])">
                         <a href="/paymenthistory"><i class="fa fa-cc"></i> Payment History</a>
                     </li> 
-                    <li ng-if="isAdmin()">
+                    <li ng-class="{active: isActive(['gSettings'])}" ng-if="isAdmin()" ng-click="closeMenu(['productMenu', 'otherMenu'])">
                         <a href="/gsettings"><i class="fa fa-cogs"></i>
                             General Settings</a>
                          
                     </li>
-                    <li>
+                    <li ng-class="{active: isActive(['reports'])}" ng-click="closeMenu(['productMenu', 'otherMenu'])">
                         <a href="/reports"><i class="fa fa-file-text"></i> Reports</a>
                     </li> 
-                    <li class="dropdown">
-                      <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-info"></i> Others </a>
+                    <li uib-dropdown auto-close="disabled" is-open="menu.otherMenu" ng-click="closeMenu(['productMenu'])">
+                      <a href="javascript:void(0);" uib-dropdown-toggle><i class="fa fa-info"></i> Others </a>
                         <ul class="dropdown-menu" role="menu">     
-                            <li> 
+                            <li ng-class="{active: isActive(['sparelisting'])}"> 
                                 <a href="/sparelisting"><i class="fa fa-list"></i> Spare Listing</a>
                             </li>
-                            <li>
+                            <li ng-class="{active: isActive(['spareupload'])}">
                                 <a href="/spareupload" ng-show="isLoggedIn()"><i class="fa fa-upload"></i>  Spare Upload</a>
                             </li>
-                            <li ng-if="isAdmin()">
+                            <li ng-class="{active: isActive(['manpowerlisting'])}" ng-if="isAdmin()">
                                 <a href="/manpowerlisting"><i class="fa fa-list"></i>Manpower Listing</a>
                             </li>
-                            <li>
+                            <li ng-class="{active: isActive(['auctionrequests'])}">
                                 <a href="/auctionrequets"><i class="fa fa-gavel"></i> Auction Request</a>
                             </li>
-                            <li ng-if="isAdmin()">
+                            <li ng-class="{active: isActive(['inputform'])}" ng-if="isAdmin()">
                                 <a href="/inputform"><i class="fa fa-tag"></i>
                                     Input Form Request </a>
                             </li>  
-                            <li ng-if="isAdmin()">
+                            <li ng-class="{active: isActive(['classifiedadlisting'])}" ng-if="isAdmin()">
                                 <a href="/classifiedadlisting"><i class="fa fa-newspaper-o"></i>  Classified Ad</a>
                             </li>    
-                             <li ng-if="isAdmin()">
+                             <li ng-class="{active: isActive(['emailer'])}" ng-if="isAdmin()">
                                 <a href="/emailer"><i class="fa fa-envelope-o"></i>
                                     Emailer</a>
                                  
                             </li>
                              
-                            <li ng-if="isAdmin()">
+                            <li ng-class="{active: isActive(['policies'])}" ng-if="isAdmin()">
                                 <a href="/policies"><i class="fa fa-pencil-square-o"></i>
                                     General Editor</a>
                                  
                             </li>                    
-                            <li ng-if="isAdmin()">
+                            <li ng-class="{active: isActive(['pricetrend'])}" ng-if="isAdmin()">
                                 <a href="/pricetrend"><i class="fa fa-inr"></i>
                                     Price Trend</a>
                                  
                             </li>
-                             <li ng-if="isAdmin()">
+                             <li ng-class="{active: isActive(['pricetrendcomment'])}" ng-if="isAdmin()">
                                 <a href="/pricetrendcomment"><i class="fa fa-comment"></i>
                                     Price Trend Comments</a>
                             </li>
                             
-                            <li >
+                            <li ng-class="{active: isActive(['bidValue'])}">
                                 <a href="/bidValue"><i class="fa fa-tag"></i>
                                     Promo Transaction Summary </a>
                             </li>
