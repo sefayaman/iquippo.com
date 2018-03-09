@@ -19,6 +19,7 @@ function PaymentOptionCtrl($scope, $rootScope, $state, Modal, Auth, $uibModal, P
       }
 
       vm.payTransaction = result[0];
+      $scope.option.select = vm.payTransaction.paymentMode;
       //PaymentSvc.updateStatus(vm.payTransaction,transactionStatuses[1].code);
     })
     .catch(function(err){

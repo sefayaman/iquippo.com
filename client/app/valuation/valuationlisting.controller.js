@@ -1,7 +1,7 @@
 (function(){
 'use strict';
 angular.module('sreizaoApp').controller('ValuationListingCtrl',ValuationListingCtrl);
-function ValuationListingCtrl($scope,$window,$stateParams,$state,Modal,Auth,PagerSvc,userSvc, ValuationSvc,AuctionSvc,UtilSvc,$rootScope,uploadSvc) {
+function ValuationListingCtrl($scope,$window,$stateParams,$state,$uibModal,Modal,Auth,PagerSvc,userSvc, ValuationSvc,AuctionSvc,UtilSvc,$rootScope,uploadSvc) {
  	 var vm = this;
 	 vm.valuations = [];
 	 var reqSent = [];
@@ -29,7 +29,8 @@ function ValuationListingCtrl($scope,$window,$stateParams,$state,Modal,Auth,Page
 	 var selectedIds = [];
 	 vm.submitToAgency = submitToAgency;
 	 vm.openPaymentOptionModel = openPaymentOptionModel;
-
+	 vm.openCommentModal = openCommentModal;
+	 
 	 $scope.$on('refreshValuationList',function(){
 	    fireCommand(true);
 	  });
@@ -100,6 +101,40 @@ function ValuationListingCtrl($scope,$window,$stateParams,$state,Modal,Auth,Page
         paymentScope.offlineOption = true;
         Modal.openDialog('paymentOption',paymentScope);
 	}
+
+	function openCommentModal(indValuation){
+      var scope = $rootScope.$new();
+      scope.dataModel = {};
+       var commentModal = $uibModal.open({
+          animation: true,
+            templateUrl: "usercomment.html",
+            scope: scope,
+            size: 'lg'
+        });
+
+        scope.close = function () {
+          commentModal.dismiss('cancel');
+        };
+        scope.submit = function(form){
+          if(form.$invalid){
+            scope.submitted = true;
+            return;
+          }
+          indValuation.userComment = scope.dataModel.userComment;
+          scope.close();
+          $rootScope.loading = true;
+          ValuationSvc.resumeRequest(indValuation)
+          .then(function(res){
+            $rootScope.loading = false;
+            fireCommand(true);
+          })
+          .catch(function(err){
+            $rootScope.loading = false;
+            if(err.data)
+              Modal.alert(err.data);
+          });
+        }
+    }
 
 	function fireCommand(rstPagination){
 	 	if (rstPagination)

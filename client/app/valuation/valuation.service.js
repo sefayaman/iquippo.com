@@ -18,6 +18,8 @@ function ValuationSvc($http,$q,$rootScope, notificationSvc,Auth,LocationSvc){
   svc.validateAction = validateAction;
   svc.submitToAgency = submitToAgency;
   svc.cancelIndValuation = cancelIndValuation;
+  svc.resumeRequest = resumeRequest;
+
    function generateInvoice(ivNo){
     return path + "/generateinvoice/" + ivNo;
    }
@@ -176,6 +178,16 @@ function ValuationSvc($http,$q,$rootScope, notificationSvc,Auth,LocationSvc){
       return deferred.promise;
   }
   
+  function resumeRequest(valReq){
+    return $http.post(path + "/removeonhold",valReq)
+    .then(function(res){
+      return res.data;
+    })
+    .catch(function(err){
+      throw err;
+    });
+  }
+
   function validateAction(valuation, action){
     var retVal = false;
     var statusesObj = [];

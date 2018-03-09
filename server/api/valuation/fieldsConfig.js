@@ -61,6 +61,11 @@ module.exports = {
 		"Payment Received":{key:"paymentReceived",type:"boolean"},
 		//"Payment Made to Agency":{key:"paymentMade",type:"boolean"}
 	},
+	'PUT_ON_HOLD':{
+		'jobID':{key:"jobId",required:true},
+		'unique_controll_no':{key:"requestId",required:true},
+		'message':{key:"onHoldMsg",required:true},
+	},
 	'REPORT_UPLOAD' :{
 		  'jobID':{key:"jobId",required:true},
 		  'unique_controll_no':{key:"requestId",required:true},

@@ -32,7 +32,12 @@ var ValuationRequestSchema = new Schema({
   scheduledTime:String,
   payOption:String,
   /*Admin update field*/
-
+  onHold:{type:Boolean,default:false},
+  onHoldDate:Date,
+  onHoldMsg:String,
+  resumeDate:Date,
+  resumedBy:{},
+  userComment:String,
   cancelled:{type:Boolean,default:false},
   //cancellationFee:Number,
   cancelledBy:{},

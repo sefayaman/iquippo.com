@@ -512,7 +512,7 @@ exports.submitRequest = function(req,res){
     var obj = {};
     keys.forEach(function(key){
       obj[key] = _.get(valReqs,fieldMap[key],"");
-      if(fieldMap[key] === 'customerName')
+      if(fieldMap[key] === 'customerName' && valReqs.user)
         obj[key] = valReqs.user.fname + " " + valReqs.user.lname;
       if(fieldMap[key] === 'customerInvoiceDate' && valReqs.invoiceData && valReqs.invoiceData.invoiceDate)
         obj[key] = valReqs.invoiceData.invoiceDate;
@@ -597,8 +597,83 @@ exports.submitRequest = function(req,res){
     }
 }
 
+exports.resumeRequest = function(req,res){
+  var bodyData = req.body;
+  if(!bodyData._id)
+    return res.status(400).send("Invalid resume request request !!!");
+
+  ValuationReq.findById(bodyData._id,function(err,valReqs){
+    if(err) return handleError(res, err);
+    if(!valReqs)
+      return res.status(404).send("Valuation request not found !!!");
+    if(!valReqs.onHold)
+      return res.status(401).send("Request is not on hold !!!");
+    if(req.user.role == 'admin')
+      return resumeRequestAtQVAPL(valReqs);
+    else
+      return res.status(401).send("Invalid resume request !!!");
+  });
+
+  function resumeRequestAtQVAPL(valReqs){
+    if(!bodyData.jobId)
+      return res.status(401).send("Invalid resume request !!!");
+    var fieldMap = fieldsConfig.SUBMITTED_TO_AGENCY_FIELD;
+    var servObj = {};
+    var keys = Object.keys(fieldMap);
+    keys.forEach(function(key){
+      servObj[key] = _.get(valReqs,fieldMap[key],"");
+      if(fieldMap[key] === 'customerName' && valReqs.user)
+        servObj[key] = valReqs.user.fname + " " + valReqs.user.lname;
+      if(fieldMap[key] === 'customerInvoiceDate' && valReqs.invoiceData && valReqs.invoiceData.invoiceDate)
+        servObj[key] = valReqs.invoiceData.invoiceDate;
+    })
+    // var s3Path = "";
+    // if(bodyData.assetDir)
+    //   s3Path = config.awsUrl + config.awsBucket + "/" + bodyData.assetDir + "/";
+    // if(s3Path && bodyData.invoiceDoc&& bodyData.invoiceDoc.filename)
+    //     servObj.invoiceDoc = s3Path + bodyData.invoiceDoc.filename;
+    // if(s3Path && bodyData.rcDoc && bodyData.rcDoc.filename)
+    //     servObj.rcDoc = s3Path + bodyData.rcDoc.filename;
+    if(valReqs.userComment)
+      servObj.comment = valReqs.userComment;
+    servObj.jobId = valReqs.jobId;
+    request({
+        url: config.qpvalURL + "?type=jobResume",
+        method: "POST",
+        json: true, 
+        body: [servObj]
+    }, function (error, response, body){
+      if(error)
+        return res.status(412).send("Unable to resume request.Please contact support team");  
+      if(response.statusCode == 200 && response.body.length && response.body[0] && response.body[0].success === 'true'){
+          bodyData.onHold = false;
+          update();
+      }else{
+        return res.status(412).send("Unable to resume request.Please contact support team");
+      }
+    });
+  }
+
+  function update(){
+    var _id = bodyData._id;
+    delete bodyData._id;
+    bodyData.resumeDate = new Date();
+    bodyData.resumedBy = {
+      userId:req.user._id,
+      name:req.user.fname || "" + " " + req.user.lname || "",
+      email:req.user.email,
+      mobile:req.user.mobile,
+      createdAt : new Date() 
+    }
+    ValuationReq.update({_id:_id},{$set:bodyData},function(err,retVal){
+      if(err) return handleError(res, err);
+      return res.status(200).send("Valuation request resumed successfully !!!");
+    }); 
+  }
+}
+
 exports.updateFromAgency = function(req,res){
-  var validActions = ['reportupload'];  
+  var validActions = ['reportupload','putonhold'];  
   var bodyData = req.body;
   var action = req.query.action;
   //console.log("reportupload req##", bodyData);
@@ -619,7 +694,10 @@ exports.updateFromAgency = function(req,res){
    req.body.overallGeneralCondition = bufferObj.toString('utf8');
   }
   var parameters = null;
-  parameters = fieldsConfig.REPORT_UPLOAD;
+  if(action == 'putonhold')
+    parameters = fieldsConfig.PUT_ON_HOLD;
+  else
+    parameters = fieldsConfig.REPORT_UPLOAD;
 
   var msg = validateRequest(bodyData);
   if(msg){
@@ -654,30 +732,35 @@ exports.updateFromAgency = function(req,res){
         updateObj[parameters[key].key] = val;
     });
 
-    updateObj.status = IndividualValuationStatuses[6];
-    updateObj.statuses = valReq.statuses;
-    updateObj.reportDate = new Date();
-    var stsObj = {};
-    stsObj.createdAt = new Date();
-    stsObj.userId = "IQVL";
-    stsObj.status = IndividualValuationStatuses[6];
-    if(updateObj.statuses)
-      updateObj.statuses[updateObj.statuses.length] = stsObj;
-
-    var statusesArr = [];
-    updateObj.statuses.forEach(function(item){
-        statusesArr.push(item.status);
-    });
-    
-    if(statusesArr.indexOf(IndividualValuationStatuses[1]) > -1 
-      && statusesArr.indexOf(IndividualValuationStatuses[3]) > -1 
-      && statusesArr.indexOf(IndividualValuationStatuses[4]) > -1) {
+    if(action === 'putonhold'){
+      updateObj.onHold = true;
+      updateObj.onHoldDate = new Date();
+    } else {
+      updateObj.status = IndividualValuationStatuses[6];
+      updateObj.statuses = valReq.statuses;
+      updateObj.reportDate = new Date();
       var stsObj = {};
       stsObj.createdAt = new Date();
       stsObj.userId = "IQVL";
-      stsObj.status = IndividualValuationStatuses[7];
-      updateObj.statuses[updateObj.statuses.length] = stsObj;
-      updateObj.status = IndividualValuationStatuses[7];
+      stsObj.status = IndividualValuationStatuses[6];
+      if(updateObj.statuses)
+        updateObj.statuses[updateObj.statuses.length] = stsObj;
+
+      var statusesArr = [];
+      updateObj.statuses.forEach(function(item){
+          statusesArr.push(item.status);
+      });
+
+      if(statusesArr.indexOf(IndividualValuationStatuses[1]) > -1 
+        && statusesArr.indexOf(IndividualValuationStatuses[3]) > -1 
+        && statusesArr.indexOf(IndividualValuationStatuses[4]) > -1) {
+        var stsObj = {};
+        stsObj.createdAt = new Date();
+        stsObj.userId = "IQVL";
+        stsObj.status = IndividualValuationStatuses[7];
+        updateObj.statuses[updateObj.statuses.length] = stsObj;
+        updateObj.status = IndividualValuationStatuses[7];
+      }
     }
 
     ValuationReq.update({_id:valReq._id},{$set:updateObj},function(err){

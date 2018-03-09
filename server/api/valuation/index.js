@@ -21,4 +21,5 @@ router.get('/generateinvoice/:ivNo',controller.generateInvoice);
 
 router.post('/submitrequest',auth.isAuthenticated(),controller.submitRequest);
 router.post('/iqvl/retailupdate',controller.updateFromAgency);
+router.post('/removeonhold',auth.hasRole('admin'),controller.resumeRequest);
 module.exports = router;

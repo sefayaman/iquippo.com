@@ -5,27 +5,26 @@
         </div>
       <div class="modal-body">
         <form novalidate class="" name="paymentForm">
-              <div class="row">
-                <div class="col-xs-6 col-sm-6 form-group">
-                  <div class="radio radio-info">
-                          <input type="radio" id="offline" name="payment" ng-model="option.select" value="offline">
-                          <label for="offline" ng-if="!offlineOption"> Pay Later </label>
-                          <label for="offline" ng-if="offlineOption"> Offline </label>
-                      </div>                   
-                </div>
-                <div class="col-xs-6 col-sm-6 form-group">
-                  <div class="radio radio-info">
-                          <input type="radio" id="online" name="payment" ng-model="option.select" value="online">
-                          <label for="online" ng-if="!offlineOption"> Pay Now </label>
-                          <label for="offline" ng-if="offlineOption"> Online </label>
-                      </div>     
-                </div>
+          <div class="row">
+            <div class="col-xs-6 col-sm-6 form-group">
+              <div class="radio radio-info">
+                <input type="radio" id="offline" name="payment" ng-model="option.select" value="offline">
+                <label for="offline"> <span ng-if="!offlineOption"> Pay Later </span> <span ng-if="offlineOption"> Offline </span> </label>
               </div>
-        </div>  
-        <div class="modal-footer asset-sale">
-          <div>
-            <button type="button" class="btn btn-primary" ng-click="paymentOptVm.closeDialog()">Cancel</button>
-            <button type="button" class="btn btn-danger" ng-click="paymentOptVm.submit()">Proceed</button>                
+            </div>
+            <div class="col-xs-6 col-sm-6 form-group">
+              <div class="radio radio-info">
+                <input type="radio" id="online" name="payment" ng-model="option.select" value="online">
+                <label for="online"> <span ng-if="!offlineOption"> Pay Now </span> <span ng-if="offlineOption"> Online </span></label>
+              </div>
+            </div>
           </div>
+        </form>
+      </div>  
+      <div class="modal-footer asset-sale">
+        <div>
+          <button type="button" class="btn btn-primary" ng-click="paymentOptVm.closeDialog()">Cancel</button>
+          <button type="button" class="btn btn-danger" ng-click="paymentOptVm.submit()">Proceed</button>
         </div>
+      </div>
     </div>
