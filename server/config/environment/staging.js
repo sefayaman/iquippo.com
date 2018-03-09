@@ -35,6 +35,13 @@ module.exports = {
   awsSecretAccessKey: 'ZnsSM+I8TzN31nBHo+8XfjDArWqlRm68+8hA7do9',
   awsBucket: 'iquippo-image-upload-dev',
   awsUrl: 'https://s3.ap-south-1.amazonaws.com/',
-  auctionURL:"https://auctionsoftwaremarketplace.com:3007/api_call/"
+  auctionURL:"https://auctionsoftwaremarketplace.com:3007/api_call/",
+   valuationReportFtp :{
+    ip:"14.142.134.52",
+    port:22,
+    username:"nggpsftp",
+    password:"Welcome123"
+  },
+  valuationReportRemotePath:"/home/nggpsftp/"
 };
 

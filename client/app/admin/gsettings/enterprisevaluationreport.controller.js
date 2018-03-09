@@ -5,6 +5,7 @@
 
     function EnterpriseValuationReportCtrl($scope,$rootScope,$state,Modal,Auth,PagerSvc,$filter,userSvc){
     	var vm  = this;
+        $scope.timestamp = new Date().getTime();
         $scope.pager = PagerSvc.getPager();
         vm.filteredList = [];
         vm.enterprises = [];

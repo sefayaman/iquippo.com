@@ -34,5 +34,12 @@ module.exports = {
   S3_HEADER_EXPIRES: new Date(Date.now() + 604800000).toISOString(),
   S3_HEADER_CACHE_CONTROL: 'maxAge=2592000',
 
-  auctionURL:"https://auctionsoftwaremarketplace.com:3007/api_call/"
+  auctionURL:"https://auctionsoftwaremarketplace.com:3007/api_call/",
+  ftpConfig :{
+    host:"14.142.134.52",
+    port:"22",
+    username:"nggpsftp",
+    password:"Welcome123"
+  },
+  valuationReportRemotePath:"/home/nggpsftp/"
 };
