@@ -23,26 +23,26 @@
         <div class="row"> 
           <div class="col-sm-3 form-group">
             <div class="filter-select">
-              <select ng-model="reportsVm.tabValue" ng-change="reportsVm.selectReportData(reportsVm.tabValue)">
+              <select ng-model="reportsVm.tabValue" class="form-control" ng-change="reportsVm.selectReportData(reportsVm.tabValue)">
+                <option value="auctionRegReport" ng-if="auctionVisibleFlag">Auction Registration Report</option>
+                <option value="bannerleads" ng-if="isAdmin()">Banner Leads History</option>
+                <option value="bookademo" ng-if="isAdmin()">Book A Demo</option>
+                <option value="bulkorder" ng-if="isAdmin()">Bulk Order Request</option>
                 <option value="callback">Call Back</option>
+                <option value="contactUs">Contact Us</option>
+                <option value="easyfinance">Easy Financing</option>
+                <option value="finance">Financing Quote</option>
+                <option value="forRent">For Rent</option>
                 <option value="instantQuote">Get Instant Quote</option>
                 <!-- <option value="additionalServices">Get a Quote for Additional Services</option> -->
+                <option value="inspection">Inspection Request</option>
+                <option value="insurance">Insurance Quote</option>
+                <option value="offerreq" ng-if="isAdmin()">Offer Request History</option>
                 <option value="buyOrRentOrBoth">Send Message - To Buy / For Rent / For Both</option>
                 <option value="shipping">Shipping Quote</option>
-                <option value="valuation">Valuation Quote</option>
-                <option value="finance">Financing Quote</option>
-                <option value="insurance">Insurance Quote</option>
                 <option value="buyrentnow">To Buy Now</option>
-                <option value="forRent">For Rent</option>
-                <option value="easyfinance">Easy Financing</option>
-                <option value="inspection">Inspection Request</option>
+                <option value="valuation">Valuation Quote</option>
                 <option value="valuationReport">Valuation Report</option>
-                <option value="contactUs">Contact Us</option>
-                <option value="auctionRegReport" ng-if="auctionVisibleFlag">Auction Registration Report</option>
-                <option value="offerreq" ng-if="isAdmin()">Offer Request History</option>
-                <option value="bulkorder" ng-if="isAdmin()">Bulk Order Request</option>
-                <option value="bookademo" ng-if="isAdmin()">Book A Demo</option>
-                <option value="bannerleads" ng-if="isAdmin()">Banner Leads History</option>
               </select>
             </div>
           </div>             

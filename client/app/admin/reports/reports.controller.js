@@ -5,7 +5,7 @@
   //controller function
   function ReportsCtrl($scope, $rootScope, $http, Auth, ReportsSvc,OfferSvc,NewEquipmentSvc,$window, $uibModal, userSvc, ValuationSvc, userRegForAuctionSvc,commonSvc,BannerLeadSvc) {
     var vm = this;
-    vm.tabValue = "callback";
+    vm.tabValue = "auctionRegReport";
 
     vm.toDate = null;
     vm.fromDate = null;
