@@ -57,6 +57,7 @@ function PaymentCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,$location,
  			vm.payTransaction = result[0];
  			vm.prevStatus = vm.payTransaction.status;
          vm.enablePayment = vm.prevStatus != transactionStatuses[5].code && vm.prevStatus != transactionStatuses[3].code?true:false;
+         vm.payTransaction.paymentMode = 'online';
 
  			if(vm.payTransaction.paymentMode === 'online' && vm.payTransaction.requestType !== 'Auction Request')
 	 		     PaymentSvc.updateStatus(vm.payTransaction,transactionStatuses[1].code);
