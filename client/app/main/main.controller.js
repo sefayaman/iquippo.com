@@ -39,6 +39,7 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
     $scope.doSearch = doSearch;
     $scope.myFunct = myFunct;
     vm.openBidModal = openBidModal;
+    vm.openLeadCaptureModal = openLeadCaptureModal;
     $scope.openPrintMedia = openPrintMedia;
     $scope.toggleSearchBox = toggleSearchBox;
     vm.getBrandCount = getBrandCount;
@@ -141,7 +142,12 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
       Modal.openDialog('inputFormReq', inputFormScope);
     }
 
-
+    function openLeadCaptureModal(currentSlide){
+      var leadCaptureScope = $rootScope.$new();
+      leadCaptureScope.slideInfo = currentSlide;
+       vm.myInterval = 1*2*60*60*1000;
+      Modal.openDialog('bannerLeads', leadCaptureScope);
+    }
 
     function getCategories(){
       var filter = angular.copy(usedFilter);

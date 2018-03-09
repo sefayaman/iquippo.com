@@ -656,7 +656,7 @@ function MasterDataCtrl($scope, $rootScope,MasterDataService, groupSvc, modelSvc
 	 function exportMasterData(level){
 	 	MasterDataService.exportMasterData({level:level})
 	 	.then(function(result){
-	 		saveAs(new Blob([s2ab(result)],{type:"application/octet-stream"}), "masterdatalist_"+ Math.ceil(Math.random()*100) +".xlsx")
+	 		saveAs(new Blob([s2ab(result)],{type:"application/octet-stream"}), "masterdatalist_"+ Math.ceil(Math.random()*100) +".csv")
 	 	})
 	 	.catch(function(res){
 	 		//error handling

@@ -25,11 +25,11 @@ function BidRequestDetailCtrl($scope, Auth, productSvc, $uibModalInstance,AssetS
 	}
 
 	function getKycInfo(kycData) {
-		if(kycData.user && kycData.user.kycInfo.length > 0) {
+		if(kycData.user && kycData.user.kycInfo && kycData.user.kycInfo.length > 0) {
 			$scope.kycUploadDir = kycDocDir;
 	        angular.copy(kycData.user.kycInfo, vm.kycList);
-      	} else if(kycData.kyc.length > 0){
-      		$scope.kycUploadDir = kycData.product.assetDir;
+	    } else if(kycData.kyc && kycData.kyc.length > 0){
+			$scope.kycUploadDir = kycData.product.assetDir;
 	        angular.copy(kycData.kyc, vm.kycList);
       	}
 	}

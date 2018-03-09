@@ -5,7 +5,7 @@
 'use strict';
 
 // Set default node environment to development
-//require('newrelic');
+require('newrelic');
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
 
@@ -38,7 +38,7 @@ var userExportsService = require('./components/userExports.js');
 
 // Connect to database
 mongoose.connect(config.mongo.uri, config.mongo.options);
-  mongoose.connection.on('error', function(err) {
+mongoose.connection.on('error', function (err) {
   console.error('MongoDB connection error: ' + err);
   process.exit(-1);
 });
@@ -48,7 +48,7 @@ var app = express();
 var server = require('http').createServer(app);
 //var socket=require('socket.io');
 
-app.get('/_status',function(req,res){
+app.get('/_status', function (req, res) {
   res.status(200);
   res.end();
 });
@@ -58,10 +58,10 @@ require('./routes')(app);
 
 
 var storage = multer.diskStorage({
-  destination: function(req, file, cb) {
+  destination: function (req, file, cb) {
     cb(null, req.uplPath);
   },
-  filename: function(req, file, cb) {
+  filename: function (req, file, cb) {
     var decodedFname = decodeURI(file.originalname);
     if (decodedFname.indexOf('%20') != -1)
       decodedFname = decodedFname.replace(/%20/g, '');
@@ -79,7 +79,7 @@ var upload = multer({
   storage: storage
 }).any();
 
-app.post('/api/uploads', function(req, res) {
+app.post('/api/uploads', function (req, res) {
   var assetDir = req.query.assetDir;
   var childDir = req.query.childDir;
   var resize = req.query.resize;
@@ -94,7 +94,7 @@ app.post('/api/uploads', function(req, res) {
   var relativePath = config.uploadPath + assetDir + "/";
   checkDirectorySync(relativePath);
   req.uplPath = relativePath;
-  upload(req, res, function(err, data) {
+  upload(req, res, function (err, data) {
     if (err) {
       return res.end("Error uploading file.");
     }
@@ -108,13 +108,13 @@ app.post('/api/uploads', function(req, res) {
       resizeImg(req, res, assetDir, dimension, false);
     } else {
       //var localDirPath = config.uploadPath + assetDir;
-      var localDirPath = config.uploadPath + assetDir + "/" +req.files[0].filename;
-      var s3DirPath = "assets/uploads/" + assetDir + "/" +req.files[0].filename;
+      var localDirPath = config.uploadPath + assetDir + "/" + req.files[0].filename;
+      var s3DirPath = "assets/uploads/" + assetDir + "/" + req.files[0].filename;
 
-      if(!assetDir || !localDirPath)
+      if (!assetDir || !localDirPath)
         return res.status(500);
 
-      utility.uploadMultipartFileOnS3(localDirPath, s3DirPath, req.files, function(uploadErr, s3res) {
+      utility.uploadMultipartFileOnS3(localDirPath, s3DirPath, req.files, function (uploadErr, s3res) {
         if (uploadErr) {
           throw err;
         }
@@ -156,7 +156,7 @@ app.post('/api/uploads', function(req, res) {
 
 
 
-app.post('/api/multiplefile/upload', function(req, res) {
+app.post('/api/multiplefile/upload', function (req, res) {
   var assetDir = req.query.assetDir;
   var resize = req.query.resize;
   if (!assetDir)
@@ -164,7 +164,7 @@ app.post('/api/multiplefile/upload', function(req, res) {
   var relativePath = config.uploadPath + assetDir + "/";
   checkDirectorySync(relativePath);
   req.uplPath = relativePath;
-  upload(req, res, function(err) {
+  upload(req, res, function (err) {
     if (err) {
       return res.end("Error uploading file.");
     }
@@ -199,38 +199,38 @@ function resizeImg(req, res, assetDir, dimension, isMultiple) {
       var s3DirPath = "assets/uploads/" + assetDir + "/" + fileName;
       fsExtra.copy(imgPath, originalFilePath, {
         replace: true
-      }, function(err, result) {
+      }, function (err, result) {
         if (err)
           throw err;
 
         if (dimension.size > 50000) {
 
-          lwip.open(imgPath, function(err, image) {
+          lwip.open(imgPath, function (err, image) {
 
             if (err)
               throw err;
-            image.scale(0.75, function(err, rzdImage) {
+            image.scale(0.75, function (err, rzdImage) {
 
               if (err)
                 throw err;
               if (extPart === 'jpg' || extPart === 'jpeg') {
                 rzdImage.toBuffer(extPart, {
                   quality: 85
-                }, function(err, buffer) {
+                }, function (err, buffer) {
 
                   if (err)
                     throw err;
-                  fs.writeFile(imgPath, buffer, function(err) {
+                  fs.writeFile(imgPath, buffer, function (err) {
 
                     if (err)
                       throw err;
 
                     //var s3DirPath = "assets/uploads/" + assetDir + "/" +req.files[0].filename;
-                    if(!assetDir || !imgPath)
+                    if (!assetDir || !imgPath)
                       return res.status(500);
 
-                    utility.uploadMultipartFileOnS3(imgPath, s3DirPath, req.files, function(err, s3res) {
-                    //utility.uploadFileS3(config.uploadPath + assetDir, assetDir, function(err, s3res) {
+                    utility.uploadMultipartFileOnS3(imgPath, s3DirPath, req.files, function (err, s3res) {
+                      //utility.uploadFileS3(config.uploadPath + assetDir, assetDir, function(err, s3res) {
                       if (err) {
                         throw err;
                       }
@@ -247,19 +247,19 @@ function resizeImg(req, res, assetDir, dimension, isMultiple) {
                     compression: "high",
                     interlaced: false,
                     transparency: 'auto'
-                  }, function(err, buffer) {
+                  }, function (err, buffer) {
 
                     if (err)
                       throw err;
-                    fs.writeFile(imgPath, buffer, function(err) {
+                    fs.writeFile(imgPath, buffer, function (err) {
 
-                    if (err) throw err;
-                    //assetDir = "assets/uploads/" +assetDir + "/" +req.files[0].filename;
-                    if(!assetDir || !imgPath)
-                      return res.status(500);
+                      if (err) throw err;
+                      //assetDir = "assets/uploads/" +assetDir + "/" +req.files[0].filename;
+                      if (!assetDir || !imgPath)
+                        return res.status(500);
 
-                    utility.uploadMultipartFileOnS3(imgPath, s3DirPath, req.files, function(err, s3res) {
-                      //utility.uploadFileS3(config.uploadPath + assetDir, assetDir, function(err, s3res) {
+                      utility.uploadMultipartFileOnS3(imgPath, s3DirPath, req.files, function (err, s3res) {
+                        //utility.uploadFileS3(config.uploadPath + assetDir, assetDir, function(err, s3res) {
                         if (err)
                           throw err;
                         req.counter++;
@@ -341,7 +341,7 @@ function resizeImg(req, res, assetDir, dimension, isMultiple) {
 }*/
 
 var otp;
-app.post('/api/sms', function(req, res) {
+app.post('/api/sms', function (req, res) {
   otp = '';
   var data = {};
   data.to = req.body.mobile; // 9555987870;
@@ -364,30 +364,31 @@ io.on('connection',function(socket){
  })
 });*/
 
-app.post('/api/notification', function(req, res) {
+app.post('/api/notification', function (req, res) {
   notification.create(req, res);
 });
-app.post('/api/emailer', function(req, res) {
+app.post('/api/emailer', function (req, res) {
   notification.emailer(req, res);
 });
 
-app.post('/api/createtask', function(req, res) {
+app.post('/api/createtask', function (req, res) {
   task.create(req, res);
 });
 
-app.post('/api/updateproductmaster', function(req, res) {
+app.post('/api/updateproductmaster', function (req, res) {
   BulkProductUpload.updateProductMaster(req, res);
 });
 
-app.post('/api/getdevenvironment', function(req, res) {
-  return res.status(200).json({"mode":app.get('env')});
+app.post('/api/getdevenvironment', function (req, res) {
+  res.setHeader('Cache-Control', 'private, max-age=604800');
+  return res.status(200).json({ "mode": app.get('env') });
 });
 
-app.post('/api/quippovaluaion', function(req, res) {
+app.post('/api/quippovaluaion', function (req, res) {
   var bodyData = req.body;
 
   var resList = [];
-  bodyData.forEach(function(item) {
+  bodyData.forEach(function (item) {
     var obj = {
       success: "true"
     };
@@ -398,14 +399,14 @@ app.post('/api/quippovaluaion', function(req, res) {
   return res.status(200).json(resList);
 });
 
-app.post('/api/currency', function(req, response) {
+app.post('/api/currency', function (req, response) {
   var url = "https://api.fixer.io/latest?base=RUB";
-  http.get(url, function(res) {
+  http.get(url, function (res) {
     var str = "";
-    res.on('data', function(chunk) {
+    res.on('data', function (chunk) {
       str += chunk;
     });
-    res.on('end', function() {
+    res.on('end', function () {
       response.end(str);
     });
 
@@ -426,10 +427,10 @@ function handleError(res, err) {
 }
 
 // Start server
-server.listen(config.port, config.ip, function() {
+server.listen(config.port, config.ip, function () {
   console.log('Express server listening on %d, in %s mode', config.port, app.get('env'));
   // notification.startNotification();
-  // taskRunner.startTaskRunner();
+  //  taskRunner.startTaskRunner();
   // valReqSubmitter.start();
   //assetSaleTracker.start();
   // checkQuickQueryNotificationService.start();

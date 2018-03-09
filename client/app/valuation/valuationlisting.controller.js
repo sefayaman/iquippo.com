@@ -143,7 +143,7 @@ function ValuationListingCtrl($scope,$stateParams,$state,Modal,Auth,ValuationSvc
     		dataToSend['ids'] = selectedIds;
         ValuationSvc.export(dataToSend)
         .then(function(buffData){
-          saveAs(new Blob([s2ab(buffData)],{type:"application/octet-stream"}), "valuations_"+ new Date().getTime() +".xlsx")
+          saveAs(new Blob([s2ab(buffData)],{type:"application/octet-stream"}), "valuations_"+ new Date().getTime() +".csv")
         });
     }
 

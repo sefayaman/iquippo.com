@@ -283,7 +283,7 @@ function NewEquipmentListingCtrl($scope, $location, $rootScope, $http, productSv
 
         productSvc.exportProduct(dataToSend)
         .then(function(buffData){
-          saveAs(new Blob([s2ab(buffData)],{type:"application/octet-stream"}), "productlist_"+ new Date().getTime() +".xlsx")
+          saveAs(new Blob([s2ab(buffData)],{type:"application/octet-stream"}), "productlist_"+ new Date().getTime() +".csv")
         });
      }
 
