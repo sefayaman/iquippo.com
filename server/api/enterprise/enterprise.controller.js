@@ -6,7 +6,7 @@ var writtenFrom = require('written-number');
 var request = require('request');
 var EnterpriseValuation = require('./enterprisevaluation.model');
 var EnterpriseValuationInvoice = require('./enterprisevaluationinvoice.model');
-
+var Product = require('../product/product.model');
 var xlsx = require('xlsx');
 var Utility = require('./../../components/utility.js');
 var config = require('./../../config/environment');
@@ -1269,7 +1269,6 @@ exports.bulkModify = function(req, res) {
 
 // Updates an existing enterprise valuation in the DB.
 exports.update = function(req, res) {
-  
   var bodyData = req.body.data;
   var user = req.body.user;
   if(bodyData._id) { delete bodyData._id; }
@@ -1277,6 +1276,17 @@ exports.update = function(req, res) {
   bodyData.auditLogs = [req.enterprise];
   EnterpriseValuation.update({_id:req.params.id},{$set:bodyData},function(err){
       if (err) { return handleError(res, err); }
+      if(req.body.status == "Valuation Report Submitted" && (bodyData.assessedValue || bodyData.overallGeneralCondition)) {
+        var data = {
+            valuationAssessedValue: bodyData.assessedValue,
+            valuationOverallGeneralCondition: bodyData.overallGeneralCondition
+        };
+        Product.update({assetId: bodyData.assetId}, data , function (err, res) {
+            if (!err) {
+                console.error(err);
+            }
+        });        
+      }
       return res.status(200).send("Enterprise valuation updated sucessfully");
   });
 
