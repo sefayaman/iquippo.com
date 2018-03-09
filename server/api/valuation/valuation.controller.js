@@ -129,7 +129,7 @@ exports.getOnFilter = function (req, res) {
   }
 
   var query = ValuationReq.find(filter);
-  query.exec(
+  query.lean().exec(
     function (err, valuations) {
       if (err) { return handleError(res, err); }
       return res.status(200).json(valuations);
@@ -417,21 +417,21 @@ function _prepareResponse(res, valuations) {
 
     tempData.push({
       "Sr. No": key + 1,
-      "Fullname": item.user ? item.user['fname'] + ' ' + item.user['lname'] : '',
-      "Country": item.user ? item.user['country'] : '',
-      "Location": item.user ? item.user['city'] : '',
-      "Mobile No": item.user ? item.user['mobile'] : '',
-      "Phone No": item.user ? item.user['phone'] : '',
-      "Email Address": item.user ? item.user['email'] : '',
+      "Fullname": _.get(item, 'user.fname', '') + ' ' + _.get(item, 'user.lname', ''),
+      "Country": _.get(item, 'user.country', ''),
+      "Location": _.get(item, 'user.city', ''),
+      "Mobile No": _.get(item, 'user.mobile', ''),
+      "Phone No": _.get(item, 'user.phone', ''),
+      "Email Address": _.get(item, 'user.email', ''),
       "Valuation Request Id": item.requestId,
-      "Asset Name": item.product ? item.product['name'] : '',
-      "Manufacturing Year": item.product ? item.product['mfgYear'] : '',
-      "Asset Location": item.product ? item.product['city'] : '',
-      "Machine Serial No.": item.product ? item.product['serialNumber'] : '',
-      "Agency Name": item.valuationAgency['name'],
-      "Request Date": item.createdAt,
-      "Request Purpose": item.purpose,
-      "Request Status": item.status
+      "Asset Name": _.get(item, 'product.name', ''),
+      "Manufacturing Year": _.get(item, 'product.mfgYear', ''),
+      "Asset Location": _.get(item, 'product.city', ''),
+      "Machine Serial No.": _.get(item, 'product.serialNumber', ''),
+      "Agency Name": _.get(item, 'valuationAgency.name', ''),
+      "Request Date": _.get(item, 'createdAt', ''),
+      "Request Purpose": _.get(item, 'purpose', ''),
+      "Request Status": _.get(item, 'status', '')
     });
   });
 

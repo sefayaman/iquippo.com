@@ -453,7 +453,7 @@ function renderExcel(req, res) {
     keys.forEach(function (key) {
       var val = _.get(item, Excel_Header[key], "");
       if (Excel_Header[key] == 'customerName')
-        val = item.fname + " " + item.lname;
+        val = _.get(item, 'fname', '') + _.get(item, 'lname', '');
       if (Excel_Header[key] == "requestRaisedBy") {
         if (item.isForSelf)
           val = "Self";
