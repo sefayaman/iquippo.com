@@ -4,11 +4,11 @@
     angular.module('admin').controller('GSettingCtrl', GSettingCtrl);
 
     //Controller function
-    function GSettingCtrl($scope, $rootScope, Auth, PagerSvc, productSvc, DTOptionsBuilder, LocationSvc, notificationSvc, SubCategorySvc, Modal, settingSvc, PaymentMasterSvc, vendorSvc, uploadSvc, AuctionMasterSvc, categorySvc, brandSvc, modelSvc, ManufacturerSvc, BannerSvc, AuctionSvc, ProductTechInfoSvc, FinanceMasterSvc, LeadMasterSvc, $window,LotSvc) {
+    function GSettingCtrl($scope, $rootScope, Auth, PagerSvc, productSvc, DTOptionsBuilder, LocationSvc, notificationSvc, SubCategorySvc, Modal, settingSvc, PaymentMasterSvc, vendorSvc, uploadSvc, AuctionMasterSvc, categorySvc, brandSvc, modelSvc, ManufacturerSvc, AuctionSvc, ProductTechInfoSvc, FinanceMasterSvc, LeadMasterSvc, $window,LotSvc) {
         $scope.dtOptions = DTOptionsBuilder.newOptions().withOption('order', []);
         $scope.actionAdditionalInfo = false;
         var vm = this;
-        vm.tabValue = 'loc';
+        vm.tabValue = 'assetcount';
         vm.onTabChange = onTabChange;
         // vm.subCategory = {};
         // vm.subCategory.category = {};
@@ -69,14 +69,6 @@
         vm.deleteManufacturer = deleteManufacturer;
         $scope.updateLogo = updateLogo;
 
-        vm.banner = {};
-        vm.bannerEdit = false;
-        vm.saveBanner = saveBanner;
-        vm.updateBanner = updateBanner;
-        vm.editBanner = editBanner;
-        vm.deleteBanner = deleteBanner;
-        $scope.updateBannerImage = updateBannerImage;
-        $scope.updateMobBannerImage = updateMobBannerImage;
         $scope.updateFinanceMasterImage = updateFinanceMasterImage
         vm.leadExportExcel = leadExportExcel;
 
@@ -187,6 +179,11 @@
         function uploadDoc(files,_this,flag) {
             if (files.length == 0)
                 return;
+            if ([3,4].indexOf(flag) !== -1 && files[0].name.indexOf('.docx') == -1) {
+                Modal.alert("Please upload a valid '.docx' file");
+                $(_this).val('')
+                return;
+            }
             $rootScope.loading = true;
             uploadSvc.upload(files[0], auctionDir).then(function(result) {
                 //vm.auctionData.docDir = result.data.assetDir;
@@ -197,6 +194,12 @@
                 if(flag==2){
                     vm.auctionData.docNameProxy = result.data.filename;
                 }
+                if(flag==3){
+                    vm.auctionData.registrationTemplate = result.data.filename;
+                }
+                if(flag==4){
+                    vm.auctionData.undertakingTemplate = result.data.filename;
+                }
             })
             .catch(function(){
                 $rootScope.loading = false;
@@ -204,11 +207,6 @@
 
         }
         
-        function resetData() {
-            vm.banner.hyperlink = "No";
-            vm.banner.ticker = "No";
-            vm.banner.showInMobile = "No";
-        }
         //Auction date master
 
         $scope.importAuctionMaster = importAuctionMaster;
@@ -257,11 +255,6 @@
                     break;
                 case 'manu':
                     getAllManufacturer();
-                    break;
-                case 'banner':
-                    vm.banner = {};
-                    resetData();
-                    getAllBanner();
                     break;
                 case 'technical':
                     resetPagination();
@@ -1288,22 +1281,6 @@
                 })
         }
 
-        /*Banner Master code start*/
-        function getAllBanner() {
-            BannerSvc.getAll()
-                .then(function(result) {
-                    vm.bannerList = result;
-                });
-        }
-
-        function updateBannerImage(files) {
-            if (files.length == 0)
-                return;
-            uploadSvc.upload(files[0], bannerDir).then(function(result) {
-                vm.banner.webImg = result.data.filename;
-            });
-        }
-
         function updateAuctionMasterImage(files) {
             if (files.length == 0)
                 return;
@@ -1317,50 +1294,7 @@
             });
         }
 
-        function updateMobBannerImage(files) {
-            if (files.length == 0)
-                return;
-            uploadSvc.upload(files[0], bannerDir).then(function(result) {
-                vm.banner.mobileImg = result.data.filename;
-            });
-        }
-
-        function saveBanner(form) {
-            /*if(form.$invalid){
-            	$scope.submitted = true;
-            	return;
-            }*/
-            if (vm.banner.hyperlink === 'Yes' && vm.banner.isClickable === 'Yes') {
-                Modal.alert("Please select any one from Express Interest or Hyperlink!", true);
-                return;
-            }
-
-            if (!vm.banner.webImg) {
-                Modal.alert("Please upload image for web.", true);
-                return;
-            }
-            if (!vm.banner.mobileImg && vm.banner.showInMobile == 'Yes') {
-                Modal.alert("Please upload image for mobile.", true);
-                return;
-            }
-            if (!vm.banner.linkUrl && vm.banner.isClickable == 'Yes') {
-                Modal.alert("Please enter hyperlink url.", true);
-                return;
-            }
-             if(vm.banner.isClickable !== 'Yes')
-                vm.banner.linkUrl = "";
-            //$scope.submitted = false;
-            BannerSvc.save(vm.banner)
-                .then(function(res) {
-                    if (res.errorCode == 0) {
-                        vm.banner = {};
-                        resetData();
-                        getAllBanner();
-                    }
-                    Modal.alert(res.message);
-                })
-
-        }
+       
         function updateFinanceMasterImage(files) {
             if (files.length == 0)
                 return;
@@ -1368,62 +1302,6 @@
                 vm.financeData.image = result.data.filename;
             });
         }
-
-        function updateBanner(form) {
-            /*if(form.$invalid){
-            	$scope.submitted = true;
-            	return;
-            }*/
-            if (vm.banner.hyperlink === 'Yes' && vm.banner.isClickable === 'Yes') {
-                Modal.alert("Please select any one from Express Interest or Hyperlink!", true);
-                return;
-            }
-            if (!vm.banner.mobileImg && vm.banner.showInMobile == 'Yes') {
-                Modal.alert("Please upload image for mobile.", true);
-                return;
-            }
-            if (!vm.banner.linkUrl && vm.banner.isClickable == 'Yes') {
-                Modal.alert("Please enter hyperlink url.", true);
-                return;
-            }
-            if(vm.banner.isClickable !== 'Yes')
-                vm.banner.linkUrl = "";
-
-            $scope.submitted = false;
-            BannerSvc.update(vm.banner)
-                .then(function(res) {
-                    if (res.errorCode == 0) {
-                        vm.banner = {};
-                        resetData();
-                        vm.bannerEdit = false;
-                        getAllBanner();
-                    }
-                    Modal.alert(res.message);
-                })
-        }
-
-        function editBanner(index) {
-            angular.copy(vm.bannerList[index], vm.banner)
-            vm.bannerEdit = true;
-            //onServiceChange(vm.paymentMaster.serviceCode,true);
-        }
-
-        function deleteBanner(index) {
-            Modal.confirm("Are you sure want to delete?", function(ret) {
-                if (ret == "yes")
-                    submitDeleteBanner(index);
-            });
-        }
-
-        function submitDeleteBanner(idx) {
-            BannerSvc.deleteBanner(vm.bannerList[idx])
-                .then(function(result) {
-                    vm.banner = {};
-                    resetData();
-                    getAllBanner();
-                })
-        }
-        /*Banner Master code end*/
 
         /*Auction Request for external product  start*/
 

@@ -14,6 +14,7 @@ angular.module('admin').factory("userRegForAuctionSvc", userRegForAuctionSvc);
     //svc.update = update;
     //svc.destroy = destroy;
     svc.checkUserRegis = checkUserRegis;
+    svc.generateKit = generateKit;
     
    function sendUserData(filter){
      return $http.post(svcPath + '/senddata',filter)
@@ -23,6 +24,33 @@ angular.module('admin').factory("userRegForAuctionSvc", userRegForAuctionSvc);
      .catch(function(err){
        throw err;
      });
+   }
+
+   function generateKit(tns){
+     var deferred = $q.defer();
+      var filter = {
+        auctionId:tns.auction_id,
+        transactionId:tns._id,
+        userId:tns.user._id
+      };
+
+      if(tns.registrationKit && tns.undertakingKit){
+        deferred.resolve({
+          registrationKit:tns.registrationKit,
+          undertakingKit : tns.undertakingKit
+        });
+      }else{
+          $http.post(svcPath + '/generatekit',filter)
+         .then(function(res){
+            deferred.resolve(res.data);
+         })
+         .catch(function(err){
+          deferred.reject(err);
+         });
+      }
+      
+
+       return deferred.promise;
    }
 
 

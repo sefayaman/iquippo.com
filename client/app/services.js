@@ -76,8 +76,8 @@
 
       };
 
-      userService.parseExcel=function(fileName,user){   
-          return $http.post(path + "/v1/import",{filename:fileName,user:user})
+      userService.parseExcel=function(excelData,user){   
+          return $http.post(path + "/v1/import",{excelData:excelData,user:user})
                 .then(function(res){
                   return res.data;
                 })

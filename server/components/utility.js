@@ -9,6 +9,7 @@ var debug = require('debug')('server.components.utility');
 var async = require('async');
 var moment = require('moment');
 var fs = require('fs');
+var jsonexport = require('jsonexport');
 var AuctionMaster = require('../api/auction/auctionmaster.model');
 var AWS = require('aws-sdk');
 var util = require('util');
@@ -44,32 +45,35 @@ exports.convertQVAPLStatus = convertQVAPLStatus;
 exports.paginatedResult = paginatedResult;
 exports.getWorkbook = getWorkbook;
 exports.excel_from_data = excel_from_data;
+exports.convertToCSV = convertToCSV;
 exports.validateExcelHeader = validateExcelHeader;
 exports.toJSON = toJSON;
 exports.uploadFileS3 = uploadFileS3;
 //exports.uploadDirToS3 = uploadDirToS3;
 //exports.uploadZipFileToS3 = uploadZipFileToS3;
 exports.downloadFromS3 = downloadFromS3;
+exports.downloadFileFromS3 = downloadFileFromS3;
 exports.deleteFromS3 = deleteFromS3;
 exports.uploadMultipartFileOnS3 = uploadMultipartFileOnS3;
 
 exports.uploadFileOnS3 = uploadFileOnS3;
 exports.getListObjectS3 = getListObjectS3;
 exports.deleteS3File = deleteS3File;
+exports.addNoCacheHeader = addNoCacheHeader;
 
-Date.prototype.addDays = function(days) {
+Date.prototype.addDays = function (days) {
   this.setDate(this.getDate() + parseInt(days));
   //this.setMinutes(this.getMinutes() + parseInt(days));
   return this;
 };
 
-Date.prototype.addHours = function(hours) {
+Date.prototype.addHours = function (hours) {
   //this.setMinutes(this.getMinutes() + parseInt(hours));
   this.setHours(this.getHours() + parseInt(hours));
   return this;
 };
 
-Date.prototype.addMinutes = function(minutes) {
+Date.prototype.addMinutes = function (minutes) {
   this.setMinutes(this.getMinutes() + parseInt(minutes));
   return this;
 };
@@ -85,14 +89,14 @@ function uploadFileS3(localFilePath, dirName, cb) {
   };
 
   var uploader = client.uploadDir(params);
-  uploader.on('error', function(err) {
+  uploader.on('error', function (err) {
     if (err) {
       debug(err);
       return cb(err);
     }
   });
 
-  uploader.on('end', function() {
+  uploader.on('end', function () {
     return cb();
   });
 }
@@ -107,7 +111,7 @@ function uploadFileOnS3(localFilePath, dirName, cb) {
   };
 
   var uploader = client.uploadFile(params);
-  uploader.on('error', function(err) {
+  uploader.on('error', function (err) {
     if (err) {
       debug(err);
       return cb(err);
@@ -118,7 +122,7 @@ function uploadFileOnS3(localFilePath, dirName, cb) {
       uploader.progressAmount, uploader.progressTotal);
   });*/
 
-  uploader.on('end', function() {
+  uploader.on('end', function () {
     //console.log("done uploading");
     return cb();
   });
@@ -138,14 +142,15 @@ function uploadMultipartFileOnS3(localFilePath, dirName, files, cb) {
   var multipartParams = {
     Bucket: config.awsBucket,
     Key: dirName,
-    ContentType: file.mimetype
+    ContentType: file.mimetype,
+    Expires: config.S3_HEADER_EXPIRES,
+    CacheControl: config.S3_HEADER_CACHE_CONTROL
   };
-
   var multipartMap = {
     Parts: []
   };
 
-  awsS3Client.createMultipartUpload(multipartParams, function(mpErr, multipart) {
+  awsS3Client.createMultipartUpload(multipartParams, function (mpErr, multipart) {
     if (mpErr) {
       console.error('Error!', mpErr);
       return cb(mpErr);
@@ -166,7 +171,7 @@ function uploadMultipartFileOnS3(localFilePath, dirName, files, cb) {
   });
 
   function completeMultipartUpload(awsS3Client, doneParams) {
-    awsS3Client.completeMultipartUpload(doneParams, function(err, data) {
+    awsS3Client.completeMultipartUpload(doneParams, function (err, data) {
       if (err) {
         console.error('An error occurred while completing multipart upload');
         return cb(err);
@@ -180,7 +185,7 @@ function uploadMultipartFileOnS3(localFilePath, dirName, files, cb) {
 
   function uploadPart(awsS3Client, multipart, partParams, tryNum) {
     var tryNum = tryNum || 1;
-    awsS3Client.uploadPart(partParams, function(multiErr, mData) {
+    awsS3Client.uploadPart(partParams, function (multiErr, mData) {
       if (multiErr) {
         console.log('Upload part error:', multiErr);
 
@@ -207,7 +212,7 @@ function uploadMultipartFileOnS3(localFilePath, dirName, files, cb) {
       };
 
       completeMultipartUpload(awsS3Client, doneParams);
-    }).on('httpUploadProgress', function(progress) {
+    }).on('httpUploadProgress', function (progress) {
       console.log(Math.round(progress.loaded / progress.total * 100) + '% done')
     });
   }
@@ -226,14 +231,39 @@ function downloadFromS3(opts, cb) {
   //var s3 = new AWS.S3();
   var downloader = client.downloadDir(params);
 
-  downloader.on('error', function(err) {
+  downloader.on('error', function (err) {
     if (err) {
       debug(err);
       return cb(err);
     }
   });
 
-  downloader.on('end', function() {
+  downloader.on('end', function () {
+    return cb();
+  });
+
+}
+
+function downloadFileFromS3(opts, cb) {
+  var params = {
+    localFile: opts.localFile,
+
+    s3Params: {
+      Bucket: config.awsBucket,
+      Key: opts.key
+    }
+  };
+  //var s3 = new AWS.S3();
+  var downloader = client.downloadFile(params);
+
+  downloader.on('error', function(err) {
+    if (err) {
+       debug(err);
+      return cb(err);
+    }
+  });
+
+  downloader.on('end', function(res) {
     return cb();
   });
 
@@ -247,14 +277,14 @@ function deleteFromS3(opts, cb) {
   //var s3 = new AWS.S3();
   var deleter = client.deleteDir(params);
 
-  deleter.on('error', function(err) {
+  deleter.on('error', function (err) {
     if (err) {
       debug(err);
       return cb(err);
     }
   });
 
-  deleter.on('end', function() {
+  deleter.on('end', function () {
     return cb();
   });
 }
@@ -262,29 +292,29 @@ function deleteFromS3(opts, cb) {
 //s3 listobject
 function getListObjectS3(localDirPath, cb) {
   var params = {
-  Bucket: config.awsBucket, 
-  Prefix: "downloads/user-export"
-  //MaxKeys: 2
- };
-    awsS3Client.listObjects(params, function(err, data) {
-      if (err){
-          console.log(err, err.stack); // an error occurred
-      }else{   
-        var oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds
-          data.Contents.forEach(function(entry) {
-          //console.log("entry key",entry.Key);
-          var d = new Date(entry.LastModified);
-          var fileTimeStamp = d.getTime(); 
-          var currentTimeStamp = new Date().getTime();
-          var diffDays = Math.round(Math.abs((currentTimeStamp - fileTimeStamp)/(oneDay)));
-          if(diffDays >1){
-            deleteS3File(entry.Key);
-          }
-        });
-        
-      }
-    });
-  }
+    Bucket: config.awsBucket,
+    Prefix: "downloads/user-export"
+    //MaxKeys: 2
+  };
+  awsS3Client.listObjects(params, function (err, data) {
+    if (err) {
+      console.log(err, err.stack); // an error occurred
+    } else {
+      var oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
+      data.Contents.forEach(function (entry) {
+        //console.log("entry key",entry.Key);
+        var d = new Date(entry.LastModified);
+        var fileTimeStamp = d.getTime();
+        var currentTimeStamp = new Date().getTime();
+        var diffDays = Math.round(Math.abs((currentTimeStamp - fileTimeStamp) / (oneDay)));
+        if (diffDays > 1) {
+          deleteS3File(entry.Key);
+        }
+      });
+
+    }
+  });
+}
 
 function isEmpty(myObject) {
   for (var key in myObject) {
@@ -310,7 +340,7 @@ function sendCompiledData(options, cb) {
     var endDate = new Date(options.dataToSend.endDate);
     options.dataToSend.endDate = new Date(endDate.getTime() - endDate.getTimezoneOffset() * 60000).toISOString();
   }
-  
+
   if (options.dataToSend.regEndDate) {
     var regEndDate = new Date(options.dataToSend.regEndDate);
     options.dataToSend.regEndDate = new Date(regEndDate.getTime() - regEndDate.getTimezoneOffset() * 60000).toISOString();
@@ -327,21 +357,21 @@ function sendCompiledData(options, cb) {
     delete options.dataToSend.updatedAt;
     delete options.dataToSend.createdAt;
   }
-  async.series([function(next) {
+  async.series([function (next) {
     fetchAuctionId(options, next);
-  }, function(next) {
+  }, function (next) {
     compileData(options, next);
-  }, function(next) {
+  }, function (next) {
     sendData(options, next);
-  }], function(err, results) {
+  }], function (err, results) {
     if (err) {
       return cb(err)
     }
     var aucResult = {};
-    results.forEach(function(item){
-      if(item.err)
+    results.forEach(function (item) {
+      if (item.err)
         aucResult.err = item.err;
-      if(item.results)
+      if (item.results)
         aucResult.result = item.results;
     });
     //console.log("Output result#aucResult.result#", aucResult);
@@ -353,7 +383,7 @@ function fetchAuctionId(options, callback) {
   if (options.dataToSend && options.dataToSend.auction_id && options.dataType !== 'auctionData') {
     AuctionMaster.find({
       "_id": options.dataToSend.auction_id
-    }, function(err, auctionData) {
+    }, function (err, auctionData) {
       if (err) return callback(err);
       options.dataToSend.auctionId = auctionData[0].auctionId;
       return callback(null, options);
@@ -366,26 +396,26 @@ function fetchAuctionId(options, callback) {
 function compileData(options, callback) {
   switch (options.dataType) {
     case "userInfo":
-    /*if(options.dataToSend.selectedLots) {
-      options.dataToSend.selectedLots = options.dataToSend.selectedLots.join();
-      console.log("options.dataToSend.selectedLots", options.dataToSend.selectedLots)
-    }*/
+      /*if(options.dataToSend.selectedLots) {
+        options.dataToSend.selectedLots = options.dataToSend.selectedLots.join();
+        console.log("options.dataToSend.selectedLots", options.dataToSend.selectedLots)
+      }*/
       callback(null, options);
       break;
     case "lotData":
       if (options.dataToSend.hasOwnProperty('assetDir'))
         delete options.dataToSend.assetDir;
-      if(!options.dataToSend.isDeleted) {
+      if (!options.dataToSend.isDeleted) {
         if (options.dataToSend.bidIncrement && options.dataToSend.bidIncrement.length < 1) {
           //options.dataToSend.bidIncrement = [{}];
           options.dataToSend.bidIncrement = {};
         } else {
-            var bidIncObj = {};
-            options.dataToSend.bidIncrement.forEach(function(x) {
-              bidIncObj[x.bidFrom + "-" + x.bidTo] = x.bidIncrement;
-            });
-            options.dataToSend.bidIncrement = bidIncObj;
-          }
+          var bidIncObj = {};
+          options.dataToSend.bidIncrement.forEach(function (x) {
+            bidIncObj[x.bidFrom + "-" + x.bidTo] = x.bidIncrement;
+          });
+          options.dataToSend.bidIncrement = bidIncObj;
+        }
       }
       callback(null, options);
       break;
@@ -393,18 +423,18 @@ function compileData(options, callback) {
       callback(null, options);
       break;
     case "auctionData":
-      if(options.dataToSend.primaryImg)
+      if (options.dataToSend.primaryImg)
         options.dataToSend.primaryImg = config.awsUrl + config.awsBucket + "/assets/uploads/auctionmaster/" + options.dataToSend.primaryImg;
-      if(!options.dataToSend.isDeleted) {
+      if (!options.dataToSend.isDeleted) {
         if (options.dataToSend.bidIncrement && options.dataToSend.bidIncrement.length < 1) {
           options.dataToSend.bidIncrement = {};
         } else {
-            var bidIncObj = {};
-            options.dataToSend.bidIncrement.forEach(function(x) {
-              bidIncObj[x.bidFrom + "-" + x.bidTo] = x.bidIncrement;
-            });
-            options.dataToSend.bidIncrement = bidIncObj;
-          }
+          var bidIncObj = {};
+          options.dataToSend.bidIncrement.forEach(function (x) {
+            bidIncObj[x.bidFrom + "-" + x.bidTo] = x.bidIncrement;
+          });
+          options.dataToSend.bidIncrement = bidIncObj;
+        }
       }
 
       if (options.dataToSend.hasOwnProperty('staticIncrement'))
@@ -427,7 +457,7 @@ function compileData(options, callback) {
 
 
 function sendData(options, callback) {
-  if(options.dataType === 'auctionData' || options.dataType === 'lotData') {
+  if (options.dataType === 'auctionData' || options.dataType === 'lotData') {
     var serviceData = [];
     serviceData.push(options.dataToSend);
     serviceData = JSON.stringify(serviceData);
@@ -464,24 +494,24 @@ function sendData(options, callback) {
   console.log("URL###", url);
   request.post({
     url: url,
-    headers:headers,
-    rejectUnauthorized:false,
+    headers: headers,
+    rejectUnauthorized: false,
     form: data
-  }, function(err, httpres, asData) {
+  }, function (err, httpres, asData) {
     if (err) {
-      console.log("+++++++",err);
+      console.log("+++++++", err);
       return callback(err);
     } else {
       try {
-        console.log("=======++__________",asData);
+        console.log("=======++__________", asData);
         var res = {};
         var asData = JSON.parse(asData);
-        if(asData.err.length > 0)
+        if (asData.err.length > 0)
           res.err = asData.err;
         else
           res.err = "";
 
-        if(asData.results.length > 0)
+        if (asData.results.length > 0)
           res.results = asData.results;
         else
           res.results = "";
@@ -500,7 +530,7 @@ function deleteS3File(fileName) {
     Bucket: config.awsBucket,
     Key: fileName
   };
-  awsS3Client.deleteObject(params, function(err, data) {
+  awsS3Client.deleteObject(params, function (err, data) {
     if (data) {
       //console.log("File deleted successfully");
     } else {
@@ -522,15 +552,16 @@ function convertQVAPLStatus(qvaplStatus) {
 }
 var csvRegEx = /,|\n|\r\n|\t|\u202c/g;
 
-function toCsvValue(valStr){
+function toCsvValue(valStr) {
   valStr = valStr + "";
-   if(valStr){
-      valStr = valStr.replace(/,|\n|\r\n|\t|\u202c/g, ' ');
-      valStr = _.trim(valStr);
-    }
-    if(valStr == "null" || valStr == "undefined")
-      valStr = "";
-    return valStr;
+  if (valStr) {
+    valStr = valStr.replace(/,|\n|\r\n|\t|\u202c/g, ' ');
+    valStr = valStr.replace(/"/g, '');
+    valStr = _.trim(valStr);
+  }
+  if (valStr == "null" || valStr == "undefined")
+    valStr = "";
+  return valStr;
 }
 
 function toIST(value) {
@@ -550,14 +581,14 @@ function paginatedResult(req, res, modelRef, filter, result, callback) {
   var prevPage = bodyData.prevPage || 0;
   var isNext = currentPage - prevPage >= 0 ? true : false;
   Seq()
-    .seq(function() {
+    .seq(function () {
       var self = this;
-      modelRef.count(filter, function(err, counts) {
+      modelRef.count(filter, function (err, counts) {
         result.totalItems = counts;
         self(err);
       })
     })
-    .seq(function() {
+    .seq(function () {
 
       var self = this;
       var sortFilter = {
@@ -581,7 +612,7 @@ function paginatedResult(req, res, modelRef, filter, result, callback) {
         skipNumber = -1 * skipNumber;
 
       query = modelRef.find(filter).sort(sortFilter).limit(pageSize * skipNumber);
-      query.exec(function(err, items) {
+      query.exec(function (err, items) {
         if (!err && items.length > pageSize * (skipNumber - 1)) {
           result.items = items.slice(pageSize * (skipNumber - 1), items.length);
         } else
@@ -592,13 +623,13 @@ function paginatedResult(req, res, modelRef, filter, result, callback) {
       });
 
     })
-    .seq(function() {
+    .seq(function () {
       if (callback) {
         return callback(result);
       }
       return res.status(200).json(result);
     })
-    .catch(function(err) {
+    .catch(function (err) {
       handleError(res, err);
     })
 
@@ -694,7 +725,7 @@ function excel_from_data(data, headers) {
   for (var R = 0; R < data.length; ++R) {
     var C = 0;
     var rowItems = data[R];
-    rowItems.forEach(function(item) {
+    rowItems.forEach(function (item) {
       if (!item && item != 0)
         item = "";
       var cell = {
@@ -755,8 +786,8 @@ function toJSON(options) {
   if (!fieldMapping.__rowNum__)
     fieldMapping.__rowNum__ = 'rowCount';
 
-  data = data.filter(function(x) {
-    Object.keys(x).forEach(function(key) {
+  data = data.filter(function (x) {
+    Object.keys(x).forEach(function (key) {
       if (fieldMapping[key]) {
         x[fieldMapping[key]] = trim(x[key] || "");
       }
@@ -770,7 +801,7 @@ function toJSON(options) {
 }
 
 var dateUtil = {
-  validateAndFormatDate: function(dateString, format) {
+  validateAndFormatDate: function (dateString, format) {
     var dateFormat = format || 'YYYY-MM-DD HH:mm:ss';
     var formattedDate = moment(dateString, format).format(dateFormat);
     if (formattedDate === 'Invalid date') {
@@ -778,7 +809,7 @@ var dateUtil = {
     }
     return formattedDate;
   },
-  isValidDateTime: function(dateTimeString, format) {
+  isValidDateTime: function (dateTimeString, format) {
     if (!dateTimeString)
       return function isValid() {
         return false;
@@ -786,5 +817,31 @@ var dateUtil = {
     return moment(dateTimeString.toString(), format);
   }
 }
+
+function addNoCacheHeader(res) {
+  res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+  res.header('Expires', '-1');
+  res.header('Pragma', 'no-cache');
+}
+
+/**
+ *  Added By Mohit Khalkho for CSV export - Start
+ */
+function convertToCSV(res, csv, filename) {
+  jsonexport(csv, function (err, csv) {
+    if (err) {
+      throw err;
+    }
+    return _renderCSV(res, csv, filename);
+  });
+}
+
+function _renderCSV(res, csv, filename) {
+  var fileName = filename ? filename : 'file_' + new Date().getTime();
+  res.setHeader('Content-Type', 'application/octet-stream');
+  res.setHeader("Content-Disposition", 'attachment; filename=' + '\"' + fileName + '.csv' + '\"');
+  res.send(new Buffer(csv, 'binary'));
+}
+// Added By Mohit Khalkho for CSV export - End
 
 exports.dateUtil = dateUtil;

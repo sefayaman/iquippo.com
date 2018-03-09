@@ -281,8 +281,15 @@ angular.module('sreizaoApp',[
         auctionURL = "https://auctionsoftwaremarketplace.com:3007";
         ccavenueURL = "https://test.ccavenue.com";
         if(res.mode === 'development') {
+          
+          /*Payment setup for dev server*/
           currentURL = "http://dev.iquippo.com";
           accessCode = 'AVHH01FA38BL35HHLB';
+
+          /*Payment setup for localhost server*/
+         /* currentURL = "http://localhost";
+          accessCode = 'AVSW00DJ54AN50WSNA';*/
+
         } else {
           currentURL = "http://uat.iquippo.com";
           accessCode = 'AVGH01FA38BL33HGLB';

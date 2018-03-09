@@ -114,6 +114,7 @@
         dataToSend.user = Auth.getCurrentUser()._id;
         dataToSend.product = {};
         dataToSend.product.seller = {};
+        dataToSend.product.seller.customerId = query.product.seller.customerId;
         dataToSend.product.seller._id = query.product.seller._id;
         dataToSend.product.seller.name = query.product.seller.fname + " " + query.product.seller.lname;
         dataToSend.product.seller.mobile = query.product.seller.mobile;

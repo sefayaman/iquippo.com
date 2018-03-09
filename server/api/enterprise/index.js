@@ -37,7 +37,7 @@ router.post('/updaterequest',scriptController.updateLegalEntityInRequest);
 */
 router.post('/asset/group',auth.hasRole('admin'),assetGroupCtrl.create);
 router.put('/asset/group/:id', auth.hasRole('admin'), assetGroupCtrl.update);
-router.get('/asset/group',auth.hasRole('admin'),assetGroupCtrl.fetch,assetGroupCtrl.renderJson);
+router.get('/asset/group',assetGroupCtrl.fetch,assetGroupCtrl.renderJson);
 
 router.get('/asset/group/count',auth.hasRole('admin'),assetGroupCtrl.count);
 router.post('/asset/group/upload/excel',auth.hasRole('admin'),assetGroupCtrl.uploadExcel);

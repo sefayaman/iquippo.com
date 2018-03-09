@@ -17,7 +17,7 @@ mongoose.connection.on('error', function (err) {
 function init(processCb) {
     findProductsCustomerId();
     function findProductsCustomerId() {
-        Product.find({deleted:false,"seller.customerId": { $exists: false}}, function (err, products) {
+        Product.find({"seller.customerId": { $exists: false}}, function (err, products) {
             if (err){
                 return processCb(err);
             }
@@ -32,10 +32,10 @@ function init(processCb) {
     }
 
     function updateProuductUserIds(product, cb) {
-        sellerEmail = product.seller.email;
+        Mobile = product.seller.mobile;
         //console.log(sellerEmail);
         if ( !product.seller.customerId ) {
-            UserModel.find({email:sellerEmail,deleted:false},function(err,users){
+            UserModel.find({mobile:Mobile},function(err,users){
                 if ( err ) {
                     return cb(); 
                 }
@@ -49,8 +49,8 @@ function init(processCb) {
                         console.log("##########", error);
                     }
                     console.log('Asset ID: ', product.assetId, 'User_ID: ',setUserCustomerId , 'Response: ', resultData);
+                    return cb();
                 });
-                return cb();
             });
         }
         else {

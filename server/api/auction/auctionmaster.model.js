@@ -38,6 +38,8 @@ var AuctionMasterSchema = new Schema({
 	docType:String,
 	docName: String,
 	docNameProxy: String,
+	registrationTemplate:String,
+	undertakingTemplate:String,
 	groupId:String,
 	onBehalfOfClient:String,
 	assetCategory:String,

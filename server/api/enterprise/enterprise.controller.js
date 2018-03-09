@@ -2,6 +2,7 @@
 
 var _ = require('lodash');
 var Seq = require("seq");
+var writtenFrom = require('written-number');
 var request = require('request');
 var EnterpriseValuation = require('./enterprisevaluation.model');
 var EnterpriseValuationInvoice = require('./enterprisevaluationinvoice.model');
@@ -72,10 +73,26 @@ function getValuationRequest(req,res){
       filter['cancelled'] = true;
     else if(queryParam.statusType === 'Request Modified')
        filter['requestModified'] = true;
+     else if(queryParam.statusType === 'Request On Hold')
+      filter['onHold'] = true;
+      else if(queryParam.statusType === 'Payment Received'){
+        filter['paymentReceived'] = true;
+        filter["status"] = EnterpriseValuationStatuses[7]; 
+      }
+    else if(queryParam.statusType === 'Payment Made'){
+      filter['paymentMade'] = true;
+      filter["status"] = EnterpriseValuationStatuses[7];
+    }
     else{
       filter["status"] = queryParam.statusType;
       filter['cancelled'] = false;
       filter['requestModified'] = false;
+      filter['onHold'] = false;
+      if(queryParam.statusType !== EnterpriseValuationStatuses[10]){
+         filter['paymentReceived'] = false;
+         filter['paymentMade'] = false;
+      }
+     
     }    
    }
 
@@ -1665,18 +1682,48 @@ exports.createInvoice = function(req,res){
 }
 
 exports.generateInvoice = function(req,res){
-  var invoiceNo = req.params.invoiceNo;
+   var invoiceNo = req.params.invoiceNo;
   if(!invoiceNo){
     return res.status(412).json({Err:'Invalid invoice Number'});
   }
-    
-  EnterpriseValuationInvoice.find({invoiceNo: invoiceNo},function(err,invoiceData){
-    if(err || !invoiceData)
-      return res.send(err || new APIError(400,'Error while fetching invoice'));
-    
-    if(invoiceData.length == 0)
-      res.status(412).json({Err:'Invalid invoice Number'});
 
+  try{
+    var getInvoiceDetail =  async.seq(getInvoice,getTransactions);
+    getInvoiceDetail(function(err,result){
+      if(err) return res.send(err);
+      generateInvoice(req,res);
+    });
+  }catch(e){
+    return handleError(res, err);
+  };
+
+  function getInvoice(callback){
+    var invoiceNo = req.params.invoiceNo;   
+    EnterpriseValuationInvoice.find({invoiceNo: invoiceNo},function(err,invoiceData){
+      if(err || !invoiceData)
+        return callback(err || new APIError(400,'Error while fetching invoice'));
+      if(invoiceData.length == 0)
+          return callback(new APIError(404,'Invoice detail not found'));
+      req.invoiceData = invoiceData[0];
+      return callback(null,req.invoiceData);
+    });
+  }
+
+  function getTransactions(invoiceData,callback){
+    var ucns = invoiceData.uniqueControlNos || [];
+    EnterpriseValuation.find({uniqueControlNo:{$in:ucns}},function(err,valReqs){
+      if(err || !valReqs)
+        return callback(err || new APIError(400,'Error while fetching valuation requests'));
+       if(valReqs.length == 0)
+          return callback(new APIError(404,'Valuation requests not found'));
+      req.valReqs = valReqs;
+      callback(null,valReqs);
+    });
+  }
+}
+
+function generateInvoice(req,res){
+    var invoiceData =  req.invoiceData;
     fs.readFile(__dirname + '/../../views/emailTemplates/EValuation_Invoice.html', 'utf8', function(err, source) {
      if (err) {
         return handleError(res, err);
@@ -1686,12 +1733,37 @@ exports.generateInvoice = function(req,res){
       //source += '</body></html>';
       var template = Handlebars.compile(source);
 
+      var descriptionD = invoiceData.requestType + " of";
+      if(invoiceData.requestCount == 1){
+        descriptionD += " " + invoiceData.assetCategory;
+      }else
+        descriptionD += " various assets as per annexure."
+      var invoiceInWords = "";
+      invoiceInWords = writtenFrom(invoiceData.totalAmount,{lang:'enIndian'});
+      if(invoiceInWords)
+        invoiceInWords += " only."
+      if(invoiceInWords && invoiceInWords.length > 4){
+        invoiceInWords = invoiceInWords.charAt(0).toUpperCase() + invoiceInWords.slice(1)
+      }
+
       var data = {
-        invoiceData : invoiceData[0],
-        invoiceDate : Utility.dateUtil.validateAndFormatDate(invoiceData[0].createdAt,'MM/DD/YYYY'),
+        valReqs : req.valReqs,
+        descriptionD:descriptionD,
+        invoiceInWords:invoiceInWords,
+        descriptionHd: invoiceData.requestType + " fee towards",
+        invoiceData : invoiceData,
+        invoiceDate : Utility.dateUtil.validateAndFormatDate(invoiceData.invoiceDate,'DD-MM-YYYY'),
         serverPath:config.serverPath,
         awsBaseImagePath:config.awsUrl + '/' + config.awsBucket
       };
+
+       var taxColms = ['CGST','SGST','IGST'];
+      if(invoiceData.selectedTaxes && invoiceData.selectedTaxes.length){
+        invoiceData.selectedTaxes.forEach(function(tax){
+          if(taxColms.indexOf(tax.type) !== -1)
+            data[tax.type] = tax;
+        });
+      }
 
       var result = template(data);
       var pdfInput = minify(result, {
@@ -1715,11 +1787,11 @@ exports.generateInvoice = function(req,res){
           res.setHeader('Content-type', 'application/pdf');
           pdfOutput.pipe(res);
         } else {
+          console.log('err',err);
           res.send(new APIError(400,'Error while creating invoice'));
         }
       });
     });
-  });
 }
 
 // Updates an existing enterprise valuation in the DB.
@@ -2150,6 +2222,10 @@ function exportExcel(req,res,fieldMap,jsonArr){
       item.status = "Hold - " + item.onHoldMsg;
     else if(item.requestModified)
       item.status = "Request Modified";
+    else if(item.paymentReceived && !item.paymentMade)
+        item.status = "Payment Received";
+    else if(item.paymentMade && !item.paymentReceived)
+        item.status = "Payment Made";
 
     allowedHeaders.forEach(function(header){
       var keyObj = fieldMap[header];
@@ -2190,7 +2266,11 @@ function exportExcel(req,res,fieldMap,jsonArr){
 }
 
 function renderCsv(req,res,csv){
-   var fileName = req.query.type + "_" + new Date().getTime();
+  if(req.query.type == "transaction") {
+    // change name of file in case of transaction
+    req.query.type = "Ent_Valuation";
+  }
+  var fileName = req.query.type + "_" + new Date().getTime();
   res.setHeader('Content-Type', 'application/octet-stream');
   res.setHeader("Content-Disposition", 'attachment; filename=' + fileName + '.csv;');
   res.end(csv, 'binary'); 

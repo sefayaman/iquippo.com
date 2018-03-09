@@ -99,10 +99,10 @@
 			   			<td ng-if="isAdmin()">
 			   				<a href="javascript:void(0);" class="btn btn-danger btn-xs" ng-click="productBidRequestVm.openDialog(bid,'emdFullPaymentPopup', '', 'Full Payment')" ng-if="productBidRequestVm.validateAction(bid,'FULLPAYMENT')">
 			   					<span ng-if="bid.fullPayment.remainingPayment > 0">Update Details</span>
-			   					<span ng-if="!bid.fullPayment.remainingPayment > 0">View Details</span>
+			   					<span ng-if="bid.fullPayment.remainingPayment <= 0">View Details</span>
 			   				</a>
 			   				<a href="javascript:void(0);" class="btn btn-danger btn-xs" ng-click="productBidRequestVm.openDialog(bid,'emdFullPaymentPopup', '', 'Full Payment')" ng-if="productBidRequestVm.validateAction(bid,'VIEWFULLPAYMENT')">
-			                  <span ng-if="!bid.fullPayment.remainingPayment > 0">View Details</span>
+			                  <span ng-if="bid.fullPayment.remainingPayment <= 0">View Details</span>
 			                </a>
 			   			</td>
 			   			<td ng-if="!isFAgencyPartner() && !isAdmin()">{{bid.parkingCharge || 0}}</td>

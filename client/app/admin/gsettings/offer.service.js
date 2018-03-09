@@ -95,7 +95,7 @@
             .then(function(res){
               saveAs(new Blob([s2ab(res.data)], {
                 type: "application/octet-stream"
-              }), "offermaster" + new Date().getTime() + ".xlsx")
+              }), "offermaster" + new Date().getTime() + ".csv")
             })
             .catch(function(err){
               throw err; 

@@ -152,7 +152,13 @@ angular.module('sreizaoApp')
         url:"/myaccount",
         templateUrl: 'app/account/myaccount/myaccount.html',
         controller: 'MyAccountCtrl as myAccountVm',
-         layout:'client'
+        layout:'client'
+      })
+      .state('useraccountedit', {
+        url: '/useraccountedit/:id',
+        templateUrl: 'app/account/myaccount/myaccount.html',
+        controller: 'MyAccountCtrl as myAccountVm',
+        layout:'client'
       })
       .state('viewproduct', {
         url:"/used/viewproducts?currentPage&group&category&brand&model" + 
@@ -296,15 +302,11 @@ angular.module('sreizaoApp')
           $rootScope.metaDescription=pagesTitles.financing.meta;
         }
       })
-      .state('cme', {
-        url:"/financing/CME",
-        //templateUrl: 'app/staticpages/financingcme.html',
+     .state('cme', {
+        url:"/financing",
+        templateUrl: 'app/staticpages/financecme.html',
         controller:"FinanceCmeCtrl",
-        layout:'client',
-        onEnter:function($rootScope){
-          $rootScope.choosenTitle=pagesTitles.financing.title;
-          $rootScope.metaDescription=pagesTitles.financing.meta;
-        }
+        layout:'client'
       })
       .state('insurance', {
         url:"/insurance",
@@ -343,7 +345,7 @@ angular.module('sreizaoApp')
         restrict:true
       })
       .state('usermanagment', {
-        url: '/usermanagement',
+        url: '/usermanagement?first_id&last_id&currentPage&prevPage&searchstr',
         templateUrl: 'app/admin/usermanagement/usermanagement.html',
         controller: 'UserManagementCtrl as userManagementVm',
         authenticate:true,
@@ -527,7 +529,7 @@ angular.module('sreizaoApp')
       })
       .state('auctionpaymentresponse', {
         url: '/auctionpaymentresponse/:tid',
-        templateUrl: 'app/payment/paymentresponse.html',
+        templateUrl: 'app/payment/auctionpaymentresponse.html',
         controller: 'AuctionPaymentResponseCtrl as auctionPaymentResponseVm',
         authenticate:true,
         layout:'client'

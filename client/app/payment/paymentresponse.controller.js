@@ -11,7 +11,6 @@ function PaymentResponseCtrl($scope,Modal,$stateParams,$state,notificationSvc,Pa
  	var valuationReq = null;
  	var auctionReq = null;
  	vm.success = true;
-  $scope.auctionResponse = false;
 
  	function init(){
  		var tid = $stateParams.tid;
@@ -29,7 +28,6 @@ function PaymentResponseCtrl($scope,Modal,$stateParams,$state,notificationSvc,Pa
  				Modal.alert("Invalid payment access");
  			}
  			vm.payTransaction = result[0];
-      $scope.auctionResponse = false;
 
  			if(vm.payTransaction.paymentMode == 'online' && !Auth.isAdmin()){
 	 			if(vm.payTransaction.statusCode == 0)
