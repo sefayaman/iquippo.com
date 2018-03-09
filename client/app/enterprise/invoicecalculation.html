@@ -21,7 +21,7 @@
       </div>
     </div>
     <legend></legend>
-    <div class="row form-group">
+    <div class="row form-group" ng-if="!individualValuation || updateAmountReq">
       <div class="col-sm-12">
         <span class="badge" ng-repeat="token in selectedTax">
           {{token.type}} : {{token.rate}} 
@@ -32,30 +32,26 @@
       </div>
     </div>
 
-    <div class="row" ng-if="individualValuation">
+    <div class="row" ng-if="individualValuation && !updateAmountReq">
       <div class="col-sm-6 form-group" ng-class="{'has-error':invoiceForm.taxType.$invalid && submitted}">
-        <select class="form-control" ng-change="getTax(invoice.taxType)" ng-model="invoice.taxType" required>
+        <select class="form-control" ng-change="getTax(selectedType)" ng-model="selectedType" required>
           <option value="">Select Type of Tax</option>
-          <option ng-repeat="tx in serviceTaxes" value="{{tx.type}}">{{tx.type}}</option>
+          <option ng-repeat="tx in serviceTaxes" value="{{tx._id}}">{{tx.type}}</option>
         </select>
       </div>      
-      <!-- <div class="col-sm-6 form-group">
-        <label>GST (18%)</label>
-        <input type="number" class="form-control" placeholder="Amount" ng-model="invoice.gst" name="gst" disabled>
-      </div> -->
     </div>
-    <div class="row" ng-if="individualValuation">
+    <div class="row" ng-if="individualValuation && !updateAmountReq">
       <div class="col-sm-6 form-group">
         <label>Actual Service Fee</label>
         <input type="number" class="form-control" placeholder="Actual Service Fee" ng-model="invoice.actualInvoiceAmount" name="actualInvoiceAmount" disabled>
       </div>   
-      <div ng-if="individualValuation" class="col-md-6 form-group" ng-class="{'has-error':invoiceForm.gst.$invalid && submitted}">
+      <div ng-if="individualValuation" class="col-md-6 form-group" ng-class="{'has-error':invoiceForm.gstAmount.$invalid && submitted}">
         <label>Tax</label>
-        <input type="number" class="form-control" placeholder="Amount" ng-model="invoice.gst" name="gst" disabled>    
+        <input type="number" class="form-control" placeholder="Amount" ng-model="gstAmount" name="gstAmount" disabled>    
       </div>
     </div>
 
-    <div class="row" ng-if="!individualValuation">   
+    <div class="row" ng-if="!individualValuation || updateAmountReq">
       <div class="col-sm-5 form-group">
         <select class="form-control" ng-change="getTax(selectedType)" ng-model="selectedType">
           <option value="">Select Type of Tax</option>

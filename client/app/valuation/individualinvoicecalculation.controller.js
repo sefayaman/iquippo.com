@@ -8,6 +8,8 @@ function IndividualInvoiceCalculationCtrl($scope,$uibModalInstance,Modal,Auth,Pa
   $scope.allState = [];
 
   $scope.generateInvoice = generateInvoice;
+  $scope.addTaxToken = addTaxToken;
+  $scope.deleteTaxToken = deleteTaxToken;
   $scope.close = close;
 
   $scope.invoice = {};
@@ -20,6 +22,7 @@ function IndividualInvoiceCalculationCtrl($scope,$uibModalInstance,Modal,Auth,Pa
   $scope.payTransaction = {};
   $scope.gstPer = 18;
   $scope.gst = 0;
+  $scope.updateAmountReq = false;
 
  	function init(){
      LocationSvc.getAllState()
@@ -53,15 +56,47 @@ function IndividualInvoiceCalculationCtrl($scope,$uibModalInstance,Modal,Auth,Pa
  	}
 
   function removeGSTCalculate(amount) {
-    $scope.gst = Number(parseFloat(amount - (amount*(100/(100+$scope.gstPer)))).toFixed(2));
-    $scope.invoice.actualInvoiceAmount = Number(parseFloat(amount - Number($scope.gst)).toFixed(2));
+    $scope.selectedTax = [];
+    $scope.currentTax = null;
+    $scope.gstAmount = "";
+    if($scope.invoice.invoiceAmount === $scope.payTransaction.totalAmount) {
+      $scope.updateAmountReq = false;
+      $scope.gst = Number(parseFloat(amount - (amount*(100/(100+$scope.gstPer)))).toFixed(2));
+      $scope.invoice.actualInvoiceAmount = Number(parseFloat(amount - Number($scope.gst)).toFixed(2));
+      // if($scope.invoice.taxType) {
+      //   $scope.invoice.gstPer = $scope.gstPer;
+      //   $scope.gstAmount = $scope.gst || 0;
+      // }
+    } else {
+      $scope.updateAmountReq = true;
+    }
   }
 
-  function getTax(taxType){
-    if(!taxType)
-        return;
-    $scope.invoice.gstPer = $scope.gstPer;
-    $scope.invoice.gst = $scope.gst || 0;
+  function getTax(_id){
+    $scope.currentTax = null;
+    if(!_id)
+      return;
+    if($scope.updateAmountReq) {
+      for(var i = 0; i < $scope.serviceTaxes.length; i++){
+        if($scope.serviceTaxes[i]._id == _id){
+           $scope.currentTax = $scope.serviceTaxes[i];
+           break;
+        }
+      }
+    } else {
+      for(var i = 0; i < $scope.serviceTaxes.length; i++){
+        if($scope.serviceTaxes[i]._id === _id){
+          var tempObj = {};
+          tempObj._id = $scope.serviceTaxes[i]._id;
+          tempObj.type = $scope.serviceTaxes[i].type;
+          tempObj.rate = $scope.gstPer;
+          $scope.selectedTax = [];
+          $scope.selectedTax.push(tempObj);
+          break;
+        }
+      }
+      $scope.gstAmount = $scope.gst || 0;
+    }
   }
 
   function setModelData(){
@@ -130,20 +165,38 @@ function setIquippoGstin(state){
 };
 
   function generateInvoice(form){
-    /*if((!$scope.selectedTax || $scope.selectedTax.length == 0)){
+    if((!$scope.selectedTax || $scope.selectedTax.length == 0)){
         Modal.alert("It seems you have not selected any taxes, Please add taxes.");
         return;
-    }*/
+    }
     if (form && form.$invalid) {
-        $scope.submitted = true;
-        return;
-      }
+      $scope.submitted = true;
+      return;
+    }
+    $scope.totalTax = 0;
+    $scope.selectedTax.forEach(function(item){
+      var calAmt = ($scope.invoice.invoiceAmount *item.rate)/100;
+      if(!$scope.updateAmountReq)
+        calAmt = Number(parseFloat($scope.invoice.invoiceAmount - ($scope.invoice.invoiceAmount*(100/(100+item.rate)))).toFixed(2));
+      item.calculatedTax = calAmt || 0;
+      $scope.totalTax = $scope.totalTax + (calAmt || 0);
+    });
+
+    $scope.totalAmount = ($scope.invoice.invoiceAmount || 0) + ($scope.totalTax || 0);
+
     calculateValuationInvoice();
   }
 
   function calculateValuationInvoice() {
-    $scope.payTransaction.totalAmount = $scope.invoice.invoiceAmount ;
-    PaymentSvc.update($scope.payTransaction);
+    if(!$scope.updateAmountReq) {
+      $scope.payTransaction.totalAmount = $scope.invoice.invoiceAmount;
+      PaymentSvc.update($scope.payTransaction);
+    } else {
+      if($scope.payTransaction.status !== transactionStatuses[5].code) {
+        $scope.payTransaction.totalAmount = $scope.totalAmount;
+        PaymentSvc.update($scope.payTransaction);
+      }
+    }
     updateValuationInvoice();
   }
 
@@ -163,6 +216,11 @@ function setIquippoGstin(state){
     $scope.valuation.invoiceData = $scope.invoice;
     $scope.valuation.invoiceDate = $scope.invoice.invoiceDate;
     $scope.invoice.invoiceNo = $scope.valuation.invoiceNo;
+    $scope.invoice.selectedTaxes = $scope.selectedTax;
+    if($scope.updateAmountReq) {
+      $scope.invoice.actualInvoiceAmount = ($scope.totalAmount || 0) - ($scope.totalTax || 0);
+      $scope.invoice.invoiceAmount = $scope.totalAmount;
+    }
 
     var stsObj = {};
     stsObj.createdAt = new Date();
@@ -207,6 +265,33 @@ function setIquippoGstin(state){
     data['to'] = valData.user.mobile;
     data['countryCode']=LocationSvc.getCountryCode(valData.user.country);
     notificationSvc.sendNotification('valuationPaymentSmsToCustomer', data, valData,'sms');
+  }
+
+  function addTaxToken(srvcTax){
+    if(!srvcTax){
+      Modal.alert("No master data present for your selection");
+      return;
+    }
+    var filteredArr = [];
+    filteredArr = $scope.selectedTax.filter(function(item){
+        return item._id == srvcTax._id;
+    })
+    if(filteredArr.length > 0){
+      Modal.alert(srvcTax.type + " is already selected");
+      return;
+    }
+
+    var taxObj = {
+      _id:srvcTax['_id'],
+      type : srvcTax['type'],
+      rate : srvcTax['taxRate']
+    }
+
+    $scope.selectedTax.push(taxObj);
+  }
+
+  function deleteTaxToken(idx){
+    $scope.selectedTax.splice(idx,1);
   }
 
   function close(){
