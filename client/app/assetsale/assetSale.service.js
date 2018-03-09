@@ -358,6 +358,12 @@
   function exportExcel(filter){
     var serPath = path;
     var reportType = "Product_Bid";
+
+    // name of file according to its status
+    if(filter.reportType) {
+      reportType = filter.reportType;
+    } 
+
     var queryParam = "";
     if(filter)
         queryParam = UtilSvc.buildQueryParam(filter);
