@@ -25,7 +25,7 @@ function init(processCb) {
                     valuationAssessedValue: entrpriseVal.assessedValue,
                     valuationOverallGeneralCondition: entrpriseVal.overallGeneralCondition
                 };
-                Product.update({assetId: entrpriseVal._id}, data , function (err, res) {
+                Product.update({assetId: entrpriseVal.assetId}, data , function (err, res) {
                     if (!err) {
                         cb();
                     } else {
@@ -33,6 +33,8 @@ function init(processCb) {
                         cb();
                     }
                 });
+            },function(){
+               return processCb(); 
             })
         }
     })
