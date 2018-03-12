@@ -118,18 +118,18 @@ angular.module('sreizaoApp')
           if (Auth.isAdmin()) {
             var filter = {};
             filter.isAdminRole = true;
-            userSvc.getUsers(filter).then(function(data){
-            vm.getUsersOnRole = data;
+            userSvc.getUsers(filter).then(function (data) {
+              vm.getUsersOnRole = data;
             })
-            .catch(function(err){
-              Modal.alert("Error in geting user");
-            })
+              .catch(function (err) {
+                Modal.alert("Error in geting user");
+              })
             var entFilter = {};
 
             entFilter.role = "enterprise";
             entFilter.enterprise = true;
             entFilter.status = true;
-            userSvc.getUsers(entFilter).then(function(data){
+            userSvc.getUsers(entFilter).then(function (data) {
               vm.enterprises = data;
             })
           }
@@ -281,36 +281,36 @@ angular.module('sreizaoApp')
       var filter = {};
       if (!filterObj)
         angular.copy(dataToSend, filter);
-    else
-      filter = filterObj;
+      else
+        filter = filterObj;
 
-    if(vm.userSearchFilter.createdBy)
-       filter['userId'] = vm.userSearchFilter.createdBy;
+      if (vm.userSearchFilter.createdBy)
+        filter['userId'] = vm.userSearchFilter.createdBy;
 
-    if(vm.userSearchFilter.enterpriseId)
-      filter['enterpriseId'] = vm.userSearchFilter.enterpriseId;
+      if (vm.userSearchFilter.enterpriseId)
+        filter['enterpriseId'] = vm.userSearchFilter.enterpriseId;
 
-    if(vm.userSearchFilter.searchStr)
-      filter['searchstr'] = vm.userSearchFilter.searchStr;
-    getUser(filter);
-  }
+      if (vm.userSearchFilter.searchStr)
+        filter['searchstr'] = vm.userSearchFilter.searchStr;
+      getUser(filter);
+    }
 
-  function resetPagination(){
-     prevPage = 0;
-     vm.currentPage = 1;
-     vm.totalItems = 0;
-     first_id = null;
-     last_id = null;
-  }
+    function resetPagination() {
+      prevPage = 0;
+      vm.currentPage = 1;
+      vm.totalItems = 0;
+      first_id = null;
+      last_id = null;
+    }
 
-    function onUserChange(user){
+    function onUserChange(user) {
       delete vm.userSearchFilter.enterpriseId;
       delete vm.userSearchFilter.createdBy;
-      if(!user) {
+      if (!user) {
         fireCommand(true);
         return;
       }
-      if(user.role == 'enterprise')
+      if (user.role == 'enterprise')
         vm.userSearchFilter.enterpriseId = user.enterpriseId;
       else
         vm.userSearchFilter['createdBy'] = user._id;
@@ -755,6 +755,7 @@ angular.module('sreizaoApp')
           $rootScope.$broadcast('updateUserList');
         })
           .catch(function (err) {
+            $rootScope.loading = false;
             console.log("error in user update", err);
           });
       }
@@ -829,7 +830,15 @@ angular.module('sreizaoApp')
         if ($scope.newUser.role == 'enterprise')
           updateServices();
 
-        $http.post('/api/users/register', $scope.newUser).success(function (result) {
+        if ($scope.show) return;
+        $scope.show = true;
+        $rootScope.loading = true;
+
+        $http.post('/api/users/register', $scope.newUser).then(function (res) {
+          var result = res.data;
+          $scope.show = false;
+          $rootScope.loading = false;
+
           if (result && result.errorCode == 1) {
             Modal.alert(result.message, true);
           } else {
@@ -850,7 +859,9 @@ angular.module('sreizaoApp')
             $rootScope.$broadcast('updateUserList');
             $scope.newUser = {};
           }
-        }).error(function (res) {
+        }).catch(function (res) {
+          $scope.show = false;
+          $rootScope.loading = false;
           Modal.alert(res, true);
         });
       }
