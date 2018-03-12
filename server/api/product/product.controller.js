@@ -56,6 +56,22 @@ exports.getAll = function(req, res) {
   });
 };
 
+// for making sitemap url need this function excuted on server side
+// exports.getAllProducts = function() {
+//   return new Promise(function(reject, resolve) {
+//     return Product.find({}, function (err, products) {
+//       if(err) { reject(err); }
+//       else{
+//         for(var i=0; i<products.length; i++){
+//           console.log(products.length);
+//           resolve(products); 
+//         }       
+//       }
+//     }); 
+//   });
+// };
+
+
 // Get a single product
 exports.getOnId = function(req, res) {
   Product.findById(req.params.id, function (err, product) {
@@ -98,7 +114,7 @@ exports.getIncomingProduct = function(req,res){
   })
 }
 
-exports.unIncomingProduct = function(req,res){
+exports.unIncomingProduct = function(req,res){  
   IncomingProduct.update({_id:req.body.productId},{$set:{lock:false}},function(err,dt){
     if(err) { return handleError(res, err); }
     return res.status(200).json(dt);
@@ -106,7 +122,7 @@ exports.unIncomingProduct = function(req,res){
 }
 
 //Set all seller related to a enterprise
-exports.getSellers = function(req,res,next){
+exports.getSellers = function(req,res,next){   
   if(!req.body.enterpriseId)
     return next();
   req.sellers = [];
