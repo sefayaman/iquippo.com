@@ -1,9 +1,9 @@
-(function() {
+(function () {
   'use strict';
 
   angular.module('sreizaoApp').controller('ViewLotCtrl', ViewLotCtrl);
 
-  function ViewLotCtrl($scope, $state,$stateParams, $rootScope, $window, categorySvc, Auth, Modal,groupSvc,brandSvc, LocationSvc, modelSvc, userRegForAuctionSvc, productSvc, AuctionSvc, $location, $uibModal, $sce, LotSvc,PagerSvc,$timeout) {
+  function ViewLotCtrl($scope, $state, $stateParams, $rootScope, $window, categorySvc, Auth, Modal, groupSvc, brandSvc, LocationSvc, modelSvc, userRegForAuctionSvc, productSvc, AuctionSvc, $location, $uibModal, $sce, LotSvc, PagerSvc, $timeout) {
     var vm = this;
     var dbAuctionId = $stateParams.dbAuctionId;
     $scope.equipmentSearchFilter = {};
@@ -16,8 +16,8 @@
     vm.maxSize = 6;
 
     vm.onGroupChange = onGroupChange;
-    vm.onCategoryChange= onCategoryChange;
-    vm.onBrandChange= onBrandChange;
+    vm.onCategoryChange = onCategoryChange;
+    vm.onBrandChange = onBrandChange;
     vm.openRegisterNow = openRegisterNow;
     vm.onPageChange = onPageChange;
     vm.fireCommand = fireCommand;
@@ -37,128 +37,128 @@
     $scope.LotWist = "lotwise";
     $scope.redirectToLiveAuction = false;
 
-    function init(){
+    function init() {
       var filter = {};
       filter._id = dbAuctionId;
       $rootScope.loading = true;
       AuctionSvc.getAuctionDateData(filter)
-        .then(function(result) {
+        .then(function (result) {
           $rootScope.loading = false;
-          if(result && result.items && result.items.length) {
+          if (result && result.items && result.items.length) {
             $scope.auctionData = result.items[0];
             $scope.contactDetailsVisible = false;
-            if($scope.auctionData.contactDetails && $scope.auctionData.contactDetails.length > 0)
+            if ($scope.auctionData.contactDetails && $scope.auctionData.contactDetails.length > 0)
               $scope.contactDetailsVisible = true;
             openLiveAuctionURL(false);
-            if(Auth.getCurrentUser()._id)
+            if (Auth.getCurrentUser()._id)
               checkWidgetAccessOnLot();
             restoreState();
-            fireCommand(false,true);
+            fireCommand(true, true); // previously fireCommand(false, true) // Changed for on back press it was not navigating to the respective page where it was triggered from.
           }
           else
             return backButton();
         })
-        .catch(function(res){
+        .catch(function (res) {
           $rootScope.loading = false;
           return backButton();
         });
-        //getLotsInAuction({});
-      groupSvc.getAllGroup({isForUsed:true})
-      .then(function(result){
-        $scope.allGroup = result;
-      });
+      //getLotsInAuction({});
+      groupSvc.getAllGroup({ isForUsed: true })
+        .then(function (result) {
+          $scope.allGroup = result;
+        });
 
-      categorySvc.getCategoryOnFilter({isForUsed:true})
-      .then(function(result){
-        $scope.categoryList = result;
-        allCategory = result;
-        if($stateParams.group)
-            onGroupChange($stateParams.group,true);
-      });
+      categorySvc.getCategoryOnFilter({ isForUsed: true })
+        .then(function (result) {
+          $scope.categoryList = result;
+          allCategory = result;
+          if ($stateParams.group)
+            onGroupChange($stateParams.group, true);
+        });
 
-      brandSvc.getBrandOnFilter({isForUsed:true})
-      .then(function(result){
-        allBrand = result;
-        $scope.brandList = result;
-        if($stateParams.category)
-            onCategoryChange($stateParams.category,true); 
-      });
+      brandSvc.getBrandOnFilter({ isForUsed: true })
+        .then(function (result) {
+          allBrand = result;
+          $scope.brandList = result;
+          if ($stateParams.category)
+            onCategoryChange($stateParams.category, true);
+        });
       //restoreState();
       //fireCommand(false,true);
     }
 
-    function checkWidgetAccessOnLot(){
+    function checkWidgetAccessOnLot() {
       var dataObj = {};
       dataObj.auction = {};
       dataObj.user = {};
       dataObj.auction.dbAuctionId = dbAuctionId;
       dataObj.user._id = Auth.getCurrentUser()._id;
       dataObj.emdTax = $scope.auctionData.emdTax;
-      if($scope.auctionData.emdTax === $scope.LotWist)
+      if ($scope.auctionData.emdTax === $scope.LotWist)
         dataObj.checkRegUser = true;
       dataObj.onlyRegLotForUser = true;
       userRegForAuctionSvc.checkUserRegis(dataObj)
-      .then(function(result) {
-        $scope.regLotForUser = result.regLot;
+        .then(function (result) {
+          $scope.regLotForUser = result.regLot;
+        });
+    }
+
+    function clearAll() {
+      for (var key in $scope.equipmentSearchFilter) {
+        if (key !== 'mfgYearMax' && key !== 'mfgYearMin' && key !== 'dbAuctionId')
+          $scope.equipmentSearchFilter[key] = "";
+      }
+
+      $scope.categoryList = allCategory;
+      $scope.brandList = allBrand;
+      saveState();
+      fireCommand();
+    }
+
+    function onGroupChange(group, noAction) {
+      if (!noAction) {
+        $scope.equipmentSearchFilter.category = "";
+        $scope.equipmentSearchFilter.brand = "";
+        $scope.brandList = [];
+      }
+
+      $scope.categoryList = allCategory.filter(function (item) {
+        return item.group.name === group && item.isForUsed;
       });
+
+      if (!noAction)
+        fireCommand();
     }
 
-   function clearAll(){
-    for(var key in $scope.equipmentSearchFilter){
-      if(key !== 'mfgYearMax' && key !== 'mfgYearMin' && key !== 'dbAuctionId')
-        $scope.equipmentSearchFilter[key] = "";
+    function onCategoryChange(category, noAction) {
+      if (!noAction) {
+        $scope.equipmentSearchFilter.brand = "";
+      }
+      $scope.brandList = allBrand.filter(function (item) {
+        return item.category.name === category && item.isForUsed;
+      });
+      if (!noAction)
+        fireCommand();
     }
 
-    $scope.categoryList = allCategory;
-    $scope.brandList = allBrand;
-    saveState();
-    fireCommand();
-  }
+    function onBrandChange(brand, noAction) {
 
-     function onGroupChange(group,noAction){
-        if(!noAction){
-          $scope.equipmentSearchFilter.category = "";
-          $scope.equipmentSearchFilter.brand = "";
-          $scope.brandList = [];
-        }
-
-        $scope.categoryList = allCategory.filter(function(item){
-          return item.group.name === group && item.isForUsed;
-        });
-
-        if(!noAction)
-          fireCommand();
+      if (!brand) {
+        fireCommand();
+        return;
       }
-
-      function onCategoryChange(category,noAction){
-        if(!noAction){
-          $scope.equipmentSearchFilter.brand = "";
-        }
-        $scope.brandList = allBrand.filter(function(item){
-          return item.category.name === category && item.isForUsed;
-        });
-        if(!noAction)
-          fireCommand();
-      }
-
-      function onBrandChange(brand,noAction){
-        
-        if(!brand) {
-          fireCommand();
-          return;
-        }
-       var filter = {};
-       filter['brandName'] = brand;
-        if(!noAction)
-          fireCommand();
-      }
+      var filter = {};
+      filter['brandName'] = brand;
+      if (!noAction)
+        fireCommand();
+    }
 
     function backButton() {
       $window.history.back();
     }
 
     function openLiveAuctionURL(initFlag) {
-      if(!Auth.getCurrentUser()._id && initFlag) {
+      if (!Auth.getCurrentUser()._id && initFlag) {
         Auth.goToLogin();
         return;
       }
@@ -168,81 +168,80 @@
       dataObj.auction.dbAuctionId = dbAuctionId;
       dataObj.user._id = Auth.getCurrentUser()._id;
       dataObj.emdTax = $scope.auctionData.emdTax;
-      if($scope.auctionData.emdTax === $scope.LotWist)
+      if ($scope.auctionData.emdTax === $scope.LotWist)
         dataObj.checkRegUser = true;
       userRegForAuctionSvc.checkUserRegis(dataObj)
-        .then(function(result) {
+        .then(function (result) {
           $scope.redirectToLiveAuction = false;
-          if(!initFlag) {
-            if(result.errorCode === 0 && Auth.getCurrentUser()._id) {
+          if (!initFlag) {
+            if (result.errorCode === 0 && Auth.getCurrentUser()._id) {
               $scope.redirectToLiveAuction = true;
-              var liveAuctionUrl = auctionURL + "/liveAuction/"+dbAuctionId+"/"+Auth.getCurrentUser()._id;
+              var liveAuctionUrl = auctionURL + "/liveAuction/" + dbAuctionId + "/" + Auth.getCurrentUser()._id;
               $scope.liveAuctionURLSCE = $sce.trustAsResourceUrl(liveAuctionUrl);
             }
             return;
           }
 
-          if(result.errorCode === 0){
+          if (result.errorCode === 0) {
             $scope.redirectToLiveAuction = true;
-            var liveAuctionUrl = auctionURL + "/liveAuction/"+dbAuctionId+"/"+Auth.getCurrentUser()._id;
+            var liveAuctionUrl = auctionURL + "/liveAuction/" + dbAuctionId + "/" + Auth.getCurrentUser()._id;
             $scope.liveAuctionURLSCE = $sce.trustAsResourceUrl(liveAuctionUrl);
             //window.open(liveAuctionURLSCE,'_blank');
           }
-          else if(result.errorCode === 1)
-            Modal.alert("You have done partial registration, payment part is pending with lotnumbers" + result.selectedLots +". If you have already paid please contact support team!");              
+          else if (result.errorCode === 1)
+            Modal.alert("You have done partial registration, payment part is pending with lotnumbers" + result.selectedLots + ". If you have already paid please contact support team!");
           else
             Modal.alert("You are not registered for this auction. Please register to access this auction!");
         })
-        .catch(function(err) {
+        .catch(function (err) {
           if (err && err.data)
             Modal.alert(err.data);
         });
     }
 
-  function fireCommand(noReset,initLoad){
-      if(vm.show == true)
-         vm.show=false;
-      if(!noReset)
+    function fireCommand(noReset, initLoad) {
+      if (vm.show == true)
+        vm.show = false;
+      if (!noReset)
         vm.currentPage = 1;
-      if(!initLoad){
+      if (!initLoad) {
         saveState(false);
       }
-
       var filter = {};
-      angular.copy($scope.equipmentSearchFilter,filter);
+      angular.copy($scope.equipmentSearchFilter, filter);
       getLotsInAuction(filter);
-  }
-  
-  var loadCounter = 0;
-  function getLotsInAuction(filter) {
+    }
+
+    var loadCounter = 0;
+    function getLotsInAuction(filter) {
       $scope.searching = true;
       $scope.noResult = false;
       filter._id = dbAuctionId;
       LotSvc.getLotsInAuction(filter)
-        .then(function(res) {
+        .then(function (res) {
           $scope.searching = false;
           $scope.noResult = false;
-          if(res && res.length){
+          if (res && res.length) {
             vm.totalItems = res.length;
             vm.lotListing = res;
-            vm.lotListing.forEach(function(lot){
+            vm.lotListing.forEach(function (lot) {
               //lot.isVisible = false;
-              if(lot.assets.length && lot.assets[0].product)
-                lot.primaryImg= $rootScope.uploadImagePrefix + lot.assets[0].product.assetDir +"/" + lot.assets[0].product.primaryImg;
-              if(!Auth.getCurrentUser()._id)
+              if (lot.assets.length && lot.assets[0].product)
+                lot.primaryImg = $rootScope.uploadImagePrefix + lot.assets[0].product.assetDir + "/" + lot.assets[0].product.primaryImg;
+              if (!Auth.getCurrentUser()._id)
                 return;
-              if($scope.auctionData.auctionType == 'L')
+              if ($scope.auctionData.auctionType == 'L')
                 return;
-              var url = auctionURL+ "/bidwidget/" + dbAuctionId + "/" + lot._id + "/" + Auth.getCurrentUser()._id + "?random=" + Math.random();
+              var url = auctionURL + "/bidwidget/" + dbAuctionId + "/" + lot._id + "/" + Auth.getCurrentUser()._id + "?random=" + Math.random();
               lot.url = $sce.trustAsResourceUrl(url);
               //checkWidgetAccessOnLot(lot);
             });
-          }else{
+          } else {
             $scope.noResult = true;
             $scope.msg = res.message;
           }
         })
-        .catch(function(err) {
+        .catch(function (err) {
           $scope.noResult = true;
           $scope.searching = false;
           throw err;
@@ -274,17 +273,17 @@
       },0);
     }*/
 
-  //Register Now
-    function openRegisterNow(){
-      Auth.isLoggedInAsync(function(loggedIn) {
+    //Register Now
+    function openRegisterNow() {
+      Auth.isLoggedInAsync(function (loggedIn) {
         if (loggedIn && !Auth.isAdmin() && !Auth.isAuctionRegPermission()) {
           var dataObj = {};
           dataObj.auction = {};
           dataObj.user = {};
           dataObj.auction.dbAuctionId = dbAuctionId;
           //if(!Auth.isAdmin()) {
-            dataObj.user._id = Auth.getCurrentUser()._id;
-            dataObj.user.mobile = Auth.getCurrentUser().mobile;
+          dataObj.user._id = Auth.getCurrentUser()._id;
+          dataObj.user.mobile = Auth.getCurrentUser().mobile;
           // } else {
           //   dataObj.user._id = $scope.registerUser._id;
           //   dataObj.user.mobile = $scope.registerUser.mobile;
@@ -293,10 +292,10 @@
           //   dataObj.selectedLots =  vm.dataToSend.selectedLots;
           // }
           //else 
-          if($scope.auctionData.emdTax === $scope.OverAll) {
+          if ($scope.auctionData.emdTax === $scope.OverAll) {
             dataObj.selectedLots = [];
-            if(vm.lotListing) {
-              vm.lotListing.forEach(function(item){
+            if (vm.lotListing) {
+              vm.lotListing.forEach(function (item) {
                 dataObj.selectedLots[dataObj.selectedLots.length] = item.lotNumber;
               });
             }
@@ -304,40 +303,38 @@
             dataObj.emdTax = $scope.LotWist;
           }
           userRegForAuctionSvc.checkUserRegis(dataObj)
-          .then(function(result){
-            console.log("the registration",result);
-            if(result.data){
-              if(result.data =="done" && $scope.auctionData.emdTax === $scope.OverAll){
-                 Modal.alert(informationMessage.auctionRegMsg, true); 
-                 return;
-               }
-              if(result.data =="undone" && $scope.auctionData.emdTax === $scope.OverAll){
-                Modal.alert(informationMessage.auctionPaymentPendingMsg,true);
-                return;
+            .then(function (result) {
+              if (result.data) {
+                if (result.data == "done" && $scope.auctionData.emdTax === $scope.OverAll) {
+                  Modal.alert(informationMessage.auctionRegMsg, true);
+                  return;
+                }
+                if (result.data == "undone" && $scope.auctionData.emdTax === $scope.OverAll) {
+                  Modal.alert(informationMessage.auctionPaymentPendingMsg, true);
+                  return;
+                }
               }
-            }
-            $scope.lotsArr = [];
-            if(result && result.length > 0 && $scope.auctionData.emdTax === $scope.LotWist)
-            { 
-              result.forEach(function(item){
-                for (var i=0; i < item.selectedLots.length;i++)
-                  $scope.lotsArr.push(item.selectedLots[i]);
-              });
-            }
-            //if(!Auth.isAdmin()) {
+              $scope.lotsArr = [];
+              if (result && result.length > 0 && $scope.auctionData.emdTax === $scope.LotWist) {
+                result.forEach(function (item) {
+                  for (var i = 0; i < item.selectedLots.length; i++)
+                    $scope.lotsArr.push(item.selectedLots[i]);
+                });
+              }
+              //if(!Auth.isAdmin()) {
               var auctionRegislogin = $rootScope.$new();
               auctionRegislogin.currentAuction = $scope.auctionData;
-              if($scope.lotsArr.length > 0 && $scope.auctionData.emdTax === $scope.LotWist)
+              if ($scope.lotsArr.length > 0 && $scope.auctionData.emdTax === $scope.LotWist)
                 auctionRegislogin.regLots = $scope.lotsArr;
-              Modal.openDialog('auctionRegislogin',auctionRegislogin);
-            // } else {
-            //   var regUserAuctionScope = $rootScope.$new();
-            //   regUserAuctionScope.currentAuction = $scope.auctionData;
-            //   if($scope.lotsArr.length > 0 && $scope.auctionData.emdTax === $scope.LotWist)
-            //     auctionRegislogin.regLots = $scope.lotsArr;
-            //   Modal.openDialog('auctionRegistration', regUserAuctionScope);
-            // }
-          }); 
+              Modal.openDialog('auctionRegislogin', auctionRegislogin);
+              // } else {
+              //   var regUserAuctionScope = $rootScope.$new();
+              //   regUserAuctionScope.currentAuction = $scope.auctionData;
+              //   if($scope.lotsArr.length > 0 && $scope.auctionData.emdTax === $scope.LotWist)
+              //     auctionRegislogin.regLots = $scope.lotsArr;
+              //   Modal.openDialog('auctionRegistration', regUserAuctionScope);
+              // }
+            });
         } else {
           var regUserAuctionScope = $rootScope.$new();
           regUserAuctionScope.currentAuction = $scope.auctionData;
@@ -347,7 +344,7 @@
     }
 
 
-    function viewLotDetail(lot){
+    function viewLotDetail(lot) {
       var lotDetailScope = $rootScope.$new();
       lotDetailScope.lot = lot;
       lotDetailScope.uploadImagePrefix = $rootScope.uploadImagePrefix;
@@ -357,40 +354,41 @@
         size: 'lg'
       });
 
-      lotDetailScope.close = function() {
+      lotDetailScope.close = function () {
         lotDetailModal.close();
       };
 
-      lotDetailScope.goToProductDetail = function(asset){
+      lotDetailScope.goToProductDetail = function (asset) {
         lotDetailModal.close();
-        var statParam = {category:asset.category,
-          brand:asset.brand,
-          id:asset.assetId
+        var statParam = {
+          category: asset.category,
+          brand: asset.brand,
+          id: asset.assetId
         };
-        if(Auth.isLoggedIn() && $scope.regLotForUser.indexOf(lot.lotNumber) !== -1)
+        if (Auth.isLoggedIn() && $scope.regLotForUser.indexOf(lot.lotNumber) !== -1)
           statParam.lot = lot._id;
-        $state.go('productdetail',statParam);
+        $state.go('productdetail', statParam);
       }
     }
 
-  function onPageChange(){
-    $window.scrollTo(0, 0);
-    saveState(true);
-  }
+    function onPageChange() {
+      $window.scrollTo(0, 0);
+      saveState(true);
+    }
 
-   function saveState(retainState){
-    $scope.equipmentSearchFilter.currentPage = vm.currentPage + "";
-    $state.go($state.current.name,$scope.equipmentSearchFilter,{location:'replace',notify:false});
-  }
-
-  function restoreState(){
-      $scope.equipmentSearchFilter = $stateParams;
-      vm.currentPage  = parseInt($stateParams.currentPage) || 1;
+    function saveState(retainState) {
       $scope.equipmentSearchFilter.currentPage = vm.currentPage + "";
-  }
+      $state.go($state.current.name, $scope.equipmentSearchFilter, { location: 'replace', notify: false });
+    }
 
-  //Entry point
-  init();
+    function restoreState() {
+      $scope.equipmentSearchFilter = $stateParams;
+      vm.currentPage = parseInt($stateParams.currentPage) || 1;
+      $scope.equipmentSearchFilter.currentPage = vm.currentPage + "";
+    }
+
+    //Entry point
+    init();
 
   }
 })();

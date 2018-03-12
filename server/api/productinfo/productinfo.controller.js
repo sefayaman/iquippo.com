@@ -12,12 +12,13 @@ var xlsx = require('xlsx');
 var config = require('./../../config/environment');
 var importPath = config.uploadPath + config.importDir + "/";
 var async = require('async');
+var Utility = require('./../../components/utility.js');
 
 
 function fetchCategory(category, cb) {
 	CategoryModel.find({
 		name: category
-	}).exec(function(err, categoryData) {
+	}).exec(function (err, categoryData) {
 		if (err) {
 			debug(err);
 			return cb(err);
@@ -34,7 +35,7 @@ function fetchBrand(brand, cb) {
 		'category.name': brand.category
 	};
 
-	BrandModel.find(filter).exec(function(err, brandData) {
+	BrandModel.find(filter).exec(function (err, brandData) {
 		if (err) {
 			debug(err);
 			return cb(err);
@@ -52,7 +53,7 @@ function fetchModel(model, cb) {
 		'brand.name': model.brand
 	};
 
-	ModelModel.find(filter).exec(function(err, modelData) {
+	ModelModel.find(filter).exec(function (err, modelData) {
 		if (err) {
 			debug(err);
 			return cb(err);
@@ -62,7 +63,7 @@ function fetchModel(model, cb) {
 }
 
 function validateData(data) {
-	var err = ['model', 'category', 'brand', 'type'].filter(function(x) {
+	var err = ['model', 'category', 'brand', 'type'].filter(function (x) {
 		if (!data[x])
 			return x;
 	});
@@ -91,7 +92,7 @@ function validateHeader(headersInFile, headers) {
 	// if (!ret)
 	//   return ret;
 
-	headers.some(function(x) {
+	headers.some(function (x) {
 		if (headersInFile.indexOf(x) < 0) {
 			ret = false;
 			return true;
@@ -101,8 +102,8 @@ function validateHeader(headersInFile, headers) {
 }
 
 //AA:private function for creating data
-var _create = function(body, cb) {
-	fetchCategory(body.category, function(err, category) {
+var _create = function (body, cb) {
+	fetchCategory(body.category, function (err, category) {
 		if (err || !category)
 			return cb(err || new APIError(400, 'Error while fetching category'));
 
@@ -115,7 +116,7 @@ var _create = function(body, cb) {
 			group: category[0]._doc.group.name
 		};
 
-		fetchBrand(brandFilter, function(err, brand) {
+		fetchBrand(brandFilter, function (err, brand) {
 			if (err || !brand)
 				return cb(err || new APIError(400, 'Error while fetching brand'));
 
@@ -129,7 +130,7 @@ var _create = function(body, cb) {
 				brand: body.brand
 			}
 
-			fetchModel(modelFilter, function(err, model) {
+			fetchModel(modelFilter, function (err, model) {
 				if (err || !model)
 					return cb(err || new APIError(400, 'Error while fetching model'));
 
@@ -161,7 +162,7 @@ var _create = function(body, cb) {
 						return cb(new APIError(400, 'Invalid choice'));
 				}
 
-				Model.create(createData, function(err, response) {
+				Model.create(createData, function (err, response) {
 					if (err || !response) {
 						debug(err);
 						if (err && err.message && err.message.indexOf('duplicate') > -1) {
@@ -183,7 +184,7 @@ var _create = function(body, cb) {
 
 
 var productInfo = {
-	fetch: function(req, res, next) {
+	fetch: function (req, res, next) {
 		var query = null;
 		var options = req.query || {};
 		var filters = {};
@@ -241,12 +242,12 @@ var productInfo = {
 		if (options.count)
 			query = query.count();
 		else
-			query = query.limit(options.limit || 10);
+			query = query.limit(Number(options.limit) || 10);
 
 		if (options.type)
 			query = query.where('type').equals(options.type);
 
-		query.exec(fetchData);
+		query.lean().exec(fetchData);
 
 		function fetchData(err, info) {
 			if (err)
@@ -264,23 +265,23 @@ var productInfo = {
 
 	},
 
-	renderJson: function(req, res, next) {
+	renderJson: function (req, res, next) {
 		if (!req && !req.productInfo)
 			return next(new APIError(400, 'No Report Data to render'));
 
 		res.status(200).json(req.productInfo);
 	},
 
-	renderXLSX: function(req, res, next) {
+	renderXLSX: function (req, res, next) {
 		if (!req && !req.productInfo)
 			return next(new APIError(400, 'No Report Data to render'));
 
 		var productInfo = req.productInfo;
 		var headers = ['Category', 'Brand', 'Model', 'Gross Weight', 'Operating Weight', 'Bucket Capacity', 'Engine Power', 'Lifting Capacity'];
 		var json = {};
-		var xlsxData = [];
+		var csvData = [];
 		var arr = [];
-		productInfo.forEach(function(x) {
+		productInfo.forEach(function (x) {
 			json = {};
 			arr = [];
 			arr.push(_.get(x, 'information.category', ''));
@@ -296,15 +297,18 @@ var productInfo = {
 				json[headers[i]] = arr[i];
 			}
 
-			xlsxData.push(json);
+			csvData.push(json);
 		})
 
-		res.xls('productinfo.xlsx', xlsxData);
-
+		try {
+			Utility.convertToCSV(res, csvData, 'productinfo');
+		} catch (excp) {
+			throw excp;
+		}
 
 	},
 
-	create: function(req, res, next) {
+	create: function (req, res, next) {
 		var body = req.body;
 
 		if (!body)
@@ -315,7 +319,7 @@ var productInfo = {
 		if (error.length)
 			return next(new APIError(422, 'Missing manadatory parameters: ' + error.toString()));
 
-		_create(body, function(err, result) {
+		_create(body, function (err, result) {
 			if (err && err.status === 404) {
 				return res.status(err.status).send(err.message);
 			}
@@ -327,7 +331,7 @@ var productInfo = {
 		})
 	},
 
-	import: function(req, res, next) {
+	import: function (req, res, next) {
 		var fileName = req.body.fileName;
 		var user = req.body.user;
 		var type = req.query.type || 'technical';
@@ -368,8 +372,8 @@ var productInfo = {
 
 		var err;
 
-		data = data.filter(function(x) {
-			Object.keys(x).forEach(function(key) {
+		data = data.filter(function (x) {
+			Object.keys(x).forEach(function (key) {
 				if (field_map[key]) {
 					x[field_map[key]] = x[key];
 				}
@@ -400,7 +404,7 @@ var productInfo = {
 		async.forEachLimit(data, 5, intialize, finalize);
 
 		function intialize(info, cb) {
-			_create(info, function(err, result) {
+			_create(info, function (err, result) {
 				debug(result);
 				if (err && err.status === 409) {
 					errObj.push({
@@ -434,7 +438,7 @@ var productInfo = {
 		}
 	},
 
-	update: function(req, res, next) {
+	update: function (req, res, next) {
 		var params = req.params;
 		var body = req.body;
 
@@ -452,7 +456,7 @@ var productInfo = {
 
 		Model.find({
 			_id: params.id
-		}, function(err, info) {
+		}, function (err, info) {
 			if (err || !info) {
 				return next(err || new APIError(500, 'Unable to fetch'));
 			}
@@ -461,7 +465,7 @@ var productInfo = {
 				return next(new APIError(404, 'No information found for id sent'));
 			}
 
-			fetchCategory(body.category, function(err, category) {
+			fetchCategory(body.category, function (err, category) {
 				if (err || !category)
 					return next(err || new APIError(500, 'Error while fetching category'));
 
@@ -476,7 +480,7 @@ var productInfo = {
 					group: category[0]._doc.group.name
 				};
 
-				fetchBrand(brandFilter, function(err, brand) {
+				fetchBrand(brandFilter, function (err, brand) {
 					if (err || !brand)
 						return next(err || new APIError(500, 'Error while fetching brand'));
 
@@ -492,7 +496,7 @@ var productInfo = {
 						brand: body.brand
 					}
 
-					fetchModel(modelFilter, function(err, model) {
+					fetchModel(modelFilter, function (err, model) {
 						if (err || !model)
 							return next(err || new APIError(500, 'Error while fetching model'));
 
@@ -527,28 +531,28 @@ var productInfo = {
 							_id: params.id,
 							type: type
 						}, {
-							$set: updateData
-						}).exec(function(err, response) {
-							if (err || !response) {
-								debug(err || response);
+								$set: updateData
+							}).exec(function (err, response) {
+								if (err || !response) {
+									debug(err || response);
 
-								if (err && err.message && err.message.indexOf('duplicate') > -1) {
-									return next(new APIError(409, 'Entry already exists'));
+									if (err && err.message && err.message.indexOf('duplicate') > -1) {
+										return next(new APIError(409, 'Entry already exists'));
+									}
+
+									return next(err || new APIError(500, 'Error while saving product information'));
 								}
 
-								return next(err || new APIError(500, 'Error while saving product information'));
-							}
-
-							return res.status(200).json({
-								msg: 'Updated Successfully'
-							});
-						})
+								return res.status(200).json({
+									msg: 'Updated Successfully'
+								});
+							})
 					})
 				})
 			})
 		})
 	},
-	delete: function(req, res, next) {
+	delete: function (req, res, next) {
 		var params = req.params;
 
 		if (!params.id || !validator.isMongoId(params.id)) {
@@ -556,10 +560,10 @@ var productInfo = {
 		}
 
 		Model.find({
-				_id: params.id
-			})
+			_id: params.id
+		})
 			.remove()
-			.exec(function(err, doc) {
+			.exec(function (err, doc) {
 				debug(doc);
 				if (err) {
 					return next(err || new APIError(500, 'Error while deleting'));

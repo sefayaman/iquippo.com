@@ -134,13 +134,22 @@
                 angular.copy(initFilter, exportFilter);
                 exportFilter.productsWise = 'n';
                 exportFilter.bidChanged = true;
-            }
-            if (allReport === 'payment') {
+            } else if (allReport === 'payment') {
                 exportFilter = {};
                 angular.copy(initFilter, exportFilter);
                 exportFilter.productsWise = 'n';
-                exportFilter.payment = 'y';
+                exportFilter.payment = 'y';                
+            } else {
+                // name of file according to its status
+                if (vm.activeBid === 'actionable') {
+                    exportFilter.reportType = "Pending_For_Approval";
+                } else if(vm.activeBid === 'saleinprocess') {
+                    exportFilter.reportType = "Sale_In_Progress";
+                } else {
+                    exportFilter.reportType = "Closed";
+                }
             }
+            
 
             if (!Auth.isAdmin())
                 exportFilter.seller = 'y';

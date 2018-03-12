@@ -67,6 +67,14 @@
                  <a href="javascript:void(0);" ng-if="tns.payments.length > 0" ng-click="auctionPaymentListingVm.openPaymentModel(tns, 'paymentView')" class="btn btn-sm btn-primary" uib-popover="View Payment" popover-trigger="mouseenter"><i class="fa fa-eye"></i></a>
                  
                  <a class="btn btn-info btn-md" href="javascript:void(0);" ng-click="auctionPaymentListingVm.resendUserData(tns)" uib-popover="Resubmit" ng-if="tns.reqSubmitStatus === ReqSubmitStatuses[1] && tns.status === 'completed' && (isAdmin() || isAuctionRegPermission())"><i class="fa fa-repeat"></i> </a>
+
+                 <a class="btn btn-success btn-md" href="{{uploadImagePrefix}}{{auctionDir}}/{{tns.registrationKit}}" popover-trigger="mouseenter" uib-popover="Registration Form" ng-if="tns.registrationKit"><i class="fa fa-download"></i> </a>
+
+                 <a class="btn btn-success btn-md" href="{{uploadImagePrefix}}{{auctionDir}}/{{tns.undertakingKit}}" popover-trigger="mouseenter" uib-popover="Undertaking Form" ng-if="tns.undertakingKit"><i class="fa fa-download"></i> </a>
+
+                 <a class="btn btn-info btn-md" href="javascript:void(0);" popover-trigger="mouseenter" uib-popover="Generate Kit" ng-click="auctionPaymentListingVm.generateKit(tns)" ng-if="!tns.registrationKit && !tns.undertakingKit && tns.status === 'completed' && isAdmin()"><i class="fa fa-medkit"></i> </a>
+                <!--  <a class="btn btn-info btn-md" href="javascript:void(0);" popover-trigger="mouseenter" uib-popover="Generate Kit" ng-if="tns.registrationKit && tns.undertakingKit" Disabled><i class="fa fa-medkit"></i> </a> -->
+
                 </td>
                </tr>
               </tbody>
@@ -106,6 +114,10 @@
             <label for="kycFlag">Your KYC details are not uploaded. Check here to upload later and proceed for payment.</label>
           </div>
         </div>
+      </div>
+      <div class="checkbox text-left">
+        <input type="checkbox" id="terms"  ng-model="option.agreeOnUndertaking"> 
+        <label for="terms">I agree to the terms and conditions of the auction.</label>
       </div>
     <div class="modal-footer asset-sale">
       <div>

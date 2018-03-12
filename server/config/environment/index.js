@@ -35,7 +35,7 @@ var all = {
   },
 
   // List of user roles
-  userRoles: ['customer', 'user', 'admin'],
+  userRoles: ['customer', 'user','enterprise','channelpartner','admin'],
 
   // MongoDB connection options
   mongo: {

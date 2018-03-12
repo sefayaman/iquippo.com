@@ -13,8 +13,8 @@ module.exports = {
 	'Chasis_No': 'chasisNo',
 	'Registration_No': 'registrationNo',
 	'Variant': 'variant',
-        'Product_Group':'group_name', 
-        'Product_Name':'name', 
+	'Product_Group': 'group_name',
+	'Product_Name': 'name',
 	'Trade_Type(SELL/NOT_AVAILABLE)*': 'tradeType',
 	'Manufacturing_Year*': 'mfgYear', //could not update
 	'Price_On_Request(Yes/No)*': 'priceOnRequest',
@@ -27,8 +27,8 @@ module.exports = {
 	'Seller Customer ID': 'seller_customerId',
 	'Seller_Mobile*': 'seller_mobile',
 	'Seller_Email_Address': 'seller_email',
-	'Seller_Name' : 'seller_name',
-        'Seller_Role':'seller_role',
+	'Seller_Name': 'seller_name',
+	'Seller_Role': 'seller_role',
 	//seller information start  end
 	'Motor_Operating_Hours': 'motorOperatingHour',
 	'Mileage': 'mileage',
@@ -88,14 +88,14 @@ module.exports = {
 	'Request_for_Valuation(Yes/No)': 'valuationReq',
 	'Name_of_Agency': 'agencyName',
 	//Extra Columns Added in next request by Venkat
-	'Uploaded_By' : 'uploaded_by',
-	'Listing_Date' : 'listing_date',
+	'Uploaded_By': 'uploaded_by',
+	'Listing_Date': 'listing_date',
 	//Extra field added for asset sale
-	'Parked_Since' : 'repoDate',
-	'Valuation_Amount' : 'valuationAmount',
-	'Parking_Charge_Payment_To(Yard/Seller)':'parkingPaymentTo',
-	'Parking_Charge_Per_Day' : 'parkingChargePerDay',
-	'Address_Of_Asset' : 'addressOfAsset',
-  'Reserve_Price' : 'reservePrice',
-  'Row_Count':'rowCount'
+	'Parked_Since': 'repoDate',
+	'Valuation_Amount': 'valuationAmount',
+	'Parking_Charge_Payment_To(Yard/Seller)': 'parkingPaymentTo',
+	'Parking_Charge_Per_Day': 'parkingChargePerDay',
+	'Address_Of_Asset': 'addressOfAsset',
+	'Reserve_Price': 'reservePrice',
+	'Row_Count': 'rowCount'
 }

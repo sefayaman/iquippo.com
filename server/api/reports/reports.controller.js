@@ -7,11 +7,11 @@ var utility = require('../../components/utility');
 var validator = require('validator');
 
 var reports = {
-	count: function(req, res, next) {
+	count: function (req, res, next) {
 		var options = req.query;
 		var filters = {};
-		if(options.userMobileNos)
-		    filters['quote.mobile'] = {$in:options.userMobileNos.split(',')};
+		if (options.userMobileNos)
+			filters['quote.mobile'] = { $in: options.userMobileNos.split(',') };
 		filters.type = options && options.type;
 		if (options.searchStr && options.searchStr !== 'undefined') {
 			filters['$text'] = {
@@ -19,7 +19,7 @@ var reports = {
 			}
 		}
 
-		return Model.find(filters).count().exec(function(err, count) {
+		return Model.find(filters).count().exec(function (err, count) {
 			if (err)
 				return next(err);
 			return res.status(200).json({
@@ -28,7 +28,7 @@ var reports = {
 		})
 
 	},
-	fetch: function(req, res, next) {
+	fetch: function (req, res, next) {
 		var query = null;
 		var options = req.query || {};
 		var filters = {};
@@ -59,9 +59,9 @@ var reports = {
 			};
 		}
 
-		if(options.userMobileNos)
-		    filters['quote.mobile'] = {$in:options.userMobileNos.split(',')};
-		
+		if (options.userMobileNos)
+			filters['quote.mobile'] = { $in: options.userMobileNos.split(',') };
+
 		if (options.searchStr && options.searchStr !== 'undefined') {
 			filters['$text'] = {
 				'$search': options.searchStr
@@ -79,7 +79,7 @@ var reports = {
 		if (options.type)
 			query = query.where('type').equals(options.type);
 
-		if(!Number(options.limit))
+		if (!Number(options.limit))
 			delete options.limit;
 
 		query = query.limit(Number(options.limit) || 50);
@@ -102,13 +102,13 @@ var reports = {
 
 	},
 
-	renderJson: function(req, res, next) {
+	renderJson: function (req, res, next) {
 		if (!req && !req.reportData)
 			return next(new APIError(400, 'No Report Data to render'));
 
 		res.status(200).json(req.reportData);
 	},
-	renderCsv: function(req, res, next) {
+	renderCsv: function (req, res, next) {
 		if (!req && !req.reportData)
 			return next(new APIError(400, 'No Report Data to render'));
 
@@ -121,20 +121,20 @@ var reports = {
 				headers: ['Ticket Id', 'Customer Id', 'Full Name', 'Country', 'Location', 'Company Name', 'Designation', 'Phone No', 'Mobile No', 'Email Address', 'Shipment Allowed', 'Packaging', 'Comments', 'Date of Request']
 			},
 			'valuation': {
-				headers: ['Ticket Id', 'Request Type' , 'Customer Id', 'Full Name', 'Country', 'Location', 'Company Name', 'Designation', 'Phone No', 'Mobile No', 'Email Address', 'Category', 'Brand', 'Modal', 'Location of Asset', 'Manufacturing Year', 'Asset Description', 'Contact Person', 'Contact Number', 'Purpose of Valutaion', 'Schedule a Call', 'Comments', 'Date of Request']
+				headers: ['Ticket Id', 'Request Type', 'Customer Id', 'Full Name', 'Country', 'Location', 'Company Name', 'Designation', 'Phone No', 'Mobile No', 'Email Address', 'Category', 'Brand', 'Modal', 'Location of Asset', 'Manufacturing Year', 'Asset Description', 'Contact Person', 'Contact Number', 'Purpose of Valutaion', 'Schedule a Call', 'Comments', 'Date of Request']
 			},
 			'finance': {
-				headers: ['Ticket Id','Full Name', 'Country', 'Location', 'Company Name', 'Designation', 'Phone No', 'Mobile No', 'Email Address', 'Category', 'Brand', 'Modal', 'Location of Asset', 'Manufacturing Year', 'Asset Description', 'Amount to be Financed', 'Indicative Rate', 'Tenure\(in Months\)', 'Method Of Contact', 'Comments', 'Date of Request']
+				headers: ['Ticket Id', 'Full Name', 'Country', 'Location', 'Company Name', 'Designation', 'Phone No', 'Mobile No', 'Email Address', 'Category', 'Brand', 'Modal', 'Location of Asset', 'Manufacturing Year', 'Asset Description', 'Amount to be Financed', 'Indicative Rate', 'Tenure\(in Months\)', 'Method Of Contact', 'Comments', 'Date of Request']
 			},
 			'insurance': {
-				headers: ['Ticket Id', 'Customer Id', 'Full Name', 'Country', 'Location', 'Company Name', 'Designation', 'Phone No', 'Mobile No', 'Email Address', 'Category', 'Brand', 'Modal', 'Location of Asset', 'Manufacturing Year', 'Asset Description', 'Invoice value', 'Method Of Contact', 'Comments', 'Date of Request', ]
+				headers: ['Ticket Id', 'Customer Id', 'Full Name', 'Country', 'Location', 'Company Name', 'Designation', 'Phone No', 'Mobile No', 'Email Address', 'Category', 'Brand', 'Modal', 'Location of Asset', 'Manufacturing Year', 'Asset Description', 'Invoice value', 'Method Of Contact', 'Comments', 'Date of Request',]
 			}
 		};
 
 		var xlsxData = [];
 		var json = {};
 		var arr = [];
-		data.forEach(function(x) {
+		data.forEach(function (x) {
 			json = {};
 			arr = [];
 
@@ -142,7 +142,7 @@ var reports = {
 				case 'shipping':
 					arr.push(
 						_.get(x, 'ticketId', ''),
-                                                _.get(x, 'quote.customerId', ''),
+						_.get(x, 'quote.customerId', ''),
 						_.get(x, 'quote.fname', '') + ' ' + _.get(x, 'quote.lname', ''),
 						_.get(x, 'quote.country', ''),
 						_.get(x, 'quote.city', ''),
@@ -162,8 +162,8 @@ var reports = {
 					arr = [];
 					arr.push(
 						_.get(x, 'ticketId', ''),
-                                                _.get(x, 'type', ''),
-                                                _.get(x, 'quote.customerId', ''),
+						_.get(x, 'type', ''),
+						_.get(x, 'quote.customerId', ''),
 						_.get(x, 'quote.fname', '') + ' ' + _.get(x, 'quote.lname', ''),
 						_.get(x, 'quote.country', ''),
 						_.get(x, 'quote.city', ''),
@@ -172,17 +172,17 @@ var reports = {
 						_.get(x, 'quote.phone', ''),
 						_.get(x, 'quote.mobile', ''),
 						_.get(x, 'quote.email', ''),
-						_.get(x,'quote.product.category',''),
-						_.get(x,'quote.product.brand',''),
-						_.get(x,'quote.product.model',''),
-						_.get(x,'quote.product.city',''),
-						_.get(x,'quote.product.mfgYear',''),
-						_.get(x,'quote.product.description',''),
-						_.get(x,'quote.product.contactPerson',''),
-						_.get(x,'quote.product.contactNumber',''),
-						_.get(x,'quote.valuation')|| _.get(x,'quote.otherName',''),
-						_.get(x,'quote.schedule',''),
-						_.get(x,'quote.comment',''),
+						_.get(x, 'quote.product.category', ''),
+						_.get(x, 'quote.product.brand', ''),
+						_.get(x, 'quote.product.model', ''),
+						_.get(x, 'quote.product.city', ''),
+						_.get(x, 'quote.product.mfgYear', ''),
+						_.get(x, 'quote.product.description', ''),
+						_.get(x, 'quote.product.contactPerson', ''),
+						_.get(x, 'quote.product.contactNumber', ''),
+						_.get(x, 'quote.valuation') || _.get(x, 'quote.otherName', ''),
+						_.get(x, 'quote.schedule', ''),
+						_.get(x, 'quote.comment', ''),
 						utility.toIST(_.get(x, 'createdAt', ''))
 					);
 					break;
@@ -199,17 +199,17 @@ var reports = {
 						_.get(x, 'quote.phone', ''),
 						_.get(x, 'quote.mobile', ''),
 						_.get(x, 'quote.email', ''),
-						_.get(x,'quote.product.category',''),
-						_.get(x,'quote.product.brand',''),
-						_.get(x,'quote.product.model',''),
-						_.get(x,'quote.product.city',''),
-						_.get(x,'quote.product.mfgYear',''),
-						_.get(x,'quote.product.description',''),
-						_.get(x,'quote.amountToBeFinanced','') ,
-						_.get(x,'quote.indicativeRate','') ,
-						_.get(x,'quote.periodInMonths','') ,
-						_.get(x,'quote.contactMethod','') ,
-						_.get(x,'quote.comment','') ,
+						_.get(x, 'quote.product.category', ''),
+						_.get(x, 'quote.product.brand', ''),
+						_.get(x, 'quote.product.model', ''),
+						_.get(x, 'quote.product.city', ''),
+						_.get(x, 'quote.product.mfgYear', ''),
+						_.get(x, 'quote.product.description', ''),
+						_.get(x, 'quote.amountToBeFinanced', ''),
+						_.get(x, 'quote.indicativeRate', ''),
+						_.get(x, 'quote.periodInMonths', ''),
+						_.get(x, 'quote.contactMethod', ''),
+						_.get(x, 'quote.comment', ''),
 						utility.toIST(_.get(x, 'createdAt', ''))
 					);
 					break;
@@ -218,7 +218,7 @@ var reports = {
 					arr = [];
 					arr.push(
 						_.get(x, 'ticketId', ''),
-                                                _.get(x, 'quote.customerId', ''),
+						_.get(x, 'quote.customerId', ''),
 						_.get(x, 'quote.fname', '') + ' ' + _.get(x, 'quote.lname', ''),
 						_.get(x, 'quote.country', ''),
 						_.get(x, 'quote.city', ''),
@@ -227,15 +227,15 @@ var reports = {
 						_.get(x, 'quote.phone', ''),
 						_.get(x, 'quote.mobile', ''),
 						_.get(x, 'quote.email', ''),
-						_.get(x,'quote.product.category',''),
-						_.get(x,'quote.product.brand',''),
-						_.get(x,'quote.product.model',''),
-						_.get(x,'quote.product.city',''),
-						_.get(x,'quote.product.mfgYear',''),
-						_.get(x,'quote.product.description',''),
-						_.get(x,'quote.amountToBeFinanced','') ,
-						_.get(x,'quote.contactMethod','') ,
-						_.get(x,'quote.comment','') ,
+						_.get(x, 'quote.product.category', ''),
+						_.get(x, 'quote.product.brand', ''),
+						_.get(x, 'quote.product.model', ''),
+						_.get(x, 'quote.product.city', ''),
+						_.get(x, 'quote.product.mfgYear', ''),
+						_.get(x, 'quote.product.description', ''),
+						_.get(x, 'quote.amountToBeFinanced', ''),
+						_.get(x, 'quote.contactMethod', ''),
+						_.get(x, 'quote.comment', ''),
 						utility.toIST(_.get(x, 'createdAt', ''))
 					);
 					break;
@@ -244,15 +244,18 @@ var reports = {
 						err: 'Invalid choice'
 					});
 			}
-			
+
 			for (var i = 0; i < csvData[type].headers.length; i++) {
 				json[csvData[type].headers[i]] = arr[i];
 			}
-
 			xlsxData.push(json);
 		})
-		res.xls(type + '_report.xlsx', xlsxData);
-		//res.end();
+
+		try {
+			utility.convertToCSV(res, xlsxData, type + '_' +  new Date().getTime());
+		} catch (excp) {
+			throw excp;
+		}
 	}
 };
 
@@ -262,7 +265,7 @@ module.exports = reports;
 
 
 if (require.main === module) {
-	(function() {
+	(function () {
 		//reports.count({}, console.log);
 		reports.fetch({
 			type: 'shipping',

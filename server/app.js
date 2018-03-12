@@ -5,7 +5,7 @@
 'use strict';
 
 // Set default node environment to development
-//require('newrelic');
+require('newrelic');
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
 
@@ -460,7 +460,7 @@ sitemapDemo();
 server.listen(config.port, config.ip, function () {
   console.log('Express server listening on %d, in %s mode', config.port, app.get('env'));
   // notification.startNotification();
-  // taskRunner.startTaskRunner();
+  //  taskRunner.startTaskRunner();
   // valReqSubmitter.start();
   //assetSaleTracker.start();
   // checkQuickQueryNotificationService.start();
