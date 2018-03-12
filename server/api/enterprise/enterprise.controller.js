@@ -1269,6 +1269,7 @@ exports.bulkModify = function(req, res) {
 
 // Updates an existing enterprise valuation in the DB.
 exports.update = function(req, res) {
+  // console.log(req.body);
   var bodyData = req.body.data;
   var user = req.body.user;
   if(bodyData._id) { delete bodyData._id; }
@@ -1276,15 +1277,15 @@ exports.update = function(req, res) {
   bodyData.auditLogs = [req.enterprise];
   EnterpriseValuation.update({_id:req.params.id},{$set:bodyData},function(err){
       if (err) { return handleError(res, err); }
-      if(req.body.status == "Valuation Report Submitted" && (bodyData.assessedValue || bodyData.overallGeneralCondition)) {
+      if(bodyData.status == "Valuation Report Submitted" && (bodyData.assessedValue || bodyData.overallGeneralCondition)) {
         var data = {
             valuationAssessedValue: bodyData.assessedValue,
             valuationOverallGeneralCondition: bodyData.overallGeneralCondition
         };
         Product.update({assetId: bodyData.assetId}, data , function (err, res) {
-            if (!err) {
+            if (err) {
                 console.error(err);
-            }
+            } 
         });        
       }
       return res.status(200).send("Enterprise valuation updated sucessfully");
@@ -1885,7 +1886,6 @@ exports.updateFromAgency = function(req,res){
   var validActions = ['reportupload','putonhold','statusupdate'];  
   var bodyData = req.body;
   var action = req.query.action;
-
   var result = {};
   result['success'] = true;
   result['jobID'] = bodyData.jobID;
@@ -1987,6 +1987,18 @@ exports.updateFromAgency = function(req,res){
           if(err){
              result['success'] = false;
              result['msg'] = "System error at iQuippo";
+          }
+          if(updateObj.status == EnterpriseValuationStatuses[6]) {
+            // updating value of fields in product db
+            var data = {
+                valuationAssessedValue: bodyData.assessedValue,
+                valuationOverallGeneralCondition: bodyData.overallGeneralCondition
+            };
+            Product.update({assetId: valReq.assetId}, {$set:data} , function (err, res) {
+                if (!err) {
+                    console.error(err);
+                }
+            }); 
           }
           if(action === 'reportupload')
             pushNotification(valReq);

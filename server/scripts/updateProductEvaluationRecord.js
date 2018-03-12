@@ -26,7 +26,7 @@ function init(processCb) {
                     valuationOverallGeneralCondition: entrpriseVal.overallGeneralCondition
                 };
                 Product.update({assetId: entrpriseVal.assetId}, data , function (err, res) {
-                    if (!err) {
+                    if (err) {
                         cb();
                     } else {
                         console.log("Updated:",res.nModified);
