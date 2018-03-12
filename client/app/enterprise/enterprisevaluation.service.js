@@ -25,6 +25,7 @@ function EnterpriseSvc($http,$rootScope ,$q,$timeout, notificationSvc,Auth,UtilS
   entSvc.getCancellationFee = getCancellationFee;
   entSvc.cancelEnterprise = cancelEnterprise;
   entSvc.resumeRequest = resumeRequest;
+  entSvc.generateReport = generateReport;
 
   function getRequestOnId(id) {
     var deferred = $q.defer();
@@ -285,6 +286,16 @@ function EnterpriseSvc($http,$rootScope ,$q,$timeout, notificationSvc,Auth,UtilS
 
    function generateInvoice(invoice){
     return $http.post(path + "/createinvoice",invoice)
+          .then(function(res){
+            return res.data;
+          })
+          .catch(function(err){
+            throw err;
+          });
+   }
+
+   function generateReport(){
+      return $http.post(path + "/generatereport",{})
           .then(function(res){
             return res.data;
           })

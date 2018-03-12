@@ -2,52 +2,36 @@
 
 var async = require("async");
 var _ = require('lodash');
-var ValuationModel = require('../api/enterprise/enterprisevaluation.model');
-var User = require('../api/user/user.model');
-var config = require('./../config/environment');
+var ValuationModel = require('./enterprisevaluation.model');
+var User = require('../user/user.model');
 var fs = require("fs");
-var Utility = require('./utility.js');
+var Utility = require('./../../components/utility.js');
+var config = require('./../../config/environment');
 var EnterpriseValuationStatuses = ['Valuation Report Submitted','Invoice Generated'];
-var TimeInterval =  15*60*1000;
-var fileName = "Format_revised.csv"; 
+var fileName = "format_revised_m.csv"; 
 var localFilePath = config.uploadPath + "temp/" +  fileName;
-var Field_MAP = {
-    "GPSID": "gpsDeviceNo",
-    "VALUATION_NO":"uniqueControlNo",
-    "ASSET_DETAILS" : "assetDetails",
-    "YEAROFMFG" : "agencyYearOfManufacturing",
-    "ENGINENO":"agencyEngineNo",
-    "CHASISNO":"agencyChassisNo",
-    "REGISTRATION_NO" : "agencyRegistrationNo",
-    "SERIAL_NO" : "agencySerialNo",
-    "INSERT_DATETIME":"INSERT_DATETIME",
-    "BOOKED":"BOOKED",
-    "NG_CONTRACT_NO":"NG_CONTRACT_NO",
-    "ASSET_ID":"ASSET_ID"
-  };
+var Field_MAP = require("./fieldsConfig").Report_Field_MAP;
  
 //qpvalURL
-function getEnterpriseUser(){
-  if(!checkExecutionTime()){
-    return setTimeout(function () { getEnterpriseUser(); },getSleepTime());
-  }
+exports.generateReport = function(req,res){
 
-  User.find({enterprise:true,deleted:false,status:true,role:'enterprise',valuationReport:true},function(err,enterprisers){
-    if(err) return handleError(err);
-    getEnterpriseRequest(enterprisers);
-  });
-}
+    User.find({ enterprise:true,deleted:false,status:true,
+                role:'enterprise',valuationReport:true
+              },
+            function(err,enterprisers){
+            if(err) return handleError(err);
+            getEnterpriseRequest(enterprisers);
+    });
 
-function getEnterpriseRequest(enterprisers){
+  function getEnterpriseRequest(enterprisers){
 
     if( !enterprisers || !enterprisers.length){
-      return setTimeout(function () { getEnterpriseUser(); },getSleepTime());
+      return res.status(404).send("No enterprises found");
     }
     var enterpriseIds = [];
     enterprisers.forEach(function(user){
       enterpriseIds.push(user.enterpriseId);
-    });
-
+    });  
     var fromDate = new Date();
     fromDate.setDate(fromDate.getDate() - 2);
     fromDate.setHours(24,0,0);
@@ -59,7 +43,8 @@ function getEnterpriseRequest(enterprisers){
     var dateFilter = {};
     dateFilter.$gte = fromDate;
     dateFilter.$lt = toDate;
-    
+    console.log("from date",fromDate.toString());
+    console.log("to date",toDate.toString());
     ValuationModel.find({'enterprise.enterpriseId':{$in:enterpriseIds},status:{$in:EnterpriseValuationStatuses},
       reportDate:dateFilter,deleted:false,cancelled:false,onHold:false}
       ,function(err,entReqs){
@@ -87,11 +72,12 @@ function createCsv(entReqs){
      fs.writeFileSync(localFilePath, new Buffer(csvStr, 'binary'));
       async.parallel([uploadFileonS3,uploadFileOnFtp],function(err){
         if(err) return  handleError(err);
-        return setTimeout(function () { getEnterpriseUser(); },getSleepTime());
+        return res.status(200).send("Report generarted and uploaded successfully.");
       });
   }catch(e){
     handleError(e);
   }
+}
 
   function uploadFileonS3(cb){
       var opts = {
@@ -110,10 +96,7 @@ function createCsv(entReqs){
     Utility.uploadFileOnFtp(localFilePath,config.valuationReportRemotePath + fileName,function(err){
       cb(err);
     });
-}
-
-}
-
+  }
 
 function getAssetDetail(item){
   var valStr = "";
@@ -135,36 +118,9 @@ function getAssetDetail(item){
   return valStr;
 }
 
-function handleError(err){
-  console.log("Error in valuation report generation",err);
-   if(checkExecutionTime()) 
-    return setTimeout(function () { getEnterpriseUser(); },TimeInterval);
-  else{
-    return setTimeout(function () { getEnterpriseUser(); },getSleepTime());
+  function handleError(err){
+    console.log("Error in valuation report generation",err);
+    res.status(500).send(err);
   }
+
 }
-
- function checkExecutionTime(){
-    var d = new Date();
-    if(d.getHours() >= 2 && d.getHours() < 4)
-      return true;
-    else
-      return false;
- }
-
-function  getSleepTime(){
-  var sleepTime = 0;
-  var currentTime = new Date().getTime();
-  var dt = new Date();
-  if(dt.getHours() >= 2)
-    dt.setDate(dt.getDate() + 1);
-  dt.setHours(2,0,0);
-  if(dt.getTime() > currentTime)
-    sleepTime = dt.getTime() - currentTime;
-  return sleepTime;
-}
-
-exports.start = function() {
-  console.log("submitter service started");
-  getEnterpriseUser();
-};

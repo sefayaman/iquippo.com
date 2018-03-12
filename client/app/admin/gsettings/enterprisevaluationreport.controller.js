@@ -3,13 +3,14 @@
 
     angular.module('admin').controller('EnterpriseValuationReportCtrl', EnterpriseValuationReportCtrl);
 
-    function EnterpriseValuationReportCtrl($scope,$rootScope,$state,Modal,Auth,PagerSvc,$filter,userSvc){
+    function EnterpriseValuationReportCtrl($scope,$rootScope,$state,Modal,Auth,PagerSvc,$filter,userSvc,EnterpriseSvc){
     	var vm  = this;
         $scope.timestamp = new Date().getTime();
         $scope.pager = PagerSvc.getPager();
         vm.filteredList = [];
         vm.enterprises = [];
         vm.update = update;
+        vm.generateReport = EnterpriseSvc.generateReport;
         function init(){
             getUsers({});
         }
