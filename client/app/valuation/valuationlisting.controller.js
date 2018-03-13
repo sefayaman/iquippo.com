@@ -2,61 +2,61 @@
 'use strict';
 angular.module('sreizaoApp').controller('ValuationListingCtrl',ValuationListingCtrl);
 function ValuationListingCtrl($scope,$window,$stateParams,$state,$uibModal,Modal,Auth,PagerSvc,userSvc, ValuationSvc,AuctionSvc,UtilSvc,$rootScope,uploadSvc) {
- 	 var vm = this;
-	 vm.valuations = [];
-	 var reqSent = [];
-	 var reqReceived = [];
-	 var filter = {};
-  	 var initFilter = {};
-	 $scope.valuationStatuses = valuationStatuses;
-	 $scope.IndividualValuationStatuses = IndividualValuationStatuses;
-	 $scope.valType = "sent";
-	 vm.master = false;
-	 vm.searchStr = "";
-	 $scope.pager = PagerSvc.getPager();
+	var vm = this;
+	vm.valuations = [];
+	var reqSent = [];
+	var reqReceived = [];
+	var filter = {};
+	var initFilter = {};
+	$scope.valuationStatuses = valuationStatuses;
+	$scope.IndividualValuationStatuses = IndividualValuationStatuses;
+	$scope.valType = "sent";
+	vm.master = false;
+	vm.searchStr = "";
+	$scope.pager = PagerSvc.getPager();
 
-	  vm.fireCommand = fireCommand;
-	  vm.openInvoiceModal = openInvoiceModal;
-	  vm.cancelledHandler = cancelledHandler;
-	 //vm.onValuationReqTypeChange = onValuationReqTypeChange;
-	 //vm.updateSelection = updateSelection;
-	 vm.exportExcel = exportExcel;
-	 vm.updateStatus = updateStatus;
-	 //$scope.uploadReport = uploadReport;
-	 vm.downloadInvoice = downloadInvoice;
-	 vm.openPaymentModel = openPaymentModel;
-	 vm.validateAction = ValuationSvc.validateAction;
-	 var selectedIds = [];
-	 vm.submitToAgency = submitToAgency;
-	 vm.openPaymentOptionModel = openPaymentOptionModel;
-	 vm.openCommentModal = openCommentModal;
-	 
-	 $scope.$on('refreshValuationList',function(){
-	    fireCommand(true);
-	  });
-	 
-	 //var mode = "user";
+	vm.fireCommand = fireCommand;
+	vm.openInvoiceModal = openInvoiceModal;
+	vm.cancelledHandler = cancelledHandler;
+	//vm.onValuationReqTypeChange = onValuationReqTypeChange;
+	//vm.updateSelection = updateSelection;
+	vm.exportExcel = exportExcel;
+	vm.updateStatus = updateStatus;
+	//$scope.uploadReport = uploadReport;
+	vm.downloadInvoice = downloadInvoice;
+	vm.openPaymentModel = openPaymentModel;
+	vm.validateAction = ValuationSvc.validateAction;
+	var selectedIds = [];
+	vm.submitToAgency = submitToAgency;
+	vm.openPaymentOptionModel = openPaymentOptionModel;
+	vm.openCommentModal = openCommentModal;
 
-	 function init(){
-	 	Auth.isLoggedInAsync(function(loggedIn){
-	 		if(loggedIn){
-	 			filter ={};
-		        initFilter.pagination = true;
-		        if(!Auth.isAdmin() && !Auth.isValuationPartner()){
-		          initFilter['userId'] = Auth.getCurrentUser()._id;
-		        }
+	$scope.$on('refreshValuationList',function(){
+		fireCommand(true);
+	});
 
-		        if(Auth.isValuationPartner())
-		        	initFilter['partnerId'] = Auth.getCurrentUser().partnerInfo._id;
+	//var mode = "user";
+
+	function init(){
+		Auth.isLoggedInAsync(function(loggedIn){
+			if(loggedIn){
+				filter ={};
+		    initFilter.pagination = true;
+		    if(!Auth.isAdmin() && !Auth.isValuationPartner()){
+		      initFilter['userId'] = Auth.getCurrentUser()._id;
+		    }
+
+		    if(Auth.isValuationPartner())
+		    	initFilter['partnerId'] = Auth.getCurrentUser().partnerInfo._id;
+			
+		    angular.copy(initFilter, filter);
+		 	getValuations(filter);	
 				
-		        angular.copy(initFilter, filter);
-			 	getValuations(filter);	
-	 			
-	 		}
-	 	});
-	 }
+			}
+		});
+	}
 
-	 init();
+	init();
 
 	function downloadInvoice(ivNo){
 		openWindow(ValuationSvc.generateInvoice(ivNo));    
@@ -106,19 +106,6 @@ function ValuationListingCtrl($scope,$window,$stateParams,$state,$uibModal,Modal
         var scope = $rootScope.$new();
         scope.valuationData = indValuation;
         scope.dataModel = {};
-        /*var commentModal = $uibModal.open({
-          animation: true,
-            templateUrl: "usercomment.html",
-            scope: scope,
-            size: 'lg'
-        });
-
-        var infoModal = $uibModal.open({
-          animation: true,
-            templateUrl: "requestStatus.html",
-            scope: scope,
-            size: 'lg'
-        });*/
         switch (modalType) {
 	        case 'onHold':
 	            var commentModal = $uibModal.open({
@@ -300,5 +287,4 @@ function ValuationListingCtrl($scope,$window,$stateParams,$state,$uibModal,Modal
         }) 
     }
 }
-
 })();

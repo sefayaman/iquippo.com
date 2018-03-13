@@ -362,14 +362,8 @@ function generateInvoice(req,res,indvReq){
         serverPath:config.serverPath,
         awsBaseImagePath:config.awsUrl + '/' + config.awsBucket
       };
+      
       var taxColms = ['CGST','SGST','IGST'];
-      // if(taxColms.indexOf(invoiceData.taxType) !== -1) {
-      //   var tempObj = {};
-      //   tempObj.type = invoiceData.taxType;
-      //   tempObj.rate = invoiceData.gstPer;
-      //   tempObj.calculatedTax = invoiceData.gst;
-      //   data[tempObj.type] = tempObj;
-      // }
       if(invoiceData.selectedTaxes && invoiceData.selectedTaxes.length){
         invoiceData.selectedTaxes.forEach(function(tax){
           if(taxColms.indexOf(tax.type) !== -1)

@@ -341,9 +341,13 @@ exports.getOfferRequest = function (req, res) {
 
   if (queryParam.pagination) {
     return Utility.paginatedResult(req, res, OfferRequest, filter, {}, function (resultData) {
-      //console.log(resultData);
+      resultData.items = resultData.items.map(function (obj) {
+        return obj.toObject();
+      });
+      
       var resultArr = formatData(resultData.items);
       resultData.items = resultArr;
+
       return res.status(200).json(resultData);
     });
   }
@@ -351,7 +355,7 @@ exports.getOfferRequest = function (req, res) {
   if (queryParam.limit && queryParam.limit < 1000)
     limit = queryParam.limit;
   var query = OfferRequest.find(filter).limit(limit).sort({ createdAt: -1 });
-  query.exec(function (err, result) {
+  query.lean().exec(function (err, result) {
     if (err) return handleError(res, err);
     req.result = result;
     if (queryParam.type == 'excel')
@@ -371,7 +375,6 @@ function formatData(resultArr, isOfferMaster) {
   if (!resultArr || !resultArr.length)
     return dataArr;
   resultArr.forEach(function (item) {
-    // item = item.toObject();
     item.orders = [];
     if (item.cashOffer && item.cashOffer.length && !isOfferMaster) {
       item.cashOffer.forEach(function (cash) {
@@ -453,7 +456,7 @@ function renderExcel(req, res) {
     keys.forEach(function (key) {
       var val = _.get(item, Excel_Header[key], "");
       if (Excel_Header[key] == 'customerName')
-        val = item.fname + " " + item.lname;
+        val = _.get(item, 'fname', '') + _.get(item, 'lname', '');
       if (Excel_Header[key] == "requestRaisedBy") {
         if (item.isForSelf)
           val = "Self";
