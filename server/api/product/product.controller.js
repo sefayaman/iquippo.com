@@ -57,6 +57,22 @@ exports.getAll = function (req, res) {
   });
 };
 
+// for making sitemap url need this function excuted on server side
+// exports.getAllProducts = function() {
+//   return new Promise(function(reject, resolve) {
+//     return Product.find({}, function (err, products) {
+//       if(err) { reject(err); }
+//       else{
+//         for(var i=0; i<products.length; i++){
+//           console.log(products.length);
+//           resolve(products); 
+//         }       
+//       }
+//     }); 
+//   });
+// };
+
+
 // Get a single product
 exports.getOnId = function (req, res) {
   Product.findById(req.params.id, function (err, product) {

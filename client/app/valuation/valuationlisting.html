@@ -56,7 +56,7 @@
               <tr ng-repeat="valuation in valuationListingVm.valuations">
                 <td><input type="checkbox" ng-checked="valuationListingVm.master" ng-click="valuationListingVm.updateSelection($event,valuation._id)"></td>
                 <td>{{valuation.requestId}}</td>
-                <td>{{valuation.product.category}}</td>
+                <td>{{ valuationListingVm.checkPropertyExist(valuation.product.category, 'name') ? valuation.product.category.name : valuation.product.category }}</td>
                 <td>{{valuation.product.name}}</td>
                 <td>{{valuation.product.status}}</td>
                 <td>{{valuation.product.serialNumber}}</td>

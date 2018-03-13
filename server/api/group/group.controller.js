@@ -60,7 +60,7 @@ exports.categoryCount = function(req,res){
     },
     {$sort:{count:-1}},
     function (err, result) {
-      if (err) return handleError(err);
+      if (err) return handleError(res, err);
       var resultArr = [];
       req.groups.forEach(function(group){
         group = group.toObject();

@@ -59,7 +59,7 @@ angular.module('sreizaoApp',[
         libraries: 'weather,geometry,visualization,places'
     });
   })
-  .run(function ($rootScope, $cookieStore, $location, Auth,Modal, $state,$http, groupSvc, categorySvc,$timeout, vendorSvc, $uibModal,CartSvc,modelSvc,brandSvc, settingSvc, InvitationSvc,UtilSvc,MarketingSvc,AppStateSvc, LocationSvc) {
+  .run(function ($rootScope, $cookieStore, $location, Auth, Modal, $state, $http, groupSvc, categorySvc,$timeout, vendorSvc, $uibModal,CartSvc,modelSvc,brandSvc, settingSvc, InvitationSvc,UtilSvc,MarketingSvc,AppStateSvc, LocationSvc) {
     // Redirect to login if route requires auth and you're not logged in
 
     $rootScope.uploadImagePrefix = s3Detais.baseURL+"/"+s3Detais.s3bucket+"/assets/uploads/";
@@ -114,7 +114,6 @@ angular.module('sreizaoApp',[
       $rootScope.loadingCount --;
       $rootScope.loading = $rootScope.loadingCount !=0;
     });*/
-
    categorySvc.getAllCategory().then(function(response){
       $rootScope.loadingCount --;
       $rootScope.loading = $rootScope.loadingCount !=0;
@@ -297,7 +296,7 @@ angular.module('sreizaoApp',[
         }
       }
     }
-   
+      
    Auth.removeCookies();
     //global logout
     $rootScope.logout = function() {

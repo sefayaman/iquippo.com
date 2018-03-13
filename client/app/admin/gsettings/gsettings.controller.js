@@ -8,7 +8,7 @@
         $scope.dtOptions = DTOptionsBuilder.newOptions().withOption('order', []);
         $scope.actionAdditionalInfo = false;
         var vm = this;
-        vm.tabValue = 'loc';
+        vm.tabValue = 'assetcount';
         vm.onTabChange = onTabChange;
         // vm.subCategory = {};
         // vm.subCategory.category = {};

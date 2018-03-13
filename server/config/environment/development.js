@@ -5,6 +5,7 @@
 module.exports = {
   // MongoDB connection options
   mongo: {
+    // uri: 'mongodb://appUser:iQuippoAppUser^*$!2K17@127.0.0.1/sreiglobaldb'
     uri: 'mongodb://127.0.0.1/sreiglobaldb'
   },
   uploadPath: 'client/assets/uploads/',
