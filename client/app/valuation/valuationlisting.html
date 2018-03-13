@@ -123,7 +123,7 @@
                   
                   <a class="btn btn-success btn-sm" ng-if="valuationListingVm.validateAction(valuation,'REPORTDOWNLOAD')" href="{{valuation.valuationReport.filename}}" uib-popover="Download Report" popover-trigger="mouseenter" target="_blank"><i class="fa fa-download"></i> </a>
 
-                  <a class="btn btn-success btn-sm" ng-if="valuationListingVm.validateAction(valuation,'STATUSCOMPLETED')" ng-click="valuationListingVm.updateStatus(valuation, IndividualValuationStatuses[7])" uib-popover="Completed" popover-trigger="mouseenter" ng-disabled="valuation.cancelled"><i class="fa fa-check"></i></a>
+                  <a class="btn btn-success btn-sm" ng-show="false" ng-click="valuationListingVm.updateStatus(valuation, IndividualValuationStatuses[7])" uib-popover="Completed" popover-trigger="mouseenter" ng-disabled="valuation.cancelled"><i class="fa fa-check"></i></a>
 
                   <a class="btn btn-default btn-sm" href="javascript:void(0);" uib-popover="Resume Hold Request" popover-trigger="mouseenter" ng-if= "valuation.onHold" ng-click="valuationListingVm.openCommentModal(valuation,'onHold')" ng-disabled="valuation.cancelled"><i class="fa fa-send"></i> </a>
 
