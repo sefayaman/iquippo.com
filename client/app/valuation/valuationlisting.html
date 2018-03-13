@@ -33,8 +33,16 @@
               Showing : {{valuationListingVm.totalItems}} Records
             </div>
             <div class="col-sm-3">
-              <select class="form-control">
-                <option>Select Status Type</option>
+              <select class="form-control" name="statusType" ng-model="valuationListingVm.statusType" ng-change="valuationListingVm.fireCommand(true)">
+                <option value="">Select Status Type</option>
+                <option value="Request Initiated">Request Initiated</option>
+                <option value="Payment Completed">Payment Completed</option>
+                <option value="Request Submitted">Request Submitted</option>
+                <option value="Invoice Generated">Invoice Generated</option>
+                <option value="Report Submitted">Report Submitted</option>
+                <option value="Completed">Request Completed</option>
+                <option value="Request On Hold">Request On Hold</option>
+                <option value="Cancelled">Request Cancelled</option>
               </select>
             </div>
             <div class="col-sm-3 pull-right">
@@ -93,7 +101,7 @@
                       <span><i class="fa fa-upload"></i></span>
                         <input type="file" data-index="{{$index}}" name="report" onchange="angular.element(this).scope().uploadReport(this.files,this)">
                   </button> -->
-                  <a class="btn btn-sm btn-info" ng-if="valuationListingVm.validateAction(valuation,'GENERATEINVOICE')" href="javascript:void(0);" ng-click="valuationListingVm.openInvoiceModal(valuation)" uib-popover="Generate Invoice" popover-trigger="mouseenter"><i class="fa fa-file"></i></a>
+                  <a class="btn btn-sm btn-info" ng-if="valuationListingVm.validateAction(valuation,'GENERATEINVOICE')" href="javascript:void(0);" ng-click="valuationListingVm.openInvoiceModal(valuation)" uib-popover="Generate Invoice" popover-trigger="mouseenter" ng-disabled="valuation.cancelled"><i class="fa fa-file"></i></a>
                   <!-- <button class="btn btn-success" ng-if="isPartner() && valuation.status == 'request_in_process'" ng-click="valuationListingVm.updateStatus(valuation,'request_completed')" uib-popover="Complete" popover-trigger="mouseenter" ><i class="fa fa-hourglass-end"></i></button> -->
 
                    <!-- <button class="btn btn-info" ng-if="isPartner() && valuation.status == 'request_submitted'"  ng-click="valuationListingVm.updateStatus(valuation,'request_in_process')" uib-popover="Inprogress" popover-trigger="mouseenter"><i class="fa fa-hourglass-2"></i></button> -->
@@ -104,24 +112,24 @@
 
                   <a class="btn btn-success btn-sm" ng-if="valuationListingVm.validateAction(valuation,'INVOICEDOWNLOAD')" ng-click="valuationListingVm.downloadInvoice(valuation._id)" href="javascript:void(0);" uib-popover="Download Invoice" popover-trigger="mouseenter" target="_blank"><i class="fa fa-download"></i> </a>
 
-                  <a class="btn btn-primary btn-sm" ng-if="valuationListingVm.validateAction(valuation,'ADDPAYMENT')" href="javascript:void(0);" ng-click="valuationListingVm.openPaymentModel(valuation, 'paymentAdd')" uib-popover="Add Payment" popover-trigger="mouseenter"><i class="fa fa-money"></i></a>
+                  <a class="btn btn-primary btn-sm" ng-if="valuationListingVm.validateAction(valuation,'ADDPAYMENT')" href="javascript:void(0);" ng-click="valuationListingVm.openPaymentModel(valuation, 'paymentAdd')" uib-popover="Add Payment" popover-trigger="mouseenter" ng-disabled="valuation.cancelled"><i class="fa fa-money"></i></a>
 
                   <!-- <a class="btn btn-primary" href="/payment/{{valuation.transactionId}}" ng-if="valuationListingVm.validateAction(valuation,'PAYNOW')">Pay Now</a> -->
-                  <a class="btn btn-info btn-sm" href="javascript:void(0);" ng-click="valuationListingVm.openPaymentOptionModel(valuation)" ng-if="valuationListingVm.validateAction(valuation,'PAYNOW')" uib-popover="Pay Now" popover-trigger="mouseenter"> <i class="fa fa-paypal"></i></a>
+                  <a class="btn btn-info btn-sm" href="javascript:void(0);" ng-click="valuationListingVm.openPaymentOptionModel(valuation)" ng-if="valuationListingVm.validateAction(valuation,'PAYNOW')" uib-popover="Pay Now" popover-trigger="mouseenter" ng-disabled="valuation.cancelled"> <i class="fa fa-paypal"></i></a>
 
-                  <a href="javascript:void(0);" ng-if="valuation.transactionIdRef.payments.length > 0" ng-click="valuationListingVm.openPaymentModel(valuation, 'paymentView')" class="btn btn-sm btn-primary" uib-popover="View Payment" popover-trigger="mouseenter"><i class="fa fa-eye"></i></a>
+                  <a href="javascript:void(0);" ng-if="valuation.transactionIdRef.payments.length > 0" ng-click="valuationListingVm.openPaymentModel(valuation, 'paymentView')" class="btn btn-sm btn-primary" uib-popover="View Payment" popover-trigger="mouseenter" ng-disabled="valuation.cancelled"><i class="fa fa-eye"></i></a>
 
-                  <a class="btn btn-primary btn-sm" href="javascript:void(0);" ng-if="valuationListingVm.validateAction(valuation,'SUBMITTOAGENCY')" ng-click="valuationListingVm.submitToAgency(valuation, 'Mjobcreation')" uib-popover="Submit to Agency" popover-trigger="mouseenter"><i class="fa fa-check-circle"></i></a>
+                  <a class="btn btn-primary btn-sm" href="javascript:void(0);" ng-if="valuation.resubmit" ng-click="valuationListingVm.submitToAgency(valuation, 'Mjobcreation')" uib-popover="Submit to Agency" popover-trigger="mouseenter" ng-disabled="valuation.cancelled"><i class="fa fa-check-circle"></i></a>
                   
-                  <a class="btn btn-default btn-sm" ng-if="valuationListingVm.validateAction(valuation,'REPORTDOWNLOAD')" href="{{valuation.valuationReport.filename}}" uib-popover="Download Report" popover-trigger="mouseenter" target="_blank"><i class="fa fa-download"></i> </a>
+                  <a class="btn btn-success btn-sm" ng-if="valuationListingVm.validateAction(valuation,'REPORTDOWNLOAD')" href="{{valuation.valuationReport.filename}}" uib-popover="Download Report" popover-trigger="mouseenter" target="_blank" ng-disabled="valuation.cancelled"><i class="fa fa-download"></i> </a>
 
-                  <a class="btn btn-success btn-sm" ng-if="valuationListingVm.validateAction(valuation,'STATUSCOMPLETED')" ng-click="valuationListingVm.updateStatus(valuation, IndividualValuationStatuses[7])" uib-popover="Completed" popover-trigger="mouseenter"><i class="fa fa-check"></i></a>
+                  <a class="btn btn-success btn-sm" ng-if="valuationListingVm.validateAction(valuation,'STATUSCOMPLETED')" ng-click="valuationListingVm.updateStatus(valuation, IndividualValuationStatuses[7])" uib-popover="Completed" popover-trigger="mouseenter" ng-disabled="valuation.cancelled"><i class="fa fa-check"></i></a>
 
-                  <a class="btn btn-default btn-sm" href="javascript:void(0);" uib-popover="Re-Submit" popover-trigger="mouseenter" ng-if= "valuation.onHold" ng-click="valuationListingVm.openCommentModal(valuation)"><i class="fa fa-send"></i> </a>
+                  <a class="btn btn-default btn-sm" href="javascript:void(0);" uib-popover="Resume Hold Request" popover-trigger="mouseenter" ng-if= "valuation.onHold" ng-click="valuationListingVm.openCommentModal(valuation,'onHold')" ng-disabled="valuation.cancelled"><i class="fa fa-send"></i> </a>
 
-                  <a class="btn btn-success btn-sm" href="javascript:void(0);" uib-popover="More Info" popover-trigger="mouseenter"><i class="fa fa-info"></i> </a>
+                  <a class="btn btn-success btn-sm" href="javascript:void(0);" uib-popover="More Info" popover-trigger="mouseenter" ng-click="valuationListingVm.openCommentModal(valuation, 'info')"><i class="fa fa-info"></i> </a>
                   
-                  <a class="btn btn-warning btn-sm" href="javascript:void(0);" ng-if="isAdmin()" ng-click="valuationListingVm.cancelledHandler(valuation, IndividualValuationStatuses[8])" uib-popover="Cancel" popover-trigger="mouseenter"><i class="fa fa-close"></i> </a>
+                  <a class="btn btn-warning btn-sm" href="javascript:void(0);" ng-if="isAdmin()" ng-click="valuationListingVm.cancelledHandler(valuation, IndividualValuationStatuses[8])" uib-popover="Cancel" popover-trigger="mouseenter" ng-disabled="valuation.cancelled || valuation.status === IndividualValuationStatuses[7]"><i class="fa fa-close"></i> </a>
                 </td>
                
                </tr>
@@ -146,6 +154,25 @@
     </div>
     <div class="modal-footer text-right">
       <button class="btn btn-danger btn-md" ng-click="submit(usercommentForm)">Submit</button>
+    </div>
+  </form>
+</script>
+
+<script type="text/ng-template" id="requestStatus.html">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="close()" aria-hidden="true">&times;</button>
+    <h4 class="modal-title">Valuation Request Status</h4>
+  </div>
+  <form name="requestStatusForm" novalidate>
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-sm-offset-3 col-sm-6" >
+          <p ng-repeat="statusVal in valuationData.statuses">{{statusVal.status}}</p>
+        </div>  
+      </div>
+    </div>
+    <div class="modal-footer text-right">
+      <button class="btn btn-default" ng-click="close()">Close</button>
     </div>
   </form>
 </script>

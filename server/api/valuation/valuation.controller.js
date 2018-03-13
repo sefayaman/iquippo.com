@@ -124,6 +124,18 @@ exports.getOnFilter = function (req, res) {
     filter['$or'] = orFilter;
   }
 
+  if (req.body.statusType){
+    if(req.body.statusType === 'Cancelled')
+      filter['cancelled'] = true;
+    else if(req.body.statusType === 'Request On Hold')
+      filter['onHold'] = true;
+    else {
+      filter["status"] = req.body.statusType;
+      filter['cancelled'] = false;
+      filter['onHold'] = false;
+    }
+   }
+
   if (req.body.userId) {
     filter['user._id'] = req.body.userId;
   }
@@ -139,12 +151,12 @@ exports.getOnFilter = function (req, res) {
     filter['valuationAgency._id'] = req.body.partnerId;
 
   if(req.body.tid)
-       filter['transactionId'] = req.body.tid;
+    filter['transactionId'] = req.body.tid;
+
   if(req.body.pagination){
     paginatedResult(req,res,ValuationReq,filter);
     return;
   }
-
   var query = ValuationReq.find(filter);
   /*query.exec(
                function (err, valuations) {
@@ -484,7 +496,7 @@ function exportExcel(req,res,fieldMap,jsonArr){
 }
 
 function renderCsv(req,res,csv){
-   var fileName = req.query.type + "_" + new Date().getTime();
+  var fileName = req.query.type + "_" + new Date().getTime();
   res.setHeader('Content-Type', 'application/octet-stream');
   res.setHeader("Content-Disposition", 'attachment; filename=' + fileName + '.csv;');
   res.end(csv, 'binary'); 

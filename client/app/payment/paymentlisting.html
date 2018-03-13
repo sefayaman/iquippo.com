@@ -36,7 +36,11 @@
                 <td><input type="checkbox" ng-checked="paymentListingVm.master" ng-click="paymentListingVm.updateSelection($event,tns._id)"></td>
                 <td>{{tns.transactionId}}</td>
                 <td>{{tns.product.category}}</td>
-                <td>{{tns.product.name}}</td>
+                <!-- <td>{{tns.product.name}}</td> -->
+                <td>
+                  <span ng-if="tns.product.name">{{tns.product.name}}</span>
+                  <span ng-if="!tns.product.name">{{tns.product.category}} {{tns.product.brand}} {{tns.product.model}}</span>
+                </td>
                 <td>{{tns.product.status}}</td>
                 <td>{{tns.product.city}}</td>
                 <td>{{tns.requestType}}</td>

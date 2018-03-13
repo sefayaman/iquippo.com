@@ -102,19 +102,49 @@ function ValuationListingCtrl($scope,$window,$stateParams,$state,$uibModal,Modal
         Modal.openDialog('paymentOption',paymentScope);
 	}
 
-	function openCommentModal(indValuation){
-      var scope = $rootScope.$new();
-      scope.dataModel = {};
-       var commentModal = $uibModal.open({
+	function openCommentModal(indValuation, modalType){
+        var scope = $rootScope.$new();
+        scope.valuationData = indValuation;
+        scope.dataModel = {};
+        /*var commentModal = $uibModal.open({
           animation: true,
             templateUrl: "usercomment.html",
             scope: scope,
             size: 'lg'
         });
 
+        var infoModal = $uibModal.open({
+          animation: true,
+            templateUrl: "requestStatus.html",
+            scope: scope,
+            size: 'lg'
+        });*/
+        switch (modalType) {
+	        case 'onHold':
+	            var commentModal = $uibModal.open({
+					animation: true,
+					templateUrl: "usercomment.html",
+					scope: scope,
+					size: 'lg'
+				});
+	            break;
+	        case 'info':
+	            var infoModal = $uibModal.open({
+					animation: true,
+					templateUrl: "requestStatus.html",
+					scope: scope,
+					size: 'lg'
+				});
+	            break;
+        }
+
         scope.close = function () {
-          commentModal.dismiss('cancel');
+        	if(modalType === 'onHold')
+          		commentModal.dismiss('cancel');
+          	else
+          		infoModal.dismiss('cancel');
         };
+
         scope.submit = function(form){
           if(form.$invalid){
             scope.submitted = true;
@@ -143,6 +173,9 @@ function ValuationListingCtrl($scope,$window,$stateParams,$state,$uibModal,Modal
 	    angular.copy(initFilter, filter);
 	    if (vm.searchStr)
 	        filter.searchStr = vm.searchStr;
+	    if(vm.statusType){
+	        filter.statusType = vm.statusType;
+	    }
 	    getValuations(filter);
 	 }
 

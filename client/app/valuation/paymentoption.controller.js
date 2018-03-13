@@ -60,6 +60,9 @@ function PaymentOptionCtrl($scope, $rootScope, $state, Modal, Auth, $uibModal, P
         tid: $scope.tid
       });
     }
+    if($scope.resetData)
+      $rootScope.$broadcast('refreshValuationData');
+        
     closeDialog();
   }
 

@@ -70,9 +70,9 @@
                         </div>
                         <div class="row">
                             <div class="col-xs-12 col-sm-3">
-                                <div class="floating-label-wrapper form-group">
-                                    <label>Category</label>
-                                    <select class="form-control" ng-model="valuationReq.product.category" ng-change="onCategoryChange(valuationReq.product.category)">
+                                <div class="floating-label-wrapper form-group" ng-class="{'has-error': form.proCategory.$invalid && submitted}">
+                                    <label>Category*</label>
+                                    <select class="form-control" name="proCategory" ng-model="valuationReq.product.category" ng-change="onCategoryChange(valuationReq.product.category)" required>
                                         <option value="">Select Category</option>
                                         <option value="{{cat.name}}" ng-repeat="cat in allCategory| orderBy:'name'">{{cat.name}}</option>
                                     </select>
@@ -80,9 +80,9 @@
                                 </div>
                             </div>
                             <div class="col-xs-12 col-sm-3">
-                                <div class="form-group floating-label-wrapper">
-                                    <label>Brand</label>
-                                    <select class="form-control" ng-model="valuationReq.product.brand" ng-change="onBrandChange(valuationReq.product.brand)">
+                                <div class="form-group floating-label-wrapper" ng-class="{'has-error': form.proBrand.$invalid && submitted}">
+                                    <label>Brand*</label>
+                                    <select class="form-control" name="proBrand" ng-model="valuationReq.product.brand" ng-change="onBrandChange(valuationReq.product.brand)" required>
                                         <option value="">Select Brand</option>
                                         <option value="{{br.name}}" ng-repeat="br in brandList| orderBy:'name'">{{br.name}}</option>
                                     </select>
@@ -90,9 +90,9 @@
                                 </div>
                             </div>
                             <div class="col-xs-12 col-sm-3">
-                                <div class="form-group floating-label-wrapper">
-                                    <label>Model</label>
-                                    <select class="form-control" ng-model="valuationReq.product.model">
+                                <div class="form-group floating-label-wrapper" ng-class="{'has-error': form.proModel.$invalid && submitted}">
+                                    <label>Model*</label>
+                                    <select class="form-control" name="proModel" ng-model="valuationReq.product.model" required>
                                         <option value="">Select Model</option>
                                         <option value="{{md.name}}" ng-repeat="md in modelList| orderBy:'name'">{{md.name}}</option>
                                     </select>

@@ -515,6 +515,7 @@
             var paymentScope = $rootScope.$new();
             paymentScope.tid = result.transactionId;
             paymentScope.valuation = result.valuation;
+            paymentScope.resetData = true;
             Modal.openDialog('paymentOption',paymentScope);
             /*$state.go('payment', {
               tid: result.transactionId
@@ -525,6 +526,10 @@
           //Modal.alert('Error while sending email');
         });
     }
+    
+    $scope.$on('refreshValuationData',function(){
+      resetData();
+    });
 
     function resetData() {
       $scope.valuationReq = {};
