@@ -127,7 +127,7 @@
 
                   <a class="btn btn-default btn-sm" href="javascript:void(0);" uib-popover="Resume Hold Request" popover-trigger="mouseenter" ng-if= "valuation.onHold" ng-click="valuationListingVm.openCommentModal(valuation,'onHold')" ng-disabled="valuation.cancelled"><i class="fa fa-send"></i> </a>
 
-                  <a class="btn btn-success btn-sm" href="javascript:void(0);" uib-popover="More Info" popover-trigger="mouseenter" ng-click="valuationListingVm.openCommentModal(valuation, 'info')"><i class="fa fa-info"></i> </a>
+                  <a class="btn btn-success btn-sm" ng-if="isAdmin()" href="javascript:void(0);" uib-popover="More Info" popover-trigger="mouseenter" ng-click="valuationListingVm.openCommentModal(valuation, 'info')"><i class="fa fa-info"></i> </a>
                   
                   <a class="btn btn-warning btn-sm" href="javascript:void(0);" ng-if="isAdmin()" ng-click="valuationListingVm.cancelledHandler(valuation, IndividualValuationStatuses[8])" uib-popover="Cancel" popover-trigger="mouseenter" ng-disabled="valuation.cancelled || valuation.status === IndividualValuationStatuses[7]"><i class="fa fa-close"></i> </a>
                 </td>
