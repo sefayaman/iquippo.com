@@ -467,7 +467,7 @@ server.listen(config.port, config.ip, function () {
   // checkQuickQueryNotificationService.start();
   // checkSearchMatchingNotificationService.start();
   //userExportsService.start();
-  //valuationReportGenerartor.start();
+  valuationReportGenerartor.start();
 });
 
 // Expose app

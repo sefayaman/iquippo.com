@@ -3,14 +3,15 @@
 var async = require("async");
 var _ = require('lodash');
 var ValuationModel = require('../api/enterprise/enterprisevaluation.model');
+var AppSettingModel = require("./../api/common/setting.model");
 var User = require('../api/user/user.model');
 var config = require('./../config/environment');
 var fs = require("fs");
 var Utility = require('./utility.js');
 var EnterpriseValuationStatuses = ['Valuation Report Submitted','Invoice Generated'];
 var TimeInterval =  15*60*1000;
-var fileName = "Format_revised.csv"; 
-var localFilePath = config.uploadPath + "temp/" +  fileName;
+var fileNamePrefix = "Ent_Valuation_Report_";
+var Setting_Key = "Ent_Valuation_Report";
 var Field_MAP = {
     "GPSID": "gpsDeviceNo",
     "VALUATION_NO":"uniqueControlNo",
@@ -44,6 +45,7 @@ function getEnterpriseRequest(enterprisers){
       return setTimeout(function () { getEnterpriseUser(); },getSleepTime());
     }
     var enterpriseIds = [];
+    console.log("########3",enterprisers);
     enterprisers.forEach(function(user){
       enterpriseIds.push(user.enterpriseId);
     });
@@ -61,7 +63,7 @@ function getEnterpriseRequest(enterprisers){
     dateFilter.$lt = toDate;
     
     ValuationModel.find({'enterprise.enterpriseId':{$in:enterpriseIds},status:{$in:EnterpriseValuationStatuses},
-      reportDate:dateFilter,deleted:false,cancelled:false,onHold:false}
+      deleted:false,cancelled:false,onHold:false}
       ,function(err,entReqs){
         if(err) return handleError(err);   
         createCsv(entReqs);
@@ -83,9 +85,16 @@ function createCsv(entReqs){
     });
     csvStr += "\r\n";
   });
+
+  var dt = new Date();
+  dt.setDate(dt.getDate() -1);
+  var dateStr = dt.getDate()+ "" + (dt.getMonth() + 1)+ "" + dt.getFullYear();
+  var fileName = fileNamePrefix + dateStr + ".csv";
+  var localFilePath = config.uploadPath + "temp/" + fileName; 
   try{
+    
      fs.writeFileSync(localFilePath, new Buffer(csvStr, 'binary'));
-      async.parallel([uploadFileonS3,uploadFileOnFtp],function(err){
+      async.parallel([uploadFileonS3,uploadFileOnFtp,updateSetting],function(err){
         if(err) return  handleError(err);
         return setTimeout(function () { getEnterpriseUser(); },getSleepTime());
       });
@@ -110,7 +119,15 @@ function createCsv(entReqs){
     Utility.uploadFileOnFtp(localFilePath,config.valuationReportRemotePath + fileName,function(err){
       cb(err);
     });
-}
+  }
+
+  function updateSetting(cb){
+    AppSettingModel.findOneAndUpdate({key:Setting_Key},
+        {key:Setting_Key,value:fileName},{upsert:true},
+        function(err){
+          cb(err);
+        });
+  }
 
 }
 
@@ -149,7 +166,7 @@ function handleError(err){
     if(d.getHours() >= 2 && d.getHours() < 4)
       return true;
     else
-      return false;
+      return true;
  }
 
 function  getSleepTime(){

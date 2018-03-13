@@ -295,11 +295,14 @@ function EnterpriseSvc($http,$rootScope ,$q,$timeout, notificationSvc,Auth,UtilS
    }
 
    function generateReport(){
+      $rootScope.loading = true;
       return $http.post(path + "/generatereport",{})
           .then(function(res){
+            $rootScope.loading = false;
             return res.data;
           })
           .catch(function(err){
+            $rootScope.loading = false;
             throw err;
           });
    }

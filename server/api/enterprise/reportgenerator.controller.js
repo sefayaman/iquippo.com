@@ -3,13 +3,14 @@
 var async = require("async");
 var _ = require('lodash');
 var ValuationModel = require('./enterprisevaluation.model');
+var AppSettingModel = require("./../common/setting.model");
 var User = require('../user/user.model');
 var fs = require("fs");
 var Utility = require('./../../components/utility.js');
 var config = require('./../../config/environment');
 var EnterpriseValuationStatuses = ['Valuation Report Submitted','Invoice Generated'];
-var fileName = "format_revised_m.csv"; 
-var localFilePath = config.uploadPath + "temp/" +  fileName;
+var fileNamePrefix = "Ent_Valuation_Report_";
+var Setting_Key = "Ent_Valuation_Report";
 var Field_MAP = require("./fieldsConfig").Report_Field_MAP;
  
 //qpvalURL
@@ -22,6 +23,12 @@ exports.generateReport = function(req,res){
             if(err) return handleError(err);
             getEnterpriseRequest(enterprisers);
     });
+
+    var dt = new Date();
+    dt.setDate(dt.getDate() -1);
+    var dateStr = dt.getDate()+ "" + (dt.getMonth() + 1)+ "" + dt.getFullYear();
+    var fileName = fileNamePrefix + dateStr + ".csv";
+    var localFilePath = config.uploadPath + "temp/" + fileName; 
 
   function getEnterpriseRequest(enterprisers){
 
@@ -45,8 +52,7 @@ exports.generateReport = function(req,res){
     dateFilter.$lt = toDate;
     console.log("from date",fromDate.toString());
     console.log("to date",toDate.toString());
-    ValuationModel.find({'enterprise.enterpriseId':{$in:enterpriseIds},status:{$in:EnterpriseValuationStatuses},
-      reportDate:dateFilter,deleted:false,cancelled:false,onHold:false}
+    ValuationModel.find({'enterprise.enterpriseId':{$in:enterpriseIds},status:{$in:EnterpriseValuationStatuses},deleted:false,cancelled:false,onHold:false}
       ,function(err,entReqs){
         if(err) return handleError(err);   
         createCsv(entReqs);
@@ -70,7 +76,7 @@ function createCsv(entReqs){
   });
   try{
      fs.writeFileSync(localFilePath, new Buffer(csvStr, 'binary'));
-      async.parallel([uploadFileonS3,uploadFileOnFtp],function(err){
+      async.parallel([uploadFileonS3,uploadFileOnFtp,updateSetting],function(err){
         if(err) return  handleError(err);
         return res.status(200).send("Report generarted and uploaded successfully.");
       });
@@ -97,6 +103,14 @@ function createCsv(entReqs){
       cb(err);
     });
   }
+
+function updateSetting(cb){
+    AppSettingModel.findOneAndUpdate({key:Setting_Key},
+        {key:Setting_Key,value:fileName},{upsert:true},
+        function(err){
+          cb(err);
+      });
+}
 
 function getAssetDetail(item){
   var valStr = "";
