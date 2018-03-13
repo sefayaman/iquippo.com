@@ -172,9 +172,7 @@ exports.getOnFilter = function (req, res) {
 };
 
 function paginatedResult(req, res, modelRef, filter) {
-    
-    var bodyData = req.query;
-
+  var bodyData = req.body;
   var pageSize = bodyData.itemsPerPage || 50;
   var first_id = bodyData.first_id;
   var last_id = bodyData.last_id;

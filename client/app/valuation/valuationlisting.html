@@ -29,11 +29,11 @@
             <button class="btn btn-primary">Inprogress</button> 
           </div> -->
         <div class="row">
-            <div class="col-sm-3">
+            <div class="col-sm-2 padd-right">
               Showing : {{valuationListingVm.totalItems}} Records
             </div>
             <div class="col-sm-3">
-              <select class="form-control" name="statusType" ng-model="valuationListingVm.statusType" ng-change="valuationListingVm.fireCommand(true)">
+              <select name="statusType" ng-model="valuationListingVm.statusType" ng-change="valuationListingVm.fireCommand(true)">
                 <option value="">Select Status Type</option>
                 <option value="Request Initiated">Request Initiated</option>
                 <option value="Payment Completed">Payment Completed</option>
@@ -121,7 +121,7 @@
 
                   <a class="btn btn-primary btn-sm" href="javascript:void(0);" ng-if="valuation.resubmit" ng-click="valuationListingVm.submitToAgency(valuation, 'Mjobcreation')" uib-popover="Submit to Agency" popover-trigger="mouseenter" ng-disabled="valuation.cancelled"><i class="fa fa-check-circle"></i></a>
                   
-                  <a class="btn btn-success btn-sm" ng-if="valuationListingVm.validateAction(valuation,'REPORTDOWNLOAD')" href="{{valuation.valuationReport.filename}}" uib-popover="Download Report" popover-trigger="mouseenter" target="_blank" ng-disabled="valuation.cancelled"><i class="fa fa-download"></i> </a>
+                  <a class="btn btn-success btn-sm" ng-if="valuationListingVm.validateAction(valuation,'REPORTDOWNLOAD')" href="{{valuation.valuationReport.filename}}" uib-popover="Download Report" popover-trigger="mouseenter" target="_blank"><i class="fa fa-download"></i> </a>
 
                   <a class="btn btn-success btn-sm" ng-if="valuationListingVm.validateAction(valuation,'STATUSCOMPLETED')" ng-click="valuationListingVm.updateStatus(valuation, IndividualValuationStatuses[7])" uib-popover="Completed" popover-trigger="mouseenter" ng-disabled="valuation.cancelled"><i class="fa fa-check"></i></a>
 
@@ -166,8 +166,23 @@
   <form name="requestStatusForm" novalidate>
     <div class="modal-body">
       <div class="row">
-        <div class="col-sm-offset-3 col-sm-6" >
-          <p ng-repeat="statusVal in valuationData.statuses">{{statusVal.status}}</p>
+        <div class="col-sm-offset-1 col-sm-10" >
+          <div class="table-responsive">
+            <table class="table">
+              <tr>
+                <th>Status</th>
+                <th>Date &amp; Time</th>
+              </tr>
+              <tr ng-repeat="statusVal in valuationData.statuses">
+                <td>
+                  {{statusVal.status}}
+                </td>
+                <td>
+                  {{statusVal.createdAt | date:"MM/dd/yyyy 'at' h:mma"}}
+                </td>
+              </tr>
+            </table>
+          </div>
         </div>  
       </div>
     </div>
