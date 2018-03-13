@@ -50,9 +50,8 @@ exports.generateReport = function(req,res){
     var dateFilter = {};
     dateFilter.$gte = fromDate;
     dateFilter.$lt = toDate;
-    console.log("from date",fromDate.toString());
-    console.log("to date",toDate.toString());
-    ValuationModel.find({'enterprise.enterpriseId':{$in:enterpriseIds},status:{$in:EnterpriseValuationStatuses},deleted:false,cancelled:false,onHold:false}
+    ValuationModel.find({'enterprise.enterpriseId':{$in:enterpriseIds},status:{$in:EnterpriseValuationStatuses},
+      reportDate:dateFilter,,deleted:false,cancelled:false,onHold:false}
       ,function(err,entReqs){
         if(err) return handleError(err);   
         createCsv(entReqs);

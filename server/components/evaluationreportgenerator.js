@@ -45,7 +45,6 @@ function getEnterpriseRequest(enterprisers){
       return setTimeout(function () { getEnterpriseUser(); },getSleepTime());
     }
     var enterpriseIds = [];
-    console.log("########3",enterprisers);
     enterprisers.forEach(function(user){
       enterpriseIds.push(user.enterpriseId);
     });
@@ -63,7 +62,7 @@ function getEnterpriseRequest(enterprisers){
     dateFilter.$lt = toDate;
     
     ValuationModel.find({'enterprise.enterpriseId':{$in:enterpriseIds},status:{$in:EnterpriseValuationStatuses},
-      deleted:false,cancelled:false,onHold:false}
+      reportDate:dateFilter,deleted:false,cancelled:false,onHold:false}
       ,function(err,entReqs){
         if(err) return handleError(err);   
         createCsv(entReqs);
@@ -166,7 +165,7 @@ function handleError(err){
     if(d.getHours() >= 2 && d.getHours() < 4)
       return true;
     else
-      return true;
+      return false;
  }
 
 function  getSleepTime(){
