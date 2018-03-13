@@ -1987,18 +1987,17 @@ exports.updateFromAgency = function(req,res){
           if(err){
              result['success'] = false;
              result['msg'] = "System error at iQuippo";
-          }
-          if(updateObj.status == EnterpriseValuationStatuses[6]) {
-            // updating value of fields in product db
-            var data = {
-                valuationAssessedValue: bodyData.assessedValue,
-                valuationOverallGeneralCondition: bodyData.overallGeneralCondition
-            };
-            Product.update({assetId: valReq.assetId}, {$set:data} , function (err, res) {
-                if (!err) {
-                    console.error(err);
-                }
-            }); 
+          } else {
+              // updating value of fields in product db
+              var data = {
+                  valuationAssessedValue: updateObj.assessedValue,
+                  valuationOverallGeneralCondition: updateObj.overallGeneralCondition
+              };
+              Product.update({assetId: valReq.assetId}, {$set:data} , function (err, res) {
+                  if (err) {
+                      console.error(err);
+                  }
+              });            
           }
           if(action === 'reportupload')
             pushNotification(valReq);
