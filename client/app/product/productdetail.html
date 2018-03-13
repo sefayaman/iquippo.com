@@ -578,27 +578,27 @@
                     <input type="text" class="form-control" ng-value="valuationVm.valuationReq.product.city" placeholder="Enter Asset Location" disabled>
                   </div>
                 </div>
-                <div class="col-sm-3 form-group" ng-class="{'has-error':valReqForm.valagency.$invalid && valSubmitted}">
-                  <div class="floating-label-wrapper">
-                    <label>Agency Name</label>
+                <div class="col-sm-3 form-group" >
+                  <div class="floating-label-wrapper" ng-class="{'has-error':valReqForm.valagency.$invalid && valSubmitted}">
+                    <label>Agency Name*</label>
                     <select class="form-control" name="valagency" required ng-model="valuationVm.valuationReq.valuationAgency._id">
                       <option value="">Select Agency Name</option>
                       <option value="{{agency._id}}" ng-repeat="agency in valAgencies">{{agency.name}}</option>
                     </select>
                   </div>
                 </div>
-                <div class="col-sm-3 form-group" ng-class="{'has-error': valReqForm.purpose.$invalid && valSubmitted}">
-                  <div class="floating-label-wrapper">
-                      <label>Purpose of Valuation</label>
+                <div class="col-sm-3 form-group">
+                  <div class="floating-label-wrapper" ng-class="{'has-error': valReqForm.purpose.$invalid && valSubmitted}">
+                      <label>Purpose of Valuation*</label>
                     <select class="form-control" name="purpose" ng-model="valuationVm.valuationReq.purpose" required>
-                      <option value="Financing">Select Purpose</option>
+                      <option value="">Select Purpose</option>
                       <option ng-repeat="valuation in valuationList" value="{{valuation.name}}">{{valuation.name}}</option>
                     </select>
                   </div>
                   
                 </div>
-                <div class="col-sm-3 form-group" ng-class="{'has-error': valReqForm.otherName.$invalid && valSubmitted}">
-                      <div class="floating-label-wrapper">
+                <div class="col-sm-3 form-group">
+                      <div class="floating-label-wrapper" ng-class="{'has-error': valReqForm.otherName.$invalid && valSubmitted}">
                         <label>Others</label>
                         <input class="form-control" type="text" name="otherName" ng-model="valuationVm.valuationReq.otherName" ng-disabled ="valuationVm.valuationReq.purpose != 'Other'" placeholder="*Other" ng-required= "valuationVm.valuationReq.purpose == 'Other'">
                       </div>
@@ -620,19 +620,19 @@
               <div class="row text-left">
                 <div class="col-xs-12 col-sm-6 form-group">
                   <div class="floating-label-wrapper">
-                    <label>Purpose of Inspection</label>
+                    <label>Purpose of Inspection*</label>
                   </div>
                   <div class="row">
-                    <div class="col-xs-12 col-sm-6 form-group" ng-class="{'has-error': reqForCertify.purpose.$invalid && valSubmitted}">
-                      <div class="floating-label-wrapper">
+                    <div class="col-xs-12 col-sm-6 form-group">
+                      <div class="floating-label-wrapper" ng-class="{'has-error': reqForCertify.purpose.$invalid && valSubmitted}">
                         <select class="form-control" ng-model="valuationVm.valuationReq.purpose" name="purpose" required>
-                          <option value="Financing">*Select Purpose</option>
+                          <option value="">Select Purpose</option>
                           <option ng-repeat="valuation in valuationList" value="{{valuation.name}}">{{valuation.name}}</option>
                         </select>
                       </div>
                     </div>
-                    <div class="col-xs-12 col-sm-6 form-group" ng-class="{'has-error': reqForCertify.otherName.$invalid && valSubmitted}">
-                      <div class="floating-label-wrapper">
+                    <div class="col-xs-12 col-sm-6 form-group">
+                      <div class="floating-label-wrapper" ng-class="{'has-error': reqForCertify.otherName.$invalid && valSubmitted}">
                         <input class="form-control" type="text" name="otherName" ng-model="valuationVm.valuationReq.otherName" ng-disabled ="valuationVm.valuationReq.purpose != 'Other'" placeholder="*Other" ng-required= "valuationVm.valuationReq.purpose == 'Other'">
                       </div>
                     </div>
@@ -684,9 +684,9 @@
                 </div>              
               </div>
               <div class="row  form-group">
-                 <div class="col-xs-12 col-sm-3 form-group" ng-class="{'has-error': reqForCertify.purpose.$invalid && valSubmitted}">
-                      <div class="floating-label-wrapper">
-                        <label>Agency Name</label>
+                 <div class="col-xs-12 col-sm-3 form-group">
+                      <div class="floating-label-wrapper" ng-class="{'has-error': reqForCertify.valagency.$invalid && valSubmitted}">
+                        <label>Agency Name*</label>
                         <select class="form-control" name="valagency" required ng-model="valuationVm.valuationReq.valuationAgency._id">
                           <option value="">Select Agency Name</option>
                           <option value="{{agency._id}}" ng-repeat="agency in insAgencies">{{agency.name}}</option>

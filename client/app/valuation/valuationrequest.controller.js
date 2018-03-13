@@ -7,7 +7,7 @@
 		//vm.close = close;
 		vm.submitValuationReq = submitValuationReq;
 		vm.resetValuationReq = resetValuationReq;
-		vm.valuationReq = {purpose:"Financing"};
+		//vm.valuationReq = {purpose:"Financing"};
 		$scope.mytime = new Date();
 	    $scope.hstep = 1;
 	    $scope.mstep = 1;
@@ -48,7 +48,7 @@
 						});
 
 				})
-
+			vm.valuationReq = {};
 			vm.valuationReq.product = {};
 			vm.valuationReq.user = {};
 			vm.valuationReq.seller = {};
@@ -105,6 +105,7 @@
 		};
 
 		$scope.$on('productloaded', function() {
+			$scope.valSubmitted = false;
 			init();
 		});
 
@@ -239,6 +240,7 @@
 								var paymentScope = $rootScope.$new();
 					            paymentScope.tid = result.transactionId;
 					            paymentScope.valuation = result.valuation;
+					            paymentScope.resetProductData = true;
 					            Modal.openDialog('paymentOption',paymentScope);
 							}
 

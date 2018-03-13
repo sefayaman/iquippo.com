@@ -62,7 +62,8 @@ function PaymentOptionCtrl($scope, $rootScope, $state, Modal, Auth, $uibModal, P
     }
     if($scope.resetData)
       $rootScope.$broadcast('refreshValuationData');
-        
+    if($scope.resetProductData)
+      $rootScope.$broadcast('productloaded');
     closeDialog();
   }
 
