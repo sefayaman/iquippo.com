@@ -46,6 +46,7 @@ exports.paginatedResult = paginatedResult;
 exports.getWorkbook = getWorkbook;
 exports.excel_from_data = excel_from_data;
 exports.convertToCSV = convertToCSV;
+exports.renderCSV = renderCSV;
 exports.validateExcelHeader = validateExcelHeader;
 exports.toJSON = toJSON;
 exports.uploadFileS3 = uploadFileS3;
@@ -832,11 +833,11 @@ function convertToCSV(res, csv, filename) {
     if (err) {
       throw err;
     }
-    return _renderCSV(res, csv, filename);
+    return renderCSV(res, csv, filename);
   });
 }
 
-function _renderCSV(res, csv, filename) {
+function renderCSV(res, csv, filename) {
   var fileName = filename ? filename : 'file_' + new Date().getTime();
   res.setHeader('Content-Type', 'application/octet-stream');
   res.setHeader("Content-Disposition", 'attachment; filename=' + '\"' + fileName + '.csv' + '\"');
