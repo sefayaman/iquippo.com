@@ -1103,9 +1103,13 @@ exports.exportExcel = function (req, res) {
 	function renderExcel(res, resList) {
 		var dataArr = [];
 		var headers = Object.keys(fieldsMap);
-		dataArr.push(headers);
+
+		var csvStr = "";
+		csvStr += headers.join(',');
+		csvStr += "\r\n";
+
 		resList.forEach(function (item, idx) {
-			dataArr[idx + 1] = [];
+			dataArr = [];
 			headers.forEach(function (header) {
 				var keyObj = fieldsMap[header];
 				var val = _.get(item, keyObj.key, "");
@@ -1194,37 +1198,18 @@ exports.exportExcel = function (req, res) {
 					val = (item.fullPaymentAmount + item.emdAmount) - (item.fullPayment.remainingPayment + item.emdPayment.remainingPayment);
 				}
 
-				//
 				if (keyObj.type && keyObj.type == 'url' && val) {
 					if (val.filename)
 						val = req.protocol + "://" + req.headers.host + "/download/" + item.assetDir + "/" + val.filename || "";
 					else
 						val = "";
 				}
-				dataArr[idx + 1].push(val);
+				dataArr.push(val);
 			});
+			csvStr += dataArr.join(",");
+			csvStr += "\r\n";
 		});
-
-		_transformresponse(res, dataArr, headers);
-	}
-
-}
-
-function _transformresponse(res, dataArr, headers) {
-
-	var tempData = [];
-	dataArr.forEach(function (data) {
-		var obj = {};
-		headers.forEach(function (item, index) {
-			obj[headers[headers.length - (headers.length - index)]] = data[headers.length - (headers.length - index)];
-		});
-		tempData.push(obj);
-	});
-	tempData.splice(0, 1);
-	try {
-		Utility.convertToCSV(res, tempData);
-	} catch (e) {
-		throw e;
+		Utility.renderCSV(res, csvStr);
 	}
 
 }
