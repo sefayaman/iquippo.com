@@ -1172,7 +1172,7 @@ exports.exportExcel = function (req, res) {
 								// else if(item.bidStatuses[item.bidStatuses.length - 1].userId === item.user._id + "")
 								// 	val = '';
 								else
-									val = 'Admin';
+									val = 'Admin' +' '+ user.fname +' '+ user.lname;
 							} else if (keyObj.key === 'approvalDate')
 								val = moment(item.bidStatuses[i].createdAt).utcOffset('+0530').format('MM/DD/YYYY');
 							else
@@ -1201,7 +1201,7 @@ exports.exportExcel = function (req, res) {
 					// else if(item.dealStatuses[item.dealStatuses.length - 1].userId === item.user._id + "")
 					// 	val = '';
 					else
-						val = 'Admin' +' '+ user.fname +' '+ user.lname;
+						val = 'Admin';
 				}
 
 				if (keyObj.key && keyObj.key === 'sellerCustomerId' && item.user)
