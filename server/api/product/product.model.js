@@ -103,7 +103,10 @@ var ProductSchema = new Schema({
   coolingEndDate : Date,
   reqSubmitStatus:{type:String,default:"Request Failed"},
   createdAt: {type:Date,default:Date.now},
-  updatedAt: {type:Date,default:Date.now}
+  updatedAt: {type:Date,default:Date.now},
+  valuationAssessedValue:Number,
+  valuationOverallGeneralCondition:String,
+  valuationReport:{}
 });
 
 ProductSchema.pre('save', function(next){
