@@ -431,7 +431,7 @@ exports.destroy = function (req, res) {
 function exportExcel(req,res,fieldMap,jsonArr){
   //var queryParam = req.query;
   //var role = queryParam.role;
-  var dataArr = [];
+  //var dataArr = [];
   var headers = Object.keys(fieldMap);
   /*var allowedHeaders = [];
   for(var i=0;i < headers.length;i++){
@@ -477,18 +477,18 @@ function exportExcel(req,res,fieldMap,jsonArr){
           val = 'NO';
       }
       val = Utility.toCsvValue(val);
-        str += val + ",";
-       //dataArr[idx + 1].push(val);
+      str += val + ",";
     });
     str += "\r\n";
   });
-
+  var csvName = "valuation_";
   str = str.substring(0,str.length -1);
-  return  renderCsv(req,res,str);
+
+  return  renderCsv(req,res,str, csvName);
 }
 
-function renderCsv(req,res,csv){
-  var fileName = req.query.type + "_" + new Date().getTime();
+function renderCsv(req,res,csv,csvName){
+  var fileName = csvName + new Date().getTime();
   res.setHeader('Content-Type', 'application/octet-stream');
   res.setHeader("Content-Disposition", 'attachment; filename=' + fileName + '.csv;');
   res.end(csv, 'binary'); 
