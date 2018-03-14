@@ -1277,19 +1277,22 @@ exports.update = function(req, res) {
   bodyData.auditLogs = [req.enterprise];
   EnterpriseValuation.update({_id:req.params.id},{$set:bodyData},function(err){
       if (err) { return handleError(res, err); }
-      if(bodyData.status == "Valuation Report Submitted" && (bodyData.assessedValue || bodyData.overallGeneralCondition)) {
-        var data = {
-            valuationAssessedValue: bodyData.assessedValue,
-            valuationOverallGeneralCondition: bodyData.overallGeneralCondition
-        };
-        Product.update({assetId: bodyData.assetId}, data , function (err, res) {
-            if (err) {
-                console.error(err);
-            } 
-        });        
+      if(bodyData.status == EnterpriseValuationStatuses[6] && bodyData.assetId && (bodyData.assessedValue || bodyData.overallGeneralCondition)) {
+          updateProductFromIquippo();    
       }
       return res.status(200).send("Enterprise valuation updated sucessfully");
   });
+
+  function updateProductFromIquippo() {
+        // updating value of fields in product db
+        var data = {
+            valuationAssessedValue: bodyData.assessedValue || 0,
+            valuationOverallGeneralCondition: bodyData.overallGeneralCondition || "",
+            valuationReport: bodyData.valuationReport || {}
+        };
+        Product.update({assetId: bodyData.assetId}, {$set:data} , function (err) {
+        }); 
+      }
 
 };
 
@@ -1987,22 +1990,30 @@ exports.updateFromAgency = function(req,res){
           if(err){
              result['success'] = false;
              result['msg'] = "System error at iQuippo";
-          } else {
-              // updating value of fields in product db
-              var data = {
-                  valuationAssessedValue: updateObj.assessedValue,
-                  valuationOverallGeneralCondition: updateObj.overallGeneralCondition
-              };
-              Product.update({assetId: valReq.assetId}, {$set:data} , function (err, res) {
-                  if (err) {
-                      console.error(err);
-                  }
-              });            
           }
-          if(action === 'reportupload')
+
+          if(action === 'reportupload'){
+            if(valReq.assetId) 
+                updateProduct();
+
             pushNotification(valReq);
+          }
           return sendResponse();
       });
+
+      function updateProduct() {
+        // updating value of fields in product db
+        var data = {
+            valuationAssessedValue: updateObj.assessedValue || 0,
+            valuationOverallGeneralCondition: updateObj.overallGeneralCondition || "",
+            valuationReport: updateObj.valuationReport || {}
+        };
+        Product.update({assetId: valReq.assetId}, {$set:data} , function (err, res) {
+            if (err) {
+                console.error(err);
+            }
+        });  
+      }
   }
 
   function sendResponse(){
