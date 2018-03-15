@@ -605,7 +605,7 @@
                     </div>
               </div>
               <div class="text-right">
-                <button type="submit" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE'" ng-click="valuationVm.submitValuationReq(valReqForm, 'Valuation')" class="btn btn-primary">Submit</button>
+                <button type="submit" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE' || isAdmin()" ng-click="valuationVm.submitValuationReq(valReqForm, 'Valuation')" class="btn btn-primary">Submit</button>
               </div>
               <!-- <small>
                 <strong>Note:</strong> Valuation Charges - <i class="fa fa-inr"></i> 5,000
@@ -705,7 +705,7 @@
               
               <!-- <small><strong>Note:</strong> Inspection Charges - <i class="fa fa-inr"></i> 3,000</small> -->
               <div class="text-right">
-                <button type="submit" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE'" ng-click="valuationVm.submitValuationReq(reqForCertify, 'Inspection')" class="btn btn-primary">Submit</button>
+                <button type="submit" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE' || isAdmin()" ng-click="valuationVm.submitValuationReq(reqForCertify, 'Inspection')" class="btn btn-primary">Submit</button>
               </div>
             </form>
             <div class="form-group"></div>

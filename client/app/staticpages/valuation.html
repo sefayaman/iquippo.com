@@ -230,8 +230,8 @@
                     </div>
 
                     <div class="text-right">
-                        <button type="button" ng-click="resetClick()" class="btn btn-default">Reset</button>
-                        <button type="button" class="btn btn-primary" ng-click="addValuationQuote(form)" >Submit</button>
+                        <button type="button" ng-click="resetClick()" ng-disabled="isAdmin()" class="btn btn-default">Reset</button>
+                        <button type="button" class="btn btn-primary" ng-disabled="isAdmin()" ng-click="addValuationQuote(form)" >Submit</button>
                     </div>
                 </div>
 
