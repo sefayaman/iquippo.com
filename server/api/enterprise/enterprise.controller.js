@@ -6,7 +6,7 @@ var writtenFrom = require('written-number');
 var request = require('request');
 var EnterpriseValuation = require('./enterprisevaluation.model');
 var EnterpriseValuationInvoice = require('./enterprisevaluationinvoice.model');
-
+var Product = require('../product/product.model');
 var xlsx = require('xlsx');
 var Utility = require('./../../components/utility.js');
 var config = require('./../../config/environment');
@@ -122,6 +122,7 @@ function getValuationRequest(req,res){
       filter['createdAt'] = dateFilter;
 
   if (queryParam.pagination) {
+    req.lean = true;
     Utility.paginatedResult(req, res, EnterpriseValuation, filter, {});
     return;
   }
@@ -176,6 +177,7 @@ function getInvoice(req,res){
     filter['createdAt'] = dateFilter;
 
   if (queryParam.pagination) {
+    req.lean = true;
     Utility.paginatedResult(req, res, EnterpriseValuationInvoice, filter, {});
     return;
   }
@@ -1269,7 +1271,7 @@ exports.bulkModify = function(req, res) {
 
 // Updates an existing enterprise valuation in the DB.
 exports.update = function(req, res) {
-  
+  // console.log(req.body);
   var bodyData = req.body.data;
   var user = req.body.user;
   if(bodyData._id) { delete bodyData._id; }
@@ -1277,8 +1279,22 @@ exports.update = function(req, res) {
   bodyData.auditLogs = [req.enterprise];
   EnterpriseValuation.update({_id:req.params.id},{$set:bodyData},function(err){
       if (err) { return handleError(res, err); }
+      if(bodyData.status == EnterpriseValuationStatuses[6] && bodyData.assetId && (bodyData.assessedValue || bodyData.overallGeneralCondition)) {
+          updateProductFromIquippo();    
+      }
       return res.status(200).send("Enterprise valuation updated sucessfully");
   });
+
+  function updateProductFromIquippo() {
+        // updating value of fields in product db
+        var data = {
+            valuationAssessedValue: bodyData.assessedValue || 0,
+            valuationOverallGeneralCondition: bodyData.overallGeneralCondition || "",
+            valuationReport: bodyData.valuationReport || {}
+        };
+        Product.update({assetId: bodyData.assetId}, {$set:data} , function (err) {
+        }); 
+      }
 
 };
 
@@ -1875,7 +1891,6 @@ exports.updateFromAgency = function(req,res){
   var validActions = ['reportupload','putonhold','statusupdate'];  
   var bodyData = req.body;
   var action = req.query.action;
-
   var result = {};
   result['success'] = true;
   result['jobID'] = bodyData.jobID;
@@ -1978,10 +1993,29 @@ exports.updateFromAgency = function(req,res){
              result['success'] = false;
              result['msg'] = "System error at iQuippo";
           }
-          if(action === 'reportupload')
+
+          if(action === 'reportupload'){
+            if(valReq.assetId) 
+                updateProduct();
+
             pushNotification(valReq);
+          }
           return sendResponse();
       });
+
+      function updateProduct() {
+        // updating value of fields in product db
+        var data = {
+            valuationAssessedValue: updateObj.assessedValue || 0,
+            valuationOverallGeneralCondition: updateObj.overallGeneralCondition || "",
+            valuationReport: updateObj.valuationReport || {}
+        };
+        Product.update({assetId: valReq.assetId}, {$set:data} , function (err, res) {
+            if (err) {
+                console.error(err);
+            }
+        });  
+      }
   }
 
   function sendResponse(){
@@ -2078,7 +2112,7 @@ exports.exportExcel = function(req,res){
         filter['createdAt'] = dateFilter;
 
       var fieldMap = fieldsConfig["TRANSACTION_EXPORT"];
-      var query = EnterpriseValuation.find(filter).sort({createdAt:-1});
+      var query = EnterpriseValuation.find(filter).lean().sort({_id:-1});
       query.exec(function(err,dataArr){
           if(err) { return handleError(res, err); }
           exportExcel(req,res,fieldMap,dataArr);
@@ -2089,7 +2123,7 @@ exports.exportExcel = function(req,res){
       if(queryParam.fromDate || queryParam.toDate)
         filter['createdAt'] = dateFilter;
       var fieldMap = fieldsConfig["INVOICE_EXPORT"];
-      var query = EnterpriseValuationInvoice.find(filter).sort({createdAt:-1});
+      var query = EnterpriseValuationInvoice.find(filter).lean().sort({_id:-1});
        query.exec(function(err,dataArr){
           if(err) { return handleError(res, err); }
           var flatArr = _getformatedInvoice(dataArr);
@@ -2101,7 +2135,7 @@ exports.exportExcel = function(req,res){
        filter['paymentMade'] = true;
       if(queryParam.fromDate || queryParam.toDate)
         filter['paymentMadeDate'] = dateFilter;
-      var query = EnterpriseValuationInvoice.find(filter).sort({createdAt:-1});
+      var query = EnterpriseValuationInvoice.find(filter).lean().sort({_id:-1});
        query.exec(function(err,dataArr){
           if(err) { return handleError(res, err); }
           var jsonArr = [];
@@ -2121,7 +2155,7 @@ exports.exportExcel = function(req,res){
       if(queryParam.fromDate || queryParam.toDate)
         filter['paymentReceivedDate'] = dateFilter;
       
-      var query = EnterpriseValuationInvoice.find(filter).sort({createdAt:-1});
+      var query = EnterpriseValuationInvoice.find(filter).lean().sort({_id:-1});
        query.exec(function(err,dataArr){
           if(err) { return handleError(res, err); }
           var jsonArr = [];
