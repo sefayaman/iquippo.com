@@ -3,7 +3,7 @@
     <li>
       <a href="/main"> Home </a>
     </li>
-    <li><a href="/used"> Used Equipment </a></li>
+    <li><a href="/used-equipment"> Used Equipment </a></li>
     <li class="active"> {{displayText || equipmentSearchFilter.group || equipmentSearchFilter.category || equipmentSearchFilter.brand || equipmentSearchFilter.location || equipmentSearchFilter.assetId || "Used Products"}} </li>
   </ol>
 </div>
@@ -135,7 +135,7 @@
           <div class="row">      
             <div class="col-sm-6 col-md-4 form-group" ng-repeat="product in productList | startFrom:(viewproductVm.currentPage -1 )*viewproductVm.itemsPerPage | limitTo:viewproductVm.itemsPerPage">
               <div class="media text-center form-group">
-                <a ng-href="/used/{{product.category.name}}/{{product.brand.name}}/{{product.assetId}}">
+                <a ng-href="/used-equipment/{{product.category.name}}/{{product.brand.name}}/{{product.assetId}}">
                    <img ng-src="{{uploadImagePrefix}}{{product.assetDir}}/{{product.primaryImg}}" class="img-responsive">              
                 </a>  
                 <div class="stamp-image" ng-if="product.certificationName && product.certificationLogo">
@@ -184,7 +184,7 @@
                       </tbody>
                     </table>
                   </div>  
-                <a ng-href="/used/{{product.category.name}}/{{product.brand.name}}/{{product.assetId}}" class="btn btn-primary btn-block" >
+                <a ng-href="/used-equipment/{{product.category.name}}/{{product.brand.name}}/{{product.assetId}}" class="btn btn-primary btn-block" >
                   View Details
                 </a>     
               </div>

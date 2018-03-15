@@ -274,7 +274,7 @@
                         <p>
                           <i class="fa fa-check-circle-o"></i> Available for Sale</p>
 
-                        <a href="/used/{{lot.assets[0].product.category}}/{{lot.assets[0].product.brand}}/{{lot.assets[0].product.assetId}}?lot={{lot._id}}"
+                        <a href="/used-equipment/{{lot.assets[0].product.category}}/{{lot.assets[0].product.brand}}/{{lot.assets[0].product.assetId}}?lot={{lot._id}}"
                           class="btn btn-primary btn-block" ng-if="lot.assets.length === 1 && lot.assets[0].product && lot.assets[0].product._id">
                           View Details
                         </a>
@@ -355,7 +355,7 @@
                   </div>  -->
                   <!-- {{lot.isVisible}} -->
                   <!-- {{lot.url}} -->
-                  <a href="/used/{{lot.assets[0].product.category}}/{{lot.assets[0].product.brand}}/{{lot.assets[0].product.assetId}}" class="btn btn-primary btn-block"
+                  <a href="/used-equipment/{{lot.assets[0].product.category}}/{{lot.assets[0].product.brand}}/{{lot.assets[0].product.assetId}}" class="btn btn-primary btn-block"
                     ng-if="lot.assets.length === 1 && lot.assets[0].product && lot.assets[0].product._id">
                     View Details
                   </a>

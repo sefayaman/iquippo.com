@@ -105,15 +105,15 @@
   <div class="container text-center">
     <div class="heading-titles">
       <h1>[ Browse By Brands ]</h1>
-      <a href="/used/brands" ng-if="!mainVm.newBrand">View All ({{mainVm.brandCount || 0}})</a>
-      <a href="/new/brands" ng-if="mainVm.newBrand">View All ({{mainVm.brandCountForNew || 0}})</a>
+      <a href="/used-equipment/brands" ng-if="!mainVm.newBrand">View All ({{mainVm.brandCount || 0}})</a>
+      <a href="/new-equipment/brands" ng-if="mainVm.newBrand">View All ({{mainVm.brandCountForNew || 0}})</a>
     </div>
     <uib-tabset justified="false">
       <uib-tab heading="Used Equipment" select="mainVm.toggleTab(0,false)">
         <div class="row">
           <div class="col-xs-12 col-sm-4 form-group text-center" ng-repeat="brand in mainVm.brands" ng-if="$index < 3">   
             <div class="brand-logo">
-              <a href="/used/brands/{{brand.name}}?currentPage=1" class="brand-name">
+              <a href="/used-equipment/brands/{{brand.name}}?currentPage=1" class="brand-name">
                 <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{brand.imgSrc}}">
               </a>
             </div>
@@ -124,7 +124,7 @@
         <div class="row">
           <div class="col-xs-12 col-sm-4 form-group text-center" ng-repeat="brand in mainVm.brandsForNew" ng-if="$index < 3">   
             <div class="brand-logo">
-              <a href="/new/brands/{{brand.name}}?currentPage=1" class="brand-name">
+              <a href="/new-equipment/brands/{{brand.name}}?currentPage=1" class="brand-name">
                 <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{brand.imgSrc}}">
               </a>
             </div>
@@ -141,15 +141,15 @@
   <div class="container text-center">
     <div class="heading-titles">
       <h1>[ Browse By Category ]</h1>
-      <a href="/used/allcategories" ng-if="!mainVm.newCategory">View All ({{mainVm.categoryCount || 0}})</a>
-      <a href="/new/allcategories" ng-if="mainVm.newCategory">View All ({{mainVm.categoryCountForNew || 0}})</a>
+      <a href="/used-equipment/allcategories" ng-if="!mainVm.newCategory">View All ({{mainVm.categoryCount || 0}})</a>
+      <a href="/new-equipment/allcategories" ng-if="mainVm.newCategory">View All ({{mainVm.categoryCountForNew || 0}})</a>
     </div>
     <uib-tabset justified="false">
       <uib-tab heading="Used Equipment" select="mainVm.toggleTab(1,false)">
         <div class="row">
           <div class="col-sm-4 form-group text-center" ng-repeat="category in mainVm.categoryList" ng-if="$index < 6">   
             <div class="cat-rectangle">
-              <a href="/used/{{category.group.name}}/{{category.name}}?currentPage=1">
+              <a href="/used-equipment/{{category.group.name}}/{{category.name}}?currentPage=1">
                 <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{category.imgSrc}}" class="category-item">
               </a>
             </div>
@@ -161,7 +161,7 @@
         <div class="row">
           <div class="col-sm-4 form-group text-center" ng-repeat="category in mainVm.categoryListForNew" ng-if="$index < 6">   
             <div class="cat-rectangle">
-              <a href="/new/{{category.group.name}}/{{category.name}}?currentPage=1">
+              <a href="/new-equipment/{{category.group.name}}/{{category.name}}?currentPage=1">
                 <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{category.imgSrc}}" class="category-item">
               </a>
             </div>
@@ -183,7 +183,7 @@
       <div class="col-sm-6 form-group text-center" ng-repeat="cert in mainVm.certificationList" ng-if="$index < 2">   
         <div class="spacial-products">
           <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{cert.primaryImg}}"  width="100%" height="100%">
-            <a href="/used/spl/{{cert.name}}?currentPage=1" class="btn btn-default" ng-if="cert.name !== 'coming soon'">Shop Now</a>
+            <a href="/used-equipment/spl/{{cert.name}}?currentPage=1" class="btn btn-default" ng-if="cert.name !== 'coming soon'">Shop Now</a>
           </div>
         </div>
       </div>
@@ -200,7 +200,7 @@
        <uib-tab heading="Used Equipment" select="mainVm.toggleTab(2,true)">
         <div class="row">
           <div class="col-sm-4 form-group text-center" ng-repeat="group in mainVm.groups" ng-if="$index < 6">   
-            <a href="/used/{{group.name}}?currentPage=1" class="industy-rectangle">
+            <a href="/used-equipment/{{group.name}}?currentPage=1" class="industy-rectangle">
               <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{group.imgSrc}}" class="category-item">
             </a>
             <div class="category-name">
@@ -213,7 +213,7 @@
       <uib-tab heading="New Equipment" select="mainVm.toggleTab(2,true)">
         <div class="row">
           <div class="col-sm-4 form-group text-center" ng-repeat="group in mainVm.groupsForNew" ng-if="$index < 6">   
-            <a href="/new/{{group.name}}?currentPage=1" class="industy-rectangle">
+            <a href="/new-equipment/{{group.name}}?currentPage=1" class="industy-rectangle">
               <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{group.imgSrc}}" class="category-item">
             </a>
             <div class="category-name">

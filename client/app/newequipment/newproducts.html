@@ -3,7 +3,7 @@
     <li>
       <a href="/main"> Home </a>
     </li>
-    <li><a href="/new"> New Equipment </a></li>
+    <li><a href="/new-equipment"> New Equipment </a></li>
     <li class="active"> {{displayText || equipmentSearchFilter.group || equipmentSearchFilter.category || equipmentSearchFilter.brand || equipmentSearchFilter.location || equipmentSearchFilter.assetId || "New Products"}} </li>
   </ol>
 </div>
@@ -97,7 +97,7 @@
         <div class="row">      
             <div class="col-sm-6 col-md-4 form-group" ng-repeat="product in productList  | startFrom:(newequipmentlistVm.currentPage -1 )*newequipmentlistVm.itemsPerPage | limitTo:newequipmentlistVm.itemsPerPage" >
             <div class="media text-center form-group">
-              <a ng-href="/new/{{product.category.name}}/{{product.brand.name}}/{{product.assetId}}">
+              <a ng-href="/new-equipment/{{product.category.name}}/{{product.brand.name}}/{{product.assetId}}">
                  <img src="{{uploadImagePrefix}}{{product.assetDir}}/{{product.primaryImg}}" class="img-responsive">              
               </a>          
               <div class="media-body text-left"> 
@@ -147,7 +147,7 @@
                 </div>                 -->
                                     
               </div> 
-              <a ng-href="/new/{{product.category.name}}/{{product.brand.name}}/{{product.assetId}}" class="btn btn-primary btn-block" >
+              <a ng-href="/new-equipment/{{product.category.name}}/{{product.brand.name}}/{{product.assetId}}" class="btn btn-primary btn-block" >
                 View Details
               </a>     
             </div>
