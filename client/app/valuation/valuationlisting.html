@@ -6,7 +6,7 @@
           <h3>Valuation Request</h3>
         </div>
         <div class="col-sm-6 text-right">
-          <h3><button class="btn btn-success btn-md" ng-click="valuationListingVm.exportExcel()"><i class="fa fa-file-excel-o"></i> Export</button></h3>
+          <h3><button class="btn btn-success btn-md" ng-click="valuationListingVm.exportExcel()"><i class="fa fa-file-text"></i> Export</button></h3>
         </div>     
       </div>
       <hr>
@@ -68,6 +68,7 @@
                   <th>Purpose</th>
                   <th>Payment Mode</th>
                   <th>Request Date</th>
+                  <th>View All</th>
                   <th width="15%">Action</th>
                 </tr>
                
@@ -97,6 +98,11 @@
                 </td>
                 <td>{{valuation.createdAt | date:'MM/dd/yyyy'}}</td>
                 <td>
+                  <a href="javascript:void(0);">
+                    More
+                  </a>
+                </td>
+                <td>
                   <!-- <button class="btn btn-default fileinput-button" ng-if="isPartner() && (valuation.status == 'request_in_process' || valuation.status == 'request_completed')" uib-popover="Upload" popover-trigger="mouseenter">
                       <span><i class="fa fa-upload"></i></span>
                         <input type="file" data-index="{{$index}}" name="report" onchange="angular.element(this).scope().uploadReport(this.files,this)">
@@ -110,12 +116,12 @@
                   <!-- <a class="btn btn-default btn-md" href="/download/{{valuation.product.assetId}}/{{valuation.report}}" uib-popover="Download" popover-trigger="mouseenter" target="_blank"><i class="fa fa-download"></i> </a> -->
                   <!-- ng-if="IndividualValuationStatuses.indexOf(valuation.status) > 4 && IndividualValuationStatuses.indexOf(valuation.status) < 8 " -->
 
-                  <a class="btn btn-success btn-sm" ng-if="valuationListingVm.validateAction(valuation,'INVOICEDOWNLOAD')" ng-click="valuationListingVm.downloadInvoice(valuation._id)" href="javascript:void(0);" uib-popover="Download Invoice" popover-trigger="mouseenter" target="_blank"><i class="fa fa-download"></i> </a>
+                  <a class="btn btn-infodark btn-sm" ng-if="valuationListingVm.validateAction(valuation,'INVOICEDOWNLOAD')" ng-click="valuationListingVm.downloadInvoice(valuation._id)" href="javascript:void(0);" uib-popover="Download Invoice" popover-trigger="mouseenter" target="_blank"><i class="fa fa-download"></i> </a>
 
                   <a class="btn btn-primary btn-sm" ng-if="valuationListingVm.validateAction(valuation,'ADDPAYMENT')" href="javascript:void(0);" ng-click="valuationListingVm.openPaymentModel(valuation, 'paymentAdd')" uib-popover="Add Payment" popover-trigger="mouseenter" ng-disabled="valuation.cancelled"><i class="fa fa-money"></i></a>
 
                   <!-- <a class="btn btn-primary" href="/payment/{{valuation.transactionId}}" ng-if="valuationListingVm.validateAction(valuation,'PAYNOW')">Pay Now</a> -->
-                  <a class="btn btn-info btn-sm" href="javascript:void(0);" ng-click="valuationListingVm.openPaymentOptionModel(valuation)" ng-if="valuationListingVm.validateAction(valuation,'PAYNOW')" uib-popover="Pay Now" popover-trigger="mouseenter" ng-disabled="valuation.cancelled"> <i class="fa fa-paypal"></i></a>
+                  <a class="btn btn-primarydark btn-sm" href="javascript:void(0);" ng-click="valuationListingVm.openPaymentOptionModel(valuation)" ng-if="valuationListingVm.validateAction(valuation,'PAYNOW')" uib-popover="Pay Now" popover-trigger="mouseenter" ng-disabled="valuation.cancelled"> <i class="fa fa-paypal"></i></a>
 
                   <a href="javascript:void(0);" ng-if="valuation.transactionIdRef.payments.length > 0" ng-click="valuationListingVm.openPaymentModel(valuation, 'paymentView')" class="btn btn-sm btn-primary" uib-popover="View Payment" popover-trigger="mouseenter"><i class="fa fa-eye"></i></a>
 

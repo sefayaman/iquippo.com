@@ -43,8 +43,12 @@ a:focus,.btn{outline: none;}
 .btn-warning.btn-block{width: 100%;}
 .btn-primary{background: #004394; border:1px solid #004393; }
 .btn-danger{background: #e3000f; border:1px solid #e3000e; }
-.btn-info:hover,.btn-info:focus{background: #d8a91a; border-color: #f4bc10;}
-.btn-info{background: #f4bc10; border-color: #d8a91a;}
+/* .btn-info:hover,.btn-info:focus{background: #d8a91a; border-color: #f4bc10;} */
+/* .btn-info{background: #f4bc10; border-color: #d8a91a;} */
+.btn-primarydark:hover,.btn-primarydark:focus{background: #042f63; border-color: #042f63;}
+.btn-primarydark{background: #042f63; border-color: #042f63; color: #fff;}
+.btn-infodark:hover,.btn-infodark:focus{background: #0f7492; border-color: #1485a7;}
+.btn-infodark{background: #1485a7; border-color: #0f7492; color: #fff;}
 .serve .quote-btn{width: 300px;margin: 135px 0 7px 0;float: left;}
 .btn-warning:hover,.btn-warning:focus,.btn-warning.active.focus,.btn-warning.active:focus,.btn-warning.active:hover,.btn-warning.focus:active,.btn-warning:active:focus,.btn-warning:active:hover{background:#E03C3C;border:1px solid #e3000f;}
 .btn{border-radius:0;}
@@ -245,7 +249,7 @@ img.sheduleImg{width:50px;height:50px;border-radius:50%;margin:0 auto}
 .product-gallery .modal-content{background:transparent;box-shadow:none; border:0;}
 .product-gallery .modal-header{border:0;padding:0; padding-bottom:30px;}
 .product-gallery .modal-dialog .modal-body{overflow:inherit;height: 500px;max-height: inherit; padding:0; }
-.product-gallery .article-slide .carousel-indicators{ position: absolute;left: auto;;margin:auto;width: 100%;z-index: 3;display: block; text-align: center;}
+.product-gallery .article-slide .carousel-indicators{ position: absolute;left: auto;margin:auto;width: 100%;z-index: 3;display: block; text-align: center;}
 .product-gallery .article-slide .carousel-indicators li{ float:none; width:60px;height:50px;}
 .product-gallery .article-slide .carousel-indicators img{width:60px; border:0; height:50px;}
 .product-gallery .carousel-inner{ max-height:100%; height:600px;}
