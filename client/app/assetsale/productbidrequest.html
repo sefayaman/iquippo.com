@@ -61,8 +61,8 @@
 			   			<th>Bid Status</th>
 			   			<th>Deal Status</th>
 			   			<th ng-if="isAdmin()">EMD Details</th>
-                                                <th>EMD Due Date/Time </th>
-                                                <th>Full Payment Due Date/Time </th>
+                                                <th ng-if="tab !='1'">EMD Due Date/Time </th>
+                                                <th ng-if="tab !='1'">Full Payment Due Date/Time </th>
 			   			<th ng-if="isAdmin()">Full Payment Details</th>
 			   			<th ng-if="!isFAgencyPartner() && !isAdmin()">Parking Charge</th>
 			   			<th ng-if="isAdmin()">Invoice in Favour of</th>
@@ -94,8 +94,8 @@
 			                  <span ng-if="!bid.emdPayment.remainingPayment > 0">View Details</span>
 			                </a>
 			   			</td>
-			   			<td>{{ bid.emdEndDate | date:"MM/dd/yyyy 'at' h:mma" }}</td>
-			   			<td>{{ bid.fullPaymentEndDate | date:"MM/dd/yyyy 'at' h:mma" }}</td> 
+			   			<td ng-if="tab !='1'">{{ bid.emdEndDate | date:"MM/dd/yyyy 'at' h:mma" }}</td>
+			   			<td ng-if="tab !='1'">{{ bid.fullPaymentEndDate | date:"MM/dd/yyyy 'at' h:mma" }}</td> 
 			   			<td ng-if="isAdmin()">
 			   				<a href="javascript:void(0);" class="btn btn-danger btn-xs" ng-click="productBidRequestVm.openDialog(bid,'emdFullPaymentPopup', '', 'Full Payment')" ng-if="productBidRequestVm.validateAction(bid,'FULLPAYMENT')">
 			   					<span ng-if="bid.fullPayment.remainingPayment > 0">Update Details</span>

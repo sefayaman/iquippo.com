@@ -611,8 +611,10 @@ function paginatedResult(req, res, modelRef, filter, result, callback) {
       var skipNumber = currentPage - prevPage;
       if (skipNumber < 0)
         skipNumber = -1 * skipNumber;
-
-      query = modelRef.find(filter).sort(sortFilter).limit(pageSize * skipNumber);
+      if(req.lean)
+        query = modelRef.find(filter).lean().sort(sortFilter).limit(pageSize * skipNumber);
+      else
+        query = modelRef.find(filter).sort(sortFilter).limit(pageSize * skipNumber);
       query.exec(function (err, items) {
         if (!err && items.length > pageSize * (skipNumber - 1)) {
           result.items = items.slice(pageSize * (skipNumber - 1), items.length);

@@ -701,7 +701,7 @@ angular.module('sreizaoApp')
         authenticate:true
       })
       .state('assetsale.bidrequests', {
-        url: '/bidrequests?assetId&productId',
+        url: '/bidrequests?assetId&productId&tab',
         templateUrl: 'app/assetsale/productbidrequest.html',
         controller:'ProductBidRequestCtrl as productBidRequestVm',
         layout:'admin',

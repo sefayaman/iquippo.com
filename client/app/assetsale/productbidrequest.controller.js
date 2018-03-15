@@ -7,6 +7,7 @@ function ProductBidRequestCtrl($scope, $rootScope, $window, $uibModal, $statePar
 
 	$scope.assetId = $stateParams.assetId;
 	$scope.bidStatuses = bidStatuses;
+	$scope.tab = $stateParams.tab;
 
 	var initFilter = {actionable : 'y'};
 	vm.bidListing = [];
