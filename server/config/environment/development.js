@@ -21,7 +21,7 @@ module.exports = {
   seedDB: true,
   mailConfig : { MailHost: "smtp.gmail.com", MailPort: "465", Mailusername: "iquippo.uat@gmail.com", Mailpassword: "pass12345678",from:"iquippo.uat@gmail.com"},
   supportMail: "iquippo.uat@gmail.com",
-  qpvalURL:"http://13.126.19.255/valuation/api.php",
+  qpvalURL:"http://13.126.19.255/Valuers/api.php",
   REDIRECT_URL:"http://finance-uat.iquippo.com/customer-portal-iquippo/sso",
 
   awsEndpoint: 's3.ap-south-1.amazonaws.com',
@@ -29,6 +29,7 @@ module.exports = {
   awsSecretAccessKey: 'ZnsSM+I8TzN31nBHo+8XfjDArWqlRm68+8hA7do9',
   awsBucket: 'iquippo-image-upload-dev',
   awsUrl: 'https://s3.ap-south-1.amazonaws.com/',
-
+  S3_HEADER_EXPIRES: new Date(Date.now() + 604800000).toISOString(),
+  S3_HEADER_CACHE_CONTROL: 'maxAge=2592000',
   auctionURL:"https://auctionsoftwaremarketplace.com:3007/api_call/"
 };
