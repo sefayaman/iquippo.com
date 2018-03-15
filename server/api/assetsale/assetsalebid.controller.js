@@ -818,7 +818,7 @@ exports.fetchBid = function (req, res) {
 function fetchBid(filter, callback) {
 
     var query = AssetSaleBid.find(filter);
-    query.populate('user product.proData')
+    query.lean().populate('user product.proData')
             .exec(function (err, results) {
                 if (err)
                     return callback(err);
@@ -872,7 +872,7 @@ function paginatedResult(req, res, modelRef, filter) {
             skipNumber = -1 * skipNumber;
 
         query = modelRef.find(filter).sort(sortFilter).limit(pageSize * skipNumber);
-        query.populate('user product.proData')
+        query.lean().populate('user product.proData')
                 .exec(function (err, items) {
                     if (!err && items.length > pageSize * (skipNumber - 1)) {
                         items = items.slice(pageSize * (skipNumber - 1), items.length);

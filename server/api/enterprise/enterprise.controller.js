@@ -122,6 +122,7 @@ function getValuationRequest(req,res){
       filter['createdAt'] = dateFilter;
 
   if (queryParam.pagination) {
+    req.lean = true;
     Utility.paginatedResult(req, res, EnterpriseValuation, filter, {});
     return;
   }
@@ -176,6 +177,7 @@ function getInvoice(req,res){
     filter['createdAt'] = dateFilter;
 
   if (queryParam.pagination) {
+    req.lean = true;
     Utility.paginatedResult(req, res, EnterpriseValuationInvoice, filter, {});
     return;
   }
@@ -2110,7 +2112,7 @@ exports.exportExcel = function(req,res){
         filter['createdAt'] = dateFilter;
 
       var fieldMap = fieldsConfig["TRANSACTION_EXPORT"];
-      var query = EnterpriseValuation.find(filter).sort({createdAt:-1});
+      var query = EnterpriseValuation.find(filter).lean().sort({_id:-1});
       query.exec(function(err,dataArr){
           if(err) { return handleError(res, err); }
           exportExcel(req,res,fieldMap,dataArr);
@@ -2121,7 +2123,7 @@ exports.exportExcel = function(req,res){
       if(queryParam.fromDate || queryParam.toDate)
         filter['createdAt'] = dateFilter;
       var fieldMap = fieldsConfig["INVOICE_EXPORT"];
-      var query = EnterpriseValuationInvoice.find(filter).sort({createdAt:-1});
+      var query = EnterpriseValuationInvoice.find(filter).lean().sort({_id:-1});
        query.exec(function(err,dataArr){
           if(err) { return handleError(res, err); }
           var flatArr = _getformatedInvoice(dataArr);
@@ -2133,7 +2135,7 @@ exports.exportExcel = function(req,res){
        filter['paymentMade'] = true;
       if(queryParam.fromDate || queryParam.toDate)
         filter['paymentMadeDate'] = dateFilter;
-      var query = EnterpriseValuationInvoice.find(filter).sort({createdAt:-1});
+      var query = EnterpriseValuationInvoice.find(filter).lean().sort({_id:-1});
        query.exec(function(err,dataArr){
           if(err) { return handleError(res, err); }
           var jsonArr = [];
@@ -2153,7 +2155,7 @@ exports.exportExcel = function(req,res){
       if(queryParam.fromDate || queryParam.toDate)
         filter['paymentReceivedDate'] = dateFilter;
       
-      var query = EnterpriseValuationInvoice.find(filter).sort({createdAt:-1});
+      var query = EnterpriseValuationInvoice.find(filter).lean().sort({_id:-1});
        query.exec(function(err,dataArr){
           if(err) { return handleError(res, err); }
           var jsonArr = [];
