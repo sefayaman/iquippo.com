@@ -8,7 +8,7 @@
 					Master Data
 						<div class="btn btn-success pull-right">
 					      <span class="fileinput-button">
-		                         <span><i class="fa fa-file-excel-o"></i> Import</span>
+		                         <span><i class="fa fa-file-text"></i> Import</span>
 		                         <input type="file" name="importfile" onchange="angular.element(this).scope().importMasterData(this.files,this)">
 		                     </span>
 					     </div>
@@ -131,14 +131,20 @@
 
 				    <uib-tab heading="Product Category" select="masterDataVm.reset()">
 				    	<form name="categoryForm" role="form" novalidate class="form">
-				    		<h4>Add New Category
-				    			<div class="btn btn-success pull-right" ng-click="masterDataVm.exportMasterData('category')">
+				    		
+			    		<div class="row">
+			    			<div class="col-sm-6">
+			    				<h4>Add New Category</h4>
+			    			</div>
+			    			<div class="col-sm-6">
+			    				<button class="btn btn-success pull-right" ng-click="masterDataVm.exportMasterData('category')">
 							      <span class="fileinput-button">
-				                         <span><i class="fa fa-file-excel-o"></i> Export</span>
+				                         <span><i class="fa fa-file-text"></i> Export</span>
 				                     </span>
-							     </div>
-				    		</h4>
-				    		<legend></legend>
+							     </button>
+			    			</div>
+			    		</div>
+			    		<legend></legend>
 
 				    	  <div class="row">
 				    	  	<div class="form-group col-sm-3" ng-class="{'has-error': form.errorGroup && submitted}">
@@ -426,13 +432,19 @@
 					    </uib-tab>
 					    <uib-tab heading="Model" select="masterDataVm.reset()">
 					    	<form role="form" name="modelForm" novalidate class="form">
-					    		<h4>Add New Model
-					    			<div class="btn btn-success pull-right" ng-click="masterDataVm.exportMasterData('model')">
-								      <span class="fileinput-button">
-					                         <span><i class="fa fa-file-excel-o"></i> Export</span>
-					                     </span>
-								     </div>
-					    		</h4>
+					    		
+					    		<div class="row">
+					    			<div class="col-sm-6">
+					    				<h4>Add New Model</h4>
+					    			</div>
+					    			<div class="col-sm-6">
+					    				<button class="btn btn-success pull-right" ng-click="masterDataVm.exportMasterData('model')">
+									      <span class="fileinput-button">
+						                         <span><i class="fa fa-file-text"></i> Export</span>
+						                     </span>
+									     </button>
+					    			</div>
+					    		</div>
 					    		<legend></legend>
                               <div class="row">
                               	<div class="form-group col-sm-3" ng-class="{'has-error': form.errorGroup && submitted}">

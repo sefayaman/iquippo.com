@@ -90,6 +90,8 @@
             $scope.auctionVisibleFlag = true;
           else
             $scope.auctionVisibleFlag = false;
+          vm.tabValue = $scope.auctionVisibleFlag ?"auctionRegReport" : "callback";
+
           dataToSend.pagination = true;
           dataToSend.itemsPerPage = vm.itemsPerPage;
           if(Auth.getCurrentUser().mobile && Auth.getCurrentUser().role != 'admin') {
