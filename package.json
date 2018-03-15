@@ -27,6 +27,7 @@
     "html-minifier": "^3.4.2",
     "html-pdf": "^2.2.0",
     "json2xls": "^0.1.2",
+    "jsonexport": "^2.0.11",
     "jsonwebtoken": "^5.0.0",
     "jszip": "^2.6.1",
     "lodash": "~3.10.1",

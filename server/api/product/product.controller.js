@@ -1327,10 +1327,10 @@ exports.exportProducts = function (req, res) {
 
   function fetchResults() {
 
-    var query = Product.find(filter).lean().sort({
+    var query = Product.find(filter).sort({
       _id: 1
     });
-    query.exec(
+    query.lean().exec(
       function (err, products) {
         if (err) {
           return handleError(res, err);
@@ -1342,7 +1342,7 @@ exports.exportProducts = function (req, res) {
           mapedFields[productFieldsMap[x]] = x;
         });
         products.forEach(function (x) {
-          var colData = x._doc;
+          var colData = x;//._doc;
           var obj = {};
           if (colData && Object.keys(colData).length) {
             Object.keys(colData).forEach(function (y) {
