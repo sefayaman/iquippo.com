@@ -566,17 +566,35 @@
                     <input type="text" class="form-control" ng-value="valuationVm.valuationReq.product.name" placeholder="Enter Asset Name" disabled>
                   </div>
                 </div>
-                <div class="col-sm-3 form-group">
+                 <div class="col-xs-12 col-sm-3">
+                    <div class="form-group floating-label-wrapper">
+                        <label>Asset Description</label>
+                        <input type="text" name="prddescription" class="form-control" placeholder="Enter Asset Description" ng-model="valuationVm.valuationReq.product.description">
+                    </div>
+                </div>
+                <!-- <div class="col-sm-3 form-group">
                   <div class="floating-label-wrapper">
                     <label>Serial Number</label>
                     <input type="text" class="form-control" ng-value="valuationVm.valuationReq.product.serialNumber" placeholder="Enter Serial Number" disabled>
                   </div>
-                </div>
+                </div> -->
                 <div class="col-sm-3 form-group">
                   <div class="floating-label-wrapper">
                     <label>Asset Location</label>
                     <input type="text" class="form-control" ng-value="valuationVm.valuationReq.product.city" placeholder="Enter Asset Location" disabled>
                   </div>
+                </div>
+                <div class="col-xs-12 col-sm-3">
+                    <div class="form-group floating-label-wrapper" ng-class="{'has-error': form.contactPerson.$invalid && submitted }">
+                        <label>Contact Person*</label>
+                        <input type="text" name="contactPerson" class="form-control" placeholder="Contact Person"  ng-model="valuationVm.valuationReq.contactPerson" required>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-3">
+                    <div class="form-group floating-label-wrapper" ng-class="{'has-error': form.contactNumber.$invalid && submitted }">
+                        <label>Contact Number*</label>
+                        <input type="text" name="contactNumber" class="form-control" ng-model="valuationVm.valuationReq.contactNumber" placeholder="Contact Number" required>
+                    </div>
                 </div>
                 <div class="col-sm-3 form-group" >
                   <div class="floating-label-wrapper" ng-class="{'has-error':valReqForm.valagency.$invalid && valSubmitted}">
@@ -598,44 +616,9 @@
                   
                 </div>
                 <div class="col-sm-3 form-group">
-                      <div class="floating-label-wrapper" ng-class="{'has-error': valReqForm.otherName.$invalid && valSubmitted}">
-                        <label>Others</label>
-                        <input class="form-control" type="text" name="otherName" ng-model="valuationVm.valuationReq.otherName" ng-disabled ="valuationVm.valuationReq.purpose != 'Other'" placeholder="*Other" ng-required= "valuationVm.valuationReq.purpose == 'Other'">
-                      </div>
-                    </div>
-              </div>
-              <div class="text-right">
-                <button type="submit" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE' || isAdmin()" ng-click="valuationVm.submitValuationReq(valReqForm, 'Valuation')" class="btn btn-primary">Submit</button>
-              </div>
-              <!-- <small>
-                <strong>Note:</strong> Valuation Charges - <i class="fa fa-inr"></i> 5,000
-              </small> -->
-            </form>
-            <div class="form-group"></div>
-          </div>
-        </uib-tab>
-        <uib-tab heading="Inspection Request">
-          <div ng-controller="ValuationRequestCtrl as valuationVm">
-            <form  novalidate class="reqForCertify" name="reqForCertify">
-              <div class="row text-left">
-                <div class="col-xs-12 col-sm-6 form-group">
-                  <div class="floating-label-wrapper">
-                    <label>Purpose of Inspection*</label>
-                  </div>
-                  <div class="row">
-                    <div class="col-xs-12 col-sm-6 form-group">
-                      <div class="floating-label-wrapper" ng-class="{'has-error': reqForCertify.purpose.$invalid && valSubmitted}">
-                        <select class="form-control" ng-model="valuationVm.valuationReq.purpose" name="purpose" required>
-                          <option value="">Select Purpose</option>
-                          <option ng-repeat="valuation in valuationList" value="{{valuation.name}}">{{valuation.name}}</option>
-                        </select>
-                      </div>
-                    </div>
-                    <div class="col-xs-12 col-sm-6 form-group">
-                      <div class="floating-label-wrapper" ng-class="{'has-error': reqForCertify.otherName.$invalid && valSubmitted}">
-                        <input class="form-control" type="text" name="otherName" ng-model="valuationVm.valuationReq.otherName" ng-disabled ="valuationVm.valuationReq.purpose != 'Other'" placeholder="*Other" ng-required= "valuationVm.valuationReq.purpose == 'Other'">
-                      </div>
-                    </div>
+                  <div class="floating-label-wrapper" ng-class="{'has-error': valReqForm.otherName.$invalid && valSubmitted}">
+                    <label>Others</label>
+                    <input class="form-control" type="text" name="otherName" ng-model="valuationVm.valuationReq.otherName" ng-disabled ="valuationVm.valuationReq.purpose != 'Other'" placeholder="*Other" ng-required= "valuationVm.valuationReq.purpose == 'Other'">
                   </div>
                 </div>
                 <div class="col-xs-12 col-sm-6 form-group">
@@ -681,18 +664,135 @@
                     <uib-timepicker ng-if="isShow" ng-model="mytime" ng-change="changed(mytime)" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></uib-timepicker>
                     
                   </div>
+                </div> 
+                <div class="col-sm-12">
+                  <div class="form-group floating-label-wrapper">
+                    <label>Comment</label>
+                    <input type="text" class="form-control" name="comment" ng-model="valuationVm.valuationReq.comment" placeholder="Write Comments (if any)">
+                  </div>
+                </div>
+              </div>
+              <div class="text-right">
+                <button type="submit" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE' || isAdmin()" ng-click="valuationVm.submitValuationReq(valReqForm, 'Valuation')" class="btn btn-primary">Submit</button>
+              </div>
+              <!-- <small>
+                <strong>Note:</strong> Valuation Charges - <i class="fa fa-inr"></i> 5,000
+              </small> -->
+            </form>
+            <div class="form-group"></div>
+          </div>
+        </uib-tab>
+        <uib-tab heading="Inspection Request">
+          <div ng-controller="ValuationRequestCtrl as valuationVm">
+            <form  novalidate class="reqForCertify" name="reqForCertify">
+              <div class="row text-left">
+                <div class="col-sm-3 form-group">
+                  <div class="floating-label-wrapper">
+                    <label>Category</label>
+                    <input type="text" class="form-control" ng-value="valuationVm.valuationReq.product.category" placeholder="Enter Category" disabled>
+                  </div>
+                </div>
+                <div class="col-sm-3 form-group">
+                  <div class="floating-label-wrapper">
+                    <label>Asset Name</label>
+                    <input type="text" class="form-control" ng-value="valuationVm.valuationReq.product.name" placeholder="Enter Asset Name" disabled>
+                  </div>
+                </div>
+                <div class="col-xs-12 col-sm-3">
+                  <div class="form-group floating-label-wrapper">
+                      <label>Asset Description</label>
+                      <input type="text" name="prddescription" class="form-control" placeholder="Enter Asset Description" ng-model="valuationVm.valuationReq.product.description">
+                  </div>
+                </div> 
+                <div class="col-sm-3 form-group">
+                  <div class="floating-label-wrapper">
+                    <label>Asset Location</label>
+                    <input type="text" class="form-control" ng-value="valuationVm.valuationReq.product.city" placeholder="Enter Asset Location" disabled>
+                  </div>
+                </div>               
+                <div class="col-xs-12 col-sm-3">
+                    <div class="form-group floating-label-wrapper" ng-class="{'has-error': form.contactPerson.$invalid && submitted }">
+                        <label>Contact Person*</label>
+                        <input type="text" name="contactPerson" class="form-control" placeholder="Contact Person"  ng-model="valuationVm.valuationReq.contactPerson" required>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-3">
+                    <div class="form-group floating-label-wrapper" ng-class="{'has-error': form.contactNumber.$invalid && submitted }">
+                        <label>Contact Number*</label>
+                        <input type="text" name="contactNumber" class="form-control" ng-model="valuationVm.valuationReq.contactNumber" placeholder="Contact Number" required>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-3 form-group">
+                    <div class="floating-label-wrapper" ng-class="{'has-error': reqForCertify.valagency.$invalid && valSubmitted}">
+                      <label>Agency Name*</label>
+                      <select class="form-control" name="valagency" required ng-model="valuationVm.valuationReq.valuationAgency._id">
+                        <option value="">Select Agency Name</option>
+                        <option value="{{agency._id}}" ng-repeat="agency in insAgencies">{{agency.name}}</option>
+                      </select>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-3 form-group">
+                  <label>Purpose of Inspection*</label>
+                  <div class="floating-label-wrapper" ng-class="{'has-error': reqForCertify.purpose.$invalid && valSubmitted}">
+                    <select class="form-control" ng-model="valuationVm.valuationReq.purpose" name="purpose" required>
+                      <option value="">Select Purpose</option>
+                      <option ng-repeat="valuation in valuationList" value="{{valuation.name}}">{{valuation.name}}</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-xs-12 col-sm-6 form-group">
+                  <label>Other</label>
+                  <div class="floating-label-wrapper" ng-class="{'has-error': reqForCertify.otherName.$invalid && valSubmitted}">
+                    <input class="form-control" type="text" name="otherName" ng-model="valuationVm.valuationReq.otherName" ng-disabled ="valuationVm.valuationReq.purpose != 'Other'" placeholder="*Other" ng-required= "valuationVm.valuationReq.purpose == 'Other'">
+                  </div>
+                </div>
+               
+                <div class="col-xs-12 col-sm-6 form-group">
+                  <div class="floating-label-wrapper">
+                    <label>Schedule a call</label>
+                  </div>
+                  <div class="row">
+                    <div class="col-xs-12 col-sm-6 form-group">
+                      <div class="radio radio-info">
+                        <input type="radio"  placeholder="" id="certifiedRadio1" name="schedule" ng-model="valuationVm.valuationReq.schedule" value="yes">
+                        <label for="certifiedRadio1"> Yes </label>
+                      </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-6 form-group">
+                      <div class="radio radio-info">
+                        <input type="radio" placeholder="" id="certifiedRadio2" name="schedule" ng-model="valuationVm.valuationReq.schedule" value="no">
+                        <label for="certifiedRadio2"> No </label>
+                      </div>
+                      
+                    </div>
+                  </div>
+                  <div class="clerafix"></div>
+                  <div class="col-sm-6 form-group" ng-if="valuationVm.valuationReq.schedule == 'yes'">
+                    <small>Pick Date</small>
+                    <div class="input-group" ng-class="{'has-error': reqForCertify.scheduleDate.$invalid && valSubmitted}">
+                      <!-- <input type="text" class="form-control pick-width" ng-model="valuationVm.valuationReq.scheduleDate" uib-datepicker-popup="{{format}}" ng-name="scheduleDate" ng-value="" is-open="popup2.opened" min-date="minDate" max-date="maxDate" datepicker-options="datepickerOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" placeholder="dd/mm/yyyy" /> -->
+                      <input type="text" class="form-control" ng-model="valuationVm.valuationReq.scheduleDate" uib-datepicker-popup="{{format}}" name="scheduleDate" ng-value="" is-open="popup1.opened" min-date="minDate" max-date="maxDate" datepicker-options="datepickerOptions" date-disabled="disabled(date, mode)" ng-required="valuationReq.schedule == 'yes'" close-text="Close" alt-input-formats="altInputFormats" placeholder="dd/mm/yyyy" />
+                      <span class="input-group-addon">
+                        <a href class="btn btn-default" ng-click="open1()"><i class="fa fa-calendar-o"></i></a>
+                      </span>
+                    </div>
+                  </div>
+                  
+                  <div class="col-sm-6 form-group" ng-if="valuationVm.valuationReq.schedule == 'yes'">
+                    <small>Set Time</small>
+                    <div class="input-group">
+                      <!-- <input type="text" class="form-control" placeholder="HH:MM" ng-model="valuationVm.valuationReq.scheduledTime" is-open=""  ng-value="{{valuationVm.valuationReq.scheduledTime | date:'shortTime' }}" timepicker-options="timepickerOptions"> -->
+                      <input type="text" class="form-control" name="otherName" placeholder="HH:MM" ng-model="valuationVm.valuationReq.scheduledTime" is-open=""  ng-value="{{valuationVm.valuationReq.scheduledTime| date:'shortTime' }}" timepicker-options="timepickerOptions">
+                      <span class="input-group-addon">
+                        <button class="btn btn-default" ng-click="toggleMode()"><i class="fa fa-clock-o"></i></button>
+                      </span>
+                    </div>
+                    <uib-timepicker ng-if="isShow" ng-model="mytime" ng-change="changed(mytime)" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></uib-timepicker>
+                    
+                  </div>
                 </div>              
               </div>
-              <div class="row  form-group">
-                 <div class="col-xs-12 col-sm-3 form-group">
-                      <div class="floating-label-wrapper" ng-class="{'has-error': reqForCertify.valagency.$invalid && valSubmitted}">
-                        <label>Agency Name*</label>
-                        <select class="form-control" name="valagency" required ng-model="valuationVm.valuationReq.valuationAgency._id">
-                          <option value="">Select Agency Name</option>
-                          <option value="{{agency._id}}" ng-repeat="agency in insAgencies">{{agency.name}}</option>
-                        </select>
-                      </div>
-                  </div>
+              <div class="row  form-group">                 
                   <div class="col-xs-12 col-sm-9">
                     <div class="form-group floating-label-wrapper">
                       <label>Comments</label>

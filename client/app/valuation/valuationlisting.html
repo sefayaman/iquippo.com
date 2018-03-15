@@ -58,14 +58,16 @@
                   <!-- <th width="50"><input type="checkbox" ng-model="valuationListingVm.master"> All</th> -->
                   <th>Request ID</th>
                   <th>Request Type</th>
-                  <th>Job ID</th>
-                  <th>Report No</th>
-                  <th>Category</th>
-                  <th>Asset Name</th>
-                  <th>Asset Status</th>
-                  <th>Serial Number</th>
-                  <th>Status</th>
                   <th>Purpose</th>
+                  <th>User Name</th>
+                  <th>Job ID</th>
+                  <th>Asset No.</th>
+                  <th>Report No</th>
+                  <!-- <th>Category</th> -->
+                  <!-- <th>Asset Name</th> -->
+                  <!-- <th>Asset Status</th> -->
+                  <!-- <th>Serial Number</th> -->
+                  <th>Status</th>
                   <th>Payment Mode</th>
                   <th>Request Date</th>
                   <th>View All</th>
@@ -78,20 +80,22 @@
                 <!-- <td><input type="checkbox" ng-checked="valuationListingVm.master" ng-click="valuationListingVm.updateSelection($event,valuation._id)"></td> -->
                 <td>{{valuation.requestId}}</td>
                 <td>{{valuation.requestType}}</td>
+                <td>{{valuation.purpose}}</td>
+                <td>{{valuation.user.fname}} {{valuation.user.lname}}</td>
                 <td>{{valuation.jobId}}</td>
+                <td>{{valuation.product.assetId}}</td>
                 <td>{{valuation.reportNo}}</td>
-                <td>{{valuation.product.category}}</td>
-                <td>
+                <!-- <td>{{valuation.product.category}}</td> -->
+               <!--  <td>
                   <span ng-if="valuation.product.name">{{valuation.product.name}}</span>
                   <span ng-if="!valuation.product.name">{{valuation.product.category}} {{valuation.product.brand}} {{valuation.product.model}}</span>
-                </td>
-                <td>{{valuation.product.status}}</td>
-                <td>{{valuation.product.serialNumber}}</td>
+                </td> -->
+                <!-- <td>{{valuation.product.status}}</td> -->
+                <!-- <td>{{valuation.product.serialNumber}}</td> -->
                 <td>
                   <span ng-if="!valuation.onHold">{{valuation.status}}</span>
                   <span ng-if="valuation.onHold && !valuation.cancelled">Hold - {{valuation.onHoldMsg}}</span>
                 </td>
-                <td>{{valuation.purpose}}</td>
                 <td>
                   <span ng-if="valuation.transactionIdRef.paymentMode">{{valuation.transactionIdRef.paymentMode}}</span>
                   <span ng-if="!valuation.transactionIdRef.paymentMode">{{valuation.payOption}}</span>
