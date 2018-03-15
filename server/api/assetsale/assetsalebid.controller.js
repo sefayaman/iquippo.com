@@ -818,7 +818,7 @@ exports.fetchBid = function (req, res) {
 function fetchBid(filter, callback) {
 
     var query = AssetSaleBid.find(filter);
-    query.populate('user product.proData')
+    query.lean().populate('user product.proData')
             .exec(function (err, results) {
                 if (err)
                     return callback(err);
@@ -872,7 +872,7 @@ function paginatedResult(req, res, modelRef, filter) {
             skipNumber = -1 * skipNumber;
 
         query = modelRef.find(filter).sort(sortFilter).limit(pageSize * skipNumber);
-        query.populate('user product.proData')
+        query.lean().populate('user product.proData')
                 .exec(function (err, items) {
                     if (!err && items.length > pageSize * (skipNumber - 1)) {
                         items = items.slice(pageSize * (skipNumber - 1), items.length);
@@ -1133,7 +1133,6 @@ exports.exportExcel = function (req, res) {
 				resList = jsonArr.slice();
 			}
 		}
-
 		renderExcel(res, resList);
 	});
 
@@ -1141,6 +1140,21 @@ exports.exportExcel = function (req, res) {
 		var dataArr = [];
 		var headers = Object.keys(fieldsMap);
 
+		/* removing items from csv in case of Pending for Approval
+			* Madhusudan Mishra
+		*/
+		if(queryParam.reportType === 'Pending_For_Approval') {
+			removeItmByHeaders(['EMD Due Date/Time','Full Payment Due Date/Time']);
+		}
+
+		function removeItmByHeaders(itmes) {
+			itmes.forEach(function(item) {
+				var index = headers.indexOf(item);
+				headers.splice(index, 1);
+			})
+		}
+
+		/* update headers in case of pending for Approcal csv  */
 		var csvStr = "";
 		csvStr += headers.join(',');
 		csvStr += "\r\n";
@@ -1161,6 +1175,18 @@ exports.exportExcel = function (req, res) {
                 if (keyObj.key && keyObj.key == 'overallGeneralCondition' && item.product.proData && item.product.proData.valuationOverallGeneralCondition)
                     val = item.product.proData.valuationOverallGeneralCondition;
 
+                /* 
+				* change date format for Emd Due Date And Full Payment Date
+                */
+                if(keyObj.key === 'emdEndDate' && item.emdEndDate)
+                	val = moment(item.emdEndDate).utcOffset('+0530').format('MM/DD/YYYY')+' at ' + moment(item.emdEndDate).utcOffset('+0530').format('hh:mm a');
+                if(keyObj.key === 'fullPaymentEndDate' && item.fullPaymentEndDate)
+                	val = moment(item.fullPaymentEndDate).utcOffset('+0530').format('MM/DD/YYYY')+' at ' + moment(item.fullPaymentEndDate).utcOffset('+0530').format('hh:mm a');
+
+                /*
+					Added by Madhusudan Mishra
+                */
+
 				if (keyObj.key && (keyObj.key === 'approvedBy' || keyObj.key === 'approvalDate' || keyObj.key === 'approvalTime') && item.bidStatuses.length > 0) {
 					for (var i = item.bidStatuses.length - 1; i > 0; i--) {
 						if (item.bidStatuses[i].status === bidStatuses[7]) {
@@ -1172,7 +1198,7 @@ exports.exportExcel = function (req, res) {
 								// else if(item.bidStatuses[item.bidStatuses.length - 1].userId === item.user._id + "")
 								// 	val = '';
 								else
-									val = 'Admin';
+									val = 'Admin' +' '+ user.fname +' '+ user.lname;
 							} else if (keyObj.key === 'approvalDate')
 								val = moment(item.bidStatuses[i].createdAt).utcOffset('+0530').format('MM/DD/YYYY');
 							else
@@ -1201,7 +1227,7 @@ exports.exportExcel = function (req, res) {
 					// else if(item.dealStatuses[item.dealStatuses.length - 1].userId === item.user._id + "")
 					// 	val = '';
 					else
-						val = 'Admin' +' '+ user.fname +' '+ user.lname;
+						val = 'Admin';
 				}
 
 				if (keyObj.key && keyObj.key === 'sellerCustomerId' && item.user)

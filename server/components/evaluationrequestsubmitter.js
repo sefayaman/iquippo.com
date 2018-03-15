@@ -78,94 +78,91 @@ function getEnterpriseRequest(enterprisers){
 
   var currDate = new Date();
   currDate.setMinutes(currDate.getMinutes() - 20);
-  ValuationModel.find({'enterprise.enterpriseId':enterprisers[0].enterpriseId,requestType:{$in:services},status:EnterpriseValuationStatuses[0],createdAt:{$lt:currDate},deleted:false,cancelled:false,onHold:false},function(err,entReqs){
-    if(err){
+  var query = ValuationModel.find({'enterprise.enterpriseId':enterprisers[0].enterpriseId,requestType:{$in:services},status:EnterpriseValuationStatuses[0],createdAt:{$lt:currDate},deleted:false,cancelled:false,onHold:false});
+  query.lean().exec(function(err,entReqs){
+    if(err || !entReqs.length){
       enterprisers.splice(0,1);
       getEnterpriseRequest(enterprisers);
       return;
     }
-    submitRequest(entReqs,function(error,resList){
-      if(error){
-         enterprisers.splice(0,1);
-        getEnterpriseRequest(enterprisers);
-        return;
-      }
-      mergeRes(resList,entReqs);
-      async.eachLimit(entReqs,5,updateValuationRequest,onUpdateComplete);
-    });    
+    async.eachLimit(entReqs,1,submitAndUpdateRequest,onComplete); 
 
   });
 
-  function updateValuationRequest(valReq,callback){
-    if(!valReq)
-      return callback();
-    var _id = valReq._id;
-    delete valReq._id;
-    ValuationModel.update({_id : _id},{$set:valReq},function(err){
-      if(!err && valReq.status === EnterpriseValuationStatuses[2])
-        ValuationCtrl.pushNotification(valReq);
-      return callback();
-    });
-  }
-
-  function onUpdateComplete(err){
-    enterprisers.splice(0,1);
+  function onComplete(err){
+     enterprisers.splice(0,1);
     getEnterpriseRequest(enterprisers);
   }
 }
 
-
-function submitRequest(reqs,cb){
-    if(!reqs || !reqs.length)
-      return cb("No record to send");
+function submitAndUpdateRequest(valReq,cb){
+   if(!valReq)
+      return cb();
     var dataArr = [];
     var keys = Object.keys(Field_MAP);
-    reqs.forEach(function(item){
-      if(item.jobId || item.deleted)
-         return;
-       if(item.onHold)
-        return;
-      if(item.cancelled)
-        return;
-      var obj = {};
-      keys.forEach(function(key){
-        obj[key] = _.get(item,Field_MAP[key]);
-      });
+    if(valReq.jobId || valReq.deleted || valReq.onHold || valReq.cancelled)
+       return cb();
+    var obj = {};
+     keys.forEach(function(key){
+      obj[key] = _.get(valReq,Field_MAP[key]);
+    });
 
-      if(obj.brand && obj.brand == "Other")
-        obj.brand = item.otherBrand;
+    if(obj.brand && obj.brand == "Other")
+      obj.brand = valReq.otherBrand;
 
-      if(obj.model && obj.model == "Other")
-        obj.model = item.otherModel;
+    if(obj.model && obj.model == "Other")
+      obj.model = valReq.otherModel;
 
-      var s3Path = "";
-      if(item.assetDir)
-        s3Path = config.awsUrl + config.awsBucket + config.awsBucketPrefix + item.assetDir + "/";
-      if(s3Path && item.invoiceDoc&& item.invoiceDoc.filename)
-          obj.invoiceDoc = s3Path + item.invoiceDoc.filename;
-      if(s3Path && item.rcDoc && item.rcDoc.filename)
-          obj.invoiceDoc = s3Path + item.rcDoc.filename;
+    var s3Path = "";
+    if(valReq.assetDir)
+      s3Path = config.awsUrl + config.awsBucket + config.awsBucketPrefix + valReq.assetDir + "/";
+    if(s3Path && valReq.invoiceDoc&& valReq.invoiceDoc.filename)
+        obj.invoiceDoc = s3Path + valReq.invoiceDoc.filename;
+    if(s3Path && valReq.rcDoc && valReq.rcDoc.filename)
+        obj.invoiceDoc = s3Path + valReq.rcDoc.filename;
 
       dataArr[dataArr.length] = obj;
 
-    });
     request({
         url: config.qpvalURL + "?type=Mjobcreation",
         method: "POST",
         json: true, 
         body: dataArr
     }, function (error, response, body){
-      if(error)
-          return cb("Error from server",null);
-        
-      if(response.statusCode == 200){
-        cb(null,response.body);
-      }else{
-        return cb("Error from server",null);
+      if(response && response.statusCode == 200)
+          updateValuationReq(response.body);
+      else{
+        console.log("Error got from qpval",error);
+        return cb();
       }
-
     });
 
+    function updateValuationReq(resBody){
+
+      if(!resBody|| !resBody || !resBody.length)
+        return cb();
+      var resItem = resBody[0];
+      if(!resItem.uniqueControlNo || resItem.uniqueControlNo !== valReq.uniqueControlNo)
+        return cb();
+     if(resItem.success == "true"){
+        valReq.jobId = resItem.jobId;
+        valReq.remarks = "";
+        valReq.resubmit = false;
+        valReq.submittedToAgencyDate = new Date();
+        setStatus(valReq,EnterpriseValuationStatuses[2]);
+      }else{
+        valReq.remarks = resItem.msg || "Unable to submit";
+        valReq.resubmit = true;
+        setStatus(valReq,EnterpriseValuationStatuses[1]);
+      }
+      var _id = valReq._id;
+      delete valReq._id;
+      ValuationModel.update({_id : _id},{$set:valReq},function(err){
+        if(!err && valReq.status === EnterpriseValuationStatuses[2])
+            ValuationCtrl.pushNotification(valReq);
+          return cb();
+      });
+    }
 }
 
 function getAutoSubmitServices(enterprsie){
@@ -181,49 +178,17 @@ function getAutoSubmitServices(enterprsie){
   return serviceArr;
 }
 
-function getValReqByUniqueCtrlNo(list,unCtrlNo){
-      var retVal = null;
-      list.some(function(item){
-        if(item.uniqueControlNo == unCtrlNo){
-          retVal = item;
-          return false;
-        }
-      });
-      return retVal;
-    }
 
-    function mergeRes(resList,sentItems){
-
-      resList.forEach(function(item){
-        var valReq = null;
-        if(item.uniqueControlNo)
-          valReq = getValReqByUniqueCtrlNo(sentItems,item.uniqueControlNo);
-        if(!valReq)
-            return;
-        if(item.success == "true"){
-          valReq.jobId = item.jobId;
-          valReq.remarks = "";
-          valReq.resubmit = false;
-          valReq.submittedToAgencyDate = new Date();
-          setStatus(valReq,EnterpriseValuationStatuses[2]);
-        }else{
-          valReq.remarks = item.msg || "Unable to submit";
-          valReq.resubmit = true;
-          setStatus(valReq,EnterpriseValuationStatuses[1]);
-        }
-      });
-    }
-
-    function setStatus(entValuation,status){
-      entValuation.status = status;
-      var stObj = {};
-      stObj.status = status;
-      stObj.createdAt = new Date();
-      stObj.userId = "System";
-      if(!entValuation.statuses)
-        entValuation.statuses = [];
-      entValuation.statuses.push(stObj);
-    }
+  function setStatus(entValuation,status){
+    entValuation.status = status;
+    var stObj = {};
+    stObj.status = status;
+    stObj.createdAt = new Date();
+    stObj.userId = "System";
+    if(!entValuation.statuses)
+      entValuation.statuses = [];
+    entValuation.statuses.push(stObj);
+  }
 
 exports.start = function() {
   console.log("submitter service started");

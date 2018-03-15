@@ -465,7 +465,8 @@ function exportExcel(req,res,fieldMap,jsonArr){
         }else
           val = "";
       }
-
+      if (keyObj.key && keyObj.key === 'userName' && item.user)
+        val = item.user.fname + " " + item.user.lname;
       if(keyObj.key === 'paymentReceived' && keyObj.type && keyObj.type == 'boolean') {
         var statusesArr = [];
         item.statuses.forEach(function(item){
