@@ -341,6 +341,10 @@ function ProductListingCtrl($scope, $location, $rootScope, $http, productSvc, Au
         var dataToSend ={};
         dataToSend["userid"] = Auth.getCurrentUser()._id;
         dataToSend["role"] = Auth.getCurrentUser().role;
+         if(Auth.isEnterprise()){
+          //delete dataToSend.userid;
+          dataToSend.enterpriseId = Auth.getCurrentUser().enterpriseId; 
+        }
         dataToSend['productCondition'] = "used";
         productSvc.exportProduct(dataToSend)
         .then(function(buffData){

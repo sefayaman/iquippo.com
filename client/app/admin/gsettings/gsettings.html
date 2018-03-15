@@ -4315,7 +4315,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr ng-repeat="user in eValuationReportVm.filteredList | startFrom:(pager.currentPage - 1) * pager.itemsPerPage | limitTo:pager.itemsPerPage"">
+                            <tr ng-repeat="user in eValuationReportVm.filteredList | startFrom:(pager.currentPage - 1) * pager.itemsPerPage | limitTo:pager.itemsPerPage">
                                
                                 <td>{{user.customerId}}</td>
                                 <td>{{user.enterpriseId}}</td>

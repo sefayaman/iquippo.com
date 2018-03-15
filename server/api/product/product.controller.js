@@ -1495,7 +1495,6 @@ exports.exportProducts = function (req, res) {
           tempArr.push(tempObj);
           tempObj = {};
         });
-
         try {
           Utility.convertToCSV(res, tempArr);
         } catch (excp) {
