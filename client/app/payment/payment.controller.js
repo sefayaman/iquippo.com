@@ -55,6 +55,12 @@ function PaymentCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,$location,
  			}
 
  			vm.payTransaction = result[0];
+         if(vm.payTransaction.status === 'completed' 
+            && vm.payTransaction.requestType === 'Valuation Request') {
+            $state.go("main");
+            Modal.alert("You have already paid.");
+            return;
+         }
  			vm.prevStatus = vm.payTransaction.status;
          vm.enablePayment = vm.prevStatus != transactionStatuses[5].code && vm.prevStatus != transactionStatuses[3].code?true:false;
          vm.payTransaction.paymentMode = 'online';

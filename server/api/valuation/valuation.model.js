@@ -46,6 +46,7 @@ var ValuationRequestSchema = new Schema({
   reportDate:Date,
 
   reportNo:String,
+  assetNo:String,
   agencyYearOfManufacturing:String,
   agencyEngineNo:String,
   agencyChassisNo:String,

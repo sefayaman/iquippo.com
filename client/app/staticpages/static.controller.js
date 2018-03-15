@@ -173,7 +173,7 @@
 
   //Valuation controller function
 
-  function ValuationCtrl($scope, $rootScope, PaymentMasterSvc, Auth, $http, $log, Modal, ValuationPurposeSvc, notificationSvc, LocationSvc, ValuationSvc, userSvc, categorySvc, brandSvc, modelSvc, MarketingSvc, UtilSvc, $state, AssetGroupSvc, vendorSvc, EnterpriseSvc) {
+  function ValuationCtrl($scope, $rootScope, $cookieStore, PaymentMasterSvc, Auth, $http, $log, Modal, ValuationPurposeSvc, notificationSvc, LocationSvc, ValuationSvc, userSvc, categorySvc, brandSvc, modelSvc, MarketingSvc, UtilSvc, $state, AssetGroupSvc, vendorSvc, EnterpriseSvc) {
 
     //NJ Start: set valuationStartTime
     $scope.valuationStartTime = new Date();
@@ -205,8 +205,21 @@
     function init() {
       loadCategory();
       getAssetGroup();
-      if ($scope.valuationReq.product && $scope.valuationReq.product.country)
-        onPrdCountryChange($scope.valuationReq.product.country)
+      if($cookieStore.get('copyValuationData')) {
+        $scope.valuationReq = angular.copy($cookieStore.get('copyValuationData'));
+        onCategoryChange($scope.valuationReq.product.category, true);
+        onBrandChange($scope.valuationReq.product.brand, true);
+        onPrdCountryChange($scope.valuationReq.product.country, true);
+        onPrdStateChange($scope.valuationReq.product.state, true);
+        $scope.valuationReq.product.brand = $scope.valuationReq.product.brand;
+        $scope.valuationReq.product.model = $scope.valuationReq.product.model;
+        $scope.valuationReq.product.state = $scope.valuationReq.product.state;
+        $scope.valuationReq.product.city = $scope.valuationReq.product.city;
+        $cookieStore.remove('copyValuationData');
+      } else {
+        if ($scope.valuationReq.product && $scope.valuationReq.product.country)
+          onPrdCountryChange($scope.valuationReq.product.country);
+      }
       ValuationPurposeSvc.get(null)
       .then(function(result) {
         $scope.valuationList = result;
@@ -275,9 +288,11 @@
       });
     }
 
-    function onPrdCountryChange(country) {
-      $scope.valuationReq.product.state = "";
-      $scope.valuationReq.product.city = "";
+    function onPrdCountryChange(country, noChange) {
+      if(!noChange) {
+        $scope.valuationReq.product.state = "";
+        $scope.valuationReq.product.city = "";
+      }
       $scope.prdStateList = [];
       $scope.prdLocationList = [];
       if (!country)
@@ -289,8 +304,10 @@
       });
     }
 
-    function onPrdStateChange(state) {
-      $scope.valuationReq.product.city = "";
+    function onPrdStateChange(state, noChange) {
+      if(!noChange) {
+        $scope.valuationReq.product.city = "";
+      }
       $scope.prdLocationList = [];
       if (!state)
         return;
@@ -322,11 +339,14 @@
       }
     }
 
-    function onCategoryChange(categoryName) {
+    function onCategoryChange(categoryName, noChange) {
+      if(!noChange) {
+        $scope.valuationReq.product.brand = "";
+        $scope.valuationReq.product.model = "";
+      }
       $scope.brandList = [];
       $scope.modelList = [];
-      $scope.valuationReq.product.brand = "";
-      $scope.valuationReq.product.model = "";
+        
       if (!categoryName)
         return;
       var filter = {};
@@ -340,10 +360,11 @@
         })
     }
 
-    function onBrandChange(brandName) {
-      
+    function onBrandChange(brandName, noChange) {
+      if(!noChange) {
+        $scope.valuationReq.product.model = "";
+      }
       $scope.modelList = [];
-      $scope.valuationReq.product.model = "";
       if (!brandName)
         return;
       var filter = {};
@@ -386,6 +407,7 @@
       
       if (!Auth.getCurrentUser()._id) {
         $scope.submitted = false;
+        $cookieStore.put('copyValuationData', $scope.valuationReq);
         Auth.goToLogin();
         return;
       }

@@ -87,7 +87,7 @@
 			vm.valuationReq.user.phone = Auth.getCurrentUser().phone;
 			vm.valuationReq.user.mobile = Auth.getCurrentUser().mobile;
 			vm.valuationReq.user.email = Auth.getCurrentUser().email;
-			vm.valuationReq.customerId = Auth.getCurrentUser().customerId;
+			vm.valuationReq.user.customerId = Auth.getCurrentUser().customerId;
 
 			vm.valuationReq.seller._id = $scope.currentProduct.seller._id;
 			vm.valuationReq.seller.mobile = $scope.currentProduct.seller.mobile;
