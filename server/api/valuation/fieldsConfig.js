@@ -16,9 +16,10 @@ module.exports = {
 		//"Referance/FI Number":{key:"customerTransactionId"},
 		"Asset No":{key:"product.assetId"},
 		//"Repo. Date":{key:"repoDate",type:'date'},
+		"Asset Category":{key:"product.category"},
 		"Brand/Make":{key:"product.brand"},
 		"Model":{key:"product.model"},
-		"Asset Category":{key:"product.category"},
+		"Asset Description":{key:"product.description"},
 		//"Asset Name":{key:"assetDescription"},
 		"Engine No":{key:"product.engineNo"},
 		"Chassis No":{key:"product.chasisNo"},
@@ -63,7 +64,7 @@ module.exports = {
 		"Schedule Call":{key:"schedule"},
 		"Schedule Date":{key:"scheduleDate",type:'date'},
 		"Schedule Time":{key:"scheduledTime"},
-		"Comment":{key:"comment"},
+		"Comment":{key:"comment"}
 		//"Payment Made to Agency":{key:"paymentMade",type:"boolean"}
 	},
 	'PUT_ON_HOLD':{

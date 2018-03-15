@@ -100,9 +100,9 @@
                                 </div>
                             </div>
                             <div class="col-xs-12 col-sm-3">
-                                <div class="form-group floating-label-wrapper" ng-class="{'has-error': form.mfgYear.$invalid && submitted}">
-                                    <label>Manufacturing Year</label>
-                                    <input type="number" name="prdMfg" class="form-control" placeholder="Enter Manufacturing Year" ng-model="valuationReq.product.mfgYear" ng-minlength="4" ng-maxlength="4" min="1900" max="currentYear" string-to-number>
+                                <div class="form-group floating-label-wrapper" ng-class="{'has-error': form.prdMfg.$invalid && submitted}">
+                                    <label>Manufacturing Year*</label>
+                                    <input type="number" name="prdMfg" class="form-control" placeholder="Enter Manufacturing Year" ng-model="valuationReq.product.mfgYear" ng-minlength="4" ng-maxlength="4" min="1900" max="currentYear" string-to-number required>
                                 </div>
                             </div>
                             <div class="col-xs-12 col-sm-3">
