@@ -209,6 +209,7 @@ img.sheduleImg{width:50px;height:50px;border-radius:50%;margin:0 auto}
 }
 #page-wrapper .input-group{width: 100%;}
 .table-responsive .table th{white-space: nowrap; border-bottom-width:0;}
+#page-wrapper .table-responsive .table th{position: sticky; top: -1px; z-index: 9;}
 .table-responsive .table td:last-child {
     white-space: nowrap;
 }
@@ -280,7 +281,7 @@ ul.alert-dropdown{width:200px;}
 /* Custom tabs Panels */
 .btn,.form-control{border-radius:0;}
 .navbar-default{background-color:#eee;border-color:#ccc;z-index:6;}
-#wrapper{margin-top:45px;}
+#wrapper{margin-top:-2em;}
 #wrapper .nav-tabs{height:41px;}
 #wrapper .nav-tabs,#wrapper .nav-tabs > li{background:#ccc;}
 #wrapper .nav-tabs > li,#wrapper .nav-tabs > li.active{width:25%;display:inline-table;float:left;border-radius:0;border:0;border-right:1px solid #666;}

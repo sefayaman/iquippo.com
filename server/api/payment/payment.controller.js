@@ -85,7 +85,7 @@ exports.getOnFilter = function (req, res) {
   }
 
   var query = Payment.find(filter).sort({ createdAt: -1 });
-  query.exec(
+  query.lean().exec(
     function (err, payments) {
       if (err) { return handleError(res, err); }
       return res.status(200).json(payments);
@@ -329,7 +329,7 @@ function _prepareCSVResponse(res, payments) {
   payments.forEach(function (payment, key, array) {
     tempData.push({
       "Sr. No": key + 1,
-      "Transaction Id": payment.requestId,
+      "Transaction Id": payment.transactionId,
       "Category": payment.product ? payment.product.category : "",
       "Asset Id": payment.product ? payment.product['assetId'] : "",
       "Asset Name": payment.product ? payment.product['name'] : "",

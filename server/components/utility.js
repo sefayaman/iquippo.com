@@ -46,6 +46,7 @@ exports.paginatedResult = paginatedResult;
 exports.getWorkbook = getWorkbook;
 exports.excel_from_data = excel_from_data;
 exports.convertToCSV = convertToCSV;
+exports.renderCSV = renderCSV;
 exports.validateExcelHeader = validateExcelHeader;
 exports.toJSON = toJSON;
 exports.uploadFileS3 = uploadFileS3;
@@ -610,8 +611,10 @@ function paginatedResult(req, res, modelRef, filter, result, callback) {
       var skipNumber = currentPage - prevPage;
       if (skipNumber < 0)
         skipNumber = -1 * skipNumber;
-
-      query = modelRef.find(filter).sort(sortFilter).limit(pageSize * skipNumber);
+      if(req.lean)
+        query = modelRef.find(filter).lean().sort(sortFilter).limit(pageSize * skipNumber);
+      else
+        query = modelRef.find(filter).sort(sortFilter).limit(pageSize * skipNumber);
       query.exec(function (err, items) {
         if (!err && items.length > pageSize * (skipNumber - 1)) {
           result.items = items.slice(pageSize * (skipNumber - 1), items.length);
@@ -832,11 +835,11 @@ function convertToCSV(res, csv, filename) {
     if (err) {
       throw err;
     }
-    return _renderCSV(res, csv, filename);
+    return renderCSV(res, csv, filename);
   });
 }
 
-function _renderCSV(res, csv, filename) {
+function renderCSV(res, csv, filename) {
   var fileName = filename ? filename : 'file_' + new Date().getTime();
   res.setHeader('Content-Type', 'application/octet-stream');
   res.setHeader("Content-Disposition", 'attachment; filename=' + '\"' + fileName + '.csv' + '\"');

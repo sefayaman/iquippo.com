@@ -5,13 +5,11 @@
 module.exports = {
   // MongoDB connection options
   mongo: {
-    uri: 'mongodb://127.0.0.1/sreiglobaldb'
+    uri: 'mongodb://appUser:iQuippoAppUser^*$!2K17@127.0.0.1/sreiglobaldb'
   },
   uploadPath: 'client/assets/uploads/',
   templatePath:'client/assets',
-  //serverPath: "http://192.168.14.120", 
   contactNumber: "011 66025672",
-  
   /*Dev server payment setup*/
   serverPath: "http://dev.iquippo.com",
   ccAvenueWorkingKey:"CC6D430E8604D39EA9EDCABADF26BE4B",
@@ -33,6 +31,5 @@ module.exports = {
   awsUrl: 'https://s3.ap-south-1.amazonaws.com/',
   S3_HEADER_EXPIRES: new Date(Date.now() + 604800000).toISOString(),
   S3_HEADER_CACHE_CONTROL: 'maxAge=2592000',
-
   auctionURL:"https://auctionsoftwaremarketplace.com:3007/api_call/"
 };
