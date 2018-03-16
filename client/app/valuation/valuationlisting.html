@@ -56,7 +56,7 @@
               <thead>
                 <tr>
                   <!-- <th width="50"><input type="checkbox" ng-model="valuationListingVm.master"> All</th> -->
-                  <th>Request ID</th>
+                  <th>Unique Control No</th>
                   <th>Request Type</th>
                   <th>Purpose</th>
                   <th>User Name</th>
@@ -102,8 +102,8 @@
                 </td>
                 <td>{{valuation.createdAt | date:'MM/dd/yyyy'}}</td>
                 <td>
-                  <a href="javascript:void(0);">
-                    More
+                  <a href="javascript:void(0);" title="Detail" ng-click="valuationListingVm.showDetail(valuation)">
+                    More..
                   </a>
                 </td>
                 <td>

@@ -30,6 +30,7 @@ function ValuationListingCtrl($scope,$window,$stateParams,$state,$uibModal,Modal
 	vm.submitToAgency = submitToAgency;
 	vm.openPaymentOptionModel = openPaymentOptionModel;
 	vm.openCommentModal = openCommentModal;
+	vm.showDetail = showDetail;
 
 	$scope.$on('refreshValuationList',function(){
 		fireCommand(true);
@@ -83,6 +84,34 @@ function ValuationListingCtrl($scope,$window,$stateParams,$state,$uibModal,Modal
           Modal.alert("Error in geting user");
         });
 	}
+
+	function showDetail(valReq){
+		var statusesObj = [];
+	    for(var i=0; i < valReq.statuses.length; i++) {
+	      statusesObj.push(valReq.statuses[i].status);
+	    }
+	    valReq.paymentReceived = statusesObj.indexOf(IndividualValuationStatuses[1]) > -1;
+	    valReq.invoiceGenerated = statusesObj.indexOf(IndividualValuationStatuses[4]) > -1;
+	    delete valReq.invoiceNo;
+		var scope = $rootScope.$new();
+		scope.downloadFile = $scope.downloadFile;
+		scope.valuation = valReq;
+		scope.IndividualValuationStatuses = IndividualValuationStatuses;
+		scope.isAdmin = $scope.isAdmin;
+		scope.showReport = ValuationSvc.validateAction(valReq,'REPORTDOWNLOAD');
+		scope.individualValuation = true;
+       	var formModal = $uibModal.open({
+          animation: true,
+            templateUrl: "app/enterprise/valuation-details-popup.html",
+            scope: scope,
+            windowTopClass: 'product-preview',
+            size: 'lg'
+        });
+
+        scope.close = function () {
+          formModal.dismiss('cancel');
+        };
+    }
 
 	function openPaymentModel(valuation, openDialog){
 		var OfflinePaymentScope = $rootScope.$new();

@@ -585,13 +585,13 @@
                   </div>
                 </div>
                 <div class="col-xs-12 col-sm-3">
-                    <div class="form-group floating-label-wrapper" ng-class="{'has-error': form.contactPerson.$invalid && submitted }">
+                    <div class="form-group floating-label-wrapper" ng-class="{'has-error': valReqForm.contactPerson.$invalid && valSubmitted }">
                         <label>Contact Person*</label>
                         <input type="text" name="contactPerson" class="form-control" placeholder="Contact Person"  ng-model="valuationVm.valuationReq.contactPerson" required>
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-3">
-                    <div class="form-group floating-label-wrapper" ng-class="{'has-error': form.contactNumber.$invalid && submitted }">
+                    <div class="form-group floating-label-wrapper" ng-class="{'has-error': valReqForm.contactNumber.$invalid && valSubmitted }">
                         <label>Contact Number*</label>
                         <input type="text" name="contactNumber" class="form-control" ng-model="valuationVm.valuationReq.contactNumber" placeholder="Contact Number" required>
                     </div>
@@ -628,14 +628,14 @@
                   <div class="row">
                     <div class="col-xs-12 col-sm-6 form-group">
                       <div class="radio radio-info">
-                        <input type="radio"  placeholder="" id="certifiedRadio1" name="schedule" ng-model="valuationVm.valuationReq.schedule" value="yes">
-                        <label for="certifiedRadio1"> Yes </label>
+                        <input type="radio"  placeholder="" id="schRadio1" name="schedule" ng-model="valuationVm.valuationReq.schedule" value="yes">
+                        <label for="schRadio1"> Yes </label>
                       </div>
                     </div>
                     <div class="col-xs-12 col-sm-6 form-group">
                       <div class="radio radio-info">
-                        <input type="radio" placeholder="" id="certifiedRadio2" name="schedule" ng-model="valuationVm.valuationReq.schedule" value="no">
-                        <label for="certifiedRadio2"> No </label>
+                        <input type="radio" placeholder="" id="schRadio2" name="schedule" ng-model="valuationVm.valuationReq.schedule" value="no">
+                        <label for="schRadio2"> No </label>
                       </div>
                       
                     </div>
@@ -643,7 +643,7 @@
                   <div class="clerafix"></div>
                   <div class="col-sm-6 form-group" ng-if="valuationVm.valuationReq.schedule == 'yes'">
                     <small>Pick Date</small>
-                    <div class="input-group" ng-class="{'has-error': reqForCertify.scheduleDate.$invalid && valSubmitted}">
+                    <div class="input-group" ng-class="{'has-error': valReqForm.scheduleDate.$invalid && valSubmitted}">
                       <!-- <input type="text" class="form-control pick-width" ng-model="valuationVm.valuationReq.scheduleDate" uib-datepicker-popup="{{format}}" ng-name="scheduleDate" ng-value="" is-open="popup2.opened" min-date="minDate" max-date="maxDate" datepicker-options="datepickerOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" placeholder="dd/mm/yyyy" /> -->
                       <input type="text" class="form-control" ng-model="valuationVm.valuationReq.scheduleDate" uib-datepicker-popup="{{format}}" name="scheduleDate" ng-value="" is-open="popup1.opened" min-date="minDate" max-date="maxDate" datepicker-options="datepickerOptions" date-disabled="disabled(date, mode)" ng-required="valuationReq.schedule == 'yes'" close-text="Close" alt-input-formats="altInputFormats" placeholder="dd/mm/yyyy" />
                       <span class="input-group-addon">
@@ -711,13 +711,13 @@
                   </div>
                 </div>               
                 <div class="col-xs-12 col-sm-3">
-                    <div class="form-group floating-label-wrapper" ng-class="{'has-error': form.contactPerson.$invalid && submitted }">
+                    <div class="form-group floating-label-wrapper" ng-class="{'has-error': reqForCertify.contactPerson.$invalid && valSubmitted }">
                         <label>Contact Person*</label>
                         <input type="text" name="contactPerson" class="form-control" placeholder="Contact Person"  ng-model="valuationVm.valuationReq.contactPerson" required>
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-3">
-                    <div class="form-group floating-label-wrapper" ng-class="{'has-error': form.contactNumber.$invalid && submitted }">
+                    <div class="form-group floating-label-wrapper" ng-class="{'has-error': reqForCertify.contactNumber.$invalid && valSubmitted }">
                         <label>Contact Number*</label>
                         <input type="text" name="contactNumber" class="form-control" ng-model="valuationVm.valuationReq.contactNumber" placeholder="Contact Number" required>
                     </div>

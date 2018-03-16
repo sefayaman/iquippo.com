@@ -8,7 +8,10 @@
               <table class="table table-bordred">               
                 <tr>
                   <td class="col-sm-3"><b>Unique Control No:</b></td>
-                  <td class="col-sm-9" colspan="3">{{valuation.uniqueControlNo}}</td>
+                  <td class="col-sm-9" colspan="3">
+                    <span ng-if="!individualValuation">{{valuation.uniqueControlNo}}</span>
+                    <span ng-if="individualValuation">{{valuation.requestId}}</span>
+                  </td>
                                    
                 </tr>
                 <tr>
@@ -17,7 +20,7 @@
                   <td><b>Purpose:</b></td>
                   <td>{{valuation.purpose}}</td>                                
                 </tr>
-                <tr>
+                <tr ng-if="!individualValuation">
                   <td><b>Name of Original Owner:</b></td>
                   <td>{{valuation.originalOwner}}</td>    
                   <td><b>Name of the Customer seeking Finance:</b></td>
@@ -25,9 +28,15 @@
                 </tr>
                 <tr>
                   <td><b>Agency Name:</b></td>
-                  <td>{{valuation.agency.name}}</td>
+                  <td>
+                    <span ng-if="!individualValuation">{{valuation.agency.name}}</span>
+                    <span ng-if="individualValuation">{{valuation.valuationAgency.name}}</span>
+                  </td>
                   <td><b>Enterprise:</b></td>
-                  <td>{{valuation.enterprise.name}}({{valuation.enterprise.enterpriseId}})</td>
+                  <td>
+                    <span ng-if="!individualValuation">{{valuation.enterprise.name}}({{valuation.enterprise.enterpriseId}})</span>
+                    <span ng-if="individualValuation">Retail</span>
+                  </td>
                 </tr>                 
                 <tr>
                   <td><b>Reference/F1 Number:</b></td>
@@ -38,7 +47,10 @@
 
                  <tr>
                   <td><b>Asset No:</b></td>
-                  <td>{{valuation.assetId}}</td>
+                  <td>
+                    <span ng-if="!individualValuation">{{valuation.assetId}}</span>
+                    <span ng-if="individualValuation">{{valuation.product.assetId}}</span>
+                  </td>
                   <td><b>Status:</b></td>
                   <td>{{valuation.status}}</td>
                 </tr>
@@ -47,29 +59,47 @@
                   <td><b>Remark:</b></td>
                   <td>{{valuation.remark}}</td>
                   <td><b>Enterprise:</b></td>
-                  <td>{{valuation.customerPartyName}}</td>
+                  <td>
+                    <span ng-if="!individualValuation">{{valuation.customerPartyName}}</span>
+                    <span ng-if="individualValuation">Retail</span>
+                  </td>
                 </tr>
 
                 <tr>                  
                    <td><b>User:</b></td>
-                  <td>{{valuation.userName}}</td> 
+                  <td>
+                    <span ng-if="!individualValuation">{{valuation.userName}}</span>
+                    <span ng-if="individualValuation">{{valuation.user.fname}} {{valuation.user.lname}}</span>
+                  </td> 
                   <td><b>Mobile No:</b></td>
-                  <td>{{valuation.customerPartyNo}}</td>                 
+                  <td>
+                    <span ng-if="!individualValuation">{{valuation.customerPartyNo}}</span>
+                    <span ng-if="individualValuation">{{valuation.user.mobile}}</span>
+                  </td>                 
                 </tr>
 
                 <tr>
                   <td><b>Request Date:</b></td>
-                  <td>{{valuation.requestDate | date:'MM/dd/yyyy'}}</td>
+                  <td>
+                    <span ng-if="!individualValuation">{{valuation.requestDate | date:'MM/dd/yyyy'}}</span>
+                    <span ng-if="individualValuation">{{valuation.createdAt | date:'MM/dd/yyyy'}}</span>
+                  </td>
                   <td><b>Repo. Date:</b></td>
                   <td>{{valuation.repoDate | date:'MM/dd/yyyy'}}</td>               
                 </tr>
                 <tr>
                   <td><b>Customer Invoice date:</b></td>
-                  <td>{{valuation.customerInvoiceDate | date:'MM/dd/yyyy'}}</td>
+                  <td>
+                    <span ng-if="!individualValuation">{{valuation.customerInvoiceDate | date:'MM/dd/yyyy'}}</span>
+                    <span ng-if="individualValuation">{{valuation.invoiceData.invoiceDate | date:'MM/dd/yyyy'}}</span>
+                  </td>
                   <td><b>Customer Invoice Value:</b></td>
-                  <td>{{valuation.customerInvoiceValue}}</td>                    
+                  <td>
+                    <span ng-if="!individualValuation">{{valuation.customerInvoiceValue}}</span>
+                    <span ng-if="individualValuation">{{valuation.invoiceData.invoiceAmount}}</span>
+                  </td>                    
                 </tr>
-                <tr>
+                <tr ng-if="!individualValuation">
                   <td><b>Invoice Upload:</b></td>
                   <td class="text-ellips"><a href="javascript:void(0);" ng-click="downloadFile(valuation.invoiceDoc,valuation.assetDir)">{{valuation.invoiceDoc.filename}}</a></td>
                   <td><b>RC Upload:</b></td>
@@ -77,56 +107,95 @@
                 </tr>
                 <tr>
                   <td><b>Asset Category:</b></td>
-                  <td>{{valuation.assetCategory}}</td>
+                  <td>
+                    <span ng-if="!individualValuation">{{valuation.assetCategory}}</span>
+                    <span ng-if="individualValuation">{{valuation.product.category}}</span>
+                  </td>
                   <td><b>Brand/Make:</b></td>
-                  <td>{{valuation.brand}}</td>                  
+                  <td>
+                    <span ng-if="!individualValuation">{{valuation.brand}}</span>
+                    <span ng-if="individualValuation">{{valuation.product.brand}}</span>
+                  </td>                  
                 </tr>
 
                 <tr>
                   <td><b>Model:</b></td>
-                  <td>{{valuation.model}}</td> 
+                  <td>
+                    <span ng-if="!individualValuation">{{valuation.model}}</span>
+                    <span ng-if="individualValuation">{{valuation.product.model}}</span>
+                  </td> 
                   <td><b>Asset Name:</b></td>
-                  <td>{{valuation.assetDescription}}</td>                 
+                  <td>
+                    <span ng-if="!individualValuation">{{valuation.assetDescription}}</span>
+                    <span ng-if="individualValuation">{{valuation.product.description}}</span>
+                  </td>                 
                 </tr>
 
                 <tr>
                   <td><b>Engine No.:</b></td>
-                  <td>{{valuation.engineNo}}</td> 
+                  <td>{{valuation.engineNo}}
+                    <span ng-if="!individualValuation">{{valuation.engineNo}}</span>
+                    <span ng-if="individualValuation">{{valuation.product.engineNo}}</span>
+                  </td> 
                   <td><b>Chassis No.:</b></td>
-                  <td>{{valuation.chassisNo}}</td>                 
+                  <td>
+                    <span ng-if="!individualValuation">{{valuation.chassisNo}}</span>
+                    <span ng-if="individualValuation">{{valuation.product.chasisNo}}</span>
+                  </td>                 
                 </tr>
 
                 <tr>
                   <td><b>Regn. No.:</b></td>
-                  <td>{{valuation.registrationNo}}</td>
+                  <td>
+                    <span ng-if="!individualValuation">{{valuation.registrationNo}}</span>
+                    <span ng-if="individualValuation">{{valuation.product.registrationNo}}</span>
+                  </td>
                   <td><b>Serial No.</b></td>
-                  <td>{{valuation.serialNo}}</td>                  
+                  <td>
+                    <span ng-if="!individualValuation">{{valuation.serialNo}}</span>
+                    <span ng-if="individualValuation">{{valuation.product.serialNumber}}</span>
+                  </td>                  
                 </tr>
                 
                 <tr>
                   <td><b>Year of Manufacture:</b></td>
-                  <td>{{valuation.yearOfManufacturing}}</td>
+                  <td>
+                    <span ng-if="!individualValuation">{{valuation.yearOfManufacturing}}</span>
+                    <span ng-if="individualValuation">{{valuation.product.mfgYear}}</span>
+                  </td>
                   <td><b>Yard Information/Asset Address:</b></td>
                   <td>{{valuation.yardParked}}</td>                    
                 </tr>
 
                 <tr>        
                   <td><b>Country:</b></td>
-                  <td>{{valuation.country}}</td>  
+                  <td>
+                    <span ng-if="!individualValuation">{{valuation.country}}</span>
+                    <span ng-if="individualValuation">{{valuation.product.country}}</span>
+                  </td>  
                   <td><b>State:</b></td>
-                  <td>{{valuation.state}}</td>                
+                  <td>
+                    <span ng-if="!individualValuation">{{valuation.state}}</span>
+                    <span ng-if="individualValuation">{{valuation.product.state}}</span>
+                  </td>                
                 </tr>
 
                 <tr>
                   <td><b>Location:</b></td>
-                  <td>{{valuation.city}}</td>
+                  <td>
+                    <span ng-if="!individualValuation">{{valuation.city}}</span>
+                    <span ng-if="individualValuation">{{valuation.product.city}}</span>
+                  </td>
                   <td><b>Contact Person:</b></td>
                   <td>{{valuation.contactPerson}}</td>                  
                 </tr>
                 
                 <tr>
                   <td><b>Contact Person Tel No:</b></td>
-                  <td colspan="3">{{valuation.contactPersonTelNo}}</td>                  
+                  <td colspan="3">
+                    <span ng-if="!individualValuation">{{valuation.contactPersonTelNo}}</span>
+                    <span ng-if="individualValuation">{{valuation.contactNumber}}</span>
+                  </td>                  
                 </tr>
               </table>
                 <!-- <tr>
@@ -134,7 +203,7 @@
                   <td><b>Integrated:</b></td>
                   <td>{{valuation.uniqueControllNO}}</td>
                 </tr> -->
-              <table class="table table-bordred" ng-if="EnterpriseValuationStatuses.indexOf(valuation.status) > 5">
+              <table class="table table-bordred" ng-if="EnterpriseValuationStatuses.indexOf(valuation.status) > 5 || (individualValuation && showReport)">
               
                 <tr>
                   <td class="col-sm-3"><b>Report No.:</b></td>
@@ -209,7 +278,9 @@
                 </tr>
                 <tr>
                   <td colspan="2"><b>Valuation Report:</b></td>
-                  <td colspan="2" class="text-ellips"><a href="javascript:void(0);" ng-click="downloadFile(valuation.valuationReport,valuation.assetDir)">{{valuation.valuationReport.filename}}</a></td>                  
+                  <td colspan="2" class="text-ellips"><a ng-if="!individualValuation" href="javascript:void(0);" ng-click="downloadFile(valuation.valuationReport,valuation.assetDir)">{{valuation.valuationReport.filename}}</a>
+                  <a target="_blank" ng-if="individualValuation" href="{{valuation.valuationReport.filename}}">{{valuation.valuationReport.filename}}</a>
+                  </td>
                  <!--  <td><b>Invoiced Date:</b></td>
                   <td>{{valuation.invoiceDate}}</td> -->
                 </tr>
@@ -222,17 +293,27 @@
                   <td>{{valuation.invoiceNo}}</td>
                   <td><b>Payment Received:</b></td>
                   <td>{{valuation.paymentReceived}}</td>
-                </tr>     -->                 
+                </tr>     -->
               </table>
-              <table class="table table-bordred" ng-if="isAdmin()">              
+              <table class="table table-bordred" ng-if="isAdmin()">
                 <tr>
                   <td class="col-sm-3"><b>Invoiced to Customer:</b></td>
                   <td class="col-sm-3">
-                    <span ng-if="valuation.invoiceNo">Yes</span>
-                    <span ng-if="!valuation.invoiceNo">No</span>
+                    <div ng-if="!individualValuation">
+                      <span ng-if="valuation.invoiceNo">Yes</span>
+                      <span ng-if="!valuation.invoiceNo">No</span>
+                    </div>
+                    
+                    <div ng-if="individualValuation">
+                      <span ng-if="valuation.invoiceGenerated">Yes</span>
+                      <span ng-if="!valuation.invoiceGenerated">No</span>
+                    </div>
                   </td>
                   <td class="col-sm-3"><b> Invoice Date:</b></td>
-                  <td class="col-sm-3">{{valuation.invoiceDate | date:'MM/dd/yyyy'}}</td>
+                  <td class="col-sm-3">
+                    <span ng-if="!individualValuation">{{valuation.invoiceDate | date:'MM/dd/yyyy'}}</span>
+                    <span ng-if="individualValuation">{{valuation.invoiceData.invoiceDate | date:'MM/dd/yyyy'}}</span>
+                  </td>
                 </tr>
                 <tr>
                   <td><b>Payment Received</b></td>
@@ -242,13 +323,13 @@
                   </td>
                   <td><b>Payment Made to Agency</b></td>
                   <td>
-                    <span ng-if="valuation.paymentMade">Yes</span>
-                    <span ng-if="!valuation.paymentMade">No</span>
+                    <span ng-if="valuation.paymentMade && !individualValuation">Yes</span>
+                    <span ng-if="!valuation.paymentMade && !individualValuation">No</span>
                   </td>
                 </tr>
               </table>
 
-              <table class="table table-bordred">
+              <table class="table table-bordred" ng-if="!individualValuation">
                 <tr>
                   <td><b>Modification Comment</b></td>
                   <td>
@@ -261,5 +342,4 @@
                 </tr>
               </table>  
             </div>
-            
 </div>
