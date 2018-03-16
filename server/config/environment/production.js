@@ -30,7 +30,7 @@ module.exports = {
   supportMail: "info@iquippo.com",
   qpvalURL:"http://quippoauctions.com/valuation/api.php",
   REDIRECT_URL:"https://finance.iquippo.com/customer-portal-iquippo/sso",
-  
+  MLP_REDIRECT_URL:"https://finance.iquippo.com/customer-portal-mlp/sso",
   //S3 Configuration
   awsEndpoint: 's3.ap-south-1.amazonaws.com',
   awsAccessKeyId: 'AKIAIEW6UDFVW7GEQAGQ',

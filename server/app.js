@@ -29,6 +29,7 @@ var gm = require('gm');
 var lwip = require('lwip');
 var task = require('./components/task.js');
 var valReqSubmitter = require('./components/evaluationrequestsubmitter.js');
+var valuationReportGenerartor = require("./components/evaluationreportgenerator.js");
 var taskRunner = require('./components/taskRunner.js');
 var assetSaleTracker = require('./components/assetsaletracker.js');
 var BulkProductUpload = require('./components/bulkProductUpload.js');
@@ -466,6 +467,7 @@ server.listen(config.port, config.ip, function () {
   // checkQuickQueryNotificationService.start();
   // checkSearchMatchingNotificationService.start();
   //userExportsService.start();
+  valuationReportGenerartor.start();
 });
 
 // Expose app

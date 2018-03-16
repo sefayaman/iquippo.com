@@ -64,6 +64,7 @@ angular.module('sreizaoApp',[
 
     $rootScope.uploadImagePrefix = s3Detais.baseURL+"/"+s3Detais.s3bucket+"/assets/uploads/";
     $rootScope.templateDir = $rootScope.uploadImagePrefix  + 'templates';
+    $rootScope.valuationreport = "valuationreport/"; 
     $rootScope.categoryDir = categoryDir;
     $rootScope.manpowerDir = manpowerDir;
     $rootScope.auctionDir = auctionDir;

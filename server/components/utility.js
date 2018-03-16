@@ -15,6 +15,8 @@ var AWS = require('aws-sdk');
 var util = require('util');
 var bucket = config.awsBucket;
 var s3baseUrl = config.awsUrl;
+var sFtp = require('ssh2-sftp-client');
+var sftpClient = new sFtp();
 var s3 = require('s3');
 var s3Options = {
   accessKeyId: config.awsAccessKeyId,
@@ -60,6 +62,7 @@ exports.uploadMultipartFileOnS3 = uploadMultipartFileOnS3;
 exports.uploadFileOnS3 = uploadFileOnS3;
 exports.getListObjectS3 = getListObjectS3;
 exports.deleteS3File = deleteS3File;
+exports.uploadFileOnFtp = uploadFileOnFtp;
 exports.addNoCacheHeader = addNoCacheHeader;
 
 Date.prototype.addDays = function (days) {
@@ -79,6 +82,19 @@ Date.prototype.addMinutes = function (minutes) {
   return this;
 };
 
+function uploadFileOnFtp(filePathOrbuffer,remotePath,cb){
+  sftpClient.connect(config.ftpConfig)
+  .then(function(resData){
+    return sftpClient.put(filePathOrbuffer,remotePath,false);
+  })
+  .then(function(resData){
+    return cb(null,resData);
+  })
+  .catch(function(err){
+     console.log("Error in connecting to ftp server",err);
+     cb(err);
+  })
+}
 
 function uploadFileS3(localFilePath, dirName, cb) {
   var params = {
@@ -129,7 +145,7 @@ function uploadFileOnS3(localFilePath, dirName, cb) {
   });
 }
 
-function uploadMultipartFileOnS3(localFilePath, dirName, files, cb) {
+function uploadMultipartFileOnS3(localFilePath, dirName, files, cb,noCache) {
   if (!files[0])
     return;
   var file = files[0];
@@ -147,6 +163,12 @@ function uploadMultipartFileOnS3(localFilePath, dirName, files, cb) {
     Expires: config.S3_HEADER_EXPIRES,
     CacheControl: config.S3_HEADER_CACHE_CONTROL
   };
+
+  if(noCache){
+    delete multipartParams.Expires;
+    delete multipartParams.CacheControl;
+  }
+
   var multipartMap = {
     Parts: []
   };

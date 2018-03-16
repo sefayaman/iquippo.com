@@ -781,7 +781,7 @@
             </div>
             <uib-pagination total-items="reportsVm.totalItems" ng-model="reportsVm.currentPage" items-per-page="reportsVm.itemsPerPage" max-size="reportsVm.maxSize" ng-change="reportsVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
           </div>
-          <div ng-if="reportsVm.tabValue == 'auctionRegReport'">
+          <div ng-if="reportsVm.tabValue == 'auctionRegReport' && auctionVisibleFlag">
             <div class="table-responsive">
                <table class="table table-bordred table-striped">
                 <thead>

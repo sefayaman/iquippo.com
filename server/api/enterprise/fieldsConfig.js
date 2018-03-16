@@ -321,5 +321,19 @@ module.exports = {
 		"Cheque Date":{key:"chequeDate"},
 		"Cheque Value":{key:"chequeValue"},
 		"Deducted TDS":{key:"deductedTds"}
-	}
+	},
+	'Report_Field_MAP' : {
+	    "GPSID": "gpsDeviceNo",
+	    "VALUATION_NO":"uniqueControlNo",
+	    "ASSET_DETAILS" : "assetDetails",
+	    "YEAROFMFG" : "agencyYearOfManufacturing",
+	    "ENGINENO":"agencyEngineNo",
+	    "CHASISNO":"agencyChassisNo",
+	    "REGISTRATION_NO" : "agencyRegistrationNo",
+	    "SERIAL_NO" : "agencySerialNo",
+	    "INSERT_DATETIME":"INSERT_DATETIME",
+	    "BOOKED":"BOOKED",
+	    "NG_CONTRACT_NO":"NG_CONTRACT_NO",
+	    "ASSET_ID":"ASSET_ID"
+  }
 }
