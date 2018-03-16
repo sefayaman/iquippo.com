@@ -1,21 +1,35 @@
 <div> 
       <div class="modal-header">
-          <button type="button" class="close" ng-click="paymentOptVm.closeDialog()">&times;</button>
-          <h4 class="modal-title">Pay {{paymentOptVm.payTransaction.totalAmount}} Rs</h4>
-        </div>
+        <button type="button" class="close" ng-click="paymentOptVm.closeDialog()">&times;</button>
+        <p>You need to pay an amount of Rs {{paymentOptVm.payTransaction.totalAmount}}. Please select your preferred payment method.</p>
+      </div>
       <div class="modal-body">
         <form novalidate class="" name="paymentForm">
-          <div class="row">
+          <div class="row" ng-if="!offlineOption && !paymentOption">
+            <div class="col-xs-6 col-sm-6 form-group">
+              <div class="radio radio-info">
+                <input type="radio" id="paylater" name="payment" ng-model="option.select" value="paylater">
+                <label for="paylater"> Pay Later </label>
+              </div>
+            </div>
+            <div class="col-xs-6 col-sm-6 form-group">
+              <div class="radio radio-info">
+                <input type="radio" id="paynow" name="payment" ng-model="option.select" value="paynow">
+                <label for="paynow"> Pay Now </label>
+              </div>
+            </div>
+          </div>
+          <div class="row" ng-if="offlineOption || paymentOption">
             <div class="col-xs-6 col-sm-6 form-group">
               <div class="radio radio-info">
                 <input type="radio" id="offline" name="payment" ng-model="option.select" value="offline">
-                <label for="offline"> <span ng-if="!offlineOption"> Pay Later </span> <span ng-if="offlineOption"> Offline </span> </label>
+                <label for="offline"> Offline </label>
               </div>
             </div>
             <div class="col-xs-6 col-sm-6 form-group">
               <div class="radio radio-info">
                 <input type="radio" id="online" name="payment" ng-model="option.select" value="online">
-                <label for="online"> <span ng-if="!offlineOption"> Pay Now </span> <span ng-if="offlineOption"> Online </span></label>
+                <label for="online"> Online </label>
               </div>
             </div>
           </div>

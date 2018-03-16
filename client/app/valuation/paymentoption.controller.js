@@ -8,7 +8,7 @@ function PaymentOptionCtrl($scope, $rootScope, $state, Modal, Auth, $uibModal, P
   $scope.option = {};
   vm.submit = submit;
   vm.closeDialog = closeDialog;
-
+  $scope.paymentOption = false;
 	function init(){
     PaymentSvc.getOnFilter({_id:$scope.tid})
     .then(function(result){
@@ -33,38 +33,55 @@ function PaymentOptionCtrl($scope, $rootScope, $state, Modal, Auth, $uibModal, P
       Modal.alert("Please select payment option");
       return;
     }
-
-    if($scope.option.select == 'offline') {
-      if(!$scope.offlineOption) {
+    switch ($scope.option.select) {
+      case 'paylater':
         $scope.valuation.payOption = "Pay Later";
         ValuationSvc.update($scope.valuation).
         then(function(res) {
           if (res)
             Modal.alert("Thank You for your interest!", true);
-          $rootScope.$broadcast('refreshValuationList');
         })
         .catch(function(res) {
           console.log(res);
-          $rootScope.$broadcast('refreshValuationList');
         });
         vm.payTransaction.paymentMode = "";
         PaymentSvc.update(vm.payTransaction);
-      } else {
+        if($scope.resetData)
+          $rootScope.$broadcast('refreshValuationData');
+        if($scope.resetProductData)
+          $rootScope.$broadcast('productloaded');
+        closeDialog();
+        break;
+      case 'paynow':
+        $scope.paymentOption = true;
+        break;
+      case 'offline':
         vm.payTransaction.paymentMode = $scope.option.select;
-        PaymentSvc.update(vm.payTransaction);
-        $rootScope.$broadcast('refreshValuationList');
-        Modal.alert("Please pay the valuation fee and inform our customer care team.!", true);
-      }
-    } else {
-      $state.go('payment', {
-        tid: $scope.tid
-      });
+        PaymentSvc.update(vm.payTransaction).
+        then(function(res) {
+          if (res)
+            Modal.alert("Please pay the valuation fee and inform our customer care team.!", true);
+          if(!angular.isUndefined($scope.offlineOption))
+            $rootScope.$broadcast('refreshValuationList');
+        })
+        .catch(function(res) {
+          console.log(res);
+          if(!angular.isUndefined($scope.offlineOption))
+            $rootScope.$broadcast('refreshValuationList');
+        });
+        if($scope.resetData)
+          $rootScope.$broadcast('refreshValuationData');
+        if($scope.resetProductData)
+          $rootScope.$broadcast('productloaded');
+        closeDialog();
+        break;
+      case 'online':
+        $state.go('payment', {
+          tid: $scope.tid
+        });
+        closeDialog();
+        break;
     }
-    if($scope.resetData)
-      $rootScope.$broadcast('refreshValuationData');
-    if($scope.resetProductData)
-      $rootScope.$broadcast('productloaded');
-    closeDialog();
   }
 
   function closeDialog() {
