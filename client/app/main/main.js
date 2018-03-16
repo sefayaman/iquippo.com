@@ -11,6 +11,7 @@ angular.module('sreizaoApp')
         onEnter:function($rootScope,$stateParams,Modal,Auth,$state){
           $rootScope.choosenTitle= pagesTitles.index.title;
           $rootScope.metaDescription = pagesTitles.index.meta;
+          $rootScope.metaKeywords = pagesTitles.index.keywords;
           Auth.isLoggedInAsync(function(isLoggedin){
             if(isLoggedin){
                 $state.go('main',{promo:''},{location:'replace',notify:false});
@@ -47,7 +48,12 @@ angular.module('sreizaoApp')
         url: '/contactus',
         templateUrl: 'app/contactus/contactus.html',
         controller: 'ContactUsCtrl',
-        layout:'client'
+        layout:'client',
+        onEnter:function($rootScope){
+          $rootScope.choosenTitle=pagesTitles.aboutus.title;
+          $rootScope.metaDescription=pagesTitles.aboutus.meta;
+          $rootScope.metaKeywords = pagesTitles.aboutus.keywords;
+        }
       })
       .state('product', {
         url: '/product',
@@ -170,7 +176,7 @@ angular.module('sreizaoApp')
          layout:'client'
       })
       .state('newviewproduct', {
-        url:"/new-equipment/viewproducts?currentPage&group&category&brand&model" + 
+        url:"/new-equipment/viewproducts?currentPage&group&category&brand&modelcategorylisting" + 
             "&type&currencyType&currencyMin&currencyMax&" +
             "&mfgYearMin&mfgYearMax&stateName&cityName&assetId&"+
             "searchstr&operatingHour&mileage&productName&location&locationName&certificationName",
@@ -240,13 +246,19 @@ angular.module('sreizaoApp')
          onEnter:function($rootScope){
           $rootScope.choosenTitle=pagesTitles.aboutus.title;
           $rootScope.metaDescription=pagesTitles.aboutus.meta;
+          $rootScope.metaKeywords = pagesTitles.aboutus.keywords;
         }
       })
       .state('manpower', {
         url:"/manpower",
         templateUrl: 'app/manpower/manpower.html',
         controller:"ManpowerCtrl as manpowerVm",
-        layout:'client'
+        layout:'client',
+        onEnter:function($rootScope){
+          $rootScope.choosenTitle=pagesTitles.aboutus.title;
+          $rootScope.metaDescription=pagesTitles.aboutus.meta;
+          $rootScope.metaKeywords = pagesTitles.aboutus.keywords;
+        }
       })
       .state('manpowerlisting', {
         url: '/manpowerlisting',
@@ -270,6 +282,7 @@ angular.module('sreizaoApp')
         onEnter:function($rootScope){
           $rootScope.choosenTitle=pagesTitles.index.title;
           $rootScope.metaDescription=pagesTitles.index.meta;
+          $rootScope.metaKeywords = pagesTitles.index.keywords;
         }
       })
       .state('valuation', {
@@ -280,6 +293,7 @@ angular.module('sreizaoApp')
         onEnter:function($rootScope){
           $rootScope.choosenTitle=pagesTitles.valuation.title;
           $rootScope.metaDescription=pagesTitles.valuation.meta;
+          $rootScope.metaKeywords = pagesTitles.valuation.keywords;
         }
       })
       // .state('financing', {
@@ -300,6 +314,7 @@ angular.module('sreizaoApp')
         onEnter:function($rootScope){
           $rootScope.choosenTitle=pagesTitles.financing.title;
           $rootScope.metaDescription=pagesTitles.financing.meta;
+          $rootScope.metaKeywords = pagesTitles.financing.keywords;
         }
       })
      .state('cme', {
@@ -316,13 +331,19 @@ angular.module('sreizaoApp')
         onEnter:function($rootScope){
           $rootScope.choosenTitle=pagesTitles.insurance.title;
           $rootScope.metaDescription=pagesTitles.insurance.meta;
+          $rootScope.metaKeywords = pagesTitles.insurance.keywords;
         }
       })
       .state('privacy', {
         url:"/privacy",
         templateUrl: 'app/staticpages/privacy.html',
         controller:"StaticCtrl",
-        layout:'client'
+        layout:'client',
+        onEnter:function($rootScope){
+          $rootScope.choosenTitle=pagesTitles.aboutus.title;
+          $rootScope.metaDescription=pagesTitles.aboutus.meta;
+          $rootScope.metaKeywords = pagesTitles.aboutus.keywords;
+        }
       })
       .state('termscondition', {
         url:"/termscondition",
@@ -464,6 +485,7 @@ angular.module('sreizaoApp')
         onEnter:function($rootScope){
           $rootScope.choosenTitle=pagesTitles.viewauctions.title;
           $rootScope.metaDescription=pagesTitles.viewauctions.meta;
+          $rootScope.metaKeywords = pagesTitles.viewauctions.keywords;
         }
       })
       .state('assetinacuction', {
@@ -701,7 +723,7 @@ angular.module('sreizaoApp')
         authenticate:true
       })
       .state('assetsale.bidrequests', {
-        url: '/bidrequests?assetId&productId&tab',
+        url: '/bidrequests?assetId&productId',
         templateUrl: 'app/assetsale/productbidrequest.html',
         controller:'ProductBidRequestCtrl as productBidRequestVm',
         layout:'admin',
@@ -735,7 +757,7 @@ angular.module('sreizaoApp')
         authenticate:true
       })
        .state("newequipment", {
-        url:"/new-equipment",
+        url:"/new",
         templateUrl: "app/newequipment/newequipment.html",
         controller:"NewEquipmentCtrl as newEquipmentVm",
         layout:"client",
@@ -745,7 +767,7 @@ angular.module('sreizaoApp')
         }
       })       
       .state("newequipmentlist", {
-        url: "/new-equipment/viewproducts?currentPage&group&category&brand&model" + 
+        url: "/new/viewproducts?currentPage&group&category&brand&model" + 
             "&type&currencyType&currencyMin&currencyMax&" +
             "&mfgYearMin&mfgYearMax&stateName&cityName&assetId&"+
             "searchstr&operatingHour&mileage&productName&location&locationName",
@@ -754,7 +776,7 @@ angular.module('sreizaoApp')
         layout:"client"
       })
       .state("newequipmentproduct", {
-        url: "/new-equipment/viewproducts/:id?currentPage",
+        url: "/new/viewproducts/:id?currentPage",
         templateUrl: "app/newequipment/newproducts.html",
         controller: "NewEquipmentListCtrl as newequipmentlistVm",
         layout:"client",
@@ -764,6 +786,7 @@ angular.module('sreizaoApp')
             if(res && res.data.length > 0) {
               $rootScope.choosenTitle=res.data[res.data.length-1].title;
               $rootScope.metaDescription=res.data[res.data.length-1].meta;
+              $rootScope.metaKeywords = res.data[res.data.length-1].keywords;
             }
           })
           .catch(function(err){
@@ -794,37 +817,37 @@ angular.module('sreizaoApp')
         layout:'admin'
       })
       .state('newgrouplisting', {
-        url: '/new-equipment',
+        url: '/new',
         templateUrl: 'app/group/grouplisting.html',
         controller: 'GroupListingCtrl as groupListingVm',
         layout:'client'
       })
       .state('newbulkorder', {
-        url: '/new-equipment/bulkorder',
+        url: '/new/bulkorder',
         templateUrl: 'app/newequipment/bulkorder.html',
         controller: 'BulkOrderCtrl as bulkOrderVm',
         layout:'client'
       })
       .state('newcategorylisting', {
-        url: '/new-equipment/allcategories',
+        url: '/new/allcategories',
         templateUrl: 'app/category/newcategorylisting.html',
         controller: 'NewCategoryListingCtrl as newcategoryListingVm',
         layout:'client'
       })
       .state('newbrandlisting', {
-        url: '/new-equipment/brands',
+        url: '/new/brands',
         templateUrl: 'app/brand/newbrandlisting.html',
         controller: 'NewBrandListingCtrl as newbrandListingVm',
         layout:'client'
       })
       .state('newcategorybycat', {
-        url: '/new-equipment/:category',
+        url: '/new/:category',
         templateUrl: "app/newequipment/newproducts.html",
         controller: "NewEquipmentListCtrl as newequipmentlistVm",
         layout:'client'
       })
       .state('brandHome',{
-        url: "/new-equipment/brands/:brand?currentPage&group&category&model" + 
+        url: "/new/brands/:brand?currentPage&group&category&model" + 
             "&type&currencyType&currencyMin&currencyMax&" +
             "&mfgYearMin&mfgYearMax&stateName&cityName&assetId&"+
             "searchstr&operatingHour&mileage&productName&location&locationName",
@@ -839,19 +862,19 @@ angular.module('sreizaoApp')
         layout:'client'
       })*/
        .state('newsplproduct',{
-        url: '/new-equipment/spl/:certificationName?currentPage',
+        url: '/new/spl/:certificationName?currentPage',
         templateUrl: 'app/newequipment/newproducts.html',
         controller: 'NewEquipmentListCtrl as newequipmentlistVm',
         layout:'client'
       })
       .state('newproductbygrouporcategory', {
-        url: '/new-equipment/:group/:category?currentPage',
+        url: '/new/:group/:category?currentPage',
         templateUrl: 'app/newequipment/newproducts.html',
         controller: 'NewEquipmentListCtrl as newequipmentlistVm',
         layout:'client'
       })
       .state('newproductdetail', {
-        url: '/new-equipment/:category/:brand/:id',
+        url: '/new/:category/:brand/:id',
         templateUrl: 'app/newequipment/newproductdetail.html',
         controller: 'NewProductDetailCtrl as newproductDetailVm',
         layout:'client'
