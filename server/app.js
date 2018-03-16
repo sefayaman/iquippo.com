@@ -35,7 +35,6 @@ var BulkProductUpload = require('./components/bulkProductUpload.js');
 var utility = require('./components/utility.js');
 var path = require('path');
 var userExportsService = require('./components/userExports.js');
-var Product = require('./api/product/product.model');
 
 // Connect to database
 mongoose.connect(config.mongo.uri, config.mongo.options);
@@ -54,9 +53,24 @@ app.get('/_status', function (req, res) {
   res.end();
 });
 
+app.get('/sitemap.xml', function (req, res) {
+  require('./scripts/sitemap')(function (files) {
+    return res.sendFile(config.root + '/sitemap.xml');
+  });
+});
+
+app.get('/sitemapxml/:name',function(req,res){
+  var filepath = config.root + '/sitemap/' + req.params.name + '.xml';
+  try {
+    fs.statSync(filepath);
+    return res.sendFile(filepath);
+  } catch(e) {
+    res.redirect('/sitemap.xml');
+  }
+});
+
 require('./config/express')(app);
 require('./routes')(app);
-
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -426,35 +440,6 @@ function checkDirectorySync(directory) {
 function handleError(res, err) {
   return res.status(500).send(err);
 }
-
-// SiteMap Method logic is below
-var currentTime = new Date().toJSON().slice(0,10).replace(/-/g,'/');
-// getting all products details for making urls
-function sitemapDemo() {
-    Product.find({},function (err, products) {
-      if(err) { return handleError(res, err); }
-      var root_path = 'https://iquippo.com/';
-      // XML sitemap generation starts here
-      var priority = 0.5;
-      var freq = currentTime;
-      var xml = '<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
-      for (var i in products) {
-        xml += '<url>';
-        xml += '<loc>'+ root_path + products[i].productCondition +'</loc>';// used/new url
-        xml += '<loc>'+ root_path + products[i].productCondition + '/'+ products[i].category.name +'/'+ (products[i].brand.name).replace('&', "%26") + '/' + products[i].assetId+'</loc>';
-        xml += '<loc>'+ root_path + products[i].productCondition + '/'+ (products[i].brand.name).replace('&',"%26") +'</loc>';
-        xml += '<changefreq>'+ freq +'</changefreq>';
-        xml += '<priority>'+ priority +'</priority>';
-        xml += '</url>';
-        i++;
-      }
-      xml += '</urlset>';
-      fs.writeFile('sitemap.xml', xml, function(err){
-          console.log('hhhhhhhhhh');
-      })
-    })
-}
-sitemapDemo();
 
 // Start server
 server.listen(config.port, config.ip, function () {
