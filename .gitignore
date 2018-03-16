@@ -7,6 +7,7 @@ sitemap
 .DS_Store
 client/.DS_Store
 .idea
+sitemap.xml
 client/bower_components
 client/assets/uploads/*
 client/assets/uploads/temp/*

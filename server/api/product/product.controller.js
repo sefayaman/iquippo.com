@@ -371,7 +371,7 @@ exports.search = function (req, res) {
       sortObj = req.body.sort;
     sortObj['createdAt'] = -1;
 
-    var query = Product.find(filter).sort(sortObj).limit(maxItem);
+    var query = Product.find(filter).lean().sort(sortObj).limit(maxItem);
     Seq()
       .par(function () {
         var self = this;
@@ -406,7 +406,7 @@ exports.search = function (req, res) {
             rentedProd = [], //status
             remainingProd = [];
           products.forEach(function (item) {
-            item = item.toObject();
+            //item = item.toObject();
             //calculate total parking charge
             var todayDate = moment().daysInMonth();
             var repoDate = moment(item.repoDate);
@@ -553,7 +553,7 @@ function paginatedProducts(req, res, filter, result) {
       if (skipNumber < 0)
         skipNumber = -1 * skipNumber;
 
-      query = Product.find(filter).sort(sortFilter).limit(pageSize * skipNumber);
+      query = Product.find(filter).lean().sort(sortFilter).limit(pageSize * skipNumber);
       query.exec(function (err, products) {
         if (!err && products.length > pageSize * (skipNumber - 1)) {
           result.products = products.slice(pageSize * (skipNumber - 1), products.length);
@@ -1328,9 +1328,9 @@ exports.exportProducts = function (req, res) {
   function fetchResults() {
 
     var query = Product.find(filter).sort({
-      productId: 1
+      _id: 1
     });
-    query.exec(
+    query.lean().exec(
       function (err, products) {
         if (err) {
           return handleError(res, err);
@@ -1342,7 +1342,7 @@ exports.exportProducts = function (req, res) {
           mapedFields[productFieldsMap[x]] = x;
         });
         products.forEach(function (x) {
-          var colData = x._doc;
+          var colData = x;//._doc;
           var obj = {};
           if (colData && Object.keys(colData).length) {
             Object.keys(colData).forEach(function (y) {
@@ -1495,7 +1495,6 @@ exports.exportProducts = function (req, res) {
           tempArr.push(tempObj);
           tempObj = {};
         });
-
         try {
           Utility.convertToCSV(res, tempArr);
         } catch (excp) {

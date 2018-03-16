@@ -71,7 +71,7 @@ module.exports = {
 	////only when trade type is rent or both end
 	'Rate_Equipment(Average/Good/Excellent)': 'rateMyEquipment',
 	'Special_Offers': 'specialOffers',
-	'Video_Link': 'videoLinks',
+	//'Video_Link': 'videoLinks',
 
 	//only visible to admin
 	'Asset_Status(listed/sold)': 'assetStatus',

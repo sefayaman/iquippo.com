@@ -25,6 +25,7 @@ function EnterpriseSvc($http,$rootScope ,$q,$timeout, notificationSvc,Auth,UtilS
   entSvc.getCancellationFee = getCancellationFee;
   entSvc.cancelEnterprise = cancelEnterprise;
   entSvc.resumeRequest = resumeRequest;
+  entSvc.generateReport = generateReport;
 
   function getRequestOnId(id) {
     var deferred = $q.defer();
@@ -289,6 +290,19 @@ function EnterpriseSvc($http,$rootScope ,$q,$timeout, notificationSvc,Auth,UtilS
             return res.data;
           })
           .catch(function(err){
+            throw err;
+          });
+   }
+
+   function generateReport(){
+      $rootScope.loading = true;
+      return $http.post(path + "/generatereport",{})
+          .then(function(res){
+            $rootScope.loading = false;
+            return res.data;
+          })
+          .catch(function(err){
+            $rootScope.loading = false;
             throw err;
           });
    }
