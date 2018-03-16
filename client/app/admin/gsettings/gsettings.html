@@ -111,7 +111,7 @@
                                 </div>
                                 <!-- <div class="col-sm-6 text-right">
                                                         <h4>
-                                                                <button class="btn btn-success" ng-click="gsettingVm.exportProductState('country')"> <i class="fa fa-file-excel-o"></i> Export</button>
+                                                                <button class="btn btn-success" ng-click="gsettingVm.exportProductState('country')"> <i class="fa fa-file-text-o"></i> Export</button>
                                                         </h4>
                                 </div> -->
                             </div>
@@ -159,7 +159,7 @@
                                 </div>
                                 <div class="col-sm-6 text-right">
                                     <h4>
-                                        <button class="btn btn-success" ng-click="gsettingVm.exportProductState('state')"> <i class="fa fa-file-excel-o"></i> Export</button>
+                                        <button class="btn btn-success" ng-click="gsettingVm.exportProductState('state')"> <i class="fa fa-file-text-o"></i> Export</button>
                                     </h4>
                                 </div>
                             </div>
@@ -213,7 +213,7 @@
                                 </div>
                                 <div class="col-sm-6 text-right">
                                     <h4>
-                                        <button class="btn btn-success" ng-click="gsettingVm.exportProductState('location')"> <i class="fa fa-file-excel-o"></i> Export</button>
+                                        <button class="btn btn-success" ng-click="gsettingVm.exportProductState('location')"> <i class="fa fa-file-text-o"></i> Export</button>
                                     </h4>
                                 </div>
                             </div>
@@ -266,50 +266,54 @@
                     <h4>Update Invitation Setting</h4>
                     <legend></legend>
                     <div class="row">
-                        <div class="col-sm-4 form-group">Start Date :</div>
-                        <!-- <div class="col-sm-6 form-group"> -->
-                        <div class="col-sm-6 form-group" ng-class="{'has-error': invMasterForm.sDate.$invalid && submitted }">
-                            <div class="input-group">
-                                <input type="text" class="form-control" ng-model="gsettingVm.invSetting.sDate" uib-datepicker-popup="{{format}}" name="sDate" ng-value="" is-open="popup1.opened" min-date="minDate" datepicker-options="datepickerOptions" date-disabled="disabled(date, mode)" close-text="Close" alt-input-formats="altInputFormats" placeholder="dd/mm/yyyy" required />
-                                <span class="input-group-addon">
-                                    <a href class="btn btn-default" ng-click="open1()"><i class="fa fa-calendar-o fa-1x"></i></a>
-                                </span>
+                        <div class="col-sm-offset-1 col-sm-10">
+                            <div class="row">
+                                <div class="col-sm-5 form-group">Start Date :</div>
+                                <!-- <div class="col-sm-6 form-group"> -->
+                                <div class="col-sm-6 form-group" ng-class="{'has-error': invMasterForm.sDate.$invalid && submitted }">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" ng-model="gsettingVm.invSetting.sDate" uib-datepicker-popup="{{format}}" name="sDate" ng-value="" is-open="popup1.opened" min-date="minDate" datepicker-options="datepickerOptions" date-disabled="disabled(date, mode)" close-text="Close" alt-input-formats="altInputFormats" placeholder="dd/mm/yyyy" required />
+                                        <span class="input-group-addon">
+                                            <a href class="btn btn-default" ng-click="open1()"><i class="fa fa-calendar-o fa-1x"></i></a>
+                                        </span>
+                                    </div>
+                                </div>
+                                <!-- </div> -->
+                            </div>
+                            <div class="row">
+                                <div class=" col-sm-5 form-group">End Date :</div>
+                                <!-- <div class="col-sm-6 form-group"> -->
+                                <div class=" col-sm-6 form-group" ng-class="{'has-error': invMasterForm.eDate.$invalid && submitted }">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" ng-model="gsettingVm.invSetting.eDate" uib-datepicker-popup="{{format}}" name="eDate" ng-value="" is-open="popup2.opened" min-date="minDate" datepicker-options="datepickerOptions" date-disabled="disabled(date, mode)" close-text="Close" alt-input-formats="altInputFormats" placeholder="dd/mm/yyyy" required/>
+                                        <span class="input-group-addon">
+                                            <a href class="btn btn-default" ng-click="open2()"><i class="fa fa-calendar-o fa-1x"></i></a>
+                                        </span>
+                                    </div>
+                                </div>
+                                <!-- </div> -->
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-sm-5">Reference Amount :<p> (To be paid to the referrer)</p>
+                                </div>
+                                <div class="form-group col-sm-6" ng-class="{'has-error': invMasterForm.refAmount.$invalid && submitted}">
+                                    <input type="number"  name="refAmount"  ng-model="gsettingVm.invSetting.refAmount" min="0" class="form-control">
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-sm-5">Referred Amount:<p> (To be paid to the Invited who signs up)</p> </div>
+                                <div class="form-group col-sm-6" ng-class="{'has-error': invMasterForm.joinAmount.$invalid && submitted}">
+                                    <input type="number"  name="joinAmount"  ng-model="gsettingVm.invSetting.joinAmount" min="0" class="form-control">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-sm-11 text-right">
+                                    <button type="button" class="btn btn-primary" ng-click="gsettingVm.saveInvitationSetting(invMasterForm)">Submit</button>
+                                </div>
+
                             </div>
                         </div>
-                        <!-- </div> -->
-                    </div>
-                    <div class="row">
-                        <div class=" col-sm-4 form-group">End Date :</div>
-                        <!-- <div class="col-sm-6 form-group"> -->
-                        <div class=" col-sm-6 form-group" ng-class="{'has-error': invMasterForm.eDate.$invalid && submitted }">
-                            <div class="input-group">
-                                <input type="text" class="form-control" ng-model="gsettingVm.invSetting.eDate" uib-datepicker-popup="{{format}}" name="eDate" ng-value="" is-open="popup2.opened" min-date="minDate" datepicker-options="datepickerOptions" date-disabled="disabled(date, mode)" close-text="Close" alt-input-formats="altInputFormats" placeholder="dd/mm/yyyy" required/>
-                                <span class="input-group-addon">
-                                    <a href class="btn btn-default" ng-click="open2()"><i class="fa fa-calendar-o fa-1x"></i></a>
-                                </span>
-                            </div>
-                        </div>
-                        <!-- </div> -->
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-sm-4">Reference Amount :<p> (To be paid to the referrer)</p>
-                        </div>
-                        <div class="form-group col-sm-3" ng-class="{'has-error': invMasterForm.refAmount.$invalid && submitted}">
-                            <input type="number"  name="refAmount"  ng-model="gsettingVm.invSetting.refAmount" min="0" class="form-control">
-                        </div>
-
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-sm-4">Referred Amount:<p> (To be paid to the Invited who signs up)</p> </div>
-                        <div class="form-group col-sm-3" ng-class="{'has-error': invMasterForm.joinAmount.$invalid && submitted}">
-                            <input type="number"  name="joinAmount"  ng-model="gsettingVm.invSetting.joinAmount" min="0" class="form-control">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-sm-7 text-right">
-                            <button type="button" class="btn btn-warning" ng-click="gsettingVm.saveInvitationSetting(invMasterForm)">Ok</button>
-                        </div>
-
                     </div>
                 </form>
             </div>
@@ -334,7 +338,7 @@
                                 <span class="btn btn-success btn-block fileinput-button">
                                     <input type="file" name="template_update" onchange="angular.element(this).scope().importAuctionMaster(this.files, this)">
                                     <span>
-                                        <i class="fa fa-file-excel-o"></i> Import Excel
+                                        <i class="fa fa-file-text-o"></i> Import
                                     </span>
                                 </span>
 
@@ -1431,14 +1435,14 @@
                             <h3>
                                 <div class="btn btn-success btn-block btn-md">
                                     <span class="fileinput-button">
-                                        <i class="fa fa-file-excel-o"></i> Import Excel
+                                        <i class="fa fa-file-text-o"></i> Import
                                         <input type="file" name="template_update" onchange="angular.element(this).scope().importTechInfoMaster(this.files, this)">
                                     </span>
                                 </div>
                             </h3>
                         </div>
                         <div class="col-xs-12 col-sm-1 padd-left">
-                            <h3><button class="btn btn-success btn-md btn-block" ng-click="gsettingVm.exportProductTechInfoExcel()"><i class="fa fa-file-excel-o"></i> Export</button></h3>
+                            <h3><button class="btn btn-success btn-md btn-block" ng-click="gsettingVm.exportProductTechInfoExcel()"><i class="fa fa-file-text-o"></i> Export</button></h3>
                         </div>
                     </div>
                     <hr>
@@ -1560,7 +1564,7 @@
                         </div>
                         <div class="col-sm-6 text-right">
                             <h4>
-                                <button class="btn btn-success"> <i class="fa fa-file-excel-o"></i> Export</button>
+                                <button class="btn btn-success"> <i class="fa fa-file-text-o"></i> Export</button>
                             </h4>
                         </div>
                     </div>
@@ -1615,7 +1619,7 @@
                         </div>
                         <div class="col-sm-6 text-right">
                             <h4>
-                                <button class="btn btn-success"> <i class="fa fa-file-excel-o"></i> Export</button>
+                                <button class="btn btn-success"> <i class="fa fa-file-text-o"></i> Export</button>
                             </h4>
                         </div>
                     </div>
@@ -1670,7 +1674,7 @@
                         </div>
                         <div class="col-sm-6 text-right">
                             <h4>
-                                <!-- <button class="btn btn-success"> <i class="fa fa-file-excel-o"></i> Export</button> -->
+                                <!-- <button class="btn btn-success"> <i class="fa fa-file-text-o"></i> Export</button> -->
                             </h4>
                         </div>
                     </div>
@@ -1779,7 +1783,7 @@
                         </div>
                         <div class="col-sm-6 text-right">
                             <h4>
-                                <!-- <button class="btn btn-success"> <i class="fa fa-file-excel-o"></i> Export</button> -->
+                                <!-- <button class="btn btn-success"> <i class="fa fa-file-text-o"></i> Export</button> -->
                             </h4>
                         </div>
                     </div>
@@ -1855,7 +1859,7 @@
                         </div>
                         <div class="col-sm-6 text-right">
                             <!-- <h4>
-                                    <button class="btn btn-success"> <i class="fa fa-file-excel-o"></i> Export</button>
+                                    <button class="btn btn-success"> <i class="fa fa-file-text-o"></i> Export</button>
                             </h4> -->
                         </div>
                     </div>
@@ -1910,7 +1914,7 @@
                         </div>
                         <div class="col-sm-6 text-right">
                             <!-- <h4>
-                                    <button class="btn btn-success"> <i class="fa fa-file-excel-o"></i> Export</button>
+                                    <button class="btn btn-success"> <i class="fa fa-file-text-o"></i> Export</button>
                             </h4> -->
                         </div>
                     </div>
@@ -1993,20 +1997,20 @@
                             <span class="btn btn-success btn-block fileinput-button">
                                             <input type="file" name="template_update">
                                             <span>
-                                                                    <i class="fa fa-file-excel-o"></i> Import Excel
+                                                                    <i class="fa fa-file-text-o"></i> Import
                                             </span>
                             </span>
                             </h4>
                     </div> -->
                     <div class="col-sm-offset-2 col-sm-2">
-                        <span class="btn btn-default fileinput-button">
+                        <span class="btn btn-success fileinput-button">
                             <input type="file" id="upload" name="upload" data-filetype="doc" file-upload required>
-                            <span><i class="fa fa-upload"></i> Import Excel</span>
+                            <span><i class="fa fa-file-text-o"></i> Import</span>
                         </span>
                         <span>{{uploadedExcel}}</span>
                     </div>
                     <div class="col-sm-2">
-                        <button type="button" class="btn btn-primary btn-block" ng-click="assetGroupVm.submitUploadTemp()">Submit Excel</button>
+                        <button type="button" class="btn btn-primary btn-block" ng-click="assetGroupVm.submitUploadTemp()">Submit</button>
                     </div>
 
                 </div>
@@ -2098,7 +2102,7 @@
                             <span class="btn btn-success btn-block fileinput-button">
                                     <input type="file" name="template_update">
                                     <span>
-                                            <i class="fa fa-file-excel-o"></i> Import Excel
+                                            <i class="fa fa-file-text-o"></i> Import
                                     </span>
                             </span>				
                     </div>	
@@ -2106,7 +2110,7 @@
                             <span class="btn btn-success btn-block fileinput-button">
                                     <input type="file" name="template_update">
                                     <span>
-                                            <i class="fa fa-file-excel-o"></i> Export Excel
+                                            <i class="fa fa-file-text-o"></i> Export
                                     </span>
                             </span>				
                     </div>	 -->
@@ -2221,7 +2225,7 @@
                             <span class="btn btn-success btn-block fileinput-button">
                                     <input type="file" name="template_update">
                                     <span>
-                                            <i class="fa fa-file-excel-o"></i> Import Excel
+                                            <i class="fa fa-file-text-o"></i> Import
                                     </span>
                             </span>				
                     </div>	
@@ -2229,7 +2233,7 @@
                             <span class="btn btn-success btn-block fileinput-button">
                                     <input type="file" name="template_update">
                                     <span>
-                                            <i class="fa fa-file-excel-o"></i> Export Excel
+                                            <i class="fa fa-file-text-o"></i> Export
                                     </span>
                             </span>				
                     </div> -->			
@@ -2299,7 +2303,7 @@
                             <span class="btn btn-success btn-block fileinput-button">
                                     <input type="file" name="template_update">
                                     <span>
-                                            <i class="fa fa-file-excel-o"></i> Import Excel
+                                            <i class="fa fa-file-text-o"></i> Import
                                     </span>
                             </span>				
                     </div>	
@@ -2307,7 +2311,7 @@
                             <span class="btn btn-success btn-block fileinput-button">
                                     <input type="file" name="template_update">
                                     <span>
-                                            <i class="fa fa-file-excel-o"></i> Export Excel
+                                            <i class="fa fa-file-text-o"></i> Export
                                     </span>
                             </span>				
                     </div> -->			
@@ -2444,7 +2448,7 @@
                             <span class="btn btn-success btn-block fileinput-button">
                                     <input type="file" name="template_update">
                                     <span>
-                                            <i class="fa fa-file-excel-o"></i> Import Excel
+                                            <i class="fa fa-file-text-o"></i> Import
                                     </span>
                             </span>				
                     </div>	
@@ -2452,7 +2456,7 @@
                             <span class="btn btn-success btn-block fileinput-button">
                                     <input type="file" name="template_update">
                                     <span>
-                                            <i class="fa fa-file-excel-o"></i> Export Excel
+                                            <i class="fa fa-file-text-o"></i> Export
                                     </span>
                             </span>				
                     </div> -->			
@@ -2604,7 +2608,7 @@
                             <span class="btn btn-success btn-block fileinput-button">
                                     <input type="file" name="template_update">
                                     <span>
-                                            <i class="fa fa-file-excel-o"></i> Import Excel
+                                            <i class="fa fa-file-text-o"></i> Import
                                     </span>
                             </span>				
                     </div>	
@@ -2612,7 +2616,7 @@
                             <span class="btn btn-success btn-block fileinput-button">
                                     <input type="file" name="template_update">
                                     <span>
-                                            <i class="fa fa-file-excel-o"></i> Export Excel
+                                            <i class="fa fa-file-text-o"></i> Export
                                     </span>
                             </span>				
                     </div> -->			
@@ -2994,7 +2998,7 @@
             <!--- Listing Lead Data -->
             <div ng-if="gsettingVm.tabValue == 'leaddata'" ng-controller="CountCtrl as countVm">
                 <h4>Listing Lead Data</h4>
-                <button class="btn btn-success btn-md btn-block" ng-click="gsettingVm.leadExportExcel()"><i class="fa fa-file-excel-o"></i> Export</button>
+                <button class="btn btn-success btn-md btn-block" ng-click="gsettingVm.leadExportExcel()"><i class="fa fa-file-text-o"></i> Export</button>
                 <div class="row">
                     <div class="col-sm-3 pull-right">
                         <div class="tablesearch text-right form-group">
@@ -3038,7 +3042,7 @@
                         <h4>Offer Master</h4>
                     </div>
                     <div class="col-sm-4 text-right">
-                        <button class="btn btn-success" ng-click="offerVm.exportExcel()"><i class="fa fa-file-excel-o"></i> Export Excel</button>                       
+                        <button class="btn btn-success" ng-click="offerVm.exportExcel()"><i class="fa fa-file-text-o"></i> Export</button>                       
                     </div>
                 </div>
                 <legend></legend>
@@ -3418,14 +3422,14 @@
                             <span class="btn btn-success btn-block fileinput-button">
                                     <input type="file" name="template_update">
                                     <span>
-                                            <i class="fa fa-file-excel-o"></i> Import Excel
+                                            <i class="fa fa-file-text-o"></i> Import
                                     </span>
                             </span>             
                     </div>   -->
                     <div class="col-sm-offset-4 col-sm-2">              
                             <button class="btn btn-success btn-block fileinput-button" ng-click="lotVm.exportCSV()">
                                     <span>
-                                            <i class="fa fa-file-excel-o"></i> Export Excel
+                                            <i class="fa fa-file-text-o"></i> Export
                                     </span>
                             </button> 
                             <export-form name="lotmasterexport" method="GET" action="api/common/lot/csv"></export-form>
@@ -3734,7 +3738,7 @@
                                     <h4>Technical Specification Master</h4>
                                 </div>
                                 <div class="col-sm-4 text-right">
-                                    <button class="btn btn-success" ng-click="techspecVm.exportExcel('category')"><i class="fa fa-file-excel-o"></i> Export Excel</button>                       
+                                    <button class="btn btn-success" ng-click="techspecVm.exportExcel('category')"><i class="fa fa-file-text-o"></i> Export</button>                       
                                     <export-form name="techspecexport"></export-form>
                                 </div>
                             </div>
@@ -3828,7 +3832,7 @@
                                     <h4>Technical Specification Master</h4>
                                 </div>
                                 <div class="col-sm-4 text-right">
-                                    <button class="btn btn-success" ng-click="techspecVm.exportExcel('brand')"><i class="fa fa-file-excel-o"></i> Export Excel</button>                       
+                                    <button class="btn btn-success" ng-click="techspecVm.exportExcel('brand')"><i class="fa fa-file-text-o"></i> Export</button>                       
                                     <export-form name="techspecexportbrand"></export-form>
                                 </div>
                             </div>                            
@@ -4294,7 +4298,7 @@
                 <legend></legend>
                 <div class="text-right form-group">
                     <a type="button" class="btn btn-success hide" href="javascript:void(0)" ng-click="eValuationReportVm.generateReport()"> <i class="fa fa-download"></i>Generate Report</a>
-                    <a type="button" class="btn btn-success" ng-href="{{uploadImagePrefix}}{{valuationreport}}{{filename}}?time={{timestamp}}" target="_blank"> <i class="fa fa-download"></i> Download</a>
+                    <a type="button" class="btn btn-success" ng-href="{{uploadImagePrefix}}{{valuationreport}}{{filename}}?time={{timestamp}}" target="_blank"> <i class="fa fa-file-text-o"></i> Export</a>
                 </div>
 
                 <legend></legend>
