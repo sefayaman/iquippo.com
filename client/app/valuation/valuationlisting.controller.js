@@ -94,9 +94,7 @@ function ValuationListingCtrl($scope,$window,$stateParams,$state,$uibModal,Modal
 	    valReq.invoiceGenerated = statusesObj.indexOf(IndividualValuationStatuses[4]) > -1;
 	    delete valReq.invoiceNo;
 		var scope = $rootScope.$new();
-		scope.downloadFile = $scope.downloadFile;
 		scope.valuation = valReq;
-		scope.IndividualValuationStatuses = IndividualValuationStatuses;
 		scope.isAdmin = $scope.isAdmin;
 		scope.showReport = ValuationSvc.validateAction(valReq,'REPORTDOWNLOAD');
 		scope.individualValuation = true;

@@ -246,7 +246,7 @@
                   <td><b>GPS Device No.:</b></td>
                   <td>{{valuation.gpsDeviceNo}}</td>
                 </tr>
-                <tr>
+                <tr ng-if="!individualValuation">
                   <td><b>Asset Image General:</b></td>
                   <td class="text-ellips">
                     <a href="javascript:void(0);" ng-click="downloadFile(valuation.generalImage,valuation.assetDir)">{{valuation.generalImage.filename}}</a>
@@ -256,7 +256,7 @@
                     <a href="javascript:void(0);" ng-click="downloadFile(valuation.engineImage,valuation.assetDir)">{{valuation.engineImage.filename}}</a>
                   </td>
                 </tr>
-                <tr>
+                <tr ng-if="!individualValuation">
                   <td><b>Asset Image Hydraulic:</b></td>
                   <td class="text-ellips">
                     <a href="javascript:void(0);" ng-click="downloadFile(valuation.hydraulicImage,valuation.assetDir)">{{valuation.hydraulicImage.filename}}</a>
@@ -266,7 +266,7 @@
                     <a href="javascript:void(0);" ng-click="downloadFile(valuation.cabinImage,valuation.assetDir)">{{valuation.cabinImage.filename}}</a>
                   </td>
                 </tr>
-                <tr>
+                <tr ng-if="!individualValuation">
                   <td><b>Asset Image Under-Carriage / Tyre:</b></td>
                   <td class="text-ellips">
                     <a href="javascript:void(0);" ng-click="downloadFile(valuation.underCarriageImage,valuation.assetDir)">{{valuation.underCarriageImage.filename}}</a>
@@ -321,7 +321,7 @@
                     <span ng-if="valuation.paymentReceived">Yes</span>
                     <span ng-if="!valuation.paymentReceived">No</span>
                   </td>
-                  <td><b>Payment Made to Agency</b></td>
+                  <td><b><span ng-if="!individualValuation">Payment Made to Agency</span></b></td>
                   <td>
                     <span ng-if="valuation.paymentMade && !individualValuation">Yes</span>
                     <span ng-if="!valuation.paymentMade && !individualValuation">No</span>

@@ -523,6 +523,7 @@
           break;
           case 'valuationReport':
           resetCount();
+          filter.onlyOldReq = true;
           ValuationSvc.getOnFilter(filter)
             .then(function(result) {
               vm.valuationListing = result.items;

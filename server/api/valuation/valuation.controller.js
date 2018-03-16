@@ -97,6 +97,9 @@ exports.getOnFilter = function (req, res) {
   if (req.body.userMobileNos)
     filter['user.mobile'] = { $in: req.body.userMobileNos };
 
+  if (req.body.onlyOldReq)
+    filter['enterprise'] = { $exists: false };
+
   /*if(req.body.searchstr){
      var term = new RegExp(req.body.searchstr, 'i');
      orFilter[orFilter.length] = { "user.fname": { $regex: term }};
@@ -152,7 +155,6 @@ exports.getOnFilter = function (req, res) {
 
   if(req.body.tid)
     filter['transactionId'] = req.body.tid;
-
   if(req.body.pagination){
     paginatedResult(req,res,ValuationReq,filter);
     return;
