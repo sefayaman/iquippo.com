@@ -757,7 +757,7 @@ angular.module('sreizaoApp')
         authenticate:true
       })
        .state("newequipment", {
-        url:"/new",
+        url:"/new-equipment",
         templateUrl: "app/newequipment/newequipment.html",
         controller:"NewEquipmentCtrl as newEquipmentVm",
         layout:"client",
@@ -767,7 +767,7 @@ angular.module('sreizaoApp')
         }
       })       
       .state("newequipmentlist", {
-        url: "/new/viewproducts?currentPage&group&category&brand&model" + 
+        url: "/new-equipment/viewproducts?currentPage&group&category&brand&model" + 
             "&type&currencyType&currencyMin&currencyMax&" +
             "&mfgYearMin&mfgYearMax&stateName&cityName&assetId&"+
             "searchstr&operatingHour&mileage&productName&location&locationName",
@@ -776,7 +776,7 @@ angular.module('sreizaoApp')
         layout:"client"
       })
       .state("newequipmentproduct", {
-        url: "/new/viewproducts/:id?currentPage",
+        url: "/new-equipment/viewproducts/:id?currentPage",
         templateUrl: "app/newequipment/newproducts.html",
         controller: "NewEquipmentListCtrl as newequipmentlistVm",
         layout:"client",
@@ -817,37 +817,37 @@ angular.module('sreizaoApp')
         layout:'admin'
       })
       .state('newgrouplisting', {
-        url: '/new',
+        url: '/new-equipment',
         templateUrl: 'app/group/grouplisting.html',
         controller: 'GroupListingCtrl as groupListingVm',
         layout:'client'
       })
       .state('newbulkorder', {
-        url: '/new/bulkorder',
+        url: '/new-equipment/bulkorder',
         templateUrl: 'app/newequipment/bulkorder.html',
         controller: 'BulkOrderCtrl as bulkOrderVm',
         layout:'client'
       })
       .state('newcategorylisting', {
-        url: '/new/allcategories',
+        url: '/new-equipment/allcategories',
         templateUrl: 'app/category/newcategorylisting.html',
         controller: 'NewCategoryListingCtrl as newcategoryListingVm',
         layout:'client'
       })
       .state('newbrandlisting', {
-        url: '/new/brands',
+        url: '/new-equipment/brands',
         templateUrl: 'app/brand/newbrandlisting.html',
         controller: 'NewBrandListingCtrl as newbrandListingVm',
         layout:'client'
       })
       .state('newcategorybycat', {
-        url: '/new/:category',
+        url: '/new-equipment/:category',
         templateUrl: "app/newequipment/newproducts.html",
         controller: "NewEquipmentListCtrl as newequipmentlistVm",
         layout:'client'
       })
       .state('brandHome',{
-        url: "/new/brands/:brand?currentPage&group&category&model" + 
+        url: "/new-equipment/brands/:brand?currentPage&group&category&model" + 
             "&type&currencyType&currencyMin&currencyMax&" +
             "&mfgYearMin&mfgYearMax&stateName&cityName&assetId&"+
             "searchstr&operatingHour&mileage&productName&location&locationName",
@@ -862,19 +862,19 @@ angular.module('sreizaoApp')
         layout:'client'
       })*/
        .state('newsplproduct',{
-        url: '/new/spl/:certificationName?currentPage',
+        url: '/new-equipment/spl/:certificationName?currentPage',
         templateUrl: 'app/newequipment/newproducts.html',
         controller: 'NewEquipmentListCtrl as newequipmentlistVm',
         layout:'client'
       })
       .state('newproductbygrouporcategory', {
-        url: '/new/:group/:category?currentPage',
+        url: '/new-equipment/:group/:category?currentPage',
         templateUrl: 'app/newequipment/newproducts.html',
         controller: 'NewEquipmentListCtrl as newequipmentlistVm',
         layout:'client'
       })
       .state('newproductdetail', {
-        url: '/new/:category/:brand/:id',
+        url: '/new-equipment/:category/:brand/:id',
         templateUrl: 'app/newequipment/newproductdetail.html',
         controller: 'NewProductDetailCtrl as newproductDetailVm',
         layout:'client'
