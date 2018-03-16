@@ -47,7 +47,7 @@ router.post('/userregforauction/generatekit', auth.isAuthenticated(),kitCtrl.pop
 //router.put('/userregforauction/:id', userRegForAuction.update);
 //router.delete('/userregforauction/:id', userRegForAuction.destroy);
 ////router.post('/userregforauction/validateuser', userRegForAuction.validateUser);
-router.post('/userregforauction/export', auth.hasRole('admin'), userRegForAuction.exportData);
+router.post('/userregforauction/export', auth.isAuthenticated(), userRegForAuction.exportData);
 
 router.post('/upload/excel',controller.bulkUpload);
 router.post('/lotstatusupdate',controller.validateUpdateLotStatus,controller.updateLotStatus);
