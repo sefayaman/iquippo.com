@@ -280,6 +280,10 @@ function NewEquipmentListingCtrl($scope, $location, $rootScope, $http, productSv
         dataToSend["userid"] = Auth.getCurrentUser()._id;
         dataToSend["role"] = Auth.getCurrentUser().role;
         dataToSend["productCondition"] = "new";
+         if(Auth.isEnterprise()){
+          d//elete dataToSend.userid;
+          dataToSend.enterpriseId = Auth.getCurrentUser().enterpriseId; 
+        }
 
         productSvc.exportProduct(dataToSend)
         .then(function(buffData){

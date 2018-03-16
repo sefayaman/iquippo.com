@@ -5,6 +5,7 @@ var auth = require('../../auth/auth.service');
 var controller = require('./enterprise.controller');
 var assetGroupCtrl = require('./assetgroup.controller');
 var scriptController=require('./scripts');
+var reportGeneratorCtr = require('./reportgenerator.controller');
 
 var router = express.Router();
 
@@ -24,6 +25,7 @@ router.post('/createinvoice',auth.hasRole('admin'),controller.createInvoice);
 router.post('/updateinvoice',auth.hasRole('admin'),controller.updateInvoice);
 router.get('/generateinvoice/:invoiceNo',auth.hasRole('admin'),controller.generateInvoice);
 router.post('/iqvl/update',controller.updateFromAgency);
+router.post('/generatereport',auth.hasRole('admin'),reportGeneratorCtr.generateReport);
 /*
 * This route should be commented once user are remapped to currect enterpriser  
 */
