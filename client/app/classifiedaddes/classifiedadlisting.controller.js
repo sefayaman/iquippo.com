@@ -3,7 +3,7 @@
 
 angular.module('classifiedAd').controller('ClassifiedAdListingCtrl',ClassifiedAdListingCtrl);
 
-function ClassifiedAdListingCtrl($scope, $rootScope,Auth ,$http, productSvc, classifiedSvc, Modal, DTOptionsBuilder, notificationSvc,$uibModal) {
+function ClassifiedAdListingCtrl($scope, $rootScope,Auth ,$http, productSvc, classifiedSvc, Modal, notificationSvc,$uibModal) {
   
   var vm = this;
   vm.classifiedAdList = [];
@@ -11,8 +11,13 @@ function ClassifiedAdListingCtrl($scope, $rootScope,Auth ,$http, productSvc, cla
   vm.classified = {};
   vm.updateClasifiedAd = updateClasifiedAd;
   vm.editClassifiedAdd = editClassifiedAdd;
+   //pagination variables
+  var prevPage = 0;
+  vm.itemsPerPage = 50;
+  vm.maxSize = 6;
+  $scope.page = 1;
 
-  $scope.dtOptions = DTOptionsBuilder.newOptions().withOption('bFilter', true).withOption('lengthChange', true);
+  // $scope.dtOptions = DTOptionsBuilder.newOptions().withOption('bFilter', true).withOption('lengthChange', true);
 
    
    function getClassifiedData(){
@@ -83,6 +88,10 @@ function ClassifiedAdListingCtrl($scope, $rootScope,Auth ,$http, productSvc, cla
        classifedAdModal.result.then(function(param) {
               getClassifiedData();
         });
+  }
+
+  function pageChanged(){
+    var startPos = ($scope.page - 1) * vm.itemsPerPage;
   }
 
 }

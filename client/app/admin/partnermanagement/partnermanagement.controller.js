@@ -3,7 +3,7 @@
 angular.module('sreizaoApp').controller('PartnerManagementCtrl', PartnerManagementCtrl);
 
 //controller function
-function PartnerManagementCtrl($scope, DTOptionsBuilder, $rootScope, $http, Auth, User, Modal, userSvc, uploadSvc, UtilSvc, notificationSvc, vendorSvc, LocationSvc) {
+function PartnerManagementCtrl($scope, $rootScope, $http, Auth, User, Modal, userSvc, uploadSvc, UtilSvc, notificationSvc, vendorSvc, LocationSvc) {
   var vm = this;
 	vm.vendorReg ={};
   vm.existingUser ={};

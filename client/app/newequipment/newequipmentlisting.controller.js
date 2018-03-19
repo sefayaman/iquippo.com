@@ -2,7 +2,7 @@
 'use strict';
 angular.module('newequipment').controller('NewEquipmentListingCtrl',NewEquipmentListingCtrl);
 
-function NewEquipmentListingCtrl($scope, $location, $rootScope, $http, productSvc, classifiedSvc, Modal, DTOptionsBuilder, $uibModal, $state, Auth, notificationSvc,uploadSvc,$timeout,$stateParams) {
+function NewEquipmentListingCtrl($scope, $location, $rootScope, $http, productSvc, classifiedSvc, Modal, $uibModal, $state, Auth, notificationSvc,uploadSvc,$timeout,$stateParams) {
   var vm  = this;
 
   //pagination variables

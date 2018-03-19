@@ -124,7 +124,7 @@ function showmailCtrl($state, $stateParams, $rootScope){
     };
 }
 
-function inboxCtrl(mailService, $scope, DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder, $http, Auth, $compile, $resource, $q, $state){
+function inboxCtrl(mailService, $scope, DTColumnBuilder, DTColumnDefBuilder, $http, Auth, $compile, $resource, $q, $state){
     var vm = this;
     // vm.dogs = ['Bernese', 'Husky', 'Goldendoodle'];
 
@@ -159,6 +159,12 @@ function inboxCtrl(mailService, $scope, DTOptionsBuilder, DTColumnBuilder, DTCol
     vm.message = 'Rtiin';
     vm.someClickHandler = someClickHandler;
     vm.showRow = showRow;
+    //pagination variables
+    var prevPage = 0;
+    vm.itemsPerPage = 50;
+    vm.maxSize = 6;
+    $scope.page = 1;
+
     // vm.dtOptions = DTOptionsBuilder.fromSource(vm.dogs)
     // vm.mailTableRef = {};
     // vm.dtOptions = DTOptionsBuilder.newOptions()
@@ -167,8 +173,8 @@ function inboxCtrl(mailService, $scope, DTOptionsBuilder, DTColumnBuilder, DTCol
     //     .withOption('stateSave',true)
     //     .withPaginationType('full_numbers')
     //     .withOption('rowCallback', rowCallback);
-    vm.dtOptions = DTOptionsBuilder.newOptions()
-    .withPaginationType('full_numbers')
+    // vm.dtOptions = DTOptionsBuilder.newOptions()
+    // .withPaginationType('full_numbers')
     // .withOption('rowCallback', rowCallback);
 
     // -------------------------------------
@@ -226,7 +232,12 @@ function inboxCtrl(mailService, $scope, DTOptionsBuilder, DTColumnBuilder, DTCol
         function (res){
             alert('Error Fetching Mails '+ res.data.message);
         }
-    );  
+    ); 
+
+    
+    function pageChanged(){
+        var startPos = ($scope.page - 1) * vm.itemsPerPage;
+    } 
  
     // User.get({userId:123}, function(user, getResponseHeaders){
     //   user.abc = true;

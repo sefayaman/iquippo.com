@@ -2,7 +2,7 @@
 'use strict';
 angular.module('spare').controller('SpareListingCtrl', SpareListingCtrl);
 
-function SpareListingCtrl($scope, $location, $rootScope, $http, spareSvc, classifiedSvc, Modal, DTOptionsBuilder, $uibModal, $state, Auth, notificationSvc,uploadSvc,$timeout,$stateParams,$window) {
+function SpareListingCtrl($scope, $location, $rootScope, $http, spareSvc, classifiedSvc, Modal, $uibModal, $state, Auth, notificationSvc,uploadSvc,$timeout,$stateParams,$window) {
   var vm  = this;
 
   //pagination variables
