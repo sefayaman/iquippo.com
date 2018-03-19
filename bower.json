@@ -16,7 +16,6 @@
     "lodash": "~4.11.2",
     "angular-ui-router": "~0.2.15",
     "angular-file-upload": "~2.1.4",
-    "DataTables": "~1.10.9",
     "Hover": "~2.0.2",
     "moment": "~2.9.0",
     "angularjs-scroll-glue": "~0.0.1",

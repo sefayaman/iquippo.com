@@ -110,9 +110,9 @@
                                     <h4>Add New Country</h4>
                                 </div>
                                 <!-- <div class="col-sm-6 text-right">
-                                                        <h4>
-                                                                <button class="btn btn-success" ng-click="gsettingVm.exportProductState('country')"> <i class="fa fa-file-excel-o"></i> Export</button>
-                                                        </h4>
+                                <h4>
+                                    <button class="btn btn-success" ng-click="gsettingVm.exportProductState('country')"> <i class="fa fa-file-excel-o"></i> Export</button>
+                                </h4>
                                 </div> -->
                             </div>
                             <legend></legend>
@@ -139,26 +139,28 @@
                                     </div>                
                                 </div>
                             </div>
-                            <table class="table table-bordred table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>Country</th>
-                                        <th>ISD Code</th>
-                                        <th>Action</th>
-                                    </tr>
+                            <div class="table-responsive">
+                                <table class="table table-bordred table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Country</th>
+                                            <th>ISD Code</th>
+                                            <th>Action</th>
+                                        </tr>
 
-                                </thead>
-                                <tbody>
-                                    <tr ng-repeat="country in filterCountry =(gsettingVm.countryList | filter: filterCountryText) | limitTo: gsettingVm.itemsPerPage:gsettingVm.itemsPerPage*(page-1)">
-                                        <td>{{country.name}}</td>
-                                        <td>{{country.countryCode}}</td>
-                                        <td>
-                                            <a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="gsettingVm.countryEditClick($index)" ><i class="fa fa-pencil"></i> </a>
-                                            <a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deleteCountry($index)"><i class="fa fa-trash"></i> </a>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="country in filterCountry =(gsettingVm.countryList | filter: filterCountryText) | limitTo: gsettingVm.itemsPerPage:gsettingVm.itemsPerPage*(page-1)">
+                                            <td>{{country.name}}</td>
+                                            <td>{{country.countryCode}}</td>
+                                            <td>
+                                                <a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="gsettingVm.countryEditClick($index)" ><i class="fa fa-pencil"></i> </a>
+                                                <a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deleteCountry($index)"><i class="fa fa-trash"></i> </a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </form>
                         <uib-pagination total-items="filterCountry.length" ng-model="page" items-per-page="gsettingVm.itemsPerPage" max-size="gsettingVm.maxSize" ng-change="gsettingVm.pageChanged()" class="pagination-sm" rotate="false">  </uib-pagination>
                     </uib-tab>
@@ -193,7 +195,7 @@
 
                             </div>
                         </form>
-                        <div class="table-responsive">
+                        <legend></legend>
                         <div class="row">
                             <div class="col-sm-6">
                               <p>Showing : {{filterState.length}} Records</p>
@@ -204,7 +206,7 @@
                                 </div>                
                             </div>
                         </div>
-
+                        <div class="table-responsive">
                             <table class="table table-bordred table-striped">
                                 <thead>
                                     <tr>
@@ -224,9 +226,9 @@
                                         </td>
                                     </tr>
                                 </tbody>
-                            </table>
-                            <uib-pagination total-items="filterState.length" ng-model="page" items-per-page="gsettingVm.itemsPerPage" max-size="gsettingVm.maxSize" ng-change="gsettingVm.pageChanged()" class="pagination-sm" rotate="false">  </uib-pagination>
+                            </table>                            
                         </div>
+                        <uib-pagination total-items="filterState.length" ng-model="page" items-per-page="gsettingVm.itemsPerPage" max-size="gsettingVm.maxSize" ng-change="gsettingVm.pageChanged()" class="pagination-sm" rotate="false">  </uib-pagination>
                     </uib-tab>
                     <uib-tab heading="Location">
                         <form name="locationForm" novalidate class="locationForm">
@@ -258,7 +260,7 @@
 
                             </div>
                         </form>
-                        <div class="table-responsive">
+                        <legend></legend>
                         <div class="row">
                             <div class="col-sm-6">
                               <p>Showing : {{filterLocation.length}} Records</p>
@@ -269,6 +271,7 @@
                                 </div>                
                             </div>
                         </div>
+                        <div class="table-responsive">                        
                             <table class="table table-bordred table-striped">
                                 <thead>
                                     <tr>
@@ -288,9 +291,9 @@
                                         </td>
                                     </tr>
                                 </tbody>
-                            </table>
-                            <uib-pagination total-items="filterLocation.length" ng-model="page" items-per-page="gsettingVm.itemsPerPage" max-size="gsettingVm.maxSize" ng-change="gsettingVm.pageChanged()" class="pagination-sm" rotate="false">  </uib-pagination>
+                            </table>                            
                         </div>
+                        <uib-pagination total-items="filterLocation.length" ng-model="page" items-per-page="gsettingVm.itemsPerPage" max-size="gsettingVm.maxSize" ng-change="gsettingVm.pageChanged()" class="pagination-sm" rotate="false">  </uib-pagination>
                     </uib-tab>
                 </uib-tabset>
             </div>
@@ -1069,6 +1072,7 @@
 
                     </div>
                 </form>
+                <legend></legend>
                 <div class="row">
                     <div class="col-sm-6">
                       <p>Showing : {{filterpayment.length}} Records</p>
@@ -1129,6 +1133,7 @@
 
                     </div>
                 </form>
+                <legend></legend>
                 <div class="row">
                     <div class="col-sm-6">
                       <p>Showing : {{filterManufacturer.length}} Records</p>
