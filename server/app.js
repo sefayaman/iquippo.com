@@ -36,6 +36,7 @@ var BulkProductUpload = require('./components/bulkProductUpload.js');
 var utility = require('./components/utility.js');
 var path = require('path');
 var userExportsService = require('./components/userExports.js');
+require('./components/sitemap').init();
 
 // Connect to database
 mongoose.connect(config.mongo.uri, config.mongo.options);
@@ -52,22 +53,6 @@ var server = require('http').createServer(app);
 app.get('/_status', function (req, res) {
   res.status(200);
   res.end();
-});
-
-app.get('/sitemap.xml', function (req, res) {
-  require('./scripts/sitemap')(function (files) {
-    return res.sendFile(config.root + '/sitemap.xml');
-  });
-});
-
-app.get('/sitemapxml/:name',function(req,res){
-  var filepath = config.root + '/sitemap/' + req.params.name + '.xml';
-  try {
-    fs.statSync(filepath);
-    return res.sendFile(filepath);
-  } catch(e) {
-    res.redirect('/sitemap.xml');
-  }
 });
 
 require('./config/express')(app);
