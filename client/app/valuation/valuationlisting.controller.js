@@ -186,7 +186,7 @@ function ValuationListingCtrl($scope,$window,$stateParams,$state,$uibModal,Modal
 	    filter = {};
 	    angular.copy(initFilter, filter);
 	    if (vm.searchStr)
-	        filter.searchStr = vm.searchStr;
+	        filter.searchstr = vm.searchStr;
 	    if(vm.statusType){
 	        filter.statusType = vm.statusType;
 	    }

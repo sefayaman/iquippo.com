@@ -91,7 +91,6 @@ function createValuationReq(req,res) {
 
 //search based on filter
 exports.getOnFilter = function (req, res) {
-
   var filter = {};
   var orFilter = [];
   if (req.body.userMobileNos)
@@ -117,9 +116,9 @@ exports.getOnFilter = function (req, res) {
      orFilter[orFilter.length] = {status:{$regex:term}};
      orFilter[orFilter.length] = {purpose:{$regex:term}};
   }*/
-  if (req.body.searchStr) {
+  if (req.body.searchstr) {
     filter['$text'] = {
-    '$search': "\""+req.body.searchStr+"\""
+    '$search': "\""+req.body.searchstr+"\""
     }
   }
 
@@ -420,8 +419,23 @@ exports.destroy = function (req, res) {
       filter["user._id"] = req.body.userid;
     if(req.body.userMobileNos)
       filter['user.mobile'] = {$in: req.body.userMobileNos.split(',')};
+    if (req.body.onlyOldReq)
+      filter['enterprise'] = { $exists: false };
     if(req.body.partnerId)
       filter['valuationAgency._id'] = req.body.partnerId;
+    var dateFilter = {};
+
+    if(req.body.fromDate)
+    dateFilter['$gte'] = new Date(req.body.fromDate);
+    if(req.body.toDate) {
+        var toDate = new Date(req.body.toDate);
+        var nextDay = toDate.getDate() + 1;
+        toDate.setDate(nextDay);
+        dateFilter.$lt = toDate;
+    }
+    if(req.body.fromDate || req.body.toDate)
+      filter['createdAt'] = dateFilter;
+
     var fieldMap = fieldsConfig["EXPORT"];
     var query = ValuationReq.find(filter).sort({createdAt:-1});
     query.exec(function(err,dataArr){
