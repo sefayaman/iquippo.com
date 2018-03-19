@@ -1,9 +1,9 @@
 <div class="container-fluid">
   <ol class="breadcrumb">
     <li><a href="/">Home</a></li>
-    <li><a href="/used"> Used Equipment </a></li>
-    <li><a href="/used/viewproducts?group={{currentProduct.group.name}}">{{currentProduct.group.name}}</a></li>
-    <li ng-if="currentProduct.category.name != 'Other'"><a href="/used/viewproducts?category={{currentProduct.category.name}}">{{currentProduct.category.name}}</a></li>
+    <li><a href="/used-equipment"> Used Equipment </a></li>
+    <li><a href="/used-equipment/viewproducts?group={{currentProduct.group.name}}">{{currentProduct.group.name}}</a></li>
+    <li ng-if="currentProduct.category.name != 'Other'"><a href="/used-equipment/viewproducts?category={{currentProduct.category.name}}">{{currentProduct.category.name}}</a></li>
     <li ng-if="currentProduct.category.name == 'Other'">{{currentProduct.category.otherName}}</li>
     <li><a class="active">{{currentProduct.name}}</a></li>
   </ol>

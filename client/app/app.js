@@ -76,6 +76,7 @@ angular.module('sreizaoApp',[
     $rootScope.financemasterDir = financemasterDir;
     $rootScope.choosenTitle=choosenTitle;
     $rootScope.metaDescription=metaDescription;
+    $rootScope.metaKeywords = metaKeywords;
     $rootScope.classifiedAdDir = classifiedAdDir;
     $rootScope.newsEventsDir = newsEventsDir;
     $rootScope.refresh = true;
@@ -173,6 +174,7 @@ angular.module('sreizaoApp',[
     });
 
     $rootScope.$on('$stateChangeSuccess', function(ev, to, toParams, from, fromParams) {
+        console.log('dshk hgf',to);
         $rootScope.previousState = from.name;
         $rootScope.previousParams = fromParams;
         $rootScope.currentState = to.name;
