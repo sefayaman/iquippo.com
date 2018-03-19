@@ -1170,7 +1170,7 @@ exports.exportExcel = function (req, res) {
 					val = moment(val).utcOffset('+0530').format('MM/DD/YYYY');
 				if (keyObj.type && keyObj.type == 'datetime' && val)
 					val = moment(val).utcOffset('+0530').format('hh:mm a');
-				if (keyObj.key && keyObj.key == 'assessedValue' && item.product.proData && item.product.proData.valuationOverallGeneralCondition)
+				if (keyObj.key && keyObj.key == 'assessedValue' && item.product.proData && item.product.proData.valuationAssessedValue)
                     val = item.product.proData.valuationAssessedValue;
                 if (keyObj.key && keyObj.key == 'overallGeneralCondition' && item.product.proData && item.product.proData.valuationOverallGeneralCondition)
                     val = item.product.proData.valuationOverallGeneralCondition;
@@ -1271,7 +1271,7 @@ exports.exportExcel = function (req, res) {
 					else
 						val = "";
 				}
-				dataArr.push(val);
+				dataArr.push(Utility.toCsvValue(val));
 			});
 			csvStr += dataArr.join(",");
 			csvStr += "\r\n";
