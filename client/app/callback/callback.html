@@ -31,7 +31,7 @@
                   <div class="form-group col-sm-6" ng-class="{'has-error': form.mobile.$invalid &&
                    form.submitted }">
                     <div class="row">
-                      <div class="col-xs-4 col-sm-4 padd-right search-field">
+                      <div class="col-xs-4 col-sm-4 padd-right search-field" ng-class="{'has-error': form.countryCode.$invalid && form.submitted }">
                         <select class="form-control" ng-model="callbackVm.callback.countryCode" ng-change="onCodeChange(callbackVm.callback.countryCode)" required>
                           <option value="" disabled>*Code</option>
                           <option  ng-repeat ="country in allCountries | orderBy:'name'" value="{{country.countryCode}}">+{{country.countryCode}}</option>
@@ -50,6 +50,10 @@
                   <p class="help-block" ng-show="(form.email.$error.email || form.email.$error.pattern) && form.submitted">
                   Please enter a valid email.
                   </p>
+                  </div>
+                  <!-- Add Comment section 'Madhusudan Mishra' -->
+                  <div class="form-group col-sm-12">
+                  <input class="form-control" name="comment" ng-model="callbackVm.callback.comment" placeholder="Comments" type="text" value="">
                   </div>
                 </div>
               </form>

@@ -15,7 +15,8 @@ var CallbackSchema = new Schema({
   email: String,
   ticketId : String,
   createdAt: Date,
-  customerId:String
+  customerId:String,
+  comment: String   // Added by Madhusudan
 });
 
 CallbackSchema.pre('save',function(next){
