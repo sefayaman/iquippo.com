@@ -7,7 +7,6 @@ module.exports = {
   mongo: {
     uri: 'mongodb://appUser:iQuippoAppUser^*$!2K17@127.0.0.1/sreiglobaldb'
   },
-  appDomain: 'http://localhost:8100/',
   uploadPath: 'client/assets/uploads/',
   templatePath:'client/assets',
   contactNumber: "011 66025672",

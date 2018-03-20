@@ -1,8 +1,11 @@
 'use strict';
 
 var fs = require('fs');
+var async = require('async');
 var config = require('../config/environment');
 var Brand = require('../api/brand/brand.model');
+var Category = require('../api/category/category.model');
+var Group = require('../api/group/group.model');
 var Product = require('../api/product/product.model');
 var root_path = config.serverPath + '/sitemapxml/';
 var directory = config.root + '/sitemap/';
@@ -31,16 +34,19 @@ module.exports = {
 
 function init() {
     _checkDirectoryExist();
-    _createStaticSitemap();
-    _createProductsSitemap(function (err) {
-        if (err) {
-            throw err;
-        }
-        _createSitemapIndex();
+    async.parallel([
+        _createStaticSitemap,
+        _createProductsSitemap,
+        _multiModelFetch
+    ], function (err) {
+        if (err) { throw err; }
+        _createSitemapIndex(function (err) {
+            if (err) { throw err; }
+            setTimeout(function () {
+                init();
+            }, TIME_INTERVAL);
+        });
     });
-    setTimeout(function () {
-        init();
-    }, TIME_INTERVAL);
 }
 
 function _checkDirectoryExist() {
@@ -58,8 +64,7 @@ function _checkDirectoryExist() {
     }
 }
 
-function _createStaticSitemap() {
-
+function _createStaticSitemap(cb) {
     var staticPaths = STATIC_PATHS;
     var xml = '<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
     staticPaths.forEach(function (path) {
@@ -70,67 +75,170 @@ function _createStaticSitemap() {
     });
     xml += '</urlset>';
     var filepath = config.root + '/sitemap/sitemap-home.xml';
-    _writeFileToDisk(filepath, xml);
-}
-
-function _createProductsSitemap(cb) {
-    var skip = 0;
-    var limit = URL_ENTRY_PER_FILE;
-    var sitemapPath = directory + 'sitemap-products-';
-    _readSitemapDirectory(function (err, files) {
-        if (err) {
-            return cb(err);
-        }
-        if (files.length > 1) {
-            var filenameSuffix = files[files.length - 1].split('-')[2];
-            var path = directory + files[files.length - 1];
-
-            skip = limit * Number(filenameSuffix.split('.')[0]);
-            var nextFilename = sitemapPath + (Number(filenameSuffix.split('.')[0]) + 1) + '.xml';
-            _queryProduct(limit, skip, nextFilename, cb);
-        } else {
-            var filename = sitemapPath + '1.xml';
-            _queryProduct(limit, skip, filename, cb);
-        }
+    fs.writeFile(filepath, xml, function (err) {
+        if (err) { cb(err); }
+        cb(null);
     });
 }
 
-function _queryProduct(limitCounter, skipCounter, filepath, cb) {
+function _createProductsSitemap(cb) {
+    var sitemapPath = directory + 'sitemap-products-';
+    var xmlArray = [];
     Product.find()
         .select('assetId productCondition category brand')
-        .limit(limitCounter)
-        .skip(skipCounter)
         .lean()
         .exec(function (err, products) {
             if (err) { return cb(err); }
-            var xml = '<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
             for (var i in products) {
+                var xml = "";
                 xml += '<url>';
-                xml += '<loc>' + config.serverPath + '/' + products[i].productCondition + '-equipment/' + products[i].category.name + '/' + (products[i].brand.name).replace('&', "&amp;") + '/' + products[i].assetId + '/' + '</loc>';
+                xml += '<loc>' + config.serverPath + '/' + products[i].productCondition + '-equipment/' + _transformUrl(products[i].category.name) + '/' + _transformUrl((products[i].brand.name).replace('&', "&amp;")) + '/' + products[i].assetId + '/' + '</loc>';
                 xml += '</url>';
 
                 if (products[i].group) {
                     xml += '<url>';
-                    xml += '<loc>' + config.serverPath + '/' + products[i].productCondition + '-equipment/' + products[i].group.name + '/' + products[i].category.name + '/' + '</loc>';
+                    xml += '<loc>' + config.serverPath + '/' + products[i].productCondition + '-equipment/' + _transformUrl(products[i].group.name) + '/' + _transformUrl(products[i].category.name) + '/' + '</loc>';
                     xml += '</url>';
                 }
                 i++;
+                xmlArray.push(xml);
             }
-            xml += '</urlset>';
-            _writeFileToDisk(filepath, xml);
-            if (products.length === limitCounter) {
-                _createProductsSitemap(cb);
-            } else {
-                cb(null);
-            }
+
+            var limit = URL_ENTRY_PER_FILE;
+            var count = 1;
+            var length = xmlArray.length;
+            var start = 0;
+            var end = limit * count;
+
+            _writeXMLToFile(start, end, count, limit, length, xmlArray, cb);
+
         });
+}
+
+function _writeXMLToFile(start, end, count, limit, length, xmlArray, cb) {
+    if (end < length) {
+        var xmlContent = xmlArray.slice(start, end);
+        xmlContent.unshift('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">');
+        xmlContent.push('</urlset>');
+        xmlContent = xmlContent.join("");
+
+        var filepath = directory + 'sitemap-products-' + count + '.xml';
+        fs.writeFile(filepath, xmlContent, function (err) {
+            if (err) { cb(err); }
+            count++; start = end; end = limit * count;
+            _writeXMLToFile(start, end, count, limit, length, xmlArray, cb);
+        });
+    } else {
+        var xmlContent = xmlArray.slice(start, length);
+        xmlContent.unshift('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">');
+        xmlContent.push('</urlset>');
+        xmlContent = xmlContent.join("");
+
+        var filepath = directory + 'sitemap-products-' + count + '.xml';
+        fs.writeFile(filepath, xmlContent, function (err) {
+            if (err) { cb(err); }
+            cb(null);
+        });
+    }
+}
+
+function _multiModelFetch(cb) {
+    async.parallel([
+        queryBrand,
+        queryCategory,
+        queryGroup
+    ], function (err, responses) {
+        createMixedSitemap(responses, function (err) {
+            if (err) { cb(err); }
+            cb(null);
+        })
+    });
+}
+
+function queryBrand(callback) {
+    Brand.find().select('name group category').lean().exec(function (err, brands) {
+        if (err) { callback(err); }
+        callback(null, brands);
+    });
+}
+
+function queryCategory(callback) {
+    Category.find().select('name').lean().exec(function (err, categories) {
+        if (err) { callback(err); }
+        callback(null, categories);
+    });
+}
+
+function queryGroup(callback) {
+    Group.find().select('name').lean().exec(function (err, groups) {
+        if (err) { callback(err); }
+        callback(null, groups);
+    });
+}
+
+function createMixedSitemap(responses, cb) {
+    var xmlArray = [];
+    var brands = responses[0];
+    var categories = responses[1];
+    var groups = responses[2];
+
+    _generateCategorySitemap(xmlArray, categories);
+    _generateBrandSitemap(xmlArray, brands);
+    _generateGroupSitemap(xmlArray, groups);
+
+    xmlArray.unshift('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">');
+    xmlArray.push('</urlset>');
+    xmlArray = xmlArray.join("");
+
+    var filepath = config.root + '/sitemap/sitemap-products-category.xml';
+    fs.writeFile(filepath, xmlArray, function (err) {
+        if (err) { cb(err); }
+        cb(null);
+    });
+}
+
+function _generateCategorySitemap(xmlArray, categories) {
+    categories.forEach(function (category) {
+        var xml = ""
+        xml += '<url>';
+        xml += '<loc>' + config.serverPath + '/new-equipment/' + _transformUrl(category.name) + '/' + '</loc>';
+        xml += '</url>';
+        xml += '<url>';
+        xml += '<loc>' + config.serverPath + '/used-equipment/' + _transformUrl(category.name) + '/' + '</loc>';
+        xml += '</url>';
+        xmlArray.push(xml);
+    });
+}
+
+function _generateBrandSitemap(xmlArray, brands) {
+    brands.forEach(function (brand) {
+        var xml = "";
+        xml += '<url>';
+        xml += '<loc>' + config.serverPath + '/new-equipment/brands/' + _transformUrl(brand.name.replace('&', "&amp;")) + '/' + '</loc>';
+        xml += '</url>';
+        xml += '<url>';
+        xml += '<loc>' + config.serverPath + '/used-equipment/brands/' + _transformUrl(brand.name.replace('&', "&amp;")) + '/' + '</loc>';
+        xml += '</url>';
+        xmlArray.push(xml);
+    });
+}
+
+function _generateGroupSitemap(xmlArray, groups) {
+    groups.forEach(function (group) {
+        var xml = "";
+        xml += '<url>';
+        xml += '<loc>' + config.serverPath + '/new-equipment/' + _transformUrl(group.name) + '/' + '</loc>';
+        xml += '</url>';
+        xml += '<url>';
+        xml += '<loc>' + config.serverPath + '/used-equipment/' + _transformUrl(group.name) + '/' + '</loc>';
+        xml += '</url>';
+        xmlArray.push(xml);
+    });
 }
 
 function _createSitemapIndex(done) {
     _readSitemapDirectory(function (err, files) {
-        if (err) {
-            throw err;
-        }
+        if (err) { done(err); }
         var xml = '<?xml version="1.0" encoding="UTF-8"?><sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
         files.forEach(function (file) {
             xml += '<sitemap>';
@@ -140,9 +248,8 @@ function _createSitemapIndex(done) {
         xml += '</sitemapindex>';
         var filepath = config.root + '/sitemap.xml';
         fs.writeFile(filepath, xml, function (err) {
-            if (err) {
-                throw err;
-            }
+            if (err) { done(err); }
+            done(null);
         });
     });
 }
@@ -150,13 +257,11 @@ function _createSitemapIndex(done) {
 function _readSitemapDirectory(cb) {
     var path = config.root + '/sitemap/';
     fs.readdir(path, function (err, files) {
-        if (err) cb(err);
+        if (err) { cb(err); }
         cb(null, files);
     });
 }
 
-function _writeFileToDisk(filepath, xml) {
-    fs.writeFile(filepath, xml, function (err) {
-        if (err) throw err;
-    });
+function _transformUrl(url) {
+    return url.split(" ").join("_");
 }
