@@ -242,7 +242,7 @@ function MasterDataCtrl($scope, $rootScope,MasterDataService, groupSvc, modelSvc
     if(otherBrand)
       $scope.brandList[$scope.brandList.length] = otherBrand;
   }
-  
+
 	function Save(Type)
 	{	$scope.submitted = true;
 		if(!validateMasterData(Type))
@@ -250,18 +250,23 @@ function MasterDataCtrl($scope, $rootScope,MasterDataService, groupSvc, modelSvc
 		switch (Type)
 		{	
 			case "Group":
-				MasterDataService.SaveGroup($scope.g).then(function(Info) {
-					loadAllGroup();
-				if(Info.Code=="SUCCESS"){
-					$scope.g={};
-				}
-				alert(Info.Message);
-				 	$('#groupName').focus();
-				}, function(reason) {
-				alert(reason.Message);
-					$('#groupName').focus();
-				});
-				break;
+				if(($scope.g.name).indexOf("_") > -1 || ($scope.g.description).indexOf("_") > -1){
+					alert('Underscore not allowed. Please update.');
+					}
+				else{
+					MasterDataService.SaveGroup($scope.g).then(function(Info) {
+						loadAllGroup();
+					if(Info.Code=="SUCCESS"){
+						$scope.g={};
+					}
+					alert(Info.Message);
+						 $('#groupName').focus();
+					}, function(reason) {
+					alert(reason.Message);
+						$('#groupName').focus();
+					});
+					break;
+					}			
 			case "Category":
 				if(!$scope.fileObj.file){
 					saveCategory();
@@ -321,6 +326,10 @@ function MasterDataCtrl($scope, $rootScope,MasterDataService, groupSvc, modelSvc
 			}
 			break;
 			case "Category":
+				if(($scope.c.name).indexOf("_") > -1){
+					alert("Underscore not allowed. Please update.");
+					return false;
+				}else{
 				if(!$scope.c.name){
 					$scope.form.errorCategory = true;
 					isValid = false;
@@ -341,8 +350,13 @@ function MasterDataCtrl($scope, $rootScope,MasterDataService, groupSvc, modelSvc
 					isValid = false;
 					Modal.alert("Please select used equipment or new equipment checkbox",true);
 				}
+			}
 				break;
 			case "Brand":
+				if(($scope.b.name).indexOf("_") > -1){
+					alert("Underscore not allowed. Please update.");
+					return false;
+				}else{
 				if(!$scope.b.category){
 					$scope.form.errorCategory = true;
 					isValid = false;
@@ -371,8 +385,13 @@ function MasterDataCtrl($scope, $rootScope,MasterDataService, groupSvc, modelSvc
 					isValid = false;
 					Modal.alert("Please select used equipment or new equipment checkbox",true);
 				}
+			}
 			break;
 			case "Model":
+				if(($scope.m.name).indexOf("_") > -1){
+					alert("Underscore not allowed. Please update.");
+					return false;
+				}else{
 				if(!$scope.m.category){
 					$scope.form.errorCategory = true;
 					isValid = false;
@@ -401,7 +420,8 @@ function MasterDataCtrl($scope, $rootScope,MasterDataService, groupSvc, modelSvc
 					isValid = false;
 					Modal.alert("Please select used equipment or new equipment checkbox",true);
 				}
-				break;                
+				break;  	              				
+			}
 		}
 		return isValid;
 	}
