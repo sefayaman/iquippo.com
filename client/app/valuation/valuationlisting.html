@@ -111,6 +111,8 @@
                       <span><i class="fa fa-upload"></i></span>
                         <input type="file" data-index="{{$index}}" name="report" onchange="angular.element(this).scope().uploadReport(this.files,this)">
                   </button> -->
+                  <a class="btn btn-sm btn-default active" href="/editvaluationrequests" uib-popover="Edit" popover-trigger="mouseenter"><i class="fa fa-pencil"></i></a>
+
                   <a class="btn btn-sm btn-info" ng-if="valuationListingVm.validateAction(valuation,'GENERATEINVOICE')" href="javascript:void(0);" ng-click="valuationListingVm.openInvoiceModal(valuation)" uib-popover="Generate Invoice" popover-trigger="mouseenter" ng-disabled="valuation.cancelled"><i class="fa fa-file"></i></a>
                   <!-- <button class="btn btn-success" ng-if="isPartner() && valuation.status == 'request_in_process'" ng-click="valuationListingVm.updateStatus(valuation,'request_completed')" uib-popover="Complete" popover-trigger="mouseenter" ><i class="fa fa-hourglass-end"></i></button> -->
 

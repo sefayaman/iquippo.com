@@ -485,6 +485,13 @@ angular.module('sreizaoApp')
         authenticate:true,
         layout:'admin'
       })
+      .state('editvaluationrequests', {
+        url: '/editvaluationrequests',
+        templateUrl: 'app/valuation/editrequest.html',
+        controller: 'ValuationListingCtrl as valuationListingVm',
+        authenticate:true,
+        layout:'admin'
+      })
       .state('paymenthistory', {
         url: '/paymenthistory',
         templateUrl: 'app/payment/paymentlisting.html',
