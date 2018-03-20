@@ -117,12 +117,12 @@ function _prepareResponse(res, users) {
       "Sr. No": key + 1,
       "Ticket Id": user.ticketId,
       "Customer Id": user.customerId,
-      "Fullname": user.fname + ' ' + user.lname,
+      "Fullname": Utility.toCsvValue(user.fname + ' ' + user.lname),
       "Mobile No": user.mobile,
       "Phone No": user.phone,
       "Email Address": user.email,
       "Date of Request": user.createdAt,
-      "Comment": user.comment
+      "Comment": Utility.toCsvValue(user.comment)
     });
   });
 
