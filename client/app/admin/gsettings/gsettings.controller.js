@@ -4,8 +4,8 @@
     angular.module('admin').controller('GSettingCtrl', GSettingCtrl);
 
     //Controller function
-    function GSettingCtrl($scope, $rootScope, Auth, PagerSvc, productSvc, DTOptionsBuilder, LocationSvc, notificationSvc, SubCategorySvc, Modal, settingSvc, PaymentMasterSvc, vendorSvc, uploadSvc, AuctionMasterSvc, categorySvc, brandSvc, modelSvc, ManufacturerSvc, AuctionSvc, ProductTechInfoSvc, FinanceMasterSvc, LeadMasterSvc, $window,LotSvc) {
-        $scope.dtOptions = DTOptionsBuilder.newOptions().withOption('order', []);
+    function GSettingCtrl($scope, $rootScope, Auth, PagerSvc, productSvc, LocationSvc, notificationSvc, SubCategorySvc, Modal, settingSvc, PaymentMasterSvc, vendorSvc, uploadSvc, AuctionMasterSvc, categorySvc, brandSvc, modelSvc, ManufacturerSvc, AuctionSvc, ProductTechInfoSvc, FinanceMasterSvc, LeadMasterSvc, $window,LotSvc) {
+        // $scope.dtOptions = DTOptionsBuilder.newOptions().withOption('order', []);
         $scope.actionAdditionalInfo = false;
         var vm = this;
         vm.tabValue = 'assetcount';

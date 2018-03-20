@@ -32,8 +32,18 @@
                   <div class="featured-pro">
                     <input type="checkbox" id="" name="cetifiedByiQuippo" ng-model="cetifiedByiQuippo" ng-value="cetifiedByiQuippo" ng-click="serviceFilter()"> Cetified By iQuippo
                   </div>
+                  <div class="row">
+                    <div class="col-sm-6">
+                      <p>Showing : {{filterServiceData.length}} Records</p>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="tablesearch form-group pull-right">
+                           Search: <input type="text" placeholder="Search..." ng-model="filterServiceText" ng-model-options="{debounce:500}">
+                        </div>                
+                    </div>
+                  </div>
                   <div class="table-responsive">
-                    <table datatable="ng" dt-options= "dtOptions" class="table table-bordred table-striped">
+                    <table class="table table-bordred table-striped">
 
                       <thead>
                         <tr>
@@ -47,7 +57,7 @@
                       </thead>
                       <tbody>
 
-                        <tr ng-repeat="service in servicesList" ng-class="{'info':product.featured}">
+                        <tr ng-repeat="service in filterServiceData =(servicesList | filter : filterServiceText) | limitTo:itemsPerPage:itemsPerPage*(page-1)" ng-class="{'info':product.featured}">
                           <td>{{service.type}}</td>
                           <td>{{service.quote.fname}}</td>
                           <td>{{service.quote.country}}</td>
@@ -61,6 +71,7 @@
                       </tbody>
                     </table>
                   </div> 
+                  <uib-pagination total-items="filterServiceData.length" ng-model="page" items-per-page="itemsPerPage" max-size="maxSize" ng-change="pageChanged()" class="pagination-sm" rotate="false">  </uib-pagination>
                 </div>
                 
                 <!-- /#page-wrapper -->

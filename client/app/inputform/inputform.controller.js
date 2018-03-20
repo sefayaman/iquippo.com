@@ -228,7 +228,7 @@ function InputFormCtrl($scope, $rootScope, Modal, Auth, categorySvc, LocationSvc
 	};
 }
 
-function InputFormListingCtrl($scope, $rootScope, Modal, Auth, PagerSvc, InputFormSvc, DTOptionsBuilder) {
+function InputFormListingCtrl($scope, $rootScope, Modal, Auth, PagerSvc, InputFormSvc) {
 	var vm = this;
 	vm.fireCommand = fireCommand;
 	vm.InputFormListing = [];

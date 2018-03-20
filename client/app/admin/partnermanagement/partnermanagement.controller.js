@@ -3,7 +3,7 @@
 angular.module('sreizaoApp').controller('PartnerManagementCtrl', PartnerManagementCtrl);
 
 //controller function
-function PartnerManagementCtrl($scope, DTOptionsBuilder, $rootScope, $http, Auth, User, Modal, userSvc, uploadSvc, UtilSvc, notificationSvc, vendorSvc, LocationSvc) {
+function PartnerManagementCtrl($scope, $rootScope, $http, Auth, User, Modal, userSvc, uploadSvc, UtilSvc, notificationSvc, vendorSvc, LocationSvc) {
   var vm = this;
 	vm.vendorReg ={};
   vm.existingUser ={};
@@ -23,7 +23,13 @@ function PartnerManagementCtrl($scope, DTOptionsBuilder, $rootScope, $http, Auth
   $scope.updateAvatar = updateAvatar;
   vm.resetClick = resetClick;
 
-  $scope.dtOptions = DTOptionsBuilder.newOptions().withOption('bFilter', true).withOption('lengthChange', true);
+  //pagination variables
+  var prevPage = 0;
+  vm.itemsPerPage = 50;
+  vm.maxSize = 6;
+  $scope.page = 1;
+
+  // $scope.dtOptions = DTOptionsBuilder.newOptions().withOption('bFilter', true).withOption('lengthChange', true);
   
   function init(){
     LocationSvc.getAllLocation()
@@ -409,6 +415,10 @@ function updateVendor(vendor) {
     }
     $scope.isEdit = true;
     vm.existFlag = true;
+  }
+
+  function pageChanged(){
+    var startPos = ($scope.page - 1) * vm.itemsPerPage;
   }
 }
 })();

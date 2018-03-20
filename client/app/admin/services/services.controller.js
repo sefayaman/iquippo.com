@@ -1,11 +1,15 @@
 'use strict';
 
 angular.module('sreizaoApp')
- .controller('ServiceCtrl',['$scope','$rootScope', '$http', 'productSvc', 'classifiedSvc','Modal', 'DTOptionsBuilder', '$uibModal', '$state','Auth', 'notificationSvc','uploadSvc', function($scope, $rootScope, $http, productSvc, classifiedSvc, Modal, DTOptionsBuilder, $uibModal, $state, Auth, notificationSvc,uploadSvc) {
+ .controller('ServiceCtrl',['$scope','$rootScope', '$http', 'productSvc', 'classifiedSvc','Modal', '$uibModal', '$state','Auth', 'notificationSvc','uploadSvc', function($scope, $rootScope, $http, productSvc, classifiedSvc, Modal, $uibModal, $state, Auth, notificationSvc,uploadSvc) {
   $scope.globalProductList = [];
   var dataToSend = {};
-  $scope.dtOptions = DTOptionsBuilder.newOptions().withOption('bFilter', true).withOption('lengthChange', true);
-
+  // $scope.dtOptions = DTOptionsBuilder.newOptions().withOption('bFilter', true).withOption('lengthChange', true);
+  //pagination variables
+  var prevPage = 0;
+  $scope.itemsPerPage = 50;
+  $scope.maxSize = 6;
+  $scope.page = 1;
    /*if(Auth.getCurrentUser()._id && Auth.getCurrentUser().role != 'admin') {
       dataToSend["userid"] = Auth.getCurrentUser()._id;
    }*/
@@ -51,5 +55,9 @@ angular.module('sreizaoApp')
     function(res){
       console.log(res)
     })
+   }
+
+   $scope.pageChanged = function(){
+    var startPos = ($scope.page - 1) * $scope.itemsPerPage;
    }
 }]);
