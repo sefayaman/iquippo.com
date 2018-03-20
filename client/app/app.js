@@ -18,7 +18,6 @@ angular.module('sreizaoApp',[
   'ngSanitize',
   'ui.router',
   'ui.bootstrap',
-  'datatables',
   'ui.tinymce',
   "account",
   'classifiedAd',

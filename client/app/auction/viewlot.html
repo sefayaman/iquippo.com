@@ -159,14 +159,14 @@
             </h5>
             {{auctionData.onBehalfOfClient}}
           </div>
-          <div class="col-xs-6 col-sm-3" ng-if="auctionData.assetCategory">
-            <h5>
+          <div class="col-xs-6 col-sm-3">
+            <h5 ng-if="auctionData.assetCategory">
               <strong>Asset Category:</strong>
             </h5>
             <p>{{auctionData.assetCategory}}</p>
           </div>
-          <div class="col-xs-6 col-sm-2 pull-right" ng-if="auctionData.city">
-            <h5>
+          <div class="col-xs-6 col-sm-2 pull-right">
+            <h5 ng-if="auctionData.city">
               <strong>Location:</strong>
             </h5>
             <p>{{auctionData.city}}</p>
@@ -217,11 +217,6 @@
               {{auctionData.termDesclaimer}}
             </div>
         </div>
-        <div class="row">
-          <div class="col-sm-7" ng-if="auctionData.onBehalfOfClient">
-            <h5><strong>On behalf of our client:</strong></h5>
-              {{auctionData.onBehalfOfClient}}
-          </div>
         </uib-accordion>
 
         <div id="search-result_wrapper">
