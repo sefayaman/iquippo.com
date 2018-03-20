@@ -263,5 +263,6 @@ function _readSitemapDirectory(cb) {
 }
 
 function _transformUrl(url) {
-    return url.split(" ").join("_");
+    // return url.split(" ").join("_");
+    return url;
 }
