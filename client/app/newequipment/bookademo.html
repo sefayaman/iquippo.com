@@ -8,8 +8,7 @@
               
                 <div class="row">
                   <div class="form-group col-sm-6" ng-class="{'has-error': form.fname.$invalid && submitted }">
-                    <input type="text" class="form-control" name="fname" ng-model="dataModel.fname" placeholder="* First Name" required>
-                  </p>
+                    <input type="text" class="form-control" name="fname" ng-model="dataModel.fname" placeholder="* First Name" required>                  
                   </div>
                   <div class="form-group col-sm-6" ng-class="{'has-error': form.lname.$invalid && submitted }">
                     <input type="text" class="form-control" name="lname" ng-model="dataModel.lname" value="" placeholder="* Last Name" required>
@@ -64,7 +63,7 @@
                 </div>
               </form>
             </div>
-            <div class="modal-footer">
-              <button type="submit" class="btn btn-primary btn-block" ng-click="saveDemo(form)">Submit</button>
+            <div class="modal-footer text-right asset-sale">
+              <button type="submit" class="btn btn-primary" ng-click="saveDemo(form)">Submit</button>
             </div>
 </div>
