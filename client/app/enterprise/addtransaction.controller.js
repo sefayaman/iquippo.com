@@ -18,7 +18,7 @@ function AddTransactionCtrl($scope, $stateParams,$uibModal,$rootScope, Modal, Au
   $scope.upload = upload;
   $scope.getAssetGroup = getAssetGroup;
 
-  vm.requestTypeList = [{name:"Valuation"},{name:"Inspection"}];
+  vm.requestTypeList = [{name:"Valuation"},{name:"Inspection"},{name:"GPS Installation"}];
   /*vm.enterpriseValuation.requestType = vm.requestTypeList[0].name;
   vm.enterpriseValuation.requestDate = moment(new Date()).format('DD/MM/YYYY');
   vm.enterpriseValuation.agency = {};*/
@@ -55,6 +55,8 @@ function AddTransactionCtrl($scope, $stateParams,$uibModal,$rootScope, Modal, Au
       isEnterprise = true;
       if(!Auth.isServiceAvailed(vm.enterpriseValuation.requestType))
           vm.enterpriseValuation.requestType = vm.requestTypeList[1].name;
+      if(!Auth.isServiceAvailed(vm.enterpriseValuation.requestType))
+         vm.enterpriseValuation.requestType = vm.requestTypeList[2].name;
       if(!Auth.isServiceAvailed(vm.enterpriseValuation.requestType))
           vm.enterpriseValuation.requestType = "";
     }

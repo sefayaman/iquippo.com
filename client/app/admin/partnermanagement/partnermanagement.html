@@ -143,6 +143,9 @@
                       <div class="col-sm-2">
                         <input type="checkbox"  name="Auction_Registration" ng-model="Auction_Registration" ng-true-value="'Auction Registration'"> Auction Registration
                       </div>
+                       <div class="col-sm-2">
+                        <input type="checkbox"  name="GPS_Installation" ng-model="GPS_Installation" ng-true-value="'GPS Installation'"> GPS Installation
+                      </div>
                   </div>
                   <div class="row form-group">
                     <div class="col-sm-12 text-right">
@@ -189,7 +192,7 @@
                  <td>{{vendor.partnerId}}</td>
                 <td>{{vendor.user.fname}}</td>
                 <td>{{vendor.entityName}}</td>
-                <td>{{partnerVM.getServiceString(vendor.services.join())}}</td>
+                <td>{{partnerVM.getServiceString(vendor.services)}}</td>
                 <td>{{vendor.user.email}}</td>
                 <td>{{vendor.user.mobile}}</td>
                 <td> 

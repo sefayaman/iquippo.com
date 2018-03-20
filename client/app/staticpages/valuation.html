@@ -313,6 +313,12 @@
                                         <label for="requestInspectionEnterprise"> Inspection </label>
                                     </div>
                                 </div>
+                                <div class="col-xs-6 col-sm-4" ng-if="isServiceAvailed('GPS Installation')">
+                                    <div class="radio radio-info">
+                                        <input type="radio" id="requestGpsInstallation" name="requestType" value="GPS Installation" ng-click="addTransactionVm.getPartners('GPS Installation')" ng-model="addTransactionVm.enterpriseValuation.requestType">
+                                        <label for="requestGpsInstallation"> GPS Installation </label>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

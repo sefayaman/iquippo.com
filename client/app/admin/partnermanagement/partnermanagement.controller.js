@@ -169,6 +169,9 @@ function PartnerManagementCtrl($scope, $rootScope, $http, Auth, User, Modal, use
       $scope.services.push($scope.Sale_Fulfilment);
     if($scope.Auction_Registration)
       $scope.services.push($scope.Auction_Registration);
+    if($scope.GPS_Installation)
+      $scope.services.push($scope.GPS_Installation);
+    
 
     vm.vendorReg.services = $scope.services;
     if(!vm.vendorReg.user.state)
@@ -219,6 +222,7 @@ function PartnerManagementCtrl($scope, $rootScope, $http, Auth, User, Modal, use
     $scope.Auction = "";
     $scope.Sale_Fulfilment = "";
     $scope.Auction_Registration = "";
+    $scope.GPS_Installation = "";
     $scope.isEdit = false;
     $rootScope.isSuccess = false;
     $rootScope.isError = false;
@@ -312,34 +316,36 @@ function PartnerManagementCtrl($scope, $rootScope, $http, Auth, User, Modal, use
     })
   }
   function getServiceString(services){
-    var tempArr = [];
+    //var tempArr = [];
     var serviceArr = [];
 
-    if(!services)
-      return;
+    if(!services || !services.length)
+      return "";
 
-    tempArr = services.split(",");
-    for (var i in tempArr) {
-      if(tempArr[i] == 'Shipping')
+    //tempArr = services.split(",");
+    for (var i in services) {
+      if(services[i] == 'Shipping')
         serviceArr.push('Shipping');
-      else if(tempArr[i] == 'Valuation')
+      else if(services[i] == 'Valuation')
         serviceArr.push('Valuation');
-      else if(tempArr[i] == 'CertifiedByIQuippo')
+      else if(services[i] == 'CertifiedByIQuippo')
          serviceArr.push('Certified by iQuippo');
-       else if(tempArr[i] == 'ManPower')
+       else if(services[i] == 'ManPower')
          serviceArr.push('ManPower');
-       else if(tempArr[i] == 'Finance')
+       else if(services[i] == 'Finance')
          serviceArr.push('Finance');
-       else if(tempArr[i] == 'Auction')
+       else if(services[i] == 'Auction')
          serviceArr.push('Auction');
-       else if(tempArr[i] == 'Dealer')
+       else if(services[i] == 'Dealer')
          serviceArr.push('Dealer');
-       else if(tempArr[i] == 'Inspection')
+       else if(services[i] == 'Inspection')
        serviceArr.push('Inspection');
-       else if(tempArr[i] == 'Sale Fulfilment')
+       else if(services[i] == 'Sale Fulfilment')
        serviceArr.push('Sale Fulfilment');
-     else if(tempArr[i] == 'Auction Registration')
+     else if(services[i] == 'Auction Registration')
        serviceArr.push('Auction Registration');
+     else if(services[i] == 'GPS Installation')
+      serviceArr.push('GPS Installation');
     }
     return serviceArr.join();
   }
@@ -412,6 +418,8 @@ function updateVendor(vendor) {
         $scope.Sale_Fulfilment = vendor.services[i];
       else if(vendor.services[i] == 'Auction Registration')
         $scope.Auction_Registration = vendor.services[i];
+      else if(vendor.services[i] == 'GPS Installation')
+        $scope.GPS_Installation = vendor.services[i];
     }
     $scope.isEdit = true;
     vm.existFlag = true;
