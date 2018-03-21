@@ -13,8 +13,8 @@ angular.module('sreizaoApp')
         templateUrl: 'app/account/settings/settings.html',
         controller: 'SettingsCtrl',
         authenticate: true
-      })
-      .state('mailhome', {
+      });
+      /*.state('mailhome', {
         url: '/mailhome',
         templateUrl: 'app/account/mymail/mailhome.html',
         controller: 'mailCtrl'
@@ -45,6 +45,5 @@ angular.module('sreizaoApp')
         templateUrl: 'app/account/mymail/reply.html',
         controller: 'replyCtrl as replyVM',
         params: { message: null},
-    })                  
-      ;
+    })*/                  
   });

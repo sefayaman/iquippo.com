@@ -75,6 +75,26 @@ function getTask() {
     });
 }
 */
+function downloadZip(taskData, cb){
+    var filename = "";
+      if (taskData && taskData.taskInfo && taskData.taskInfo.filename) {
+          filename = taskData.taskInfo.filename;
+        } else {
+          return cb(new Error('Invalid taskinfo/file'), taskData);
+        }
+      var opts = {
+        localFile: config.uploadPath + "temp/" + filename,
+        key: "assets/uploads/temp/" + filename
+      };
+      utility.downloadFileFromS3(opts, function(err, s3res) {
+        if (err) {
+          debug("Error in downloading file > " + filename);
+          return cb(err);
+        }
+        cb();
+      });
+}
+
 function executeTask(taskData) {
   switch (taskData.taskType) {
     case "bulkproduct":
@@ -89,10 +109,17 @@ function executeTask(taskData) {
       //bulkProductUpload.commitProduct(taskData, updateTask);
       break;
     case "bulkauction":
-      bulkUpload.init(taskData, updateTask);
+        downloadZip(taskData,function(err){
+          if(err){
+            console.log("Error in downloading zip",err);
+            return;
+          }
+          bulkUpload.init(taskData, updateTask);
+        });
+      //
       break;
     case "bulkSpare" :
-      bulkUpload.init(taskData,updateTask);
+      //bulkUpload.init(taskData,updateTask);
       break;
   }
 }
