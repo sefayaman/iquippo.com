@@ -113,7 +113,7 @@
         <div class="row">
           <div class="col-xs-12 col-sm-4 form-group text-center" ng-repeat="brand in mainVm.brands" ng-if="$index < 3">   
             <div class="brand-logo">
-              <a href="/used-equipment/brands/{{brand.name}}?currentPage=1" class="brand-name">
+              <a href="/used-equipment/brands/{{removeSpace(brand.name)}}?currentPage=1" class="brand-name">
                 <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{brand.imgSrc}}">
               </a>
             </div>
@@ -124,7 +124,7 @@
         <div class="row">
           <div class="col-xs-12 col-sm-4 form-group text-center" ng-repeat="brand in mainVm.brandsForNew" ng-if="$index < 3">   
             <div class="brand-logo">
-              <a href="/new-equipment/brands/{{brand.name}}?currentPage=1" class="brand-name">
+              <a href="/new-equipment/brands/{{removeSpace(brand.name)}}?currentPage=1" class="brand-name">
                 <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{brand.imgSrc}}">
               </a>
             </div>
@@ -149,7 +149,7 @@
         <div class="row">
           <div class="col-sm-4 form-group text-center" ng-repeat="category in mainVm.categoryList" ng-if="$index < 6">   
             <div class="cat-rectangle">
-              <a href="/used-equipment/{{category.group.name}}/{{category.name}}?currentPage=1">
+              <a href="/used-equipment/{{removeSpace(category.group.name)}}/{{removeSpace(category.name)}}?currentPage=1">
                 <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{category.imgSrc}}" class="category-item">
               </a>
             </div>
@@ -161,7 +161,7 @@
         <div class="row">
           <div class="col-sm-4 form-group text-center" ng-repeat="category in mainVm.categoryListForNew" ng-if="$index < 6">   
             <div class="cat-rectangle">
-              <a href="/new-equipment/{{category.group.name}}/{{category.name}}?currentPage=1">
+              <a href="/new-equipment/{{category.group.name}}/{{removeSpace(category.name)}}?currentPage=1">
                 <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{category.imgSrc}}" class="category-item">
               </a>
             </div>
@@ -200,7 +200,7 @@
        <uib-tab heading="Used Equipment" select="mainVm.toggleTab(2,true)">
         <div class="row">
           <div class="col-sm-4 form-group text-center" ng-repeat="group in mainVm.groups" ng-if="$index < 6">   
-            <a href="/used-equipment/{{group.name}}?currentPage=1" class="industy-rectangle">
+            <a href="/used-equipment/{{removeSpace(group.name)}}?currentPage=1" class="industy-rectangle">
               <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{group.imgSrc}}" class="category-item">
             </a>
             <div class="category-name">
@@ -213,7 +213,7 @@
       <uib-tab heading="New Equipment" select="mainVm.toggleTab(2,true)">
         <div class="row">
           <div class="col-sm-4 form-group text-center" ng-repeat="group in mainVm.groupsForNew" ng-if="$index < 6">   
-            <a href="/new-equipment/{{group.name}}?currentPage=1" class="industy-rectangle">
+            <a href="/new-equipment/{{removeSpace(group.name)}}?currentPage=1" class="industy-rectangle">
               <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{group.imgSrc}}" class="category-item">
             </a>
             <div class="category-name">

@@ -16,7 +16,7 @@
     <div>
       <ul class="new-equipment-brand">
         <li ng-repeat="newBrand in allBanner | orderBy:'order' | limitTo:newEquipmentVm.bnrLimit">
-          <a href="/new-equipment/brands/{{newBrand.brand.name}}?currentPage=1" title="" ng-if="newBrand.brand.name">
+          <a href="/new-equipment/brands/{{removeSpace(newBrand.brand.name)}}?currentPage=1" title="" ng-if="newBrand.brand.name">
             <img src="{{uploadImagePrefix}}{{bannerDir}}/{{newBrand.newEquipBannerImg}}" alt="">
           </a>
           <a href="/new-equipment/spl/{{newBrand.promotion.name}}?currentPage=1" title="" ng-if="newBrand.promotion.name">
@@ -42,7 +42,7 @@
     <div class="row">
       <div class="col-sm-4 form-group text-center" ng-repeat="brand in allBrand | limitTo:newEquipmentVm.bLimit" >   
         <div class="brand-logo">
-          <a href="/new-equipment/brands/{{brand.name}}?currentPage=1">
+          <a href="/new-equipment/brands/{{removeSpace(brand.name)}}?currentPage=1">
             <img src="{{uploadImagePrefix}}{{categoryDir}}/{{brand.imgSrc}}" width="100%" height="100">
           </a>
         </div>
@@ -75,7 +75,7 @@
     <div class="row">
       <div class="col-sm-4 form-group text-center" ng-repeat="category in allCategory| limitTo:newEquipmentVm.cLimit">   
         <div class="cat-rectangle">
-          <a href="/new-equipment/{{category.group.name}}/{{category.name}}?currentPage=1">
+          <a href="/new-equipment/{{removeSpace(category.group.name)}}/{{removeSpace(category.name)}}?currentPage=1">
             <img src="{{uploadImagePrefix}}{{categoryDir}}/{{category.imgSrc}}" class="category-item">
           </a>
         </div>

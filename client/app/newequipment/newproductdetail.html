@@ -5,8 +5,8 @@
     </li>
     
     <li><a href="/new-equipment"> New Equipment</a></li>
-    <li><a href="/new-equipment/viewproducts?group={{currentProduct.group.name}}">{{currentProduct.group.name}}</a></li>
-    <li ng-if="currentProduct.category.name != 'Other'"><a href="new-equipment/viewproducts?category={{currentProduct.category.name}}">{{currentProduct.category.name}}</a></li>
+    <li><a href="/new-equipment/viewproducts?group={{removeSpace(currentProduct.group.name)}}">{{currentProduct.group.name}}</a></li>
+    <li ng-if="currentProduct.category.name != 'Other'"><a href="new-equipment/viewproducts?category={{removeSpace(currentProduct.category.name)}}">{{currentProduct.category.name}}</a></li>
     <li ng-if="currentProduct.category.name == 'Other'">{{currentProduct.category.otherName}}</li>
     <li><a class="active">{{currentProduct.name}}</a></li>
 <!--    {{currentProduct}}-->

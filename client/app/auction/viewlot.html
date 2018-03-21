@@ -39,7 +39,7 @@
           <div>
             <div class="radio" ng-repeat="cat in categoryList">
               <input type="radio" ng-model="equipmentSearchFilter.category" ng-change="viewLotVm.onCategoryChange(equipmentSearchFilter.category)"
-                name="category" value="{{cat.name}}" id="cat_{{$index}}">
+                name="category" value="{{removeSpace(cat.name)}}" id="cat_{{$index}}">
               <label for="cat_{{$index}}">{{cat.name}}</label>
             </div>
 
@@ -53,7 +53,7 @@
           </uib-accordion-heading>
           <div>
             <div class="radio" ng-repeat="br in brandList | unique: 'name' | orderBy :'name'">
-              <input type="radio" ng-model="equipmentSearchFilter.brand" ng-change="viewLotVm.fireCommand()" name="brand" value="{{br.name}}"
+              <input type="radio" ng-model="equipmentSearchFilter.brand" ng-change="viewLotVm.fireCommand()" name="brand" value="{{removeSpace(br.name)}}"
                 id="brand_{{$index}}">
               <label for="brand_{{$index}}">{{br.name}}</label>
             </div>
@@ -269,7 +269,7 @@
                         <p>
                           <i class="fa fa-check-circle-o"></i> Available for Sale</p>
 
-                        <a href="/used-equipment/{{lot.assets[0].product.category}}/{{lot.assets[0].product.brand}}/{{lot.assets[0].product.assetId}}?lot={{lot._id}}"
+                        <a href="/used-equipment/{{removeSpace(lot.assets[0].product.category)}}/{{removeSpace(lot.assets[0].product.brand)}}/{{lot.assets[0].product.assetId}}?lot={{lot._id}}"
                           class="btn btn-primary btn-block" ng-if="lot.assets.length === 1 && lot.assets[0].product && lot.assets[0].product._id">
                           View Details
                         </a>
@@ -350,7 +350,7 @@
                   </div>  -->
                   <!-- {{lot.isVisible}} -->
                   <!-- {{lot.url}} -->
-                  <a href="/used-equipment/{{lot.assets[0].product.category}}/{{lot.assets[0].product.brand}}/{{lot.assets[0].product.assetId}}" class="btn btn-primary btn-block"
+                  <a href="/used-equipment/{{removeSpace(lot.assets[0].product.category)}}/{{removeSpace(lot.assets[0].product.brand)}}/{{lot.assets[0].product.assetId}}" class="btn btn-primary btn-block"
                     ng-if="lot.assets.length === 1 && lot.assets[0].product && lot.assets[0].product._id">
                     View Details
                   </a>

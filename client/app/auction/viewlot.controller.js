@@ -7,6 +7,9 @@
     var vm = this;
     var dbAuctionId = $stateParams.dbAuctionId;
     $scope.equipmentSearchFilter = {};
+    $stateParams.group = $scope.removeUnderScore($stateParams.group);
+    $stateParams.brand = $scope.removeUnderScore($stateParams.brand);
+    $stateParams.location = $scope.removeUnderScore($stateParams.location);
     //$scope.pager = PagerSvc.getPager(null,1,24);
     //pagination variables
     var prevPage = 0;
@@ -378,6 +381,7 @@
 
     function saveState(retainState) {
       $scope.equipmentSearchFilter.currentPage = vm.currentPage + "";
+      $scope.equipmentSearchFilter.location = $scope.removeSpace($scope.equipmentSearchFilter.location);
       $state.go($state.current.name, $scope.equipmentSearchFilter, { location: 'replace', notify: false });
     }
 
