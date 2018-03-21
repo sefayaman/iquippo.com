@@ -306,7 +306,8 @@ var Payment_Variable = {
   "depositAmount" : "amount",
   "cash" : "cash",
   "bankName" : "bankname",
-  "refNo" : "refNo",
+  "dd_refNo" : "refNo",
+  "rtgs_refNo" : "refNo",
   "paymentDate" : "paymentDate",
   "neftRtgsNo":"neftRtgsNo"
 }
@@ -351,6 +352,12 @@ var Auction_Variable = {
         else
           val = '';
       }
+      if(key === 'dd_refNo' && payment && ['DD','Cheque'].indexOf(payment.paymentModeType) === -1)
+          val = '';
+
+      if(key === 'rtgs_refNo' && payment && ['RTGS','NEFT'].indexOf(payment.paymentModeType) === -1)
+          val = '';
+       
 
       if(key ==='paymentDate') {
           val = moment(payment.paymentDate).utcOffset('+0530').format('MM/DD/YYYY');
@@ -359,6 +366,18 @@ var Auction_Variable = {
         val = "";
       data[key] = val;
     });
+
+    if(payment && ['DD','Cheque'].indexOf(payment.paymentModeType) === -1){
+      data['bankName'] = "";
+      data['paymentDate'] = "";
+    }
+
+    if(payment && payment.paymentModeType==='Cash'){
+      data['dd_refNo'] = "";
+      data['rtgs_refNo'] = "";
+      data['bankName'] = "";
+      data['paymentDate'] = "";
+    }
  }
 
  function setAuctionData(auctionData,data){
