@@ -395,7 +395,7 @@
     }
 
     function _customComparator(a, b) {
-      var splitter = /^(\d+)([A-Z]*)/;
+      var splitter = /^(\d+)([a-zA-Z]*)/;
       a = a.lotNumber.match(splitter);
       b = b.lotNumber.match(splitter);
 
