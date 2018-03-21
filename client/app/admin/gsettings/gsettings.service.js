@@ -22,6 +22,7 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
       lServices.getCountryCode = getCountryCode;
 
       lServices.getCountryNameByCode = getCountryNameByCode;
+      lServices.getCountryCodeByName = getCountryCodeByName; // added by Madhusudan for getting country code in case of logged in user
       lServices.deleteCountry = deleteCountry;
       lServices.updateCountry = updateCountry;
       lServices.saveCountry = saveCountry;
@@ -131,6 +132,18 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
         })
 
         return name;
+      }
+
+      function getCountryCodeByName(name){
+        var code = '';
+        $rootScope.allCountries.some(function(x){
+          if(x.name == name){
+            code =  x.countryCode;
+            return true;
+          }
+        })
+
+        return code;
       }
 
       function getAllCountry(){

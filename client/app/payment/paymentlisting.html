@@ -43,7 +43,7 @@
                
               </thead>
               <tbody>
-              <tr ng-repeat="tns in filterData = (paymentListingVm.transactions | filter : filterText) | limitTo:paymentListingVm.itemsPerPage:paymentListingVm.itemsPerPage*(page-1)"">
+              <tr ng-repeat="tns in filterData = (paymentListingVm.transactions | filter : filterText) | limitTo:paymentListingVm.itemsPerPage:paymentListingVm.itemsPerPage*(page-1)">
                 <td><input type="checkbox" ng-checked="paymentListingVm.master" ng-click="paymentListingVm.updateSelection($event,tns._id)"></td>
                 <td>{{tns.transactionId}}</td>
                 <td>{{tns.product.category}}</td>

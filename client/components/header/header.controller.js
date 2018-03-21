@@ -134,33 +134,33 @@ angular.module('sreizaoApp')
     }
 
     $scope.sendCallback = function(){
-      if(Auth.getCurrentUser()._id) {
-        if(Auth.getCurrentUser().profileStatus == 'incomplete'){
-          $state.go('myaccount');
-          return;
-        }
-        var dataToServer = {};
-        dataToServer['fname'] = Auth.getCurrentUser().fname;
-        dataToServer['mname'] = Auth.getCurrentUser().mname;
-        dataToServer['lname'] = Auth.getCurrentUser().lname;
-        dataToServer['country'] = Auth.getCurrentUser().country;
-        dataToServer['phone'] = Auth.getCurrentUser().phone;
-        dataToServer['mobile'] = Auth.getCurrentUser().mobile;
-        dataToServer['email'] = Auth.getCurrentUser().email;
-        dataToServer['customerId'] = Auth.getCurrentUser().customerId;
-        
-        $http.post('/api/callback', dataToServer);
-        var data = {};
-        data['to'] = supportMail;
-        data['subject'] = 'Callback request';
-        dataToServer['serverPath'] = serverPath;
-        notificationSvc.sendNotification('callbackEmail',data,dataToServer,'email');
-        data['to'] = dataToServer['email'];
-        notificationSvc.sendNotification('callbackEmailToCustomer',data,dataToServer,'email');
-          Modal.alert(informationMessage.callbackSuccess,true);
-      } else {
+      // if(Auth.getCurrentUser()._id) {
+      //   if(Auth.getCurrentUser().profileStatus == 'incomplete'){
+      //     $state.go('myaccount');
+      //     return;
+      //   }
+      //   var dataToServer = {};
+      //   dataToServer['fname'] = Auth.getCurrentUser().fname;
+      //   dataToServer['mname'] = Auth.getCurrentUser().mname;
+      //   dataToServer['lname'] = Auth.getCurrentUser().lname;
+      //   dataToServer['country'] = Auth.getCurrentUser().country;
+      //   dataToServer['phone'] = Auth.getCurrentUser().phone;
+      //   dataToServer['mobile'] = Auth.getCurrentUser().mobile;
+      //   dataToServer['email'] = Auth.getCurrentUser().email;
+      //   dataToServer['customerId'] = Auth.getCurrentUser().customerId;
+
+      //   $http.post('/api/callback', dataToServer);
+      //   var data = {};
+      //   data['to'] = supportMail;
+      //   data['subject'] = 'Callback request';
+      //   dataToServer['serverPath'] = serverPath;
+      //   notificationSvc.sendNotification('callbackEmail',data,dataToServer,'email');
+      //   data['to'] = dataToServer['email'];
+      //   notificationSvc.sendNotification('callbackEmailToCustomer',data,dataToServer,'email');
+      //     Modal.alert(informationMessage.callbackSuccess,true);
+      // } else {
         $scope.openDialog('callback');
-      }
+      // }
     }
 
     /*$rootScope.submitToRapid = function(){

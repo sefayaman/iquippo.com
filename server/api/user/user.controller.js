@@ -968,7 +968,7 @@ exports.getUser = function(req, res) {
   else {
     if(req.body.isAdminRole) {
       // get users of role enterprise and channelPartner
-      filter["role"] = {$in: ['enterprise', 'channelpartner']};
+      filter['$or'] = [{'role':'enterprise','enterprise': true},{'role':'channelpartner'}];
     } else {
       var typeFilter = {};
       typeFilter.$ne = "admin";
