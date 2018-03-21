@@ -8,6 +8,7 @@ var LotSchema = new Schema({
   lotNumber:String,
   auction_id:String,
   auctionId:String,
+  auctionType: String,
   startingPrice:Number,
   reservePrice:Number,
   startDate:Date,

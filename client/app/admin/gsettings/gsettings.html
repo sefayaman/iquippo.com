@@ -434,26 +434,36 @@
 
                                         <input type="text" class="form-control" name="auctionAddr" ng-model="gsettingVm.auctionData.auctionAddr" placeholder="Address of Auction" />
                                     </div>
-                                    <div class="col-sm-3 form-group">
+                                    <div class="col-sm-6 form-group">
                                         Auction Type
                                         <div class="row">
-                                            <div class="col-xs-5 padd-right" ng-class="{'has-error': auctionDateForm.auctionType.$invalid && submitted}">
-                                                <input type="radio" id="inlineRadio1" name="auctionType" ng-model="gsettingVm.auctionData.auctionType" value="L" ng-required="!gsettingVm.auctionData.auctionType"> Live Auction
+                                            <div class="col-xs-4 padd-right" ng-class="{'has-error': auctionDateForm.auctionType.$invalid && submitted}">
+                                                <div class="radio radio-info">
+                                                    <input type="radio" id="inlineRadio1" name="auctionType" ng-disabled="gsettingVm.auctionData.auctionType==='PT'" ng-model="gsettingVm.auctionData.auctionType" value="L" ng-required="!gsettingVm.auctionData.auctionType"> <label for="inlineRadio1">Live Auction </label>
+                                                </div>
                                             </div>
-                                            <div class="col-xs-7" ng-class="{'has-error': auctionDateForm.auctionType.$invalid && submitted}">
-                                                <input type="radio" id="inlineRadio2" name="auctionType" ng-model="gsettingVm.auctionData.auctionType" value="A" ng-required="!gsettingVm.auctionData.auctionType"> On-Line Auction
+                                            <div class="col-xs-4" ng-class="{'has-error': auctionDateForm.auctionType.$invalid && submitted}">
+                                                <div class="radio radio-info">
+                                                    <input type="radio" id="inlineRadio2" name="auctionType" ng-disabled="gsettingVm.auctionData.auctionType==='PT'" ng-model="gsettingVm.auctionData.auctionType" value="A" ng-required="!gsettingVm.auctionData.auctionType"> <label for="inlineRadio2">On-Line Auction </label>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-4" ng-class="{'has-error': auctionDateForm.auctionType.$invalid && submitted}">
+                                                <div class="radio radio-info">
+                                                    <input type="radio" id="inlineRadio3" name="auctionType" ng-disabled="gsettingVm.auctionData.auctionType==='L' || gsettingVm.auctionData.auctionType==='A'" ng-model="gsettingVm.auctionData.auctionType" value="PT" ng-required="!gsettingVm.auctionData.auctionType"> <label for="inlineRadio3">Private Treaty </label>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
+                                    					
+                                </div>
+                                <div class="row">
                                     <div class="col-sm-3 form-group" ng-class="{'has-error': auctionDateForm.emdTax.$invalid && submitted }">
                                         <select class="form-control"  name="emdTax" ng-model="gsettingVm.auctionData.emdTax" required>
                                             <option value="">EMD and Tax Applicability</option>
                                             <option value="lotwise">Lot Wise</option>
                                             <option value="overall">Overall</option>					
                                         </select>
-                                    </div>					
-                                </div>
-                                <div class="row">
+                                    </div>
                                     <div class="col-sm-3 form-group" ng-if="gsettingVm.auctionData.emdTax === 'overall'" ng-class="{'has-error': auctionDateForm.emdAmount.$invalid && submitted }" >
                                         <!-- <input type="Number" class="form-control" name="regCharges" ng-model="gsettingVm.auctionData.regCharges" placeholder="Registration Charges for Auction" disabled> -->
                                         <input type="Number" class="form-control" name="emdAmount" ng-model="gsettingVm.auctionData.emdAmount" placeholder="EMD Amount" required>
@@ -468,11 +478,12 @@
                                             <option value="notIncluded">Tax not included</option>						
                                         </select>
                                     </div>
+                                    
+                                </div>
+                                <div class="row">
                                     <div class="col-sm-3">
                                         <input type="Number" class="form-control" name="" value="" ng-model="gsettingVm.auctionData.lastMinuteBid" placeholder="Last Minute Bid ( in minutes )">
                                     </div>
-                                </div>
-                                <div class="row">
                                     <div class="col-sm-3">
                                         <input type="Number" class="form-control" ng-model="gsettingVm.auctionData.extendedTo" name="" value="" placeholder="Extended To ( in minutes )">
                                     </div>	
@@ -482,11 +493,12 @@
                                     <div class="col-sm-3 form-group">   
                                         <input type="text" name="" class="form-control" placeholder="Contact Person Name" ng-model="gsettingVm.auctionData.contactName">
                                     </div>
+                                    
+                                </div>
+                                <div class="row">
                                     <div class="col-sm-3 form-group">   
                                         <input type="text" name="" class="form-control" placeholder="Contact Person No." ng-model="gsettingVm.auctionData.contactNumber">
                                     </div>
-                                </div>
-                                <div class="row">
                                     <div class="col-sm-3">  
                                         <select class="form-control" name="allowBid" ng-model="gsettingVm.auctionData.allowBid">
                                             <option value="">Allow Bid</option>
@@ -508,15 +520,16 @@
                                         </span>
                                         <span>{{gsettingVm.auctionData.docNameProxy}}</span>
                                     </div>  
+                                    	
+                                </div>
+                                <div class="row">
                                     <div class="col-sm-3">							
                                         <span class="btn btn-warning btn-block fileinput-button">
                                             <span>Upload Image</span>
                                             <input type="file" name="file" onchange="angular.element(this).scope().updateAuctionMasterImage(this.files, this)" accept="image/*" class="ng-scope">
                                         </span>
                                         <span>{{gsettingVm.auctionData.primaryImg}}</span>
-                                    </div>	
-                                </div>
-                                <div class="row">
+                                    </div>
                                     <div class="col-sm-3 form-group">
                                          <span class="btn btn-warning btn-block fileinput-button">
                                             <span>Upload Registration Form</span>

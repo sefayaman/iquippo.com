@@ -46,10 +46,11 @@
                 <i class="fa fa-circle"></i><strong class="text-danger">Now</strong>
               </div>
             </div>
-            <p ng-if="auction.auctionType === 'A' || auction.auctionType === 'L'">
+            <p ng-if="auction.auctionType === 'A' || auction.auctionType === 'L' || auction.auctionType === 'PT'">
               <i class="fa fa-gavel"></i> 
               <strong ng-if="auction.auctionType === 'A'">Online</strong>
               <strong ng-if="auction.auctionType === 'L'">Live Auction</strong>
+              <strong ng-if="auction.auctionType === 'PT'">Private Treaty</strong>
             </p>
             <p><i class="fa fa-clock-o"></i> <strong class="text-success"><timer end-time="auction.endTimer">{{days}} days, {{hours}} hours, {{minutes}} minutes, {{seconds}} seconds.</timer></strong></p>
             <p><a href="{{uploadImagePrefix}}{{auctionDir}}/{{auction.docName}}" ng-if="auction.docType == 'tc'" target="_blank"><i class="fa fa-file-text-o"></i> <strong class="text-info">Download Catalog</strong></a>

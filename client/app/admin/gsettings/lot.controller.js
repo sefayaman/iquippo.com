@@ -52,6 +52,7 @@ function LotCtrl($scope, $rootScope, $state,Modal,Auth,PagerSvc,$filter,AuctionM
     angular.copy(rowData, vm.dataModel);
     vm.dataModel._id  = rowData._id;
     vm.dataModel.auction_id = rowData.auction_id;
+    vm.dataModel.auctionType = rowData.auctionType;
     vm.dataModel.startingPrice = rowData.startingPrice;
     vm.dataModel.reservePrice = rowData.reservePrice;
     vm.dataModel.startDate = moment(rowData.startDate).format('MM/DD/YYYY hh:mm A');
@@ -94,6 +95,7 @@ function LotCtrl($scope, $rootScope, $state,Modal,Auth,PagerSvc,$filter,AuctionM
       if (vm.auctionListing[i]._id === vm.dataModel.auction_id) {
         vm.dataModel.auctionId = vm.auctionListing[i].auctionId;
         vm.dataModel.auction_id = vm.auctionListing[i]._id;
+        vm.dataModel.auctionType = vm.auctionListing[i].auctionType;
         break;
       }
     }

@@ -1180,23 +1180,30 @@ function postRequest(req, res) {
   }, function (err, result) {
     options.dataToSend = result[0].toObject();
     options.dataType = "auctionData";
-
-    Utility.sendCompiledData(options, function (err, result) {
-      if (err || (result && result.err)) {
-        //options.dataToSend.reqSubmitStatus = ReqSubmitStatuses[1];
-        req.body.reqSubmitStatus = ReqSubmitStatuses[1];
-        update(req.body);
-        if (result && result.err)
-          return res.status(412).send(result.err);
-        return res.status(412).send("Unable to post auction request. Please contact support team.");
-      }
-      if (result) {
-        //options.dataToSend.reqSubmitStatus =  ReqSubmitStatuses[0];
-        req.body.reqSubmitStatus = ReqSubmitStatuses[0];
+    if (req.body.auctionType==='PT') {
         update(req.body);
         return res.status(201).json({ errorCode: 0, message: "Auction request submitted successfully !!!" });
-      }
-    });
+    }
+    else
+        {
+
+            Utility.sendCompiledData(options, function (err, result) {
+                if (err || (result && result.err)) {
+                    //options.dataToSend.reqSubmitStatus = ReqSubmitStatuses[1];
+                    req.body.reqSubmitStatus = ReqSubmitStatuses[1];
+                    update(req.body);
+                    if (result && result.err)
+                        return res.status(412).send(result.err);
+                    return res.status(412).send("Unable to post auction request. Please contact support team.");
+                }
+                if (result) {
+                    //options.dataToSend.reqSubmitStatus =  ReqSubmitStatuses[0];
+                    req.body.reqSubmitStatus = ReqSubmitStatuses[0];
+                    update(req.body);
+                    return res.status(201).json({errorCode: 0, message: "Auction request submitted successfully !!!"});
+                }
+            });
+        }
   });
 }
 
@@ -1711,23 +1718,31 @@ exports.deleteAuctionMaster = function (req, res) {
         "isDeleted": true,
       }
       options.dataType = "auctionData";
-      Utility.sendCompiledData(options, function (err, result) {
-        if (err || (result && result.err)) {
-          //options.dataToSend.isDeleted = false;
-          //update(options.dataToSend);
-          AuctionMaster.update({ _id: req.params.id }, { $set: { isDeleted: false } }).exec();
-          if (result && result.err) {
-            return res.status(412).send(result.err);
-          }
-          return res.status(412).send("Unable to delete auction request. Please contact support team.");
-        }
-        if (result) {
-          //options.dataToSend.isDeleted = true;
-          //update(options.dataToSend);
+      
+      if (req.body.auctionType==='PT') {
           AuctionMaster.update({ _id: req.params.id }, { $set: { isDeleted: true } }).exec();
           return res.status(201).json({ errorCode: 0, message: "Auction request deleted successfully !!!" });
-        }
-      });
+      }
+        else
+        {
+        Utility.sendCompiledData(options, function (err, result) {
+          if (err || (result && result.err)) {
+            //options.dataToSend.isDeleted = false;
+            //update(options.dataToSend);
+            AuctionMaster.update({ _id: req.params.id }, { $set: { isDeleted: false } }).exec();
+            if (result && result.err) {
+              return res.status(412).send(result.err);
+            }
+            return res.status(412).send("Unable to delete auction request. Please contact support team.");
+          }
+          if (result) {
+            //options.dataToSend.isDeleted = true;
+            //update(options.dataToSend);
+            AuctionMaster.update({ _id: req.params.id }, { $set: { isDeleted: true } }).exec();
+            return res.status(201).json({ errorCode: 0, message: "Auction request deleted successfully !!!" });
+          }
+        });
+      }
     });
 };
 
