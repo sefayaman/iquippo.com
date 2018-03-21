@@ -154,8 +154,18 @@
                 <uib-accordion-heading>
                   Buy Quotations  <i class="pull-right fa" ng-class="{'fa-minus': Buystatus.open, 'fa-plus': !Buystatus.open}"></i>
                 </uib-accordion-heading>
+                <div class="row">
+                  <div class="col-sm-6">
+                    <p>Showing : {{filterAllBuyerData.length}} Records</p>
+                  </div>
+                  <div class="col-sm-6">
+                      <div class="tablesearch form-group pull-right">
+                         Search: <input type="text" placeholder="Search..." ng-model="filterAllBuyerText" ng-model-options="{debounce:500}">
+                      </div>                
+                  </div>
+                </div>
                  <div class="table-responsive">
-                    <table datatable="ng" dt-options= "dtOptions" class="table table-bordred table-striped">
+                    <table class="table table-bordred table-striped">
                       <thead>
                     <tr>
                       <th width="10%">Name</th>
@@ -167,7 +177,7 @@
                     </tr>        
                     </thead>                  
                     <tbody>           
-                    <tr ng-repeat="buyer in allBuyerRequest">
+                    <tr ng-repeat="buyer in filterAllBuyerData = (allBuyerRequest | filter : filterAllBuyerText) | limitTo:itemsPerPage:itemsPerPage*(page-1)">
                       <td>{{buyer.fname}} {{buyer.lname}}</td>
                       <td>{{buyer.email}}</td>
                       <td>{{buyer.mobile}}</td>
@@ -177,12 +187,24 @@
                    </tbody>
                     </table>
                   </div>
+                  <uib-pagination total-items="filterAllBuyerData.length" ng-model="page" items-per-page="itemsPerPage" max-size="maxSize" ng-change="pageChanged()" class="pagination-sm" rotate="false">  </uib-pagination>
               </uib-accordion-group>
               <uib-accordion-group is-open="servicestatus.open" ng-hide="!isActive()">
                 <uib-accordion-heading>
                   Services Quotations  <i class="pull-right fa" ng-class="{'fa-minus': servicestatus.open, 'fa-plus': !servicestatus.open}"></i>
                                 </uib-accordion-heading>
-                  <table datatable="ng" dt-options= "dtOptions" class="table table-striped">
+
+                  <div class="row">
+                    <div class="col-sm-6">
+                      <p>Showing : {{filterService.length}} Records</p>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="tablesearch form-group pull-right">
+                           Search: <input type="text" placeholder="Search..." ng-model="filterServiceText" ng-model-options="{debounce:500}">
+                        </div>                
+                    </div>
+                  </div>
+                  <table class="table table-striped">
                     <thead>
                       <tr>
                         <th>Name</th>
@@ -192,7 +214,7 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <tr ng-repeat="addService in allAdditionalService">
+                      <tr ng-repeat="addService in filterService = (allAdditionalService | filter : filterServiceText) | limitTo:itemsPerPage:itemsPerPage*(page-1)">
                         <td>
                           <a ng-click="previewQutation(addService)" href="javascript:void(0);">{{addService.fname}} {{addService.lname}}</a>
                         </td>
@@ -202,6 +224,7 @@
                       </tr>
                     </tbody>
                   </table>
+                  <uib-pagination total-items="filterService.length" ng-model="page" items-per-page="itemsPerPage" max-size="maxSize" ng-change="pageChanged()" class="pagination-sm" rotate="false">  </uib-pagination>
               </uib-accordion-group>
             </uib-accordion>
             <section ng-repeat="proHistory in allProductHistroyOnProductId">

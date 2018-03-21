@@ -110,9 +110,9 @@
                                     <h4>Add New Country</h4>
                                 </div>
                                 <!-- <div class="col-sm-6 text-right">
-                                                        <h4>
-                                                                <button class="btn btn-success" ng-click="gsettingVm.exportProductState('country')"> <i class="fa fa-file-excel-o"></i> Export</button>
-                                                        </h4>
+                                <h4>
+                                    <button class="btn btn-success" ng-click="gsettingVm.exportProductState('country')"> <i class="fa fa-file-excel-o"></i> Export</button>
+                                </h4>
                                 </div> -->
                             </div>
                             <legend></legend>
@@ -129,27 +129,40 @@
                                 </div>
 
                             </div>
-                            <table datatable="ng" dt-options="dtOptions" class="table table-bordred table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>Country</th>
-                                        <th>ISD Code</th>
-                                        <th>Action</th>
-                                    </tr>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                  <p>Showing : {{filterCountry.length}} Records</p>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="tablesearch form-group pull-right">
+                                       Search: <input type="text" placeholder="Search..." ng-model="filterCountryText" ng-model-options="{debounce:500}">
+                                    </div>                
+                                </div>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-bordred table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Country</th>
+                                            <th>ISD Code</th>
+                                            <th>Action</th>
+                                        </tr>
 
-                                </thead>
-                                <tbody>
-                                    <tr ng-repeat="country in gsettingVm.countryList">
-                                        <td>{{country.name}}</td>
-                                        <td>{{country.countryCode}}</td>
-                                        <td>
-                                            <a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="gsettingVm.countryEditClick($index)" ><i class="fa fa-pencil"></i> </a>
-                                            <a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deleteCountry($index)"><i class="fa fa-trash"></i> </a>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="country in filterCountry =(gsettingVm.countryList | filter: filterCountryText) | limitTo: gsettingVm.itemsPerPage:gsettingVm.itemsPerPage*(page-1)">
+                                            <td>{{country.name}}</td>
+                                            <td>{{country.countryCode}}</td>
+                                            <td>
+                                                <a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="gsettingVm.countryEditClick($index)" ><i class="fa fa-pencil"></i> </a>
+                                                <a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deleteCountry($index)"><i class="fa fa-trash"></i> </a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </form>
+                        <uib-pagination total-items="filterCountry.length" ng-model="page" items-per-page="gsettingVm.itemsPerPage" max-size="gsettingVm.maxSize" ng-change="gsettingVm.pageChanged()" class="pagination-sm" rotate="false">  </uib-pagination>
                     </uib-tab>
                     <uib-tab heading="State">
                         <form name="stateForm" novalidate class="stateForm">
@@ -182,8 +195,19 @@
 
                             </div>
                         </form>
+                        <legend></legend>
+                        <div class="row">
+                            <div class="col-sm-6">
+                              <p>Showing : {{filterState.length}} Records</p>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="tablesearch form-group pull-right">
+                                   Search: <input type="text" placeholder="Search..." ng-model="filterStateText" ng-model-options="{debounce:500}">
+                                </div>                
+                            </div>
+                        </div>
                         <div class="table-responsive">
-                            <table datatable="ng" dt-options="dtOptions" class="table table-bordred table-striped">
+                            <table class="table table-bordred table-striped">
                                 <thead>
                                     <tr>
                                         <th>Country</th>
@@ -193,7 +217,7 @@
 
                                 </thead>
                                 <tbody>
-                                    <tr ng-repeat="state in gsettingVm.stateList">
+                                    <tr ng-repeat="state in filterState = (gsettingVm.stateList | filter : filterStateText) | limitTo: gsettingVm.itemsPerPage:gsettingVm.itemsPerPage*(page-1)">
                                         <td>{{state.country}}</td>
                                         <td>{{state.name}}</td>
                                         <td>
@@ -202,8 +226,9 @@
                                         </td>
                                     </tr>
                                 </tbody>
-                            </table>
+                            </table>                            
                         </div>
+                        <uib-pagination total-items="filterState.length" ng-model="page" items-per-page="gsettingVm.itemsPerPage" max-size="gsettingVm.maxSize" ng-change="gsettingVm.pageChanged()" class="pagination-sm" rotate="false">  </uib-pagination>
                     </uib-tab>
                     <uib-tab heading="Location">
                         <form name="locationForm" novalidate class="locationForm">
@@ -235,8 +260,19 @@
 
                             </div>
                         </form>
-                        <div class="table-responsive">
-                            <table datatable="ng" dt-options="dtOptions" class="table table-bordred table-striped">
+                        <legend></legend>
+                        <div class="row">
+                            <div class="col-sm-6">
+                              <p>Showing : {{filterLocation.length}} Records</p>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="tablesearch form-group pull-right">
+                                   Search: <input type="text" placeholder="Search..." ng-model="filterLocText" ng-model-options="{debounce:500}">
+                                </div>                
+                            </div>
+                        </div>
+                        <div class="table-responsive">                        
+                            <table class="table table-bordred table-striped">
                                 <thead>
                                     <tr>
                                         <th>State</th>
@@ -246,7 +282,7 @@
 
                                 </thead>
                                 <tbody>
-                                    <tr ng-repeat="loc in gsettingVm.locationList">
+                                    <tr ng-repeat="loc in filterLocation = (gsettingVm.locationList | filter: filterLocText) | limitTo:gsettingVm.itemsPerPage:gsettingVm.itemsPerPage*(page-1)">
                                         <td>{{loc.state.name}}</td>
                                         <td>{{loc.name}}</td>
                                         <td>
@@ -255,8 +291,9 @@
                                         </td>
                                     </tr>
                                 </tbody>
-                            </table>
+                            </table>                            
                         </div>
+                        <uib-pagination total-items="filterLocation.length" ng-model="page" items-per-page="gsettingVm.itemsPerPage" max-size="gsettingVm.maxSize" ng-change="gsettingVm.pageChanged()" class="pagination-sm" rotate="false">  </uib-pagination>
                     </uib-tab>
                 </uib-tabset>
             </div>
@@ -1035,8 +1072,19 @@
 
                     </div>
                 </form>
+                <legend></legend>
+                <div class="row">
+                    <div class="col-sm-6">
+                      <p>Showing : {{filterpayment.length}} Records</p>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="tablesearch form-group pull-right">
+                           Search: <input type="text" placeholder="Search..." ng-model="filterPaymentText" ng-model-options="{debounce:500}">
+                        </div>                
+                    </div>
+                </div>
                 <div class="table-responsive">
-                    <table datatable="ng" dt-options="dtOptions" class="table table-bordred table-striped">
+                    <table class="table table-bordred table-striped">
                         <thead>
                         <th>Service Name</th>
                         <th>Fee</th>
@@ -1045,7 +1093,7 @@
 
                         </thead>
                         <tbody>
-                            <tr ng-repeat="payment in gsettingVm.paymentMasterList">
+                            <tr ng-repeat="payment in filterpayment = (gsettingVm.paymentMasterList | filter : filterPaymentText) | limitTo:gsettingVm.itemsPerPage:gsettingVm.itemsPerPage*(page-1)">
                                 <td>{{payment.serviceName}}<span ng-if="payment.partnerId">({{gsettingVm.getParnerName(payment.partnerId)}})</span></td>
                                 <td>{{payment.fees}}</td>
                                 <td><input type="checkbox" ng-model="payment.default" ng-change="gsettingVm.markeDefaultPartner(payment)"></td>
@@ -1057,6 +1105,7 @@
                         </tbody>
                     </table>
                 </div>
+                <uib-pagination total-items="filterpayment.length" ng-model="page" items-per-page="gsettingVm.itemsPerPage" max-size="gsettingVm.maxSize" ng-change="gsettingVm.pageChanged()" class="pagination-sm" rotate="false">  </uib-pagination>
             </div>
             <!--Select Manufacturer -->
             <div ng-if="gsettingVm.tabValue == 'manu'">
@@ -1084,8 +1133,19 @@
 
                     </div>
                 </form>
+                <legend></legend>
+                <div class="row">
+                    <div class="col-sm-6">
+                      <p>Showing : {{filterManufacturer.length}} Records</p>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="tablesearch form-group pull-right">
+                           Search: <input type="text" placeholder="Search..." ng-model="filterManufacturerText" ng-model-options="{debounce:500}">
+                        </div>                
+                    </div>
+                </div>
                 <div class="table-responsive">
-                    <table datatable="ng" dt-options="dtOptions" class="table table-bordred table-striped">
+                    <table class="table table-bordred table-striped">
                         <thead>
                             <tr>
                                 <th>Image</th>
@@ -1095,7 +1155,7 @@
 
                         </thead>
                         <tbody>
-                            <tr ng-repeat="mfg in gsettingVm.manufacturerList">
+                            <tr ng-repeat="mfg in filterManufacturer = (gsettingVm.manufacturerList | filter: {name : filterManufacturerText}) | limitTo: gsettingVm.itemsPerPage:gsettingVm.itemsPerPage*(page-1)">
                                 <td><img class="sheduleImg img-circle" ng-src="{{uploadImagePrefix}}{{manufacturerDir}}/{{mfg.imgsrc}}" alt="Image"></td>
                                 <td>{{mfg.name}}</td>
                                 <td>
@@ -1106,6 +1166,7 @@
                         </tbody>
                     </table>
                 </div>
+                <uib-pagination total-items="filterManufacturer.length" ng-model="page" items-per-page="gsettingVm.itemsPerPage" max-size="gsettingVm.maxSize" ng-change="gsettingVm.pageChanged()" class="pagination-sm" rotate="false">  </uib-pagination>
             </div>
             <!--Banner setting -->
             <div ng-if="gsettingVm.tabValue == 'banner'" ng-controller="BannerMasterCtrl as bannerVm">
@@ -3104,8 +3165,7 @@
                                 </select>
 
                             </div>
-                        </div>
- -->
+                        </div>-->
                         <div class="row">
                             <div class="col-sm-2">
                                 <div class="checkbox">

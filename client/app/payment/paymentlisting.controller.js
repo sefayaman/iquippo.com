@@ -12,6 +12,11 @@
 		vm.updateSelection = updateSelection;
 		vm.exportExcel = exportExcel;
 		var selectedIds = [];
+		//pagination variables
+		var prevPage = 0;
+		vm.itemsPerPage = 50;
+		vm.maxSize = 6;
+		$scope.page = 1;
 
 		function init() {
 			Auth.isLoggedInAsync(function (loggedIn) {
@@ -64,6 +69,10 @@
 				selectedIds.push(id)
 			if (action == 'remove' && selectedIds.indexOf(id) != -1)
 				selectedIds.splice(selectedIds.indexOf(id), 1);
+		}
+
+		function pageChanged(){
+		   var startPos = ($scope.page - 1) * vm.itemsPerPage;
 		}
 	}
 

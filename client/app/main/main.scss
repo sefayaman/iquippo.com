@@ -55,6 +55,7 @@ select::-ms-expand {display: none;}
 a.text-muted{position:absolute; top:7px; right:30px; font-size:18px;}
 /* .panel-title span i{position:absolute; right:30px; font-size:14px;} */
 .quote-btn{width: 250px;margin: -33px 0 7px 400px;float: left;}
+.search-tabs{ background:  rgba(0,0,0,0.6); padding: 10px 15px; width:  60%; margin:  auto; border-radius: 5px;}
 .search-tabs .tab-content .form-control,.search-tabs .tab-content .btn{border-radius:2px; height:40px;}
 .panel-default .panel-heading{background: #eee; border-radius: 0;}
 .mob-menu{display: none;}
@@ -749,7 +750,7 @@ body{font-family: Lato-Regular ,sans-serif;}
 /* .navbar .navbar-nav i{border-radius:50%;background:#1C2437;color:#fff;width:30px;height:30px;padding:8px;text-align:center;} */
 .navbar .nav.navbar-nav.navbar-right .dropdown:hover .dropdown-menu{display: block;}
 #view-container{min-height:400px;margin-bottom:0px; margin-top: 5em;}
-#view-container .banner .carousel-indicators{top:55%;}
+#view-container .banner .carousel-indicators{top:55%; display: none;}
 #view-container .banner .carousel-inner .item img{width: 100vw;}
 .valuation-banner img{height: 300px; width: 100vw; margin-bottom: 1.5em;}
 .search-banner{position: absolute;bottom:0; z-index: 99; color: #fff;}
@@ -757,6 +758,10 @@ body{font-family: Lato-Regular ,sans-serif;}
 .search-banner p{text-shadow: 1px 2px 3px #666; font-weight: bold; letter-spacing: 2px; margin-bottom: 15px;}
 .search-banner .input-group{width: 100%;}
 .search-banner .input-group .form-control{height: 50px; border-color: #eee; border-radius: 4px;}
+.search-banner .input-group .form-control::placeholder, .filter .form-control::placeholder{color:#00429A; }
+.search-banner .input-group .form-control::-webkit-input-placeholder, .filter .form-control::-webkit-input-placeholder{color:#00429A; }
+.search-banner .input-group .form-control:-ms-input-placeholder, .filter .form-control:-ms-input-placeholder{color:#00429A; }
+.search-banner .input-group .form-control::-moz-placeholder, .filter .form-control::-moz-placeholder{color:#00429A; }
 .search-banner .input-group.has-error .form-control{border:1px solid #ef100c; background: #f5e7e6;}
 .search-banner .input-group.has-error .input-group-addon{background: transparent;}
 .filter{background: #fff; border-radius: 4px;}
@@ -764,7 +769,7 @@ body{font-family: Lato-Regular ,sans-serif;}
 .filter .select-text{margin-left: 0px;}
 .filter .has-error-filter{border:1px solid #ef100c; border-radius: 4px; background: #f5e7e6;}
 .filter .has-error-filter .form-control{background: transparent;}
-.filter .select-text .back-tohome a{line-height: 46px; text-shadow: none; color: #666; display: block;}
+.filter .select-text .back-tohome a{line-height: 46px; text-shadow: none; color: #00429A; display: block;}
 .filter .select-text:nth-of-type(1) .form-control{border-radius: 4px 0 0 4px;}
 .filter .select-text:nth-of-type(5) .form-control{border-radius: 0 4px 4px 0;}
 .banner{min-height:400px; position: relative; margin-bottom: 2em;}
@@ -772,6 +777,7 @@ body{font-family: Lato-Regular ,sans-serif;}
     z-index: 9;
     font-size: 13px;
     border: 0;
+    font-weight: bold;
     right: 6em;
     top: 1.4em; text-decoration: none; text-shadow: none; color: #00429A;}
 .search-banner .btn.btn-default{text-transform: uppercase; font-size: 14px; padding:15px 28px; color: #00429A; margin: 3em 1em 0; border-radius: 3px; box-shadow: 0px 2px 3px #ccc; font-weight: bold; letter-spacing: 2px;}
@@ -941,7 +947,7 @@ align-items: center; justify-content: center;
 .view-offer h2{margin-bottom: 10px; font-size: 24px; font-weight: bold;}
 .information-tabs.panel-primary .panel-heading{border-radius:0; background-color:#104095; border-color:#104095; color: #fff; text-transform: uppercase; text-align: center; padding: 1.3em;}
 .information-tabs.panel-primary .panel-heading .panel-title{font-size:1.3em;}
-.view-offer .panel-group .panel.panel-default{box-shadow: none; border: 0; border-bottom: 1px solid #00429A; margin-top: 2em;}
+.view-offer .panel-group .panel.panel-default{box-shadow: none; border: 0; background: transparent; border-bottom: 1px solid #00429A; margin-top: 2em;}
 .view-offer .panel-group .panel.panel-default .panel-heading{background: transparent; border:0; padding: 0;}
 .view-offer .panel-group .panel.panel-default .panel-heading .panel-title{font-weight: bold; position: relative;}
 .view-offer .panel-group .panel.panel-default .panel-heading .panel-title span i{top: 8px; font-size: 24px;}
@@ -1212,7 +1218,7 @@ footer .subscribe{height: 40px;}
 
 
 .radio {
-  padding-left: 20px; margin-bottom: 0px;}
+  padding-left: 20px;}
   .radio label {
     display: inline-block;
     position: relative;

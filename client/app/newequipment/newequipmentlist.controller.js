@@ -2,7 +2,7 @@
 'use strict';
 angular.module('sreizaoApp').controller('NewEquipmentListCtrl', NewEquipmentListCtrl);
 
-  function NewEquipmentListCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Auth, CartSvc, productSvc,categorySvc,SubCategorySvc,LocationSvc,brandSvc,modelSvc, groupSvc,TechSpecMasterSvc ,DTOptionsBuilder,Modal,$timeout,$window) {
+  function NewEquipmentListCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Auth, CartSvc, productSvc,categorySvc,SubCategorySvc,LocationSvc,brandSvc,modelSvc, groupSvc,TechSpecMasterSvc, Modal,$timeout,$window) {
     $rootScope.loading = false;
     var vm = this;
     $scope.productList = [];

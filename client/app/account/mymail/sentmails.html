@@ -1,8 +1,18 @@
 <div class="table-responsive">
+    <div class="row">
+        <div class="col-sm-6">
+          <p>Showing : {{filterData.length}} Records</p>
+        </div>
+        <div class="col-sm-6">
+            <div class="tablesearch form-group pull-right">
+               Search: <input type="text" placeholder="Search..." ng-model="filterText" ng-model-options="{debounce:500}">
+            </div>                
+        </div>
+    </div>
   <!-- <table datatable="ng" id="inbox_table" dt-options= "dtOptions" dt-instance="dogs" class="table table-bordred table-striped nosort"> -->
 
  <!-- <table datatable="" dt-options="inboxVM.dtOptions" dt-columns="inboxVM.dtColumns" dt-column-defs="inboxVM.dtColumnDefs" class="row-border hover"> -->
-  <table datatable="ng" id="inbox_table" dt-options="inboxVM.dtOptions" class="row-border hover">
+  <table id="inbox_table" class="row-border hover">
     <thead>
       <tr>
         <!-- <th><input type="checkbox" ng-model="inboxVM.selectAll" ng-click="inboxVM.toggleAll(inboxVM.selectAll, inboxVM.selected)"></th> -->
@@ -14,7 +24,7 @@
     </thead>
 
     <tbody>
-    	<tr ng-repeat="mess in inboxVM.messages" ng-click="inboxVM.showRow($index)">
+        <tr ng-repeat="mess in filterData = (inboxVM.messages| filter : filterText) | limitTo:inboxVM.itemsPerPage:inboxVM.itemsPerPage*(page-1)" ng-click="inboxVM.showRow($index)">
     		<td><input type="checkbox" ng-model="inboxVM.selected[ mess._id ]" ng-click="inboxVM.toggleOne(inboxVM.selected)"></td>
 
     		<td>{{mess.from}}</td>
@@ -25,5 +35,5 @@
 
 
     </table>
-
+    <uib-pagination total-items="filterData.length" ng-model="page" items-per-page="inboxVM.itemsPerPage" max-size="inboxVM.maxSize" ng-change="inboxVM.pageChanged()" class="pagination-sm" rotate="false">  </uib-pagination>
 </div>
