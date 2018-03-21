@@ -72,6 +72,11 @@ module.exports = {
 		'unique_controll_no':{key:"requestId",required:true},
 		'message':{key:"onHoldMsg",required:true},
 	},
+	'STATUS_UPDATE':{
+		'jobID':{key:"jobId",required:true},
+		'unique_controll_no':{key:"requestId",required:true},
+		'status':{key:"status",required:true},
+	},
 	'REPORT_UPLOAD' :{
 		  'jobID':{key:"jobId",required:true},
 		  'unique_controll_no':{key:"requestId",required:true},
