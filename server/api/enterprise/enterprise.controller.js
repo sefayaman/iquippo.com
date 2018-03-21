@@ -38,6 +38,7 @@ var notification = require('./../../components/notification.js');
 var VALUATION_REQUEST = "ValuationRequest";
 var VALUATION_REPORT_SUBMISSION= "ValuationReportSubmission";
 var DEFAULT_PURPOSE = "Financing";
+var Encoded_Fields = ["yardParked",'disFromCustomerOffice','contactPerson','originalOwner','nameOfCustomerSeeking'];
 
 exports.get = function(req, res) {
   
@@ -1370,6 +1371,10 @@ exports.submitRequest = function(req,res){
       var obj = {};
       keys.forEach(function(key){
         obj[key] = _.get(item,fieldMap[key],"");
+        if(Encoded_Fields.indexOf(fieldMap[key]) !== -1){
+          var buffer = new Buffer(obj[key]);
+          obj[key] = buffer.toString("base64"); 
+        }
       })
 
       if(obj.brand && obj.brand == "Other")
@@ -1390,6 +1395,7 @@ exports.submitRequest = function(req,res){
       obj.rcDoc = s3Path + item.rcDoc.filename;
       dataArr[dataArr.length] = obj;
     });
+    console.log("dataArr",dataArr);
     if(!dataArr.length)
       return res.status(200).send("There is no request to post.");
     request({
@@ -1398,6 +1404,7 @@ exports.submitRequest = function(req,res){
         json: true, 
         body: dataArr
     }, function (error, response, body){
+      console.log("res body",response.body);
       if(error)
          return res.status(412).send("Unable to post request to agency.Please contact support team.");
       if(response.statusCode == 200){
