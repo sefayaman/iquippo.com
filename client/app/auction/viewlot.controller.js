@@ -239,6 +239,9 @@
               lot.url = $sce.trustAsResourceUrl(url);
               //checkWidgetAccessOnLot(lot);
             });
+
+            vm.lotListing = _sortByLotNumber(vm.lotListing);
+
           } else {
             $scope.noResult = true;
             $scope.msg = res.message;
@@ -389,6 +392,23 @@
       $scope.equipmentSearchFilter = $stateParams;
       vm.currentPage = parseInt($stateParams.currentPage) || 1;
       $scope.equipmentSearchFilter.currentPage = vm.currentPage + "";
+    }
+
+    function _sortByLotNumber(dataModel) {
+      return dataModel.sort(_customComparator);
+    }
+
+    function _customComparator(a, b) {
+      var splitter = /^(\d+)([a-zA-Z]*)/;
+      a = a.lotNumber.match(splitter);
+      b = b.lotNumber.match(splitter);
+
+      var aNum = parseInt(a[1], 10);
+      var bNum = parseInt(b[1], 10);
+      if (aNum === bNum) {
+        return a[2] < b[2] ? -1 : a[2] > b[2] ? 1 : 0;
+      }
+      return aNum - bNum;
     }
 
     //Entry point
