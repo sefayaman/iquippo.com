@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('sreizaoApp')
-  .controller('UserManagementCtrl', ['$scope', '$rootScope', '$stateParams', '$state', 'DTOptionsBuilder', 'Auth', 'uploadSvc', 'notificationSvc', 'userSvc', 'Modal', '$http', function ($scope, $rootScope, $stateParams, $state, DTOptionsBuilder, Auth, uploadSvc, notificationSvc, userSvc, Modal, $http) {
+  .controller('UserManagementCtrl', ['$scope', '$rootScope', '$stateParams', '$state', 'Auth', 'uploadSvc', 'notificationSvc', 'userSvc', 'Modal', '$http', function ($scope, $rootScope, $stateParams, $state, Auth, uploadSvc, notificationSvc, userSvc, Modal, $http) {
     var vm = this;
     //pagination variables
     var prevPage = 0;

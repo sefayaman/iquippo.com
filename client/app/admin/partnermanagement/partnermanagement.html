@@ -154,8 +154,20 @@
             </form>
           </div>
 
+          <div class="row">
+            <div class="col-sm-6">
+              <p>Showing : {{filterData.length}} Records</p>
+            </div>
+            <div class="col-sm-6">
+                <div class="tablesearch form-group pull-right">
+                   Search: <input type="text" placeholder="Search..." ng-model="filterText" ng-model-options="{debounce:500}">
+                </div>                
+            </div>
+          </div>
+
           <div class="table-responsive">
-            <table datatable="ng" dt-options="dtOptions" class="table table-bordred table-striped">
+          
+            <table class="table table-bordred table-striped">
 
               <thead>
                 <tr>
@@ -172,7 +184,7 @@
                
               </thead>
               <tbody>
-               <tr ng-repeat="vendor in vendorList">
+               <tr ng-repeat="vendor in filterData = (vendorList | filter : filterText) | limitTo:partnerVM.itemsPerPage:partnerVM.itemsPerPage*(page-1)">
                 <td><img class="sheduleImg img-circle" ng-src="{{uploadImagePrefix}}{{avatarDir}}/{{vendor.user.imgsrc}}" alt="Image"></td>
                  <td>{{vendor.partnerId}}</td>
                 <td>{{vendor.user.fname}}</td>
@@ -191,6 +203,7 @@
               </tbody>
             </table>
           </div>
+          <uib-pagination total-items="filterData.length" ng-model="page" items-per-page="partnerVM.itemsPerPage" max-size="partnerVM.maxSize" ng-change="partnerVM.pageChanged()" class="pagination-sm" rotate="false">  </uib-pagination>
         </div>
       </div>   
     </div>

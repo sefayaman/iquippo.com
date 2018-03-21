@@ -3,7 +3,7 @@
 'use strict';
 angular.module('sreizaoApp').controller('CallbackCtrl',CallbackCtrl);
 
-  function CallbackCtrl($scope,$http, $uibModalInstance, notificationSvc, Modal,MarketingSvc, UtilSvc, LocationSvc, userSvc) {
+  function CallbackCtrl($scope,$http, $uibModalInstance, notificationSvc, Modal,MarketingSvc, UtilSvc, LocationSvc, userSvc, Auth) {
     //Start > NJ:push callBackOpen object in GTM dataLayer
     dataLayer.push(gaMasterObject.callBackOpen);
     //End
@@ -45,8 +45,17 @@ angular.module('sreizaoApp').controller('CallbackCtrl',CallbackCtrl);
       dataToSend['phone'] = callback.phone;
       dataToSend['mobile'] = callback.mobile;
       dataToSend['email'] = callback.email;
+      dataToSend['comment'] = callback.comment;
       
-      var userFilter = {};
+      if(callback.customerId) {
+        dataToSend['customerId'] = callback.customerId;
+        callbackSave(dataToSend);
+      } else {
+        getCustomerId();     
+      }
+
+      function getCustomerId() {
+        var userFilter = {};
         userFilter.mobile = callback.mobile;
         userSvc.getUsers(userFilter).then(function(data){
             if ( data.length ){
@@ -56,7 +65,8 @@ angular.module('sreizaoApp').controller('CallbackCtrl',CallbackCtrl);
             else {
                 callbackSave(dataToSend);
             }
-        });     
+        });
+      }
   };
   
   function callbackSave(dataToSend){
@@ -94,6 +104,26 @@ angular.module('sreizaoApp').controller('CallbackCtrl',CallbackCtrl);
     //End
     $uibModalInstance.dismiss('cancel');
   };
+
+  function init() {
+    if(Auth.getCurrentUser()._id) {
+        if(Auth.getCurrentUser().profileStatus == 'incomplete'){
+          $state.go('myaccount');
+          return;
+        }
+        vm.callback['fname'] = Auth.getCurrentUser().fname;
+        vm.callback['mname'] = Auth.getCurrentUser().mname;
+        vm.callback['lname'] = Auth.getCurrentUser().lname;
+        vm.callback['country'] = Auth.getCurrentUser().country;
+        vm.callback['phone'] = Auth.getCurrentUser().phone;
+        vm.callback['mobile'] = Auth.getCurrentUser().mobile;
+        vm.callback['email'] = Auth.getCurrentUser().email;
+        vm.callback['customerId'] = Auth.getCurrentUser().customerId;
+        vm.callback['countryCode'] = LocationSvc.getCountryCodeByName(vm.callback['country']);
+    }
+  }
+
+  init()
 
 }
 

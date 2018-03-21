@@ -2,7 +2,7 @@
 'use strict';
 angular.module('sreizaoApp').controller('NewBrandHomeCtrl', NewBrandHomeCtrl);
 
-  function NewBrandHomeCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Auth, CartSvc, productSvc,categorySvc,SubCategorySvc,LocationSvc,brandSvc,modelSvc, groupSvc,TechSpecMasterSvc ,DTOptionsBuilder,Modal,$timeout,$window) {
+  function NewBrandHomeCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Auth, CartSvc, productSvc,categorySvc,SubCategorySvc,LocationSvc,brandSvc,modelSvc, groupSvc,TechSpecMasterSvc,Modal,$timeout,$window) {
     var vm = this;
     $scope.brand = null;
     $scope.productList = [];
