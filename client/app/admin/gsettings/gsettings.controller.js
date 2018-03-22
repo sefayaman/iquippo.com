@@ -491,8 +491,11 @@
                 $scope.submitted = true;
                 return;
             }
-            LocationSvc.saveCountry(vm.country)
-                .then(function(result) {
+            if((form.countryName.$viewValue).indexOf("_") > -1 || (form.countryCode.$viewValue).indexOf("_") > -1){
+                alert('Underscore not allowed. Please update.');   
+            }else{
+                LocationSvc.saveCountry(vm.country)
+                .then(function(result) {                    
                     if (result.errorCode == 1)
                         Modal.alert(result.message, true);
                     else {
@@ -500,6 +503,7 @@
                         loadAllCountry();
                     }
                 })
+            }
         }
 
         function updateCountry(form) {
@@ -542,15 +546,21 @@
 
         //state functions
         function saveState(form) {
+            //console.log('hhhh', form.stateName.$viewValue);
             if (form.$invalid) {
                 $scope.submitted = true;
                 return;
             }
-            LocationSvc.saveState(vm.state)
+            if((form.stateName.$viewValue).indexOf("_") > -1){
+                alert('Underscore not allowed. Please update.');   
+            }else{
+                LocationSvc.saveState(vm.state)
                 .then(function(result) {
                     vm.state = {};
                     loadAllState();
                 })
+            }
+            
         }
 
         function updateState(form) {
@@ -598,12 +608,17 @@
                 $scope.submitted = true;
                 return;
             }
-            LocationSvc.saveLocation(vm.location)
+            if((form.locationName.$viewValue).indexOf("_") > -1){
+                alert('Underscore not allowed. Please update.');   
+            }else{
+                LocationSvc.saveLocation(vm.location)
                 .then(function(result) {
                     vm.location = {};
                     vm.country = "";
                     loadAllLocation();
                 })
+            }
+            
         }
 
         function updateLocation(form) {

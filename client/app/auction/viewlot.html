@@ -293,7 +293,7 @@
 
             </div>
             <div class="row" ng-if="!isLoggedIn() || (isLoggedIn() && auctionData.auctionType === 'L') || (isLoggedIn() && !redirectToLiveAuction && auctionData.auctionType !== 'L')">
-              <div class="col-sm-6 col-md-4 form-group" ng-repeat="lot in viewLotVm.lotListing | orderBy: 'lotNumber' | startFrom:(viewLotVm.currentPage -1 )*viewLotVm.itemsPerPage | limitTo:viewLotVm.itemsPerPage">
+              <div class="col-sm-6 col-md-4 form-group" ng-repeat="lot in viewLotVm.lotListing | startFrom:(viewLotVm.currentPage -1 )*viewLotVm.itemsPerPage | limitTo:viewLotVm.itemsPerPage">
                 <div class="media text-center form-group">
                   <!-- <a href="/used/{{auctionProduct.product.category}}/{{auctionProduct.product.brand}}/{{auctionProduct.product.assetId}}" ng-if="auctionProduct.product._id">
                    <img src="http://placehold.it/300x200" class="img-responsive" ng-if="!auctionProduct.product.primaryImg">              
