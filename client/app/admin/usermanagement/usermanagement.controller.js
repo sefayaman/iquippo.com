@@ -744,6 +744,8 @@ angular.module('sreizaoApp')
         if ($scope.newUser.role == 'enterprise') {
           if ($scope.newUser.enterprise && !$scope.newUser.enterpriseId)
             $scope.newUser.enterpriseId = "E" + $scope.newUser.mobile + "" + Math.floor(Math.random() * 10);
+          if(!$scope.newUser.enterprise)
+            $scope.newUser.enterprise = false;
           updateServices();
         }
 
