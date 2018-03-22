@@ -3,7 +3,7 @@
 
     angular.module('admin').controller('LegalTypeMasterCtrl', LegalTypeMasterCtrl);
 
-    function LegalTypeMasterCtrl($scope,$rootScope,$state,Modal,Auth,PagerSvc,LegalTypeSvc){
+    function LegalTypeMasterCtrl($scope,$rootScope,$state,$window,Modal,Auth,PagerSvc,LegalTypeSvc){
     	var vm  = this;
         vm.dataModel = {};
         $scope.isEdit = false;
@@ -69,6 +69,7 @@
         }
 
         function editClicked(rowData){
+            $window.scrollTo(0, 0);
             vm.dataModel = {};
             vm.dataModel._id  = rowData._id;
             vm.dataModel.legalType = rowData.legalType;

@@ -106,7 +106,7 @@ function submitAndUpdateRequest(valReq,cb){
     var obj = {};
      keys.forEach(function(key){
       obj[key] = _.get(valReq,Field_MAP[key]);
-      if(Encoded_Fields.indexOf(fieldMap[key]) !== -1){
+      if(Encoded_Fields.indexOf(Field_MAP[key]) !== -1){
         var buffer = new Buffer(obj[key]);
         obj[key] = buffer.toString("base64"); 
       }

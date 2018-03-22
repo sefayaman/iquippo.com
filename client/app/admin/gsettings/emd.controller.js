@@ -3,7 +3,7 @@
 
 angular.module('admin').controller('EmdCtrl', EmdCtrl);
 
-function EmdCtrl($scope,$rootScope,$state,Modal,Auth,PagerSvc,$filter,LotSvc,AuctionSvc,AuctionMasterSvc,EmdSvc){
+function EmdCtrl($scope,$rootScope,$state,$window,Modal,Auth,PagerSvc,$filter,LotSvc,AuctionSvc,AuctionMasterSvc,EmdSvc){
   var vm  = this;
   vm.dataModel = {};
   vm.auctionListing = [];
@@ -68,6 +68,7 @@ function EmdCtrl($scope,$rootScope,$state,Modal,Auth,PagerSvc,$filter,LotSvc,Auc
   }
 
   function editClicked(rowData){
+    $window.scrollTo(0, 0);
     //getAuctions();
     vm.dataModel = {};
     angular.copy(rowData, vm.dataModel);
