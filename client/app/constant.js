@@ -169,6 +169,7 @@ var auctionmasterDir="auctionmaster";
 var financemasterDir="financemaster";
 var choosenTitle="";
 var metaDescription="";
+var metaKeywords = "";
 
 var templateDir = "templates";
 var auctionDir = "auction"

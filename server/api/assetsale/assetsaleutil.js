@@ -12,13 +12,18 @@ var AssetSaleBid = require('./assetsalebid.model');
 * For enterprise master filter must be like {}
 */
 
-exports.setStatus = function(bid,status,statusField,historyField,userId){ 
+exports.setStatus = function(bid,status,statusField,historyField,user){ 
         bid[statusField] = status;
         var stsObj = {};
         stsObj.status = status;
-        if(userId)
-        	stsObj.userId = userId;
-        else
+        if(user) {
+			stsObj.userId = user._id;
+	        stsObj.fname = user.fname;
+	        stsObj.lname = user.lname;
+	        stsObj.mobile = user.mobile;
+	        stsObj.customerId = user.customerId;
+	        stsObj.role = user.role;
+        } else
         stsObj.userId = "SYSTEM";
         stsObj.createdAt = new Date();
         if(!bid[historyField])
