@@ -3,7 +3,7 @@
 
     angular.module('admin').controller('SaleProcesssMasterCtrl', SaleProcesssMasterCtrl);
 
-    function SaleProcesssMasterCtrl($scope,$state,Modal,Auth,PagerSvc,$filter,userSvc, SaleProcessSvc){
+    function SaleProcesssMasterCtrl($scope,$state,$window,Modal,Auth,PagerSvc,$filter,userSvc, SaleProcessSvc){
     	var vm  = this;
         vm.dataModel = {};
         vm.filteredList = [];
@@ -203,6 +203,7 @@
         }
 
         function editClicked(rowData){
+            $window.scrollTo(0, 0);
             vm.dataModel = angular.copy(rowData);
             getUserOnRole(vm.dataModel.userRole, true);
             if(vm.dataModel.user && vm.dataModel.user.userId && vm.dataModel.userRole == 'enterprise') {

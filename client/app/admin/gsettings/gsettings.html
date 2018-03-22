@@ -1354,7 +1354,7 @@
                                     <td>{{banner.linkUrl}}</td>
                                     <td>{{banner.sequence}}</td>
                                     <td>
-                                        <a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="bannerVm.editBanner($index)"><i class="fa fa-edit"></i> </a>
+                                        <a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="bannerVm.editBanner($index)"><i class="fa fa-pencil"></i> </a>
                                         <a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="bannerVm.deleteBanner($index)"><i class="fa fa-trash"></i> </a>
                                     </td>
                                 </tr>
@@ -2656,8 +2656,8 @@
                             </tr>
                         </tbody>
                     </table>
-                    <uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" ng-change="saleProcesssVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
                 </div>
+                <uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" ng-change="saleProcesssVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
             </div>
             <!-- Markup price master -->
             <div ng-if="gsettingVm.tabValue == 'markup'" ng-controller="MarkupPriceMasterCtrl as markupVm">
@@ -2852,8 +2852,9 @@
                             </tr>
                         </tbody>
                     </table>
-                    <uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" ng-change="emdChargeVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+                    
                 </div>
+                <uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" ng-change="emdChargeVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
             </div>
 
             <!--- Add aseet Count -->

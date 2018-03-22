@@ -3,7 +3,7 @@
 
 angular.module('admin').controller('DealerMasterCtrl', DealerMasterCtrl);
 
-function DealerMasterCtrl($scope,$rootScope,$state,categorySvc,vendorSvc, modelSvc, brandSvc, Modal,LocationSvc,DealerMasterSvc, Auth,PagerSvc,$filter){
+function DealerMasterCtrl($scope,$rootScope,$state,$window,categorySvc,vendorSvc, modelSvc, brandSvc, Modal,LocationSvc,DealerMasterSvc, Auth,PagerSvc,$filter){
 	var vm  = this;
     //vm.dataModel = {brand:{}};
     $scope.isEdit = false;
@@ -126,6 +126,7 @@ function DealerMasterCtrl($scope,$rootScope,$state,categorySvc,vendorSvc, modelS
     }
 
     function editClicked(rowData){
+        $window.scrollTo(0, 0);
         vm.dataModel = {};
         vm.dataModel = angular.copy(rowData);
         var i=0;
