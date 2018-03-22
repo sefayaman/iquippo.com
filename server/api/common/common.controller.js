@@ -860,7 +860,6 @@ exports.exportMasterData = function (req, res) {
 		} else {
 			var tempData = [];
 			data.forEach(function (item, key, array) {
-				// console.log('key value',item);
 				delete array[key]._id;
 				tempData.push({
 					"Product_Group": item.group['name'],
