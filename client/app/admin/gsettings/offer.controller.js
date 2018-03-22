@@ -2,7 +2,7 @@
     'use strict';
    angular.module('admin').controller('OfferCtrl',OfferCtrl);
 
-    function OfferCtrl($scope,$state,Modal,Auth,PagerSvc,$filter,categorySvc,SubCategorySvc,LocationSvc,brandSvc,modelSvc,OfferSvc,vendorSvc){
+    function OfferCtrl($scope,$state,$window,Modal,Auth,PagerSvc,$filter,categorySvc,SubCategorySvc,LocationSvc,brandSvc,modelSvc,OfferSvc,vendorSvc){
         var vm  = this;
         vm.dataModel = {};
         $scope.pager = PagerSvc.getPager();
@@ -170,7 +170,7 @@
         }
 
         function editClicked(rowData){
-
+          $window.scrollTo(0, 0);
           angular.copy(rowData, vm.dataModel);
           onCategoryChange(vm.dataModel.category.id,true);
           onBrandChange(vm.dataModel.brand.id,true);

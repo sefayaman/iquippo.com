@@ -3,7 +3,7 @@
 
 angular.module('admin').controller('LotCtrl', LotCtrl);
 
-function LotCtrl($scope, $rootScope, $state,Modal,Auth,PagerSvc,$filter,AuctionMasterSvc,LotSvc){
+function LotCtrl($scope, $rootScope,$window, $state,Modal,Auth,PagerSvc,$filter,AuctionMasterSvc,LotSvc){
   var vm  = this;
   vm.dataModel = {};
   vm.duplicate = {};
@@ -47,6 +47,7 @@ function LotCtrl($scope, $rootScope, $state,Modal,Auth,PagerSvc,$filter,AuctionM
   }
 
   function editClicked(rowData){
+    $window.scrollTo(0, 0);
     getAuctions();
     vm.dataModel = {};
     angular.copy(rowData, vm.dataModel);

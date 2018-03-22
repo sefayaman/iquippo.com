@@ -490,8 +490,8 @@ exports.validateSubmitBid = function (req, res, next) {
                 return next();
             }
             req.body.autoApprove = true;
-            AssetSaleUtil.setStatus(req.body, dealStatuses[6], 'dealStatus', 'dealStatuses', req.user._id);
-            AssetSaleUtil.setStatus(req.body, bidStatuses[7], 'bidStatus', 'bidStatuses', req.user._id);
+            AssetSaleUtil.setStatus(req.body, dealStatuses[6], 'dealStatus', 'dealStatuses');
+            AssetSaleUtil.setStatus(req.body, bidStatuses[7], 'bidStatus', 'bidStatuses');
             req.body.emdStartDate = new Date();
             req.body.emdEndDate = new Date().addDays(saleProcessData.emdPeriod);
             //if(req.body.emdEndDate)
@@ -501,7 +501,7 @@ exports.validateSubmitBid = function (req, res, next) {
             var otherBids = req.otherBids;
             req.otherBids = [];
             otherBids.forEach(function (item) {
-                AssetSaleUtil.setStatus(item, bidStatuses[5], 'bidStatus', 'bidStatuses', req.user._id);
+                AssetSaleUtil.setStatus(item, bidStatuses[5], 'bidStatus', 'bidStatuses');
                 req.otherBids.push(item);
             });
 
@@ -1063,6 +1063,23 @@ exports.getProductsList = function (req, res, next) {
     })
 }
 
+exports.getApproverUserList = function (req, res, next) {
+    req.approverUserList = [];
+    var filter = {};
+    filter.deleted = false;
+    filter["role"] = {$in: ['admin','enterprise']};
+    User.find(filter, function (err, users) {
+        if (err || !users.length) {
+            return next();
+        }
+
+        users.forEach(function (item) {
+            req.approverUserList.push(item)
+        });
+        next();
+    })
+}
+
 exports.exportExcel = function (req, res) {
 	var filter = {};
 	var user = req.user;
@@ -1188,44 +1205,49 @@ exports.exportExcel = function (req, res) {
                 */
 
 				if (keyObj.key && (keyObj.key === 'approvedBy' || keyObj.key === 'approvalDate' || keyObj.key === 'approvalTime') && item.bidStatuses.length > 0) {
+                    var tempArr = [];
 					for (var i = item.bidStatuses.length - 1; i > 0; i--) {
 						if (item.bidStatuses[i].status === bidStatuses[7]) {
-							if (keyObj.key === 'approvedBy') {
-								if (item.bidStatuses[i].userId === 'SYSTEM')
-									val = 'System';
-								else if (item.product && item.product.seller && item.bidStatuses[i].userId === item.product.seller._id)
-									val = item.product.seller.name;
-								// else if(item.bidStatuses[item.bidStatuses.length - 1].userId === item.user._id + "")
-								// 	val = '';
-								else
-									val = 'Admin';
-							} else if (keyObj.key === 'approvalDate')
-								val = moment(item.bidStatuses[i].createdAt).utcOffset('+0530').format('MM/DD/YYYY');
-							else
-								val = moment(item.bidStatuses[i].createdAt).utcOffset('+0530').format('hh:mm a');
-							break;
+                            tempArr.push(item.bidStatuses[i]);
 						}
 					}
+                    var itemObj = {};
+                    if(tempArr.length === 1) {
+                        itemObj = tempArr[0];
+                    } else if(tempArr.length > 1) {
+                        itemObj = tempArr[1];
+                    }
+                    if(Object.keys(itemObj).length > 0) {
+                        if (keyObj.key === 'approvedBy') {
+                            if (itemObj.userId === 'SYSTEM' || itemObj.userId === item.user._id + "" || itemObj.userId === item.user._id)
+                                val = 'System';
+                            else if (item.product && item.product.seller && itemObj.userId === item.product.seller._id)
+                                val = item.product.seller.name;
+                            else {
+                                var approverObj = getApproverData(itemObj.userId, req.approverUserList);
+                                val = (approverObj.fname || "") + " " + (approverObj.lname || "");
+                            }
+                        } else if (keyObj.key === 'approvalDate')
+                            val = moment(itemObj.createdAt).utcOffset('+0530').format('MM/DD/YYYY');
+                        else
+                            val = moment(itemObj.createdAt).utcOffset('+0530').format('hh:mm a');
+                    }
 				}
 
 				if (keyObj.key && keyObj.key === 'bidStatusUpdateBy' && item.bidStatuses.length > 0) {
-					if (item.bidStatuses[item.bidStatuses.length - 1].userId === 'SYSTEM')
+					if (item.bidStatuses[item.bidStatuses.length - 1].userId === 'SYSTEM' || item.bidStatuses[item.bidStatuses.length - 1].userId === item.user._id + "" || item.bidStatuses[item.bidStatuses.length - 1].userId === item.user._id)
 						val = 'System';
 					else if (item.product && item.product.seller && item.bidStatuses[item.bidStatuses.length - 1].userId === item.product.seller._id)
 						val = item.product.seller.name;
-					// else if(item.bidStatuses[item.bidStatuses.length - 1].userId === item.user._id + "")
-					// 	val = '';
-					else
-						val = 'Admin';
+					else 
+                        val = 'Admin';
 				}
 
 				if (keyObj.key && keyObj.key === 'dealStatusUpdatedBy' && item.dealStatuses.length > 0) {
-					if (item.dealStatuses[item.dealStatuses.length - 1].userId === 'SYSTEM')
+					if (item.dealStatuses[item.dealStatuses.length - 1].userId === 'SYSTEM' || item.dealStatuses[item.dealStatuses.length - 1].userId === item.user._id + "" || item.dealStatuses[item.dealStatuses.length - 1].userId === item.user._id)
 						val = 'System';
 					else if (item.product && item.product.seller && item.dealStatuses[item.dealStatuses.length - 1].userId === item.product.seller._id)
 						val = item.product.seller.name;
-					// else if(item.dealStatuses[item.dealStatuses.length - 1].userId === item.user._id + "")
-					// 	val = '';
 					else
 						val = 'Admin';
 				}
@@ -1279,6 +1301,17 @@ exports.exportExcel = function (req, res) {
 		Utility.renderCSV(res, csvStr);
 	}
 
+}
+
+function getApproverData(userId, approverLists) {
+    var approverData = {};
+    for (var i = 0; i < approverLists.length; i++) {
+        if(approverLists[i]._id + "" === userId || approverLists[i]._id === userId){
+            approverData = approverLists[i];
+            break;
+        }
+    }
+    return approverData;
 }
 
 function _formatPayments(item, innerItem, jsonArr) {
