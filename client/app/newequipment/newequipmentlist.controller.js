@@ -213,6 +213,10 @@ angular.module('sreizaoApp').controller('NewEquipmentListCtrl', NewEquipmentList
   function saveState(retainState){
     $scope.equipmentSearchFilter.currentPage = vm.currentPage + "";
     $scope.equipmentSearchFilter.location = $scope.removeSpace($scope.equipmentSearchFilter.location);
+    $scope.equipmentSearchFilter.category = $scope.removeSpace($scope.equipmentSearchFilter.category);
+    $scope.equipmentSearchFilter.brand = $scope.removeSpace($scope.equipmentSearchFilter.brand);
+    $scope.equipmentSearchFilter.model = $scope.removeSpace($scope.equipmentSearchFilter.model);
+    $scope.equipmentSearchFilter.group = $scope.removeSpace($scope.equipmentSearchFilter.group);
     if(retainState)
       $state.go($state.current.name,$scope.equipmentSearchFilter,{location:'replace',notify:false});
     else
