@@ -210,6 +210,7 @@
       if (!initLoad) {
         saveState(false);
       }
+      $scope.equipmentSearchFilter.location = $scope.removeUnderScore($scope.equipmentSearchFilter.location)
       var filter = {};
       angular.copy($scope.equipmentSearchFilter, filter);
       getLotsInAuction(filter);

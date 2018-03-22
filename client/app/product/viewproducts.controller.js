@@ -328,6 +328,8 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
     $scope.equipmentSearchFilter.currentPage = vm.currentPage + "";
     $scope.equipmentSearchFilter.location = $scope.removeSpace($scope.equipmentSearchFilter.location);
     $scope.equipmentSearchFilter.group = $scope.removeSpace($scope.equipmentSearchFilter.group);
+    $scope.equipmentSearchFilter.category = $scope.removeSpace($scope.equipmentSearchFilter.category);
+    $scope.equipmentSearchFilter.brand = $scope.removeSpace($scope.equipmentSearchFilter.brand);
     if(retainState)
       $state.go($state.current.name,$scope.equipmentSearchFilter,{location:'replace',notify:false});
     else
