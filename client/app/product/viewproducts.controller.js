@@ -11,7 +11,12 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
   var productList = [];
 
   console.log("the params",$stateParams);
-
+  // replace underscore with space
+  $stateParams.brand = $scope.removeUnderScore($stateParams.brand);
+  $stateParams.category = $scope.removeUnderScore($stateParams.category);
+  $stateParams.model = $scope.removeUnderScore($stateParams.model);
+  $stateParams.group = $scope.removeUnderScore($stateParams.group);
+  $stateParams.location = $scope.removeUnderScore($stateParams.location);
   $scope.searching = true;
   $scope.noResult = false;
   $scope.status = {};
@@ -41,6 +46,7 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
 
   var allCategory = [];
   var allBrand = [];
+
   function init(){
 
       for(var key in $stateParams){
@@ -133,6 +139,11 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
       }
 
       var filter = {};
+      $scope.equipmentSearchFilter.brand = $scope.removeUnderScore($scope.equipmentSearchFilter.brand);
+      $scope.equipmentSearchFilter.category = $scope.removeUnderScore($scope.equipmentSearchFilter.category);
+      $scope.equipmentSearchFilter.model = $scope.removeUnderScore($scope.equipmentSearchFilter.model);
+      $scope.equipmentSearchFilter.group = $scope.removeUnderScore($scope.equipmentSearchFilter.group);
+      $scope.equipmentSearchFilter.location = $scope.removeUnderScore($scope.equipmentSearchFilter.location);
       angular.copy($scope.equipmentSearchFilter,filter);
       filter['status'] = true;
       filter['sort'] = {featured:-1};
@@ -315,6 +326,8 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
 
   function saveState(retainState){
     $scope.equipmentSearchFilter.currentPage = vm.currentPage + "";
+    $scope.equipmentSearchFilter.location = $scope.removeSpace($scope.equipmentSearchFilter.location);
+    $scope.equipmentSearchFilter.group = $scope.removeSpace($scope.equipmentSearchFilter.group);
     if(retainState)
       $state.go($state.current.name,$scope.equipmentSearchFilter,{location:'replace',notify:false});
     else

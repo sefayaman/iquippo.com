@@ -141,6 +141,8 @@ factory("uploadSvc",['$http','$rootScope',function($http,$rootScope){
   utilSvc.compileTemplate = compileTemplate;
   utilSvc.validateMobile = validateMobile;
   utilSvc.validateAadhaar = validateAadhaar;
+  utilSvc.removeSpace = removeSpace;
+  utilSvc.removeUnderScore = removeUnderScore;
 
   function getStatusOnCode(list,code){
       var statusObj = {};
@@ -269,6 +271,19 @@ factory("uploadSvc",['$http','$rootScope',function($http,$rootScope){
       }
     }
 
+    function removeSpace(name) {
+      if(!name) {
+        return '';
+      }
+      return name.replace(/ /g,'_');
+    }
+
+    function removeUnderScore(name) {
+      if(!name) {
+        return '';
+      }
+      return name.replace(/_/g,' ');
+    }
   return utilSvc;
 });
 

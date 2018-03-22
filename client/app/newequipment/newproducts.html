@@ -3,7 +3,7 @@
     <li>
       <a href="/main"> Home </a>
     </li>
-    <li><a href="/new"> New Equipment </a></li>
+    <li><a href="/new-equipment"> New Equipment </a></li>
     <li class="active"> {{displayText || equipmentSearchFilter.group || equipmentSearchFilter.category || equipmentSearchFilter.brand || equipmentSearchFilter.location || equipmentSearchFilter.assetId || "New Products"}} </li>
   </ol>
 </div>
@@ -25,7 +25,7 @@
             Industry<i class="pull-right fa" ng-class="{'fa-minus': status.group, 'fa-plus': !status.group}"></i>
           </uib-accordion-heading>
             <div class="radio" ng-repeat="group in allGroup | orderBy :'name'">
-              <input type="radio" ng-model="equipmentSearchFilter.group" ng-change="newequipmentlistVm.onGroupChange(equipmentSearchFilter.group)" name="group" value="{{group.name}}" id="gp_{{$index}}"> <label for="gp_{{$index}}">{{group.name}}</label>
+              <input type="radio" ng-model="equipmentSearchFilter.group" ng-change="newequipmentlistVm.onGroupChange(equipmentSearchFilter.group)" name="group" value="{{removeSpace(group.name)}}" id="gp_{{$index}}"> <label for="gp_{{$index}}">{{group.name}}</label>
             </div>
         </uib-accordion-group>
 
@@ -35,7 +35,7 @@
           </uib-accordion-heading>
             <div>
               <div class="radio" ng-repeat="cat in categoryList | orderBy :'name'">
-                <input type="radio" ng-model="equipmentSearchFilter.category" ng-change="newequipmentlistVm.onCategoryChange(equipmentSearchFilter.category)" name="category" value="{{cat.name}}" id="cat_{{$index}}"> <label for="cat_{{$index}}">{{cat.name}}</label>
+                <input type="radio" ng-model="equipmentSearchFilter.category" ng-change="newequipmentlistVm.onCategoryChange(equipmentSearchFilter.category)" name="category" value="{{removeSpace(cat.name)}}" id="cat_{{$index}}"> <label for="cat_{{$index}}">{{cat.name}}</label>
               </div>
               
             </div>
@@ -47,7 +47,7 @@
           </uib-accordion-heading>
             <div>
               <div class="radio" ng-repeat="br in brandList | unique: 'name' | orderBy :'name'">
-                <input type="radio" ng-model="equipmentSearchFilter.brand" name="brand" value="{{br.name}}" id="brand_{{$index}}" ng-change="newequipmentlistVm.fireCommand()"> <label for="brand_{{$index}}">{{br.name}}</label>
+                <input type="radio" ng-model="equipmentSearchFilter.brand" name="brand" value="{{removeSpace(br.name)}}" id="brand_{{$index}}" ng-change="newequipmentlistVm.fireCommand()"> <label for="brand_{{$index}}">{{br.name}}</label>
               </div>
               
             </div>
@@ -97,7 +97,7 @@
         <div class="row">      
             <div class="col-sm-6 col-md-4 form-group" ng-repeat="product in productList  | startFrom:(newequipmentlistVm.currentPage -1 )*newequipmentlistVm.itemsPerPage | limitTo:newequipmentlistVm.itemsPerPage" >
             <div class="media text-center form-group">
-              <a ng-href="/new/{{product.category.name}}/{{product.brand.name}}/{{product.assetId}}">
+              <a ng-href="/new-equipment/{{removeSpace(product.category.name)}}/{{removeSpace(product.brand.name)}}/{{product.assetId}}">
                  <img src="{{uploadImagePrefix}}{{product.assetDir}}/{{product.primaryImg}}" class="img-responsive">              
               </a>          
               <div class="media-body text-left"> 
@@ -147,7 +147,7 @@
                 </div>                 -->
                                     
               </div> 
-              <a ng-href="/new/{{product.category.name}}/{{product.brand.name}}/{{product.assetId}}" class="btn btn-primary btn-block" >
+              <a ng-href="/new-equipment/{{removeSpace(product.category.name)}}/{{removeSpace(product.brand.name)}}/{{product.assetId}}" class="btn btn-primary btn-block" >
                 View Details
               </a>     
             </div>

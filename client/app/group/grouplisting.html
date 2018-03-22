@@ -17,7 +17,7 @@
     <div class="row">      
       <div class="col-sm-6 col-md-4 form-group" ng-repeat="group in groupListingVm.groupList" ng-if="group.name !== 'Other'">
         <div class="media text-center">
-          <a href="/used/{{group.name}}" class="media-picture">
+          <a href="/used-equipment/{{removeSpace(group.name)}}" class="media-picture">
             <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{group.imgSrc}}" ng-if="group.imgSrc" width="400" height="250">
             <img src="http://placehold.it/400x250" width="100%" ng-if="!group.imgSrc"> 
           </a>                       
@@ -28,7 +28,7 @@
             </p>                     
           </div> 
           <div class="text-center">
-            <a  href="/used/{{group.name}}" class="btn btn-primary">Explore</a>
+            <a  href="/used-equipment/{{removeSpace(group.name)}}" class="btn btn-primary">Explore</a>
           </div>         
         </div>
       </div>

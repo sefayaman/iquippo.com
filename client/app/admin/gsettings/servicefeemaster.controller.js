@@ -3,7 +3,7 @@
 
     angular.module('admin').controller('ServiceFeeMasterCtrl', ServiceFeeMasterCtrl);
 
-    function ServiceFeeMasterCtrl($scope,Modal,Auth,PagerSvc,$filter,ServiceFeeSvc,userSvc,vendorSvc){
+    function ServiceFeeMasterCtrl($scope,$window,Modal,Auth,PagerSvc,$filter,ServiceFeeSvc,userSvc,vendorSvc){
     	
     	var vm  = this;
         vm.serviceList = [
@@ -99,6 +99,7 @@
         }
 
         function editClicked(rowData){
+            $window.scrollTo(0, 0);
             vm.dataModel = angular.copy(rowData);
             if (vm.dataModel.effectiveFromDate)
                 vm.dataModel.effectiveFromDate = moment(vm.dataModel.effectiveFromDate).format('MM/DD/YYYY');

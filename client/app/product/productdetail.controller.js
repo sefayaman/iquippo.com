@@ -4,6 +4,10 @@
 
   function ProductDetailCtrl($scope, $sce, $location, AssetSaleSvc, AuctionSvc, LocationSvc, AuctionMasterSvc, vendorSvc, NegotiationSvc, $stateParams, $rootScope, PaymentMasterSvc, $uibModal, $http, Auth, productSvc, notificationSvc, Modal, CartSvc, ProductTechInfoSvc, BuyContactSvc, userSvc, PriceTrendSvc, ValuationSvc, $state,LotSvc,userRegForAuctionSvc) {
    var vm = this;
+
+   // remove underscore from params
+    $stateParams.brand = $scope.removeUnderScore($stateParams.brand);
+    $stateParams.category = $scope.removeUnderScore($stateParams.category);
     $scope.lot = {};
     $scope.showWidget = false;
     $scope.currentProduct = {};

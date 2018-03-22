@@ -3,7 +3,7 @@
 
     angular.module('admin').controller('EmdChargeMasterCtrl', EmdChargeMasterCtrl);
 
-    function EmdChargeMasterCtrl($scope,$state,Modal,Auth,PagerSvc,$filter,userSvc,categorySvc, EmdChargeSvc){
+    function EmdChargeMasterCtrl($scope,$state,$window,Modal,Auth,PagerSvc,$filter,userSvc,categorySvc, EmdChargeSvc){
     	 var vm  = this;
         vm.dataModel = {};
         vm.dataList = [];
@@ -215,6 +215,7 @@
         }
 
         function editClicked(rowData){
+            $window.scrollTo(0, 0);
             vm.dataModel = angular.copy(rowData);
             getUserOnRole(vm.dataModel.userRole, true);
             if(vm.dataModel.user && vm.dataModel.user.userId && vm.dataModel.userRole == 'enterprise') {
