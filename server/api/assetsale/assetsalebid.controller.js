@@ -235,7 +235,7 @@ exports.validateUpdate = function (req, res, next) {
                 req.otherBids.forEach(function (item) {
                     if (item.bidStatus === bidStatuses[7]) {
                         item.lastAccepted = false;
-                        AssetSaleUtil.setStatus(item, bidStatuses[0], 'bidStatus', 'bidStatuses', req.user._id);
+                        AssetSaleUtil.setStatus(item, bidStatuses[0], 'bidStatus', 'bidStatuses', req.user);
                         req.bids.push(item);
                     }
                 });
@@ -253,8 +253,8 @@ exports.validateUpdate = function (req, res, next) {
                 //	req.body.fullPaymentEndDate = req.body.fullPaymentEndDate.setHours(24,0,0,0);
                 req.otherBids.forEach(function (item) {
                     item.status = false;
-                    AssetSaleUtil.setStatus(item, bidStatuses[2], 'bidStatus', 'bidStatuses', req.user._id);
-                    AssetSaleUtil.setStatus(item, dealStatuses[5], 'dealStatus', 'dealStatuses', req.user._id);
+                    AssetSaleUtil.setStatus(item, bidStatuses[2], 'bidStatus', 'bidStatuses', req.user);
+                    AssetSaleUtil.setStatus(item, dealStatuses[5], 'dealStatus', 'dealStatuses', req.user);
                     req.bids.push(item);
                 });
                 req.bidLost = true;
@@ -266,8 +266,8 @@ exports.validateUpdate = function (req, res, next) {
         } else if (req.query.action === 'fullpayment') {
             req.otherBids.forEach(function (item) {
                 item.status = false;
-                AssetSaleUtil.setStatus(item, bidStatuses[2], 'bidStatus', 'bidStatuses', req.user._id);
-                AssetSaleUtil.setStatus(item, dealStatuses[5], 'dealStatus', 'dealStatuses', req.user._id);
+                AssetSaleUtil.setStatus(item, bidStatuses[2], 'bidStatus', 'bidStatuses', req.user);
+                AssetSaleUtil.setStatus(item, dealStatuses[5], 'dealStatus', 'dealStatuses', req.user);
                 req.bids.push(item);
             });
             req.bidLost = true;
@@ -278,7 +278,7 @@ exports.validateUpdate = function (req, res, next) {
         } else if (req.query.action === 'doissued') {
             req.product.assetStatus = 'sold';
             req.product.updatedAt = new Date();
-            AssetSaleUtil.setStatus(req.product, 'sold', 'assetStatus', 'assetStatuses', req.user._id);
+            AssetSaleUtil.setStatus(req.product, 'sold', 'assetStatus', 'assetStatuses', req.user);
             req.product.isSold = true;
             req.updateProduct = true;
 
@@ -559,8 +559,8 @@ exports.validateSubmitBid = function (req, res, next) {
                     //bid.status = false;
                 }
                 bid.status = false;
-                AssetSaleUtil.setStatus(bid, bidStatuses[1], 'bidStatus', 'bidStatuses', req.user._id);
-                AssetSaleUtil.setStatus(bid, dealStatuses[2], 'dealStatus', 'dealStatuses', req.user._id);
+                AssetSaleUtil.setStatus(bid, bidStatuses[1], 'bidStatus', 'bidStatuses', req.user);
+                AssetSaleUtil.setStatus(bid, dealStatuses[2], 'dealStatus', 'dealStatuses', req.user);
             });
             return callback();
         });
@@ -723,9 +723,9 @@ exports.withdrawBid = function (req, res) {
 
     function updateBid(bidData, callback) {
 
-        AssetSaleUtil.setStatus(bidData, bidStatuses[1], 'bidStatus', 'bidStatuses', req.user._id);
-        AssetSaleUtil.setStatus(bidData, dealStatuses[2], 'dealStatus', 'dealStatuses', req.user._id);
-        AssetSaleUtil.setStatus(bidData, offerStatuses[2], 'offerStatus', 'offerStatuses', req.user._id);
+        AssetSaleUtil.setStatus(bidData, bidStatuses[1], 'bidStatus', 'bidStatuses', req.user);
+        AssetSaleUtil.setStatus(bidData, dealStatuses[2], 'dealStatus', 'dealStatuses', req.user);
+        AssetSaleUtil.setStatus(bidData, offerStatuses[2], 'offerStatus', 'offerStatuses', req.user);
         bidData.status = false;
         var bidId = bidData._id;
         delete bidData._id;
@@ -1239,7 +1239,7 @@ exports.exportExcel = function (req, res) {
 						val = 'System';
 					else if (item.product && item.product.seller && item.bidStatuses[item.bidStatuses.length - 1].userId === item.product.seller._id)
 						val = item.product.seller.name;
-					else 
+					else
                         val = 'Admin';
 				}
 
