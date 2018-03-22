@@ -130,6 +130,8 @@ angular.module('sreizaoApp').controller('NewEquipmentListCtrl', NewEquipmentList
       var filter = {};
       $scope.equipmentSearchFilter.brand = $scope.removeUnderScore($scope.equipmentSearchFilter.brand);
       $scope.equipmentSearchFilter.category = $scope.removeUnderScore($scope.equipmentSearchFilter.category);
+      $scope.equipmentSearchFilter.model = $scope.removeUnderScore($scope.equipmentSearchFilter.model);
+      $scope.equipmentSearchFilter.group = $scope.removeUnderScore($scope.equipmentSearchFilter.group);
       $scope.equipmentSearchFilter.location = $scope.removeUnderScore($scope.equipmentSearchFilter.location);
       angular.copy($scope.equipmentSearchFilter,filter);
       filter['status'] = true;

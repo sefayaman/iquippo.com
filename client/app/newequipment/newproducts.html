@@ -25,7 +25,7 @@
             Industry<i class="pull-right fa" ng-class="{'fa-minus': status.group, 'fa-plus': !status.group}"></i>
           </uib-accordion-heading>
             <div class="radio" ng-repeat="group in allGroup | orderBy :'name'">
-              <input type="radio" ng-model="equipmentSearchFilter.group" ng-change="newequipmentlistVm.onGroupChange(equipmentSearchFilter.group)" name="group" value="{{group.name}}" id="gp_{{$index}}"> <label for="gp_{{$index}}">{{group.name}}</label>
+              <input type="radio" ng-model="equipmentSearchFilter.group" ng-change="newequipmentlistVm.onGroupChange(removeSpace(equipmentSearchFilter.group))" name="group" value="{{group.name}}" id="gp_{{$index}}"> <label for="gp_{{$index}}">{{group.name}}</label>
             </div>
         </uib-accordion-group>
 
