@@ -39,7 +39,7 @@
           <div>
             <div class="radio" ng-repeat="cat in categoryList">
               <input type="radio" ng-model="equipmentSearchFilter.category" ng-change="viewLotVm.onCategoryChange(equipmentSearchFilter.category)"
-                name="category" value="{{cat.name}}" id="cat_{{$index}}">
+                name="category" value="{{removeSpace(cat.name)}}" id="cat_{{$index}}">
               <label for="cat_{{$index}}">{{cat.name}}</label>
             </div>
 
@@ -53,7 +53,7 @@
           </uib-accordion-heading>
           <div>
             <div class="radio" ng-repeat="br in brandList | unique: 'name' | orderBy :'name'">
-              <input type="radio" ng-model="equipmentSearchFilter.brand" ng-change="viewLotVm.fireCommand()" name="brand" value="{{br.name}}"
+              <input type="radio" ng-model="equipmentSearchFilter.brand" ng-change="viewLotVm.fireCommand()" name="brand" value="{{removeSpace(br.name)}}"
                 id="brand_{{$index}}">
               <label for="brand_{{$index}}">{{br.name}}</label>
             </div>
@@ -239,7 +239,7 @@
 
           <div ng-if="!searching && !noResult">
             <div class="row" ng-if="isLoggedIn() && redirectToLiveAuction && auctionData.auctionType !== 'L'">
-              <div class="col-sm-12 col-md-12 form-group" ng-repeat="lot in viewLotVm.lotListing | orderBy: 'lotNumber' | startFrom:(pager.currentPage -1 )*pager.itemsPerPage | limitTo:pager.itemsPerPage">
+              <div class="col-sm-12 col-md-12 form-group" ng-repeat="lot in viewLotVm.lotListing | startFrom:(pager.currentPage -1 )*pager.itemsPerPage | limitTo:pager.itemsPerPage">
                 <div class="media text-center form-group">
                   <div class="row">
                     <div class="col-sm-7 padd-right">
@@ -269,7 +269,7 @@
                         <p>
                           <i class="fa fa-check-circle-o"></i> Available for Sale</p>
 
-                        <a href="/used-equipment/{{lot.assets[0].product.category}}/{{lot.assets[0].product.brand}}/{{lot.assets[0].product.assetId}}?lot={{lot._id}}"
+                        <a href="/used-equipment/{{removeSpace(lot.assets[0].product.category)}}/{{removeSpace(lot.assets[0].product.brand)}}/{{lot.assets[0].product.assetId}}?lot={{lot._id}}"
                           class="btn btn-primary btn-block" ng-if="lot.assets.length === 1 && lot.assets[0].product && lot.assets[0].product._id">
                           View Details
                         </a>
@@ -293,7 +293,7 @@
 
             </div>
             <div class="row" ng-if="!isLoggedIn() || (isLoggedIn() && auctionData.auctionType === 'L') || (isLoggedIn() && !redirectToLiveAuction && auctionData.auctionType !== 'L')">
-              <div class="col-sm-6 col-md-4 form-group" ng-repeat="lot in viewLotVm.lotListing | orderBy: 'lotNumber' | startFrom:(viewLotVm.currentPage -1 )*viewLotVm.itemsPerPage | limitTo:viewLotVm.itemsPerPage">
+              <div class="col-sm-6 col-md-4 form-group" ng-repeat="lot in viewLotVm.lotListing | startFrom:(viewLotVm.currentPage -1 )*viewLotVm.itemsPerPage | limitTo:viewLotVm.itemsPerPage">
                 <div class="media text-center form-group">
                   <!-- <a href="/used/{{auctionProduct.product.category}}/{{auctionProduct.product.brand}}/{{auctionProduct.product.assetId}}" ng-if="auctionProduct.product._id">
                    <img src="http://placehold.it/300x200" class="img-responsive" ng-if="!auctionProduct.product.primaryImg">              
@@ -350,7 +350,7 @@
                   </div>  -->
                   <!-- {{lot.isVisible}} -->
                   <!-- {{lot.url}} -->
-                  <a href="/used-equipment/{{lot.assets[0].product.category}}/{{lot.assets[0].product.brand}}/{{lot.assets[0].product.assetId}}" class="btn btn-primary btn-block"
+                  <a href="/used-equipment/{{removeSpace(lot.assets[0].product.category)}}/{{removeSpace(lot.assets[0].product.brand)}}/{{lot.assets[0].product.assetId}}" class="btn btn-primary btn-block"
                     ng-if="lot.assets.length === 1 && lot.assets[0].product && lot.assets[0].product._id">
                     View Details
                   </a>

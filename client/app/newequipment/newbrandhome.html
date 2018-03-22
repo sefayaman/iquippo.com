@@ -111,7 +111,7 @@
         <div class="row">      
             <div class="col-sm-6 col-md-4 form-group" ng-repeat="product in productList  | startFrom:(newBrandHomeVm.currentPage -1 )*newBrandHomeVm.itemsPerPage | limitTo:newBrandHomeVm.itemsPerPage" >
             <div class="media text-center form-group">
-              <a ng-href="/new-equipment/{{product.category.name}}/{{product.brand.name}}/{{product.assetId}}">
+              <a ng-href="/new-equipment/{{removeSpace(product.category.name)}}/{{removeSpace(product.brand.name)}}/{{product.assetId}}">
                  <img src="{{uploadImagePrefix}}{{product.assetDir}}/{{product.primaryImg}}" class="img-responsive">              
               </a>          
               <div class="media-body text-left"> 
@@ -161,7 +161,7 @@
                 </div>                 -->
                                     
               </div> 
-              <a ng-href="/new-equipment/{{product.category.name}}/{{product.brand.name}}/{{product.assetId}}" class="btn btn-primary btn-block" >
+              <a ng-href="/new-equipment/{{removeSpace(product.category.name)}}/{{removeSpace(product.brand.name)}}/{{product.assetId}}" class="btn btn-primary btn-block" >
                 View Details
               </a>     
             </div>

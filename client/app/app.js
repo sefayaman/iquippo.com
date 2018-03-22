@@ -223,6 +223,8 @@ angular.module('sreizaoApp',[
     $rootScope.isBuySaleApprover = Auth.isBuySaleApprover;
     $rootScope.isBuySaleViewOnly = Auth.isBuySaleViewOnly;
     $rootScope.isAuctionRegPermission = Auth.isAuctionRegPermission;
+    $rootScope.removeSpace = UtilSvc.removeSpace;
+    $rootScope.removeUnderScore = UtilSvc.removeUnderScore;
     
     $rootScope.closeMeassage = function(){
       $rootScope.isSuccess = false;

@@ -1395,7 +1395,6 @@ exports.submitRequest = function(req,res){
       obj.rcDoc = s3Path + item.rcDoc.filename;
       dataArr[dataArr.length] = obj;
     });
-    console.log("dataArr",dataArr);
     if(!dataArr.length)
       return res.status(200).send("There is no request to post.");
     request({
@@ -1404,7 +1403,6 @@ exports.submitRequest = function(req,res){
         json: true, 
         body: dataArr
     }, function (error, response, body){
-      console.log("res body",response.body);
       if(error)
          return res.status(412).send("Unable to post request to agency.Please contact support team.");
       if(response.statusCode == 200){
