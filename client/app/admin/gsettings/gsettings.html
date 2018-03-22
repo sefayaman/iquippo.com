@@ -3591,11 +3591,10 @@
                 <div class="row form-group">
                     <div class="col-sm-2"><p class="text-left">Showing : {{lotVm.totalItems}} Records</p></div>
                     <div class="col-sm-3">
-                        <select class="form-control" ng-model="selectAuctionId"> 
+                        <select class="form-control" ng-model="selectAuctionId" ng-change="lotVm.getLotByAuction(selectAuctionId)"> 
                             <option value=""> Select Auction Id </option> 
-                            <option ng-repeat="lotdata in lotVm.filteredList | unique: 'auctionId'" value="{{lotdata.auctionId}}">{{lotdata.auctionId}}</option>
-                        </select>  
-                        <!-- {{lotVm.filteredList}}  -->
+                            <option ng-repeat="auction in lotVm.allAuctionListing | unique: 'auctionId'" value="{{auction._id}}">{{auction.auctionId}}</option>
+                        </select>
 
                     </div>
                     <div class="col-sm-7 tablesearch text-right">
@@ -3622,7 +3621,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr ng-repeat="lotdata in lotVm.filteredList | filter:{auctionId:selectAuctionId}">
+                                    <tr ng-repeat="lotdata in lotVm.filteredList">
                                         <td>{{lotdata.auctionId}}</td>
                                         <td>{{lotdata.lotNumber}}</td>
                                         <td>{{lotdata.startingPrice}}</td>

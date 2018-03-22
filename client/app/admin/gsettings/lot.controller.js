@@ -32,6 +32,7 @@ function LotCtrl($scope, $rootScope,$window, $state,Modal,Auth,PagerSvc,$filter,
     filter = {};
     initFilter.pagination = true;
     angular.copy(initFilter, filter);
+    _getAllAuctions();
     getAuctions();
     getLotData(filter);
   } 
@@ -43,6 +44,9 @@ function LotCtrl($scope, $rootScope,$window, $state,Modal,Auth,PagerSvc,$filter,
     angular.copy(initFilter, filter);
     if (vm.searchStr)
         filter.searchStr = vm.searchStr;
+    if($scope.selectAuctionId) {
+      filter['aucId'] = $scope.selectAuctionId;
+    }
     getLotData(filter);
   }
 
@@ -276,6 +280,26 @@ function LotCtrl($scope, $rootScope,$window, $state,Modal,Auth,PagerSvc,$filter,
     AuctionMasterSvc.get(filter).then(function(result) {
       vm.auctionListing = result;
     });
+  }
+
+  function _getAllAuctions() {
+    AuctionMasterSvc.get().then(function(result) {
+      vm.allAuctionListing = result;
+    }).catch(function() {
+      vm.allAuctionListing = [];
+    });
+  }
+
+  vm.getLotByAuction = function(auctionId) {
+    var filter = {};
+    if(auctionId == "") {
+      filter['pagination'] = true;
+    } else {
+      filter['pagination'] = true;
+      filter['aucId'] = auctionId;
+    }
+    $scope.pager.reset();
+    getLotData(filter);
   }
 
   function checkForLot(lotNumber,auction_id){
