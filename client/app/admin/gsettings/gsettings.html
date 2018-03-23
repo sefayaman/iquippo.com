@@ -76,25 +76,27 @@
                                             </div>
                                                             
                                     </div>
-                            </form>	
-                            <div class="table-responsive">
-                                    <table datatable="ng" dt-options="dtOptions" class="table table-bordred table-striped">
-                                            <thead>
-                                                                    <th>Category</th>
-                                                                    <th>Sub Category</th>
-                                                                    <th>Action</th>
-                                                                    
-                                            </thead>
-                                            <tbody>
-                                                    <tr ng-repeat="sc in gsettingVm.subCategoryList">
-                                                            <td>{{sc.category.name}}</td>
-                                                            <td>{{sc.name}}</td>
-                                                            <td>
-                                                                    <a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="gsettingVm.subCategoryEditClick($index)" ><i class="fa fa-pencil"></i> </a>
-                                                                    <a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deleteSubCategory($index)"><i class="fa fa-trash"></i> </a>
-                                                            </td>
-                                                    </tr>
-                                            </tbody>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-bordred table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Country</th>
+                                                <th>ISD Code</th>
+                                                <th>Action</th>
+                                            </tr>
+    
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="country in filterCountry =(gsettingVm.countryList | filter: filterCountryText) | limitTo: gsettingVm.itemsPerPage:gsettingVm.itemsPerPage*(page-1)">
+                                                <td>{{country.name}}</td>
+                                                <td>{{country.countryCode}}</td>
+                                                <td>
+                                                    <a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="gsettingVm.countryEditClick(country)" ><i class="fa fa-pencil"></i> </a>
+                                                    <a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deleteCountry(country)"><i class="fa fa-trash"></i> </a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
                                     </table>
                             </div>
             </div>
@@ -154,8 +156,8 @@
                                             <td>{{country.name}}</td>
                                             <td>{{country.countryCode}}</td>
                                             <td>
-                                                <a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="gsettingVm.countryEditClick($index)" ><i class="fa fa-pencil"></i> </a>
-                                                <a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deleteCountry($index)"><i class="fa fa-trash"></i> </a>
+                                                <a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="gsettingVm.stateEditClick(state)" ><i class="fa fa-pencil"></i> </a>
+                                                <a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deleteState(state)"><i class="fa fa-trash"></i> </a>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -194,7 +196,36 @@
                                 </div>
 
                             </div>
-                        </form>
+                            <div class="table-responsive">                        
+                                <table class="table table-bordred table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>State</th>
+                                            <th>Location</th>
+                                            <th>Action</th>
+                                        </tr>
+    
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="loc in filterLocation = (gsettingVm.locationList | filter: filterLocText) | limitTo:gsettingVm.itemsPerPage:gsettingVm.itemsPerPage*(page-1)">
+                                            <td>{{loc.state.name}}</td>
+                                            <td>{{loc.name}}</td>
+                                            <td>
+                                                <a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="gsettingVm.locationEditClick(loc)" ><i class="fa fa-pencil"></i> </a>
+                                                <a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deleteLocation(loc)"><i class="fa fa-trash"></i> </a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>                            
+                            </div>
+                            <uib-pagination total-items="filterLocation.length" ng-model="page" items-per-page="gsettingVm.itemsPerPage" max-size="gsettingVm.maxSize" ng-change="gsettingVm.pageChanged()" class="pagination-sm" rotate="false">  </uib-pagination>
+                        </uib-tab>
+                    </uib-tabset>
+                </div>
+                <!--Select Invitation  -->
+                <div ng-if="gsettingVm.tabValue == 'inv'">
+                    <form name="invMasterForm" novalidate class="invMasterForm">
+                        <h4>Update Invitation Setting</h4>
                         <legend></legend>
                         <div class="row">
                             <div class="col-sm-6">
@@ -1145,16 +1176,27 @@
                         </div>
 
                     </div>
-                </form>
-                <legend></legend>
-                <div class="row">
-                    <div class="col-sm-6">
-                      <p>Showing : {{filterManufacturer.length}} Records</p>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="tablesearch form-group pull-right">
-                           Search: <input type="text" placeholder="Search..." ng-model="filterManufacturerText" ng-model-options="{debounce:500}">
-                        </div>                
+                    <div class="table-responsive">
+                        <table class="table table-bordred table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Image</th>
+                                    <th>Manufacturers</th>
+                                    <th>Action</th>
+                                </tr>
+    
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="mfg in filterManufacturer = (gsettingVm.manufacturerList | filter: {name : filterManufacturerText}) | limitTo: gsettingVm.itemsPerPage:gsettingVm.itemsPerPage*(page-1)">
+                                    <td><img class="sheduleImg img-circle" ng-src="{{uploadImagePrefix}}{{manufacturerDir}}/{{mfg.imgsrc}}" alt="Image"></td>
+                                    <td>{{mfg.name}}</td>
+                                    <td>
+                                        <a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="gsettingVm.editManufacturer(mfg)"><i class="fa fa-pencil"></i> </a>
+                                        <a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deleteManufacturer(mfg)"><i class="fa fa-trash"></i> </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
                 <div class="table-responsive">

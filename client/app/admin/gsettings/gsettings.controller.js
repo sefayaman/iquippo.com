@@ -523,20 +523,21 @@
             }
         }
 
-        function countryEditClick(idx) {
-            vm.country = angular.copy(vm.countryList[idx]);
+        function countryEditClick(rowData) {
+            vm.country = {};
+            angular.copy(rowData, vm.country);
             vm.countryEdit = true;
         }
 
-        function deleteCountry(idx) {
+        function deleteCountry(rowData) {
             Modal.confirm("Are you sure want to delete?", function(ret) {
                 if (ret == "yes")
-                    submitDeleteCountry(idx);
+                    submitDeleteCountry(rowData);
             });
         }
 
-        function submitDeleteCountry(idx) {
-            LocationSvc.deleteCountry(vm.countryList[idx])
+        function submitDeleteCountry(rowData) {
+            LocationSvc.deleteCountry(rowData)
                 .then(function(result) {
                     if (!result.errorCode)
                         loadAllCountry();
@@ -584,20 +585,21 @@
             }
         }
 
-        function stateEditClick(idx) {
-            vm.state = angular.copy(vm.stateList[idx]);
+        function stateEditClick(rowData) {
+            vm.state = {};
+            angular.copy(rowData, vm.state);
             vm.stateEdit = true;
         }
 
-        function deleteState(idx) {
+        function deleteState(rowData) {
             Modal.confirm("Are you sure want to delete?", function(ret) {
                 if (ret == "yes")
-                    submitDeleteState(idx);
+                    submitDeleteState(rowData);
             });
         }
 
-        function submitDeleteState(idx) {
-            LocationSvc.deleteState(vm.stateList[idx])
+        function submitDeleteState(rowData) {
+            LocationSvc.deleteState(rowData)
                 .then(function(result) {
                     if (!result.errorCode)
                         loadAllState();
@@ -647,22 +649,23 @@
             }
         }
 
-        function locationEditClick(idx) {
-            vm.location = angular.copy(vm.locationList[idx]);
+        function locationEditClick(rowData) {
+            vm.location = {};
+            angular.copy(rowData, vm.location);
             vm.country = vm.location.state.country;
             onCountryChange(vm.country);
             vm.locationEdit = true;
         }
 
-        function deleteLocation(idx) {
+        function deleteLocation(rowData) {
             Modal.confirm("Are you sure want to delete?", function(ret) {
                 if (ret == "yes")
-                    submitDeleteLocation(idx);
+                    submitDeleteLocation(rowData);
             });
         }
 
-        function submitDeleteLocation(idx) {
-            LocationSvc.deleteLocation(vm.locationList[idx])
+        function submitDeleteLocation(rowData) {
+            LocationSvc.deleteLocation(rowData)
                 .then(function(result) {
                     loadAllLocation();
                 })
@@ -1288,21 +1291,22 @@
                 })
         }
 
-        function editManufacturer(index) {
-            angular.copy(vm.manufacturerList[index], vm.manufacturer)
+        function editManufacturer(rowData) {
+            vm.manufacturer = {};
+            angular.copy(rowData, vm.manufacturer);
             vm.manufacturerEdit = true;
             //onServiceChange(vm.paymentMaster.serviceCode,true);
         }
 
-        function deleteManufacturer(index) {
+        function deleteManufacturer(rowData) {
             Modal.confirm("Are you sure want to delete?", function(ret) {
                 if (ret == "yes")
-                    submitDeleteManufacturer(index);
+                    submitDeleteManufacturer(rowData);
             });
         }
 
-        function submitDeleteManufacturer(idx) {
-            ManufacturerSvc.deleteManufacturer(vm.manufacturerList[idx])
+        function submitDeleteManufacturer(rowData) {
+            ManufacturerSvc.deleteManufacturer(rowData)
                 .then(function(result) {
                     getAllManufacturer();
                 })
