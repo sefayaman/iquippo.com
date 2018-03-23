@@ -106,7 +106,9 @@
           AssetSaleSvc.setStatus(dataToSend,dealStatuses[6],'dealStatus','dealStatuses');
           AssetSaleSvc.setStatus(dataToSend,bidStatuses[7],'bidStatus','bidStatuses');
         }*/
-        dataToSend.auctionType = query.auction.auctionType;
+        if (query.auction.auctionType) {
+          dataToSend.auctionType = query.auction.auctionType;   
+        }
 
         if (query.typeOfRequest)
           dataToSend.typeOfRequest = query.typeOfRequest;
