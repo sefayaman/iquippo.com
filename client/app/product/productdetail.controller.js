@@ -86,6 +86,7 @@
         bidAmount: bidAmounts,
         product:$scope.currentProduct,
         stateId:$scope.state._id,
+        auction: $scope.auctionsData, 
         bid: "placebid",
         offerType: "Bid",
         callback: countBid
@@ -103,6 +104,7 @@
         bidAmount: bidAmounts,
         product: $scope.currentProduct,
         stateId:$scope.state._id,
+        auction: $scope.auctionsData, 
         bid: "buynow",
         offerType: "Buynow"
       };

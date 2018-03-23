@@ -1183,6 +1183,15 @@ exports.exportExcel = function (req, res) {
 				var val = _.get(item, keyObj.key, "");
 				if (keyObj.type && keyObj.type == 'boolean')
 					val = val ? 'YES' : 'NO';
+				if (keyObj.key && keyObj.key == 'proxyBid' && item.auctionType) {
+                                    if (item.auctionType==='PT')
+                                        var aucType = ' (Private Treaty)';
+                                    if (item.auctionType==='A')
+                                        var aucType = ' (On-Line Auction)';
+                                    if (item.auctionType==='L')
+                                        var aucType = ' (Live Auction)';
+                                    val = val ? 'YES' + aucType : 'NO' + aucType;
+                                }
 				if (keyObj.type && keyObj.type == 'date' && val)
 					val = moment(val).utcOffset('+0530').format('MM/DD/YYYY');
 				if (keyObj.type && keyObj.type == 'datetime' && val)
