@@ -173,7 +173,6 @@ angular.module('sreizaoApp',[
     });
 
     $rootScope.$on('$stateChangeSuccess', function(ev, to, toParams, from, fromParams) {
-        console.log('dshk hgf',to);
         $rootScope.previousState = from.name;
         $rootScope.previousParams = fromParams;
         $rootScope.currentState = to.name;

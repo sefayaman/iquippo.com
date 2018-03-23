@@ -491,7 +491,7 @@
                 $scope.submitted = true;
                 return;
             }
-            if((form.countryName.$viewValue).indexOf("_") > -1 || (form.countryCode.$viewValue).indexOf("_") > -1){
+            if(vm.country.name.indexOf("_") !== -1 || vm.country.countryCode.indexOf("_") !== -1 ){
                 alert('Underscore not allowed. Please update.');   
             }else{
                 LocationSvc.saveCountry(vm.country)
@@ -511,9 +511,9 @@
                 $scope.submitted = true;
                 return;
             }
-            if((form.countryName.$viewValue).indexOf("_") > -1 || (form.countryCode.$viewValue).indexOf("_") > -1){
+            if(vm.country.name.indexOf("_") !== -1 || vm.country.countryCode.indexOf("_") !== -1 ){
                 alert('Underscore not allowed. Please update.');   
-            }else{
+            } else{
             LocationSvc.updateCountry(vm.country)
                 .then(function(result) {
                     vm.country = {};
@@ -523,20 +523,21 @@
             }
         }
 
-        function countryEditClick(idx) {
-            vm.country = vm.countryList[idx];
+        function countryEditClick(rowData) {
+            vm.country = {};
+            angular.copy(rowData, vm.country);
             vm.countryEdit = true;
         }
 
-        function deleteCountry(idx) {
+        function deleteCountry(rowData) {
             Modal.confirm("Are you sure want to delete?", function(ret) {
                 if (ret == "yes")
-                    submitDeleteCountry(idx);
+                    submitDeleteCountry(rowData);
             });
         }
 
-        function submitDeleteCountry(idx) {
-            LocationSvc.deleteCountry(vm.countryList[idx])
+        function submitDeleteCountry(rowData) {
+            LocationSvc.deleteCountry(rowData)
                 .then(function(result) {
                     if (!result.errorCode)
                         loadAllCountry();
@@ -555,7 +556,7 @@
                 $scope.submitted = true;
                 return;
             }
-            if((form.stateName.$viewValue).indexOf("_") > -1){
+            if(vm.state.name.indexOf("_") !== -1){
                 alert('Underscore not allowed. Please update.');   
             }else{
                 LocationSvc.saveState(vm.state)
@@ -572,9 +573,9 @@
                 $scope.submitted = true;
                 return;
             }
-            if((form.stateName.$viewValue).indexOf("_") > -1){
+            if((vm.state.name).indexOf("_") !== -1){
                 alert('Underscore not allowed. Please update.');   
-            }else{
+            }else {
             LocationSvc.updateState(vm.state)
                 .then(function(result) {
                     vm.state = {};
@@ -584,20 +585,21 @@
             }
         }
 
-        function stateEditClick(idx) {
-            vm.state = vm.stateList[idx];
+        function stateEditClick(rowData) {
+            vm.state = {};
+            angular.copy(rowData, vm.state);
             vm.stateEdit = true;
         }
 
-        function deleteState(idx) {
+        function deleteState(rowData) {
             Modal.confirm("Are you sure want to delete?", function(ret) {
                 if (ret == "yes")
-                    submitDeleteState(idx);
+                    submitDeleteState(rowData);
             });
         }
 
-        function submitDeleteState(idx) {
-            LocationSvc.deleteState(vm.stateList[idx])
+        function submitDeleteState(rowData) {
+            LocationSvc.deleteState(rowData)
                 .then(function(result) {
                     if (!result.errorCode)
                         loadAllState();
@@ -616,7 +618,7 @@
                 $scope.submitted = true;
                 return;
             }
-            if((form.locationName.$viewValue).indexOf("_") > -1){
+            if((vm.location.name).indexOf("_") !== -1){
                 alert('Underscore not allowed. Please update.');   
             }else{
                 LocationSvc.saveLocation(vm.location)
@@ -634,9 +636,9 @@
                 $scope.submitted = true;
                 return;
             }
-            if((form.locationName.$viewValue).indexOf("_") > -1){
+            if((vm.location.name).indexOf("_") !== -1){
                 alert('Underscore not allowed. Please update.');   
-            }else{
+            } else{
             LocationSvc.updateLocation(vm.location)
                 .then(function(result) {
                     vm.location = {};
@@ -647,22 +649,23 @@
             }
         }
 
-        function locationEditClick(idx) {
-            vm.location = vm.locationList[idx];
+        function locationEditClick(rowData) {
+            vm.location = {};
+            angular.copy(rowData, vm.location);
             vm.country = vm.location.state.country;
             onCountryChange(vm.country);
             vm.locationEdit = true;
         }
 
-        function deleteLocation(idx) {
+        function deleteLocation(rowData) {
             Modal.confirm("Are you sure want to delete?", function(ret) {
                 if (ret == "yes")
-                    submitDeleteLocation(idx);
+                    submitDeleteLocation(rowData);
             });
         }
 
-        function submitDeleteLocation(idx) {
-            LocationSvc.deleteLocation(vm.locationList[idx])
+        function submitDeleteLocation(rowData) {
+            LocationSvc.deleteLocation(rowData)
                 .then(function(result) {
                     loadAllLocation();
                 })
@@ -1288,21 +1291,22 @@
                 })
         }
 
-        function editManufacturer(index) {
-            angular.copy(vm.manufacturerList[index], vm.manufacturer)
+        function editManufacturer(rowData) {
+            vm.manufacturer = {};
+            angular.copy(rowData, vm.manufacturer);
             vm.manufacturerEdit = true;
             //onServiceChange(vm.paymentMaster.serviceCode,true);
         }
 
-        function deleteManufacturer(index) {
+        function deleteManufacturer(rowData) {
             Modal.confirm("Are you sure want to delete?", function(ret) {
                 if (ret == "yes")
-                    submitDeleteManufacturer(index);
+                    submitDeleteManufacturer(rowData);
             });
         }
 
-        function submitDeleteManufacturer(idx) {
-            ManufacturerSvc.deleteManufacturer(vm.manufacturerList[idx])
+        function submitDeleteManufacturer(rowData) {
+            ManufacturerSvc.deleteManufacturer(rowData)
                 .then(function(result) {
                     getAllManufacturer();
                 })
