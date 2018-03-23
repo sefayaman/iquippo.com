@@ -40,6 +40,11 @@
         var stsObj = {};
         stsObj.status = status;
         stsObj.userId = Auth.getCurrentUser()._id;
+        stsObj.fname = Auth.getCurrentUser().fname;
+        stsObj.lname = Auth.getCurrentUser().lname;
+        stsObj.mobile = Auth.getCurrentUser().mobile;
+        stsObj.customerId = Auth.getCurrentUser().customerId;
+        stsObj.role = Auth.getCurrentUser().role;
         stsObj.createdAt = new Date();
         if(!bid[historyField])
           bid[historyField] = [];

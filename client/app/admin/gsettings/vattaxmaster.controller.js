@@ -3,7 +3,7 @@
 
     angular.module('admin').controller('VatTaxMasterCtrl', VatTaxMasterCtrl);
 
-    function VatTaxMasterCtrl($scope,$state,Modal,Auth,PagerSvc,$filter,VatTaxSvc,categorySvc,groupSvc,modelSvc,brandSvc,LocationSvc){
+    function VatTaxMasterCtrl($scope,$state,$window,Modal,Auth,PagerSvc,$filter,VatTaxSvc,categorySvc,groupSvc,modelSvc,brandSvc,LocationSvc){
     	 var vm  = this;
         vm.dataModel = {};
         vm.dataList = [];
@@ -86,6 +86,7 @@
         }
 
         function editClicked(rowData){
+            $window.scrollTo(0, 0);
             vm.dataModel = {};
             vm.dataModel._id  = rowData._id;
             vm.dataModel.taxType = rowData.taxType;

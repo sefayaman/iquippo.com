@@ -3,7 +3,7 @@
 
     angular.module('admin').controller('BannerMasterCtrl', BannerMasterCtrl);
 
-    function BannerMasterCtrl($scope,$rootScope,$state,Modal,Auth,PagerSvc,$filter,uploadSvc,BannerSvc){
+    function BannerMasterCtrl($scope,$rootScope,$state,$window,Modal,Auth,PagerSvc,$filter,uploadSvc,BannerSvc){
     	var vm  = this;
         $scope.pager = PagerSvc.getPager();
         vm.banner = {};
@@ -140,6 +140,7 @@
         function editBanner(index) {
             angular.copy(vm.bannerList[index], vm.banner)
             vm.bannerEdit = true;
+            $window.scrollTo(0, 0);
         }
 
         function deleteBanner(index) {

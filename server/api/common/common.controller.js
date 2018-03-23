@@ -826,11 +826,9 @@ function deleteMasterData(req, res) {
 exports.exportMasterData = function (req, res) {
 	var level = req.body.level;
 	var collectionRef = null;
-	if (level == 'category')
+	if (level == 'category'){
 		collectionRef = Category;
-	else
-		collectionRef = Model;
-	collectionRef.find({}).lean().exec(function (err, data) {
+		collectionRef.find({}).lean().exec(function (err, data) {
 		if (err) {
 			return handleError(res, err)
 		} else {
@@ -852,7 +850,36 @@ exports.exportMasterData = function (req, res) {
 				throw excp;
 			}
 		}
+	  });
+	}
+	else{
+		collectionRef = Model;
+		collectionRef.find({}).lean().exec(function (err, data) {
+		if (err) {
+			return handleError(res, err)
+		} else {
+			var tempData = [];
+			data.forEach(function (item, key, array) {
+				delete array[key]._id;
+				tempData.push({
+					"Product_Group": item.group['name'],
+					"Product_Category": item.category.name,
+					"Brand_Name": item.brand.name,
+					"Model_No": item.name,
+					"Used": item.isForUsed ? 'Yes' : 'No',
+					"New": item.isForNew ? 'Yes' : 'No',
+					"Both": item.isForUsed && item.isForNew ? 'Yes' : 'No'
+				});
+			});
+			try {
+				utility.convertToCSV(res, tempData);
+			} catch (excp) {
+				throw excp;
+			}
+		}
 	});
+	}
+	
 }
 
 function Workbook() {

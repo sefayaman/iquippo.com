@@ -7,6 +7,9 @@
     var vm = this;
     var dbAuctionId = $stateParams.dbAuctionId;
     $scope.equipmentSearchFilter = {};
+    $stateParams.group = $scope.removeUnderScore($stateParams.group);
+    $stateParams.brand = $scope.removeUnderScore($stateParams.brand);
+    $stateParams.location = $scope.removeUnderScore($stateParams.location);
     //$scope.pager = PagerSvc.getPager(null,1,24);
     //pagination variables
     var prevPage = 0;
@@ -207,6 +210,7 @@
       if (!initLoad) {
         saveState(false);
       }
+      $scope.equipmentSearchFilter.location = $scope.removeUnderScore($scope.equipmentSearchFilter.location)
       var filter = {};
       angular.copy($scope.equipmentSearchFilter, filter);
       getLotsInAuction(filter);
@@ -236,6 +240,9 @@
               lot.url = $sce.trustAsResourceUrl(url);
               //checkWidgetAccessOnLot(lot);
             });
+
+            vm.lotListing = _sortByLotNumber(vm.lotListing);
+
           } else {
             $scope.noResult = true;
             $scope.msg = res.message;
@@ -378,6 +385,7 @@
 
     function saveState(retainState) {
       $scope.equipmentSearchFilter.currentPage = vm.currentPage + "";
+      $scope.equipmentSearchFilter.location = $scope.removeSpace($scope.equipmentSearchFilter.location);
       $state.go($state.current.name, $scope.equipmentSearchFilter, { location: 'replace', notify: false });
     }
 
@@ -385,6 +393,23 @@
       $scope.equipmentSearchFilter = $stateParams;
       vm.currentPage = parseInt($stateParams.currentPage) || 1;
       $scope.equipmentSearchFilter.currentPage = vm.currentPage + "";
+    }
+
+    function _sortByLotNumber(dataModel) {
+      return dataModel.sort(_customComparator);
+    }
+
+    function _customComparator(a, b) {
+      var splitter = /^(\d+)([a-zA-Z]*)/;
+      a = a.lotNumber.match(splitter);
+      b = b.lotNumber.match(splitter);
+
+      var aNum = parseInt(a[1], 10);
+      var bNum = parseInt(b[1], 10);
+      if (aNum === bNum) {
+        return a[2].toUpperCase() < b[2].toUpperCase() ? -1 : a[2].toUpperCase() > b[2].toUpperCase() ? 1 : 0;
+      }
+      return aNum - bNum;
     }
 
     //Entry point

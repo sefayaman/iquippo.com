@@ -17,7 +17,7 @@
     <div class="row">      
       <div class="col-sm-6 col-md-4 form-group" ng-repeat="category in newcategoryListingVm.allCategoryList" ng-if="$index < newcategoryListingVm.showedItems && category.name !== 'Other'" >
         <div class="media text-center">
-          <a href="/new/{{category.group.name}}/{{category.name}}" class="media-picture">
+          <a href="/new-equipment/{{category.group.name}}/{{removeSpace(category.name)}}" class="media-picture">
              <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{category.imgSrc}}" ng-if="category.imgSrc">
              <img src="/assets/images/watermark.png" ng-if="!category.imgSrc">              
           </a>          
@@ -26,7 +26,7 @@
                                 
           </div> 
           <div class="text-center">
-            <a href="/new/{{category.group.name}}/{{category.name}}" class="btn btn-primary">Explore</a>
+            <a href="/new-equipment/{{category.group.name}}/{{removeSpace(category.name)}}" class="btn btn-primary">Explore</a>
           </div>         
         </div>
       </div>

@@ -3,7 +3,7 @@
 
 angular.module('admin').controller('LotCtrl', LotCtrl);
 
-function LotCtrl($scope, $rootScope, $state,Modal,Auth,PagerSvc,$filter,AuctionMasterSvc,LotSvc){
+function LotCtrl($scope, $rootScope,$window, $state,Modal,Auth,PagerSvc,$filter,AuctionMasterSvc,LotSvc){
   var vm  = this;
   vm.dataModel = {};
   vm.duplicate = {};
@@ -32,6 +32,7 @@ function LotCtrl($scope, $rootScope, $state,Modal,Auth,PagerSvc,$filter,AuctionM
     filter = {};
     initFilter.pagination = true;
     angular.copy(initFilter, filter);
+    _getAllAuctions();
     getAuctions();
     getLotData(filter);
   } 
@@ -43,10 +44,14 @@ function LotCtrl($scope, $rootScope, $state,Modal,Auth,PagerSvc,$filter,AuctionM
     angular.copy(initFilter, filter);
     if (vm.searchStr)
         filter.searchStr = vm.searchStr;
+    if($scope.selectAuctionId) {
+      filter['aucId'] = $scope.selectAuctionId;
+    }
     getLotData(filter);
   }
 
   function editClicked(rowData){
+    $window.scrollTo(0, 0);
     getAuctions();
     vm.dataModel = {};
     angular.copy(rowData, vm.dataModel);
@@ -277,6 +282,26 @@ function LotCtrl($scope, $rootScope, $state,Modal,Auth,PagerSvc,$filter,AuctionM
     AuctionMasterSvc.get(filter).then(function(result) {
       vm.auctionListing = result;
     });
+  }
+
+  function _getAllAuctions() {
+    AuctionMasterSvc.get().then(function(result) {
+      vm.allAuctionListing = result;
+    }).catch(function() {
+      vm.allAuctionListing = [];
+    });
+  }
+
+  vm.getLotByAuction = function(auctionId) {
+    var filter = {};
+    if(auctionId == "") {
+      filter['pagination'] = true;
+    } else {
+      filter['pagination'] = true;
+      filter['aucId'] = auctionId;
+    }
+    $scope.pager.reset();
+    getLotData(filter);
   }
 
   function checkForLot(lotNumber,auction_id){

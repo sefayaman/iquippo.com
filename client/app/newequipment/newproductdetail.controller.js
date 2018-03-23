@@ -19,6 +19,9 @@
     $scope.viewOffer = viewOffer;
     $scope.increaseQuantity = increaseQuantity;
     $scope.decreaseQuantity = decreaseQuantity;
+
+    $stateParams.brand = $scope.removeUnderScore($stateParams.brand);
+    $stateParams.category = $scope.removeUnderScore($stateParams.category);
     
     function viewOffer(location){
       /*  
