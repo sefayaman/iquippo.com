@@ -238,7 +238,7 @@
         </div> -->
 
           <div ng-if="!searching && !noResult">
-            <div class="row" ng-if="isLoggedIn() && redirectToLiveAuction && auctionData.auctionType !== 'L'">
+            <div class="row" ng-if="isLoggedIn() && redirectToLiveAuction && auctionData.auctionType !== 'L' &&  auctionData.auctionType === 'PT' ">
               <div class="col-sm-12 col-md-12 form-group" ng-repeat="lot in viewLotVm.lotListing | startFrom:(pager.currentPage -1 )*pager.itemsPerPage | limitTo:pager.itemsPerPage">
                 <div class="media text-center form-group">
                   <div class="row">
