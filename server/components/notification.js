@@ -73,6 +73,8 @@ exports.create = function(req, res) {
   }
   data['counter'] = 0;
   data.isSent = false;
+  if(!data.to)
+    return res.status(412).send("No recipient found"); 
   notification.create(req.body, function(err, data) {
     if (err) {
       return handleError(res, err);
@@ -131,6 +133,11 @@ function createEmail(req, res, data) {
   if (req.counter < req.users.length) {
     data.to = req.users[req.counter];
     data.isSent = false;
+    if(!data.to){
+        req.counter++;
+        createEmail(req, res, data);
+        return;
+    }
     notification.create(data, function(err, dt) {
       if (err) {
         return handleError(res, err);
@@ -150,6 +157,11 @@ function createEmail(req, res, data) {
 exports.pushNotification = function(data, cb) {
   data['counter'] = 0;
   data.isSent = false;
+  if(!data || !data.to){
+     if(cb)
+      cb(false);
+     return
+  }
   notification.create(data, function(err, data) {
     if (err) {
       if (cb)
