@@ -67,6 +67,7 @@ function OfflinePaymentCtrl($scope,$rootScope,Modal,$stateParams,$state,$uibModa
     stsObj.createdAt = new Date();
     stsObj.paymentStatus = "success";
     vm.dataModel.payments[vm.dataModel.payments.length] = stsObj;
+    vm.dataModel.reqSubmitStatus = ReqSubmitStatuses[1];
     vm.dataModel.userDataSendToAuction = true;
     $rootScope.loading = true;
     PaymentSvc.updateStatus(vm.dataModel, transactionStatuses[5].code)
@@ -84,10 +85,10 @@ function OfflinePaymentCtrl($scope,$rootScope,Modal,$stateParams,$state,$uibModa
     })
     .catch(function(err){
       if(err.data)
-        Modal.alert(err.data); 
+        Modal.alert(err.data);
       $rootScope.loading = false;
       userRegForAuctionSvc.generateKit(vm.dataModel);
-
+      closeDialog();
     });
   }
 
