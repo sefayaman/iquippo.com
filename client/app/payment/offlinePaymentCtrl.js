@@ -26,6 +26,7 @@ function OfflinePaymentCtrl($scope,$rootScope,Modal,$stateParams,$state,$uibModa
         vm.dataModel.amount =  vm.dataModel.totalAmount;
         vm.dataModel.auctionId = $scope.offlinePayment.auctionId;
         vm.dataModel.auction_id = $scope.offlinePayment.auction_id;
+        vm.dataModel.auctionType = $scope.offlinePayment.auctionType;
         vm.dataModel.emdTax = $scope.offlinePayment.emdTax;
         vm.dataModel.requestType = "Auction Request";
         vm.dataModel.status = transactionStatuses[5].code;
@@ -38,6 +39,7 @@ function OfflinePaymentCtrl($scope,$rootScope,Modal,$stateParams,$state,$uibModa
       angular.copy($scope.offlinePayment, vm.dataModel);
       vm.dataModel.amount =  $scope.offlinePayment.totalAmount;
       vm.dataModel.transactionId =  $scope.offlinePayment.transactionId;
+      vm.dataModel.auctionType = $scope.offlinePayment.auctionType;
     }
     if($scope.viewMode === 'paymentView') {
       $scope.totalPaidAmount = 0;
@@ -68,6 +70,7 @@ function OfflinePaymentCtrl($scope,$rootScope,Modal,$stateParams,$state,$uibModa
     stsObj.paymentStatus = "success";
     vm.dataModel.payments[vm.dataModel.payments.length] = stsObj;
     vm.dataModel.reqSubmitStatus = ReqSubmitStatuses[1];
+    console.log(vm.dataModel);
     vm.dataModel.userDataSendToAuction = true;
     $rootScope.loading = true;
     PaymentSvc.updateStatus(vm.dataModel, transactionStatuses[5].code)
