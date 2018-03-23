@@ -491,7 +491,7 @@
                 $scope.submitted = true;
                 return;
             }
-            if((form.countryName.$viewValue).indexOf("_") > -1 || (form.countryCode.$viewValue).indexOf("_") > -1){
+            if(vm.country.name.indexOf("_") !== -1 || vm.country.countryCode.indexOf("_") !== -1 ){
                 alert('Underscore not allowed. Please update.');   
             }else{
                 LocationSvc.saveCountry(vm.country)
@@ -511,9 +511,9 @@
                 $scope.submitted = true;
                 return;
             }
-            if((form.countryName.$viewValue).indexOf("_") > -1 || (form.countryCode.$viewValue).indexOf("_") > -1){
+            if(vm.country.name.indexOf("_") !== -1 || vm.country.countryCode.indexOf("_") !== -1 ){
                 alert('Underscore not allowed. Please update.');   
-            }else{
+            } else{
             LocationSvc.updateCountry(vm.country)
                 .then(function(result) {
                     vm.country = {};
@@ -524,7 +524,7 @@
         }
 
         function countryEditClick(idx) {
-            vm.country = vm.countryList[idx];
+            vm.country = angular.copy(vm.countryList[idx]);
             vm.countryEdit = true;
         }
 
@@ -555,7 +555,7 @@
                 $scope.submitted = true;
                 return;
             }
-            if((form.stateName.$viewValue).indexOf("_") > -1){
+            if(vm.state.name.indexOf("_") !== -1){
                 alert('Underscore not allowed. Please update.');   
             }else{
                 LocationSvc.saveState(vm.state)
@@ -572,9 +572,9 @@
                 $scope.submitted = true;
                 return;
             }
-            if((form.stateName.$viewValue).indexOf("_") > -1){
+            if((vm.state.name).indexOf("_") !== -1){
                 alert('Underscore not allowed. Please update.');   
-            }else{
+            }else {
             LocationSvc.updateState(vm.state)
                 .then(function(result) {
                     vm.state = {};
@@ -585,7 +585,7 @@
         }
 
         function stateEditClick(idx) {
-            vm.state = vm.stateList[idx];
+            vm.state = angular.copy(vm.stateList[idx]);
             vm.stateEdit = true;
         }
 
@@ -616,7 +616,7 @@
                 $scope.submitted = true;
                 return;
             }
-            if((form.locationName.$viewValue).indexOf("_") > -1){
+            if((vm.location.name).indexOf("_") !== -1){
                 alert('Underscore not allowed. Please update.');   
             }else{
                 LocationSvc.saveLocation(vm.location)
@@ -634,9 +634,9 @@
                 $scope.submitted = true;
                 return;
             }
-            if((form.locationName.$viewValue).indexOf("_") > -1){
+            if((vm.location.name).indexOf("_") !== -1){
                 alert('Underscore not allowed. Please update.');   
-            }else{
+            } else{
             LocationSvc.updateLocation(vm.location)
                 .then(function(result) {
                     vm.location = {};
@@ -648,7 +648,7 @@
         }
 
         function locationEditClick(idx) {
-            vm.location = vm.locationList[idx];
+            vm.location = angular.copy(vm.locationList[idx]);
             vm.country = vm.location.state.country;
             onCountryChange(vm.country);
             vm.locationEdit = true;
