@@ -70,7 +70,6 @@ function OfflinePaymentCtrl($scope,$rootScope,Modal,$stateParams,$state,$uibModa
     stsObj.paymentStatus = "success";
     vm.dataModel.payments[vm.dataModel.payments.length] = stsObj;
     vm.dataModel.reqSubmitStatus = ReqSubmitStatuses[1];
-    console.log(vm.dataModel);
     vm.dataModel.userDataSendToAuction = true;
     $rootScope.loading = true;
     PaymentSvc.updateStatus(vm.dataModel, transactionStatuses[5].code)

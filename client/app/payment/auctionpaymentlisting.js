@@ -77,7 +77,7 @@ function AuctionPaymentListingCtrl($scope, $state, $rootScope, $uibModal, Modal,
     payScope.option = {};
     payScope.option.select = paymentData.paymentMode;
     payScope.auctionType = paymentData.auctionType;
-    console.log('DSJFKLJDSF',paymentData);
+    
     if(angular.isUndefined(payScope.auctionRegPayment.emd)) {
       if(payScope.auctionRegPayment.emdTax === $scope.OverAll) {
         var serData = {};
