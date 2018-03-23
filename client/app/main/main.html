@@ -93,6 +93,7 @@
             <!-- <span>{{auction.startTimer | date :'hh:mma'}} to {{auction.endTimer | date :'hh:mma'}}</span> -->
             <span ng-if="auction.auctionType === 'A'"><i class="fa fa-gavel"></i> Online Auction</span>
             <span ng-if="auction.auctionType === 'L'"><i class="fa fa-gavel"></i> Live Auction</span>
+            <span ng-if="auction.auctionType === 'PT'"><i class="fa fa-gavel"></i> Private Treaty</span>
           </div>
         </a>
       </div>
