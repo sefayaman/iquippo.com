@@ -154,8 +154,8 @@
                                                 <td>{{country.name}}</td>
                                                 <td>{{country.countryCode}}</td>
                                                 <td>
-                                                    <a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="gsettingVm.countryEditClick($index)" ><i class="fa fa-pencil"></i> </a>
-                                                    <a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deleteCountry($index)"><i class="fa fa-trash"></i> </a>
+                                                    <a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="gsettingVm.countryEditClick(country)" ><i class="fa fa-pencil"></i> </a>
+                                                    <a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deleteCountry(country)"><i class="fa fa-trash"></i> </a>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -221,8 +221,8 @@
                                             <td>{{state.country}}</td>
                                             <td>{{state.name}}</td>
                                             <td>
-                                                <a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="gsettingVm.stateEditClick($index)" ><i class="fa fa-pencil"></i> </a>
-                                                <a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deleteState($index)"><i class="fa fa-trash"></i> </a>
+                                                <a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="gsettingVm.stateEditClick(state)" ><i class="fa fa-pencil"></i> </a>
+                                                <a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deleteState(state)"><i class="fa fa-trash"></i> </a>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -286,8 +286,8 @@
                                             <td>{{loc.state.name}}</td>
                                             <td>{{loc.name}}</td>
                                             <td>
-                                                <a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="gsettingVm.locationEditClick($index)" ><i class="fa fa-pencil"></i> </a>
-                                                <a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deleteLocation($index)"><i class="fa fa-trash"></i> </a>
+                                                <a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="gsettingVm.locationEditClick(loc)" ><i class="fa fa-pencil"></i> </a>
+                                                <a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deleteLocation(loc)"><i class="fa fa-trash"></i> </a>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -1159,8 +1159,8 @@
                                     <td><img class="sheduleImg img-circle" ng-src="{{uploadImagePrefix}}{{manufacturerDir}}/{{mfg.imgsrc}}" alt="Image"></td>
                                     <td>{{mfg.name}}</td>
                                     <td>
-                                        <a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="gsettingVm.editManufacturer($index)"><i class="fa fa-pencil"></i> </a>
-                                        <a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deleteManufacturer($index)"><i class="fa fa-trash"></i> </a>
+                                        <a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="gsettingVm.editManufacturer(mfg)"><i class="fa fa-pencil"></i> </a>
+                                        <a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deleteManufacturer(mfg)"><i class="fa fa-trash"></i> </a>
                                     </td>
                                 </tr>
                             </tbody>
