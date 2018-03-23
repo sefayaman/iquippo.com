@@ -9,6 +9,7 @@ var AuctionRequestSchema = new Schema({
   seller:{},
   auctionId:String,
   dbAuctionId:String,
+  auctionType: String,
   lot_id:String,
   lotNo:String,
   emdAmount : Number,

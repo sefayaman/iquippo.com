@@ -1515,6 +1515,7 @@
             for (var i = 0; i < vm.upcomingAuctions.length; i++) {
                 if (vm.upcomingAuctions[i]._id == vm.auctionProduct.dbAuctionId) {
                     vm.auctionProduct.auctionId = vm.upcomingAuctions[i].auctionId;
+                    vm.auctionProduct.auctionType = vm.upcomingAuctions[i].auctionType;
                     vm.auctionProduct.startDate = vm.upcomingAuctions[i].startDate;
                     vm.auctionProduct.endDate = vm.upcomingAuctions[i].endDate;
                 }
@@ -1621,6 +1622,7 @@
             for (var i = 0; i < vm.upcomingAuctions.length; i++) {
                 if (vm.upcomingAuctions[i]._id == vm.auctionProduct.dbAuctionId) {
                     vm.auctionProduct.auctionId = vm.upcomingAuctions[i].auctionId;
+                    vm.auctionProduct.auctionType = vm.upcomingAuctions[i].auctionType;
                     vm.auctionProduct.startDate = vm.upcomingAuctions[i].startDate;
                     vm.auctionProduct.endDate = vm.upcomingAuctions[i].endDate;
                 }
@@ -1675,6 +1677,7 @@
                 dataObj.assetDesc = product.name;
                 dataObj.auction_id = reqData.dbAuctionId;
                 dataObj.auctionId = reqData.auctionId;
+                dataObj.auctionType = reqData.auctionType;
                 dataObj.lot_id = reqData.lot_id;
                 dataObj.assetDir = product.assetDir;
                 dataObj.city = product.city;

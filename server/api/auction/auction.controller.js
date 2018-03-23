@@ -97,8 +97,11 @@ exports.getAuctionInfoForProduct = function (req, res) {
       if (auctionData.startDate < currentDate && auctionData.endDate > currentDate)
         auctionData.visibleBuyNow = false;
       auctionData.allowProxyBid = false;
-      if (auctionData.insStartDate < currentDate && auctionData.endDate > currentDate)
+      if (auctionData.insStartDate < currentDate && auctionData.endDate > currentDate && auctionData.auctionType!='PT')
         auctionData.allowProxyBid = true;
+      if ( auctionData.auctionType==='PT' && auctionData.startDate < currentDate && auctionData.endDate > currentDate) {
+        auctionData.allowProxyBid = true;
+      }
       return res.status(200).json(auctionData);
     });
   });
@@ -162,6 +165,7 @@ function _create(data, cb) {
         options.dataToSend.assetDesc = auctionAsset.product.description;
         options.dataToSend.auction_id = auctionAsset.dbAuctionId;
         options.dataToSend.auctionId = auctionAsset.auctionId;
+        options.dataToSend.auctionType = auctionAsset.auctionType;
         options.dataToSend.lot_id = auctionAsset.lot_id;
         options.dataToSend.assetDir = auctionAsset.product.assetDir;
         options.dataToSend.city = auctionAsset.product.city;
@@ -179,23 +183,29 @@ function _create(data, cb) {
         options.dataToSend.seller.contactNumber = auctionAsset.product.contactNumber;
         options.dataToSend.seller.contactName = auctionAsset.product.contactName;
         options.dataType = "assetData";
-
-        Utility.sendCompiledData(options, function (err, result) {
-          if (err || (result && result.err)) {
-            options.dataToSend.reqSubmitStatus = ReqSubmitStatuses[1];
-            updateAsset(options.dataToSend);
-            //if (result && result.err)
-            //return cb(result.err);
-            //return cb({errorCode: 3,message: "Unable to post asset request. Please contact support team."});
-            return cb(err);
-          }
-          if (result) {
+        
+        if ( auctionAsset.auctionType ==='PT' ) {
             options.dataToSend.reqSubmitStatus = ReqSubmitStatuses[0];
             updateAsset(options.dataToSend);
-            //return cb({errorCode: 0,message: "Asset request submitted successfully !!!"});
-          }
-          return cb();
-        });
+        }
+        else {
+            Utility.sendCompiledData(options, function (err, result) {
+              if (err || (result && result.err)) {
+                options.dataToSend.reqSubmitStatus = ReqSubmitStatuses[1];
+                updateAsset(options.dataToSend);
+                //if (result && result.err)
+                //return cb(result.err);
+                //return cb({errorCode: 3,message: "Unable to post asset request. Please contact support team."});
+                return cb(err);
+              }
+              if (result) {
+                options.dataToSend.reqSubmitStatus = ReqSubmitStatuses[0];
+                updateAsset(options.dataToSend);
+                //return cb({errorCode: 0,message: "Asset request submitted successfully !!!"});
+              }
+              return cb();
+            });
+        }
       });
     })
     .catch(function (err) {
@@ -291,16 +301,8 @@ function postRequestAsset(req, res) {
       options.dataToSend.seller.contactName = req.body.product.contactName;
     }
     options.dataType = "assetData";
-
-    Utility.sendCompiledData(options, function (err, result) {
-      if (err || (result && result.err)) {
-        options.dataToSend.reqSubmitStatus = ReqSubmitStatuses[1];
-        updateAsset(options.dataToSend);
-        if (result && result.err)
-          return res.status(412).send(result.err);
-        return res.status(412).send("Unable to post asset request. Please contact support team.");
-      }
-      if (result) {
+    
+    if (req.body.auctionType==='PT') {
         options.dataToSend.reqSubmitStatus = ReqSubmitStatuses[0];
         updateAsset(options.dataToSend);
         if (req.body.isDeleted)
@@ -310,7 +312,27 @@ function postRequestAsset(req, res) {
         else
           return res.status(201).json({ errorCode: 0, message: "Asset request submitted successfully !!!" });
       }
-    });
+    else {
+        Utility.sendCompiledData(options, function (err, result) {
+          if (err || (result && result.err)) {
+            options.dataToSend.reqSubmitStatus = ReqSubmitStatuses[1];
+            updateAsset(options.dataToSend);
+            if (result && result.err)
+              return res.status(412).send(result.err);
+            return res.status(412).send("Unable to post asset request. Please contact support team.");
+          }
+          if (result) {
+            options.dataToSend.reqSubmitStatus = ReqSubmitStatuses[0];
+            updateAsset(options.dataToSend);
+            if (req.body.isDeleted)
+              return res.status(201).json({ errorCode: 0, message: "Asset deleted successfully !!!" });
+            else if (req.isUpdate)
+              return res.status(201).json({ errorCode: 0, message: "Asset request updated successfully  !!!" });
+            else
+              return res.status(201).json({ errorCode: 0, message: "Asset request submitted successfully !!!" });
+          }
+        });
+    }
   });
 }
 
@@ -338,7 +360,6 @@ exports.reSendReqToCreateAsset = function (req, res) {
     options.dataToSend = req.body;
     options.dataToSend._id = productId;
     options.dataType = "assetData";
-
     Utility.sendCompiledData(options, function (err, result) {
       if (err || (result && result.err)) {
         Product.findOneAndUpdate({ _id: productId }, { $set: { "reqSubmitStatus": ReqSubmitStatuses[1] } }).exec();
@@ -1184,26 +1205,25 @@ function postRequest(req, res) {
         update(req.body);
         return res.status(201).json({ errorCode: 0, message: "Auction request submitted successfully !!!" });
     }
-    else
-        {
+    else {
 
-            Utility.sendCompiledData(options, function (err, result) {
-                if (err || (result && result.err)) {
-                    //options.dataToSend.reqSubmitStatus = ReqSubmitStatuses[1];
-                    req.body.reqSubmitStatus = ReqSubmitStatuses[1];
-                    update(req.body);
-                    if (result && result.err)
-                        return res.status(412).send(result.err);
-                    return res.status(412).send("Unable to post auction request. Please contact support team.");
-                }
-                if (result) {
-                    //options.dataToSend.reqSubmitStatus =  ReqSubmitStatuses[0];
-                    req.body.reqSubmitStatus = ReqSubmitStatuses[0];
-                    update(req.body);
-                    return res.status(201).json({errorCode: 0, message: "Auction request submitted successfully !!!"});
-                }
-            });
-        }
+        Utility.sendCompiledData(options, function (err, result) {
+            if (err || (result && result.err)) {
+                //options.dataToSend.reqSubmitStatus = ReqSubmitStatuses[1];
+                req.body.reqSubmitStatus = ReqSubmitStatuses[1];
+                update(req.body);
+                if (result && result.err)
+                    return res.status(412).send(result.err);
+                return res.status(412).send("Unable to post auction request. Please contact support team.");
+            }
+            if (result) {
+                //options.dataToSend.reqSubmitStatus =  ReqSubmitStatuses[0];
+                req.body.reqSubmitStatus = ReqSubmitStatuses[0];
+                update(req.body);
+                return res.status(201).json({errorCode: 0, message: "Auction request submitted successfully !!!"});
+            }
+        });
+    }
   });
 }
 
