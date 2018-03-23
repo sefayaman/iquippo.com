@@ -67,12 +67,13 @@ function OfflinePaymentCtrl($scope,$rootScope,Modal,$stateParams,$state,$uibModa
     stsObj.createdAt = new Date();
     stsObj.paymentStatus = "success";
     vm.dataModel.payments[vm.dataModel.payments.length] = stsObj;
-    if(!$scope.iValuationFlag)
+    if(!$scope.iValuationFlag) {
+      vm.dataModel.reqSubmitStatus = ReqSubmitStatuses[1];
       vm.dataModel.userDataSendToAuction = true;
+    }
     $rootScope.loading = true;
     PaymentSvc.updateStatus(vm.dataModel, transactionStatuses[5].code)
     .then(function(res){
-        vm.dataModel = {};
         $scope.submitted = false;
         $rootScope.loading = false;
        /* if($scope.generateKitCallback)
@@ -82,8 +83,7 @@ function OfflinePaymentCtrl($scope,$rootScope,Modal,$stateParams,$state,$uibModa
 		    if(!$scope.iValuationFlag) {
           $rootScope.$broadcast('refreshPaymentHistroyList');
           generateKit(vm.dataModel);
-        }
-        else {
+        } else {
           ValuationSvc.updateStatus($scope.valuation, IndividualValuationStatuses[1]);
           submitToAgency($scope.valuation,'Mjobcreation');
         }
@@ -93,10 +93,10 @@ function OfflinePaymentCtrl($scope,$rootScope,Modal,$stateParams,$state,$uibModa
     })
     .catch(function(err){
       if(err.data)
-        Modal.alert(err.data); 
+        Modal.alert(err.data);
       $rootScope.loading = false;
       userRegForAuctionSvc.generateKit(vm.dataModel);
-
+      closeDialog();
     });
   }
 
