@@ -511,12 +511,16 @@
                 $scope.submitted = true;
                 return;
             }
+            if((form.countryName.$viewValue).indexOf("_") > -1 || (form.countryCode.$viewValue).indexOf("_") > -1){
+                alert('Underscore not allowed. Please update.');   
+            }else{
             LocationSvc.updateCountry(vm.country)
                 .then(function(result) {
                     vm.country = {};
                     vm.countryEdit = false;
                     loadAllCountry();
                 })
+            }
         }
 
         function countryEditClick(idx) {
@@ -568,12 +572,16 @@
                 $scope.submitted = true;
                 return;
             }
+            if((form.stateName.$viewValue).indexOf("_") > -1){
+                alert('Underscore not allowed. Please update.');   
+            }else{
             LocationSvc.updateState(vm.state)
                 .then(function(result) {
                     vm.state = {};
                     vm.stateEdit = false;
                     loadAllState();
                 })
+            }
         }
 
         function stateEditClick(idx) {
@@ -626,6 +634,9 @@
                 $scope.submitted = true;
                 return;
             }
+            if((form.locationName.$viewValue).indexOf("_") > -1){
+                alert('Underscore not allowed. Please update.');   
+            }else{
             LocationSvc.updateLocation(vm.location)
                 .then(function(result) {
                     vm.location = {};
@@ -633,6 +644,7 @@
                     vm.locationEdit = false;
                     loadAllLocation();
                 })
+            }
         }
 
         function locationEditClick(idx) {

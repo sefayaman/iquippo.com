@@ -1235,7 +1235,7 @@ exports.exportExcel = function (req, res) {
 				}
 
 				if (keyObj.key && keyObj.key === 'bidStatusUpdateBy' && item.bidStatuses.length > 0) {
-					if (item.bidStatuses[item.bidStatuses.length - 1].userId === 'SYSTEM' || item.bidStatuses[item.bidStatuses.length - 1].userId === item.user._id + "" || item.bidStatuses[item.bidStatuses.length - 1].userId === item.user._id)
+					if (item.bidStatuses[item.bidStatuses.length - 1].userId === 'SYSTEM')
 						val = 'System';
 					else if (item.product && item.product.seller && item.bidStatuses[item.bidStatuses.length - 1].userId === item.product.seller._id)
 						val = item.product.seller.name;
@@ -1244,7 +1244,7 @@ exports.exportExcel = function (req, res) {
 				}
 
 				if (keyObj.key && keyObj.key === 'dealStatusUpdatedBy' && item.dealStatuses.length > 0) {
-					if (item.dealStatuses[item.dealStatuses.length - 1].userId === 'SYSTEM' || item.dealStatuses[item.dealStatuses.length - 1].userId === item.user._id + "" || item.dealStatuses[item.dealStatuses.length - 1].userId === item.user._id)
+					if (item.dealStatuses[item.dealStatuses.length - 1].userId === 'SYSTEM')
 						val = 'System';
 					else if (item.product && item.product.seller && item.dealStatuses[item.dealStatuses.length - 1].userId === item.product.seller._id)
 						val = item.product.seller.name;
