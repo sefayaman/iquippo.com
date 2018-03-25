@@ -554,7 +554,7 @@ exports.validateSubmitBid = function (req, res, next) {
 
             req.otherBids.forEach(function (bid) {
                 if (req.query.typeOfRequest == "changeBid") {
-                    AssetSaleUtil.setStatus(bid, offerStatuses[1], 'offerStatus', 'offerStatuses', req.user._id);
+                    AssetSaleUtil.setStatus(bid, offerStatuses[1], 'offerStatus', 'offerStatuses', req.user);
                     bid.bidChanged = true;
                     //bid.status = false;
                 }
@@ -1228,9 +1228,11 @@ exports.exportExcel = function (req, res) {
                     }
                     if(Object.keys(itemObj).length > 0) {
                         if (keyObj.key === 'approvedBy') {
-                            if (itemObj.userId === 'SYSTEM' || itemObj.userId === item.user._id + "" || itemObj.userId === item.user._id)
+                            if (itemObj.userId === 'SYSTEM' || itemObj.userId + "" === item.user._id + "")
                                 val = 'System';
-                            else if (item.product && item.product.seller && itemObj.userId === item.product.seller._id)
+                            else if (itemObj.fname && itemObj.lname)
+                                val = itemObj.fname + " " + itemObj.lname;
+                            else if (item.product && item.product.seller && itemObj.userId + "" === item.product.seller._id + "")
                                 val = item.product.seller.name;
                             else {
                                 var approverObj = getApproverData(itemObj.userId, req.approverUserList);
@@ -1244,21 +1246,37 @@ exports.exportExcel = function (req, res) {
 				}
 
 				if (keyObj.key && keyObj.key === 'bidStatusUpdateBy' && item.bidStatuses.length > 0) {
-					if (item.bidStatuses[item.bidStatuses.length - 1].userId === 'SYSTEM')
+                    var bidObj = item.bidStatuses[item.bidStatuses.length - 1];
+					if (bidObj.userId === 'SYSTEM')
 						val = 'System';
-					else if (item.product && item.product.seller && item.bidStatuses[item.bidStatuses.length - 1].userId === item.product.seller._id)
+                    else if (bidObj.fname && bidObj.lname)
+                        val = bidObj.fname + " " + bidObj.lname;
+                    else if (bidObj.userId + "" === item.user._id + "")
+                        val = (item.user.fname || "") + " " + (item.user.lname || "");
+					else if (item.product && item.product.seller && bidObj.userId + "" === item.product.seller._id + "")
 						val = item.product.seller.name;
-					else
-                        val = 'Admin';
+					else {
+                            var approverObj = getApproverData(bidObj.userId, req.approverUserList);
+                            val = (approverObj.fname || "") + " " + (approverObj.lname || "");
+                        }
+                        //val = 'Admin';
 				}
 
 				if (keyObj.key && keyObj.key === 'dealStatusUpdatedBy' && item.dealStatuses.length > 0) {
-					if (item.dealStatuses[item.dealStatuses.length - 1].userId === 'SYSTEM')
+                    var dealObj = item.dealStatuses[item.dealStatuses.length - 1];
+					if (dealObj.userId === 'SYSTEM')
 						val = 'System';
-					else if (item.product && item.product.seller && item.dealStatuses[item.dealStatuses.length - 1].userId === item.product.seller._id)
+                    else if (dealObj.fname && dealObj.lname)
+                        val = dealObj.fname + " " + dealObj.lname;
+                    else if (dealObj.userId + "" === item.user._id + "")
+                        val = (item.user.fname || "") + " " + (item.user.lname || "");
+					else if (item.product && item.product.seller && dealObj.userId + "" === item.product.seller._id + "")
 						val = item.product.seller.name;
-					else
-						val = 'Admin';
+					else {
+                            var approverObj = getApproverData(dealObj.userId, req.approverUserList);
+                            val = (approverObj.fname || "") + " " + (approverObj.lname || "");
+                        }
+                        //val = 'Admin';
 				}
 
 				if (keyObj.key && keyObj.key === 'sellerCustomerId' && item.user)
@@ -1315,7 +1333,7 @@ exports.exportExcel = function (req, res) {
 function getApproverData(userId, approverLists) {
     var approverData = {};
     for (var i = 0; i < approverLists.length; i++) {
-        if(approverLists[i]._id + "" === userId || approverLists[i]._id === userId){
+        if(approverLists[i]._id + "" === userId + ""){
             approverData = approverLists[i];
             break;
         }
