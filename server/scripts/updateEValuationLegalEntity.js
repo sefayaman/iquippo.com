@@ -15,7 +15,7 @@ mongoose.connection.on('error', function (err) {
 });
 
 function init(processCb) {
-    var query = EnterpriseValuation.find({deleted:false});
+    var query = EnterpriseValuation.find({});
     query.exec(function(err,valReqs){
         if (err){
              return processCb(err);
