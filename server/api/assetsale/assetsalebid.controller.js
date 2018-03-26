@@ -1072,9 +1072,9 @@ exports.getApproverUserList = function (req, res, next) {
         if (err || !users.length) {
             return next();
         }
-
+        req.approverUser = {};
         users.forEach(function (item) {
-            req.approverUserList.push(item)
+            req.approverUser[item._id + ""] = item;
         });
         next();
     })
@@ -1235,8 +1235,11 @@ exports.exportExcel = function (req, res) {
                             else if (item.product && item.product.seller && itemObj.userId + "" === item.product.seller._id + "")
                                 val = item.product.seller.name;
                             else {
-                                var approverObj = getApproverData(itemObj.userId, req.approverUserList);
-                                val = (approverObj.fname || "") + " " + (approverObj.lname || "");
+                                var approverObj = req.approverUser[itemObj.userId + ""];
+                                if(approverObj && approverObj.fname)
+                                    val = (approverObj.fname) + " " + (approverObj.lname);
+                                else
+                                    val = "";
                             }
                         } else if (keyObj.key === 'approvalDate')
                             val = moment(itemObj.createdAt).utcOffset('+0530').format('MM/DD/YYYY');
@@ -1256,11 +1259,13 @@ exports.exportExcel = function (req, res) {
 					else if (item.product && item.product.seller && bidObj.userId + "" === item.product.seller._id + "")
 						val = item.product.seller.name;
 					else {
-                            var approverObj = getApproverData(bidObj.userId, req.approverUserList);
-                            val = (approverObj.fname || "") + " " + (approverObj.lname || "");
+                            var approverObj = req.approverUser[bidObj.userId + ""];
+                            if(approverObj && approverObj.fname)
+                                val = (approverObj.fname) + " " + (approverObj.lname);
+                            else
+                                val = "";
                         }
-                        //val = 'Admin';
-				}
+                }
 
 				if (keyObj.key && keyObj.key === 'dealStatusUpdatedBy' && item.dealStatuses.length > 0) {
                     var dealObj = item.dealStatuses[item.dealStatuses.length - 1];
@@ -1273,11 +1278,13 @@ exports.exportExcel = function (req, res) {
 					else if (item.product && item.product.seller && dealObj.userId + "" === item.product.seller._id + "")
 						val = item.product.seller.name;
 					else {
-                            var approverObj = getApproverData(dealObj.userId, req.approverUserList);
-                            val = (approverObj.fname || "") + " " + (approverObj.lname || "");
+                            var approverObj = req.approverUser[dealObj.userId + ""];
+                            if(approverObj && approverObj.fname)
+                                val = (approverObj.fname) + " " + (approverObj.lname);
+                            else
+                                val = "";
                         }
-                        //val = 'Admin';
-				}
+                }
 
 				if (keyObj.key && keyObj.key === 'sellerCustomerId' && item.user)
 					val = item.product.seller.customerId;
@@ -1328,17 +1335,6 @@ exports.exportExcel = function (req, res) {
 		Utility.renderCSV(res, csvStr);
 	}
 
-}
-
-function getApproverData(userId, approverLists) {
-    var approverData = {};
-    for (var i = 0; i < approverLists.length; i++) {
-        if(approverLists[i]._id + "" === userId + ""){
-            approverData = approverLists[i];
-            break;
-        }
-    }
-    return approverData;
 }
 
 function _formatPayments(item, innerItem, jsonArr) {
