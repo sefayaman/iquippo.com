@@ -3,7 +3,7 @@
 
 	angular.module('sreizaoApp').factory("AssetSaleSvc", AssetSaleSvc);
 
-	function AssetSaleSvc($http,Auth,UtilSvc, Modal) {
+	function AssetSaleSvc($http,$rootScope,Auth,UtilSvc, Modal) {
 		var svc = {};
 		var path='api/assetSale';
 		svc.submitBid = submitBid;
@@ -374,12 +374,15 @@
         queryParam = UtilSvc.buildQueryParam(filter);
     if(queryParam)
       serPath = serPath + "/export" + "?" + queryParam;
+    $rootScope.loading = true;
     return $http.get(serPath)
     .then(function(res){
+      $rootScope.loading = false;
        saveAs(new Blob([s2ab(res.data)],{type:"application/octet-stream"}),reportType+"_"+ new Date().getTime() +".csv");
       //return res.data
     })
     .catch(function(err){
+      $rootScope.loading = false;
       throw err;
     })
   }
