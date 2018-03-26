@@ -1371,8 +1371,8 @@ exports.submitRequest = function(req,res){
       var obj = {};
       keys.forEach(function(key){
         obj[key] = _.get(item,fieldMap[key],"");
-        if(Encoded_Fields.indexOf(fieldMap[key]) !== -1){
-          var buffer = new Buffer(obj[key]);
+        if(Encoded_Fields.indexOf(fieldMap[key]) !== -1 && obj[key]){
+          var buffer = new Buffer(obj[key] || "");
           obj[key] = buffer.toString("base64"); 
         }
       })
