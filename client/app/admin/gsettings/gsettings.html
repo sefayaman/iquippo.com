@@ -24,6 +24,7 @@
                             <option value="emdmaster">EMD Master</option>
                             <option value="evaluation_report">Enterprise Valuation Report</option>
                             <option value="vatmaster">GST Tax Master</option>
+                            <option value="holidaymaster">Holiday Calendar Master</option>
                             <option value="inputform">Input Form Master</option>
                             <option value="inv">Invite Code Setting</option>
                             <option value="iquippogst">iQuippo GST Master</option>
@@ -4402,6 +4403,66 @@
                     </div>
                     <uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="pager.maxSize" class="pagination-sm" rotate="false">  </uib-pagination>
                 </div>
+
+                <!-- iquippo Holiday Calender Master  -->
+            <div ng-if="gsettingVm.tabValue == 'holidaymaster'"  ng-controller="EnterpriseValuationReportCtrl as eValuationReportVm">
+                <h4>Add Holiday Calendar</h4>
+                <legend></legend>
+                <form>
+                    <div class="row">
+                        <div class="col-sm-3 form-group">
+                            <div class="input-group">
+                                <input class="form-control" datetime-picker readonly name="startDate" ng-model="dt" id="EstartDate" placeholder="Event Start Date" date-only date-format="MM/dd/yyyy" required/>
+                                <label for="EstartDate" class="input-group-addon">
+                                    <i class="fa fa-calendar"></i>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-sm-3 form-group">
+                            <div class="input-group">
+                                <input class="form-control" datetime-picker readonly name="startDate" ng-model="dt1" id="EendDate" placeholder="Event end Date" date-only date-format="MM/dd/yyyy" required/>
+                                <label for="EendDate" class="input-group-addon">
+                                    <i class="fa fa-calendar"></i>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-sm-2 form-group">
+                            <button type="button" class="btn btn-default" ng-if="true">Add More</button>
+                            <button type="button" class="btn btn-default" ng-if="false">Delete</button>
+                        </div>
+                    </div>
+                    <div class="text-right form-group row">
+                        <div class="col-sm-2 pull-right">
+                            <button type="button" class="btn btn-block btn-primary">Save</button>
+                        </div>
+                    </div>
+                </form>
+
+                <legend></legend>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Event Start Date</th>
+                                <th>Event End Date</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>                          
+                                <td>{{event.start.date}}</td>
+                                <td>{{event.end.date}}</td>
+                                <td>
+                                    <a href="javascript:void(0);" class="btn btn-danger btn-sm" uib-popover="Delet" popover-trigger="mouseenter">
+                                        <i class="fa fa-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="pager.maxSize" class="pagination-sm" rotate="false">  </uib-pagination>
+            </div>
             </div>
         </div>
     </div>
