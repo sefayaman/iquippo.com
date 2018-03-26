@@ -1252,10 +1252,10 @@ exports.exportExcel = function (req, res) {
                     var bidObj = item.bidStatuses[item.bidStatuses.length - 1];
 					if (bidObj.userId === 'SYSTEM')
 						val = 'System';
-                    else if (bidObj.fname && bidObj.lname)
+                    else if (bidObj.fname && bidObj.lname && bidObj.userId + "" !== item.user._id + "")
                         val = bidObj.fname + " " + bidObj.lname;
                     else if (bidObj.userId + "" === item.user._id + "")
-                        val = (item.user.fname || "") + " " + (item.user.lname || "");
+                        val = "";
 					else if (item.product && item.product.seller && bidObj.userId + "" === item.product.seller._id + "")
 						val = item.product.seller.name;
 					else {
@@ -1271,10 +1271,10 @@ exports.exportExcel = function (req, res) {
                     var dealObj = item.dealStatuses[item.dealStatuses.length - 1];
 					if (dealObj.userId === 'SYSTEM')
 						val = 'System';
-                    else if (dealObj.fname && dealObj.lname)
+                    else if (dealObj.fname && dealObj.lname && dealObj.userId + "" !== item.user._id + "")
                         val = dealObj.fname + " " + dealObj.lname;
                     else if (dealObj.userId + "" === item.user._id + "")
-                        val = (item.user.fname || "") + " " + (item.user.lname || "");
+                        val = "";
 					else if (item.product && item.product.seller && dealObj.userId + "" === item.product.seller._id + "")
 						val = item.product.seller.name;
 					else {
