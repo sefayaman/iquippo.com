@@ -946,8 +946,9 @@ exports.getUser = function(req, res) {
     filter["createdBy._id"] = req.body.userId;
   if (req.body.enterpriseId) {
       filter["enterpriseId"] = req.body.enterpriseId;
-      filter["$or"] = [{"enterprise":{$exists : false}}, {"enterprise":false}]; // remove enterprise which are new selected   
   }
+  if(req.body.enterpriseId && req.body.enterpriseUsers)
+    filter["$or"] = [{"enterprise":{$exists : false}}, {"enterprise":false}]; // remove enterprise which are new selected   
   if (req.body.enterprise)
     filter["enterprise"] = req.body.enterprise;
   if (req.body.mobile)

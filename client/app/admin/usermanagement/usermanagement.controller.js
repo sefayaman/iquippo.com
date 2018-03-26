@@ -310,8 +310,10 @@ angular.module('sreizaoApp')
         fireCommand(true);
         return;
       }
-      if (user.role == 'enterprise')
+      if (user.role == 'enterprise'){
         vm.userSearchFilter.enterpriseId = user.enterpriseId;
+        vm.userSearchFilter.enterpriseUsers = true;
+      }
       else
         vm.userSearchFilter['createdBy'] = user._id;
       fireCommand(true);
