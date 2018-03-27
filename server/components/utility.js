@@ -66,14 +66,14 @@ exports.uploadFileOnFtp = uploadFileOnFtp;
 exports.addNoCacheHeader = addNoCacheHeader;
 
 Date.prototype.addDays = function (days) {
-  //this.setDate(this.getDate() + parseInt(days));
-  this.setMinutes(this.getMinutes() + parseInt(days));
+  this.setDate(this.getDate() + parseInt(days));
+  //this.setMinutes(this.getMinutes() + parseInt(days));
   return this;
 };
 
 Date.prototype.addHours = function (hours) {
-  this.setMinutes(this.getMinutes() + parseInt(hours));
-  //this.setHours(this.getHours() + parseInt(hours));
+  //this.setMinutes(this.getMinutes() + parseInt(hours));
+  this.setHours(this.getHours() + parseInt(hours));
   return this;
 };
 
