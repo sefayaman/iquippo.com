@@ -278,7 +278,7 @@ exports.getLotData = function(req, res) {
   
   if (req.query.searchStr) {
        filter['$text'] = {
-        '$search': "\""+req.query.searchStr+"\""
+        '$search': req.query.searchStr
       }
   }
   if (req.query.auction_id) {
