@@ -4405,14 +4405,17 @@
                 </div>
 
                 <!-- iquippo Holiday Calender Master  -->
-            <div ng-if="gsettingVm.tabValue == 'holidaymaster'"  ng-controller="EnterpriseValuationReportCtrl as eValuationReportVm">
+                <div ng-if="gsettingVm.tabValue == 'holidaymaster'"  ng-controller="EventCtrl as eventVm">
                 <h4>Add Holiday Calendar</h4>
                 <legend></legend>
-                <form>
+                <form name="eventForm">
                     <div class="row">
                         <div class="col-sm-3 form-group">
+                            <input id="eventName" name="eventName" ng-model="eventVm.event.name" type="text" class="form-control" placeholder="Event name" required>
+                        </div>
+                        <div class="col-sm-3 form-group">
                             <div class="input-group">
-                                <input class="form-control" datetime-picker readonly name="startDate" ng-model="dt" id="EstartDate" placeholder="Event Start Date" date-only date-format="MM/dd/yyyy" required/>
+                                <input class="form-control" datetime-picker readonly name="startDate" ng-model="eventVm.event.start" id="EstartDate" placeholder="Event Start Date" date-only date-format="MM/dd/yyyy" required/>
                                 <label for="EstartDate" class="input-group-addon">
                                     <i class="fa fa-calendar"></i>
                                 </label>
@@ -4420,20 +4423,20 @@
                         </div>
                         <div class="col-sm-3 form-group">
                             <div class="input-group">
-                                <input class="form-control" datetime-picker readonly name="startDate" ng-model="dt1" id="EendDate" placeholder="Event end Date" date-only date-format="MM/dd/yyyy" required/>
+                                <input class="form-control" datetime-picker readonly name="endDate" ng-model="eventVm.event.end" id="EendDate" placeholder="Event end Date" date-only date-format="MM/dd/yyyy" required/>
                                 <label for="EendDate" class="input-group-addon">
                                     <i class="fa fa-calendar"></i>
                                 </label>
                             </div>
                         </div>
                         <div class="col-sm-2 form-group">
-                            <button type="button" class="btn btn-default" ng-if="true">Add More</button>
+                            <button type="button" class="btn btn-default">Add More</button>
                             <button type="button" class="btn btn-default" ng-if="false">Delete</button>
                         </div>
                     </div>
                     <div class="text-right form-group row">
                         <div class="col-sm-2 pull-right">
-                            <button type="button" class="btn btn-block btn-primary">Save</button>
+                            <button type="button" class="btn btn-block btn-primary" ng-click="eventVm.save(eventForm)">Save</button>
                         </div>
                     </div>
                 </form>
@@ -4443,17 +4446,19 @@
                     <table class="table table-bordered">
                         <thead>
                             <tr>
+                                <th>Event Name</th>
                                 <th>Event Start Date</th>
                                 <th>Event End Date</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>                          
-                                <td>{{event.start.date}}</td>
-                                <td>{{event.end.date}}</td>
+                            <tr ng-repeat="event in eventVm.events">
+                                <td>{{ event.name }}</td>                       
+                                <td>{{ event.start |  date:'MM/dd/yyyy' }}</td>
+                                <td>{{ event.end |  date:'MM/dd/yyyy' }}</td>
                                 <td>
-                                    <a href="javascript:void(0);" class="btn btn-danger btn-sm" uib-popover="Delet" popover-trigger="mouseenter">
+                                    <a href="javascript:void(0);" class="btn btn-danger btn-sm" uib-popover="Delete" popover-trigger="mouseenter" ng-click="eventVm.delete(event)">
                                         <i class="fa fa-trash"></i>
                                     </a>
                                 </td>
