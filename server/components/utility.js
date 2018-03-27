@@ -569,8 +569,9 @@ function convertQVAPLStatus(qvaplStatus) {
     accept: "Inspection In Progress",
     complete: "Inspection Completed",
     updated: "Valuation Report Submitted",
-    cancel: 'Cancelled'
-  }
+    cancel: 'Cancelled',
+    decline: 'Job Assigning Is In process'
+  };
   return statusMapping[qvaplStatus];
 }
 var csvRegEx = /,|\n|\r\n|\t|\u202c|;/g;
