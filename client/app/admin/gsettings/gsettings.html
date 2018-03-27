@@ -434,14 +434,23 @@
     
                                             <input type="text" class="form-control" name="auctionAddr" ng-model="gsettingVm.auctionData.auctionAddr" placeholder="Address of Auction" />
                                         </div>
-                                        <div class="col-sm-3 form-group">
+                                        <div class="col-sm-6 form-group">
                                             Auction Type
                                             <div class="row">
-                                                <div class="col-xs-5 padd-right" ng-class="{'has-error': auctionDateForm.auctionType.$invalid && submitted}">
-                                                    <input type="radio" id="inlineRadio1" name="auctionType" ng-model="gsettingVm.auctionData.auctionType" value="L" ng-required="!gsettingVm.auctionData.auctionType"> Live Auction
+                                                <div class="col-xs-4 padd-right" ng-class="{'has-error': auctionDateForm.auctionType.$invalid && submitted}">
+                                                    <div class="radio radio-info">
+                                                        <input type="radio" id="inlineRadio1" name="auctionType" ng-disabled="gsettingVm.auctionData.auctionType==='PT'" ng-model="gsettingVm.auctionData.auctionType" value="L" ng-required="!gsettingVm.auctionData.auctionType"> <label for="inlineRadio1">Live Auction </label>
+                                                    </div>
                                                 </div>
-                                                <div class="col-xs-7" ng-class="{'has-error': auctionDateForm.auctionType.$invalid && submitted}">
-                                                    <input type="radio" id="inlineRadio2" name="auctionType" ng-model="gsettingVm.auctionData.auctionType" value="A" ng-required="!gsettingVm.auctionData.auctionType"> On-Line Auction
+                                                <div class="col-xs-4" ng-class="{'has-error': auctionDateForm.auctionType.$invalid && submitted}">
+                                                    <div class="radio radio-info">
+                                                        <input type="radio" id="inlineRadio2" name="auctionType" ng-disabled="gsettingVm.auctionData.auctionType==='PT'" ng-model="gsettingVm.auctionData.auctionType" value="A" ng-required="!gsettingVm.auctionData.auctionType"> <label for="inlineRadio2">On-Line Auction </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-4" ng-class="{'has-error': auctionDateForm.auctionType.$invalid && submitted}">
+                                                    <div class="radio radio-info">
+                                                        <input type="radio" id="inlineRadio3" name="auctionType" ng-disabled="gsettingVm.auctionData.auctionType==='L' || gsettingVm.auctionData.auctionType==='A'" ng-model="gsettingVm.auctionData.auctionType" value="PT" ng-required="!gsettingVm.auctionData.auctionType"> <label for="inlineRadio3">Private Treaty </label>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -726,7 +735,7 @@
                                             <td>{{auc.auctionAddr}}</td>
                                             <td>{{auc.contactName}}</td>
                                             <td>{{auc.contactNumber}}</td> -->
-                                            <td>{{auc.auctionType| titleCase}}</td>
+                                            <td>{{auc.auctionType| uppercase}}</td>
                                             <!-- <td>{{}}</td> -->
                                             <td>{{auc.emdAmount}}</td>
                                             <!-- <td>{{}}</td>
@@ -3591,9 +3600,9 @@
                     <div class="row form-group">
                         <div class="col-sm-2"><p class="text-left">Showing : {{lotVm.totalItems}} Records</p></div>
                         <div class="col-sm-3">
-                            <select class="form-control" ng-model="selectAuctionId"> 
+                            <select class="form-control" ng-model="selectAuctionId" ng-change="lotVm.getLotByAuction(selectAuctionId)"> 
                                 <option value=""> Select Auction Id </option> 
-                                <option ng-repeat="lotdata in lotVm.filteredList | unique: 'auctionId'" value="{{lotdata.auctionId}}">{{lotdata.auctionId}}</option>
+                                <option ng-repeat="auction in lotVm.allAuctionListing | unique: 'auctionId'" value="{{auction._id}}">{{auction.auctionId}}</option>
                             </select>  
                             <!-- {{lotVm.filteredList}}  -->
     
@@ -3622,7 +3631,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr ng-repeat="lotdata in lotVm.filteredList | filter:{auctionId:selectAuctionId}">
+                                        <tr ng-repeat="lotdata in lotVm.filteredList">
                                             <td>{{lotdata.auctionId}}</td>
                                             <td>{{lotdata.lotNumber}}</td>
                                             <td>{{lotdata.startingPrice}}</td>

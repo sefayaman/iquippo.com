@@ -368,11 +368,11 @@
       lotDetailScope.goToProductDetail = function (asset) {
         lotDetailModal.close();
         var statParam = {
-          category: asset.category,
-          brand: asset.brand,
+          category: $scope.removeSpace(asset.category),
+          brand: $scope.removeSpace(asset.brand),
           id: asset.assetId
         };
-        if (Auth.isLoggedIn() && $scope.regLotForUser.indexOf(lot.lotNumber) !== -1)
+        if (Auth.isLoggedIn() && $scope.regLotForUser && $scope.regLotForUser.indexOf(lot.lotNumber) !== -1)
           statParam.lot = lot._id;
         $state.go('productdetail', statParam);
       }

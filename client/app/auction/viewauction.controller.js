@@ -26,6 +26,7 @@
           dataObj.auction = {};
           dataObj.user = {};
           dataObj.auction.dbAuctionId = auction._id;
+          dataObj.auction.auctionType = auction.auctionType;
           //if(!Auth.isAdmin()) {
             dataObj.user._id = Auth.getCurrentUser()._id;
             dataObj.user.mobile = Auth.getCurrentUser().mobile;

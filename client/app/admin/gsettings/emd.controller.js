@@ -62,6 +62,7 @@ function EmdCtrl($scope,$rootScope,$state,$window,Modal,Auth,PagerSvc,$filter,Lo
       if(vm.auctionListing[i]._id == dbAuctionId){
         vm.dataModel.auctionName = vm.auctionListing[i].name;
         vm.dataModel.auctionId = vm.auctionListing[i].auctionId;
+        vm.dataModel.auctionType = vm.auctionListing[i].auctionType;
         break;
       }
     }
@@ -73,6 +74,7 @@ function EmdCtrl($scope,$rootScope,$state,$window,Modal,Auth,PagerSvc,$filter,Lo
     vm.dataModel = {};
     angular.copy(rowData, vm.dataModel);
     vm.dataModel.auction_id = rowData.auction_id;
+    vm.dataModel.auctionType = rowData.auctionType;
     onSelectAuction(rowData.auction_id);
     vm.dataModel.selectedLots={};
     vm.dataModel.selectedLots.lotNumber = rowData.selectedLots[0].lotNumber;

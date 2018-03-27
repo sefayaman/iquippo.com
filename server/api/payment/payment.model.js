@@ -7,6 +7,7 @@ var PaymentTransactionSchema = new Schema({
   product: {},
   auctionId:String,
   auctionName:String,
+  auctionType: String,
   auction_id:{type:Schema.Types.ObjectId,ref:'AuctionMaster'},
   emdTax:String,
   entityName : String,

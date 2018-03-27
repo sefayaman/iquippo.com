@@ -1283,6 +1283,7 @@
           $scope.auctionReq.startDate = $scope.auctions[i].startDate;
           $scope.auctionReq.endDate = $scope.auctions[i].endDate;
           $scope.auctionReq.auctionId = $scope.auctions[i].auctionId;
+          $scope.auctionReq.auctionType = $scope.auctions[i].auctionType;
           break;
         }
       }
@@ -1694,6 +1695,7 @@
       for (var i = 0; i < $scope.auctions.length; i++) {
         if ($scope.auctions[i]._id == $scope.auctionReq.dbAuctionId) {
           $scope.setAssetMapData.auctionId = $scope.auctions[i].auctionId;
+          $scope.setAssetMapData.auctionType = $scope.auctions[i].auctionType;
           break;
         }
       }

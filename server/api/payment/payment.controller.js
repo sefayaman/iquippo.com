@@ -154,21 +154,29 @@ function postRequest(req, res) {
     options.dataToSend.auction_id = paymentResult[0].auction_id + "";
     options.dataToSend.selectedLots = paymentResult[0].selectedLots;
     options.dataType = "userInfo";
-    Util.sendCompiledData(options, function (err, result) {
-      options.dataToSend._id = paymentResult[0]._id;
-      if (err || (result && result.err)) {
-        options.dataToSend.reqSubmitStatus = ReqSubmitStatuses[1];
-        update(options.dataToSend);
-        if (result && result.err)
-          return res.status(412).send(result.err);
-        return res.status(412).send("Payment details saved successfully. Details not passed to AS portal. Use Retry button");
-      }
-      if (result) {
+    console.log('paymentauctiontype',paymentResult[0].auctionType);
+    if ( paymentResult[0].auctionType==='PT' ) {
         options.dataToSend.reqSubmitStatus = ReqSubmitStatuses[0];
         update(options.dataToSend);
         return res.status(201).json({ errorCode: 0, message: "Payment request submitted successfully !!!" });
-      }
-    });
+    }
+    else {
+        Util.sendCompiledData(options, function (err, result) {
+          options.dataToSend._id = paymentResult[0]._id;
+          if (err || (result && result.err)) {
+            options.dataToSend.reqSubmitStatus = ReqSubmitStatuses[1];
+            update(options.dataToSend);
+            if (result && result.err)
+              return res.status(412).send(result.err);
+            return res.status(412).send("Payment details saved successfully. Details not passed to AS portal. Use Retry button");
+          }
+          if (result) {
+            options.dataToSend.reqSubmitStatus = ReqSubmitStatuses[0];
+            update(options.dataToSend);
+            return res.status(201).json({ errorCode: 0, message: "Payment request submitted successfully !!!" });
+          }
+        });
+    }
   });
 }
 

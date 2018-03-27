@@ -6,6 +6,7 @@ var mongoose = require('mongoose'),
 var EmdSchema = new Schema({
   auction_id:String,
   auctionId:String,
+  auctionType: String,
   selectedLots:[{}],
   status:{type:Boolean,default:true},
   emdAmount:Number,
