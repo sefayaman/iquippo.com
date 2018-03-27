@@ -244,6 +244,7 @@
                     getAuctionMaster(dataToSend);
                     loadAuctionData();
                     loadAllCategory();
+                    loadAllLocation();
                     //checkForLot();
                     break;
                 case 'inv':
