@@ -518,30 +518,11 @@
               facebookConversionSent = true;
             }
 
-            var data = {};
-            data['to'] = supportMail;
-            data['subject'] = 'Valuation';
-            var dataToSend={};
-            dataToSend=$scope.valuationReq;
-            dataToSend.serverPath=serverPath;
-            dataToSend.transactionId=result.transactionId;
-            notificationSvc.sendNotification('enquiriesQuoteValuationEmailToAdmin', data, dataToSend,'email');
-            
-            data={};
-            data['to'] = $scope.valuationReq.user.email;
-            data['subject'] = 'Your request has been initiated successfully';
-            dataToSend={};
-            dataToSend.serverPath=serverPath;
-            notificationSvc.sendNotification('enquiriesQuoteServicesEmailToCustomer', data,dataToSend,'email');
-
             var paymentScope = $rootScope.$new();
             paymentScope.tid = result.transactionId;
             paymentScope.valuation = result.valuation;
             paymentScope.resetData = true;
             Modal.openDialog('paymentOption',paymentScope);
-            /*$state.go('payment', {
-              tid: result.transactionId
-            });*/
           }
         })
         .catch(function(err) {

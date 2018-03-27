@@ -278,7 +278,7 @@ var auctionStatuses = [
     notificationText : "listed"
   }
 ];
-var IndividualValuationStatuses = ['Request Initiated','Payment Completed','Request Failed','Request Submitted','Invoice Generated','Report Failed','Report Submitted','Completed', 'Cancelled'];
+var IndividualValuationStatuses = ['Request Initiated','Payment Completed','Request Failed','Request Submitted','Invoice Generated','Valuation Report Failed','Valuation Report Submitted','Completed', 'Cancelled'];
 var iqvlOtherGroupId = 6;
 var valuationStatuses = [
 {

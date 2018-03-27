@@ -13,13 +13,15 @@ var Utility = require('./../../components/utility.js');
 var config = require('./../../config/environment');
 var importPath = config.uploadPath + config.importDir + "/";
 var Product = require('./../product/product.model');
+var ValuationUtil = require('./valuationutil');
 var fs = require('fs');
 var Handlebars = require('handlebars');
 var pdf = require('html-pdf');
 var validator = require('validator');
 var minify = require('html-minifier').minify;
 var fieldsConfig = require('./fieldsConfig');
-var IndividualValuationStatuses = ['Request Initiated','Payment Completed','Request Failed','Request Submitted','Invoice Generated','Report Failed','Report Submitted','Completed', 'Cancelled'];
+var ApiError = require('./../../components/_error.js');
+var IndividualValuationStatuses = ['Request Initiated','Payment Completed','Request Failed','Request Submitted','Invoice Generated','Valuation Report Failed','Valuation Report Submitted','Completed', 'Cancelled'];
 
 // Get list of Valuation
 exports.getAll = function (req, res) {
@@ -83,6 +85,7 @@ function createValuationReq(req,res) {
               resObj.valuation = valuation;
               resObj.transactionId = valuation.transactionId;
               resObj.errorCode = 0;
+              ValuationUtil.sendNotification({action: "REQUEST", requestId: valuation.requestId});
               return res.status(200).json(resObj);
             }
           });
@@ -99,23 +102,6 @@ exports.getOnFilter = function (req, res) {
   if (req.body.onlyOldReq)
     filter['enterprise'] = { $exists: false };
 
-  /*if(req.body.searchstr){
-     var term = new RegExp(req.body.searchstr, 'i');
-     orFilter[orFilter.length] = { "user.fname": { $regex: term }};
-     orFilter[orFilter.length] = { "user.lname": { $regex: term }};
-     orFilter[orFilter.length] = { "user.mobile": { $regex: term }};
-     orFilter[orFilter.length] = { "user.phone": { $regex: term }};
-     orFilter[orFilter.length] = { "user.email": { $regex: term }};
-     orFilter[orFilter.length] = { "user.country": { $regex: term }};
-     orFilter[orFilter.length] = {"product.name":{$regex:term}};
-     orFilter[orFilter.length] = {"product.category":{$regex:term}};
-     orFilter[orFilter.length] = {"product.status":{$regex:term}};
-     orFilter[orFilter.length] = {"product.mfgYear":{$regex:term}};
-     orFilter[orFilter.length] = {"valuationAgency.name":{$regex:term}};
-     orFilter[orFilter.length] = {requestId:{$regex:term}};
-     orFilter[orFilter.length] = {status:{$regex:term}};
-     orFilter[orFilter.length] = {purpose:{$regex:term}};
-  }*/
   if (req.body.searchstr) {
     filter['$text'] = {
     '$search': "\""+req.body.searchstr+"\""
@@ -237,10 +223,28 @@ exports.update = function (req, res) {
     if (!valuation) { return res.status(404).send('Not Found'); }
     ValuationReq.update({ _id: req.params.id }, { $set: req.body }, function (err) {
       if (err) { return handleError(res, err); }
+      sendStatusMail(req.body);
       return res.status(200).json(req.body);
     });
   });
 };
+
+function sendStatusMail(valReq) {
+    var valObj = {};
+    switch (valReq.status) {
+        case IndividualValuationStatuses[1] /*PAYMENT*/:
+            valObj.action = "PAYMENT";
+            break;
+        case IndividualValuationStatuses[4] /*INVOICE*/:
+            valObj.action = "INVOICE";
+            break;
+    }
+    if (!valObj.action)
+        return;
+
+    valObj.requestId = valReq.requestId;
+    ValuationUtil.sendNotification(valObj);
+}
 
 exports.cancelRequest = function(req,res){
   var bodyData = req.body;
@@ -580,13 +584,13 @@ exports.submitRequest = function(req,res){
 
   function requestPostProcessing(valReqs,resList){
     var resObj = resList[0];
-    //console.log("response.body####",resObj);
     if(type === 'Mjobcreation'){
       if(resObj.success === 'true'){
         valReqs.jobId = resObj.jobId;
         valReqs.submittedToAgencyDate = new Date();
         valReqs.remarks = "";
         valReqs.resubmit = false;
+        ValuationUtil.sendNotification({action: "AGENCY", requestId: valReqs.requestId});
         setStatus(valReqs,IndividualValuationStatuses[3]);
       }else{
         valReqs.remarks = resObj.msg || "Unable to submit";
@@ -788,6 +792,7 @@ exports.updateFromAgency = function(req,res){
         updateObj.statuses[updateObj.statuses.length] = stsObj;
         updateObj.status = IndividualValuationStatuses[7];
       }
+      ValuationUtil.sendNotification({action: "REPORT", requestId: valReq.requestId});
     }
 
     ValuationReq.update({_id:valReq._id},{$set:updateObj},function(err){

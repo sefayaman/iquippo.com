@@ -43,11 +43,11 @@ function PaymentResponseCtrl($scope,Modal,$stateParams,$state,notificationSvc,Pa
         getValuatonReqDetail(vm.payTransaction);
 
  			for(var i = 0;i< vm.payTransaction.payments.length;i++){
- 				if(vm.payTransaction.payments[i].type == "auctionreq")
- 					getAuctionReqDetail(vm.payTransaction._id);
+ 				// if(vm.payTransaction.payments[i].type == "auctionreq")
+ 				// 	getAuctionReqDetail(vm.payTransaction._id);
  				// else if(vm.payTransaction.payments[i].type == "valuationreq")
  				// 	getValuatonReqDetail(vm.payTransaction);
- 				else if(vm.payTransaction.payments[i].type == "valuationEnquiries")
+ 				if(vm.payTransaction.payments[i].type == "valuationEnquiries")
  					getValuatonEnquiryDetail(vm.payTransaction._id);
  				else if(vm.payTransaction.payments[i].type == "sparebuy")
  					getBuyReqDetail(vm.payTransaction._id);
@@ -100,7 +100,7 @@ function PaymentResponseCtrl($scope,Modal,$stateParams,$state,notificationSvc,Pa
 
  	}
 
- 	function getAuctionReqDetail(transactionId){
+ 	/*function getAuctionReqDetail(transactionId){
  		if(!transactionId)
  			return;
  		AuctionSvc.getOnFilter({tid :transactionId})
@@ -115,7 +115,7 @@ function PaymentResponseCtrl($scope,Modal,$stateParams,$state,notificationSvc,Pa
  			}
 
  		})
- 	}
+ 	}*/
 
  	function getValuatonReqDetail(transaction){
  		if(!transaction._id)
@@ -124,14 +124,12 @@ function PaymentResponseCtrl($scope,Modal,$stateParams,$state,notificationSvc,Pa
  		.then(function(result){
  			if(result.length > 0){
  				valuationReq = result[0];
+        $scope.reqId = result[0].requestId;
         if(vm.success) {
           ValuationSvc.updateStatus(valuationReq, IndividualValuationStatuses[1]);
           submitToAgency(valuationReq,'Mjobcreation');
         }
         setPayment(transaction, vm.success);
-        ValuationSvc.sendNotification(valuationReq,IndividualValuationStatuses[1],'customer');
- 				PaymentSvc.sendNotification(vm.payTransaction, valuationReq, 2);
-		
  			}
  		});
  	}

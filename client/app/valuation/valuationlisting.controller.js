@@ -267,7 +267,8 @@ function ValuationListingCtrl($scope,$window,$stateParams,$state,$uibModal,Modal
     		// if(valuationReq.isAuction)
     		// 	updateAuction(valuationReq,toStatus);
 
-    		ValuationSvc.sendNotification(valuationReq,toStatus,'customer');
+    		//email for valuation status update
+    		//ValuationSvc.sendNotification(valuationReq,toStatus,'customer');
     		// if(intermediateStatus)
     		// 	ValuationSvc.sendNotification(valuationReq,toStatus,'valagency');
     	})

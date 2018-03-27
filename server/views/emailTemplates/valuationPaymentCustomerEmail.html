@@ -7,14 +7,18 @@
       <td style="height:70px;padding-bottom:20px;" valign="top"><img src="{{awsBaseImagePath}}/assets/images/srei-logo-img.png"></td>
     </tr>
     <tr>
-      <td style="font-size:18px; color:#FF4342; padding-bottom:10px; font-family:Verdana, Geneva, sans-serif;">Dear Valuation Partner, </td>
+      <td style="font-size:18px; color:#FF4342; padding-bottom:10px; font-family:Verdana, Geneva, sans-serif;">Dear {{user.fname}}, </td>
     </tr>
     <tr>
       <td style="color:#000;font-size:13px;padding-bottom:10px;">
-           A Request for Valuation/Inspection has been received for the asset specified below - 
+           We have received the payment for {{valuation/Inspection}} request - {{requestId}}.
       </td>
     </tr>
-   
+    <tr>
+      <td style="color:#000;font-size:13px;padding-bottom:10px;">
+           The payment details are specified below - 
+      </td>
+    </tr>
     <tr>
       <td align="center" style=" padding-top: 10px;padding-bottom: 10px;">
         <table style="font-size:11px;line-height:14px;" border="0" cellspacing="0" cellpadding="0" width="90%" bgcolor="#ffffff">
@@ -22,25 +26,22 @@
                 <tr>
                   <td>
                     <p  style="font-size:12px;line-height:20px;color:#333333; font-family:Verdana, Geneva, sans-serif; text-align: left; margin: 5px 0;">
-                      <b>Request ID:</b> {{requestId}}
+                      <b>Amount Paid:</b> {{paymentDetails.amount}}
                     </p>
                     <p  style="font-size:12px;line-height:20px;color:#333333; font-family:Verdana, Geneva, sans-serif; text-align: left; margin: 5px 0;">
-                      <b>Category:</b> {{product.category}}
-                    </p>
-                    <p  style="font-size:12px;line-height:20px;color:#333333; font-family:Verdana, Geneva, sans-serif; text-align: left; margin: 5px 0;">
-                      <b>Brand:</b>{{product.brand}}
+                      <b>Payment Mode:</b>{{paymentDetails.paymentMode}} / {{paymentDetails.paymentModeType}}
                     </p>
                     <p style="font-size:12px;line-height:20px;color:#333333; font-family:Verdana, Geneva, sans-serif; text-align: left; margin: 5px 0;">
-                      <b>Model:</b> {{product.model}}
+                      <b>Bank Txn Reference Number:</b> {{paymentDetails.refNo}}
                     </p>
                     <p style="font-size:12px;line-height:20px;color:#333333; font-family:Verdana, Geneva, sans-serif; text-align: left; margin: 5px 0;">
-                      <b>Asset Description:</b> {{product.description}}
+                      <b>Bank Name:</b> {{paymentDetails.bankname}}
                     </p>
                     <p style="font-size:12px;line-height:20px;color:#333333; font-family:Verdana, Geneva, sans-serif; text-align: left; margin: 5px 0;">
-                      <b>Location:</b> {{product.city}}, {{product.state}}
+                      <b>Date of Transaction:</b> {{paymentDetails.paymentDate}}
                     </p>
                     <p style="font-size:12px;line-height:20px;color:#333333; font-family:Verdana, Geneva, sans-serif; text-align: left; margin: 5px 0;">
-                      <b>Payment Status:</b> {{paymentStatus}}
+                      <b>Payment Status:</b> Completed
                     </p>
                   </td>
                 </tr>
@@ -51,11 +52,9 @@
     </tr>
     <tr>
       <td style="color:#000;font-size:13px;padding-bottom:10px;">
-           Please update the status of this Valuation Request on <a href="https://www.iquippo.com">www.iquippo.com</a>.
+           Please feel free to email us at <a href="mailto:info@iquippo.com">info@iquippo.com</a> for any queries or support.
       </td>
     </tr>
-    
-    
     <tr>
       <td style="color:#01395c;font-size:13px; font-weight: bold; padding-bottom:10px;">
           Best Wishes, <br/>

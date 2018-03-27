@@ -69,7 +69,7 @@
 			vm.valuationReq.product.country = $scope.currentProduct.country;
 			vm.valuationReq.product.state = $scope.currentProduct.state;
 			vm.valuationReq.product.city = $scope.currentProduct.city;
-			vm.valuationReq.product.description = $scope.currentProduct.comment;
+			//vm.valuationReq.product.description = $scope.currentProduct.comment;
 			
 			if($scope.currentProduct.country)
 				vm.valuationReq.product.countryCode=LocationSvc.getCountryCode($scope.currentProduct.country);

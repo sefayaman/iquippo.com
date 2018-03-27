@@ -225,6 +225,11 @@ function setIquippoGstin(state){
     var stsObj = {};
     stsObj.createdAt = new Date();
     stsObj.userId = Auth.getCurrentUser()._id;
+    stsObj.fname = Auth.getCurrentUser().fname;
+    stsObj.lname = Auth.getCurrentUser().lname;
+    stsObj.mobile = Auth.getCurrentUser().mobile;
+    stsObj.customerId = Auth.getCurrentUser().customerId;
+    stsObj.role = Auth.getCurrentUser().role;
     stsObj.status = IndividualValuationStatuses[4];
     $scope.valuation.statuses[$scope.valuation.statuses.length] = stsObj;
     $scope.valuation.status = IndividualValuationStatuses[4];
@@ -233,8 +238,6 @@ function setIquippoGstin(state){
     .then(function(genInvoice){
       //ValuationSvc.updateStatus($scope.valuation,IndividualValuationStatuses[4]);
       updateStatusComplete($scope.valuation);
-      if($scope.valuation.payOption)
-        sendNotification($scope.valuation, IndividualValuationStatuses[4]);
       if($scope.callback)
         $scope.callback(true);
       close();
@@ -252,19 +255,6 @@ function setIquippoGstin(state){
     }
     if(statusesObj.indexOf(IndividualValuationStatuses[6]) > -1 && Auth.isAdmin())
       ValuationSvc.updateStatus(valData,IndividualValuationStatuses[7]);
-  }
-
-  function sendNotification(valData, status) {
-    var data = {};
-    data['to'] = valData.user.email;
-    data['subject'] = 'Please pay for valuation/inspection';
-    valData.serverPath = serverPath;
-    //valData.payURL = serverPath + "/signin?state=payment&tid=" + valData.transactionId;
-    valData.statusName = status;
-    notificationSvc.sendNotification('valuationPaymentEmailToCustomer', data, valData,'email');
-    data['to'] = valData.user.mobile;
-    data['countryCode']=LocationSvc.getCountryCode(valData.user.country);
-    notificationSvc.sendNotification('valuationPaymentSmsToCustomer', data, valData,'sms');
   }
 
   function addTaxToken(srvcTax){

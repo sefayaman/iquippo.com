@@ -1,0 +1,6 @@
+Dear Customer,
+Invoice has been generated for your Valuation/Inspection request- {{requestId}}. Kindly click the links below - 
+View Invoice: {{serverPath}}/api/valuation/generateinvoice/{{_id}}
+{{#if showPaymentLink}}
+Pay Online: {{serverPath}}/signin?state=payment%26tid={{transactionId}}
+{{/if}}
