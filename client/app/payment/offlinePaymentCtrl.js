@@ -83,7 +83,7 @@ function OfflinePaymentCtrl($scope,$rootScope,Modal,$stateParams,$state,$uibModa
         else
           $rootScope.$broadcast('refreshPaymentHistroyList');*/
 		    if(!$scope.iValuationFlag) {
-          $rootScope.$broadcast('refreshPaymentHistroyList');
+          //$rootScope.$broadcast('refreshPaymentHistroyList');
           generateKit(vm.dataModel);
         } else {
           ValuationSvc.updateStatus($scope.valuation, IndividualValuationStatuses[1]);

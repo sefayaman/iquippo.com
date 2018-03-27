@@ -120,6 +120,7 @@ function PaymentResponseCtrl($scope,Modal,$stateParams,$state,notificationSvc,Pa
  	function getValuatonReqDetail(transaction){
  		if(!transaction._id)
  			return;
+    setPayment(transaction, vm.success);
  		ValuationSvc.getOnFilter({tid :transaction._id})
  		.then(function(result){
  			if(result.length > 0){
@@ -129,7 +130,6 @@ function PaymentResponseCtrl($scope,Modal,$stateParams,$state,notificationSvc,Pa
           ValuationSvc.updateStatus(valuationReq, IndividualValuationStatuses[1]);
           submitToAgency(valuationReq,'Mjobcreation');
         }
-        setPayment(transaction, vm.success);
  			}
  		});
  	}

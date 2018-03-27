@@ -303,7 +303,9 @@ exports.cancelRequest = function(req,res){
       stObj.status = IndividualValuationStatuses[8];
       stObj.createdAt = new Date();
       stObj.userId = req.user._id;
-      stObj.name = req.user.fname + " " + req.user.lname;
+      stObj.fname = req.user.fname;
+      stObj.lname = req.user.lname;
+      stObj.role = req.user.role;
       stObj.mobile = req.user.mobile;
       stObj.email = req.user.email;
       if(!result.statuses)
@@ -619,7 +621,9 @@ exports.submitRequest = function(req,res){
       stObj.status = status;
       stObj.createdAt = new Date();
       stObj.userId = req.user._id;
-      stObj.name = req.user.fname + " " + req.user.lname;
+      stObj.fname = req.user.fname;
+      stObj.lname = req.user.lname;
+      stObj.role = req.user.role;
       stObj.mobile = req.user.mobile;
       stObj.email = req.user.email;
       if(!entValuation.statuses)
