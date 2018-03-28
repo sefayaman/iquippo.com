@@ -84,7 +84,7 @@ exports.sendNotification = function(valReq){
 				tplName = "valuationInvoiceEmailToCustomer";
 				emailData.subject = "Invoice generated for your " + tplData.requestType + " request: " + tplData.requestId;
 				tplData.showPaymentLink = false;
-				if(tplData.payOption === "Pay Later" || tplData.transactionIdRef.payments.length === 0)
+				if(tplData.transactionIdRef.payments.length === 0)
 					tplData.showPaymentLink = true;
 				if(tplData.user && tplData.user.email) {
 					emailData.to = tplData.user.email;

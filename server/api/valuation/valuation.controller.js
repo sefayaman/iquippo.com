@@ -798,7 +798,6 @@ exports.updateFromAgency = function(req,res){
         updateObj.statuses[updateObj.statuses.length] = stsObj;
         updateObj.status = IndividualValuationStatuses[7];
       }
-      ValuationUtil.sendNotification({action: "REPORT", requestId: valReq.requestId});
     }
 
     ValuationReq.update({_id:valReq._id},{$set:updateObj},function(err){
@@ -806,8 +805,8 @@ exports.updateFromAgency = function(req,res){
            result['success'] = false;
            result['msg'] = "System error at iQuippo";
         }
-        //if(action === 'reportupload')
-          //pushNotification(valReq);
+        if(action === 'reportupload')
+          ValuationUtil.sendNotification({action: "REPORT", requestId: valReq.requestId});
         return sendResponse();
     });
   }
