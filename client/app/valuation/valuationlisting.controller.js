@@ -310,8 +310,8 @@ function ValuationListingCtrl($scope,$window,$stateParams,$state,$uibModal,Modal
           fireCommand(true);    
         })
         .catch(function(err){
-          if(err)
-            Modal.alert("Error occured in integration");
+          if(err && err.data)
+        	Modal.alert(err.data);
         }) 
     }
 }

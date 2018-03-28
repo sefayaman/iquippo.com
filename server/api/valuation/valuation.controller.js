@@ -573,11 +573,14 @@ exports.submitRequest = function(req,res){
         json: true, 
         body: dataArr
     }, function (error, response, body){
-      if(error)
-         return res.status(412).send("Unable to post request to agency.Please contact support team.");
+      if(error) {
+        ValuationReq.update({ _id: valReqs._id }, { $set: { resubmit: true } }).exec();
+        return res.status(412).send("Unable to post request to agency.Please contact support team.");
+      }
       if(response.statusCode == 200){
         requestPostProcessing(valReqs,response.body);
       }else{
+        ValuationReq.update({ _id: valReqs._id }, { $set: { resubmit: true } }).exec();
         return res.status(412).send("Unable to post request to agency.Please contact support team");
       }
 
@@ -597,9 +600,8 @@ exports.submitRequest = function(req,res){
       }else{
         valReqs.remarks = resObj.msg || "Unable to submit";
         valReqs.resubmit = true;
-        setStatus(valReqs,IndividualValuationStatuses[2]);
+        //setStatus(valReqs,IndividualValuationStatuses[2]);
       }
-      //return;
     }
     update(valReqs);
   }

@@ -130,7 +130,7 @@
 
                   <a href="javascript:void(0);" ng-if="valuation.transactionIdRef.payments.length > 0" ng-click="valuationListingVm.openPaymentModel(valuation, 'paymentView')" class="btn btn-sm btn-primary" uib-popover="View Payment" popover-trigger="mouseenter"><i class="fa fa-eye"></i></a>
 
-                  <a class="btn btn-primary btn-sm" href="javascript:void(0);" ng-if="valuation.resubmit" ng-click="valuationListingVm.submitToAgency(valuation, 'Mjobcreation')" uib-popover="Submit to Agency" popover-trigger="mouseenter" ng-disabled="valuation.cancelled"><i class="fa fa-check-circle"></i></a>
+                  <a class="btn btn-primary btn-sm" href="javascript:void(0);" ng-if="valuation.resubmit && isAdmin()" ng-click="valuationListingVm.submitToAgency(valuation, 'Mjobcreation')" uib-popover="Submit to Agency" popover-trigger="mouseenter" ng-disabled="valuation.cancelled"><i class="fa fa-check-circle"></i></a>
                   
                   <a class="btn btn-success btn-sm" ng-if="valuationListingVm.validateAction(valuation,'REPORTDOWNLOAD')" href="{{valuation.valuationReport.filename}}" uib-popover="Download Report" popover-trigger="mouseenter" target="_blank"><i class="fa fa-download"></i> </a>
 

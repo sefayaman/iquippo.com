@@ -47,9 +47,9 @@ function PaymentResponseCtrl($scope,Modal,$stateParams,$state,notificationSvc,Pa
  				// 	getAuctionReqDetail(vm.payTransaction._id);
  				// else if(vm.payTransaction.payments[i].type == "valuationreq")
  				// 	getValuatonReqDetail(vm.payTransaction);
- 				if(vm.payTransaction.payments[i].type == "valuationEnquiries")
- 					getValuatonEnquiryDetail(vm.payTransaction._id);
- 				else if(vm.payTransaction.payments[i].type == "sparebuy")
+ 				// if(vm.payTransaction.payments[i].type == "valuationEnquiries")
+ 				// 	getValuatonEnquiryDetail(vm.payTransaction._id);
+ 				if(vm.payTransaction.payments[i].type == "sparebuy")
  					getBuyReqDetail(vm.payTransaction._id);
  			}
 
@@ -60,7 +60,7 @@ function PaymentResponseCtrl($scope,Modal,$stateParams,$state,notificationSvc,Pa
  		})
  	}
 
- 	function getValuatonEnquiryDetail(transactionId){
+ 	/*function getValuatonEnquiryDetail(transactionId){
      if(!transactionId)
      	return;
      if(vm.payTransaction.status=="completed"){
@@ -97,8 +97,7 @@ function PaymentResponseCtrl($scope,Modal,$stateParams,$state,notificationSvc,Pa
       dataToSend.transactionId=vm.payTransaction.transactionId;
       notificationSvc.sendNotification('paymentUnsuccessfullValuationEnquiry', data,dataToSend,'email');
      }
-
- 	}
+ 	}*/
 
  	/*function getAuctionReqDetail(transactionId){
  		if(!transactionId)
@@ -141,8 +140,8 @@ function PaymentResponseCtrl($scope,Modal,$stateParams,$state,notificationSvc,Pa
       //Modal.alert("Valuation request submitted successfully !!!");
     })
     .catch(function(err){
-      if(err)
-        Modal.alert("Error occured in integration");
+      if(err && err.data)
+        Modal.alert(err.data);
     }) 
   }
 

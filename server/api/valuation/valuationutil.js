@@ -23,7 +23,7 @@ exports.sendNotification = function(valReq){
 		switch(valReq.action){
 			case 'REQUEST':
 				tplName = "valuationCustomerEmail";
-				emailData.subject = "Request for valuation/inspection received: " + tplData.requestId;
+				emailData.subject = "Request for " + tplData.requestType + " received: " + tplData.requestId;
  				if(tplData.user && tplData.user.email) {
 					emailData.to = tplData.user.email;
 					sendEmail(tplData,emailData,tplName);
@@ -40,12 +40,12 @@ exports.sendNotification = function(valReq){
 				break;
 			case 'PAYMENT':
 				tplName = "valuationPaymentCustomerEmail";
-				emailData.subject = "Payment received for your Valuation/Inspection request: " + tplData.requestId;
+				emailData.subject = "Payment received for your " + tplData.requestType + " request: " + tplData.requestId;
 				tplData.paymentDetails = {};
 				if(tplData.transactionIdRef.payments.length > 0) {
 					tplData.paymentDetails = tplData.transactionIdRef.payments[0];
 					tplData.paymentDetails.paymentDate = moment(tplData.transactionIdRef.payments[0].createdAt).utcOffset('+0530').format('MM/DD/YYYY');
-					tplData.paymentDetails.paymentMode = tplData.transactionIdRef.paymentMode;
+					tplData.paymentDetails.paymentMode = tplData.transactionIdRef.paymentMode === 'online' ? "Online" : 'Offline';
 				}
 				if(tplData.user && tplData.user.email) {
 					emailData.to = tplData.user.email;
@@ -54,7 +54,7 @@ exports.sendNotification = function(valReq){
 				break;
 			case 'AGENCY':
 				tplName = "valuationAgencyEmail";
-				emailData.subject = "Request for Individual valuation/inspection received: " + tplData.requestId;
+				emailData.subject = "Request for Individual " + tplData.requestType + " received: " + tplData.requestId;
 				if(tplData.valuationAgency && tplData.valuationAgency.email) {
 					emailData.to = tplData.valuationAgency.email;
 					sendEmail(tplData,emailData,tplName);
@@ -62,7 +62,7 @@ exports.sendNotification = function(valReq){
 				break;
 			case 'REPORT':
 				tplName = "individualValuationReportsEmailToCustomer";
-				emailData.subject = "Your Valuation/Inspection report is available to view: " + tplData.requestId;
+				emailData.subject = "Your " + tplData.requestType + " report is available to view: " + tplData.requestId;
 				if(tplData.valuationReport && tplData.valuationReport.filename)
 	              tplData.reportUrl = tplData.valuationReport.filename;
 	            
@@ -82,7 +82,7 @@ exports.sendNotification = function(valReq){
 				break;
 			case 'INVOICE':
 				tplName = "valuationInvoiceEmailToCustomer";
-				emailData.subject = "Invoice generated for your Valuation/Inspection request: " + tplData.requestId;
+				emailData.subject = "Invoice generated for your " + tplData.requestType + " request: " + tplData.requestId;
 				tplData.showPaymentLink = false;
 				if(tplData.payOption === "Pay Later" || tplData.transactionIdRef.payments.length === 0)
 					tplData.showPaymentLink = true;
@@ -90,7 +90,7 @@ exports.sendNotification = function(valReq){
 					emailData.to = tplData.user.email;
 					sendEmail(tplData,emailData,tplName);
 				}
-				setTimeout(function () { 
+				setTimeout(function () {
 					if(tplData.user && tplData.user.mobile) {
 						tplName = "valuationInvoiceSmsToCustomer";
 						emailData.to = tplData.user.mobile;

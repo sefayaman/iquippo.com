@@ -110,8 +110,8 @@ function OfflinePaymentCtrl($scope,$rootScope,Modal,$stateParams,$state,$uibModa
         $scope.callback(true);
     })
     .catch(function(err){
-      if(err)
-        Modal.alert("Error occured in integration");
+      if(err && err.data)
+        Modal.alert(err.data);
       if($scope.callback)
         $scope.callback(true);
     });

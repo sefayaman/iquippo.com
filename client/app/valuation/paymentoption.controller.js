@@ -39,7 +39,7 @@ function PaymentOptionCtrl($scope, $rootScope, $state, Modal, Auth, $uibModal, P
         ValuationSvc.update($scope.valuation).
         then(function(res) {
           if (res)
-            Modal.alert("We have received your request and your request ID is" + $scope.valuation.requestId + " . Please make the necessary payment to complete your request.", true);
+            Modal.alert("We have received your request and your request ID is " + $scope.valuation.requestId + " . Please make the necessary payment to complete your request.", true);
         })
         .catch(function(res) {
           console.log(res);
