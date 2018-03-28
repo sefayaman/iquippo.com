@@ -161,7 +161,7 @@
 
 					var existCat = false;
 					for (var i = 0; i < $scope.assetCategoryList.length; i++) {
-						if($scope.assetCategoryList[i].assetCategory && $scope.assetCategoryList[i].assetCategory === vm.valuationReq.product.category){
+						if($scope.assetCategoryList[i].assetCategory && $scope.assetCategoryList[i].assetCategory.toLowerCase() === vm.valuationReq.product.category.toLowerCase()){
 						  vm.valuationReq.assetCategory = $scope.assetCategoryList[i].assetCategory || "";
 						  vm.valuationReq.valuerGroupId = $scope.assetCategoryList[i].valuerGroupId || "";
 						  existCat = true;

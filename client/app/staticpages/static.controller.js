@@ -449,7 +449,7 @@
       }
       var existCat = false;
       for (var i = 0; i < $scope.assetCategoryList.length; i++) {
-        if($scope.assetCategoryList[i].assetCategory && $scope.assetCategoryList[i].assetCategory === $scope.valuationReq.product.category){
+        if($scope.assetCategoryList[i].assetCategory && $scope.assetCategoryList[i].assetCategory.toLowerCase() === $scope.valuationReq.product.category.toLowerCase()){
           $scope.valuationReq.assetCategory = $scope.assetCategoryList[i].assetCategory || "";
           $scope.valuationReq.valuerGroupId = $scope.assetCategoryList[i].valuerGroupId || "";
           existCat = true;
