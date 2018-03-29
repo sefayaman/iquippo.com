@@ -98,10 +98,10 @@ function ValuationListingCtrl($scope,$window,$stateParams,$state,$uibModal,Modal
 		scope.valuation = valReq;
 		scope.isAdmin = $scope.isAdmin;
 		scope.showReport = ValuationSvc.validateAction(valReq,'REPORTDOWNLOAD');
-		scope.individualValuation = true;
+		// scope.individualValuation = true;
        	var formModal = $uibModal.open({
           animation: true,
-            templateUrl: "app/enterprise/valuation-details-popup.html",
+            templateUrl: "app/valuation/individual-valuation-details-popup.html",
             scope: scope,
             windowTopClass: 'product-preview',
             size: 'lg'
