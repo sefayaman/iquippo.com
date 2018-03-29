@@ -452,11 +452,15 @@
             auctionFilter._id = $scope.currentProduct.auction._id;
             AuctionSvc.getAuctionInfoForProduct(auctionFilter)
               .then(function(aucts) {
-                $scope.auctionsData = aucts;
-                if($scope.auctionsData.allowProxyBid)
-                  $scope.allowBid = "No";
-                else
+                if(aucts.isExpired) { // when auction date is exired by Madhusudan
                   $scope.allowBid = 'Yes';
+                } else {
+                  $scope.auctionsData = aucts;
+                  if($scope.auctionsData.allowProxyBid)
+                    $scope.allowBid = "No";
+                  else
+                    $scope.allowBid = 'Yes';
+                }
               });
           } else {
             $scope.allowBid = 'Yes';
