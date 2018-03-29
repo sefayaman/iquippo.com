@@ -54,7 +54,10 @@ var Export_Field_Mapping = {
   "Bank Name":"BKName",
   "Branch Name":"BrName",
   "GST Details Provided":"GSTUploaded",
-  "Creation Date" : "createdAt"
+  "Creation Date" : "createdAt"//,
+  /*"Enterprise Id" : "enterpriseId",
+  "Enterprise Name" : "enterpriseName",
+  "Access" : "access"*/
 };
 
 var Export_GST_Field_Mapping = {
@@ -1467,6 +1470,34 @@ function getRegisteredBy(user) {
     return user.createdBy.fname + " " + user.createdBy.lname + ' (Self)';
 }
 
+exports.loadAllEnterprise = function(req,res,next){
+  var filter = {};
+  filter.deleted = false;
+  filter.enterprise = true;
+   var query = User.find(filter).sort({
+    _id: -1
+  });
+  query.exec(function(err,enterprises){
+    if(err) return handleError(res, err);
+    req.enterprises = {};
+    enterprises.forEach(function(user){
+      req.enterprises[user.enterpriseId] = user;
+    });
+    next();
+  });
+}
+
+function getAvailedSerices(user){
+  var svc = "";
+  if(user && user.availedServices && user.availedServices.length){
+    user.availedServices.forEach(function(svcObj){
+      svc += svcObj.code + " ";
+    });
+  }
+  svc = svc.substring(0,svc.length - 1);
+  return svc;
+}
+
 exports.exportUsers = function(req, res) {
   var filter = {};
   filter.deleted = false;
@@ -1505,7 +1536,7 @@ exports.exportUsers = function(req, res) {
 
 function exportUsersData(query, req, res) {
     //user export start
-    query.exec(
+    query.lean().exec(
         function (err, users) {
             if (err) {
                 return handleError(res, err);
@@ -1554,7 +1585,12 @@ function exportUsersData(query, req, res) {
                             val = 'No';
                     } else if (key === 'createdAt') {
                         val = Utility.toIST(_.get(item, 'createdAt', ''));
-                    } else
+                    }else if(key == 'enterpriseName' && item.enterpriseId && req.enterprises && req.enterprises[item.enterpriseId]){
+                      val = req.enterprises[item.enterpriseId].fname || "" + " " + req.enterprises[item.enterpriseId].lname || "";
+                    }else if(key == 'access' && item.availedServices && item.availedServices.length){
+                      val = getAvailedSerices(item) || "";
+                    } 
+                    else
                         val = _.get(item, key, "");
                     val = Utility.toCsvValue(val);
                     csvStr += val + ",";

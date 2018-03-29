@@ -24,6 +24,7 @@ router.post('/validateuser',controller.validateUser);
 router.post('/validatesignup',controller.validateSignup);
 router.post('/validateotp',controller.validateOtp);
 router.post('/resetpassword',controller.resetPassword);
+//router.post('/export',auth.isAuthenticated(),controller.loadAllEnterprise,controller.exportUsers);
 router.post('/export',auth.isAuthenticated(),controller.exportUsers);
 //router.get('/fetch/single/:id',auth.isAuthenticated(),controller.fetchSingleUser);
 router.post('/getproductscountonuserids', controller.getProductsCountOnUserIds);

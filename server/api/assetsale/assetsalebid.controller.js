@@ -209,9 +209,38 @@ exports.validateUpdate = function (req, res, next) {
         req.bids = [];
         req.bids[req.bids.length] = req.body;
         if (req.query.action === 'approve') {
+            if(req.bid.bidStatus !== bidStatuses[0])
+                return res.status(412).send("Invalid status update");
             getSaleProcessMaster(function (entData) {
                 if (!entData) {
                     return res.status(404).send("Cooling period configuration is not found");
+                }
+                if(entData.coolingPeriod == 0){
+                    var maxBid = req.bids[0];
+                    if(maxBid){
+                      maxBid.emdStartDate = new Date(); 
+                      maxBid.emdEndDate = new Date().addDays(entData.emdPeriod);
+                      maxBid.product.prevTradeType = req.product.tradeType;
+                      req.product.cooling = false;
+                      req.product.tradeType = tradeTypeStatuses[2];
+                      req.product.bidRequestApproved = true;
+                      AssetSaleUtil.setStatus(maxBid,bidStatuses[7],'bidStatus','bidStatuses',req.user);
+                      AssetSaleUtil.setStatus(maxBid,dealStatuses[6],'dealStatus','dealStatuses',req.user); 
+                      //AssetSaleUtil.sendNotification([{action:"APPROVE",ticketId:maxBid.ticketId}]);
+                    }
+
+                    req.otherBids.forEach(function(item){
+                        if(item._id == maxBid._id )
+                            return;
+                        if (item.bidStatus === bidStatuses[7]) {
+                            item.lastAccepted = false;
+                            AssetSaleUtil.setStatus(item, bidStatuses[0], 'bidStatus', 'bidStatuses', req.user);
+                        }
+                        AssetSaleUtil.setStatus(item,bidStatuses[5],'bidStatus','bidStatuses',req.user);
+                        req.bids.push(item);
+                    });
+                    req.updateProduct = true;
+                    return next();
                 }
                 if (!req.product.cooling) {
                     req.product.cooling = true;
@@ -243,6 +272,9 @@ exports.validateUpdate = function (req, res, next) {
             });
 
         } else if (req.query.action === 'emdpayment') {
+            var isValidStatus = bidStatuses.indexOf(req.bid.bidStatus) > 6 && req.bid.dealStatus === dealStatuses[6] ? true:false;
+            if(!isValidStatus)
+                 return res.status(412).send("Invalid status update");
             //if(req.bid.emdPayment.remainingPayment === 0){
             getSaleProcessMaster(function (entData) {
                 if (!entData.fullPaymentPeriod)
@@ -264,6 +296,9 @@ exports.validateUpdate = function (req, res, next) {
             //else
             //	return res.status(412).send("EMD payment remaining");		
         } else if (req.query.action === 'fullpayment') {
+            var isValidStatus = bidStatuses.indexOf(req.bid.bidStatus) > 6 && req.bid.dealStatus === dealStatuses[7] ? true:false;
+            if(!isValidStatus)
+                return res.status(412).send("Invalid status update");
             req.otherBids.forEach(function (item) {
                 item.status = false;
                 AssetSaleUtil.setStatus(item, bidStatuses[2], 'bidStatus', 'bidStatuses', req.user);
@@ -276,6 +311,9 @@ exports.validateUpdate = function (req, res, next) {
             //else
             //	return res.status(412).send("Full payment remaining");		
         } else if (req.query.action === 'doissued') {
+            var isValidStatus = bidStatuses.indexOf(req.bid.bidStatus) > 6 && req.bid.dealStatus === dealStatuses[8] ? true:false;
+            if(!isValidStatus)
+                return res.status(412).send("Invalid status update");
             req.product.assetStatus = 'sold';
             req.product.updatedAt = new Date();
             AssetSaleUtil.setStatus(req.product, 'sold', 'assetStatus', 'assetStatuses', req.user);
@@ -296,6 +334,9 @@ exports.validateUpdate = function (req, res, next) {
              });*/
             next();
         } else if (req.query.action === 'reject') {
+            if([bidStatuses[0],bidStatuses[7],bidStatuses[8]].indexOf(req.bid.bidStatus) === -1)
+                return res.status(412).send("Invalid status update");
+
             if (req.bid.dealStatus === dealStatuses[6]) {
                 var selBid = null;
                 if (!req.bid.autoApprove)
@@ -306,15 +347,15 @@ exports.validateUpdate = function (req, res, next) {
                         if (entData.emdPeriod)
                             selBid.emdEndDate = new Date().addDays(entData.emdPeriod || 0);
                         selBid.product.prevTradeType = req.bid.product.prevTradeType;
-                        AssetSaleUtil.setStatus(selBid, bidStatuses[7], 'bidStatus', 'bidStatuses');
-                        AssetSaleUtil.setStatus(selBid, dealStatuses[6], 'dealStatus', 'dealStatuses');
+                        AssetSaleUtil.setStatus(selBid, bidStatuses[7], 'bidStatus', 'bidStatuses',req.user);
+                        AssetSaleUtil.setStatus(selBid, dealStatuses[6], 'dealStatus', 'dealStatuses',req.user);
                         req.bids.push(selBid);
-                        AssetSaleUtil.sendNotification([{action: "APPROVE", ticketId: selBid.ticketId}]);
+                        //AssetSaleUtil.sendNotification([{action: "APPROVE", ticketId: selBid.ticketId}]);
                     } else {
                         req.updateProduct = true;
                         req.otherBids.forEach(function (item) {
-                            AssetSaleUtil.setStatus(item, dealStatuses[0], 'dealStatus', 'dealStatuses');
-                            AssetSaleUtil.setStatus(item, bidStatuses[0], 'bidStatus', 'bidStatuses');
+                            AssetSaleUtil.setStatus(item, dealStatuses[0], 'dealStatus', 'dealStatuses',req.user);
+                            AssetSaleUtil.setStatus(item, bidStatuses[0], 'bidStatus', 'bidStatuses',req.user);
                             req.bids.push(item);
                         });
                         var bidCount = req.otherBids.length || 0;
