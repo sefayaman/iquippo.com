@@ -9,6 +9,7 @@ function PaymentOptionCtrl($scope, $rootScope, $state, Modal, Auth, $uibModal, P
   vm.submit = submit;
   vm.closeDialog = closeDialog;
   $scope.paymentOption = false;
+  $scope.closeMsg = false;
 	function init(){
     PaymentSvc.getOnFilter({_id:$scope.tid})
     .then(function(result){
@@ -50,6 +51,7 @@ function PaymentOptionCtrl($scope, $rootScope, $state, Modal, Auth, $uibModal, P
           $rootScope.$broadcast('refreshValuationData');
         if($scope.resetProductData)
           $rootScope.$broadcast('productloaded');
+        $scope.closeMsg = true;
         closeDialog();
         break;
       case 'paynow':
@@ -73,18 +75,27 @@ function PaymentOptionCtrl($scope, $rootScope, $state, Modal, Auth, $uibModal, P
           $rootScope.$broadcast('refreshValuationData');
         if($scope.resetProductData)
           $rootScope.$broadcast('productloaded');
+        $scope.closeMsg = true;
         closeDialog();
         break;
       case 'online':
         $state.go('payment', {
           tid: $scope.tid
         });
+        $scope.closeMsg = true;
         closeDialog();
         break;
     }
   }
 
   function closeDialog() {
+    if(!$scope.closeMsg) {
+      if($scope.resetData)
+          $rootScope.$broadcast('refreshValuationData');
+      if($scope.resetProductData)
+          $rootScope.$broadcast('productloaded');  
+      Modal.alert("We have received your request and your request ID is " + $scope.valuation.requestId + " . Please make the necessary payment to complete your request.", true);
+    }
     $uibModalInstance.dismiss('cancel');
   }
 

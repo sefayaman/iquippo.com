@@ -22,7 +22,7 @@ module.exports = {
 		"Asset Description":{key:"product.description"},
 		//"Asset Name":{key:"assetDescription"},
 		"Engine No":{key:"product.engineNo"},
-		"Chassis No":{key:"product.chasisNo"},
+		"Chassis No":{key:"product.chassisNo"},
 		"Serial No":{key:"product.serialNumber"},
 		"Regn No":{key:"product.registrationNo"},
 		"Invoice Date":{key:"invoiceData.invoiceDate",type:'date'},

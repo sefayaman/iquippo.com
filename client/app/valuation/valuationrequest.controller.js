@@ -73,10 +73,23 @@
 			
 			if($scope.currentProduct.country)
 				vm.valuationReq.product.countryCode=LocationSvc.getCountryCode($scope.currentProduct.country);
-			vm.valuationReq.product.serialNumber = $scope.currentProduct.serialNo;
-			vm.valuationReq.product.registrationNo = $scope.currentProduct.registrationNo;
-			vm.valuationReq.product.engineNo = $scope.currentProduct.engineNo;
-			vm.valuationReq.product.chassisNo = $scope.currentProduct.chasisNo;
+			if($scope.currentProduct.serialNo) {
+				vm.valuationReq.product.serialNumber = $scope.currentProduct.serialNo;
+				$scope.serialNumberDisable = true;
+			}
+			if($scope.currentProduct.registrationNo) {
+				vm.valuationReq.product.registrationNo = $scope.currentProduct.registrationNo;
+				$scope.registrationNoDisable = true;
+			}
+			if($scope.currentProduct.engineNo) {
+				vm.valuationReq.product.engineNo = $scope.currentProduct.engineNo;
+				$scope.engineNoDisable = true;
+			}
+			if($scope.currentProduct.chasisNo) {
+				vm.valuationReq.product.chassisNo = $scope.currentProduct.chasisNo;
+				$scope.chassisNoDisable = true;
+			}
+
 			vm.valuationReq.user._id = Auth.getCurrentUser()._id;
 			vm.valuationReq.user.fname = Auth.getCurrentUser().fname;
 			vm.valuationReq.user.lname = Auth.getCurrentUser().lname;

@@ -432,8 +432,11 @@
         $scope.submitted = true;
         return;
       }
-
-      submitValuationReq();
+      Modal.confirm("Do you want to submit?", function(ret) {
+        if (ret == "yes") {
+          submitValuationReq();
+        }
+      });  
     }
 
 
