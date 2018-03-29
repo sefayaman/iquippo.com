@@ -215,6 +215,10 @@
         $scope.valuationReq.product.model = $scope.valuationReq.product.model;
         $scope.valuationReq.product.state = $scope.valuationReq.product.state;
         $scope.valuationReq.product.city = $scope.valuationReq.product.city;
+        $scope.valuationReq.product.engineNo = $scope.valuationReq.product.engineNo;
+        $scope.valuationReq.product.chassisNo = $scope.valuationReq.product.chassisNo;
+        $scope.valuationReq.product.registrationNo = $scope.valuationReq.product.registrationNo;
+        $scope.valuationReq.product.serialNumber = $scope.valuationReq.product.serialNumber;
         $cookieStore.remove('copyValuationData');
       } else {
         if ($scope.valuationReq.product && $scope.valuationReq.product.country)
@@ -420,7 +424,10 @@
         else
           form.scheduleDate.$invalid = false;
       }
-
+      if(!$scope.valuationReq.product.engineNo && !$scope.valuationReq.product.chassisNo 
+        && !$scope.valuationReq.product.registrationNo && !$scope.valuationReq.product.serialNumber){
+        Modal.alert("Please fill one of these. Engine No. Chassis No. Registration No. Serial No.", true);
+      }
       if (form.$invalid || ret) {
         $scope.submitted = true;
         return;

@@ -43,8 +43,8 @@ function PaymentResponseCtrl($scope,Modal,$stateParams,$state,notificationSvc,Pa
         getValuatonReqDetail(vm.payTransaction);
 
  			for(var i = 0;i< vm.payTransaction.payments.length;i++){
- 				// if(vm.payTransaction.payments[i].type == "auctionreq")
- 				// 	getAuctionReqDetail(vm.payTransaction._id);
+ 				if(vm.payTransaction.payments[i].type == "auctionreq")
+ 					getAuctionReqDetail(vm.payTransaction._id);
  				// else if(vm.payTransaction.payments[i].type == "valuationreq")
  				// 	getValuatonReqDetail(vm.payTransaction);
  				// if(vm.payTransaction.payments[i].type == "valuationEnquiries")
@@ -99,7 +99,7 @@ function PaymentResponseCtrl($scope,Modal,$stateParams,$state,notificationSvc,Pa
      }
  	}*/
 
- 	/*function getAuctionReqDetail(transactionId){
+ 	function getAuctionReqDetail(transactionId){
  		if(!transactionId)
  			return;
  		AuctionSvc.getOnFilter({tid :transactionId})
@@ -114,7 +114,7 @@ function PaymentResponseCtrl($scope,Modal,$stateParams,$state,notificationSvc,Pa
  			}
 
  		})
- 	}*/
+ 	}
 
  	function getValuatonReqDetail(transaction){
  		if(!transaction._id)

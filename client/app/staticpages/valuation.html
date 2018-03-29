@@ -140,6 +140,29 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="col-xs-12 col-sm-3">
+                                <div class="form-group floating-label-wrapper" ng-class="{'has-error': (form.engineNo.$invalid || form.chassisNo.$invalid || form.registrationNo.$invalid || form.serialNumber.$invalid) && submitted}">
+                                    <label>Engine No.</label>
+                                    <input type="text" name="engineNo" ng-model="valuationReq.product.engineNo" class="form-control" placeholder="Engine No." ng-required="!(valuationReq.product.chassisNo || valuationReq.product.registrationNo || valuationReq.product.serialNumber || valuationReq.product.engineNo)">
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-3">
+                                <div class="form-group floating-label-wrapper" ng-class="{'has-error': (form.engineNo.$invalid || form.chassisNo.$invalid || form.registrationNo.$invalid || form.serialNumber.$invalid) && submitted}">
+                                    <label>Chassis No.</label>
+                                    <input type="text" name="chassisNo" ng-model="valuationReq.product.chassisNo" class="form-control" placeholder="Chassis No." ng-required="!(valuationReq.product.chassisNo || valuationReq.product.registrationNo || valuationReq.product.serialNumber || valuationReq.product.engineNo)">
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-3">
+                                <div class="form-group floating-label-wrapper" ng-class="{'has-error': (form.engineNo.$invalid || form.chassisNo.$invalid || form.registrationNo.$invalid || form.serialNumber.$invalid) && submitted}">
+                                    <label>Registration No.</label>
+                                    <input type="text" name="registrationNo" ng-model="valuationReq.product.registrationNo" class="form-control"  placeholder="Registration No." ng-required="!(valuationReq.product.chassisNo || valuationReq.product.registrationNo || valuationReq.product.serialNumber || valuationReq.product.engineNo)">
+                                </div>
+                            </div><div class="col-xs-12 col-sm-3">
+                                <div class="form-group floating-label-wrapper" ng-class="{'has-error': (form.engineNo.$invalid || form.chassisNo.$invalid || form.registrationNo.$invalid || form.serialNumber.$invalid) && submitted}">
+                                    <label>Serial No.</label>
+                                    <input type="text" name="serialNumber" ng-model="valuationReq.product.serialNumber" class="form-control" placeholder="Serial No." ng-required="!(valuationReq.product.chassisNo || valuationReq.product.registrationNo || valuationReq.product.serialNumber || valuationReq.product.engineNo)">
+                                </div>
+                            </div>
 
                             <div class="col-xs-12 col-sm-3">
                                 <div class="form-group floating-label-wrapper" ng-class="{'has-error': form.contactPerson.$invalid && submitted }">
