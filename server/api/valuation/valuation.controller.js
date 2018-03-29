@@ -101,6 +101,8 @@ exports.getOnFilter = function (req, res) {
 
   if (req.body.onlyOldReq)
     filter['enterprise'] = { $exists: false };
+  if (req.body.onlyNewReq)
+    filter['enterprise'] = { $exists: true };
 
   if (req.body.searchstr) {
     filter['$text'] = {
@@ -427,6 +429,8 @@ exports.destroy = function (req, res) {
       filter['user.mobile'] = {$in: req.body.userMobileNos.split(',')};
     if (req.body.onlyOldReq)
       filter['enterprise'] = { $exists: false };
+    if (req.body.onlyNewReq)
+      filter['enterprise'] = { $exists: true };
     if(req.body.partnerId)
       filter['valuationAgency._id'] = req.body.partnerId;
     var dateFilter = {};

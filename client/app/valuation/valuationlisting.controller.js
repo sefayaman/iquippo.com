@@ -43,6 +43,7 @@ function ValuationListingCtrl($scope,$window,$stateParams,$state,$uibModal,Modal
 			if(loggedIn){
 				filter ={};
 		    initFilter.pagination = true;
+		    initFilter.onlyNewReq = true;
 		    if(!Auth.isAdmin() && !Auth.isValuationPartner()){
 		      initFilter['userId'] = Auth.getCurrentUser()._id;
 		    }
@@ -217,6 +218,7 @@ function ValuationListingCtrl($scope,$window,$stateParams,$state,$uibModal,Modal
 		// }
 		// if(!vm.master)
 		// 	dataToSend['ids'] = selectedIds;
+		dataToSend.onlyNewReq = true;
 		ValuationSvc.export(dataToSend)
 		.then(function(buffData){
 		  saveAs(new Blob([s2ab(buffData)],{type:"application/octet-stream"}), "valuations_"+ new Date().getTime() +".csv")
@@ -274,7 +276,7 @@ function ValuationListingCtrl($scope,$window,$stateParams,$state,$uibModal,Modal
     	})
     }
 
-    function updateAuction(valuationReq,toStatus){
+    /*function updateAuction(valuationReq,toStatus){
     	AuctionSvc.getOnFilter({valuationId:valuationReq._id})
 		.then(function(result){
 			if(result.length > 0){
@@ -283,7 +285,7 @@ function ValuationListingCtrl($scope,$window,$stateParams,$state,$uibModal,Modal
 				AuctionSvc.update(auctReq);
 			}
 		});
-    }
+    }*/
 
     /*function uploadReport(files,_this){
     	if(!files[0])
