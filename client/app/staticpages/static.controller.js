@@ -443,7 +443,7 @@
           $scope.valuationReq.valuationAgency.name = $scope.vendorList[i].name;
           $scope.valuationReq.valuationAgency.email = $scope.vendorList[i].email;
           $scope.valuationReq.valuationAgency.mobile = $scope.vendorList[i].mobile;
-          $scope.valuationReq.valuationAgency.countryCode=$scope.vendorList[i].country;
+          $scope.valuationReq.valuationAgency.countryCode = LocationSvc.getCountryCode($scope.vendorList[i].country);
           break;
         }
       }

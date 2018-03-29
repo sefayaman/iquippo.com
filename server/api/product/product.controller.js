@@ -1070,7 +1070,7 @@ function postRequest(req, res) {
     options.dataType = "assetData";
     if (options.dataToSend.createdBy)
       delete options.dataToSend.createdBy;
-    if (req.body.assetMapData.auctionType==='PT') {
+    if (req.body.assetMapData && req.body.assetMapData.auctionType==='PT') {
         options.dataToSend.reqSubmitStatus = ReqSubmitStatuses[0];
         proResult.reqSubmitStatus = ReqSubmitStatuses[0];
         update(options.dataToSend);

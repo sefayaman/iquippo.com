@@ -154,7 +154,7 @@
 							vm.valuationReq.valuationAgency.name = agencyArr[i].name;
 							vm.valuationReq.valuationAgency.email = agencyArr[i].email;
 							vm.valuationReq.valuationAgency.mobile = agencyArr[i].mobile;
-							vm.valuationReq.valuationAgency.countryCode = agencyArr[i].country;
+							vm.valuationReq.valuationAgency.countryCode = LocationSvc.getCountryCode(agencyArr[i].country);
 							break;
 						}
 					}
