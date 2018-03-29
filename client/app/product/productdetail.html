@@ -616,7 +616,10 @@
                 <div class="col-xs-12 col-sm-3">
                     <div class="form-group floating-label-wrapper" ng-class="{'has-error': valReqForm.contactNumber.$invalid && valSubmitted }">
                         <label>Contact Number*</label>
-                        <input type="text" name="contactNumber" class="form-control" ng-model="valuationVm.valuationReq.contactNumber" placeholder="Contact Number" required>
+                        <input type="text" name="contactNumber" class="form-control" ng-model="valuationVm.valuationReq.contactNumber" placeholder="Contact Number" ng-pattern="/^[0-9]{10,10}$/" required>
+                        <p class="help-block" ng-if="valReqForm.contactNumber.$error.pattern && valSubmitted">
+                          Contact Number should only have 10 digits.
+                        </p>
                     </div>
                 </div>
                 <div class="col-sm-3 form-group" >
@@ -765,7 +768,10 @@
                 <div class="col-xs-12 col-sm-3">
                     <div class="form-group floating-label-wrapper" ng-class="{'has-error': reqForCertify.contactNumber.$invalid && valSubmitted }">
                         <label>Contact Number*</label>
-                        <input type="text" name="contactNumber" class="form-control" ng-model="valuationVm.valuationReq.contactNumber" placeholder="Contact Number" required>
+                        <input type="text" name="contactNumber" class="form-control" ng-model="valuationVm.valuationReq.contactNumber" placeholder="Contact Number" ng-pattern="/^[0-9]{10,10}$/" required>
+                        <p class="help-block" ng-if="reqForCertify.contactNumber.$error.pattern && valSubmitted">
+                          Contact Number should only have 10 digits.
+                        </p>
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-3 form-group">

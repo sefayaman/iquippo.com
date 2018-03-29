@@ -157,7 +157,8 @@
                                     <label>Registration No.</label>
                                     <input type="text" name="registrationNo" ng-model="valuationReq.product.registrationNo" class="form-control"  placeholder="Registration No." ng-required="!(valuationReq.product.chassisNo || valuationReq.product.registrationNo || valuationReq.product.serialNumber || valuationReq.product.engineNo)">
                                 </div>
-                            </div><div class="col-xs-12 col-sm-3">
+                            </div>
+                            <div class="col-xs-12 col-sm-3">
                                 <div class="form-group floating-label-wrapper" ng-class="{'has-error': (form.engineNo.$invalid || form.chassisNo.$invalid || form.registrationNo.$invalid || form.serialNumber.$invalid) && submitted}">
                                     <label>Serial No.</label>
                                     <input type="text" name="serialNumber" ng-model="valuationReq.product.serialNumber" class="form-control" placeholder="Serial No." ng-required="!(valuationReq.product.chassisNo || valuationReq.product.registrationNo || valuationReq.product.serialNumber || valuationReq.product.engineNo)">
@@ -173,15 +174,18 @@
                             <div class="col-xs-12 col-sm-3">
                                 <div class="form-group floating-label-wrapper" ng-class="{'has-error': form.contactNumber.$invalid && submitted }">
                                     <label>Contact Number*</label>
-                                    <input type="text" name="contactNumber" class="form-control" ng-model="valuationReq.contactNumber" placeholder="Contact Number" required>
+                                    <input type="text" name="contactNumber" class="form-control" ng-model="valuationReq.contactNumber" ng-pattern="/^[0-9]{10,10}$/" placeholder="Contact Number" required>
+                                    <p class="help-block" ng-if="form.contactNumber.$error.pattern && submitted">
+                                        Contact Number should only have 10 digits.
+                                    </p>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-xs-12 col-sm-3">
-                                <div class="form-group floating-label-wrapper">
+                                <div class="form-group floating-label-wrapper" ng-class="{'has-error': form.valagency.$invalid && submitted }">
                                     <label>Partner</label>
-                                    <select class="form-control" ng-model="valuationReq.valuationAgency._id">
+                                    <select class="form-control" name="valagency" ng-model="valuationReq.valuationAgency._id" required>
                                         <option value="">Select Partner</option>
                                         <option ng-repeat="vendor in vendorList" value="{{vendor._id}}">{{vendor.name}}</option>
                                     </select>
