@@ -433,7 +433,7 @@ server.listen(config.port, config.ip, function () {
   // notification.startNotification();
   //  taskRunner.startTaskRunner();
   // valReqSubmitter.start();
-  //assetSaleTracker.start();
+  assetSaleTracker.start();
   // checkQuickQueryNotificationService.start();
   // checkSearchMatchingNotificationService.start();
   //userExportsService.start();

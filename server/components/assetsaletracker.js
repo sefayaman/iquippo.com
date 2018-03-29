@@ -1,10 +1,12 @@
 'use strict';
 
+var moment = require("moment");
 var async = require("async");
 var _ = require('lodash');
 var AssetSaleModel = require('../api/assetsale/assetsalebid.model');
 var AssetSaleUtil = require('../api/assetsale/assetsaleutil');
 var Product = require('../api/product/product.model');
+var Event = require('../api/common/event.model');
 
 var dealStatuses=['Decision Pending','Offer Rejected','Cancelled','Rejected-EMD Failed','Rejected-Full Sale Value Not Realized','Bid-Rejected','Approved','EMD Received','Full Payment Received','DO Issued','Asset Delivered','Acceptance of Delivery','Closed'];
 var bidStatuses=['In Progress','Cancelled','Bid Lost','EMD Failed','Full Payment Failed','Auto Rejected-Cooling Period','Rejected','Accepted','Auto Accepted'];
@@ -56,27 +58,53 @@ var TimeInterval =  1*60*1000;/*Service interval*/
             if(maxBid){
               maxBid.emdStartDate = new Date(); 
               maxBid.emdEndDate = new Date().addDays(entMasterData.emdPeriod);
+              console.log(maxBid.emdEndDate.toString());
+
+              _checkHolidayExistAndAdd(maxBid.emdStartDate, maxBid.emdEndDate, function(err, revisedDate) {
+
+                maxBid.emdEndDate = revisedDate;
+                console.log("Proceeding...");
+                console.log('Revised ------', revisedDate.toString());
+                maxBid.product.prevTradeType = prd.tradeType;
+                AssetSaleUtil.setStatus(maxBid,bidStatuses[7],'bidStatus','bidStatuses');
+                AssetSaleUtil.setStatus(maxBid,dealStatuses[6],'dealStatus','dealStatuses');
+
+                bids.forEach(function(item){
+                  if(item._id == maxBid._id )
+                    return;
+                  AssetSaleUtil.setStatus(item,bidStatuses[5],'bidStatus','bidStatuses');
+                });
+    
+                async.eachLimit(bids,2,updateBid,function(err){
+                  if(!err){
+                    AssetSaleUtil.sendNotification([{action:"APPROVE",ticketId:maxBid.ticketId}]);
+                    Product.update({_id:prd._id},{$set:{tradeType:tradeTypeStatuses[2],cooling:false,bidRequestApproved:true}}).exec();
+                  }
+                  return cb(err);
+                });
+
+              });
               //if(maxBid.emdEndDate)
                 //maxBid.emdEndDate.setHours(24,0,0,0);
-              maxBid.product.prevTradeType = prd.tradeType;
-              AssetSaleUtil.setStatus(maxBid,bidStatuses[7],'bidStatus','bidStatuses');
-              AssetSaleUtil.setStatus(maxBid,dealStatuses[6],'dealStatus','dealStatuses'); 
+              // maxBid.product.prevTradeType = prd.tradeType;
+              // AssetSaleUtil.setStatus(maxBid,bidStatuses[7],'bidStatus','bidStatuses');
+              // AssetSaleUtil.setStatus(maxBid,dealStatuses[6],'dealStatus','dealStatuses'); 
               //AssetSaleUtil.sendNotification([{action:"APPROVE",ticketId:maxBid.ticketId}]);
             }
+            
+            // bids.forEach(function(item){
+            //   if(item._id == maxBid._id )
+            //     return;
+            //   AssetSaleUtil.setStatus(item,bidStatuses[5],'bidStatus','bidStatuses');
+            // });
 
-            bids.forEach(function(item){
-              if(item._id == maxBid._id )
-                return;
-              AssetSaleUtil.setStatus(item,bidStatuses[5],'bidStatus','bidStatuses');
-            });
-
-            async.eachLimit(bids,2,updateBid,function(err){
-              if(!err){
-                AssetSaleUtil.sendNotification([{action:"APPROVE",ticketId:maxBid.ticketId}]);
-                Product.update({_id:prd._id},{$set:{tradeType:tradeTypeStatuses[2],cooling:false,bidRequestApproved:true}}).exec();
-              }
-              return cb(err);
-            });
+            // async.eachLimit(bids,2,updateBid,function(err){
+            //   if(!err){
+            //     AssetSaleUtil.sendNotification([{action:"APPROVE",ticketId:maxBid.ticketId}]);
+            //     Product.update({_id:prd._id},{$set:{tradeType:tradeTypeStatuses[2],cooling:false,bidRequestApproved:true}}).exec();
+            //   }
+            //   return cb(err);
+            // });
           });
       });
     }
@@ -157,15 +185,31 @@ var TimeInterval =  1*60*1000;/*Service interval*/
       var bidRec = true;
       if(bidCount === 0)
         bidRec = false;
-      async.eachLimit(actionableBids,3,updateBid,function(err){
-        if(err)
-          return callback(err);
-        if(item.updateProduct)
-            Product.update({_id:item.product.proData},{$set:{tradeType:item.product.prevTradeType,bidReceived:bidRec,bidRequestApproved:false,bidCount:bidCount,highestBid:highestBid}}).exec();
-        if(selBid)
-          AssetSaleUtil.sendNotification([{action:"APPROVE",ticketId:selBid.ticketId}]);
-        return callback();
-      });
+
+      if(selBid.emdStartDate && selBid.emdEndDate) {
+        _checkHolidayExistAndAdd(selBid.startDate, selBid.emdEndDate, function(err, revisedDate) {
+          selBid.endDate = revisedDate;
+          async.eachLimit(actionableBids,3,updateBid,function(err){
+            if(err)
+              return callback(err);
+            if(item.updateProduct)
+                Product.update({_id:item.product.proData},{$set:{tradeType:item.product.prevTradeType,bidReceived:bidRec,bidRequestApproved:false,bidCount:bidCount,highestBid:highestBid}}).exec();
+            if(selBid)
+              AssetSaleUtil.sendNotification([{action:"APPROVE",ticketId:selBid.ticketId}]);
+            return callback();
+          });
+        });
+      }
+
+      // async.eachLimit(actionableBids,3,updateBid,function(err){
+      //   if(err)
+      //     return callback(err);
+      //   if(item.updateProduct)
+      //       Product.update({_id:item.product.proData},{$set:{tradeType:item.product.prevTradeType,bidReceived:bidRec,bidRequestApproved:false,bidCount:bidCount,highestBid:highestBid}}).exec();
+      //   if(selBid)
+      //     AssetSaleUtil.sendNotification([{action:"APPROVE",ticketId:selBid.ticketId}]);
+      //   return callback();
+      // });
     }
 
     function getOtherBids(innerCallback){
@@ -236,6 +280,33 @@ function checkExpiryDate(date){
     return true;
   else
     return false;
+}
+
+function _checkHolidayExistAndAdd(startDate, endDate, cb) {
+  var sdt = startDate, edt = endDate;
+  var filter = {
+    start: { $gte: startDate },
+    end: { $lte: endDate }
+  };
+  Event.find(filter).lean().exec(function(err, events) {
+    if(!err && events) {
+      edt = edt.addDays(events.length);
+      events.forEach(function(obj) {
+        if(moment(obj.start).isSame(sdt)) {
+          var mins = 60 - sdt.getMinutes();
+          if(mins > 0) {
+            var hours = 23 - sdt.getHours();
+          } else {
+            var hours = 24 - sdt.getHours();
+          }
+          edt = edt.addHours(hours);
+          edt = edt.addMinutes(mins);
+          return;
+        }
+      });
+    }
+    return cb(null, edt);
+  });
 }
 
 exports.start = function() {
