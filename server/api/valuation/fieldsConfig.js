@@ -67,6 +67,23 @@ module.exports = {
 		"Comment":{key:"comment"}
 		//"Payment Made to Agency":{key:"paymentMade",type:"boolean"}
 	},
+	'OLD_REQUEST_EXPORT':{
+	  "Fullname": {key:"userName"},
+      "Country": {key:"user.country"},
+      "Location": {key:"user.city"},
+      "Mobile No": {key:"user.mobile"},
+      "Phone No": {key:"user.phone"},
+      "Email Address": {key:"user.email"},
+      "Valuation Request Id": {key:"requestId"},
+      "Asset Name": {key:"product.name"},
+      "Manufacturing Year": {key:"product.mfgYear"},
+      "Asset Location": {key:"product.city"},
+      "Machine Serial No.": {key:"product.serialNumber"},
+      "Agency Name": {key:"valuationAgency.name"},
+      "Request Date": {key:"createdAt",type:'date'},
+      "Request Purpose": {key:"purpose"},
+      "Request Status": {key:"status"}
+	},
 	'PUT_ON_HOLD':{
 		'jobID':{key:"jobId",required:true},
 		'unique_controll_no':{key:"requestId",required:true},

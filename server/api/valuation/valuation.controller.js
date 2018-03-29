@@ -427,16 +427,20 @@ exports.destroy = function (req, res) {
       filter["user._id"] = req.body.userid;
     if(req.body.userMobileNos)
       filter['user.mobile'] = {$in: req.body.userMobileNos.split(',')};
-    if (req.body.onlyOldReq)
+    if (req.body.onlyOldReq) {
       filter['enterprise'] = { $exists: false };
-    if (req.body.onlyNewReq)
+      var fieldMap = fieldsConfig["OLD_REQUEST_EXPORT"];
+    }
+    if (req.body.onlyNewReq) {
       filter['enterprise'] = { $exists: true };
+      var fieldMap = fieldsConfig["EXPORT"];
+    }
     if(req.body.partnerId)
       filter['valuationAgency._id'] = req.body.partnerId;
     var dateFilter = {};
 
     if(req.body.fromDate)
-    dateFilter['$gte'] = new Date(req.body.fromDate);
+      dateFilter['$gte'] = new Date(req.body.fromDate);
     if(req.body.toDate) {
         var toDate = new Date(req.body.toDate);
         var nextDay = toDate.getDate() + 1;
@@ -446,7 +450,7 @@ exports.destroy = function (req, res) {
     if(req.body.fromDate || req.body.toDate)
       filter['createdAt'] = dateFilter;
 
-    var fieldMap = fieldsConfig["EXPORT"];
+    //var fieldMap = fieldsConfig["EXPORT"];
     var query = ValuationReq.find(filter).sort({createdAt:-1});
     query.exec(function(err,dataArr){
         if(err) { return handleError(res, err); }

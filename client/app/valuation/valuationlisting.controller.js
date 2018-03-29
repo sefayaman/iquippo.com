@@ -31,6 +31,8 @@ function ValuationListingCtrl($scope,$window,$stateParams,$state,$uibModal,Modal
 	vm.openPaymentOptionModel = openPaymentOptionModel;
 	vm.openCommentModal = openCommentModal;
 	vm.showDetail = showDetail;
+	vm.toDate = null;
+    vm.fromDate = null;
 
 	$scope.$on('refreshValuationList',function(){
 		fireCommand(true);
@@ -212,6 +214,11 @@ function ValuationListingCtrl($scope,$window,$stateParams,$state,$uibModal,Modal
 			dataToSend["userid"] = Auth.getCurrentUser()._id;
 		if(Auth.isValuationPartner())
 			dataToSend['partnerId'] = Auth.getCurrentUser().partnerInfo._id;
+		if(vm.fromDate)
+			dataToSend.fromDate = vm.fromDate;
+
+		if(vm.toDate)
+			dataToSend.toDate = vm.toDate;
 		// if(!vm.master && selectedIds.length == 0){
 		// 	Modal.alert("Please select valuation request to export.");
 		// 	return;
