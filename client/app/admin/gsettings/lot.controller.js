@@ -112,12 +112,17 @@ function LotCtrl($scope, $rootScope,$window, $state,Modal,Auth,PagerSvc,$filter,
         vm.dataModel.auction_id = vm.auctionListing[i]._id;
         vm.dataModel.auctionType = vm.auctionListing[i].auctionType;
         // Lot start Date shouldn't be less than Auction Start Date
-        if(vm.dateCheckValidation(vm.auctionListing[i].startDate, vm.dataModel.startDate)) {
+        if(vm.dateCheckValidation(moment(vm.auctionListing[i].startDate).format('MM/DD/YYYY hh:mm A'), vm.dataModel.startDate)) {
             Modal.alert("Please enter lot start date greater than or equal to auction start date", true);
             return;
         }
+        // Lot start Date shouldn't be less than Auction end Date
+        if(vm.dateCheckValidation(vm.dataModel.startDate, moment(vm.auctionListing[i].endDate).format('MM/DD/YYYY hh:mm A'))) {
+            Modal.alert("Please enter lot start date less than auction end date", true);
+            return;
+        }
         // Lot end Date shouldn't be less than Auction end Date
-        if(vm.dateCheckValidation(vm.auctionListing[i].endDate, vm.dataModel.endDate)) {
+        if(vm.dateCheckValidation(moment(vm.auctionListing[i].endDate).format('MM/DD/YYYY hh:mm A'), vm.dataModel.endDate)) {
             Modal.alert("Please enter lot end date greater than or equal to auction end date", true);
             return;
         }
@@ -174,6 +179,11 @@ function LotCtrl($scope, $rootScope,$window, $state,Modal,Auth,PagerSvc,$filter,
     // Lot start Date shouldn't be less than Auction Start Date
     if(vm.dateCheckValidation(vm.dataModel.auctionStartDate, vm.dataModel.startDate)) {
         Modal.alert("Please enter lot start date greater than or equal to auction start date", true);
+        return;
+    }
+    // Lot start Date shouldn't be less than Auction end Date
+    if(vm.dateCheckValidation(vm.dataModel.startDate, vm.dataModel.auctionEndDate)) {
+        Modal.alert("Please enter lot start date less than auction end date", true);
         return;
     }
     // Lot end Date shouldn't be less than Auction end Date
