@@ -148,6 +148,7 @@
         //vm.checkBidIncrement = checkBidIncrement;
         vm.checkBidIncrementAuction = checkBidIncrementAuction;
         vm.deleteDocumentFieldAuction = deleteDocumentFieldAuction;
+        vm.dateCheckValidation = dateCheckValidation; // to check start date is less than end date
 
         function closeTechInfo() {
             return $scope.isTechCollapsed = !$scope.isTechCollapsed;
@@ -886,7 +887,20 @@
                 Modal.alert("Please upload image for auctionmaster.", true);
                 return;
             }*/
-            
+            /* Start Date can't be greater than end date :- Madhusudan Mishra*/
+            // validation Start
+
+            if(vm.dateCheckValidation(vm.auctionData.startDate, vm.auctionData.endDate)) {
+                Modal.alert("Please enter auction start date less than end date", true);
+                return;
+            }
+
+            if(vm.dateCheckValidation(vm.auctionData.insStartDate, vm.auctionData.insEndDate)) {
+                Modal.alert("Please enter inspection start date less than end date", true);
+                return;
+            }
+            // validation End
+
             $scope.submitted = false;
             getChangeAuctionMasterData();
             $rootScope.loading = true;
@@ -919,6 +933,20 @@
                 $scope.submitted = true;
                 return;
             }
+
+            /* Start Date can't be greater than end date :- Madhusudan Mishra*/
+            // validation Start
+
+            if(vm.dateCheckValidation(vm.auctionData.startDate, vm.auctionData.endDate)) {
+                Modal.alert("Please enter auction start date less than end date", true);
+                return;
+            }
+
+            if(vm.dateCheckValidation(vm.auctionData.insStartDate, vm.auctionData.insEndDate)) {
+                Modal.alert("Please enter inspection start date less than end date", true);
+                return;
+            }
+            // validation End
 
             $scope.submitted = false;
             getChangeAuctionMasterData();
@@ -2188,6 +2216,12 @@
             .then(function(result) {
                 saveAs(new Blob([s2ab(result)],{type:"application/octet-stream"}), "leadlist_"+ new Date().getTime() +".xlsx")
             });
+        }
+
+        function dateCheckValidation(startDate, endDate) {
+            if(startDate && endDate && (startDate > endDate))
+                return true;
+            return false;
         }
     }
 })();
