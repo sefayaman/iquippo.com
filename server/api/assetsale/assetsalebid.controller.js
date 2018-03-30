@@ -17,27 +17,20 @@ var Vendor = require('../vendor/vendor.model');
 var VatModel = require('../common/vattax.model');
 var MarkupPrice = require('../common/markupprice.model');
 var fieldConfig = require('./fieldsConfig');
+var _sendMsgViaSocket = require('../../realTimeSocket')._sendMsgViaSocket;
 
 var tradeTypeStatuses = ['SELL', 'BOTH', 'NOT_AVAILABLE'];
 var dealStatuses = ['Decision Pending', 'Offer Rejected', 'Cancelled', 'Rejected-EMD Failed', 'Rejected-Full Sale Value Not Realized', 'Bid-Rejected', 'Approved', 'EMD Received', 'Full Payment Received', 'DO Issued', 'Asset Delivered', 'Acceptance of Delivery', 'Closed'];
 var bidStatuses = ['In Progress', 'Cancelled', 'Bid Lost', 'EMD Failed', 'Full Payment Failed', 'Auto Rejected-Cooling Period', 'Rejected', 'Accepted', 'Auto Accepted'];
-var socketIO;
-exports.socketRegister = function (io) {
-  socketIO = io; 
-  socketIO.on("connection", function (client) {
-        console.log('a user connectedssss');
-    });
-};
+// var socketIO;
+// exports.socketRegister = function (io) {
+//   socketIO = io; 
+//   socketIO.on("connection", function (client) {
+//         console.log('a user connectedssss');
+//     });
+// };
 
-function _sendMsgViaSocket(evt, msg){
-    console.log('herrr4xxx');
-    socketIO.broadcast.emit(evt, msg);
-    socketIO.on('postUpdateSocket', function () {
-        console.log('herrr35');
-        socketIO.broadcast.emit(evt, msg);
 
-    });
-}
 
 
 exports.getEMDBasedOnUser = function (req, res) {
@@ -449,13 +442,13 @@ exports.validateUpdate = function (req, res, next) {
 }
 
 exports.postUpdate = function (req, res, next) {
-    console.log('rrrrrrrrrrr000');
-    _sendMsgViaSocket('onSubmitBidSocket','socketbidsumi00000t----');
     var postAction = req.query.action;
     if (req.updateProduct)
         updateProduct();
-    else
+    else {
+        _sendMsgViaSocket('onSubmitBidSocket',req.product);
         return res.status(200).send("Bid request updated successfully");
+    }
 
     function updateProduct() {
         var productId = req.product._id + "";
@@ -463,6 +456,7 @@ exports.postUpdate = function (req, res, next) {
         Product.update({_id: productId}, {$set: req.product}, function (error, retData) {
             if (error)
                 return handleError(res, error);
+            _sendMsgViaSocket('onSubmitBidSocket',req.product);
             return res.status(200).send("Bid updated successfully.");
         });
     }
@@ -611,7 +605,7 @@ exports.verifyCalculation = function (req, res, next) {
 
 exports.submitBid = function (req, res) {
     console.log('rrrrrrrrrrr000000----');
-    _sendMsgViaSocket('onSubmitBidSocket','socketbidsumit----');
+    // _sendMsgViaSocket('onSubmitBidSocket','socketbidsumit----');
     async.series([newBidData, updateBidAndProduct], function (err) {
         
         if (err)

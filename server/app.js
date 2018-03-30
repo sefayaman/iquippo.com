@@ -50,7 +50,7 @@ var app = express();
 var server = require('http').createServer(app);
 var socket=require('socket.io')(server);
 
-require('./api/assetsale/assetsalebid.controller.js').socketRegister(socket);
+require('./realTimeSocket')(socket)
 
 app.get('/_status', function (req, res) {
   res.status(200);
