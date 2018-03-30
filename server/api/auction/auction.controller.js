@@ -102,6 +102,9 @@ exports.getAuctionInfoForProduct = function (req, res) {
       if ( auctionData.auctionType==='PT' && auctionData.startDate < currentDate && auctionData.endDate > currentDate) {
         auctionData.allowProxyBid = true;
       }
+      if (currentDate > auctionData.endDate) {
+        auctionData.isExpired = true; // if auction date is expire 'Madhusudan'
+      }
       return res.status(200).json(auctionData);
     });
   });

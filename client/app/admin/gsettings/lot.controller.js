@@ -27,7 +27,8 @@ function LotCtrl($scope, $rootScope,$window, $state,Modal,Auth,PagerSvc,$filter,
   var initFilter = {};
   var filter = {};
   vm.searchStr = "";
-  
+  vm.dateCheckValidation = dateCheckValidation; // to check start date is less than end date
+
   function init() {
     filter = {};
     initFilter.pagination = true;
@@ -62,6 +63,9 @@ function LotCtrl($scope, $rootScope,$window, $state,Modal,Auth,PagerSvc,$filter,
     vm.dataModel.reservePrice = rowData.reservePrice;
     vm.dataModel.startDate = moment(rowData.startDate).format('MM/DD/YYYY hh:mm A');
     vm.dataModel.endDate =  moment(rowData.endDate).format('MM/DD/YYYY hh:mm A');
+    // Adding extra keys to pass Auction start and end date.
+    vm.dataModel.auctionStartDate = vm.dataModel.startDate;
+    vm.dataModel.auctionEndDate = vm.dataModel.endDate;
     if (rowData.bidIncrement && rowData.bidIncrement[0] && rowData.bidIncrement.length > 0) {
       for (var i = 0; i < rowData.bidIncrement.length; i++) {
         if (rowData.bidIncrement[i] && rowData.bidIncrement[i].bidFrom)
@@ -89,6 +93,12 @@ function LotCtrl($scope, $rootScope,$window, $state,Modal,Auth,PagerSvc,$filter,
       $scope.submitted = true;
       return;
     }
+    /* Start Date can't be greater than end date :- Madhusudan Mishra*/
+    if(vm.dateCheckValidation(vm.dataModel.startDate, vm.dataModel.endDate)) {
+        Modal.alert("Please enter lot start date less than end date", true);
+        return;
+    }
+    /* End */
     vm.dataModel.createdBy = {};
     vm.dataModel.createdBy._id = Auth.getCurrentUser()._id;
     vm.dataModel.createdBy.email = Auth.getCurrentUser().email;
@@ -101,6 +111,21 @@ function LotCtrl($scope, $rootScope,$window, $state,Modal,Auth,PagerSvc,$filter,
         vm.dataModel.auctionId = vm.auctionListing[i].auctionId;
         vm.dataModel.auction_id = vm.auctionListing[i]._id;
         vm.dataModel.auctionType = vm.auctionListing[i].auctionType;
+        // Lot start Date shouldn't be less than Auction Start Date
+        if(vm.dateCheckValidation(moment(vm.auctionListing[i].startDate).format('MM/DD/YYYY hh:mm A'), vm.dataModel.startDate)) {
+            Modal.alert("Please enter lot start date greater than or equal to auction start date", true);
+            return;
+        }
+        // Lot start Date shouldn't be less than Auction end Date
+        if(vm.dateCheckValidation(vm.dataModel.startDate, moment(vm.auctionListing[i].endDate).format('MM/DD/YYYY hh:mm A'))) {
+            Modal.alert("Please enter lot start date less than auction end date", true);
+            return;
+        }
+        // Lot end Date shouldn't be less than Auction end Date
+        if(vm.dateCheckValidation(moment(vm.auctionListing[i].endDate).format('MM/DD/YYYY hh:mm A'), vm.dataModel.endDate)) {
+            Modal.alert("Please enter lot end date greater than or equal to auction end date", true);
+            return;
+        }
         break;
       }
     }
@@ -146,6 +171,27 @@ function LotCtrl($scope, $rootScope,$window, $state,Modal,Auth,PagerSvc,$filter,
       return;
     }
 
+    /* Start Date can't be greater than end date :- Madhusudan Mishra*/
+    if(vm.dateCheckValidation(vm.dataModel.startDate, vm.dataModel.endDate)) {
+        Modal.alert("Please enter lot start date less than end date", true);
+        return;
+    }
+    // Lot start Date shouldn't be less than Auction Start Date
+    if(vm.dateCheckValidation(vm.dataModel.auctionStartDate, vm.dataModel.startDate)) {
+        Modal.alert("Please enter lot start date greater than or equal to auction start date", true);
+        return;
+    }
+    // Lot start Date shouldn't be less than Auction end Date
+    if(vm.dateCheckValidation(vm.dataModel.startDate, vm.dataModel.auctionEndDate)) {
+        Modal.alert("Please enter lot start date less than auction end date", true);
+        return;
+    }
+    // Lot end Date shouldn't be less than Auction end Date
+    if(vm.dateCheckValidation(vm.dataModel.auctionEndDate, vm.dataModel.endDate)) {
+        Modal.alert("Please enter lot end date greater than or equal to auction end date", true);
+        return;
+    }
+    /* End */
     if(vm.dataModel.rangeIncrement){
       vm.dataModel.bidIncrement = vm.dataModel.bidIncrement.filter(function(item, idx) {
         if (item && (item.bidFrom || item.bidTo || item.bidIncrement))
@@ -343,5 +389,11 @@ function LotCtrl($scope, $rootScope,$window, $state,Modal,Auth,PagerSvc,$filter,
       }else
       $state.go("main");
   });
+
+  function dateCheckValidation(startDate, endDate) {
+      if(startDate && endDate && (startDate > endDate))
+          return true;
+      return false;
+  }
 }
 })();
