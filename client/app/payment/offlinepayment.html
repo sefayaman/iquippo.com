@@ -1,7 +1,7 @@
 <div>
 	<div class="modal-header">
 	  <button type="button" class="close" ng-click="offlinePaymentVm.closeDialog()" aria-hidden="true">&times;</button>
-	  <h4 class="modal-title">Offline Payment Information</h4>
+	  <h4 class="modal-title"><span ng-if="viewMode === 'paymentAdd'">Offline Payment Information</span><span ng-if="viewMode === 'paymentView'">Payment Information</span></h4>
 	</div>
 	<div class="modal-body">
 		<form class="techInformationForm" name="offlineform" ng-if="viewMode === 'paymentAdd'" novalidate>

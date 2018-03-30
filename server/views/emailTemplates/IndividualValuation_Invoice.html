@@ -1,0 +1,304 @@
+<head>
+  <meta charset="utf-8" content="width=device-width, initial-screen=1"/>
+</head>
+<body>
+<div style="page-break-inside: avoid;">
+  <table cellpadding="0" cellspacing="0" align="center" style="width:90%;font-family:arial, sans-serif;font-size:10px;">
+    <tr>
+      <td colspan="2" align="center">
+        <img src="{{awsBaseImagePath}}/assets/images/srei-logo-img.png" width="100px">
+      </td>
+    </tr>
+    <tr><td colspan="2" height="10"></td></tr> 
+    <tr>
+      <td align="center" colspan="2"><h3>TAX INVOICE</h3></td>
+   </tr>
+   <tr>
+      <td width="50%">
+        <table cellpadding="0" cellspacing="0" width="100%" style="font-family:arial, sans-serif;font-size:10px; border:2px solid #333;  height: 125px; padding-left: 10px; font-weight: bold;">
+          <tr>
+            <td><u>Service Provider / Billed from</u></td>
+          </tr>
+          <tr>
+            <td>IQUIPPO Services Pvt. Ltd.</td>
+          </tr>
+          <tr>
+            <td>Ground Floor, Plot No. X-1,2 &amp; 3, IPCL Bulding</td>
+          </tr>
+          <tr>
+            <td>Block-EP, Sector-V, Salt Lake City, Kolkata</td>
+          </tr>
+          <tr>
+            <td>State - West Bengal</td>
+          </tr>
+          <tr>
+            <td><a href="https://iquippo.com">www.iquippo.com</a></td>
+          </tr>
+        </table>
+      </td>
+      <td width="50%">
+        <table cellpadding="0" cellspacing="0" width="100%" style="font-family:arial, sans-serif;font-size:10px; border:2px solid #333; border-left: 0;  height: 125px; padding-left: 10px; font-weight: bold;">
+          <tr>
+            <td>Invoice No.</td>
+            <td>{{invoiceData.invoiceNo}}</td>
+          </tr>
+          <tr>
+            <td>Invoice Date</td>
+            <td>{{invoiceDate}}</td>
+          </tr>
+          <tr>
+            <td>Service Type</td>
+            <td>{{invoiceData.requestType}}</td>
+          </tr>
+          <tr><td></td></tr> 
+          <tr>
+            <td>PAN</td>
+            <td>AAECI5465N</td>
+          </tr>
+          <tr>
+            <td>GSTIN</td>
+            <td>{{invoiceData.iquippoGstin}}</td>
+          </tr>
+          
+        </table>
+      </td>
+   </tr>
+   <tr><td colspan="2" height="10"></td></tr>   
+   <tr>
+      <td width="50%">
+        <table cellpadding="1" cellspacing="0" width="100%" style="font-family:arial, sans-serif;font-size:10px; border:2px solid #333;  height: 120px; padding-left: 10px;">
+          <tr>
+            <td colspan="2"><strong>Billed To:</strong></td>
+          </tr>
+          <tr>
+            <td colspan="2">Mr. {{invoiceData.invoiceInFavour}}</td>
+          </tr>
+          <tr>
+            <td width="50%">{{invoiceData.userAddress}}{{#if invoiceData.userAddress}}<span>,<br/></span>{{/if}}{{invoiceData.userCity}},<br/>{{invoiceData.userState}},<br/>{{invoiceData.userCountry}}</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>PAN</td>
+            <td>{{invoiceData.userPanNumber}}</td>
+          </tr>
+          <tr>
+            <td>GSTIN / Unique Id</td>
+            <td>{{invoiceData.userGstin}}</td>
+          </tr>
+        </table>
+      </td>
+      <td width="50%">
+        <table cellpadding="1" cellspacing="0" width="100%" style="font-family:arial, sans-serif;font-size:10px; border:2px solid #333; border-left:0;  height: 120px; padding-left: 10px;">
+          <tr>
+            <td colspan="2"><strong>Service Rendered:</strong></td>
+          </tr>
+          <tr>
+            <td colspan="2">Mr. {{invoiceData.invoiceInFavour}}</td>
+          </tr>
+          <tr>
+            <td width="50%">{{invoiceData.userAddress}}{{#if invoiceData.userAddress}}<span><br/></span>{{/if}}{{invoiceData.userCity}}<br/>{{invoiceData.userState}}<br/>{{invoiceData.userCountry}}</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>PAN</td>
+            <td>{{invoiceData.userPanNumber}}</td>
+          </tr>
+          <tr>
+            <td>GSTIN / Unique Id</td>
+            <td>{{invoiceData.userGstin}}</td>
+          </tr>
+        </table>
+      </td>
+   </tr>
+   <tr><td colspan="2" align="right" height="15">Amount in Rs.</td></tr> 
+   <tr>
+     <td colspan="2">
+       <table cellspacing="0" cellpadding="5" border="1" style="font-family:arial, sans-serif;font-size:10px;width:100%; border-color: #333; text-align: center;" align="center">
+        <tr>
+          <th rowspan="2">S.No.</th>
+          <th rowspan="2">Description of Services</th>
+          <th rowspan="2">Taxable Amount</th>
+          <th colspan="2">CGST</th>
+          <th colspan="2">SGST</th>
+          <th colspan="2">IGST</th>
+          <th rowspan="2">Total Amount(Inc. Tax)</th>
+        </tr>
+        <tr>
+          <th>Rate</th>
+          <th>Amount</th>
+          <th>Rate</th>
+          <th>Amount</th>
+          <th>Rate</th>
+          <th>Amount</th>
+        </tr>
+        <tr>
+          <td height="120" valign="top">1</td>
+          <td valign="top" align="left">{{descriptionHd}}<br/>{{descriptionD}}</td>
+          <td valign="top" align="right">{{invoiceData.actualInvoiceAmount}}</td>
+          <td valign="top" align="right">{{CGST.rate}}</td>
+          <td valign="top" align="right">{{CGST.calculatedTax}}</td>
+          <td valign="top" align="right">{{SGST.rate}}</td>
+          <td valign="top" align="right">{{SGST.calculatedTax}}</td>
+          <td valign="top" align="right">{{IGST.rate}}</td>
+          <td valign="top" align="right">{{IGST.calculatedTax}}</td>
+          <td valign="top" align="right">{{invoiceData.invoiceAmount}}</td>
+        </tr>
+       
+
+        <tr>
+          <th colspan="9" align="left">Total Invoice Value (in Figures)  </th>
+          <th align="right">{{invoiceData.invoiceAmount}}</th>
+        </tr>
+        <tr><td colspan="10"></td></tr>
+        <tr>
+          <td colspan="3" align="left">
+            Total Invoice Value (in Words)
+          </td>
+          <td colspan="7" align="left">{{invoiceInWords}}</td>
+        </tr>
+      </table>
+     </td>
+   </tr>
+   <tr><td colspan="2" height="10"></td></tr> 
+   <tr>
+     <td colspan="2">
+       <table cellspacing="0" cellpadding="5" border="1" style="font-family:arial, sans-serif;font-size:10px;width:85%; border-color: #333; text-align: left;" align="left">
+        <tr>
+          <th>Particulars</th>
+          <th>Invoice Value/Taxable Value</th>
+          <th align="center">CGST</th>
+          <th align="center">SGST</th>
+          <th align="center">IGST</th>
+        </tr>
+        <tr>
+          <td>Total Invoice Amount</td>
+          <td align="center">{{invoiceData.actualInvoiceAmount}}</td>
+          <td align="center">{{CGST.calculatedTax}}</td>
+          <td align="center">{{SGST.calculatedTax}}</td>
+          <td align="center">{{IGST.calculatedTax}}</td>
+        </tr>
+        <tr>
+          <td>Advance already received</td>
+          <td align="center"> </td>
+          <td align="center"></td>
+          <td align="center"></td>
+          <td align="center"></td>
+        </tr>
+        <tr>
+          <td>Balance</td>
+          <td align="center">{{invoiceData.actualInvoiceAmount}}</td>
+          <td align="center">{{CGST.calculatedTax}}</td>
+          <td align="center">{{SGST.calculatedTax}}</td>
+          <td align="center">{{IGST.calculatedTax}}</td>
+        </tr>
+
+       </table>
+     </td>
+   </tr>
+  </table>
+
+  <table cellpadding="0" cellspacing="0" align="center" width="90%">
+    <tr>
+      <td width="70%" valign="top">
+        <table cellpadding="2" cellspacing="0" style="font-family:arial, sans-serif;font-size:10px;width:100%;">
+            <tr>
+              <td colspan="2" height="10"></td>
+            </tr>
+            <tr>
+              <td width="50%"><strong>Description of Service</strong></td>
+              <td><strong>{{invoiceData.requestType}}</strong></td>
+            </tr>
+            <tr>
+              <td colspan="2" height="15"></td>
+            </tr>
+            <tr>
+              <td colspan="2"><strong>With Further Credit Favouring:</strong></td>
+            </tr>
+            <tr>
+              <td width="30%">Account Name:</td>
+              <td>IQUIPPO Services Private Limited</td>
+            </tr>
+            <tr>
+              <td width="30%">Account Number:</td>
+              <td>917020058796837 </td>
+            </tr>
+            <tr>
+              <td width="30%">Account Type:</td>
+              <td> Current </td>
+            </tr>
+            <tr>
+              <td width="30%">Bank Name:</td>
+              <td>Axis Bank Ltd.</td>
+            </tr>
+            <tr>
+              <td width="30%">Bank Branch:</td>
+              <td>Electronic Complex, Salt Lake City </td>
+            </tr>
+            <tr>
+              <td width="30%">RTGS/NEFT IFSC:</td>
+              <td>UTIB0000319</td>
+            </tr>
+            <tr>
+              <td style="padding-bottom: 20px;"></td>
+            </tr>            
+        </table>
+      </td>
+      
+      <td>
+        <table cellpadding="5" cellspacing="0" style="font-family:arial, sans-serif;font-size:10px;width:100%;border:0; padding-top: 30px;" align="center">
+          <tr>
+            <td>For and behalf of:</td>
+          </tr>
+          <tr>
+          <td colspan="2"><strong>IQUIPPO Services Pvt. Ltd.</strong></td>
+          </tr>
+          <tr>
+            <td style="padding-bottom: 50px;"></td>
+          </tr>
+          <tr>
+            <td style="padding-bottom: 90px;"><strong>Authorised Signatory</strong></td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+        
+    <tr>
+      <td colspan="2" align="center" style="font-size: 9px; font-family:arial, sans-serif">
+        <h2>IQUIPPO SERVICES PRIVATE LIMITED</h2>
+        <h4 style="margin: 2px;">CIN-U74999WB2017PTC221672</h4>
+        <h4 style="margin: 2px;">Registered Office: "IPCL Buliding", Plot No. X-1,2 &amp; 3, Block-EP, Sector-V, Salt Lake City, Kolkata - 700091</h4>
+        <h4 style="margin: 2px;">
+          Phone: +91 33 6606 7858, Fax: +91 33 6606 7823
+        </h4>
+          
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2" height="130"></td>
+    </tr>
+  </table>
+
+  <table cellpadding="5" cellspacing="0" border="1" align="center" style="width:90%;font-family:arial, sans-serif;font-size:10px; border-color: #333; text-align: center;">
+    <tr>
+      <td align="center" colspan="5"><h3 style="margin-top: 15px;">ANNEXURE</h3></td>
+    </tr>
+    <tr>
+      <th width="20%">Unique Control Number</th>
+      <th>Asset Name</th>
+      <th>Asset Id</th>
+      <th>Job Id</th>
+      <th>Report No.</th>
+    </tr>
+    <tr>
+      <td>{{valReqs.requestId}}</td>
+      <!-- <td>
+        {{valReqs.product.category}} {{#if valReqs.product.otherBrand}} {{valReqs.product.otherBrand}} {{else}} {{valReqs.product.brand}} {{/if}} {{#if valReqs.product.otherModel}} {{valReqs.product.otherModel}} {{else}} {{valReqs.product.model}} {{/if}} </td> -->
+        <td>
+        {{#if valReqs.product.name}} {{valReqs.product.name}} {{else}} {{valReqs.product.category}} {{valReqs.product.brand}} {{valReqs.product.model}} {{/if}} </td>
+      <td>{{valReqs.product.assetId}}</td>
+      <td>{{valReqs.jobId}}</td>
+      <td>{{valReqs.reportNo}}</td>
+    </tr>
+  </table>
+</div>   
+</body>

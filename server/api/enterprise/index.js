@@ -23,7 +23,7 @@ router.put('/upload/excel',auth.isAuthenticated(),controller.bulkModify);
 router.post('/bulkUpdate',auth.isAuthenticated(),controller.bulkUpdate);
 router.post('/createinvoice',auth.hasRole('admin'),controller.createInvoice);
 router.post('/updateinvoice',auth.hasRole('admin'),controller.updateInvoice);
-router.get('/generateinvoice/:invoiceNo',auth.hasRole('admin'),controller.generateInvoice);
+router.get('/generateinvoice/:invoiceNo',auth.isAuthenticated(),controller.generateInvoice);
 router.post('/iqvl/update',controller.updateFromAgency);
 router.post('/generatereport',auth.hasRole('admin'),reportGeneratorCtr.generateReport);
 /*
