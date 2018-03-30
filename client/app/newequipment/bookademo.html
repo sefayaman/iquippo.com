@@ -4,14 +4,16 @@
               <h4 class="modal-title">Book A Demo</h4>
             </div>
             <div class="modal-body">
-              <form class="form" name="form" novalidate>
+              <form class="form text-left" name="form" novalidate>
               
                 <div class="row">
                   <div class="form-group col-sm-6" ng-class="{'has-error': form.fname.$invalid && submitted }">
-                    <input type="text" class="form-control" name="fname" ng-model="dataModel.fname" placeholder="* First Name" required>                  
+                    <label>*First Name</label>
+                    <input type="text" class="form-control" name="fname" ng-model="dataModel.fname" placeholder="First Name" required>                  
                   </div>
                   <div class="form-group col-sm-6" ng-class="{'has-error': form.lname.$invalid && submitted }">
-                    <input type="text" class="form-control" name="lname" ng-model="dataModel.lname" value="" placeholder="* Last Name" required>
+                    <label>*Last Name</label>
+                    <input type="text" class="form-control" name="lname" ng-model="dataModel.lname" value="" placeholder="Last Name" required>
                   </div>
                 </div>
                 
@@ -21,11 +23,16 @@
                   </div> -->
                   <div class="form-group col-sm-6" ng-class="{'has-error': form.mobile.$invalid &&
                    submitted }">
-                    <input type="number" class="form-control" name="mobile" ng-model="dataModel.mobile"  placeholder="* Mobile No." uib-tooltip="+91-98-XXXX-XXXX" tooltip-trigger="focus" tooltip-placement="top" string-to-number required>
+                    <label>*Mobile No.</label>
+                    <input type="number" class="form-control" name="mobile" ng-model="dataModel.mobile"  placeholder="Mobile No." uib-tooltip="+91-98-XXXX-XXXX" ng-pattern="/^[0-9]{10,10}$/" tooltip-trigger="focus" tooltip-placement="top" string-to-number required>
+                    <p class="help-block" ng-show="form.mobile.$error.pattern && submitted"> 
+                      Mobile no. should have only 10 digits.
+                    </p>
                     
                   </div>
                   <div class="form-group col-sm-6" ng-class="{'has-error': form.email.$invalid && submitted }">
-                  <input class="form-control" name="email" ng-model="dataModel.email" placeholder="Email" type="email" value="">
+                    <label>Email</label>
+                    <input class="form-control" name="email" ng-model="dataModel.email" placeholder="Email" type="email" value="">
                   </div>
 
                 </div>
@@ -34,12 +41,14 @@
                   <input class="form-control" name="email" ng-model="dataModel.email" placeholder="Email" type="email" value="">
                   </div> -->
                   <div class="form-group col-sm-6" ng-class="{'has-error': form.country.$invalid && submitted }">
+                    <label>*Select Country</label>
                     <select class="form-control" name="country" ng-model="dataModel.country" ng-change="onCountryChange(this,dataModel.country)" required>
-                      <option value="">*Select Country</option>
+                      <option value="">Select Country</option>
                       <option value="{{country.name}}" ng-repeat="country in allCountries | orderBy:'name'">{{country.name}}</option>              
                     </select>
                   </div>
                   <div class="form-group col-sm-6" ng-class="{'has-error': form.state.$invalid && submitted }">
+                      <label>Select State</label>
                       <select class="form-control" name="state" ng-model="dataModel.state" ng-change="onStateChange(this,dataModel.state)" required>
                         <option value="">Select State</option>
                         <option value="{{state.name}}" ng-repeat="state in stateList">{{state.name}}</option>              
@@ -55,6 +64,7 @@
                     </select>
                   </div> -->
                   <div class="form-group col-sm-6" ng-class="{'has-error': form.city.$invalid && submitted }">
+                    <label>Select City</label>
                     <select class="form-control" name="city" ng-model="dataModel.city" required>
                       <option value="">Select City</option>
                       <option value="{{city.name}}" ng-repeat="city in cityList">{{city.name}}</option>              
