@@ -22,9 +22,10 @@ function ProductBidRequestCtrl($scope, $rootScope, $window, $uibModal, $statePar
 	vm.backButton = backButton;
 	//vm.activeBid = "approved";
 	//$scope.onTabChange = onTabChange;
-        socketSvc.on('onSubmitBidSocket',function (data){
-           console.log('dfskjakkjjjjjjjjjjjjjjj',data); 
-        });
+    socketSvc.on('onSubmitBidSocket',function (data){
+       getBidData(angular.copy(initFilter));
+       console.log("I am leaving")
+    });
 	function backButton() {
       $window.history.back();
     }
