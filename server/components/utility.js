@@ -570,7 +570,8 @@ function convertQVAPLStatus(qvaplStatus) {
     complete: "Inspection Completed",
     updated: "Valuation Report Submitted",
     cancel: 'Cancelled',
-    decline: 'Request Submitted'
+    decline: 'Request Submitted',
+    hold:"Inspection In Progress"
   };
   return statusMapping[qvaplStatus];
 }

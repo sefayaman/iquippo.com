@@ -169,9 +169,9 @@
                   <td><b>Physical Condition:</b></td>
                   <td>{{valuation.physicalCondition}}</td>
                   <td><b>GPS Installed:</b></td>
-                  <td>{{valuation.gpsInstalled}}</td>
+                  <td>{{valuation.gpsInstalled ? 'Yes' : 'NO'}}</td>
                 </tr>
-                <tr ng-if="valuation.gpsInstalled">
+                <tr>
                   <td><b>IMIE No.:</b></td>
                   <td>{{valuation.gpsIMEINo}}</td>
                   <td><b>GPS Device No.:</b></td>
