@@ -424,10 +424,6 @@
         else
           form.scheduleDate.$invalid = false;
       }
-      if(!$scope.valuationReq.product.engineNo && !$scope.valuationReq.product.chassisNo 
-        && !$scope.valuationReq.product.registrationNo && !$scope.valuationReq.product.serialNumber){
-        Modal.alert("Please fill one of these. Engine No. Chassis No. Registration No. Serial No.", true);
-      }
       if (form.$invalid || ret) {
         $scope.submitted = true;
         return;

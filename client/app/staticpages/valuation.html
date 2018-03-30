@@ -164,7 +164,11 @@
                                     <input type="text" name="serialNumber" ng-model="valuationReq.product.serialNumber" class="form-control" placeholder="Serial No." ng-required="!(valuationReq.product.chassisNo || valuationReq.product.registrationNo || valuationReq.product.serialNumber || valuationReq.product.engineNo)">
                                 </div>
                             </div>
-
+                            <div class="col-sm-12 form-group has-error" ng-if="(form.engineNo.$invalid && form.chassisNo.$invalid && form.registrationNo.$invalid && form.serialNumber.$invalid) && submitted">
+                                <p class="help-block">
+                                    Please fill one of these- Engine No/Chassis No/Registration No/Serial No.
+                                </p>
+                            </div>
                             <div class="col-xs-12 col-sm-3">
                                 <div class="form-group floating-label-wrapper" ng-class="{'has-error': form.contactPerson.$invalid && submitted }">
                                     <label>Contact Person*</label>
@@ -176,7 +180,7 @@
                                     <label>Contact Number*</label>
                                     <input type="text" name="contactNumber" class="form-control" ng-model="valuationReq.contactNumber" ng-pattern="/^[0-9]{10,10}$/" placeholder="Contact Number" required>
                                     <p class="help-block" ng-if="form.contactNumber.$error.pattern && submitted">
-                                        Contact Number should only have 10 digits.
+                                        Contact No. should only have 10 digits.
                                     </p>
                                 </div>
                             </div>
