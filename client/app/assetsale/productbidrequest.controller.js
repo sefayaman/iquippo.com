@@ -1,7 +1,7 @@
 (function() {
 	'use strict';
 	angular.module('sreizaoApp').controller('ProductBidRequestCtrl', ProductBidRequestCtrl);
-function ProductBidRequestCtrl($scope, $rootScope, $window, $uibModal, $stateParams,$state, productSvc, Modal, Auth, AssetSaleSvc,PagerSvc,uploadSvc) {
+function ProductBidRequestCtrl($scope, $rootScope, $window, $uibModal, $stateParams,$state, productSvc,socketSvc , Modal, Auth, AssetSaleSvc,PagerSvc,uploadSvc) {
 	var vm = this;
 	$scope.pager = PagerSvc.getPager();
 
@@ -22,7 +22,9 @@ function ProductBidRequestCtrl($scope, $rootScope, $window, $uibModal, $statePar
 	vm.backButton = backButton;
 	//vm.activeBid = "approved";
 	//$scope.onTabChange = onTabChange;
-
+        socketSvc.on('onSubmitBidSocket',function (data){
+           console.log('dfskjakkjjjjjjjjjjjjjjj',data); 
+        });
 	function backButton() {
       $window.history.back();
     }
@@ -78,7 +80,7 @@ function ProductBidRequestCtrl($scope, $rootScope, $window, $uibModal, $statePar
 	}
 
 	function update(bid,action,cb){
-		
+
 		Modal.confirm(StatusChangeConfirmationMsg[action],function(retVal){
 			if(retVal === 'yes')
 				AssetSaleSvc.changeBidStatus(bid,action,cb || fireCommand);				
