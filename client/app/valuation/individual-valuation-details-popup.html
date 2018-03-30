@@ -108,32 +108,27 @@
                   <td><b>Year of Manufacture:</b></td>
                   <td>
                     {{valuation.product.mfgYear}}
-                  </td>           
-                                
-                  <td><b>Yard Information/Asset Address:</b></td>
-                  <td>{{valuation.yardParked}}</td>
-                </tr>
-                <tr>
+                  </td>
                   <td><b>Country:</b></td>
                   <td>
                     {{valuation.product.country}}
-                  </td>                          
+                  </td> 
+                </tr>
+                <tr>                         
                   <td><b>State:</b></td>
                   <td>
                     {{valuation.product.state}}
-                  </td> 
-                </tr>
-                <tr>  
+                  </td>                  
                   <td><b>Location:</b></td>
                   <td>
                     {{valuation.product.city}}
-                  </td>           
-                  <td><b>Contact Person:</b></td>
-                  <td>{{valuation.contactPerson}}</td>
+                  </td>
                 </tr>
-                <tr>                  
+                <tr>           
+                  <td><b>Contact Person:</b></td>
+                  <td>{{valuation.contactPerson}}</td>                                  
                   <td><b>Contact Person Tel No:</b></td>
-                  <td colspan="3">
+                  <td >
                     {{valuation.contactNumber}}
                   </td>                  
                 </tr>
@@ -147,8 +142,7 @@
                   <td><b>Integrated:</b></td>
                   <td>{{valuation.uniqueControllNO}}</td>
                 </tr> -->
-              <table class="table table-bordred" ng-if="EnterpriseValuationStatuses.indexOf(valuation.status) > 5 || (individualValuation && showReport)">
-              
+              <table class="table table-bordred" ng-if="showReport">
                 <tr>
                   <td class="col-sm-3"><b>Report No.:</b></td>
                   <td class="col-sm-3">{{valuation.reportNo}}</td>
@@ -190,40 +184,11 @@
                   <td><b>GPS Device No.:</b></td>
                   <td>{{valuation.gpsDeviceNo}}</td>
                 </tr>
-                <tr ng-if="!individualValuation">
-                  <td><b>Asset Image General:</b></td>
-                  <td class="text-ellips">
-                    <a href="javascript:void(0);" ng-click="downloadFile(valuation.generalImage,valuation.assetDir)">{{valuation.generalImage.filename}}</a>
-                    </td>
-                  <td><b>Asset Image Engine:</b></td>
-                  <td class="text-ellips">
-                    <a href="javascript:void(0);" ng-click="downloadFile(valuation.engineImage,valuation.assetDir)">{{valuation.engineImage.filename}}</a>
-                  </td>
-                </tr>
-                <tr ng-if="!individualValuation">
-                  <td><b>Asset Image Hydraulic:</b></td>
-                  <td class="text-ellips">
-                    <a href="javascript:void(0);" ng-click="downloadFile(valuation.hydraulicImage,valuation.assetDir)">{{valuation.hydraulicImage.filename}}</a>
-                  </td>
-                  <td><b>Asset Image Cabin:</b></td>
-                  <td class="text-ellips">
-                    <a href="javascript:void(0);" ng-click="downloadFile(valuation.cabinImage,valuation.assetDir)">{{valuation.cabinImage.filename}}</a>
-                  </td>
-                </tr>
-                <tr ng-if="!individualValuation">
-                  <td><b>Asset Image Under-Carriage / Tyre:</b></td>
-                  <td class="text-ellips">
-                    <a href="javascript:void(0);" ng-click="downloadFile(valuation.underCarriageImage,valuation.assetDir)">{{valuation.underCarriageImage.filename}}</a>
-                  </td>
-                  <td><b>Asset Image Others:</b></td>
-                  <td class="text-ellips">
-                    <a href="javascript:void(0);" ng-click="downloadFile(valuation.otherImage,valuation.assetDir)">{{valuation.otherImage.filename}}</a>
-                  </td>
-                </tr>
+    
                 <tr>
-                  <td colspan="2"><b>Valuation Report:</b></td>
-                  <td colspan="2" class="text-ellips"><a ng-if="!individualValuation" href="javascript:void(0);" ng-click="downloadFile(valuation.valuationReport,valuation.assetDir)">{{valuation.valuationReport.filename}}</a>
-                  <a target="_blank" ng-if="individualValuation" href="{{valuation.valuationReport.filename}}">{{valuation.valuationReport.filename}}</a>
+                  <td><b>Valuation Report:</b></td>
+                  <td colspan="3" class="text-ellips">
+                  <a target="_blank" href="{{valuation.valuationReport.filename}}">{{valuation.valuationReport.filename}}</a>
                   </td>
                  <!--  <td><b>Invoiced Date:</b></td>
                   <td>{{valuation.invoiceDate}}</td> -->
@@ -243,47 +208,23 @@
                 <tr>
                   <td class="col-sm-3"><b>Invoiced to Customer:</b></td>
                   <td class="col-sm-3">
-                    <div ng-if="!individualValuation">
-                      <span ng-if="valuation.invoiceNo">Yes</span>
-                      <span ng-if="!valuation.invoiceNo">No</span>
-                    </div>
-                    
-                    <div ng-if="individualValuation">
+                    <div>
                       <span ng-if="valuation.invoiceGenerated">Yes</span>
                       <span ng-if="!valuation.invoiceGenerated">No</span>
                     </div>
                   </td>
                   <td class="col-sm-3"><b> Invoice Date:</b></td>
                   <td class="col-sm-3">
-                    <span ng-if="!individualValuation">{{valuation.invoiceDate | date:'MM/dd/yyyy'}}</span>
-                    <span ng-if="individualValuation">{{valuation.invoiceData.invoiceDate | date:'MM/dd/yyyy'}}</span>
+                    <span>{{valuation.invoiceData.invoiceDate | date:'MM/dd/yyyy'}}</span>
                   </td>
                 </tr>
                 <tr>
                   <td><b>Payment Received</b></td>
-                  <td>
+                  <td colspan="3">
                     <span ng-if="valuation.paymentReceived">Yes</span>
                     <span ng-if="!valuation.paymentReceived">No</span>
                   </td>
-                  <td><b><span ng-if="!individualValuation">Payment Made to Agency</span></b></td>
-                  <td>
-                    <span ng-if="valuation.paymentMade && !individualValuation">Yes</span>
-                    <span ng-if="!valuation.paymentMade && !individualValuation">No</span>
-                  </td>
                 </tr>
               </table>
-
-              <table class="table table-bordred" ng-if="!individualValuation">
-                <tr>
-                  <td><b>Modification Comment</b></td>
-                  <td>
-                    {{valuation.requestModifiedMsg}}
-                  </td>
-                  <td><b>Modified Fields</b></td>
-                  <td class="word-break">
-                    {{valuation.fieldsModified}}
-                  </td>
-                </tr>
-              </table>  
             </div>
 </div>
