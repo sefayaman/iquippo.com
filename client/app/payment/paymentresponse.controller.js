@@ -3,7 +3,7 @@
 'use strict';
 angular.module('sreizaoApp').controller('PaymentResponseCtrl',PaymentResponseCtrl);
 
-function PaymentResponseCtrl($scope,Modal,$stateParams,$state,notificationSvc,PaymentSvc,Auth,ValuationSvc,AuctionSvc,BuyContactSvc,$cookieStore) {
+function PaymentResponseCtrl($scope,Modal,$rootScope,$stateParams,$state,notificationSvc,PaymentSvc,Auth,ValuationSvc,AuctionSvc,BuyContactSvc,$cookieStore) {
  	var vm = this;
   var filter={};
  	vm.payTransaction = null;
@@ -135,13 +135,16 @@ function PaymentResponseCtrl($scope,Modal,$stateParams,$state,notificationSvc,Pa
 
   function submitToAgency(valuation,type){
     //api integration
+    $rootScope.loading = true;
     ValuationSvc.submitToAgency(valuation,type)
     .then(function(resList){
+      $rootScope.loading = false;
       //Modal.alert("Valuation request submitted successfully !!!");
     })
     .catch(function(err){
       if(err && err.data)
         Modal.alert(err.data);
+      $rootScope.loading = false;
     }) 
   }
 

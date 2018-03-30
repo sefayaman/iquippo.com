@@ -16,7 +16,7 @@ router.post('/export', controller.exportValuation);
 //router.post('/createinvoice',auth.hasRole('admin'),controller.createInvoice);
 //router.post('/updateinvoice',auth.hasRole('admin'),controller.updateInvoice);
 //router.post('/generateinvoice',auth.hasRole('admin'),controller.generateInvoice);
-router.post('/cancel',auth.isAuthenticated(),controller.cancelRequest);
+router.post('/cancel',auth.isAuthenticated(),controller.findAndValidateRequest,controller.cancelRequest);
 router.get('/generateinvoice/:ivNo',controller.generateInvoice);
 
 router.post('/submitrequest',auth.isAuthenticated(),controller.submitRequest);

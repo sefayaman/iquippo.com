@@ -144,7 +144,6 @@ module.exports = {
       'category':'product.category',
       'brand':'product.brand',
       'model':'product.model',
-      'yardParked':'yardParked',
       'country':'product.country',
       'state':'product.state',
       'city':'product.city',

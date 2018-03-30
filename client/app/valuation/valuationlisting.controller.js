@@ -260,7 +260,8 @@ function ValuationListingCtrl($scope,$window,$stateParams,$state,$uibModal,Modal
       })
       .catch(function(err){
         $rootScope.loading = false;
-        Modal.alert("There are some issue in request cancellation.Please try again or contact support team.");
+        Modal.alert("There are some issue in request cancellation. Please try again or contact support team.");
+        fireCommand(true);
       });
     }
 

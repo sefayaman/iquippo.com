@@ -248,6 +248,23 @@ function sendStatusMail(valReq) {
     ValuationUtil.sendNotification(valObj);
 }
 
+exports.findAndValidateRequest = function (req, res, next) {
+    ValuationReq.findById(req.body._id, function (err, data) {
+        if (err || !data) {
+            return res.status(400).send("Invalid cancel request !!!");
+        }
+        var statusesArr = [];
+        data.statuses.forEach(function(item){
+            statusesArr.push(item.status);
+        });
+
+      if(statusesArr.indexOf(IndividualValuationStatuses[7]) > -1) {
+        return res.status(412).send("Valuation has been Completed !!!");
+      }
+        next();
+    })
+}
+
 exports.cancelRequest = function(req,res){
   var bodyData = req.body;
   if(!bodyData._id)
@@ -574,7 +591,7 @@ exports.submitRequest = function(req,res){
 
     if(!dataArr.length)
       return res.status(200).send("There is no request to post.");
-    //console.log("dataArr####",dataArr);
+    console.log("dataArr####",dataArr);
     request({
         url: config.qpvalURL + "?type=" + type,
         method: "POST",

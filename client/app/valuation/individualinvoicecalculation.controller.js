@@ -236,10 +236,7 @@ function setIquippoGstin(state){
 
     ValuationSvc.update($scope.valuation)
     .then(function(genInvoice){
-      //ValuationSvc.updateStatus($scope.valuation,IndividualValuationStatuses[4]);
       updateStatusComplete($scope.valuation);
-      if($scope.callback)
-        $scope.callback(true);
       close();
     })
     .catch(function(err){
@@ -253,8 +250,16 @@ function setIquippoGstin(state){
     for(var i=0; i < valData.statuses.length; i++) {
       statusesObj.push(valData.statuses[i].status);
     }
-    if(statusesObj.indexOf(IndividualValuationStatuses[6]) > -1 && Auth.isAdmin())
-      ValuationSvc.updateStatus(valData,IndividualValuationStatuses[7]);
+    if(statusesObj.indexOf(IndividualValuationStatuses[6]) > -1 && Auth.isAdmin()) {
+      ValuationSvc.updateStatus(valData,IndividualValuationStatuses[7])
+      .then(function(){
+        if($scope.callback)
+          $scope.callback(true);
+      });
+    } else {
+      if($scope.callback)
+          $scope.callback(true);
+    }
   }
 
   function addTaxToken(srvcTax){
