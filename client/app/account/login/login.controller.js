@@ -16,8 +16,11 @@ angular.module('account').controller('LoginCtrl', LoginCtrl);
     $scope.errors = {};
 
     function login(form) {
-
-      $scope.submitted = true;
+      if(form.$invalid){
+        $scope.submitted = true;
+        return;
+      }
+      // $scope.submitted = true;
       var dataToSend = {};
       dataToSend['userId'] = vm.user.userId;
       dataToSend['password'] = vm.user.password;
