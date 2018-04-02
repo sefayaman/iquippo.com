@@ -277,8 +277,8 @@ exports.getLotData = function(req, res) {
   filter.isDeleted = false;
   
   if (req.query.searchStr) {
-       filter['$text'] = {
-        '$search': req.query.searchStr
+       filter['lotNumber'] = {
+        '$regex' : req.query.searchStr, '$options' : 'i'
       }
   }
   if (req.query.auction_id) {
