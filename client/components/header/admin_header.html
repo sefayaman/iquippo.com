@@ -81,11 +81,14 @@
                     <li ng-class="{active: isActive(['assetsale', 'assetsale.bidproduct', 'assetsale.bidrequests', 'assetsale.buyer', 'assetsale.fulfilmentagency', 'assetbidhistory'])}" ng-if="isFAgencyPartner()" ng-click="closeMenu(['productMenu', 'otherMenu'])">
                         <a href="/assetsale/fulfilmentagency?t=1"><i class="fa fa-gavel"></i> TRADE DETAILS</a>
                     </li>
-                    <li ng-class="{active: isActive(['valuationrequests'])}" ng-if="isValuationPartner()" ng-click="closeMenu(['productMenu', 'otherMenu'])">
+                    <!--<li ng-class="{active: isActive(['valuationrequests'])}" ng-if="isValuationPartner()" ng-click="closeMenu(['productMenu', 'otherMenu'])">
                         <a href="/valuationrequests/valuationpartner"><i class="fa fa-tags"></i> Valuation Request</a>
                     </li>
                     <li ng-class="{active: isActive(['valuationrequests'])}" ng-click="closeMenu(['productMenu', 'otherMenu'])">
                         <a href="/valuationrequests/myrequest"><i class="fa fa-tags"></i> My Valuation Request</a>
+                    </li> -->
+                    <li ng-class="{active: isActive(['valuationrequests'])}" ng-click="closeMenu(['productMenu', 'otherMenu'])">
+                        <a href="/valuationrequests"><i class="fa fa-tags"></i>Valuation Request</a>
                     </li>
                    <!--  <li ng-if="!isFAgencyPartner() && !isAdmin()">
                         <a href="/assetsale/seller"><i class="fa fa-gavel"></i> Asset Sale</a>

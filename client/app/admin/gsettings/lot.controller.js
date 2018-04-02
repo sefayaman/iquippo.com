@@ -95,7 +95,7 @@ function LotCtrl($scope, $rootScope,$window, $state,Modal,Auth,PagerSvc,$filter,
     }
     /* Start Date can't be greater than end date :- Madhusudan Mishra*/
     if(vm.dateCheckValidation(vm.dataModel.startDate, vm.dataModel.endDate)) {
-        Modal.alert("Please enter lot start date less than end date", true);
+        Modal.alert("Lot Start Date/Time should be less than Lot End Date Time", true);
         return;
     }
     /* End */
@@ -112,13 +112,18 @@ function LotCtrl($scope, $rootScope,$window, $state,Modal,Auth,PagerSvc,$filter,
         vm.dataModel.auction_id = vm.auctionListing[i]._id;
         vm.dataModel.auctionType = vm.auctionListing[i].auctionType;
         // Lot start Date shouldn't be less than Auction Start Date
-        if(vm.dateCheckValidation(vm.auctionListing[i].startDate, vm.dataModel.startDate)) {
-            Modal.alert("Please enter lot start date greater than or equal to auction start date", true);
+        if(vm.dateCheckValidation(moment(vm.auctionListing[i].startDate).format('MM/DD/YYYY hh:mm A'), vm.dataModel.startDate)) {
+            Modal.alert("Lot Start Date/Time should be greater than or equal to Auction Start Date Time", true);
+            return;
+        }
+        // Lot start Date shouldn't be less than Auction end Date
+        if(vm.dateCheckValidation(vm.dataModel.startDate, moment(vm.auctionListing[i].endDate).format('MM/DD/YYYY hh:mm A'))) {
+            Modal.alert("Auction End Date/Time should be greater than or equal to Lot Start Date Time", true);
             return;
         }
         // Lot end Date shouldn't be less than Auction end Date
-        if(vm.dateCheckValidation(vm.auctionListing[i].endDate, vm.dataModel.endDate)) {
-            Modal.alert("Please enter lot end date greater than or equal to auction end date", true);
+        if(vm.dateCheckValidation(moment(vm.auctionListing[i].endDate).format('MM/DD/YYYY hh:mm A'), vm.dataModel.endDate)) {
+            Modal.alert("Lot End Date/Time should be greater than or equal to Auction End Date Time", true);
             return;
         }
         break;
@@ -168,17 +173,22 @@ function LotCtrl($scope, $rootScope,$window, $state,Modal,Auth,PagerSvc,$filter,
 
     /* Start Date can't be greater than end date :- Madhusudan Mishra*/
     if(vm.dateCheckValidation(vm.dataModel.startDate, vm.dataModel.endDate)) {
-        Modal.alert("Please enter lot start date less than end date", true);
+        Modal.alert("Lot Start Date/Time should be less than Lot End Date Time", true);
         return;
     }
     // Lot start Date shouldn't be less than Auction Start Date
     if(vm.dateCheckValidation(vm.dataModel.auctionStartDate, vm.dataModel.startDate)) {
-        Modal.alert("Please enter lot start date greater than or equal to auction start date", true);
+        Modal.alert("Lot Start Date/Time should be greater than or equal to Auction Start Date Time", true);
+        return;
+    }
+    // Lot start Date shouldn't be less than Auction end Date
+    if(vm.dateCheckValidation(vm.dataModel.startDate, vm.dataModel.auctionEndDate)) {
+        Modal.alert("Auction End Date/Time should be greater than or equal to Lot Start Date Time", true);
         return;
     }
     // Lot end Date shouldn't be less than Auction end Date
     if(vm.dateCheckValidation(vm.dataModel.auctionEndDate, vm.dataModel.endDate)) {
-        Modal.alert("Please enter lot end date greater than or equal to auction end date", true);
+        Modal.alert("Lot End Date/Time should be greater than or equal to Auction End Date Time", true);
         return;
     }
     /* End */

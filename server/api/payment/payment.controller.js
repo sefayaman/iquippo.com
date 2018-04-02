@@ -3,7 +3,8 @@
 var _ = require('lodash');
 var crypto = require('crypto');
 var Payment = require('./payment.model');
-var xlsx = require('xlsx');
+var ValuationReq = require('./../valuation/valuation.model');
+var  xlsx = require('xlsx');
 var config = require('./../../config/environment');
 var async = require('async');
 var Util = require('./../../components/utility.js');
@@ -85,13 +86,33 @@ exports.getOnFilter = function (req, res) {
   }
 
   var query = Payment.find(filter).sort({ createdAt: -1 });
-  query.lean().exec(
-    function (err, payments) {
-      if (err) { return handleError(res, err); }
-      return res.status(200).json(payments);
-    }
+  query.exec(
+               function (err, payments) {
+                      if(err) { return handleError(res, err); }
+                      if(payments[0].requestType === 'Valuation Request')
+                        addValuationData(req, res, payments);
+                      else
+                        return res.status(200).json(payments);
+               }
   );
 };
+
+  function addValuationData(req,res,payments) {
+    ValuationReq.find({
+        "transactionId": req.body._id,
+      }, function(err, valResult) {
+        if(err) { return handleError(res, err); }
+        var tempPaymentArr = [];
+        payments.forEach(function(item){
+          item = item.toObject();
+          item.valuationData = {};
+          item.valuationData = valResult[0];
+          tempPaymentArr.push(item);
+        });
+        return res.status(200).json(tempPaymentArr);
+      });
+  }
+
 // Updates an existing payment in the DB.
 exports.update = function (req, res) {
   if (req.body._id) { delete req.body._id; }

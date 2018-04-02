@@ -5,7 +5,7 @@
   </div>
  <div class="modal-body">
    <form name="invoiceForm" class="text-left" novalidate>
-    <div class="row">
+    <div class="row" ng-if="!individualValuation">
       <div class="col-md-12">
         <div class="alert alert-info">Valuation Request Count: {{invoice.requestCount}}</div>
       </div>
@@ -15,11 +15,13 @@
         Service Fee:
       </div>
       <div class="col-md-6 form-group" ng-class="{'has-error':invoiceForm.serviceFee.$invalid && submitted}">        
-        <input type="number" class="form-control" name="serviceFee" ng-model="invoice.invoiceAmount" placeholder="Enter Service Fee" required/>
+        <input ng-if="!individualValuation" type="number" class="form-control" name="serviceFee" ng-model="invoice.invoiceAmount" placeholder="Enter Service Fee" required/>
+
+        <input ng-if="individualValuation" type="number" class="form-control" name="serviceFee" ng-model="invoice.invoiceAmount" ng-keyup="removeGSTCalculate(invoice.invoiceAmount)" ng-model-options="{debounce:20}"  autocomplete="off" placeholder="Enter Service Fee" required/>
       </div>
     </div>
     <legend></legend>
-    <div class="row form-group">
+    <div class="row form-group" ng-if="!individualValuation || updateAmountReq">
       <div class="col-sm-12">
         <span class="badge" ng-repeat="token in selectedTax">
           {{token.type}} : {{token.rate}} 
@@ -29,7 +31,27 @@
         </span>
       </div>
     </div>
-    <div class="row">   
+
+    <div class="row" ng-if="individualValuation && !updateAmountReq">
+      <div class="col-sm-6 form-group" ng-class="{'has-error':invoiceForm.taxType.$invalid && submitted}">
+        <select class="form-control" ng-change="getTax(selectedType)" ng-model="selectedType" required>
+          <option value="">Select Type of Tax</option>
+          <option ng-repeat="tx in serviceTaxes" value="{{tx._id}}">{{tx.type}}</option>
+        </select>
+      </div>      
+    </div>
+    <div class="row" ng-if="individualValuation && !updateAmountReq">
+      <div class="col-sm-6 form-group">
+        <label>Actual Service Fee</label>
+        <input type="number" class="form-control" placeholder="Actual Service Fee" ng-model="invoice.actualInvoiceAmount" name="actualInvoiceAmount" disabled>
+      </div>   
+      <div ng-if="individualValuation" class="col-md-6 form-group" ng-class="{'has-error':invoiceForm.gstAmount.$invalid && submitted}">
+        <label>Tax</label>
+        <input type="number" class="form-control" placeholder="Amount" ng-model="gstAmount" name="gstAmount" disabled>    
+      </div>
+    </div>
+
+    <div class="row" ng-if="!individualValuation || updateAmountReq">
       <div class="col-sm-5 form-group">
         <select class="form-control" ng-change="getTax(selectedType)" ng-model="selectedType">
           <option value="">Select Type of Tax</option>
@@ -46,11 +68,11 @@
       <div class="col-md-2">
       <button class="btn btn-primary" ng-click="addTaxToken(currentTax)"> Add</button>
       </div>
-    </div>    
+    </div> 
     <div class="row">
-      <div class="col-sm-6 form-group">
+      <div class="col-sm-6 form-group" ng-class="{'has-error':invoiceForm.invoiceDate.$invalid && submitted}">
         <label>Date of Invoice</label>
-        <custom-datepicker placeholder="Date of Invoice"  ng-model="invoice.invoiceDate" required></custom-datepicker>
+        <custom-datepicker placeholder="Date of Invoice"  ng-model="invoice.invoiceDate" name="invoiceDate" required></custom-datepicker>
       </div>
       <div class="col-sm-6 form-group" ng-class="{'has-error':invoiceForm.invcInFavourOf.$invalid && submitted}">
         <label>Invoice in favour of</label>

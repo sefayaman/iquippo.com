@@ -11,7 +11,12 @@
     </tr>
     <tr>
       <td style="color:#000;font-size:13px;padding-bottom:10px;">
-          We have received the request for {{requestType}} for the asset specified below - 
+           We have received the payment for {{requestType}} request - {{requestId}}.
+      </td>
+    </tr>
+    <tr>
+      <td style="color:#000;font-size:13px;padding-bottom:10px;">
+           The payment details are specified below - 
       </td>
     </tr>
     <tr>
@@ -21,22 +26,22 @@
                 <tr>
                   <td>
                     <p  style="font-size:12px;line-height:20px;color:#333333; font-family:Verdana, Geneva, sans-serif; text-align: left; margin: 5px 0;">
-                      <b>Category:</b> {{product.category}}
+                      <b>Amount Paid: INR</b> {{paymentDetails.amount}}
                     </p>
                     <p  style="font-size:12px;line-height:20px;color:#333333; font-family:Verdana, Geneva, sans-serif; text-align: left; margin: 5px 0;">
-                      <b>Brand:</b>{{product.brand}}
+                      <b>Payment Mode:</b> {{paymentDetails.paymentMode}} / {{paymentDetails.paymentModeType}}
                     </p>
                     <p style="font-size:12px;line-height:20px;color:#333333; font-family:Verdana, Geneva, sans-serif; text-align: left; margin: 5px 0;">
-                      <b>Model:</b> {{product.model}}
+                      <b>Bank Txn Reference Number:</b> {{paymentDetails.refNo}}
                     </p>
                     <p style="font-size:12px;line-height:20px;color:#333333; font-family:Verdana, Geneva, sans-serif; text-align: left; margin: 5px 0;">
-                      <b>Asset Description:</b> {{product.description}}
+                      <b>Bank Name:</b> {{paymentDetails.bankname}}
                     </p>
                     <p style="font-size:12px;line-height:20px;color:#333333; font-family:Verdana, Geneva, sans-serif; text-align: left; margin: 5px 0;">
-                      <b>Location:</b> {{product.city}}, {{product.state}}
+                      <b>Date of Transaction:</b> {{paymentDetails.paymentDate}}
                     </p>
                     <p style="font-size:12px;line-height:20px;color:#333333; font-family:Verdana, Geneva, sans-serif; text-align: left; margin: 5px 0;">
-                      <b>Payment Status:</b> Pending
+                      <b>Payment Status:</b> Completed
                     </p>
                   </td>
                 </tr>
@@ -44,32 +49,6 @@
             </table>
       </td>
       
-    </tr>
-    <tr>
-      <td style="color:#000;font-size:13px;font-weight:bold;padding-bottom:10px;">
-           Your reference Number is {{requestId}}. We are working on your request and one of our exectives will get back to you.
-      </td>
-    </tr>
-    <tr>
-      <td style="color:#000;font-size:13px;padding-bottom:10px;">
-        You can check the status of your request by - 
-        <ol>
-          <li>
-            Logging in to <a href="https://www.iquippo.com">www.iquippo.com</a>
-          </li>
-          <li>
-            Click on Dashboard
-          </li>
-          <li>
-            Click 'Valuation Request'to view your Valuation/Inspection requests.
-          </li>
-        </ol>
-      </td>
-    </tr>
-    <tr>
-      <td style="color:#000;font-size:13px;padding-bottom:10px;">
-           In case you have not paid, you can click "Pay" button to make the payment for your request. You can either pay Online or you may pay offline and inform our customer care team.
-      </td>
     </tr>
     <tr>
       <td style="color:#000;font-size:13px;padding-bottom:10px;">
