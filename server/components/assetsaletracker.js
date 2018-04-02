@@ -9,6 +9,7 @@ var Product = require('../api/product/product.model');
 var dealStatuses=['Decision Pending','Offer Rejected','Cancelled','Rejected-EMD Failed','Rejected-Full Sale Value Not Realized','Bid-Rejected','Approved','EMD Received','Full Payment Received','DO Issued','Asset Delivered','Acceptance of Delivery','Closed'];
 var bidStatuses=['In Progress','Cancelled','Bid Lost','EMD Failed','Full Payment Failed','Auto Rejected-Cooling Period','Rejected','Accepted','Auto Accepted'];
 var tradeTypeStatuses = ['SELL','BOTH','NOT_AVAILABLE'];
+var _sendAndUpdateViaSocket = require('../realTimeSocket')._sendAndUpdateViaSocket;
 
 var TimeInterval =  1*60*1000;/*Service interval*/
 
@@ -214,6 +215,7 @@ function updateBid(bid,callback){
     if(err) {
       return callback(err);
     }
+    _sendAndUpdateViaSocket('onSystemUpdateBidSocket',bid);
     return callback();
   });
 }

@@ -27,6 +27,10 @@ function ProductBidRequestCtrl($scope, $rootScope, $window, $uibModal, $statePar
             $scope.pager.reset();
             getBidData(angular.copy(initFilter));
         });
+        socketSvc.on('onSystemUpdateBidSocket', function (data) {
+            $scope.pager.reset();
+            getBidData(angular.copy(initFilter));
+        });
         
 	function backButton() {
             $window.history.back();
