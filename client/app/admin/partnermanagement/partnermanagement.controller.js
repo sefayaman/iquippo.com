@@ -351,7 +351,7 @@ function PartnerManagementCtrl($scope, $rootScope, $http, Auth, User, Modal, use
        serviceArr.push('Auction Registration');
      else if(services[i] == 'GPS Installation')
       serviceArr.push('GPS Installation');
-      else if(services[i] == 'Photographs')
+      else if(services[i] == 'Photographs Only')
         serviceArr.push('Photographs Only');
     }
     return serviceArr.join();
@@ -427,7 +427,7 @@ function updateVendor(vendor) {
         $scope.Auction_Registration = vendor.services[i];
       else if(vendor.services[i] == 'GPS Installation')
         $scope.GPS_Installation = vendor.services[i];
-      else if(vendor.services[i] == 'Photographs')
+      else if(vendor.services[i] == 'Photographs Only')
         $scope.Photographs_Only = vendor.services[i];
     }
     $scope.isEdit = true;

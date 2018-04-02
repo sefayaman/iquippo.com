@@ -18,7 +18,7 @@ function AddTransactionCtrl($scope, $stateParams,$uibModal,$rootScope, Modal, Au
   $scope.upload = upload;
   $scope.getAssetGroup = getAssetGroup;
 
-  vm.requestTypeList = [{name:"Valuation",displayText:"Valuation"},{name:"Inspection",displayText:"Inspection"},{name:"GPS Installation",displayText:"GPS Installation"},{name:"Photographs",displayText:"Photographs Only"}];
+  vm.requestTypeList = [{name:"Valuation",displayText:"Valuation"},{name:"Inspection",displayText:"Inspection"},{name:"GPS Installation",displayText:"GPS Installation"},{name:"Photographs Only",displayText:"Photographs Only"}];
   /*vm.enterpriseValuation.requestType = vm.requestTypeList[0].name;
   vm.enterpriseValuation.requestDate = moment(new Date()).format('DD/MM/YYYY');
   vm.enterpriseValuation.agency = {};*/

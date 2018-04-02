@@ -20,7 +20,7 @@ angular.module('sreizaoApp')
         //{name:"Approval Authority buy Now/Make an Offer",code:"Authority",sequence:3,approvalRequired:"No"},
         { name: "Financing", code: "Finance", sequence: 4, approvalRequired: "No" },
          { name: "GPS Installation", code: "GPS Installation", sequence: 5, approvalRequired: "No" },
-          { name: "Photographs Only", code: "Photographs", sequence: 6, approvalRequired: "No" }
+          { name: "Photographs Only", code: "Photographs Only", sequence: 6, approvalRequired: "No" }
         //{name:"Sale Fulfilment",code:"Sale Fulfilment",sequence:5,approvalRequired:"No"}
       ]
       //$scope.editImage = false;

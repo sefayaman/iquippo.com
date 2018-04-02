@@ -207,7 +207,7 @@ angular.module('sreizaoApp').factory("vendorSvc",vendorSvc)
             auctionRegVendorList.push(vd);
           }else if(data[i].services[j] == 'GPS Installation' && data[i].status){
             gpsVendorList.push(vd);
-          }else if(data[i].services[j] == 'Photographs' && data[i].status){
+          }else if(data[i].services[j] == 'Photographs Only' && data[i].status){
             photographesList.push(vd);
           }
         }
@@ -285,7 +285,7 @@ angular.module('sreizaoApp').factory("vendorSvc",vendorSvc)
       case 'GPS Installation':
         list = gpsVendorList;
       break;
-       case 'Photographs':
+       case 'Photographs Only':
         list = photographesList;
       break;
     }
