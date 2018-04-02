@@ -100,8 +100,10 @@ function EmdFullPaymentCtrl($scope, $state, $rootScope, Modal, Auth, $uibModal, 
 			 msg = informationMessage.Fullpayment;
 			} else  msg = informationMessage.partialFullpayment;
 		}
+		$rootScope.loading = true;
 	    AssetSaleSvc.update($scope.bidData,serverAction).
 	      then(function(res) {
+	      	$rootScope.loading = false;
 	      	if(msg)
 	      		Modal.alert(msg, true);	
 	        else if(res)

@@ -1,0 +1,230 @@
+<div>
+        <div class="modal-header">
+              <button type="button" class="close" ng-click="close()" aria-hidden="true">&times;</button>
+              <h4 class="modal-title">Details</h4>
+            </div>
+            <div class="modal-body">
+              
+              <table class="table table-bordred">               
+                <tr>
+                  <td class="col-sm-3"><b>Unique Control No:</b></td>
+                  <td class="col-sm-9" colspan="3">
+                    {{valuation.requestId}}
+                  </td>                                   
+                </tr>
+                <tr>
+                  <td><b>Request Type:</b></td>
+                  <td>{{valuation.requestType}}</td>
+                  <td><b>Purpose:</b></td>
+                  <td>{{valuation.purpose}}</td>                                
+                </tr>
+                
+                <tr>
+                  <td><b>Agency Name:</b></td>
+                  <td>
+                    {{valuation.valuationAgency.name}}
+                  </td>
+                  <td><b>Job ID:</b></td>
+                  <td>{{valuation.jobId}}</td>
+                </tr> 
+                <tr>
+                  <td><b>Asset No:</b></td>
+                  <td>
+                    {{valuation.product.assetId}}
+                  </td>
+                  <td><b>Status:</b></td>
+                  <td>{{valuation.status}}</td>
+                </tr>
+
+                <tr>
+                  <td><b>Remark:</b></td>
+                  <td>{{valuation.remark}}</td>
+                  <td><b>User:</b></td>
+                  <td>
+                    {{valuation.user.fname}} {{valuation.user.lname}}
+                  </td>
+                </tr>
+                <tr>                  
+                  <td><b>Mobile No:</b></td>
+                  <td>
+                    {{valuation.user.mobile}}
+                  </td>                
+                
+                  <td><b>Request Date:</b></td>
+                  <td>
+                    {{valuation.createdAt | date:'MM/dd/yyyy'}}
+                  </td>
+                </tr>
+                <tr>
+                  <td><b>Customer Invoice date:</b></td>
+                  <td>
+                    {{valuation.invoiceData.invoiceDate | date:'MM/dd/yyyy'}}
+                  </td>
+                
+                  <td><b>Customer Invoice Value:</b></td>
+                  <td>
+                    {{valuation.invoiceData.invoiceAmount}}
+                  </td> 
+                </tr>
+                <tr>
+                  <td><b>Asset Category:</b></td>
+                  <td>
+                    {{valuation.product.category}}
+                  </td>                   
+                                 
+                  <td><b>Brand/Make:</b></td>
+                  <td>
+                    {{valuation.product.brand}}
+                  </td>
+                </tr>
+                <tr>
+                  <td><b>Model:</b></td>
+                  <td>
+                    {{valuation.product.model}}
+                  </td>                   
+                               
+                  <td><b>Asset Name:</b></td>
+                  <td>
+                    {{valuation.product.description}}
+                  </td> 
+                </tr>
+                <tr>
+                  <td><b>Engine No.:</b></td>
+                  <td>{{valuation.product.engineNo}} </td>                 
+                                 
+                  <td><b>Chassis No.:</b></td>
+                  <td>{{valuation.product.chassisNo}} </td> 
+                </tr>
+                <tr>
+                  <td><b>Regn. No.:</b></td>
+                  <td>
+                    {{valuation.product.registrationNo}}
+                  </td>                
+                                 
+                  <td><b>Serial No.</b></td>
+                  <td>{{valuation.product.serialNumber}}</td>
+                </tr>
+                <tr>
+                  <td><b>Year of Manufacture:</b></td>
+                  <td>
+                    {{valuation.product.mfgYear}}
+                  </td>
+                  <td><b>Country:</b></td>
+                  <td>
+                    {{valuation.product.country}}
+                  </td> 
+                </tr>
+                <tr>                         
+                  <td><b>State:</b></td>
+                  <td>
+                    {{valuation.product.state}}
+                  </td>                  
+                  <td><b>Location:</b></td>
+                  <td>
+                    {{valuation.product.city}}
+                  </td>
+                </tr>
+                <tr>           
+                  <td><b>Contact Person:</b></td>
+                  <td>{{valuation.contactPerson}}</td>                                  
+                  <td><b>Contact Person Tel No:</b></td>
+                  <td >
+                    {{valuation.contactNumber}}
+                  </td>                  
+                </tr>
+                <tr>                  
+                  <td><b>Comment:</b></td>
+                  <td colspan="3">{{valuation.comment}}</td>               
+                </tr>
+              </table>
+                <!-- <tr>
+                  
+                  <td><b>Integrated:</b></td>
+                  <td>{{valuation.uniqueControllNO}}</td>
+                </tr> -->
+              <table class="table table-bordred" ng-if="showReport">
+                <tr>
+                  <td class="col-sm-3"><b>Report No.:</b></td>
+                  <td class="col-sm-3">{{valuation.reportNo}}</td>
+                  <td class="col-sm-3"><b>Report Date:</b></td>
+                  <td class="col-sm-3">{{valuation.reportDate | date:'MM/dd/yyyy'}}</td>
+                </tr>
+                <tr>
+                  <td><b>Year of Manufacture:</b></td>
+                  <td>{{valuation.agencyYearOfManufacturing}}</td>
+                  <td><b>Engine No.:</b></td>
+                  <td>{{valuation.agencyEngineNo}}</td>
+                  <tr>
+                    <td><b>Chassis No.:</b></td>
+                    <td>{{valuation.agencyChassisNo}}</td>
+                    <td><b>Regn. No.:</b></td>
+                    <td>{{valuation.agencyRegistrationNo}}</td>
+                  </tr>
+                  <tr>
+                  <td><b>Serial No.</b></td>
+                  <td>{{valuation.agencySerialNo}}</td>
+                  <td><b>HMR / KMR:</b></td>
+                  <td>{{valuation.hmr_kmr}}</td>
+                </tr>
+                <tr>
+                  <td><b>Assessed Value:</b></td>
+                  <td>{{valuation.assessedValue}}</td>
+                  <td><b>Inspection By:</b></td>
+                  <td>{{valuation.inspectionBy}}</td>
+                </tr>
+                <tr>
+                  <td><b>Physical Condition:</b></td>
+                  <td>{{valuation.physicalCondition}}</td>
+                  <td><b>GPS Installed:</b></td>
+                  <td>{{valuation.gpsInstalled}}</td>
+                </tr>
+                <tr>
+                  <td><b>IMIE No.:</b></td>
+                  <td>{{valuation.gpsIMEINo}}</td>
+                  <td><b>GPS Device No.:</b></td>
+                  <td>{{valuation.gpsDeviceNo}}</td>
+                </tr>
+    
+                <tr>
+                  <td><b>Valuation Report:</b></td>
+                  <td colspan="3" class="text-ellips">
+                  <a target="_blank" href="{{valuation.valuationReport.filename}}">{{valuation.valuationReport.filename}}</a>
+                  </td>
+                 <!--  <td><b>Invoiced Date:</b></td>
+                  <td>{{valuation.invoiceDate}}</td> -->
+                </tr>
+                <tr>
+                  <td><b>Overall General Condition:</b></td>
+                  <td colspan="3">{{valuation.overallGeneralCondition}}</td>
+                </tr>
+               <!--  <tr>
+                  <td><b>Invoice No:</b></td>
+                  <td>{{valuation.invoiceNo}}</td>
+                  <td><b>Payment Received:</b></td>
+                  <td>{{valuation.paymentReceived}}</td>
+                </tr>     -->
+              </table>
+              <table class="table table-bordred" ng-if="isAdmin()">
+                <tr>
+                  <td class="col-sm-3"><b>Invoiced to Customer:</b></td>
+                  <td class="col-sm-3">
+                    <div>
+                      <span ng-if="valuation.invoiceGenerated">Yes</span>
+                      <span ng-if="!valuation.invoiceGenerated">No</span>
+                    </div>
+                  </td>
+                  <td class="col-sm-3"><b> Invoice Date:</b></td>
+                  <td class="col-sm-3">
+                    <span>{{valuation.invoiceData.invoiceDate | date:'MM/dd/yyyy'}}</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td><b>Payment Received</b></td>
+                  <td colspan="3">
+                    <span ng-if="valuation.paymentReceived">Yes</span>
+                    <span ng-if="!valuation.paymentReceived">No</span>
+                  </td>
+                </tr>
+              </table>
+            </div>
+</div>

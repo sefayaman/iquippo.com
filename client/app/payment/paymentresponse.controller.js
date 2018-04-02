@@ -3,7 +3,7 @@
 'use strict';
 angular.module('sreizaoApp').controller('PaymentResponseCtrl',PaymentResponseCtrl);
 
-function PaymentResponseCtrl($scope,Modal,$stateParams,$state,notificationSvc,PaymentSvc,Auth,ValuationSvc,AuctionSvc,BuyContactSvc,$cookieStore) {
+function PaymentResponseCtrl($scope,Modal,$rootScope,$stateParams,$state,notificationSvc,PaymentSvc,Auth,ValuationSvc,AuctionSvc,BuyContactSvc,$cookieStore) {
  	var vm = this;
   var filter={};
  	vm.payTransaction = null;
@@ -39,14 +39,17 @@ function PaymentResponseCtrl($scope,Modal,$stateParams,$state,notificationSvc,Pa
  				
  			}
  			
+      if(vm.payTransaction.requestType === "Valuation Request")
+        getValuatonReqDetail(vm.payTransaction);
+
  			for(var i = 0;i< vm.payTransaction.payments.length;i++){
  				if(vm.payTransaction.payments[i].type == "auctionreq")
  					getAuctionReqDetail(vm.payTransaction._id);
- 				else if(vm.payTransaction.payments[i].type == "valuationreq")
- 					getValuatonReqDetail(vm.payTransaction._id);
- 				else if(vm.payTransaction.payments[i].type == "valuationEnquiries")
- 					getValuatonEnquiryDetail(vm.payTransaction._id);
- 				else if(vm.payTransaction.payments[i].type == "sparebuy")
+ 				// else if(vm.payTransaction.payments[i].type == "valuationreq")
+ 				// 	getValuatonReqDetail(vm.payTransaction);
+ 				// if(vm.payTransaction.payments[i].type == "valuationEnquiries")
+ 				// 	getValuatonEnquiryDetail(vm.payTransaction._id);
+ 				if(vm.payTransaction.payments[i].type == "sparebuy")
  					getBuyReqDetail(vm.payTransaction._id);
  			}
 
@@ -57,7 +60,7 @@ function PaymentResponseCtrl($scope,Modal,$stateParams,$state,notificationSvc,Pa
  		})
  	}
 
- 	function getValuatonEnquiryDetail(transactionId){
+ 	/*function getValuatonEnquiryDetail(transactionId){
      if(!transactionId)
      	return;
      if(vm.payTransaction.status=="completed"){
@@ -94,8 +97,7 @@ function PaymentResponseCtrl($scope,Modal,$stateParams,$state,notificationSvc,Pa
       dataToSend.transactionId=vm.payTransaction.transactionId;
       notificationSvc.sendNotification('paymentUnsuccessfullValuationEnquiry', data,dataToSend,'email');
      }
-
- 	}
+ 	}*/
 
  	function getAuctionReqDetail(transactionId){
  		if(!transactionId)
@@ -114,31 +116,70 @@ function PaymentResponseCtrl($scope,Modal,$stateParams,$state,notificationSvc,Pa
  		})
  	}
 
- 	function getValuatonReqDetail(transactionId){
- 		if(!transactionId)
+ 	function getValuatonReqDetail(transaction){
+ 		if(!transaction._id)
  			return;
- 		ValuationSvc.getOnFilter({tid :transactionId})
+    setPayment(transaction, vm.success);
+ 		ValuationSvc.getOnFilter({tid :transaction._id})
  		.then(function(result){
  			if(result.length > 0){
  				valuationReq = result[0];
- 				if(valuationReq.initiatedBy == "seller"){
-	 				ValuationSvc.updateStatus(valuationReq,valuationStatuses[3].code);
-	 				//ValuationSvc.sendNotification(valuationReq,valuationStatuses[3].notificationText,'customer');
-	 				ValuationSvc.sendNotification(valuationReq,valuationStatuses[3].notificationText,'valagency');
- 				}
-
- 				if(valuationReq.initiatedBy == "buyer"){
- 					ValuationSvc.updateStatus(valuationReq,valuationStatuses[1].code);
-	 				//ValuationSvc.sendNotification(valuationReq,valuationStatuses[1].notificationText,'customer');
-	 				ValuationSvc.sendNotification(valuationReq,valuationStatuses[1].notificationText,'seller');
-	 				//need to send seller also
- 				}
-
- 				PaymentSvc.sendNotification(vm.payTransaction,valuationReq,2);
-		
+        $scope.reqId = result[0].requestId;
+        if(vm.success) {
+          ValuationSvc.updateStatus(valuationReq, IndividualValuationStatuses[1]);
+          submitToAgency(valuationReq,'Mjobcreation');
+        }
  			}
  		});
  	}
+
+  function submitToAgency(valuation,type){
+    //api integration
+    $rootScope.loading = true;
+    ValuationSvc.submitToAgency(valuation,type)
+    .then(function(resList){
+      $rootScope.loading = false;
+      //Modal.alert("Valuation request submitted successfully !!!");
+    })
+    .catch(function(err){
+      if(err && err.data)
+        Modal.alert(err.data);
+      $rootScope.loading = false;
+    }) 
+  }
+
+  function setPayment(payTran, success) {
+    if(payTran.payments.length < 1)
+      payTran.payments = [];
+    var paymentObj = {};
+    paymentObj.paymentModeType = payTran.ccAvenueRes.payment_mode; //"Net Banking";
+    paymentObj.amount = payTran.totalAmount;
+    paymentObj.paymentDate = new Date();
+    paymentObj.createdAt = new Date();
+    paymentObj.refNo = payTran.ccAvenueRes.bank_ref_no;
+    paymentObj.bankname = payTran.ccAvenueRes.card_name;
+    paymentObj.trans_fee = payTran.ccAvenueData.trans_fee || 0;
+    paymentObj.service_tax = payTran.ccAvenueData.service_tax || 0;
+    paymentObj.totAmount = payTran.ccAvenueData.amount;
+    paymentObj.tracking_id = payTran.ccAvenueRes.tracking_id;
+    paymentObj.ccAvenueData = payTran.ccAvenueData;
+    paymentObj.ccAvenueRes = payTran.ccAvenueRes;
+    if(success)
+      paymentObj.paymentStatus = "success";
+    else
+      paymentObj.paymentStatus = transactionStatuses[2].code;
+    vm.payTransaction.payments[vm.payTransaction.payments.length] = paymentObj;
+    vm.payTransaction.paymentMode = "online";
+    var stsObj = {};
+    stsObj.createdAt = new Date();
+    stsObj.userId = Auth.getCurrentUser()._id;
+    if(success)
+      stsObj.status = transactionStatuses[5].code;
+    else
+      stsObj.status = transactionStatuses[2].code;
+    vm.payTransaction.statuses[vm.payTransaction.statuses.length] = stsObj;
+    PaymentSvc.update(vm.payTransaction);
+  }
 
  	function getBuyReqDetail(transactionId){
  		if(!transactionId)

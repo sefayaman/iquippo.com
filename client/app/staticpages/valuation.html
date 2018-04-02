@@ -55,13 +55,13 @@
                                 <div class="row">
                                     <div class="col-xs-6 col-sm-6">
                                         <div class="radio radio-info">
-                                            <input type="radio" id="requestValuation" ng-model="valuationQuote.requestType" name="requestType" value="Valuation" ng-change="getVendors('Valuation')">
+                                            <input type="radio" id="requestValuation" ng-model="valuationReq.requestType" name="requestType" value="Valuation" ng-change="getVendors('Valuation')">
                                             <label for="requestValuation"> Valuation </label>
                                         </div>
                                     </div>
                                     <div class="col-xs-6 col-sm-6">
                                         <div class="radio radio-info">
-                                            <input type="radio" id="requestInspection" ng-model="valuationQuote.requestType" name="requestType" value="Inspection" ng-click="getVendors('Inspection')">
+                                            <input type="radio" id="requestInspection" ng-model="valuationReq.requestType" name="requestType" value="Inspection" ng-click="getVendors('Inspection')">
                                             <label for="requestInspection"> Inspection </label>
                                         </div>
                                     </div>
@@ -70,9 +70,9 @@
                         </div>
                         <div class="row">
                             <div class="col-xs-12 col-sm-3">
-                                <div class="floating-label-wrapper form-group">
-                                    <label>Category</label>
-                                    <select class="form-control" ng-model="valuationQuote.product.category" ng-change="onCategoryChange(valuationQuote.product.category)">
+                                <div class="floating-label-wrapper form-group" ng-class="{'has-error': form.proCategory.$invalid && submitted}">
+                                    <label>Category*</label>
+                                    <select class="form-control" name="proCategory" ng-model="valuationReq.product.category" ng-change="onCategoryChange(valuationReq.product.category)" required>
                                         <option value="">Select Category</option>
                                         <option value="{{cat.name}}" ng-repeat="cat in allCategory| orderBy:'name'">{{cat.name}}</option>
                                     </select>
@@ -80,9 +80,9 @@
                                 </div>
                             </div>
                             <div class="col-xs-12 col-sm-3">
-                                <div class="form-group floating-label-wrapper">
-                                    <label>Brand</label>
-                                    <select class="form-control" ng-model="valuationQuote.product.brand" ng-change="onBrandChange(valuationQuote.product.brand)">
+                                <div class="form-group floating-label-wrapper" ng-class="{'has-error': form.proBrand.$invalid && submitted}">
+                                    <label>Brand*</label>
+                                    <select class="form-control" name="proBrand" ng-model="valuationReq.product.brand" ng-change="onBrandChange(valuationReq.product.brand)" required>
                                         <option value="">Select Brand</option>
                                         <option value="{{br.name}}" ng-repeat="br in brandList| orderBy:'name'">{{br.name}}</option>
                                     </select>
@@ -90,9 +90,9 @@
                                 </div>
                             </div>
                             <div class="col-xs-12 col-sm-3">
-                                <div class="form-group floating-label-wrapper">
-                                    <label>Model</label>
-                                    <select class="form-control" ng-model="valuationQuote.product.model">
+                                <div class="form-group floating-label-wrapper" ng-class="{'has-error': form.proModel.$invalid && submitted}">
+                                    <label>Model*</label>
+                                    <select class="form-control" name="proModel" ng-model="valuationReq.product.model" required>
                                         <option value="">Select Model</option>
                                         <option value="{{md.name}}" ng-repeat="md in modelList| orderBy:'name'">{{md.name}}</option>
                                     </select>
@@ -100,31 +100,31 @@
                                 </div>
                             </div>
                             <div class="col-xs-12 col-sm-3">
-                                <div class="form-group floating-label-wrapper" ng-class="{'has-error': form.mfgYear.$invalid && submitted}">
-                                    <label>Manufacturing Year</label>
-                                    <input type="number" name="prdMfg" class="form-control" placeholder="Enter Manufacturing Year" ng-model="valuationQuote.product.mfgYear" ng-minlength="4" ng-maxlength="4" min="1900" max="currentYear" string-to-number>
+                                <div class="form-group floating-label-wrapper" ng-class="{'has-error': form.prdMfg.$invalid && submitted}">
+                                    <label>Manufacturing Year*</label>
+                                    <input type="number" name="prdMfg" class="form-control" placeholder="Enter Manufacturing Year" ng-model="valuationReq.product.mfgYear" ng-minlength="4" ng-maxlength="4" min="1900" max="currentYear" string-to-number required>
                                 </div>
                             </div>
                             <div class="col-xs-12 col-sm-3">
                                 <div class="form-group floating-label-wrapper">
                                     <label>Asset Description</label>
-                                    <input type="text" name="prddescription" class="form-control" placeholder="Enter Asset Description" ng-model="valuationQuote.product.description">
+                                    <input type="text" name="prddescription" class="form-control" placeholder="Enter Asset Description" ng-model="valuationReq.product.description">
                                 </div>
                             </div>
                             <div class="col-xs-12 col-sm-3">
                                 <div class="form-group floating-label-wrapper" ng-class="{'has-error': form.prdCountry.$invalid && submitted }">
                                     <label>Country*</label>
-                                    <select class="form-control" ng-model="valuationQuote.product.country" name="prdCountry" ng-change="onPrdCountryChange(valuationQuote.product.country)" required>
+                                    <select class="form-control" ng-model="valuationReq.product.country" name="prdCountry" ng-change="onPrdCountryChange(valuationReq.product.country)" required>
                                         <option value="">Select Country</option>
                                         <option ng-repeat="country in allCountries| orderBy:'name'" value="{{country.name}}">{{country.name}}</option>
                                     </select>
 
                                 </div>
                             </div>
-                            <div class="col-xs-12 col-sm-3" ng-class="{'has-error': form.prdState.$invalid && submitted }">
-                                <div class="floating-label-wrapper form-group">
+                            <div class="col-xs-12 col-sm-3">
+                                <div class="floating-label-wrapper form-group" ng-class="{'has-error': form.prdState.$invalid && submitted }">
                                     <label>State*</label>
-                                    <select class="form-control" name="prdState" ng-model="valuationQuote.product.state" ng-change="onPrdStateChange(valuationQuote.product.state)" required>
+                                    <select class="form-control" name="prdState" ng-model="valuationReq.product.state" ng-change="onPrdStateChange(valuationReq.product.state)" required>
                                         <option value="">Select State</option>
                                         <option ng-repeat="state in prdStateList| orderBy:'name'" value="{{state.name}}">{{state.name}}</option>
                                     </select>
@@ -134,57 +134,72 @@
                             <div class="col-xs-12 col-sm-3">
                                 <div class="form-group floating-label-wrapper" ng-class="{'has-error': form.prdLocation.$invalid && submitted }">
                                     <label>Location*</label>
-                                    <select class="form-control" name="prdLocation"  ng-model="valuationQuote.product.city" required>
+                                    <select class="form-control" name="prdLocation"  ng-model="valuationReq.product.city" required>
                                         <option value="">Select Location</option>
                                         <option ng-repeat="location in prdLocationList| orderBy:'name'" value="{{location.name}}">{{location.name}}</option>
                                     </select>
                                 </div>
                             </div>
-
+                            <div class="col-xs-12 col-sm-3">
+                                <div class="form-group floating-label-wrapper" ng-class="{'has-error': (form.engineNo.$invalid || form.chassisNo.$invalid || form.registrationNo.$invalid || form.serialNumber.$invalid) && submitted}">
+                                    <label>Engine No.</label>
+                                    <input type="text" name="engineNo" ng-model="valuationReq.product.engineNo" class="form-control" placeholder="Engine No." ng-required="!(valuationReq.product.chassisNo || valuationReq.product.registrationNo || valuationReq.product.serialNumber || valuationReq.product.engineNo)">
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-3">
+                                <div class="form-group floating-label-wrapper" ng-class="{'has-error': (form.engineNo.$invalid || form.chassisNo.$invalid || form.registrationNo.$invalid || form.serialNumber.$invalid) && submitted}">
+                                    <label>Chassis No.</label>
+                                    <input type="text" name="chassisNo" ng-model="valuationReq.product.chassisNo" class="form-control" placeholder="Chassis No." ng-required="!(valuationReq.product.chassisNo || valuationReq.product.registrationNo || valuationReq.product.serialNumber || valuationReq.product.engineNo)">
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-3">
+                                <div class="form-group floating-label-wrapper" ng-class="{'has-error': (form.engineNo.$invalid || form.chassisNo.$invalid || form.registrationNo.$invalid || form.serialNumber.$invalid) && submitted}">
+                                    <label>Registration No.</label>
+                                    <input type="text" name="registrationNo" ng-model="valuationReq.product.registrationNo" class="form-control"  placeholder="Registration No." ng-required="!(valuationReq.product.chassisNo || valuationReq.product.registrationNo || valuationReq.product.serialNumber || valuationReq.product.engineNo)">
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-3">
+                                <div class="form-group floating-label-wrapper" ng-class="{'has-error': (form.engineNo.$invalid || form.chassisNo.$invalid || form.registrationNo.$invalid || form.serialNumber.$invalid) && submitted}">
+                                    <label>Serial No.</label>
+                                    <input type="text" name="serialNumber" ng-model="valuationReq.product.serialNumber" class="form-control" placeholder="Serial No." ng-required="!(valuationReq.product.chassisNo || valuationReq.product.registrationNo || valuationReq.product.serialNumber || valuationReq.product.engineNo)">
+                                </div>
+                            </div>
+                            <div class="col-sm-12 form-group has-error" ng-if="(form.engineNo.$invalid && form.chassisNo.$invalid && form.registrationNo.$invalid && form.serialNumber.$invalid) && submitted">
+                                <p class="help-block">
+                                    Please fill one of these- Engine No/Chassis No/Registration No/Serial No.
+                                </p>
+                            </div>
                             <div class="col-xs-12 col-sm-3">
                                 <div class="form-group floating-label-wrapper" ng-class="{'has-error': form.contactPerson.$invalid && submitted }">
                                     <label>Contact Person*</label>
-                                    <input type="text" name="contactPerson" class="form-control" placeholder="Contact Person"  ng-model="valuationQuote.product.contactPerson" ng-required="!valuationQuote.product.contactPersonAsAbove">
+                                    <input type="text" name="contactPerson" class="form-control" placeholder="Contact Person"  ng-model="valuationReq.contactPerson" required>
                                 </div>
                             </div>
-                            <!-- <div class="col-xs-offset-1 col-xs-10 col-sm-offset-0 col-sm-3">
-                                    <div class="checkbox checkbox-info floating-label-wrapper">
-                    <input id="checkbox1" type="checkbox" ng-model="valuationQuote.product.contactPersonAsAbove" name="" ng-change="onChange('contactPerson')">
-                    <label for="checkbox1">
-                        same as above
-                    </label>
-                </div>
-                            </div> -->
                             <div class="col-xs-12 col-sm-3">
                                 <div class="form-group floating-label-wrapper" ng-class="{'has-error': form.contactNumber.$invalid && submitted }">
                                     <label>Contact Number*</label>
-                                    <input type="text" name="contactNumber" class="form-control" ng-model="valuationQuote.product.contactNumber" placeholder="Contact Number" ng-required="!valuationQuote.product.contactNumberAsAbove">
+                                    <input type="text" name="contactNumber" class="form-control" ng-model="valuationReq.contactNumber" ng-pattern="/^[0-9]{10,10}$/" placeholder="Contact Number" required>
+                                    <p class="help-block" ng-if="form.contactNumber.$error.pattern && submitted">
+                                        Contact No. should only have 10 digits.
+                                    </p>
                                 </div>
                             </div>
-                            <!-- <div class="col-xs-offset-1 col-xs-10 col-sm-offset-0 col-sm-3">
-                                    <div class="checkbox checkbox-info floating-label-wrapper">
-                    <input id="checkbox2" type="checkbox"  ng-model="valuationQuote.product.contactNumberAsAbove" name="" ng-change="onChange('contactNumber')">
-                    <label for="checkbox2">
-                        same as above
-                    </label>
-                </div>
-                            </div> -->
                         </div>
                         <div class="row">
                             <div class="col-xs-12 col-sm-3">
-                                <div class="form-group floating-label-wrapper">
+                                <div class="form-group floating-label-wrapper" ng-class="{'has-error': form.valagency.$invalid && submitted }">
                                     <label>Partner</label>
-                                    <select class="form-control" ng-model="valuationQuote.partnerId">
+                                    <select class="form-control" name="valagency" ng-model="valuationReq.valuationAgency._id" required>
                                         <option value="">Select Partner</option>
                                         <option ng-repeat="vendor in vendorList" value="{{vendor._id}}">{{vendor.name}}</option>
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-xs-6 col-sm-3" ng-class="{'has-error': form.valuation.$invalid && submitted }">
-                                <div class="floating-label-wrapper form-group">
+                            <div class="col-xs-6 col-sm-3">
+                                <div class="floating-label-wrapper form-group" ng-class="{'has-error': form.purpose.$invalid && submitted }">
                                     <label>Purpose of valuation</label>
-                                    <select class="form-control" ng-model="valuationQuote.valuation" name="valuation" required>
-                                        <option value="Financing">Financing</option>
+                                    <select class="form-control" ng-model="valuationReq.purpose" name="purpose" required>
+                                        <!-- <option value="Financing">Financing</option> -->
                                         <option ng-repeat="valuation in valuationList| orderBy:'name'" value="{{valuation.name}}">{{valuation.name}}</option>
                                     </select>
                                 </div>
@@ -194,7 +209,7 @@
                             <div class="col-xs-6 col-sm-3" ng-class="{'has-error': form.otherName.$invalid && submitted }">
                                 <div class="floating-label-wrapper form-group">
                                     <label>Other*</label>
-                                    <input class="form-control" type="text" name="otherName" ng-model="valuationQuote.otherName" ng-disabled ="valuationQuote.valuation != 'Other'" placeholder="Other" ng-required= "valuationQuote.valuation == 'Other'">
+                                    <input class="form-control" type="text" name="otherName" ng-model="valuationReq.otherName" ng-disabled ="valuationReq.purpose != 'Other'" placeholder="Other" ng-required= "valuationReq.purpose == 'Other'">
                                 </div>
                             </div>
                         </div>
@@ -205,33 +220,33 @@
                                 </div>
                                 <div class="col-xs-6 col-sm-6 form-group">
                                     <div class="radio radio-info">
-                                        <input type="radio" id="inlineRadio1" name="schedule" ng-model="valuationQuote.schedule" value="yes">
+                                        <input type="radio" id="inlineRadio1" name="schedule" ng-model="valuationReq.schedule" value="yes">
                                         <label for="inlineRadio1"> Yes </label>
                                     </div>
                                 </div>
                                 <div class="col-xs-6 col-sm-6 form-group">
                                     <div class="radio radio-info">
-                                        <input type="radio" id="inlineRadio2" name="schedule" ng-model="valuationQuote.schedule" value="no">
+                                        <input type="radio" id="inlineRadio2" name="schedule" ng-model="valuationReq.schedule" value="no">
                                         <label for="inlineRadio2"> No </label>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xs-6 col-sm-3 form-group" ng-if="valuationQuote.schedule == 'yes'" >
+                            <div class="col-xs-6 col-sm-3 form-group" ng-if="valuationReq.schedule == 'yes'" >
 
                                 <div class="input-group floating-label-wrapper" ng-class="{'has-error': form.scheduleDate.$invalid && submitted }">
                                     <label>Pick Date</label>
-                                    <input type="text" class="form-control" ng-model="valuationQuote.scheduleDate" uib-datepicker-popup="{{format}}" name="scheduleDate" ng-value="" is-open="popup1.opened" min-date="minDate" max-date="maxDate" datepicker-options="datepickerOptions" date-disabled="disabled(date, mode)" ng-required="valuationQuote.schedule == 'yes'" close-text="Close" alt-input-formats="altInputFormats" placeholder="dd/mm/yyyy" />
+                                    <input type="text" class="form-control" ng-model="valuationReq.scheduleDate" uib-datepicker-popup="{{format}}" name="scheduleDate" ng-value="" is-open="popup1.opened" min-date="minDate" max-date="maxDate" datepicker-options="datepickerOptions" date-disabled="disabled(date, mode)" ng-required="valuationReq.schedule == 'yes'" close-text="Close" alt-input-formats="altInputFormats" placeholder="dd/mm/yyyy" />
                                     <span class="input-group-addon">
                                         <a href ng-click="open1()"><i class="fa fa-calendar-o fa-2x"></i></a>
                                     </span>
                                 </div>
                             </div>
 
-                            <div class="col-xs-6 col-sm-3 form-group " ng-if="valuationQuote.schedule == 'yes'">
+                            <div class="col-xs-6 col-sm-3 form-group " ng-if="valuationReq.schedule == 'yes'">
 
                                 <div class="input-group floating-label-wrapper">
                                     <label>Set Time</label>
-                                    <input type="text" class="form-control" name="otherName" placeholder="HH:MM" ng-model="valuationQuote.scheduledTime" is-open=""  ng-value="{{valuationQuote.scheduledTime| date:'shortTime' }}" timepicker-options="timepickerOptions">
+                                    <input type="text" class="form-control" name="otherName" placeholder="HH:MM" ng-model="valuationReq.scheduledTime" is-open=""  ng-value="{{valuationReq.scheduledTime| date:'shortTime' }}" timepicker-options="timepickerOptions">
                                     <span class="input-group-addon">
                                         <a href ng-click="toggleMode()"><i class="fa fa-clock-o fa-2x"></i></a>
                                     </span>
@@ -241,13 +256,13 @@
                         </div>
                         <div class="form-group floating-label-wrapper">
                             <label>Comment</label>
-                            <input type="text" class="form-control" name="comment" ng-model="valuationQuote.comment" placeholder="Write Comments (if any)">
+                            <input type="text" class="form-control" name="comment" ng-model="valuationReq.comment" placeholder="Write Comments (if any)">
                         </div>
                     </div>
 
                     <div class="text-right">
-                        <button type="button" ng-click="resetClick()" class="btn btn-default">Reset</button>
-                        <button type="button" class="btn btn-primary" ng-click="addValuationQuote(form)" >Submit</button>
+                        <button type="button" ng-click="resetClick()" ng-disabled="isAdmin()" class="btn btn-default">Reset</button>
+                        <button type="button" class="btn btn-primary" ng-disabled="isAdmin()" ng-click="addValuationQuote(form)" >Submit</button>
                     </div>
                 </div>
 

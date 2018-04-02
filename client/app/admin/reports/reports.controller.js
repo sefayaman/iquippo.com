@@ -523,6 +523,7 @@
           break;
           case 'valuationReport':
           resetCount();
+          filter.onlyOldReq = true;
           ValuationSvc.getOnFilter(filter)
             .then(function(result) {
               vm.valuationListing = result.items;
@@ -674,8 +675,10 @@
       }else if(vm.tabValue == "bookademo"){
          fileName = "bookademo_";
       }
-      else 
+      else {
+        filter.onlyOldReq = true;
         fileName = "ValuationReport_";
+      }
        //else
         //fileName = "AdditionalServices_";
       //filter.role=Auth.getCurrentUser().role;
