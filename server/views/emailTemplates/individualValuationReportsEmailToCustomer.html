@@ -1,0 +1,32 @@
+<head>
+  <meta charset="utf-8" content="width=divice-width, initial-screen=1"/>
+</head>
+<body>
+  <table style="width:60%; margin:0 auto; padding:15px;font-family:Verdana, Geneva, sans-serif; border: 5px solid rgba(128, 128, 128, 0.28);">
+    <tr>
+      <td style="height:70px;padding-bottom:20px;" valign="top"><img src="{{awsBaseImagePath}}/assets/images/srei-logo-img.png"></td>
+    </tr>
+    <tr>
+      <td style="font-size:18px; color:#FF4342; padding-bottom:10px; font-family:Verdana, Geneva, sans-serif;">Dear {{user.fname}}, </td>
+    </tr>
+    <tr>
+      <td style="color:#000;font-size:13px;padding-bottom:10px;">
+          Your request for {{requestType}} has been completed and the report is available to view. Kindly login to <a href="https://www.iquippo.com">iquippo.com</a> to view the report.
+      </td>
+    </tr>
+    <tr>
+      <td style="color:#000;font-size:13px;padding-bottom:10px;">
+           You can also view the report by clicking the link below - <br />
+           <a href="{{reportUrl}}">{{reportUrl}}</a>
+
+      </td>
+    </tr>
+    
+    <tr>
+      <td style="color:#01395c;font-size:13px; font-weight: bold; padding-bottom:10px;">
+          Best Wishes, <br/>
+          iQuippo
+      </td>
+    </tr>
+  </table>
+</body>

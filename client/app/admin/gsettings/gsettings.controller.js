@@ -891,12 +891,12 @@
             // validation Start
 
             if(vm.dateCheckValidation(vm.auctionData.startDate, vm.auctionData.endDate)) {
-                Modal.alert("Please enter auction start date less than end date", true);
+                Modal.alert("Auction Start Date/Time should be less than Auction End Date/Time", true);
                 return;
             }
 
             if(vm.dateCheckValidation(vm.auctionData.insStartDate, vm.auctionData.insEndDate)) {
-                Modal.alert("Please enter inspection start date less than end date", true);
+                Modal.alert("Inspection Start Date/Time should be less than Inspection End Date/Time", true);
                 return;
             }
             // validation End
@@ -938,12 +938,12 @@
             // validation Start
 
             if(vm.dateCheckValidation(vm.auctionData.startDate, vm.auctionData.endDate)) {
-                Modal.alert("Please enter auction start date less than end date", true);
+                Modal.alert("Auction Start Date/Time should be less than Auction End Date/Time", true);
                 return;
             }
 
             if(vm.dateCheckValidation(vm.auctionData.insStartDate, vm.auctionData.insEndDate)) {
-                Modal.alert("Please enter inspection start date less than end date", true);
+                Modal.alert("Inspection Start Date/Time should be less than Inspection End Date/Time", true);
                 return;
             }
             // validation End

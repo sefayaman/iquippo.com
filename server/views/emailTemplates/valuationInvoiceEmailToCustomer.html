@@ -1,0 +1,68 @@
+<head>
+  <meta charset="utf-8" content="width=divice-width, initial-screen=1"/>
+</head>
+<body>
+  <table style="width:60%; margin:0 auto; padding:15px;font-family:Verdana, Geneva, sans-serif; border: 5px solid rgba(128, 128, 128, 0.28);">
+    <tr>
+      <td style="height:70px;padding-bottom:20px;" valign="top"><img src="{{awsBaseImagePath}}/assets/images/srei-logo-img.png"></td>
+    </tr>
+    <tr>
+      <td style="font-size:18px; color:#FF4342; padding-bottom:10px; font-family:Verdana, Geneva, sans-serif;">Dear {{user.fname}}, </td>
+    </tr>
+   
+    
+    <tr>
+      <td style="color:#000;font-size:13px;">
+           We have generated the invoice for your {{requestType}} request - {{requestId}}.
+      </td>
+    </tr>
+    <tr>
+      <td style="color:#000;font-size:13px;padding-bottom:10px;">
+          You can download the invoice from the below link - 
+          <a href="{{serverPath}}/api/valuation/generateinvoice/{{_id}}" >
+          Download
+        </a>
+      </td>
+    </tr>
+    <tr>
+      <td style="color:#000;font-size:13px;padding-bottom:10px;">
+        You can also download the invoice by -  
+        <ol>
+          <li>
+            Logging in to <a href="https://www.iquippo.com">iquippo.com</a>
+          </li>
+          <li>
+            Click on Dashboard
+          </li>
+          <li>
+            Click 'Valuation Request'to view your Valuation/Inspection requests.
+          </li>
+          <li>
+            Click the Download Invoice button.
+          </li>
+        </ol>
+      </td>
+    </tr>
+    {{#if showPaymentLink}}
+    <tr>
+      <td style="color:#000;font-size:13px;font-weight:bold;padding-bottom:10px;">
+           You can also make the payment against the invoice Online by clicking the below link - <br />
+           <a href="{{serverPath}}/signin?state=payment&tid={{transactionId}}">
+            {{serverPath}}/signin?state=payment&tid={{transactionId}}
+          </a>
+      </td>
+    </tr>
+    {{/if}}
+    <tr>
+      <td style="color:#000;font-size:13px;padding-bottom:10px;">
+           Please feel free to email us at <a href="mailto:info@iquippo.com">info@iquippo.com</a> for any queries or support.
+      </td>
+    </tr>
+    <tr>
+      <td style="color:#01395c;font-size:13px; font-weight: bold; padding-bottom:10px;">
+          Best Wishes, <br/>
+          iQuippo
+      </td>
+    </tr>
+  </table>
+</body>

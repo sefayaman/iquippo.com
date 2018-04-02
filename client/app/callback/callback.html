@@ -36,7 +36,7 @@
                     <div class="row">
                       <div class="col-xs-4 col-sm-4 padd-right search-field" ng-class="{'has-error': form.countryCode.$invalid && form.submitted }">
                         <select class="form-control" ng-model="callbackVm.callback.countryCode" ng-change="onCodeChange(callbackVm.callback.countryCode)" required>
-                          <option value="" disabled>*Code</option>
+                          <option value="" disabled>Code</option>
                           <option  ng-repeat ="country in allCountries | orderBy:'name'" value="{{country.countryCode}}">+{{country.countryCode}}</option>
                         </select>
                       </div>                      
