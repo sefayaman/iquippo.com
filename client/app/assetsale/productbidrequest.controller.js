@@ -1,7 +1,7 @@
 (function() {
 	'use strict';
 	angular.module('sreizaoApp').controller('ProductBidRequestCtrl', ProductBidRequestCtrl);
-function ProductBidRequestCtrl($scope, $rootScope, $window, $uibModal, $stateParams,$state, productSvc,socketSvc , Modal, Auth, AssetSaleSvc,PagerSvc,uploadSvc) {
+function ProductBidRequestCtrl($scope, $rootScope, $window, $uibModal, $stateParams,$state, productSvc, socketSvc, Modal, Auth, AssetSaleSvc,PagerSvc,uploadSvc) {
 	var vm = this;
 	$scope.pager = PagerSvc.getPager();
 
@@ -22,13 +22,15 @@ function ProductBidRequestCtrl($scope, $rootScope, $window, $uibModal, $statePar
 	vm.backButton = backButton;
 	//vm.activeBid = "approved";
 	//$scope.onTabChange = onTabChange;
-    socketSvc.on('onSubmitBidSocket',function (data){
-       getBidData(angular.copy(initFilter));
-       console.log("I am leaving")
-    });
+        
+        socketSvc.on('onSubmitBidSocket', function (data) {
+            $scope.pager.reset();
+            getBidData(angular.copy(initFilter));
+        });
+        
 	function backButton() {
-      $window.history.back();
-    }
+            $window.history.back();
+        }
 	function init() {
 		var filter = {};
 		filter._id = $stateParams.productId;

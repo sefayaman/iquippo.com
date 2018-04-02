@@ -17,20 +17,11 @@ var Vendor = require('../vendor/vendor.model');
 var VatModel = require('../common/vattax.model');
 var MarkupPrice = require('../common/markupprice.model');
 var fieldConfig = require('./fieldsConfig');
-var _sendMsgViaSocket = require('../../realTimeSocket')._sendMsgViaSocket;
+var _sendAndUpdateViaSocket = require('../../realTimeSocket')._sendAndUpdateViaSocket;
 
 var tradeTypeStatuses = ['SELL', 'BOTH', 'NOT_AVAILABLE'];
 var dealStatuses = ['Decision Pending', 'Offer Rejected', 'Cancelled', 'Rejected-EMD Failed', 'Rejected-Full Sale Value Not Realized', 'Bid-Rejected', 'Approved', 'EMD Received', 'Full Payment Received', 'DO Issued', 'Asset Delivered', 'Acceptance of Delivery', 'Closed'];
 var bidStatuses = ['In Progress', 'Cancelled', 'Bid Lost', 'EMD Failed', 'Full Payment Failed', 'Auto Rejected-Cooling Period', 'Rejected', 'Accepted', 'Auto Accepted'];
-// var socketIO;
-// exports.socketRegister = function (io) {
-//   socketIO = io; 
-//   socketIO.on("connection", function (client) {
-//         console.log('a user connectedssss');
-//     });
-// };
-
-
 
 
 exports.getEMDBasedOnUser = function (req, res) {
@@ -44,7 +35,7 @@ exports.getEMDBasedOnUser = function (req, res) {
 
         return res.status(200).json(result);
     });
-}
+};
 
 exports.calculateGst = function (req, res, next) {
     req.result = {};
@@ -105,7 +96,7 @@ exports.calculateGst = function (req, res, next) {
                 cb(null, null);
         });
     }
-}
+};
 
 exports.calculateTcs = function (req, res, next) {
     if (Number(req.query.bidAmount) + Number(req.result.taxRate) > 1000000)
@@ -115,7 +106,7 @@ exports.calculateTcs = function (req, res, next) {
     req.result.tcs = Math.round(req.result.tcs || 0);
 
     return next();
-}
+};
 
 exports.callculateParkingCharge = function (req, res, next) {
     var prdId = req.query.productId;
@@ -133,17 +124,16 @@ exports.callculateParkingCharge = function (req, res, next) {
         req.result.parkingCharges = Math.round(req.result.parkingCharges);
         return next();
 
-    })
-}
+    });
+};
 
 exports.getBidOrBuyCalculation = function (req, res) {
     req.result.total = Math.round(req.result.taxRate + req.result.tcs + req.result.parkingCharges + parseInt(req.query.bidAmount));
     res.status(200).json(req.result);
-}
+};
 
 // Updates an existing record in the DB.
 exports.update = function (req, res, next) {
-    console.log('updateeee');
     async.eachLimit(req.bids, 5, _update, function (err) {
         if (err)
             return handleError(res, err);
@@ -173,7 +163,7 @@ exports.update = function (req, res, next) {
             cb(err);
         });
     }
-}
+};
 
 function sendStatusMail(bid) {
     var bidArr = [];
@@ -439,14 +429,14 @@ exports.validateUpdate = function (req, res, next) {
             return callback();
         });
     }
-}
+};
 
 exports.postUpdate = function (req, res, next) {
     var postAction = req.query.action;
     if (req.updateProduct)
         updateProduct();
     else {
-        _sendMsgViaSocket('onSubmitBidSocket',req.product);
+        _sendAndUpdateViaSocket('onSubmitBidSocket',req.product);
         return res.status(200).send("Bid request updated successfully");
     }
 
@@ -456,12 +446,12 @@ exports.postUpdate = function (req, res, next) {
         Product.update({_id: productId}, {$set: req.product}, function (error, retData) {
             if (error)
                 return handleError(res, error);
-            _sendMsgViaSocket('onSubmitBidSocket',req.product);
+            _sendAndUpdateViaSocket('onSubmitBidSocket',req.product);
             return res.status(200).send("Bid updated successfully.");
         });
     }
 
-}
+};
 
 exports.validateSubmitBid = function (req, res, next) {
 
@@ -604,8 +594,6 @@ exports.verifyCalculation = function (req, res, next) {
 }
 
 exports.submitBid = function (req, res) {
-    console.log('rrrrrrrrrrr000000----');
-    // _sendMsgViaSocket('onSubmitBidSocket','socketbidsumit----');
     async.series([newBidData, updateBidAndProduct], function (err) {
         
         if (err)

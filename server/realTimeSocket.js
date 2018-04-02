@@ -1,11 +1,17 @@
+/**
+ * 
+ */
+
+'use strict';
+
 var socketIO;
 
 module.exports = function (io) {
   socketIO = io;
 };
-function _sendMsgViaSocket(evt, msg){
-    console.log('herrr4xxx');
+function _sendAndUpdateViaSocket(evt, msg){
+    console.log('socketCalled');
     socketIO.emit(evt, msg);    
 }
 
-module.exports._sendMsgViaSocket = _sendMsgViaSocket;
+module.exports._sendAndUpdateViaSocket = _sendAndUpdateViaSocket;

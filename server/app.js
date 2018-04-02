@@ -50,7 +50,7 @@ var app = express();
 var server = require('http').createServer(app);
 var socket=require('socket.io')(server);
 
-require('./realTimeSocket')(socket)
+require('./realTimeSocket')(socket);
 
 app.get('/_status', function (req, res) {
   res.status(200);
