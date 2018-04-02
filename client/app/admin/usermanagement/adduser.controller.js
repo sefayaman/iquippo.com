@@ -19,7 +19,8 @@ angular.module('sreizaoApp')
         { name: "Asset Inspection", code: "Inspection", sequence: 2, approvalRequired: "No" },
         //{name:"Approval Authority buy Now/Make an Offer",code:"Authority",sequence:3,approvalRequired:"No"},
         { name: "Financing", code: "Finance", sequence: 4, approvalRequired: "No" },
-         { name: "GPS Installation", code: "GPS Installation", sequence: 5, approvalRequired: "No" }
+         { name: "GPS Installation", code: "GPS Installation", sequence: 5, approvalRequired: "No" },
+          { name: "Photographs Only", code: "Photographs", sequence: 6, approvalRequired: "No" }
         //{name:"Sale Fulfilment",code:"Sale Fulfilment",sequence:5,approvalRequired:"No"}
       ]
       //$scope.editImage = false;
@@ -359,6 +360,8 @@ angular.module('sreizaoApp')
         if ($scope.newUser.role == 'enterprise') {
           if ($scope.newUser.enterprise && !$scope.newUser.enterpriseId)
             $scope.newUser.enterpriseId = "E" + $scope.newUser.mobile + "" + Math.floor(Math.random() * 10);
+          if(!$scope.newUser.enterprise)
+            $scope.newUser.enterprise = false;
           updateServices();
         }
 

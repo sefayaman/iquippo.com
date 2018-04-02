@@ -4,11 +4,11 @@
               <h4 class="modal-title">Call Back</h4>
             </div>
             <div class="modal-body">
-              <form class="form" name="form" novalidate>
-              
+              <form class="form text-left" name="form" novalidate>              
                 <div class="row">
                   <div class="form-group col-sm-6" ng-class="{'has-error': form.fname.$invalid && form.submitted }">
-                    <input type="text" class="form-control" name="fname" ng-model="callbackVm.callback.fname" placeholder="* First Name" required>
+                    <label>*First Name</label>
+                    <input type="text" class="form-control" name="fname" ng-model="callbackVm.callback.fname" placeholder="First Name" required>
                    <!-- <p class="help-block" ng-show="form.fname.$error.required && form.submitted">
                   First name is required
                   </p> -->
@@ -17,7 +17,8 @@
                     <input type="text" class="form-control" name="mname" ng-model="callbackVm.callback.mname" value="" placeholder="Middle Name">
                   </div> -->
                   <div class="form-group col-sm-6" ng-class="{'has-error': form.lname.$invalid && form.submitted }">
-                    <input type="text" class="form-control" name="lname" ng-model="callbackVm.callback.lname" value="" placeholder="* Last Name" required>
+                    <label>*Last Name</label>
+                    <input type="text" class="form-control" name="lname" ng-model="callbackVm.callback.lname" value="" placeholder="Last Name" required>
                     <!-- <p class="help-block" ng-show="form.fname.$error.required && form.submitted">
                   Last name is required
                   </p> -->
@@ -26,19 +27,21 @@
                 
                 <div class="row">
                   <div class="form-group col-sm-6">
+                    <label>Phone No.</label>
                     <input type="text" class="form-control" name="phone" ng-model="callbackVm.callback.phone" value="" placeholder="Phone No.">
                   </div>
                   <div class="form-group col-sm-6" ng-class="{'has-error': form.mobile.$invalid &&
                    form.submitted }">
+                    <label>*Mobile No.</label>
                     <div class="row">
-                      <div class="col-xs-4 col-sm-4 padd-right search-field">
+                      <div class="col-xs-4 col-sm-4 padd-right search-field" ng-class="{'has-error': form.countryCode.$invalid && form.submitted }">
                         <select class="form-control" ng-model="callbackVm.callback.countryCode" ng-change="onCodeChange(callbackVm.callback.countryCode)" required>
                           <option value="" disabled>*Code</option>
                           <option  ng-repeat ="country in allCountries | orderBy:'name'" value="{{country.countryCode}}">+{{country.countryCode}}</option>
                         </select>
                       </div>                      
                       <div class="col-xs-8 col-sm-8 padd-left">
-                        <input type="text" class="form-control" name="mobile" ng-model="callbackVm.callback.mobile"  placeholder="* Mobile No." uib-tooltip="+91-98-XXXX-XXXX" tooltip-trigger="focus" tooltip-placement="top" required>
+                        <input type="text" class="form-control" name="mobile" ng-model="callbackVm.callback.mobile"  placeholder="Mobile No." uib-tooltip="+91-98-XXXX-XXXX" tooltip-trigger="focus" tooltip-placement="top" required>
                       </div>                      
                     </div>
                     
@@ -46,15 +49,21 @@
                 </div>
                 <div class="row">
                   <div class="form-group col-sm-12" ng-class="{'has-error': form.email.$invalid && form.submitted }">
+                    <label>Email</label>
                   <input class="form-control" name="email" ng-model="callbackVm.callback.email" placeholder="Email" type="email" value="">
                   <p class="help-block" ng-show="(form.email.$error.email || form.email.$error.pattern) && form.submitted">
                   Please enter a valid email.
                   </p>
                   </div>
+                  <!-- Add Comment section 'Madhusudan Mishra' -->
+                  <div class="form-group col-sm-12">
+                  <label>Comments</label>
+                  <input class="form-control" name="comment" ng-model="callbackVm.callback.comment" placeholder="Comments" type="text" value="">
+                  </div>
                 </div>
               </form>
             </div>
-            <div class="modal-footer">
-              <button type="submit" class="btn btn-lg btn-warning" ng-click="callbackVm.sendCallback(callbackVm.callback)">Submit</button>
+            <div class="modal-footer asset-sale">
+              <button type="submit" class="btn btn-lg btn-danger" ng-click="callbackVm.sendCallback(callbackVm.callback)">Submit</button>
             </div>
 </div>

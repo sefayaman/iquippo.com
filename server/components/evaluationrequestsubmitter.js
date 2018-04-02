@@ -7,6 +7,7 @@ var ValuationCtrl = require('../api/enterprise/enterprise.controller');
 var User = require('../api/user/user.model');
 var config = require('./../config/environment');
 var request = require('request');
+var Encoded_Fields = ["yardParked",'disFromCustomerOffice','contactPerson','originalOwner','nameOfCustomerSeeking'];
 
 var EnterpriseValuationStatuses = ['Request Initiated','Request Failed','Request Submitted','Valuation Report Failed','Valuation Report Submitted','Invoice Generated','Payment Received','Payment Made to valuation Partner'];
 var TimeInterval =  15*60*1000;
@@ -105,6 +106,10 @@ function submitAndUpdateRequest(valReq,cb){
     var obj = {};
      keys.forEach(function(key){
       obj[key] = _.get(valReq,Field_MAP[key]);
+      if(Encoded_Fields.indexOf(Field_MAP[key]) !== -1 && obj[key]){
+        var buffer = new Buffer(obj[key] || "");
+        obj[key] = buffer.toString("base64"); 
+      }
     });
 
     if(obj.brand && obj.brand == "Other")

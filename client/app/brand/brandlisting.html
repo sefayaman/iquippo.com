@@ -3,7 +3,7 @@
     <li>
       <a href="/main">Home</a>
     </li>
-    <li><a href="/used">Used Equipment</a></li>
+    <li><a href="/used-equipment">Used Equipment</a></li>
     <li class="active"> Brand</li>
   </ol>
 </div>
@@ -18,7 +18,7 @@
     <ul class="brand-list">      
       <li class="form-group" ng-repeat="brand in brandListingVm.brandList" ng-if="$index < brandListingVm.showedItems && brand.name !== 'Other'">
         <div class="media text-center">
-          <a href="/used/brands/{{brand.name}}?currentPage=1" class="brand-name">             
+          <a href="/used-equipment/brands/{{removeSpace(brand.name)}}?currentPage=1" class="brand-name">             
              <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{brand.imgSrc}}" ng-if="brand.imgSrc">  <img src="/assets/images/JCBlogo.png" ng-if="!brand.imgSrc">            
           </a>
           <h4>{{brand.name}}</h4>               

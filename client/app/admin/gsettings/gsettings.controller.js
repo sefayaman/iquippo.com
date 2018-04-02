@@ -148,6 +148,7 @@
         //vm.checkBidIncrement = checkBidIncrement;
         vm.checkBidIncrementAuction = checkBidIncrementAuction;
         vm.deleteDocumentFieldAuction = deleteDocumentFieldAuction;
+        vm.dateCheckValidation = dateCheckValidation; // to check start date is less than end date
 
         function closeTechInfo() {
             return $scope.isTechCollapsed = !$scope.isTechCollapsed;
@@ -244,6 +245,7 @@
                     getAuctionMaster(dataToSend);
                     loadAuctionData();
                     loadAllCategory();
+                    loadAllLocation();
                     //checkForLot();
                     break;
                 case 'inv':
@@ -491,8 +493,11 @@
                 $scope.submitted = true;
                 return;
             }
-            LocationSvc.saveCountry(vm.country)
-                .then(function(result) {
+            if(vm.country.name.indexOf("_") !== -1 || vm.country.countryCode.indexOf("_") !== -1 ){
+                alert('Underscore not allowed. Please update.');   
+            }else{
+                LocationSvc.saveCountry(vm.country)
+                .then(function(result) {                    
                     if (result.errorCode == 1)
                         Modal.alert(result.message, true);
                     else {
@@ -500,6 +505,7 @@
                         loadAllCountry();
                     }
                 })
+            }
         }
 
         function updateCountry(form) {
@@ -507,28 +513,33 @@
                 $scope.submitted = true;
                 return;
             }
+            if(vm.country.name.indexOf("_") !== -1 || vm.country.countryCode.indexOf("_") !== -1 ){
+                alert('Underscore not allowed. Please update.');   
+            } else{
             LocationSvc.updateCountry(vm.country)
                 .then(function(result) {
                     vm.country = {};
                     vm.countryEdit = false;
                     loadAllCountry();
                 })
+            }
         }
 
-        function countryEditClick(idx) {
-            vm.country = vm.countryList[idx];
+        function countryEditClick(rowData) {
+            vm.country = {};
+            angular.copy(rowData, vm.country);
             vm.countryEdit = true;
         }
 
-        function deleteCountry(idx) {
+        function deleteCountry(rowData) {
             Modal.confirm("Are you sure want to delete?", function(ret) {
                 if (ret == "yes")
-                    submitDeleteCountry(idx);
+                    submitDeleteCountry(rowData);
             });
         }
 
-        function submitDeleteCountry(idx) {
-            LocationSvc.deleteCountry(vm.countryList[idx])
+        function submitDeleteCountry(rowData) {
+            LocationSvc.deleteCountry(rowData)
                 .then(function(result) {
                     if (!result.errorCode)
                         loadAllCountry();
@@ -542,15 +553,21 @@
 
         //state functions
         function saveState(form) {
+            //console.log('hhhh', form.stateName.$viewValue);
             if (form.$invalid) {
                 $scope.submitted = true;
                 return;
             }
-            LocationSvc.saveState(vm.state)
+            if(vm.state.name.indexOf("_") !== -1){
+                alert('Underscore not allowed. Please update.');   
+            }else{
+                LocationSvc.saveState(vm.state)
                 .then(function(result) {
                     vm.state = {};
                     loadAllState();
                 })
+            }
+            
         }
 
         function updateState(form) {
@@ -558,28 +575,33 @@
                 $scope.submitted = true;
                 return;
             }
+            if((vm.state.name).indexOf("_") !== -1){
+                alert('Underscore not allowed. Please update.');   
+            }else {
             LocationSvc.updateState(vm.state)
                 .then(function(result) {
                     vm.state = {};
                     vm.stateEdit = false;
                     loadAllState();
                 })
+            }
         }
 
-        function stateEditClick(idx) {
-            vm.state = vm.stateList[idx];
+        function stateEditClick(rowData) {
+            vm.state = {};
+            angular.copy(rowData, vm.state);
             vm.stateEdit = true;
         }
 
-        function deleteState(idx) {
+        function deleteState(rowData) {
             Modal.confirm("Are you sure want to delete?", function(ret) {
                 if (ret == "yes")
-                    submitDeleteState(idx);
+                    submitDeleteState(rowData);
             });
         }
 
-        function submitDeleteState(idx) {
-            LocationSvc.deleteState(vm.stateList[idx])
+        function submitDeleteState(rowData) {
+            LocationSvc.deleteState(rowData)
                 .then(function(result) {
                     if (!result.errorCode)
                         loadAllState();
@@ -598,12 +620,17 @@
                 $scope.submitted = true;
                 return;
             }
-            LocationSvc.saveLocation(vm.location)
+            if((vm.location.name).indexOf("_") !== -1){
+                alert('Underscore not allowed. Please update.');   
+            }else{
+                LocationSvc.saveLocation(vm.location)
                 .then(function(result) {
                     vm.location = {};
                     vm.country = "";
                     loadAllLocation();
                 })
+            }
+            
         }
 
         function updateLocation(form) {
@@ -611,6 +638,9 @@
                 $scope.submitted = true;
                 return;
             }
+            if((vm.location.name).indexOf("_") !== -1){
+                alert('Underscore not allowed. Please update.');   
+            } else{
             LocationSvc.updateLocation(vm.location)
                 .then(function(result) {
                     vm.location = {};
@@ -618,24 +648,26 @@
                     vm.locationEdit = false;
                     loadAllLocation();
                 })
+            }
         }
 
-        function locationEditClick(idx) {
-            vm.location = vm.locationList[idx];
+        function locationEditClick(rowData) {
+            vm.location = {};
+            angular.copy(rowData, vm.location);
             vm.country = vm.location.state.country;
             onCountryChange(vm.country);
             vm.locationEdit = true;
         }
 
-        function deleteLocation(idx) {
+        function deleteLocation(rowData) {
             Modal.confirm("Are you sure want to delete?", function(ret) {
                 if (ret == "yes")
-                    submitDeleteLocation(idx);
+                    submitDeleteLocation(rowData);
             });
         }
 
-        function submitDeleteLocation(idx) {
-            LocationSvc.deleteLocation(vm.locationList[idx])
+        function submitDeleteLocation(rowData) {
+            LocationSvc.deleteLocation(rowData)
                 .then(function(result) {
                     loadAllLocation();
                 })
@@ -855,7 +887,20 @@
                 Modal.alert("Please upload image for auctionmaster.", true);
                 return;
             }*/
-            
+            /* Start Date can't be greater than end date :- Madhusudan Mishra*/
+            // validation Start
+
+            if(vm.dateCheckValidation(vm.auctionData.startDate, vm.auctionData.endDate)) {
+                Modal.alert("Please enter auction start date less than end date", true);
+                return;
+            }
+
+            if(vm.dateCheckValidation(vm.auctionData.insStartDate, vm.auctionData.insEndDate)) {
+                Modal.alert("Please enter inspection start date less than end date", true);
+                return;
+            }
+            // validation End
+
             $scope.submitted = false;
             getChangeAuctionMasterData();
             $rootScope.loading = true;
@@ -888,6 +933,20 @@
                 $scope.submitted = true;
                 return;
             }
+
+            /* Start Date can't be greater than end date :- Madhusudan Mishra*/
+            // validation Start
+
+            if(vm.dateCheckValidation(vm.auctionData.startDate, vm.auctionData.endDate)) {
+                Modal.alert("Please enter auction start date less than end date", true);
+                return;
+            }
+
+            if(vm.dateCheckValidation(vm.auctionData.insStartDate, vm.auctionData.insEndDate)) {
+                Modal.alert("Please enter inspection start date less than end date", true);
+                return;
+            }
+            // validation End
 
             $scope.submitted = false;
             getChangeAuctionMasterData();
@@ -1261,21 +1320,22 @@
                 })
         }
 
-        function editManufacturer(index) {
-            angular.copy(vm.manufacturerList[index], vm.manufacturer)
+        function editManufacturer(rowData) {
+            vm.manufacturer = {};
+            angular.copy(rowData, vm.manufacturer);
             vm.manufacturerEdit = true;
             //onServiceChange(vm.paymentMaster.serviceCode,true);
         }
 
-        function deleteManufacturer(index) {
+        function deleteManufacturer(rowData) {
             Modal.confirm("Are you sure want to delete?", function(ret) {
                 if (ret == "yes")
-                    submitDeleteManufacturer(index);
+                    submitDeleteManufacturer(rowData);
             });
         }
 
-        function submitDeleteManufacturer(idx) {
-            ManufacturerSvc.deleteManufacturer(vm.manufacturerList[idx])
+        function submitDeleteManufacturer(rowData) {
+            ManufacturerSvc.deleteManufacturer(rowData)
                 .then(function(result) {
                     getAllManufacturer();
                 })
@@ -1515,6 +1575,7 @@
             for (var i = 0; i < vm.upcomingAuctions.length; i++) {
                 if (vm.upcomingAuctions[i]._id == vm.auctionProduct.dbAuctionId) {
                     vm.auctionProduct.auctionId = vm.upcomingAuctions[i].auctionId;
+                    vm.auctionProduct.auctionType = vm.upcomingAuctions[i].auctionType;
                     vm.auctionProduct.startDate = vm.upcomingAuctions[i].startDate;
                     vm.auctionProduct.endDate = vm.upcomingAuctions[i].endDate;
                 }
@@ -1621,6 +1682,7 @@
             for (var i = 0; i < vm.upcomingAuctions.length; i++) {
                 if (vm.upcomingAuctions[i]._id == vm.auctionProduct.dbAuctionId) {
                     vm.auctionProduct.auctionId = vm.upcomingAuctions[i].auctionId;
+                    vm.auctionProduct.auctionType = vm.upcomingAuctions[i].auctionType;
                     vm.auctionProduct.startDate = vm.upcomingAuctions[i].startDate;
                     vm.auctionProduct.endDate = vm.upcomingAuctions[i].endDate;
                 }
@@ -1675,6 +1737,7 @@
                 dataObj.assetDesc = product.name;
                 dataObj.auction_id = reqData.dbAuctionId;
                 dataObj.auctionId = reqData.auctionId;
+                dataObj.auctionType = reqData.auctionType;
                 dataObj.lot_id = reqData.lot_id;
                 dataObj.assetDir = product.assetDir;
                 dataObj.city = product.city;
@@ -2153,6 +2216,12 @@
             .then(function(result) {
                 saveAs(new Blob([s2ab(result)],{type:"application/octet-stream"}), "leadlist_"+ new Date().getTime() +".xlsx")
             });
+        }
+
+        function dateCheckValidation(startDate, endDate) {
+            if(startDate && endDate && (startDate > endDate))
+                return true;
+            return false;
         }
     }
 })();

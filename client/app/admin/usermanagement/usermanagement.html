@@ -60,7 +60,7 @@
             <div class="col-sm-9 form-group">
               <div ng-if="isAdmin()" class="">            
                 <label>Channel Partners:</label>
-                <select ng-model="selectedUser" ng-change="userManagementVm.onUserChange(selectedUser)" ng-options="user as (user.fname+ ' '+ user.lname +' ('+user.mobile+')') for user in userManagementVm.getUsersOnRole track by user._id" >
+                <select ng-model="selectedUser" ng-change="userManagementVm.onUserChange(selectedUser)" ng-options="user as (user.fname+ ' '+ user.lname +' ('+user.mobile+')') for user in userManagementVm.getUsersOnRole | orderBy:'fname' track by user._id">
                   <option value="">Select User</option>
                 </select>
               </div>

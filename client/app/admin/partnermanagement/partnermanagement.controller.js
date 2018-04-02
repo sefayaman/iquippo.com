@@ -171,6 +171,10 @@ function PartnerManagementCtrl($scope, $rootScope, $http, Auth, User, Modal, use
       $scope.services.push($scope.Auction_Registration);
     if($scope.GPS_Installation)
       $scope.services.push($scope.GPS_Installation);
+    if($scope.Photographs_Only)
+      $scope.services.push($scope.Photographs_Only);
+    
+
     
 
     vm.vendorReg.services = $scope.services;
@@ -223,6 +227,7 @@ function PartnerManagementCtrl($scope, $rootScope, $http, Auth, User, Modal, use
     $scope.Sale_Fulfilment = "";
     $scope.Auction_Registration = "";
     $scope.GPS_Installation = "";
+    $scope.Photographs_Only = "";
     $scope.isEdit = false;
     $rootScope.isSuccess = false;
     $rootScope.isError = false;
@@ -346,6 +351,8 @@ function PartnerManagementCtrl($scope, $rootScope, $http, Auth, User, Modal, use
        serviceArr.push('Auction Registration');
      else if(services[i] == 'GPS Installation')
       serviceArr.push('GPS Installation');
+      else if(services[i] == 'Photographs')
+        serviceArr.push('Photographs Only');
     }
     return serviceArr.join();
   }
@@ -420,6 +427,8 @@ function updateVendor(vendor) {
         $scope.Auction_Registration = vendor.services[i];
       else if(vendor.services[i] == 'GPS Installation')
         $scope.GPS_Installation = vendor.services[i];
+      else if(vendor.services[i] == 'Photographs')
+        $scope.Photographs_Only = vendor.services[i];
     }
     $scope.isEdit = true;
     vm.existFlag = true;

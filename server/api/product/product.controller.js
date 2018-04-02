@@ -1055,6 +1055,7 @@ function addProduct(req, res) {
 
 function postRequest(req, res) {
   var options = {};
+  
   Product.find({
     _id: req.body._id
   }, function (err, proResult) {
@@ -1069,29 +1070,39 @@ function postRequest(req, res) {
     options.dataType = "assetData";
     if (options.dataToSend.createdBy)
       delete options.dataToSend.createdBy;
-    Utillity.sendCompiledData(options, function (err, result) {
-      if (err || (result && result.err)) {
-        options.dataToSend.reqSubmitStatus = ReqSubmitStatuses[1];
-        proResult.reqSubmitStatus = ReqSubmitStatuses[1];
-        //options.dataToSend.status = false;
-        update(options.dataToSend);
-        if (req.body.auction && req.body.auction._id)
-          AuctionReq.update({ _id: req.body.auction._id }, { $set: { "reqSubmitStatus": options.dataToSend.reqSubmitStatus } }).exec();
-        // if(result && result.err) {}
-        //     return res.status(412).send(result.err);
-        //return res.status(412).json("Unable to post asset request. Please contact support team.");
-        return res.status(201).json({ errorCode: 1, message: "Unable to post asset request. Please contact support team.", product: proResult });
-      }
-      if (result) {
+    if (req.body.assetMapData.auctionType==='PT') {
         options.dataToSend.reqSubmitStatus = ReqSubmitStatuses[0];
         proResult.reqSubmitStatus = ReqSubmitStatuses[0];
-        //options.dataToSend.status = true;
         update(options.dataToSend);
         if (req.body.auction && req.body.auction._id)
           AuctionReq.update({ _id: req.body.auction._id }, { $set: { "reqSubmitStatus": options.dataToSend.reqSubmitStatus } }).exec();
         return res.status(201).json({ errorCode: 0, message: "Product request submitted successfully !!!", product: proResult });
-      }
-    });
+    }
+    else {
+        Utillity.sendCompiledData(options, function (err, result) {
+          if (err || (result && result.err)) {
+            options.dataToSend.reqSubmitStatus = ReqSubmitStatuses[1];
+            proResult.reqSubmitStatus = ReqSubmitStatuses[1];
+            //options.dataToSend.status = false;
+            update(options.dataToSend);
+            if (req.body.auction && req.body.auction._id)
+              AuctionReq.update({ _id: req.body.auction._id }, { $set: { "reqSubmitStatus": options.dataToSend.reqSubmitStatus } }).exec();
+            // if(result && result.err) {}
+            //     return res.status(412).send(result.err);
+            //return res.status(412).json("Unable to post asset request. Please contact support team.");
+            return res.status(201).json({ errorCode: 1, message: "Unable to post asset request. Please contact support team.", product: proResult });
+          }
+          if (result) {
+            options.dataToSend.reqSubmitStatus = ReqSubmitStatuses[0];
+            proResult.reqSubmitStatus = ReqSubmitStatuses[0];
+            //options.dataToSend.status = true;
+            update(options.dataToSend);
+            if (req.body.auction && req.body.auction._id)
+              AuctionReq.update({ _id: req.body.auction._id }, { $set: { "reqSubmitStatus": options.dataToSend.reqSubmitStatus } }).exec();
+            return res.status(201).json({ errorCode: 0, message: "Product request submitted successfully !!!", product: proResult });
+          }
+        });
+    }
   });
 }
 

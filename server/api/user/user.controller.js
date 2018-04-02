@@ -944,8 +944,11 @@ exports.getUser = function(req, res) {
 
   if (req.body.userId)
     filter["createdBy._id"] = req.body.userId;
-  if (req.body.enterpriseId)
-    filter["enterpriseId"] = req.body.enterpriseId;
+  if (req.body.enterpriseId) {
+      filter["enterpriseId"] = req.body.enterpriseId;
+  }
+  if(req.body.enterpriseId && req.body.enterpriseUsers)
+    filter["$or"] = [{"enterprise":{$exists : false}}, {"enterprise":false}]; // remove enterprise which are new selected   
   if (req.body.enterprise)
     filter["enterprise"] = req.body.enterprise;
   if (req.body.mobile)
@@ -968,7 +971,7 @@ exports.getUser = function(req, res) {
   else {
     if(req.body.isAdminRole) {
       // get users of role enterprise and channelPartner
-      filter = {$or:[{'role':'enterprise','enterprise': true},{'role':'channelpartner'}]}
+      filter['$or'] = [{'role':'enterprise','enterprise': true},{'role':'channelpartner'}];
     } else {
       var typeFilter = {};
       typeFilter.$ne = "admin";

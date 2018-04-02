@@ -4,6 +4,7 @@ var _ = require('lodash');
 var Callback = require('./callback.model');
 var Utility = require('./../../components/utility.js');
 var xlsx = require('xlsx');
+var moment = require('moment');
 
 // Get list of callback
 exports.getAll = function (req, res) {
@@ -117,11 +118,12 @@ function _prepareResponse(res, users) {
       "Sr. No": key + 1,
       "Ticket Id": user.ticketId,
       "Customer Id": user.customerId,
-      "Fullname": user.fname + ' ' + user.lname,
+      "Fullname": Utility.toCsvValue(user.fname + ' ' + user.lname),
       "Mobile No": user.mobile,
       "Phone No": user.phone,
       "Email Address": user.email,
-      "Date of Request": user.createdAt
+      "Date of Request": moment(user.createdAt).utcOffset('+0530').format('MM/DD/YYYY')+' at ' + moment(user.createdAt).utcOffset('+0530').format('hh:mm A'),
+      "Comment": Utility.toCsvValue(user.comment)
     });
   });
 

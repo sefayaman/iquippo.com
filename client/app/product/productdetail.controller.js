@@ -4,6 +4,10 @@
 
   function ProductDetailCtrl($scope, $sce, $location, AssetSaleSvc, AuctionSvc, LocationSvc, AuctionMasterSvc, vendorSvc, NegotiationSvc, $stateParams, $rootScope, PaymentMasterSvc, $uibModal, $http, Auth, productSvc, notificationSvc, Modal, CartSvc, ProductTechInfoSvc, BuyContactSvc, userSvc, PriceTrendSvc, ValuationSvc, $state,LotSvc,userRegForAuctionSvc) {
    var vm = this;
+
+   // remove underscore from params
+    $stateParams.brand = $scope.removeUnderScore($stateParams.brand);
+    $stateParams.category = $scope.removeUnderScore($stateParams.category);
     $scope.lot = {};
     $scope.showWidget = false;
     $scope.currentProduct = {};
@@ -82,6 +86,7 @@
         bidAmount: bidAmounts,
         product:$scope.currentProduct,
         stateId:$scope.state._id,
+        auction: $scope.auctionsData, 
         bid: "placebid",
         offerType: "Bid",
         callback: countBid
@@ -99,6 +104,7 @@
         bidAmount: bidAmounts,
         product: $scope.currentProduct,
         stateId:$scope.state._id,
+        auction: $scope.auctionsData, 
         bid: "buynow",
         offerType: "Buynow"
       };
@@ -446,11 +452,15 @@
             auctionFilter._id = $scope.currentProduct.auction._id;
             AuctionSvc.getAuctionInfoForProduct(auctionFilter)
               .then(function(aucts) {
-                $scope.auctionsData = aucts;
-                if($scope.auctionsData.allowProxyBid)
-                  $scope.allowBid = "No";
-                else
+                if(aucts.isExpired) { // when auction date is exired by Madhusudan
                   $scope.allowBid = 'Yes';
+                } else {
+                  $scope.auctionsData = aucts;
+                  if($scope.auctionsData.allowProxyBid)
+                    $scope.allowBid = "No";
+                  else
+                    $scope.allowBid = 'Yes';
+                }
               });
           } else {
             $scope.allowBid = 'Yes';

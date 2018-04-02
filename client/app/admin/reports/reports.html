@@ -64,7 +64,8 @@
                   <th>Mobile No.</th>                                
                   <th>Phone No.</th>                                
                   <th>Email Address</th>                                
-                  <th>Date of Request</th>  
+                  <th>Date of Request</th>
+                  <th>Comment</th>   
                </tr>
               </thead>
               <tbody>
@@ -76,7 +77,8 @@
                 <td>{{callback.mobile}}</td>
                 <td>{{callback.phone}}</td>
                 <td>{{callback.email}}</td>
-                <td>{{callback.createdAt | date:'MM/dd/yyyy hh:mm a'}}</td>                    
+                <td>{{callback.createdAt | date:'MM/dd/yyyy hh:mm a'}}</td>
+                <td>{{callback.comment}}</td>                    
                </tr>
               </tbody>
             </table>

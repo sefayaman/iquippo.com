@@ -60,20 +60,27 @@ var ReqSubmitStatuses = ['Request Submitted', 'Request Failed'];
       }, function(err, result) {
         options.dataToSend = result[0].toObject();
         options.dataType = "emdData";
-        Util.sendCompiledData(options, function(err, result) {
-          if (err || (result && result.err)) {
-            options.dataToSend.reqSubmitStatus = ReqSubmitStatuses[1];
-            update(options.dataToSend);
-            if(result && result.err)
-              return res.status(412).send(result.err);
-            return res.status(412).send("Unable to post EMD request. Please contact support team.");
-          }
-          if(result){
+        if (req.body.auctionType==='PT') {
             options.dataToSend.reqSubmitStatus =  ReqSubmitStatuses[0];
             update(options.dataToSend);
             return res.status(201).json({errorCode: 0,message: "EMD request submitted successfully !!!"});
-          }
-        });
+        }
+        else  {
+            Util.sendCompiledData(options, function(err, result) {
+              if (err || (result && result.err)) {
+                options.dataToSend.reqSubmitStatus = ReqSubmitStatuses[1];
+                update(options.dataToSend);
+                if(result && result.err)
+                  return res.status(412).send(result.err);
+                return res.status(412).send("Unable to post EMD request. Please contact support team.");
+              }
+              if(result){
+                options.dataToSend.reqSubmitStatus =  ReqSubmitStatuses[0];
+                update(options.dataToSend);
+                return res.status(201).json({errorCode: 0,message: "EMD request submitted successfully !!!"});
+              }
+            });
+        }
       });
   }
 
@@ -109,17 +116,22 @@ exports.updateEmdData = function(req, res) {
       options.dataToSend = req.body;
       options.dataToSend._id = req.params.id;
       options.dataType = "emdData";
-      Util.sendCompiledData(options, function(err, result) {
-        if (err || (result && result.err)) {
-          update(emdResult[0].toObject());
-          if(result && result.err)
-            return res.status(412).send(result.err);
-          return res.status(412).send("Unable to update EMD request. Please contact support team.");
-        }
-        if(result){
+      if (req.body.auctionType==='PT') {
           return res.status(201).json({errorCode: 0,message: "EMD request updated successfully !!!"});
-        }
-      });
+      }
+      else {
+        Util.sendCompiledData(options, function(err, result) {
+          if (err || (result && result.err)) {
+            update(emdResult[0].toObject());
+            if(result && result.err)
+              return res.status(412).send(result.err);
+            return res.status(412).send("Unable to update EMD request. Please contact support team.");
+          }
+          if(result){
+            return res.status(201).json({errorCode: 0,message: "EMD request updated successfully !!!"});
+          }
+        });
+      }
     });
   });
 };
@@ -204,21 +216,28 @@ exports.destroy = function(req, res) {
     };
     
     options.dataType="emdData";
-    Util.sendCompiledData(options,function(err,result){
-      if (err || (result && result.err)) {
-        options.dataToSend.isDeleted = false;
-        update(options.dataToSend);
-        if(result && result.err) {
-          return res.status(412).send(result.err); 
-        }
-        return res.status(412).send("Unable to delete EMD request. Please contact support team.");
-      }
-      if(result){
+    if (req.body.auctionType==='PT') {
         options.dataToSend.isDeleted = true;
         update(options.dataToSend);
-          return res.status(200).send({errorCode: 0,message: "EMD master deleted sucessfully!!!"});
-      }
-    });
+        return res.status(200).send({errorCode: 0,message: "EMD master deleted sucessfully!!!"});
+    }
+    else {
+        Util.sendCompiledData(options,function(err,result){
+          if (err || (result && result.err)) {
+            options.dataToSend.isDeleted = false;
+            update(options.dataToSend);
+            if(result && result.err) {
+              return res.status(412).send(result.err); 
+            }
+            return res.status(412).send("Unable to delete EMD request. Please contact support team.");
+          }
+          if(result){
+            options.dataToSend.isDeleted = true;
+            update(options.dataToSend);
+              return res.status(200).send({errorCode: 0,message: "EMD master deleted sucessfully!!!"});
+          }
+        });
+    }
       // return res.status(200).send({
       //   message: "Data Successfully deleted!!!"
       // });

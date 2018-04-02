@@ -38,6 +38,7 @@ var notification = require('./../../components/notification.js');
 var VALUATION_REQUEST = "ValuationRequest";
 var VALUATION_REPORT_SUBMISSION= "ValuationReportSubmission";
 var DEFAULT_PURPOSE = "Financing";
+var Encoded_Fields = ["yardParked",'disFromCustomerOffice','contactPerson','originalOwner','nameOfCustomerSeeking'];
 
 exports.get = function(req, res) {
   
@@ -1370,6 +1371,10 @@ exports.submitRequest = function(req,res){
       var obj = {};
       keys.forEach(function(key){
         obj[key] = _.get(item,fieldMap[key],"");
+        if(Encoded_Fields.indexOf(fieldMap[key]) !== -1 && obj[key]){
+          var buffer = new Buffer(obj[key] || "");
+          obj[key] = buffer.toString("base64"); 
+        }
       })
 
       if(obj.brand && obj.brand == "Other")

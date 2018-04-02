@@ -75,6 +75,7 @@
           dataObj.auction = {};
           dataObj.user = {};
           dataObj.auction.dbAuctionId = $scope.currentAuction._id;
+          dataObj.auction.auctionType = $scope.currentAuction.auctionType;
           if(!Auth.isAdmin() && !Auth.isAuctionRegPermission()) {
             dataObj.user._id = Auth.getCurrentUser()._id;
             dataObj.user.mobile = Auth.getCurrentUser().mobile;

@@ -80,6 +80,7 @@ var AssetSaleBidSchema = new Schema({
   dateOfDelivery:Date,
   rating:Number,
   comment:String,
+  auctionType: String,
   proxyBid:{type:Boolean,default:false},
   lastAccepted:{type:Boolean,default:false},
   autoApprove:{type:Boolean,default:false},
