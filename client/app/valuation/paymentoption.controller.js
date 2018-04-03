@@ -62,7 +62,7 @@ function PaymentOptionCtrl($scope, $rootScope, $state, Modal, Auth, $uibModal, P
         PaymentSvc.update(vm.payTransaction).
         then(function(res) {
           if (res)
-            Modal.alert("Please pay the valuation fee and inform our customer care team.!", true);
+            Modal.alert("We have received your request and your request ID is " + $scope.valuation.requestId + ". Please pay the valuation fee and inform our customer care team.!", true);
           if(!angular.isUndefined($scope.offlineOption))
             $rootScope.$broadcast('refreshValuationList');
         })
@@ -89,11 +89,11 @@ function PaymentOptionCtrl($scope, $rootScope, $state, Modal, Auth, $uibModal, P
   }
 
   function closeDialog() {
-    if(!$scope.closeMsg) {
+    if(!$scope.closeMsg && angular.isUndefined($scope.offlineOption)) {
       if($scope.resetData)
           $rootScope.$broadcast('refreshValuationData');
       if($scope.resetProductData)
-          $rootScope.$broadcast('productloaded');  
+          $rootScope.$broadcast('productloaded');
       Modal.alert("We have received your request and your request ID is " + $scope.valuation.requestId + " . Please make the necessary payment to complete your request.", true);
     }
     $uibModalInstance.dismiss('cancel');
