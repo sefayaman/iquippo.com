@@ -12,6 +12,12 @@
                             },
                             {
                                 name:"Inspection"
+                            },
+                            {
+                                name : "GPS Installation"
+                            },
+                            {
+                                name:"Photographs Only"
                             }
                         ];
         vm.dataModel = {};

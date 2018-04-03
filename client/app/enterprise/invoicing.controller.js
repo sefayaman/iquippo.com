@@ -7,7 +7,8 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth,
   var INVOICE_TEMPLATE = "EValuation_Invoice"
   var selectedItems = [];
   var selectedFee = null;
-  vm.serviceList = [{name:"Valuation"},{name:"Inspection"}];
+  vm.serviceList = [{name:"Valuation",displayText:"Valuation"},{name:"Inspection",displayText:"Inspection"},{name:"GPS Installation",displayText:"GPS Installation"},{name:"Photographs Only",displayText:"Photographs Only"}];
+  //vm.serviceList = [{name:"Valuation"},{name:"Inspection"}];
   var statuses = [EnterpriseValuationStatuses[6]]
  	
   //$scope.taxList = TaxList;
