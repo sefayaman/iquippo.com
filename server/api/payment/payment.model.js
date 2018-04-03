@@ -22,6 +22,7 @@ var PaymentTransactionSchema = new Schema({
   requestType:String,
   ccAvenueRes:{},
   ccAvenueData:{},
+  ccAvenueHistory:[],
   kycUploadlater:String,
   paymentMode : {type:String,default:'online'},
   statusCode : {type:Number,default:-1},

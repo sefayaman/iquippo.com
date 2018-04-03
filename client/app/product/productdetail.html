@@ -641,7 +641,8 @@
                   <div class="floating-label-wrapper" ng-class="{'has-error': valReqForm.purpose.$invalid && valSubmitted}">
                     <label>Purpose of Valuation*</label>
                     <select class="form-control" name="purpose" ng-model="valuationVm.valuationReq.purpose" required>
-                      <option value="">Select Purpose</option>
+                      <!-- <option value="">Select Purpose</option> -->
+                      <option value="Financing">Financing</option>
                       <option ng-repeat="valuation in valuationList" value="{{valuation.name}}">{{valuation.name}}</option>
                     </select>
                   </div>
@@ -799,7 +800,8 @@
                   <div class="floating-label-wrapper" ng-class="{'has-error': reqForCertify.purpose.$invalid && valSubmitted}">
                     <label>Purpose of Inspection*</label>
                     <select class="form-control" ng-model="valuationVm.valuationReq.purpose" name="purpose" required>
-                      <option value="">Select Purpose</option>
+                      <!-- <option value="">Select Purpose</option> -->
+                      <option value="Financing">Financing</option>
                       <option ng-repeat="valuation in valuationList" value="{{valuation.name}}">{{valuation.name}}</option>
                     </select>
                   </div>

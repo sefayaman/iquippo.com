@@ -199,15 +199,15 @@
                                 <div class="floating-label-wrapper form-group" ng-class="{'has-error': form.purpose.$invalid && submitted }">
                                     <label>Purpose of valuation</label>
                                     <select class="form-control" ng-model="valuationReq.purpose" name="purpose" required>
-                                        <!-- <option value="Financing">Financing</option> -->
+                                        <option value="Financing">Financing</option>
                                         <option ng-repeat="valuation in valuationList| orderBy:'name'" value="{{valuation.name}}">{{valuation.name}}</option>
                                     </select>
                                 </div>
                             </div>
 
 
-                            <div class="col-xs-6 col-sm-3" ng-class="{'has-error': form.otherName.$invalid && submitted }">
-                                <div class="floating-label-wrapper form-group">
+                            <div class="col-xs-6 col-sm-3">
+                                <div class="floating-label-wrapper form-group" ng-class="{'has-error': form.otherName.$invalid && submitted }">
                                     <label>Other*</label>
                                     <input class="form-control" type="text" name="otherName" ng-model="valuationReq.otherName" ng-disabled ="valuationReq.purpose != 'Other'" placeholder="Other" ng-required= "valuationReq.purpose == 'Other'">
                                 </div>
@@ -311,21 +311,33 @@
             <div class="panel-body">
                 <form name="form">
                     <div class="row">
-                        <div class="col-xs-12 col-sm-6">
+                        <div class="col-xs-12 col-sm-8">
                             <div class="floating-label-wrapper">
                                 <label>Request Type</label>
                             </div>
                             <div class="row form-group">
-                                <div class="col-xs-6 col-sm-4" ng-if="isServiceAvailed('Valuation')">
+                                <div class="col-xs-6 col-sm-3" ng-if="isServiceAvailed('Valuation')">
                                     <div class="radio radio-info">
                                         <input type="radio" name="requestType" id="requestValuationEnterprise" value="Valuation" ng-model="addTransactionVm.enterpriseValuation.requestType" ng-click="addTransactionVm.getPartners('Valuation')" >
                                         <label for="requestValuationEnterprise"> Valuation </label>
                                     </div>
                                 </div>
-                                <div class="col-xs-6 col-sm-4" ng-if="isServiceAvailed('Inspection')">
+                                <div class="col-xs-6 col-sm-3" ng-if="isServiceAvailed('Inspection')">
                                     <div class="radio radio-info">
                                         <input type="radio" id="requestInspectionEnterprise" name="requestType" value="Inspection" ng-click="addTransactionVm.getPartners('Inspection')" ng-model="addTransactionVm.enterpriseValuation.requestType">
                                         <label for="requestInspectionEnterprise"> Inspection </label>
+                                    </div>
+                                </div>
+                                <div class="col-xs-6 col-sm-3" ng-if="isServiceAvailed('GPS Installation')">
+                                    <div class="radio radio-info">
+                                        <input type="radio" id="requestGpsInstallation" name="requestType" value="GPS Installation" ng-click="addTransactionVm.getPartners('GPS Installation')" ng-model="addTransactionVm.enterpriseValuation.requestType">
+                                        <label for="requestGpsInstallation"> GPS Installation </label>
+                                    </div>
+                                </div>
+                                <div class="col-xs-6 col-sm-3" ng-if="isServiceAvailed('Photographs Only')">
+                                    <div class="radio radio-info">
+                                        <input type="radio" id="photographsOnly" name="photographs" value="Photographs Only" ng-click="addTransactionVm.getPartners('Photographs Only')" ng-model="addTransactionVm.enterpriseValuation.requestType">
+                                        <label for="photographsOnly"> Photographs Only </label>
                                     </div>
                                 </div>
                             </div>
