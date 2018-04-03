@@ -199,15 +199,15 @@
                                 <div class="floating-label-wrapper form-group" ng-class="{'has-error': form.purpose.$invalid && submitted }">
                                     <label>Purpose of valuation</label>
                                     <select class="form-control" ng-model="valuationReq.purpose" name="purpose" required>
-                                        <!-- <option value="Financing">Financing</option> -->
+                                        <option value="Financing">Financing</option>
                                         <option ng-repeat="valuation in valuationList| orderBy:'name'" value="{{valuation.name}}">{{valuation.name}}</option>
                                     </select>
                                 </div>
                             </div>
 
 
-                            <div class="col-xs-6 col-sm-3" ng-class="{'has-error': form.otherName.$invalid && submitted }">
-                                <div class="floating-label-wrapper form-group">
+                            <div class="col-xs-6 col-sm-3">
+                                <div class="floating-label-wrapper form-group" ng-class="{'has-error': form.otherName.$invalid && submitted }">
                                     <label>Other*</label>
                                     <input class="form-control" type="text" name="otherName" ng-model="valuationReq.otherName" ng-disabled ="valuationReq.purpose != 'Other'" placeholder="Other" ng-required= "valuationReq.purpose == 'Other'">
                                 </div>
