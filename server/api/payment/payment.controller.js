@@ -639,7 +639,10 @@ exports.paymentResponse = function (req, res) {
     paymentVal.tracking_id = resPayment.tracking_id;
     payment.ccAvenueRes = paymentVal;
     payment.ccAvenueData = resPayment;
-
+    
+    if (!payment.ccAvenueHistory || !payment.ccAvenueHistory.length)
+      payment.ccAvenueHistory = [];
+    payment.ccAvenueHistory.push(resPayment);
     if (status == "success")
       payment.statusCode = 0;
     else

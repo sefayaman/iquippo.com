@@ -33,7 +33,7 @@
     <div class="col-sm-3">
       <select class="form-control" ng-model="enterpriseInvoiceVm.reqType" ng-change="enterpriseInvoiceVm.getPartners(enterpriseInvoiceVm.reqType)">
         <option value="">Select Type of Request</option>
-        <option ng-repeat="req in enterpriseInvoiceVm.serviceList" value="{{req.name}}">{{req.name}}</option>
+        <option ng-repeat="req in enterpriseInvoiceVm.serviceList" value="{{req.name}}">{{req.displayText}}</option>
       </select>
       <i class="caret"></i>
     </div>

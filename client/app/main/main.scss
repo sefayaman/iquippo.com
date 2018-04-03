@@ -1285,6 +1285,9 @@ footer .subscribe{height: 40px;}
   border-color: #5bc0de; }
 .radio-info input[type="radio"]:checked + label::after {
   background-color: #5bc0de; }
+.invMasterForm .radio{
+  margin-bottom: 0;
+}
 
 /* floating label */
 .floating-label-wrapper {position: relative; padding: 0.5em 0;}

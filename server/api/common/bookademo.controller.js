@@ -71,7 +71,7 @@ function renderExcel(req, res) {
       if (Excel_Header[key] == 'customerName')
         val = item.fname + " " + item.lname;
       if (Excel_Header[key] == "createdAt")
-        val = moment(item.createdAt).utcOffset('+0530').format('MM/DD/YYYY');
+        val = moment(item.createdAt).utcOffset('+0530').format('MM/DD/YYYY')+' at ' + moment(item.createdAt).utcOffset('+0530').format('hh:mm A');
       rowData.push(val);
     });
     if (rowData.length)

@@ -7,7 +7,6 @@
 		//vm.close = close;
 		vm.submitValuationReq = submitValuationReq;
 		vm.resetValuationReq = resetValuationReq;
-		//vm.valuationReq = {purpose:"Financing"};
 		$scope.mytime = new Date();
 	    $scope.hstep = 1;
 	    $scope.mstep = 1;
@@ -53,6 +52,7 @@
 			vm.valuationReq.user = {};
 			vm.valuationReq.seller = {};
 			vm.valuationReq.valuationAgency = {};
+			vm.valuationReq.purpose = "Financing";
 			vm.valuationReq.initiatedBy = "buyer";
 			if (Auth.getCurrentUser()._id && Auth.getCurrentUser()._id == $scope.currentProduct.seller._id)
 				vm.valuationReq.initiatedBy = "seller";
@@ -242,8 +242,8 @@
 					          $state.go('main');
 					          return;
 					        }
-							/*vm.valuationReq = {purpose:"Financing"};
-							if (result.transactionId)
+							vm.valuationReq.purpose = "Financing";
+							/*if (result.transactionId)
 								$state.go('payment', {
 									tid: result.transactionId
 								});*/
