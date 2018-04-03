@@ -10,7 +10,7 @@ module.exports = function (io) {
   socketIO = io;
 };
 function _sendAndUpdateViaSocket(evt, msg){
-    console.log('socketCalled');
+    console.log('socketCalled:- ',evt);
     socketIO.emit(evt, msg);    
 }
 
