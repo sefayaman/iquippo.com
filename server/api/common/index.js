@@ -217,6 +217,7 @@ router.get('/newequipmentotherinfo', controller.getNewEquipmentOtherInfo);
 
 router.get('/events', eventCtrl.index);
 router.post('/events', eventCtrl.create);
+router.put('/events/:id', eventCtrl.update);
 router.delete('/events/:id', eventCtrl.delete);
 
 module.exports = router;

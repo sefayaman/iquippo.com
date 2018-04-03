@@ -25,6 +25,14 @@
             });
         }
 
+        svc.update = function(data) {
+            return $http.put(svcPath + '/' + data._id, data).then(function(res) {
+                return res.data;
+            }).catch(function(err) {
+                throw err;
+            });
+        }
+
         svc.delete = function (id) {
             return $http.delete(svcPath + '/' + id).then(function (res) {
                 return res.data

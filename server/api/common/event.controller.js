@@ -25,14 +25,14 @@ exports.create = function(req, res) {
 
 exports.update = function(req, res) {
 
-    Event.findById(req.params.id).exec(function(err, event) {
+    Event.findById(req.params.id).exec(function(err, doc) {
         if(err) { return res.status(500).send(err); }
-        if(!event) { return res.status(404).send('Not Found'); }
+        if(!doc) { return res.status(404).send('Not Found'); }
         
-        var updatedEvent = _.merge(event, req.body);
-        updatedEvent.save(function(err, doc) {
+        var updatedEvent = _.merge(doc, req.body);
+        updatedEvent.save(function(err, result) {
             if(err) { return res.status(500).send(err); }
-            return res.status(200).json(doc);
+            return res.status(200).json(result);
         });
 
     });

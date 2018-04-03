@@ -58,13 +58,9 @@ var TimeInterval =  1*60*1000;/*Service interval*/
             if(maxBid){
               maxBid.emdStartDate = new Date(); 
               maxBid.emdEndDate = new Date().addDays(entMasterData.emdPeriod);
-              console.log(maxBid.emdEndDate.toString());
 
               _checkHolidayExistAndAdd(maxBid.emdStartDate, maxBid.emdEndDate, function(err, revisedDate) {
-
                 maxBid.emdEndDate = revisedDate;
-                console.log("Proceeding...");
-                console.log('Revised ------', revisedDate.toString());
                 maxBid.product.prevTradeType = prd.tradeType;
                 AssetSaleUtil.setStatus(maxBid,bidStatuses[7],'bidStatus','bidStatuses');
                 AssetSaleUtil.setStatus(maxBid,dealStatuses[6],'dealStatus','dealStatuses');
@@ -84,27 +80,21 @@ var TimeInterval =  1*60*1000;/*Service interval*/
                 });
 
               });
-              //if(maxBid.emdEndDate)
-                //maxBid.emdEndDate.setHours(24,0,0,0);
-              // maxBid.product.prevTradeType = prd.tradeType;
-              // AssetSaleUtil.setStatus(maxBid,bidStatuses[7],'bidStatus','bidStatuses');
-              // AssetSaleUtil.setStatus(maxBid,dealStatuses[6],'dealStatus','dealStatuses'); 
-              //AssetSaleUtil.sendNotification([{action:"APPROVE",ticketId:maxBid.ticketId}]);
+            } else {
+              bids.forEach(function(item){
+                if(item._id == maxBid._id )
+                  return;
+                AssetSaleUtil.setStatus(item,bidStatuses[5],'bidStatus','bidStatuses');
+              });
+  
+              async.eachLimit(bids,2,updateBid,function(err){
+                if(!err){
+                  AssetSaleUtil.sendNotification([{action:"APPROVE",ticketId:maxBid.ticketId}]);
+                  Product.update({_id:prd._id},{$set:{tradeType:tradeTypeStatuses[2],cooling:false,bidRequestApproved:true}}).exec();
+                }
+                return cb(err);
+              });
             }
-            
-            // bids.forEach(function(item){
-            //   if(item._id == maxBid._id )
-            //     return;
-            //   AssetSaleUtil.setStatus(item,bidStatuses[5],'bidStatus','bidStatuses');
-            // });
-
-            // async.eachLimit(bids,2,updateBid,function(err){
-            //   if(!err){
-            //     AssetSaleUtil.sendNotification([{action:"APPROVE",ticketId:maxBid.ticketId}]);
-            //     Product.update({_id:prd._id},{$set:{tradeType:tradeTypeStatuses[2],cooling:false,bidRequestApproved:true}}).exec();
-            //   }
-            //   return cb(err);
-            // });
           });
       });
     }
@@ -186,7 +176,7 @@ var TimeInterval =  1*60*1000;/*Service interval*/
       if(bidCount === 0)
         bidRec = false;
 
-      if(selBid.emdStartDate && selBid.emdEndDate) {
+      if(selBid) {
         _checkHolidayExistAndAdd(selBid.startDate, selBid.emdEndDate, function(err, revisedDate) {
           selBid.endDate = revisedDate;
           async.eachLimit(actionableBids,3,updateBid,function(err){
@@ -199,17 +189,17 @@ var TimeInterval =  1*60*1000;/*Service interval*/
             return callback();
           });
         });
+      } else {
+        async.eachLimit(actionableBids,3,updateBid,function(err){
+          if(err)
+            return callback(err);
+          if(item.updateProduct)
+              Product.update({_id:item.product.proData},{$set:{tradeType:item.product.prevTradeType,bidReceived:bidRec,bidRequestApproved:false,bidCount:bidCount,highestBid:highestBid}}).exec();
+          if(selBid)
+            AssetSaleUtil.sendNotification([{action:"APPROVE",ticketId:selBid.ticketId}]);
+          return callback();
+        });
       }
-
-      // async.eachLimit(actionableBids,3,updateBid,function(err){
-      //   if(err)
-      //     return callback(err);
-      //   if(item.updateProduct)
-      //       Product.update({_id:item.product.proData},{$set:{tradeType:item.product.prevTradeType,bidReceived:bidRec,bidRequestApproved:false,bidCount:bidCount,highestBid:highestBid}}).exec();
-      //   if(selBid)
-      //     AssetSaleUtil.sendNotification([{action:"APPROVE",ticketId:selBid.ticketId}]);
-      //   return callback();
-      // });
     }
 
     function getOtherBids(innerCallback){
@@ -283,30 +273,45 @@ function checkExpiryDate(date){
 }
 
 function _checkHolidayExistAndAdd(startDate, endDate, cb) {
-  var sdt = startDate, edt = endDate;
+  var sdt = startDate
+  var edt = endDate;
   var filter = {
     start: { $gte: startDate },
     end: { $lte: endDate }
   };
   Event.find(filter).lean().exec(function(err, events) {
     if(!err && events) {
-      edt = edt.addDays(events.length);
       events.forEach(function(obj) {
-        if(moment(obj.start).isSame(sdt)) {
-          var mins = 60 - sdt.getMinutes();
-          if(mins > 0) {
-            var hours = 23 - sdt.getHours();
-          } else {
-            var hours = 24 - sdt.getHours();
-          }
-          edt = edt.addHours(hours);
-          edt = edt.addMinutes(mins);
-          return;
-        }
+        edt = _calculateHolidayRange(obj, edt);
       });
     }
     return cb(null, edt);
   });
+}
+
+// Checks if emd period/payment period start date is same as day listed in holidays
+// function _handleIfSameDay(sdt, edt) {
+//   var mins = 60 - sdt.getMinutes();
+//   if(mins > 0) {
+//     var hours = 23 - sdt.getHours();
+//   } else {
+//     var hours = 24 - sdt.getHours();
+//   }
+//   edt = edt.addHours(hours);
+//   edt = edt.addMinutes(mins);
+//   return edt;
+// }
+
+// If holiday is in date range
+function _calculateHolidayRange(obj, emdEndDate) {
+  var sdt = moment(obj.start);
+  var edt = moment(obj.end);
+
+  if(sdt < edt) {
+    var dayCount = edt.diff(sdt, 'days');
+    emdEndDate = emdEndDate.addDays(dayCount+1);
+  }
+  return emdEndDate;
 }
 
 exports.start = function() {
