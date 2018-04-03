@@ -39,7 +39,7 @@
             <div class="col-sm-2 padd-right">
               Showing : {{valuationListingVm.totalItems}} Records
             </div>
-            <div class="col-sm-3">
+            <div class="col-sm-3" ng-if="isAdmin()">
               <select name="statusType" ng-model="valuationListingVm.statusType" ng-change="valuationListingVm.fireCommand(true)">
                 <option value="">Select Status Type</option>
                 <option value="Request Initiated">Request Initiated</option>

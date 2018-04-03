@@ -339,6 +339,7 @@ function LotCtrl($scope, $rootScope,$window, $state,Modal,Auth,PagerSvc,$filter,
   }
 
   vm.getLotByAuction = function(auctionId) {
+    vm.searchStr = "";
     var filter = {};
     if(auctionId == "") {
       filter['pagination'] = true;

@@ -58,7 +58,7 @@
                          Please enter your user id and password.
                       </p>
 
-                      <p class="help-block" ng-if="!form.userId.$error.required && !form.password.$error.required && submitted">{{ errors.other }}</p>
+                      <p class="help-block" ng-show="!form.userId.$error.required && !form.password.$error.required">{{ errors.other }}</p>
                   </div>
               </div>
 

@@ -879,76 +879,94 @@ function updateProduct(req, res) {
     req.body.featured = false;
     delete req.body.featured;
     req.proData = product.toObject();
-    if (req.body.featured) {
-      var imgPath = config.uploadPath + req.body.assetDir + "/" + req.body.primaryImg;
-      var featureFilePath = config.uploadPath + "featured/" + req.body.primaryImg;
-      var fileParts = req.body.primaryImg.split('.');
-      var extPart = fileParts[1];
-      var fileBeforeCompression = 1;
-      var fileAfterCompression = 0;
-      if (fs.existsSync(featureFilePath)) {
-        return updateProductData();
-      }
+    
+    if ( req.body.tradeType && req.body.tradeType.toLowerCase()==='sell' ) {
+            console.log(req.body.assetId);
+            var filter = {};
+            filter['product.assetId'] = req.body.assetId;
+            filter['bidStatus'] = 'Accepted';
+            AssetSaleModel.find(filter,function(err,bids){
+                if(err || !bids.length){
+                    return handleError(res, err);
+                };
 
-      fsExtra.copy(imgPath, featureFilePath, {
-        replace: false
-      }, function (err, result) {
-        if (err) {
-          return updateProductData();
+                if(bids && bids.length){
+                    return res.status(404).send("Asset Trade Type can't be modified as there is an active bid on it");    
+               }
+            });
         }
-        lwip.open(featureFilePath, function (err, image) {
-          if (err) {
-            return updateProductData();
-          }
-          var stats = fs.statSync(featureFilePath);
-          fileBeforeCompression = stats.size;
-          image.resize(130, 100, function (err, rzdImage) {
-            if (err) {
-              return updateProductData();
+    else {
+        if (req.body.featured) {
+            var imgPath = config.uploadPath + req.body.assetDir + "/" + req.body.primaryImg;
+            var featureFilePath = config.uploadPath + "featured/" + req.body.primaryImg;
+            var fileParts = req.body.primaryImg.split('.');
+            var extPart = fileParts[1];
+            var fileBeforeCompression = 1;
+            var fileAfterCompression = 0;
+            if (fs.existsSync(featureFilePath)) {
+                return updateProductData();
             }
-            if (extPart.toLowerCase() === 'jpg' || extPart.toLowerCase() === 'jpeg') {
-              rzdImage.toBuffer(extPart, {
-                quality: 75
-              }, function (err, buffer) {
+
+            fsExtra.copy(imgPath, featureFilePath, {
+                replace: false
+            }, function (err, result) {
                 if (err) {
-                  return updateProductData();
+                    return updateProductData();
                 }
-                fs.writeFile(featureFilePath, buffer, function (err) {
-                  if (err) {
-                    return updateProductData();
-                  }
-                  var stats = fs.statSync(featureFilePath);
-                  fileAfterCompression = stats.size;
-                  debug("SIZE After compression", fileAfterCompression);
-                  return updateProductData();
-                })
-              })
-            } else {
-              if (extPart === 'png') {
-                rzdImage.toBuffer(extPart, {
-                  compression: "high",
-                  interlaced: false,
-                  transparency: 'auto'
-                }, function (err, buffer) {
-                  if (err) {
-                    return updateProductData();
-                  }
-                  fs.writeFile(featureFilePath, buffer, function (err) {
+                lwip.open(featureFilePath, function (err, image) {
                     if (err) {
-                      return updateProductData();
+                        return updateProductData();
                     }
                     var stats = fs.statSync(featureFilePath);
-                    fileAfterCompression = stats.size;
-                    return updateProductData();
-                  })
-                })
-              }
-            }
-          })
-        })
-      })
-    } else {
-      updateProductData();
+                    fileBeforeCompression = stats.size;
+                    image.resize(130, 100, function (err, rzdImage) {
+                        if (err) {
+                            return updateProductData();
+                        }
+                        if (extPart.toLowerCase() === 'jpg' || extPart.toLowerCase() === 'jpeg') {
+                            rzdImage.toBuffer(extPart, {
+                                quality: 75
+                            }, function (err, buffer) {
+                                if (err) {
+                                    return updateProductData();
+                                }
+                                fs.writeFile(featureFilePath, buffer, function (err) {
+                                    if (err) {
+                                        return updateProductData();
+                                    }
+                                    var stats = fs.statSync(featureFilePath);
+                                    fileAfterCompression = stats.size;
+                                    debug("SIZE After compression", fileAfterCompression);
+                                    return updateProductData();
+                                });
+                            });
+                        } else {
+                            if (extPart === 'png') {
+                                rzdImage.toBuffer(extPart, {
+                                    compression: "high",
+                                    interlaced: false,
+                                    transparency: 'auto'
+                                }, function (err, buffer) {
+                                    if (err) {
+                                        return updateProductData();
+                                    }
+                                    fs.writeFile(featureFilePath, buffer, function (err) {
+                                        if (err) {
+                                            return updateProductData();
+                                        }
+                                        var stats = fs.statSync(featureFilePath);
+                                        fileAfterCompression = stats.size;
+                                        return updateProductData();
+                                    });
+                                });
+                            }
+                        }
+                    });
+                });
+            });
+        } else {
+            updateProductData();
+        }
     }
 
     function updateProductData() {
