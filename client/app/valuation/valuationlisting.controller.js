@@ -1,7 +1,7 @@
 (function(){
 'use strict';
 angular.module('sreizaoApp').controller('ValuationListingCtrl',ValuationListingCtrl);
-function ValuationListingCtrl($scope,$window,$stateParams,$state,$uibModal,Modal,Auth,PagerSvc,userSvc, ValuationSvc,AuctionSvc,UtilSvc,$rootScope,uploadSvc) {
+function ValuationListingCtrl($scope,$window,$stateParams,$state,$uibModal,Modal,socketSvc,Auth,PagerSvc,userSvc, ValuationSvc,AuctionSvc,UtilSvc,$rootScope,uploadSvc) {
 	var vm = this;
 	vm.valuations = [];
 	var reqSent = [];
@@ -33,6 +33,10 @@ function ValuationListingCtrl($scope,$window,$stateParams,$state,$uibModal,Modal
 	vm.showDetail = showDetail;
 	vm.toDate = null;
     vm.fromDate = null;
+
+    socketSvc.on('onStatusUpdate', function (data) {
+        fireCommand(true);
+    });
 
 	$scope.$on('refreshValuationList',function(){
 		fireCommand(true);
@@ -80,7 +84,7 @@ function ValuationListingCtrl($scope,$window,$stateParams,$state,$uibModal,Modal
 			invoiceScope.user = userData[0];
 			invoiceScope.reqType = valuation.requestType;
 			invoiceScope.individualValuation = true;
-			invoiceScope.callback = fireCommand;
+			//invoiceScope.callback = fireCommand;
 			Modal.openDialog('individualValuationInvoiceCalcuation',invoiceScope);
         })
         .catch(function(err){
@@ -120,7 +124,7 @@ function ValuationListingCtrl($scope,$window,$stateParams,$state,$uibModal,Modal
 		OfflinePaymentScope.valuation = valuation;
 		OfflinePaymentScope.viewMode = openDialog;
 		OfflinePaymentScope.iValuationFlag = true;
-		OfflinePaymentScope.callback = fireCommand;
+		//OfflinePaymentScope.callback = fireCommand;
 		Modal.openDialog('OfflinePaymentPopup',OfflinePaymentScope);
 	}
 
@@ -315,13 +319,17 @@ function ValuationListingCtrl($scope,$window,$stateParams,$state,$uibModal,Modal
 
 	function submitToAgency(valuation,type){
         //api integration
+        $rootScope.loading = true;
         ValuationSvc.submitToAgency(valuation,type)
         .then(function(resList){
-          fireCommand(true);    
+          fireCommand(true);
+          $rootScope.loading = false;
+          Modal.alert(resList, true); 
         })
         .catch(function(err){
           if(err && err.data)
         	Modal.alert(err.data);
+          $rootScope.loading = false;
         }) 
     }
 }

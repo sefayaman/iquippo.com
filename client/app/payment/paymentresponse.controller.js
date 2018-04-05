@@ -126,14 +126,21 @@ function PaymentResponseCtrl($scope,Modal,$rootScope,$stateParams,$state,notific
  				valuationReq = result[0];
         $scope.reqId = result[0].requestId;
         if(vm.success) {
-          ValuationSvc.updateStatus(valuationReq, IndividualValuationStatuses[1]);
-          submitToAgency(valuationReq,'Mjobcreation');
+          $rootScope.loading = true;
+          ValuationSvc.updateStatus(valuationReq, IndividualValuationStatuses[1])
+          .then(function(){
+            $rootScope.loading = false;
+          })
+          .catch(function(err){
+            $rootScope.loading = false;
+          });
+          //submitToAgency(valuationReq,'Mjobcreation');
         }
  			}
  		});
  	}
 
-  function submitToAgency(valuation,type){
+  /*function submitToAgency(valuation,type){
     //api integration
     $rootScope.loading = true;
     ValuationSvc.submitToAgency(valuation,type)
@@ -146,7 +153,7 @@ function PaymentResponseCtrl($scope,Modal,$rootScope,$stateParams,$state,notific
         Modal.alert(err.data);
       $rootScope.loading = false;
     }) 
-  }
+  }*/
 
   function setPayment(payTran, success) {
     if(payTran.payments.length < 1)

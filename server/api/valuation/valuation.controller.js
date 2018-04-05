@@ -22,7 +22,7 @@ var minify = require('html-minifier').minify;
 var fieldsConfig = require('./fieldsConfig');
 var ApiError = require('./../../components/_error.js');
 var IndividualValuationStatuses = ['Request Initiated','Payment Completed','Request Failed','Request Submitted','Invoice Generated','Valuation Report Failed','Valuation Report Submitted','Completed', 'Cancelled'];
-
+var _sendAndUpdateViaSocket = require('../../realTimeSocket')._sendAndUpdateViaSocket;
 // Get list of Valuation
 exports.getAll = function (req, res) {
   ValuationReq.find(function (err, valuations) {
@@ -86,6 +86,7 @@ function createValuationReq(req,res) {
               resObj.transactionId = valuation.transactionId;
               resObj.errorCode = 0;
               ValuationUtil.sendNotification({action: "REQUEST", requestId: valuation.requestId});
+              _sendAndUpdateViaSocket('onStatusUpdate');
               return res.status(200).json(resObj);
             }
           });
@@ -217,7 +218,7 @@ function paginatedResult(req, res, modelRef, filter) {
 }
 
 // Updates an existing valuation in the DB.
-exports.update = function (req, res) {
+exports.update = function (req, res, next) {
   if (req.body._id) { delete req.body._id; }
   req.body.updatedAt = new Date();
   ValuationReq.findById(req.params.id, function (err, valuation) {
@@ -226,6 +227,14 @@ exports.update = function (req, res) {
     ValuationReq.update({ _id: req.params.id }, { $set: req.body }, function (err) {
       if (err) { return handleError(res, err); }
       sendStatusMail(req.body);
+      if(req.body.status === IndividualValuationStatuses[1]) {
+        req.body._id = req.params.id;
+        req.query.type = 'Mjobcreation';
+        req.noResponseSend = true;
+        next();
+      }
+
+      _sendAndUpdateViaSocket('onStatusUpdate');
       return res.status(200).json(req.body);
     });
   });
@@ -334,7 +343,8 @@ exports.cancelRequest = function(req,res){
       delete result._id;
       ValuationReq.update({_id:bodyData._id},{$set:result},function(err,retVal){
         if(err) return handleError(res, err);
-        return res.status(200).send("Valuation request cancelled successfully !!!");
+      _sendAndUpdateViaSocket('onStatusUpdate');
+      return res.status(200).send("Valuation request cancelled successfully !!!");
       });
     });
   }
@@ -555,6 +565,14 @@ exports.submitRequest = function(req,res){
 
     if(!valReqs.length)
       return res.status(200).send("No record found to submit");
+    var statusesArr = [];
+      valReqs[0].statuses.forEach(function(item){
+          statusesArr.push(item.status);
+      });
+
+    if(statusesArr.indexOf(IndividualValuationStatuses[1]) < 0) {
+      return res.status(412).send("Payment not Completed !");
+    }
 
     postRequest(valReqs[0]);
   });
@@ -637,7 +655,9 @@ exports.submitRequest = function(req,res){
     ValuationReq.update({_id:_id},{$set:valReqs},function(err,retVal){
       // if(!err && type === 'Mjobcreation')
       //   pushNotification(valReqs);
-      return res.status(200).send("Valuation request submitted successfully !!!");
+      _sendAndUpdateViaSocket('onStatusUpdate');
+      if(!req.noResponseSend)
+        return res.status(200).send("Valuation request submitted successfully !!!");
     }); 
   }
 
@@ -729,6 +749,7 @@ exports.resumeRequest = function(req,res){
     }
     ValuationReq.update({_id:_id},{$set:bodyData},function(err,retVal){
       if(err) return handleError(res, err);
+      _sendAndUpdateViaSocket('onStatusUpdate');
       return res.status(200).send("Valuation request resumed successfully !!!");
     }); 
   }
@@ -837,6 +858,7 @@ exports.updateFromAgency = function(req,res){
   }
 
   function sendResponse(){
+    _sendAndUpdateViaSocket('onStatusUpdate');
     res.status(200).json(result);
   }
 

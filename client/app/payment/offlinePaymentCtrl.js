@@ -87,7 +87,7 @@ function OfflinePaymentCtrl($scope,$rootScope,Modal,$stateParams,$state,$uibModa
           generateKit(vm.dataModel);
         } else {
           ValuationSvc.updateStatus($scope.valuation, IndividualValuationStatuses[1]);
-          submitToAgency($scope.valuation,'Mjobcreation');
+          //submitToAgency($scope.valuation,'Mjobcreation');
         }
         //generateKit(vm.dataModel);
         Modal.alert(res.message);
@@ -102,7 +102,7 @@ function OfflinePaymentCtrl($scope,$rootScope,Modal,$stateParams,$state,$uibModa
     });
   }
 
-  function submitToAgency(valuation,type){
+  /*function submitToAgency(valuation,type){
     //api integration
     ValuationSvc.submitToAgency(valuation,type)
     .then(function(resList){
@@ -115,7 +115,7 @@ function OfflinePaymentCtrl($scope,$rootScope,Modal,$stateParams,$state,$uibModa
       if($scope.callback)
         $scope.callback(true);
     });
-  }
+  }*/
 
   function generateKit(tns){
     if(!tns)
