@@ -101,7 +101,7 @@
       </div>
       <div class="col-sm-9">
         <div class="row">
-          <div class="col-sm-8 form-group">
+          <div class="col-sm-7 form-group">
             <h3 class="auctionName">{{auctionData.auctionTypeValue | titleCase}} {{auctionData.name}} - {{auctionData.city}}
               <small class="text-success" ng-if="auctionData.auctionValue =='ongoingAuctions'">(
                 <i class="fa fa-circle"></i> Ongoing)</small>
@@ -122,7 +122,7 @@
 
             <a ng-href="{{liveAuctionURLSCE}}" target="_blank" class="btn btn-primary btn-block form-group" ng-if="redirectToLiveAuction && auctionData.auctionType === 'A'" ng-disabled="auctionData.auctionValue === 'upcomingAuctions'">View Online Auction</a>
           </div>
-          <div class="col-xs-6 col-sm-2 padd-left asset-sale" ng-if="auctionData.auctionType === 'L'">
+          <div class="col-xs-6 col-sm-3 padd-left asset-sale" ng-if="auctionData.auctionType === 'L'">
              <button type="button" class="btn btn-primary btn-block form-group" ng-if="!redirectToLiveAuction && auctionData.auctionType === 'L'" ng-disabled="auctionData.auctionValue === 'upcomingAuctions'" ng-click="viewLotVm.openLiveAuctionURL(true)">View Live Auction</button>
 
              <a ng-href="{{liveAuctionURLSCE}}" target="_blank" class="btn btn-primary btn-block form-group" ng-if="redirectToLiveAuction && auctionData.auctionType === 'L'" ng-disabled="auctionData.auctionValue === 'upcomingAuctions'">View Live Auction</a>
