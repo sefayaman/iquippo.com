@@ -9,7 +9,7 @@
     $stateParams.brand = $scope.removeUnderScore($stateParams.brand);
     $stateParams.category = $scope.removeUnderScore($stateParams.category);
     $scope.lot = {};
-    $scope.showWidget = false;
+    //$scope.showWidget = false;
     $scope.currentProduct = {};
     $scope.priceTrendData = null;
     $rootScope.currntUserInfo = {};
@@ -371,7 +371,7 @@
       });
     }
 
-    function getLot(){
+    /*function getLot(){
       if(!$stateParams.lot){
         $scope.showWidget = false;
         return;
@@ -416,7 +416,7 @@
         .catch(function(err){
           $scope.showWidget = false;
         });
-    }
+    }*/
 
     function init() {
       vendorSvc.getAllVendors()
@@ -536,11 +536,11 @@
           countBid();
           getLastBidForUser();
           getPriceTrendData();
-          if(Auth.getCurrentUser()._id && $stateParams.lot)
+          /*if(Auth.getCurrentUser()._id && $stateParams.lot)
             getLot();
           else{
              $scope.showWidget = false;
-          }
+          }*/
          /* if ($scope.currentProduct.tradeType == "SELL")
             vm.showText = "To Buy"
           else if ($scope.currentProduct.tradeType == "RENT")

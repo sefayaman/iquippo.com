@@ -89,7 +89,7 @@ exports.getOnFilter = function (req, res) {
   query.exec(
                function (err, payments) {
                       if(err) { return handleError(res, err); }
-                      if(payments[0].requestType === 'Valuation Request')
+                      if(payments[0] && payments[0].requestType && payments[0].requestType === 'Valuation Request')
                         addValuationData(req, res, payments);
                       else
                         return res.status(200).json(payments);
