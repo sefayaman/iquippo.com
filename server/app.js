@@ -48,7 +48,9 @@ mongoose.connection.on('error', function (err) {
 // Setup server
 var app = express();
 var server = require('http').createServer(app);
-//var socket=require('socket.io');
+var socket=require('socket.io')(server);
+
+require('./realTimeSocket')(socket);
 
 app.get('/_status', function (req, res) {
   res.status(200);

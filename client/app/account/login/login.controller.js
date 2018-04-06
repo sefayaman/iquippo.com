@@ -14,7 +14,7 @@ angular.module('account').controller('LoginCtrl', LoginCtrl);
     //vm.closeDialog = closeDialog;
 
     $scope.errors = {};
-
+    var submitted = false;
     function login(form) {
       if(form.$invalid){
         $scope.submitted = true;
@@ -25,10 +25,14 @@ angular.module('account').controller('LoginCtrl', LoginCtrl);
       dataToSend['userId'] = vm.user.userId;
       dataToSend['password'] = vm.user.password;
       //dataToSend['isManpower'] = false;
+      if(submitted)
+        return;
       if(form.$valid) {
+        submitted = true;
         Auth.login(dataToSend)
         .then( function() {
           //closeDialog();
+          submitted = false;
           vm.user = {};
 
           //Google and Facbook conversion start
@@ -58,6 +62,7 @@ angular.module('account').controller('LoginCtrl', LoginCtrl);
 
         })
         .catch( function(err) {
+          submitted = false;
           $scope.errors.other = err.message;
         });
       }
