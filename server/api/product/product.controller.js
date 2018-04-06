@@ -880,7 +880,7 @@ function updateProduct(req, res) {
     delete req.body.featured;
     req.proData = product.toObject();
     
-    if ( req.body.tradeType && req.body.tradeType.toLowerCase()==='sell' ) {
+    if ( req.body.tradeType && req.body.tradeType.toLowerCase()==='sell' && req.body.bidRequestApproved) {
             console.log(req.body.assetId);
             var filter = {};
             filter['product.assetId'] = req.body.assetId;
@@ -892,11 +892,9 @@ function updateProduct(req, res) {
 
                 if(bids && bids.length){
                     return res.status(404).send("Asset Trade Type can't be modified as there is an active bid on it");    
-               }
+                }
             });
-        }
-    else {
-        if (req.body.featured) {
+        } else if (req.body.featured) {
             var imgPath = config.uploadPath + req.body.assetDir + "/" + req.body.primaryImg;
             var featureFilePath = config.uploadPath + "featured/" + req.body.primaryImg;
             var fileParts = req.body.primaryImg.split('.');
@@ -967,7 +965,7 @@ function updateProduct(req, res) {
         } else {
             updateProductData();
         }
-    }
+    
 
     function updateProductData() {
       Product.update({ _id: req.params.id }, { $set: req.body }, function (err) {
