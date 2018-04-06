@@ -14,6 +14,8 @@ angular.module('sreizaoApp').factory("vendorSvc",vendorSvc)
     var inspectionVendorList = [];
     var saleFulfilmentVendorList = [];
     var auctionRegVendorList = [];
+    var gpsVendorList = [];
+    var photographesList = [];
       var vendorService = {};
       var path = '/api/vendor';
       
@@ -104,6 +106,8 @@ angular.module('sreizaoApp').factory("vendorSvc",vendorSvc)
           inspectionVendorList = [];
           saleFulfilmentVendorList = [];
           auctionRegVendorList = [];
+          gpsVendorList = [];
+          photographesList = [];
       		return res.data;
       	})
       	.catch(function(err){
@@ -125,6 +129,8 @@ angular.module('sreizaoApp').factory("vendorSvc",vendorSvc)
             inspectionVendorList = [];
             saleFulfilmentVendorList = [];
             auctionRegVendorList = [];
+            gpsVendorList = [];
+            photographesList = [];
             return res.data.vendor + 1;
           })
           .catch(function(err){
@@ -146,6 +152,8 @@ angular.module('sreizaoApp').factory("vendorSvc",vendorSvc)
           inspectionVendorList = [];
           saleFulfilmentVendorList = [];
           auctionRegVendorList = [];
+          gpsVendorList = [];
+          photographesList = [];
         	return res.data;
         })
         .catch(function(err){
@@ -197,6 +205,10 @@ angular.module('sreizaoApp').factory("vendorSvc",vendorSvc)
           }
           else if(data[i].services[j] == 'Auction Registration' && data[i].status){
             auctionRegVendorList.push(vd);
+          }else if(data[i].services[j] == 'GPS Installation' && data[i].status){
+            gpsVendorList.push(vd);
+          }else if(data[i].services[j] == 'Photographs Only' && data[i].status){
+            photographesList.push(vd);
           }
         }
       }
@@ -214,6 +226,8 @@ angular.module('sreizaoApp').factory("vendorSvc",vendorSvc)
     inspectionVendorList = [];
     saleFulfilmentVendorList = [];
     auctionRegVendorList =[];
+    gpsVendorList = [];
+    photographesList = [];
   }
 
   function getShippingVendors(){
@@ -267,6 +281,12 @@ angular.module('sreizaoApp').factory("vendorSvc",vendorSvc)
       break;
       case 'Auction Registration':
          list = auctionRegVendorList;
+      break;
+      case 'GPS Installation':
+        list = gpsVendorList;
+      break;
+       case 'Photographs Only':
+        list = photographesList;
       break;
     }
     return list;

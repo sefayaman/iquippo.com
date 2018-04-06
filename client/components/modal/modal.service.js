@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('sreizaoApp')
-  .factory('Modal', function($rootScope, $uibModal) {
+  .factory('Modal', function ($rootScope, $uibModal) {
 
     function openModal(scope, modalClass) {
       var modalScope = $rootScope.$new();
@@ -20,60 +20,60 @@ angular.module('sreizaoApp')
     return {
 
       /*Alert model*/
-      alert: function(message, autoClose) {
+      alert: function (message, autoClose) {
         var scope = {}
         scope.message = message;
         scope.template = 'components/modal/alert.html';
         scope.backdrop = true;
         var alertModal;
-        scope.close = function() {
+        scope.close = function () {
           alertModal.close()
         }
         alertModal = openModal(scope, null);
         if (autoClose)
-          setTimeout(function() {
+          setTimeout(function () {
             scope.close()
           }, 50 * 1000);
 
       },
       /*Confirm model*/
-      confirm: function(message, con) {
+      confirm: function (message, con) {
         con = con || angular.noop;
         var scope = {}
         scope.message = message;
         scope.template = 'components/modal/confirm.html';
         scope.backdrop = "static";
         var confirmModal;
-        scope.close = function(param) {
+        scope.close = function (param) {
           confirmModal.close(param)
         }
         confirmModal = openModal(scope, null);
-        confirmModal.result.then(function(param) {
+        confirmModal.result.then(function (param) {
           con(param);
         });
       },
 
       /* delete  modals */
-      delete: function(message, del) {
+      delete: function (message, del) {
         del = del || angular.noop;
         var scope = {}
         scope.message = message;
         scope.template = 'components/modal/delete.html';
         scope.backdrop = "static";
         var deleteModal;
-        scope.close = function(param) {
+        scope.close = function (param) {
           deleteModal.close(param)
         }
         deleteModal = openModal(scope, 'modal-danger');
-        deleteModal.result.then(function(param) {
+        deleteModal.result.then(function (param) {
           del(param);
         });
 
       },
-      openDialog: function(modalType, scope,modalClass) {
+      openDialog: function (modalType, scope, modalClass) {
         if (!scope)
           scope = $rootScope.$new();
-         modalClass = modalClass || 'modal-default';
+        modalClass = modalClass || 'modal-default';
         var modalInstance = $uibModal.open({
           animation: true,
           templateUrl: Modals[modalType].tplUrl,
@@ -82,16 +82,16 @@ angular.module('sreizaoApp')
           scope: scope,
           size: 'lg'
         });
-        return  modalInstance;
+        return modalInstance;
       },
 
-      openMap: function(loc, scope, NgMap) {
+      openMap: function (loc, scope, NgMap) {
 
         return $uibModal.open({
           animation: true,
           templateUrl: 'components/modal/map.html',
-          controller: function() {
-            NgMap.getMap().then(function(map) {
+          controller: function () {
+            NgMap.getMap().then(function (map) {
               console.log(map.getCenter());
               console.log('markers', map.markers);
               console.log('shapes', map.shapes);

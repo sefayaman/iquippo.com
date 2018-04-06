@@ -31,36 +31,43 @@
           <div uib-collapse="isCollapsed">
           <form class="form" name="form" >
             <div class="form-group fill-info">
-  	        <div class="row">
-  	        	<div class="form-group">
-  					<div class="form-group col-sm-3" ng-class="{'has-error': form.fname.$invalid && submitted }">
+  	          <div class="row">
+  	        	  <div class="form-group">
+  					        <div class="form-group col-sm-3" ng-class="{'has-error': form.fname.$invalid && submitted }">
+                      <label>*First Name</label>
                       <input type="text" class="form-control" name="fname" ng-model="partnerVM.vendorReg.user.fname" value="" placeholder="*First Name" required/>
                     </div>
                     <div class="form-group col-sm-3">
+                      <label>Middle Name</label>
                       <input type="text" class="form-control" name="mname" ng-model="partnerVM.vendorReg.user.mname" value="" placeholder="Middle Name"/>
                     </div>
                     <div class="form-group col-sm-3" ng-class="{'has-error': form.lname.$invalid && submitted }">
+                      <label>*Last Name</label>
                       <input type="text" class="form-control" name="lname" ng-model="partnerVM.vendorReg.user.lname" value="" placeholder="*Last Name" required/>
                     </div>
                     <div class="col-sm-3" ng-class="{'has-error': form.entityName.$invalid && submitted }">
+                      <label>*Legal Entity Name</label>
                       <input type="text" class="form-control" name="entityName" ng-model="partnerVM.vendorReg.entityName" value="" placeholder="*Legal Entity Name" required/>
                     </div>
-  				</div>
-  	        </div>
+  				      </div>
+  	          </div>
               <div class="row">
                   
                 <div class="form-group col-sm-3" ng-class="{'has-error': form.email.$invalid && submitted }">
+                  <label>Email</label>
                   <input class="form-control" name="email" ng-model="partnerVM.vendorReg.user.email" placeholder="Email" type="email" value="" >
                   <p class="help-block" ng-show="(form.email.$error.email || form.email.$error.pattern) && submitted">
                   Please enter a valid email.
                 </p>
                 </div>
                 <div class="form-group col-sm-3" ng-class="{'has-error': form.mobile.$invalid && submitted }">
-                      <input class="form-control" name="mobile" ng-model="partnerVM.vendorReg.user.mobile" placeholder="* Mobile No." type="text" value="" ng-blur="partnerVM.verify()" uib-tooltip="98-XXXX-XXXX" tooltip-trigger="focus" tooltip-placement="top" required>
+                    <label>* Mobile No.</label>
+                    <input class="form-control" name="mobile" ng-model="partnerVM.vendorReg.user.mobile" placeholder="* Mobile No." type="text" value="" ng-blur="partnerVM.verify()" uib-tooltip="98-XXXX-XXXX" tooltip-trigger="focus" tooltip-placement="top" required>
                   </div>
 
                 <div class="form-group col-sm-3">
-                    <div class="form-group" ng-class="{'has-error': form.password.$invalid && submitted }">
+                    <div ng-class="{'has-error': form.password.$invalid && submitted }">
+                      <label>Password</label>
                         <input type="password" name="password" class="form-control" placeholder="* Password" ng-model="partnerVM.vendorReg.user.password" ng-minlength="4" ng-disabled="partnerVM.existFlag" ng-required="!partnerVM.existFlag">
                       </div>
                       <p class="help-block"
@@ -69,12 +76,14 @@
                     </p>  
                 </div>
                 <div class="form-group col-sm-3">
+                  <label>Phone No.</label>
                   <input type="text" class="form-control" name="phone" ng-model="partnerVM.vendorReg.user.phone" value="" placeholder="Phone No.">
                 </div>
               </div>
   				        <div class="row">
                   <div class="col-xs-3">
                         <div class="form-group" ng-class="{'has-error': form.location.$invalid && submitted }">
+                          <label>*Current Location</label>
                             <select class="form-control" name="location" ng-model="partnerVM.vendorReg.user.city" ng-change="partnerVM.onLocationChange(partnerVM.vendorReg.user.city)" required>
                               <option value="" disabled>*Current Location</option>
                               <option ng-repeat="location in locationList" value="{{location.name}}">{{location.name}}</option>
@@ -83,10 +92,12 @@
                     </div>
                   </div>
                   <div class="form-group col-sm-3">
+                    <label>Your URL</label>
                     <input type="url" name="url" class="form-control" ng-model="partnerVM.vendorReg.url" placeholder="Your URL" />
                       
                   </div>
                   <div class="col-sm-3 form-group">
+                    <label>Upload Logo</label>
                     <span class="btn btn-warning fileinput-button">
                       <span>Browse Partner Logo...</span>
                       <!-- <input type="file" image-upload="" data-filetype="image" data-index="0" name="files_0" class="ng-scope"> -->
@@ -97,7 +108,8 @@
                     {{partnerVM.vendorReg.user.imgsrc}}
                   </div>
                 
-                </div>               
+                </div> 
+                    <label>Services</label>              
                     <div class="row form-group">
                       <div class="col-sm-2">
                         <input type="checkbox" name="Shipping" ng-model="Shipping" ng-true-value="'Shipping'"> Shipping
@@ -131,6 +143,12 @@
                       <div class="col-sm-2">
                         <input type="checkbox"  name="Auction_Registration" ng-model="Auction_Registration" ng-true-value="'Auction Registration'"> Auction Registration
                       </div>
+                       <div class="col-sm-2">
+                        <input type="checkbox"  name="GPS_Installation" ng-model="GPS_Installation" ng-true-value="'GPS Installation'"> GPS Installation
+                      </div>
+                     <div class="col-sm-2">
+                        <input type="checkbox"  name="photographs" ng-model="Photographs_Only" ng-true-value="'Photographs Only'"> Photographs Only
+                      </div>
                   </div>
                   <div class="row form-group">
                     <div class="col-sm-12 text-right">
@@ -142,8 +160,20 @@
             </form>
           </div>
 
+          <div class="row">
+            <div class="col-sm-6">
+              <p>Showing : {{filterData.length}} Records</p>
+            </div>
+            <div class="col-sm-6">
+                <div class="tablesearch form-group pull-right">
+                   Search: <input type="text" placeholder="Search..." ng-model="filterText" ng-model-options="{debounce:500}">
+                </div>                
+            </div>
+          </div>
+
           <div class="table-responsive">
-            <table datatable="ng" dt-options="dtOptions" class="table table-bordred table-striped">
+          
+            <table class="table table-bordred table-striped">
 
               <thead>
                 <tr>
@@ -160,12 +190,12 @@
                
               </thead>
               <tbody>
-               <tr ng-repeat="vendor in vendorList">
+               <tr ng-repeat="vendor in filterData = (vendorList | filter : filterText) | limitTo:partnerVM.itemsPerPage:partnerVM.itemsPerPage*(page-1)">
                 <td><img class="sheduleImg img-circle" ng-src="{{uploadImagePrefix}}{{avatarDir}}/{{vendor.user.imgsrc}}" alt="Image"></td>
                  <td>{{vendor.partnerId}}</td>
                 <td>{{vendor.user.fname}}</td>
                 <td>{{vendor.entityName}}</td>
-                <td>{{partnerVM.getServiceString(vendor.services.join())}}</td>
+                <td>{{partnerVM.getServiceString(vendor.services)}}</td>
                 <td>{{vendor.user.email}}</td>
                 <td>{{vendor.user.mobile}}</td>
                 <td> 
@@ -179,6 +209,7 @@
               </tbody>
             </table>
           </div>
+          <uib-pagination total-items="filterData.length" ng-model="page" items-per-page="partnerVM.itemsPerPage" max-size="partnerVM.maxSize" ng-change="partnerVM.pageChanged()" class="pagination-sm" rotate="false">  </uib-pagination>
         </div>
       </div>   
     </div>

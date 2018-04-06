@@ -140,6 +140,11 @@ function AuctionRegisCtrl($scope, $rootScope, $location, Modal, Auth,PagerSvc,KY
       }
     }
 
+    if(paymentProcess && !$scope.option.agreeOnUndertaking){
+      Modal.alert("Please accept the terms & conditions and undertaking of auction.");
+      return;
+    }
+
    if(paymentProcess && $scope.kycExist && $scope.kycUpdateNow)
       updateUser(lotData,function(){
         proceedToSubmit(paymentProcess);
@@ -155,6 +160,7 @@ function AuctionRegisCtrl($scope, $rootScope, $location, Modal, Auth,PagerSvc,KY
     dataObj.auction.dbAuctionId = $scope.currentAuction._id;
     dataObj.auction.name = $scope.currentAuction.name;
     dataObj.auction.auctionId = $scope.currentAuction.auctionId;
+    dataObj.auction.auctionType = $scope.currentAuction.auctionType;
     dataObj.auction.emdAmount = $scope.currentAuction.emdAmount;
     dataObj.auction.emdTax = $scope.currentAuction.emdTax;
     dataObj.auction.auctionOwnerMobile = $scope.currentAuction.auctionOwnerMobile;
@@ -244,10 +250,12 @@ function AuctionRegisCtrl($scope, $rootScope, $location, Modal, Auth,PagerSvc,KY
     var paymentObj = {};
     if($scope.option.select)
       paymentObj.paymentMode = $scope.option.select;
+    paymentObj.agreeOnUndertaking = $scope.option.agreeOnUndertaking;
     paymentObj.transactionId = result.transactionId;
     paymentObj.auctionId = dataObj.auction.auctionId;
     paymentObj.auctionName = dataObj.auction.name;
     paymentObj.auction_id = dataObj.auction.dbAuctionId;
+    paymentObj.auctionType = dataObj.auction.auctionType;
     paymentObj.emdTax = dataObj.auction.emdTax;
     paymentObj.requestType = "Auction Request";
     if($scope.kyc.kycUploadlater)
@@ -282,10 +290,12 @@ function AuctionRegisCtrl($scope, $rootScope, $location, Modal, Auth,PagerSvc,KY
       } else {
         var paymentObj = {};
         paymentObj.paymentMode = $scope.option.select;
+        paymentObj.agreeOnUndertaking = $scope.option.agreeOnUndertaking;
         paymentObj.transactionId = result.transactionId;
         paymentObj.auctionId = dataObj.auction.auctionId;
         paymentObj.auctionName = dataObj.auction.name;
         paymentObj.auction_id = dataObj.auction.dbAuctionId;
+        paymentObj.auctionType = dataObj.auction.auctionType;
         paymentObj.emdTax = dataObj.auction.emdTax;
         paymentObj.requestType = "Auction Request";
         paymentObj.status = transactionStatuses[1].code;

@@ -2,7 +2,7 @@
 'use strict';
 angular.module('product').controller('ProductListingCtrl',ProductListingCtrl);
 
-function ProductListingCtrl($scope, $location, $rootScope, $http, productSvc, AuctionSvc, classifiedSvc, Modal, DTOptionsBuilder, $uibModal, $state, Auth, notificationSvc,uploadSvc,$timeout,$stateParams) {
+function ProductListingCtrl($scope, $location, $rootScope, $http, productSvc, AuctionSvc, classifiedSvc, Modal, $uibModal, $state, Auth, notificationSvc,uploadSvc,$timeout,$stateParams) {
   var vm  = this;
 
   //pagination variables
@@ -341,10 +341,14 @@ function ProductListingCtrl($scope, $location, $rootScope, $http, productSvc, Au
         var dataToSend ={};
         dataToSend["userid"] = Auth.getCurrentUser()._id;
         dataToSend["role"] = Auth.getCurrentUser().role;
+         if(Auth.isEnterprise()){
+          //delete dataToSend.userid;
+          dataToSend.enterpriseId = Auth.getCurrentUser().enterpriseId; 
+        }
         dataToSend['productCondition'] = "used";
         productSvc.exportProduct(dataToSend)
         .then(function(buffData){
-          saveAs(new Blob([s2ab(buffData)],{type:"application/octet-stream"}), "productlist_"+ new Date().getTime() +".xlsx")
+          saveAs(new Blob([s2ab(buffData)],{type:"application/octet-stream"}), "productlist_"+ new Date().getTime() +".csv")
         });
      }
 

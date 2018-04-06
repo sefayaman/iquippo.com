@@ -3,7 +3,7 @@
 'use strict';
 angular.module('sreizaoApp').controller('OfflinePaymentCtrl',OfflinePaymentCtrl);
 
-function OfflinePaymentCtrl($scope,$rootScope,Modal,$stateParams,$state,$uibModalInstance, PaymentSvc,Auth) {
+function OfflinePaymentCtrl($scope,$rootScope,Modal,$stateParams,$state,$uibModalInstance, ValuationSvc,PaymentSvc,Auth,userRegForAuctionSvc) {
    
   var vm = this;
   vm.dataModel = {};
@@ -26,6 +26,7 @@ function OfflinePaymentCtrl($scope,$rootScope,Modal,$stateParams,$state,$uibModa
         vm.dataModel.amount =  vm.dataModel.totalAmount;
         vm.dataModel.auctionId = $scope.offlinePayment.auctionId;
         vm.dataModel.auction_id = $scope.offlinePayment.auction_id;
+        vm.dataModel.auctionType = $scope.offlinePayment.auctionType;
         vm.dataModel.emdTax = $scope.offlinePayment.emdTax;
         vm.dataModel.requestType = "Auction Request";
         vm.dataModel.status = transactionStatuses[5].code;
@@ -38,6 +39,7 @@ function OfflinePaymentCtrl($scope,$rootScope,Modal,$stateParams,$state,$uibModa
       angular.copy($scope.offlinePayment, vm.dataModel);
       vm.dataModel.amount =  $scope.offlinePayment.totalAmount;
       vm.dataModel.transactionId =  $scope.offlinePayment.transactionId;
+      vm.dataModel.auctionType = $scope.offlinePayment.auctionType;
     }
     if($scope.viewMode === 'paymentView') {
       $scope.totalPaidAmount = 0;
@@ -67,21 +69,67 @@ function OfflinePaymentCtrl($scope,$rootScope,Modal,$stateParams,$state,$uibModa
     stsObj.createdAt = new Date();
     stsObj.paymentStatus = "success";
     vm.dataModel.payments[vm.dataModel.payments.length] = stsObj;
-    vm.dataModel.userDataSendToAuction = true;
+    if(!$scope.iValuationFlag) {
+      vm.dataModel.reqSubmitStatus = ReqSubmitStatuses[1];
+      vm.dataModel.userDataSendToAuction = true;
+    }
     $rootScope.loading = true;
     PaymentSvc.updateStatus(vm.dataModel, transactionStatuses[5].code)
     .then(function(res){
-        vm.dataModel = {};
         $scope.submitted = false;
         $rootScope.loading = false;
-        $rootScope.$broadcast('refreshPaymentHistroyList');
+       /* if($scope.generateKitCallback)
+          $scope.generateKitCallback(vm.dataModel);
+        else
+          $rootScope.$broadcast('refreshPaymentHistroyList');*/
+		    if(!$scope.iValuationFlag) {
+          //$rootScope.$broadcast('refreshPaymentHistroyList');
+          generateKit(vm.dataModel);
+        } else {
+          ValuationSvc.updateStatus($scope.valuation, IndividualValuationStatuses[1]);
+          //submitToAgency($scope.valuation,'Mjobcreation');
+        }
+        //generateKit(vm.dataModel);
         Modal.alert(res.message);
         closeDialog();
     })
     .catch(function(err){
-    if(err.data)
-      Modal.alert(err.data); 
-    $rootScope.loading = false;
+      if(err.data)
+        Modal.alert(err.data);
+      $rootScope.loading = false;
+      userRegForAuctionSvc.generateKit(vm.dataModel);
+      closeDialog();
+    });
+  }
+
+  /*function submitToAgency(valuation,type){
+    //api integration
+    ValuationSvc.submitToAgency(valuation,type)
+    .then(function(resList){
+      if($scope.callback)
+        $scope.callback(true);
+    })
+    .catch(function(err){
+      if(err && err.data)
+        Modal.alert(err.data);
+      if($scope.callback)
+        $scope.callback(true);
+    });
+  }*/
+
+  function generateKit(tns){
+    if(!tns)
+      return;
+   $rootScope.loading = true;
+    userRegForAuctionSvc.generateKit(tns)
+    .then(function(res){
+      $rootScope.loading = false;
+       $rootScope.$broadcast('refreshPaymentHistroyList');
+    })
+    .catch(function(err){
+      $rootScope.$broadcast('refreshPaymentHistroyList');
+      $rootScope.loading = false;
+      console.log("Error in kit generation",err);
     });
   }
 

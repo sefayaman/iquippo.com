@@ -11,7 +11,7 @@
             <th>Price(Rs.)</th>
           </tr>
           <tr>
-            <td>{{paymentVm.payTransaction.auctionName || paymentVm.payTransaction.auctionId}}({{paymentVm.payTransaction.auctionId}})</td>
+            <td>{{paymentVm.payTransaction.auctionName || paymentVm.payTransaction.auctionId}} ({{paymentVm.payTransaction.auctionId}})</td>
             <td class="text-capitalize">{{paymentVm.payTransaction.emdTax}}</td>
             <td>Rs. {{paymentVm.payTransaction.totalAmount}}</td>
           </tr>
@@ -30,14 +30,14 @@
               </div> 
           </div>
         </div>
-        <div class="panel panel-default">
+        <div class="panel panel-default charges-spacified">
            <div class="panel-heading">
-             <h3 class="panel-title"><strong>Online Transaction Charges are specified below</strong></h3>
+             <h5 class="panel-title"><small><strong>Online Transaction Charges are specified below</strong></small></h5>
            </div>
            <div class="panel-body">
-             <div><strong>Debit Cards</strong>  - 1% of the transaction amount plus applicable taxes</div>
-             <div><strong>Credit Cards</strong> - 1.8% of the transaction amount plus applicable taxes </div>
-             <div><strong>Net Banking</strong>  - Maximum of INR 55 plus applicable taxes</div>
+             <h6><small><strong>Debit Cards</strong>  - 1% of the transaction amount plus applicable taxes </small></h6>
+             <h6><small><strong>Credit Cards</strong> - 1.8% of the transaction amount plus applicable taxes  </small></h6>
+             <h6><small><strong>Net Banking</strong>  - Maximum of INR 55 plus applicable taxes </small></h6>
            </div>
          </div>
         <div class="clearfix form-group"></div>
@@ -54,8 +54,82 @@
   </div>
 </section>
 
+<!-- for individual valuation -->
+<div id="wrapper" ng-if="paymentVm.payTransaction.requestType === 'Valuation Request'">
+  <section class="wrapper">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-12">
+          <div id="page-wrapper" ng-if="!ccAvenue">
+            <!-- Page Heading -->
+              <div class="row">
+                <div class="col-lg-12">
+                  <h3>
+                      Order Summary
+                  </h3>
+                  <hr>
+                </div>
+              </div>
+              <!-- /.row -->
+
+              <div class="table-responsive">
+                <table class="table table-striped">
+                  <tr>
+                    <th>Product</th>
+                    <th>Type</th>
+                    <th>Price(Rs.)</th>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="media">
+                        <div class="media-body payment-details">
+                          <h4 class="media-heading"><a href="javascript:void(0);">
+                            <span ng-if="paymentVm.payTransaction.product.name">{{paymentVm.payTransaction.product.name}}</span>
+                            <span ng-if="!paymentVm.payTransaction.product.name">{{paymentVm.payTransaction.product.category}} {{paymentVm.payTransaction.product.brand}} {{paymentVm.payTransaction.product.model}}</span>
+                          </a></h4>
+                          <p ng-if="paymentVm.payTransaction.product.type == 'spare'">{{paymentVm.payTransaction.product.partNo}} {{paymentVm.payTransaction.product.manufacturer}}</p>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <!-- <span >Valuation (Agency Name)</span> -->
+                      <span >{{paymentVm.payTransaction.valuationData.requestType}} ({{paymentVm.payTransaction.valuationData.valuationAgency.name}})</span>
+                    </td>
+                    <td>
+                      {{paymentVm.payTransaction.totalAmount}}
+                    </td>
+                  </tr>
+                </table>
+              </div>
+              <div class="well form-group">
+                  <div class="row">
+                      <div class="col-sm-5">
+                        Payment Mode: <span>{{paymentVm.payTransaction.paymentMode}}</span>
+                      </div>
+                      <div class="col-xs-6 col-sm-3 text-right">
+                        Total: 
+                      </div>
+                      <div class="col-xs-6 col-sm-4 text-center">
+                        <strong>Rs. {{paymentVm.payTransaction.totalAmount}}</strong>
+                      </div> 
+                  </div>
+                </div>
+                <div class="clearfix form-group"></div>
+                <div class="text-center">
+                  <button class="btn btn-success" ng-if = "!isAdmin()" ng-click="paymentVm.payNow()">Proceed to Payment</button>
+                </div>
+          </div>
+         <div class="page-wrapper" ng-if="ccAvenue">
+            <iframe width="100%" height="570" scrolling="yes" frameborder="0"  id="paymentFrame" ng-src="{{ ccavenueURLSCE }}"></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
 <!--for payment -->
-<div id="wrapper" ng-if="paymentVm.payTransaction.requestType !== 'Auction Request'">
+<div id="wrapper" ng-if="paymentVm.payTransaction.requestType !== 'Auction Request' && paymentVm.payTransaction.requestType !== 'Valuation Request'">
   <section class="wrapper">
     <div class="container-fluid">
       <div class="row">        
@@ -75,21 +149,18 @@
               <div class="table-responsive">
                 <table class="table table-striped">
                   <tr>
-                    <th>Product</th>                   
+                    <th>Product</th>
                     <th>Type</th>
                     <th>Price(Rs.)</th>
                   </tr>
                   <tr ng-repeat="py in paymentVm.payTransaction.payments">
                     <td>
                       <div class="media">
-                        <!-- <a class="pull-left" href="javascrip:void(0)">
-                          <img class="img-circle media-object" ng-src="{{uploadImagePrefix}}{{paymentVm.payTransaction.product.assetDir}}/{{paymentVm.payTransaction.product.primaryImg}}" alt="Image" width="70" height="70">
-                        </a> -->
                         <div class="media-body payment-details">
                           <h4 class="media-heading"><a href="javascript:void(0);">
                             <span ng-if="paymentVm.payTransaction.product.name">{{paymentVm.payTransaction.product.name}}</span>
-                            <span ng-if="!paymentVm.payTransaction.product.name">{{paymentVm.payTransaction.product.category}} {{paymentVm.payTransaction.product.model}} {{paymentVm.payTransaction.product.brand}}</span>
-                          </a></h4>                      
+                            <span ng-if="!paymentVm.payTransaction.product.name">{{paymentVm.payTransaction.product.category}} {{paymentVm.payTransaction.product.brand}} {{paymentVm.payTransaction.product.model}}</span>
+                          </a></h4>
                           <p ng-if="paymentVm.payTransaction.product.type == 'spare'">{{paymentVm.payTransaction.product.partNo}} {{paymentVm.payTransaction.product.manufacturer}}</p>
                           <!-- <p>{{paymentVm.payTransaction.product.city}}</p> -->
 

@@ -3,7 +3,7 @@
 
 angular.module('admin').controller('TechSpecMasterCtrl', TechSpecMasterCtrl);
 
-function TechSpecMasterCtrl($scope,$rootScope,$state,uploadSvc,categorySvc,brandSvc, modelSvc,Modal,TechSpecMasterSvc, Auth,PagerSvc,$filter){
+function TechSpecMasterCtrl($scope,$rootScope,$state,$window,uploadSvc,categorySvc,brandSvc, modelSvc,Modal,TechSpecMasterSvc, Auth,PagerSvc,$filter){
     var vm  = this;
     $scope.pager = PagerSvc.getPager();
     vm.tabVal = "techSpec";
@@ -255,6 +255,7 @@ function TechSpecMasterCtrl($scope,$rootScope,$state,uploadSvc,categorySvc,brand
     }
 
     function editClicked(rowData){
+        $window.scrollTo(0, 0);
         vm.dataModel = angular.copy(rowData);
         $scope.isEdit = true;
     }

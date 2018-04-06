@@ -61,22 +61,29 @@ var ReqSubmitStatuses = ['Request Submitted', 'Request Failed'];
       }, function(err, lotResult) {
         options.dataToSend = lotResult[0].toObject();
         options.dataType = "lotData";
-        Util.sendCompiledData(options, function(err, result) {
-          //options.dataToSend.auction_id = lotResult[0].auction_id;
-          if (err || (result && result.err)) {
-            options.dataToSend.reqSubmitStatus = ReqSubmitStatuses[1];
-            update(options.dataToSend);
-            if(result && result.err)
-              return res.status(412).send(result.err);
-            return res.status(412).send("Unable to post lot request. Please contact support team.");
-          }
-
-          if(result){
+        if (req.body.auctionType==='PT') {
             options.dataToSend.reqSubmitStatus =  ReqSubmitStatuses[0];
             update(options.dataToSend);
             return res.status(201).json({errorCode: 0,message: "Lot request submitted successfully !!!"});
+        }
+        else {
+            Util.sendCompiledData(options, function(err, result) {
+              //options.dataToSend.auction_id = lotResult[0].auction_id;
+              if (err || (result && result.err)) {
+                options.dataToSend.reqSubmitStatus = ReqSubmitStatuses[1];
+                update(options.dataToSend);
+                if(result && result.err)
+                  return res.status(412).send(result.err);
+                return res.status(412).send("Unable to post lot request. Please contact support team.");
+              }
+
+              if(result){
+                options.dataToSend.reqSubmitStatus =  ReqSubmitStatuses[0];
+                update(options.dataToSend);
+                return res.status(201).json({errorCode: 0,message: "Lot request submitted successfully !!!"});
+              }
+            });
           }
-        });
       });
   }
 
@@ -115,22 +122,29 @@ exports.updateLotData = function(req, res) {
         options.dataToSend = req.body;
         options.dataToSend._id = req.params.id;
         options.dataType = "lotData";
-        Util.sendCompiledData(options, function(err, result) {
-          if (err || (result && result.err)) {
-            //options.dataToSend = lotResult[0].toObject();
-            options.dataToSend.reqSubmitStatus =  ReqSubmitStatuses[1];
-
-            update(options.dataToSend);
-            if(result && result.err)
-              return res.status(412).send(result.err);
-            return res.status(412).send("Unable to update lot request. Please contact support team.");
-          }
-          if(result){
+        if (req.body.auctionType==='PT') {
             options.dataToSend.reqSubmitStatus =  ReqSubmitStatuses[0];
             update(options.dataToSend);
             return res.status(201).json({errorCode: 0,message: "Lot request updated successfully !!!"});
-          }
-        });
+        }
+        else {
+            Util.sendCompiledData(options, function(err, result) {
+              if (err || (result && result.err)) {
+                //options.dataToSend = lotResult[0].toObject();
+                options.dataToSend.reqSubmitStatus =  ReqSubmitStatuses[1];
+
+                update(options.dataToSend);
+                if(result && result.err)
+                  return res.status(412).send(result.err);
+                return res.status(412).send("Unable to update lot request. Please contact support team.");
+              }
+              if(result){
+                options.dataToSend.reqSubmitStatus =  ReqSubmitStatuses[0];
+                update(options.dataToSend);
+                return res.status(201).json({errorCode: 0,message: "Lot request updated successfully !!!"});
+              }
+            });
+        }
       });
     } else {
       return res.status(201).json({errorCode: 1,message: "Data already exist with same auction id and lot number!"});
@@ -155,6 +169,10 @@ exports.updateProductLotData = function(req, res) {
     }
     options.dataToSend = req.body;
     options.dataType = "lotData";
+    if (req.body.auctionType==='PT') {
+        return res.status(200).json(req.body);
+    }
+    else  
     Util.sendCompiledData(options, function(err, result) {
       if (err) return handleError(res, err);
     });
@@ -259,8 +277,8 @@ exports.getLotData = function(req, res) {
   filter.isDeleted = false;
   
   if (req.query.searchStr) {
-       filter['$text'] = {
-        '$search': "\""+req.query.searchStr+"\""
+       filter['lotNumber'] = {
+        '$regex' : req.query.searchStr, '$options' : 'i'
       }
   }
   if (req.query.auction_id) {
@@ -268,6 +286,9 @@ exports.getLotData = function(req, res) {
   }
   if (req.query.auctionId) {
     filter.auctionId = req.query.auctionId;
+  }
+  if(req.query.aucId) {
+    filter['auction_id'] = req.query.aucId;
   }
   if (req.query._id)
     filter._id = req.query._id;
@@ -452,33 +473,45 @@ exports.destroy = function(req, res) {
         "auction_id": req.body.auction_id
       }
       options.dataType = "lotData";
-      Lot.find({'_id': req.params.id}, function(err, lotResult) {
-        Util.sendCompiledData(options, function(err, result) {
-          if (err || (result && result.err)) {
-              //options.dataToSend.isDeleted = false;
-              //update(options.dataToSend);
-              Lot.update({_id:req.params.id},{$set:{"isDeleted":false}}).exec();
-              if(result && result.err) {
-                return res.status(412).send(result.err); 
-              }
-              AuctionRequest.update({'lot_id': req.params.id, 'auction_id':lotResult[0].auction_id}, {$set: {'isDeleted': false}}, {multi: true}, function(aucErr, resultData) {
-                if (aucErr)
-                  return handleError(res, err);
-                return res.status(200).send("Unable to delete lot request. Please contact support team.");
-              });
-            }
-            if(result){
-              //options.dataToSend.isDeleted = true;
-              //update(options.dataToSend);
+      if (req.body.auctionType==='PT') {
+          Lot.find({'_id': req.params.id}, function(err, lotResult) {
               Lot.update({_id:req.params.id},{$set:{"isDeleted":true}}).exec();
-              AuctionRequest.update({'lot_id': req.params.id, 'dbAuctionId':lotResult[0].auction_id}, {$set: {'isDeleted': true}}, {multi: true}, function(aucErr, resultData) {
-                if (aucErr)
-                  return handleError(res, err);
-                return res.status(200).send({errorCode: 0,message: "Lot master deleted sucessfully!!!"});
-              });
-            }
+                AuctionRequest.update({'lot_id': req.params.id, 'dbAuctionId':lotResult[0].auction_id}, {$set: {'isDeleted': true}}, {multi: true}, function(aucErr, resultData) {
+                  if (aucErr)
+                    return handleError(res, err);
+                  return res.status(200).send({errorCode: 0,message: "Lot master deleted sucessfully!!!"});
+                });
+          });
+      }
+      else {
+        Lot.find({'_id': req.params.id}, function(err, lotResult) {
+          Util.sendCompiledData(options, function(err, result) {
+            if (err || (result && result.err)) {
+                //options.dataToSend.isDeleted = false;
+                //update(options.dataToSend);
+                Lot.update({_id:req.params.id},{$set:{"isDeleted":false}}).exec();
+                if(result && result.err) {
+                  return res.status(412).send(result.err); 
+                }
+                AuctionRequest.update({'lot_id': req.params.id, 'auction_id':lotResult[0].auction_id}, {$set: {'isDeleted': false}}, {multi: true}, function(aucErr, resultData) {
+                  if (aucErr)
+                    return handleError(res, err);
+                  return res.status(200).send("Unable to delete lot request. Please contact support team.");
+                });
+              }
+              if(result){
+                //options.dataToSend.isDeleted = true;
+                //update(options.dataToSend);
+                Lot.update({_id:req.params.id},{$set:{"isDeleted":true}}).exec();
+                AuctionRequest.update({'lot_id': req.params.id, 'dbAuctionId':lotResult[0].auction_id}, {$set: {'isDeleted': true}}, {multi: true}, function(aucErr, resultData) {
+                  if (aucErr)
+                    return handleError(res, err);
+                  return res.status(200).send({errorCode: 0,message: "Lot master deleted sucessfully!!!"});
+                });
+              }
+          });
         });
-      });
+      }
     });
 };
 exports.removeLotData = function(req, res) {

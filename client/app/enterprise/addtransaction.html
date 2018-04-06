@@ -22,7 +22,7 @@
             <label>Request Type</label>
             <select class="form-control" name="requestType" ng-model="addTransactionVm.enterpriseValuation.requestType"  ng-disabled="!editEnterpriseField('requestType')" ng-change="addTransactionVm.getPartners(addTransactionVm.enterpriseValuation.requestType)" required>
               <option value="">*Request Type</option>
-              <option ng-repeat="req in addTransactionVm.requestTypeList" value="{{req.name}}" ng-if="isServiceAvailed(req.name)">{{req.name}}</option>
+              <option ng-repeat="req in addTransactionVm.requestTypeList" value="{{req.name}}" ng-if="isServiceAvailed(req.name)">{{req.displayText}}</option>
             </select>
             
           </div>

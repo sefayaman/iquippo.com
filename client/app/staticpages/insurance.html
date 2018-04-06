@@ -40,39 +40,43 @@
             <div class="form-group">                    
               <div class="row">
                 <div class="col-xs-12 col-sm-4">
-                  <div class="form-group" ng-class="{'has-error': form.fname.$invalid && form.submitted }">                          
-                    <input type="text" name="fname" class="form-control" placeholder="* First Name" ng-model="insuranceQuote.fname" required>
+                  <div class="form-group" ng-class="{'has-error': form.fname.$invalid && form.submitted }">  
+                   <label>*First Name</label>                         
+                    <input type="text" name="fname" class="form-control" placeholder="First Name" ng-model="insuranceQuote.fname" required>
                   </div>
                 </div>
                 <div class="col-xs-12 col-sm-4">
-                  <div class="form-group">                                      
+                  <div class="form-group">       
+                    <label>Middle Name</label>                                 
                     <input type="text" name="mname" class="form-control" placeholder="Middle Name" ng-model="insuranceQuote.mname">
                   </div>
                 </div>            
                 <div class="col-xs-12 col-sm-4">
-                  <div class="form-group" ng-class="{'has-error': form.lname.$invalid && form.submitted }">                          
-                    <input type="text" name="lname" class="form-control" placeholder="* Last Name" ng-model="insuranceQuote.lname" required>
+                  <div class="form-group" ng-class="{'has-error': form.lname.$invalid && form.submitted }">
+                    <label>*Last Name</label>                           
+                    <input type="text" name="lname" class="form-control" placeholder="Last Name" ng-model="insuranceQuote.lname" required>
                   </div>
                 </div>
               </div>  
               <div class="row">
                 <div class="col-xs-12 col-sm-4">
-                  <div class="form-group" ng-class="{'has-error': form.country.$invalid && form.submitted }"> 
+                  <div class="form-group" ng-class="{'has-error': form.country.$invalid && form.submitted }">
+                    <label>*Select Country</label> 
                     <select class="form-control" ng-model="insuranceQuote.country" name="country" ng-change="onCountryChange(insuranceQuote.country)" required>
                       <option value="">*Select Country</option>
                       <option ng-repeat="country in allCountries | orderBy:'name'" value="{{country.name}}">{{country.name}}</option>
                     </select>
-                    <i class="caret"></i>
                   </div>
                 </div>
                 <div class="col-xs-12 col-sm-4 form-group" ng-class="{'has-error': form.state.$invalid && form.submitted }">
+                    <label>*Select State</label>
                     <select class="form-control" name="state" ng-model="insuranceQuote.state" ng-change="onStateChange(insuranceQuote.state)" required>
-                      <option value="">*Select State</option>
+                      <option value="">Select State</option>
                         <option ng-repeat="state in stateList | orderBy:'name'" value="{{state.name}}">{{state.name}}</option>
                     </select>
-                    <i class="caret"></i>
                 </div>           
                 <div class="col-xs-12 col-sm-4 form-group" ng-class="{'has-error': form.location.$invalid && form.submitted }">
+                  <label>Select Location</label>
                   <select class="form-control" name="location" ng-model="insuranceQuote.city" required>
                     <option value="">Select Location</option>
                       <option ng-repeat="location in locationList | orderBy:'name'" value="{{location.name}}">{{location.name}}</option>
@@ -82,32 +86,37 @@
               </div>  
               <div class="row">
                 <div class="col-xs-12 col-sm-6">
-                  <div class="form-group">                          
+                  <div class="form-group">   
+                    <label>Company Name</label>                       
                     <input type="text" name="" class="form-control" placeholder="Company Name" ng-model="insuranceQuote.companyname">
                   </div>
                 </div>            
                 <div class="col-xs-12 col-sm-6">
-                  <div class="form-group">                          
+                  <div class="form-group">      
+                    <label>Designation</label>                    
                     <input type="text" name="" class="form-control" placeholder="Designation" ng-model="insuranceQuote.designation">
                   </div>
                 </div>
               </div> 
               <div class="row">
                 <div class="col-xs-12 col-sm-6">
-                  <div class="form-group">                          
+                  <div class="form-group">   
+                    <label>Phone No.</label>                       
                     <input type="text" name="" class="form-control" placeholder="Phone No." ng-model="insuranceQuote.phone">
                   </div>
                 </div> 
                 <div class="col-xs-12 col-sm-6">
-                  <div class="form-group" ng-class="{'has-error': form.mobile.$invalid && form.submitted }"> 
-                   <input type="text" name="mobile" class="form-control" placeholder="* Mobile No." ng-model="insuranceQuote.mobile" uib-tooltip="98-XXXX-XXXX" tooltip-trigger="focus" tooltip-placement="top" required>
+                  <div class="form-group" ng-class="{'has-error': form.mobile.$invalid && form.submitted }">
+                    <label>*Mobile No.</label> 
+                   <input type="text" name="mobile" class="form-control" placeholder="Mobile No." ng-model="insuranceQuote.mobile" uib-tooltip="98-XXXX-XXXX" tooltip-trigger="focus" tooltip-placement="top" required>
                   </div>
                 </div>
               </div>            
               <div class="row">
                 <div class="col-xs-12 col-sm-6">
-                  <div class="form-group" ng-class="{'has-error': form.email.$invalid && form.submitted }">                              
-                  <input type="email" name="email" class="form-control" placeholder="Email Address" ng-model="insuranceQuote.email">
+                  <div class="form-group" ng-class="{'has-error': form.email.$invalid && form.submitted }">
+                    <label>Email</label>
+                  <input type="email" name="email" class="form-control" placeholder="Email" ng-model="insuranceQuote.email">
                   <p class="help-block" ng-show="(form.email.$error.email || form.email.$error.pattern) && form.submitted">
                   Please enter a valid email.
                   </p>
@@ -126,73 +135,76 @@
               </div>
               <div class="row ">
                 <div class="col-xs-12 col-sm-6 form-group">
+                  <label>Select Category</label>
                   <select class="form-control" name="category" ng-model="insuranceQuote.product.category" ng-change="onCategoryChange(insuranceQuote.product.category)">
                     <option value="">Select Category </option>
                       <option ng-repeat="ct in allCategory | orderBy:'name'" value="{{ct.name}}">{{ct.name}}</option>
                   </select>
-                  <i class="caret"></i>
                 </div>
                 <div class="col-xs-12 col-sm-6 form-group">
+                  <label>Select Brand</label>
                   <select class="form-control" name="brand" ng-model="insuranceQuote.product.brand" ng-change="onBrandChange(insuranceQuote.product.brand)">
                     <option value="">Select Brand </option>
                       <option ng-repeat="br in brandList | orderBy:'name'" value="{{br.name}}">{{br.name}}</option>
                   </select>
-                  <i class="caret"></i>
                 </div>            
               </div>  
               <div class="row">
                 <div class="col-xs-12 col-sm-6 form-group">
+                  <label>Select Model</label>
                   <select class="form-control" name="model" ng-model="insuranceQuote.product.model">
                     <option value="">Select Model </option>
                       <option ng-repeat="md in modelList | orderBy:'name'" value="{{md.name}}">{{md.name}}</option>
                   </select>
-                  <i class="caret"></i>
                 </div>
                 <div class="col-xs-12 col-sm-6">
-                  <div class="form-group" ng-class="{'has-error': form.prdDesc.$invalid && form.submitted }">                          
-                    <input type="text" name="prdDesc" class="form-control" placeholder="*Asset Description " ng-model="insuranceQuote.product.description" required>
+                  <div class="form-group" ng-class="{'has-error': form.prdDesc.$invalid && form.submitted }">
+                    <label>*Asset Description</label>
+                    <input type="text" name="prdDesc" class="form-control" placeholder="Asset Description " ng-model="insuranceQuote.product.description" required>
                   </div>
                 </div>            
               </div>  
               <div class="row">
                 <div class="col-xs-12 col-sm-4">
                   <div class="form-group" ng-class="{'has-error': form.prdCountry.$invalid && form.submitted }"> 
+                    <label>*Select Country</label>
                     <select class="form-control" ng-model="insuranceQuote.product.country" name="prdCountry" ng-change="onPrdCountryChange(insuranceQuote.product.country)" required>
-                      <option value="">*Select Country</option>
+                      <option value="">Select Country</option>
                       <option ng-repeat="country in allCountries | orderBy:'name'" value="{{country.name}}">{{country.name}}</option>
                     </select>
-                    <i class="caret"></i>
                   </div>
                 </div>
                 <div class="col-xs-12 col-sm-4 form-group" ng-class="{'has-error': form.prdState.$invalid && form.submitted }">
+                    <label>*Select State</label>
                     <select class="form-control" name="prdState" ng-model="insuranceQuote.product.state" ng-change="onPrdStateChange(insuranceQuote.product.state)" required>
-                      <option value="">*Select State</option>
+                      <option value="">Select State</option>
                         <option ng-repeat="state in prdStateList | orderBy:'name'" value="{{state.name}}">{{state.name}}</option>
                     </select>
-                    <i class="caret"></i>
                 </div>  
                 <div class="col-xs-12 col-sm-4" ng-class="{'has-error': form.prdlocation.$invalid && form.submitted }">
+                  <label>*Select Location </label>
                   <select class="form-control" name="prdlocation" ng-model="insuranceQuote.product.city" required>
-                    <option value="">*Select Location </option>
+                    <option value="">Select Location </option>
                       <option ng-repeat="location in prdLocationList | orderBy:'name'" value="{{location.name}}">{{location.name}}</option>
                   </select>
-                  <i class="caret"></i>
                 </div>                        
               </div>  
               <div class="row form-group">      
                 <div class="col-xs-12 col-sm-6">
-                  <div class="form-group" ng-class="{'has-error': form.prdMfgYear.$invalid && form.submitted }">                          
-                    <input type="number" name="prdMfgYear" class="form-control" placeholder="*Manufacturing Year" ng-model="insuranceQuote.product.mfgYear" ng-minlength="4" ng-maxlength="4" min="1900" ng-max="currentYear" required>
+                  <div class="form-group" ng-class="{'has-error': form.prdMfgYear.$invalid && form.submitted }">      
+                    <label>*Manufacturing</label>                    
+                    <input type="number" name="prdMfgYear" class="form-control" placeholder="Manufacturing Year" ng-model="insuranceQuote.product.mfgYear" ng-minlength="4" ng-maxlength="4" min="1900" ng-max="currentYear" required>
                   </div>
                 </div>        
                 <div class="col-xs-12 col-sm-6">
                   <div class="" ng-class="{'has-error': form.invoiceVal.$invalid && form.submitted }"> 
-                   <input type="number" name="invoiceVal" class="form-control" min="0" placeholder="*Invoice Value" ng-model="insuranceQuote.invoiceVal" required>
+                    <label>*Invoice Value</label>
+                   <input type="number" name="invoiceVal" class="form-control" min="0" placeholder="Invoice Value" ng-model="insuranceQuote.invoiceVal" required>
                   </div>
                 </div>            
               </div>  
 
-              <span>Method of contact </span>
+              <label>Method of contact </label>
                 <div class="row">
                   <div class="col-xs-6">
                     <div class="radio radio-info">
@@ -207,14 +219,15 @@
                     </div>               
                   </div>
                 </div>
-               <div class="form-group">                      
+               <div class="form-group">     
+                <label>Comments if any</label>                 
                 <textarea class="form-control" placeholder="Comments if any" ng-model="insuranceQuote.comment"></textarea>
               </div> 
             </div>
 
-            <div class="modal-footer">
-              <button type="button" ng-click="resetClick()" class="btn btn-default">Reset</button>
-              <button type="submit" class="btn btn-warning">Submit</button>
+            <div class="modal-footer asset-sale">
+              <button type="button" ng-click="resetClick()" class="btn btn-danger">Reset</button>
+              <button type="submit" class="btn btn-primary">Submit</button>
             </div>
           </form>
             </div>

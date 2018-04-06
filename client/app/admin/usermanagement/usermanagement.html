@@ -12,7 +12,7 @@
             
               <div class="col-xs-6 col-sm-2" ng-if="!isAdmin()">
                   <h3>
-                    <button class="btn btn-success btn-md btn-block" ng-click="userManagementVm.exportExcel('userdata')"><i class="fa fa-file-excel-o"></i> Export</button>
+                    <button class="btn btn-success btn-md btn-block" ng-click="userManagementVm.exportExcel('userdata')"><i class="fa fa-file-text-o"></i> Export</button>
                   </h3>
                   <export-form name="userexport"></export-form>
               </div>
@@ -40,13 +40,13 @@
                 </div>
                   <div class="col-sm-1 padd-right">
                  <!--  <a class="btn btn-success btn-md" ng-if="isAdmin()" target="_blank">Export</a> -->
-                  <button class="btn btn-success btn-md btn-block" ng-click="userManagementVm.exportExcel('userdata')"><i class="fa fa-file-excel-o"></i> Export</button>
+                  <button class="btn btn-success btn-md btn-block" ng-click="userManagementVm.exportExcel('userdata')"><i class="fa fa-file-text-o"></i> Export</button>
                   <export-form name="userexport"></export-form>
                 </div>
 
                   <div class="col-sm-2">
                  <!--  <a class="btn btn-success btn-md" ng-if="isAdmin()" target="_blank">Export</a> -->
-                  <button class="btn btn-success btn-md btn-block" ng-click="userManagementVm.exportExcel('gstinfo')"><i class="fa fa-file-excel-o"></i> Export GST</button>
+                  <button class="btn btn-success btn-md btn-block" ng-click="userManagementVm.exportExcel('gstinfo')"><i class="fa fa-file-text-o"></i> Export GST</button>
                   <export-form name="usergstexport"></export-form>
                 </div>
               </div>
@@ -60,7 +60,7 @@
             <div class="col-sm-9 form-group">
               <div ng-if="isAdmin()" class="">            
                 <label>Channel Partners:</label>
-                <select ng-model="selectedUser" ng-change="userManagementVm.onUserChange(selectedUser)" ng-options="user as (user.fname+ ' '+ user.lname +' ('+user.mobile+')') for user in userManagementVm.getUsersOnRole track by user._id" >
+                <select ng-model="selectedUser" ng-change="userManagementVm.onUserChange(selectedUser)" ng-options="user as (user.fname+ ' '+ user.lname +' ('+user.mobile+')') for user in userManagementVm.getUsersOnRole | orderBy:'fname' track by user._id">
                   <option value="">Select User</option>
                 </select>
               </div>

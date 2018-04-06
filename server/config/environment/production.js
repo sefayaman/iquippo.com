@@ -30,12 +30,14 @@ module.exports = {
   supportMail: "info@iquippo.com",
   qpvalURL:"http://quippoauctions.com/valuation/api.php",
   REDIRECT_URL:"https://finance.iquippo.com/customer-portal-iquippo/sso",
-  
+  MLP_REDIRECT_URL:"https://finance.iquippo.com/customer-portal-mlp/sso",
   //S3 Configuration
   awsEndpoint: 's3.ap-south-1.amazonaws.com',
   awsAccessKeyId: 'AKIAIEW6UDFVW7GEQAGQ',
   awsSecretAccessKey: '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',
   awsBucket: 'iquppo-image-upload',
   awsUrl: 'https://s3.ap-south-1.amazonaws.com/',
+  S3_HEADER_EXPIRES: new Date(Date.now() + 604800000).toISOString(),
+  S3_HEADER_CACHE_CONTROL: 'maxAge=2592000',
   auctionURL:"https://auctions.iquippo.com/api_call/"
 };

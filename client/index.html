@@ -10,15 +10,13 @@
     <!-- <link href="http://fonts.googleapis.com/css?family=Roboto+Condensed" rel="stylesheet"> -->
         
     <meta name="description" content={{metaDescription}}>
+    <meta name="keywords" content={{metaKeywords}}>
     <meta name="viewport" content="width=device-width">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css(client) app/vendor.css -->
       <!-- bower:css -->
       <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
-      <link rel="stylesheet" href="bower_components/DataTables/media/css/jquery.dataTables.css" />
       <link rel="stylesheet" href="bower_components/Hover/css/hover.css" />
-      <link rel="stylesheet" href="bower_components/angular-datatables/dist/css/angular-datatables.css" />
-      <link rel="stylesheet" href="bower_components/angular-datatables/dist/plugins/bootstrap/datatables.bootstrap.min.css" />
       <link rel="stylesheet" href="bower_components/nvd3/build/nv.d3.css" />
       <!-- endbower -->
     <!-- endbuild -->
@@ -162,21 +160,7 @@
       <script src="bower_components/lodash/lodash.js"></script>
       <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
       <script src="bower_components/angular-file-upload/dist/angular-file-upload.min.js"></script>
-      <script src="bower_components/DataTables/media/js/jquery.dataTables.js"></script>
       <script src="bower_components/moment/moment.js"></script>
-      <script src="bower_components/datatables.net/js/jquery.dataTables.js"></script>
-      <script src="bower_components/angular-datatables/dist/angular-datatables.js"></script>
-      <script src="bower_components/angular-datatables/dist/plugins/bootstrap/angular-datatables.bootstrap.js"></script>
-      <script src="bower_components/angular-datatables/dist/plugins/colreorder/angular-datatables.colreorder.js"></script>
-      <script src="bower_components/angular-datatables/dist/plugins/columnfilter/angular-datatables.columnfilter.js"></script>
-      <script src="bower_components/angular-datatables/dist/plugins/light-columnfilter/angular-datatables.light-columnfilter.js"></script>
-      <script src="bower_components/angular-datatables/dist/plugins/colvis/angular-datatables.colvis.js"></script>
-      <script src="bower_components/angular-datatables/dist/plugins/fixedcolumns/angular-datatables.fixedcolumns.js"></script>
-      <script src="bower_components/angular-datatables/dist/plugins/fixedheader/angular-datatables.fixedheader.js"></script>
-      <script src="bower_components/angular-datatables/dist/plugins/scroller/angular-datatables.scroller.js"></script>
-      <script src="bower_components/angular-datatables/dist/plugins/tabletools/angular-datatables.tabletools.js"></script>
-      <script src="bower_components/angular-datatables/dist/plugins/buttons/angular-datatables.buttons.js"></script>
-      <script src="bower_components/angular-datatables/dist/plugins/select/angular-datatables.select.js"></script>
       <script src="bower_components/angularjs-scroll-glue/src/scrollglue.js"></script>
       <script src="bower_components/tinymce/tinymce.js"></script>
       <script src="bower_components/angular-ui-tinymce/src/tinymce.js"></script>
@@ -190,9 +174,11 @@
       <script src="bower_components/angular-nvd3/dist/angular-nvd3.js"></script>
       <script src="bower_components/humanize-duration/humanize-duration.js"></script>
       <script src="bower_components/angular-timer/dist/angular-timer.js"></script>
+      <script src="bower_components/js-xlsx/dist/xlsx.full.min.js"></script>
+      <script src="bower_components/angular-socket-io/socket.js"></script>
       <!-- endbower -->
     <!-- endbuild -->
-
+        <script src="/socket.io/socket.io.js"></script>
 
         <!-- build:js(.tmp) app/app.js -->
 
@@ -213,24 +199,40 @@
           <script src="app/admin/gsettings/assetGroup.service.js"></script>
           <script src="app/admin/gsettings/assetsalecharge.controller.js"></script>
           <script src="app/admin/gsettings/assetsalecharge.service.js"></script>
+          <script src="app/admin/gsettings/bankmaster.controller.js"></script>
+          <script src="app/admin/gsettings/bankmaster.service.js"></script>
+          <script src="app/admin/gsettings/bannermaster.controller.js"></script>
+          <script src="app/admin/gsettings/bannerproductmapping.controller.js"></script>
           <script src="app/admin/gsettings/certificatemaster.controller.js"></script>
           <script src="app/admin/gsettings/certificatemaster.service.js"></script>
           <script src="app/admin/gsettings/count.controller.js"></script>
           <script src="app/admin/gsettings/count.service.js"></script>
           <script src="app/admin/gsettings/dealermaster.controller.js"></script>
           <script src="app/admin/gsettings/dealermaster.service.js"></script>
+          <script src="app/admin/gsettings/emd.controller.js"></script>
+          <script src="app/admin/gsettings/emd.service.js"></script>
           <script src="app/admin/gsettings/emdcharge.controller.js"></script>
           <script src="app/admin/gsettings/emdcharge.service.js"></script>
+          <script src="app/admin/gsettings/enterprisevaluationreport.controller.js"></script>
           <script src="app/admin/gsettings/gsettings.controller.js"></script>
           <script src="app/admin/gsettings/gsettings.service.js"></script>
           <script src="app/admin/gsettings/inputformmaster.controller.js"></script>
           <script src="app/admin/gsettings/inputformmaster.service.js"></script>
+          <script src="app/admin/gsettings/iquippogst.service.js"></script>
+          <script src="app/admin/gsettings/iquippogstmaster.controller.js"></script>
           <script src="app/admin/gsettings/kycmaster.controller.js"></script>
           <script src="app/admin/gsettings/kycmaster.service.js"></script>
+          <script src="app/admin/gsettings/legalentitytype.controller.js"></script>
+          <script src="app/admin/gsettings/legalentitytype.service.js"></script>
+          <script src="app/admin/gsettings/lot.controller.js"></script>
+          <script src="app/admin/gsettings/lot.service.js"></script>
           <script src="app/admin/gsettings/markuppricemaster.controller.js"></script>
           <script src="app/admin/gsettings/markuppricemaster.service.js"></script>
+          <script src="app/admin/gsettings/newEquipmentBanners.controller.js"></script>
+          <script src="app/admin/gsettings/newEquipmentBanners.service.js"></script>
           <script src="app/admin/gsettings/newequipment.controller.js"></script>
           <script src="app/admin/gsettings/newequipment.service.js"></script>
+          <script src="app/admin/gsettings/offer.controller-vin.js"></script>
           <script src="app/admin/gsettings/offer.controller.js"></script>
           <script src="app/admin/gsettings/offer.service.js"></script>
           <script src="app/admin/gsettings/saleprocessmaster.controller.js"></script>
@@ -261,6 +263,7 @@
           <script src="app/admin/reports/reports.controller.js"></script>
           <script src="app/admin/reports/reports.service.js"></script>
           <script src="app/admin/services/services.controller.js"></script>
+          <script src="app/admin/usermanagement/adduser.controller.js"></script>
           <script src="app/admin/usermanagement/usermanagement.controller.js"></script>
           <script src="app/assetsale/assetSale.service.js"></script>
           <script src="app/assetsale/assetbidpopup.controller.js"></script>
@@ -276,23 +279,27 @@
           <script src="app/assetsale/kycdocument.controller.js"></script>
           <script src="app/assetsale/productbidrequest.controller.js"></script>
           <script src="app/assetsale/selectpaymenttype.controller.js"></script>
+          <script src="app/assetsale/socket.service.js"></script>
           <script src="app/assetsale/viewproductorrequestdetail.controller.js"></script>
           <script src="app/auction/assetinauction.controller.js"></script>
           <script src="app/auction/auction.service.js"></script>
           <script src="app/auction/auctionlisting.controller.js"></script>
+          <script src="app/auction/auctionregis.controller.js"></script>
           <script src="app/auction/auctionregreport.controller.js"></script>
           <script src="app/auction/userregisterforauction.controller.js"></script>
           <script src="app/auction/userregisterforauction.service.js"></script>
           <script src="app/auction/viewauction.controller.js"></script>
+          <script src="app/auction/viewlot.controller.js"></script>
           <script src="app/bidValue/bid.controller.js"></script>
           <script src="app/bidValue/bid.service.js"></script>
+          <script src="app/brand/brandlisting.controller.js"></script>
           <script src="app/brand/newbrandlisting.controller.js"></script>
           <script src="app/bulkupload/bulkupload.controller.js"></script>
           <script src="app/bulkupload/bulkupload.service.js"></script>
           <script src="app/callback/callback.controller.js"></script>
           <script src="app/cart/cart.controller.js"></script>
           <script src="app/cart/cart.service.js"></script>
-          <script src="app/category/allcategory.controller.js"></script>
+          <script src="app/category/categorylisting.controller.js"></script>
           <script src="app/category/newcategorylisting.controller.js"></script>
           <script src="app/classifiedaddes/classifiedad.service.js"></script>
           <script src="app/classifiedaddes/classifiedadd.controller.js"></script>
@@ -304,6 +311,7 @@
           <script src="app/enterprise/dashborad.controller.js"></script>
           <script src="app/enterprise/enterprisevaluation.controller.js"></script>
           <script src="app/enterprise/enterprisevaluation.service.js"></script>
+          <script src="app/enterprise/invoicecalculation.controller.js"></script>
           <script src="app/enterprise/invoicing.controller.js"></script>
           <script src="app/enterprise/paymentmade.controller.js"></script>
           <script src="app/enterprise/paymentreceived.controller.js"></script>
@@ -311,24 +319,34 @@
           <script src="app/filters.js"></script>
           <script src="app/finance/finance.controller.js"></script>
           <script src="app/finance/finance.service.js"></script>
+          <script src="app/group/grouplisting.controller.js"></script>
           <script src="app/inputform/inputform.controller.js"></script>
           <script src="app/inputform/inputform.service.js"></script>
           <script src="app/invitationaccept/invite.controller.js"></script>
+          <script src="app/main/bannerlead.controller.js"></script>
           <script src="app/main/main.controller.js"></script>
           <script src="app/main/main.js"></script>
           <script src="app/manpower/manpower.controller.js"></script>
           <script src="app/manpower/manpower.service.js"></script>
           <script src="app/negotiation/negotiation.service.js"></script>
+          <script src="app/newequipment/newbrandhome.controller.js"></script>
+          <script src="app/newequipment/newbulkorder.controller.js"></script>
           <script src="app/newequipment/newequipment.controller.js"></script>
           <script src="app/newequipment/newequipment.service.js"></script>
+          <script src="app/newequipment/newequipmentlist.controller.js"></script>
           <script src="app/newequipment/newequipmentlisting.controller.js"></script>
           <script src="app/newequipment/newequipmentmaster.controller.js"></script>
+          <script src="app/newequipment/newproductdetail.controller.js"></script>
+          <script src="app/payment/auctionpaymentlisting.js"></script>
+          <script src="app/payment/auctionpaymentresponse.controller.js"></script>
+          <script src="app/payment/offlinePaymentCtrl.js"></script>
           <script src="app/payment/payment.controller.js"></script>
           <script src="app/payment/payment.service.js"></script>
           <script src="app/payment/paymentlisting.controller.js"></script>
           <script src="app/payment/paymentresponse.controller.js"></script>
           <script src="app/product/bulkproduct.controller.js"></script>
-          <script src="app/product/newproductdetail.controller.js"></script>
+          <script src="app/product/cropimage.controller.js"></script>
+          <script src="app/product/pricetrend.controller.js"></script>
           <script src="app/product/product.controller.js"></script>
           <script src="app/product/product.service.js"></script>
           <script src="app/product/productdetail.controller.js"></script>
@@ -347,6 +365,8 @@
           <script src="app/spare/viewspares.controller.js"></script>
           <script src="app/staticpages/static.controller.js"></script>
           <script src="app/util.js"></script>
+          <script src="app/valuation/individualinvoicecalculation.controller.js"></script>
+          <script src="app/valuation/paymentoption.controller.js"></script>
           <script src="app/valuation/valuation.service.js"></script>
           <script src="app/valuation/valuationlisting.controller.js"></script>
           <script src="app/valuation/valuationrequest.controller.js"></script>
@@ -356,11 +376,13 @@
           <script src="components/datepicker/datepicker.js"></script>
           <script src="components/financing/financeintegration.js"></script>
           <script src="components/footer/footer.controller.js"></script>
+          <script src="components/form/exportform.js"></script>
           <script src="components/header/adminheader.controller.js"></script>
           <script src="components/header/header.controller.js"></script>
           <script src="components/lib/FileSaver.js"></script>
           <script src="components/modal/modal.service.js"></script>
           <script src="components/mongoose-error/mongoose-error.directive.js"></script>
+          <script src="components/services/bannerlead.service.js"></script>
           <script src="components/services/brand.service.js"></script>
           <script src="components/services/category.service.js"></script>
           <script src="components/services/group.service.js"></script>

@@ -2,7 +2,7 @@
 'use strict';
 angular.module('sreizaoApp').controller('NewEquipmentListCtrl', NewEquipmentListCtrl);
 
-  function NewEquipmentListCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Auth, CartSvc, productSvc,categorySvc,SubCategorySvc,LocationSvc,brandSvc,modelSvc, groupSvc,TechSpecMasterSvc ,DTOptionsBuilder,Modal,$timeout,$window) {
+  function NewEquipmentListCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Auth, CartSvc, productSvc,categorySvc,SubCategorySvc,LocationSvc,brandSvc,modelSvc, groupSvc,TechSpecMasterSvc, Modal,$timeout,$window) {
     $rootScope.loading = false;
     var vm = this;
     $scope.productList = [];
@@ -10,6 +10,10 @@ angular.module('sreizaoApp').controller('NewEquipmentListCtrl', NewEquipmentList
     var productList = [];
     var searchObj={};
 
+    $stateParams.brand = $scope.removeUnderScore($stateParams.brand);
+    $stateParams.category = $scope.removeUnderScore($stateParams.category);
+    $stateParams.group = $scope.removeUnderScore($stateParams.group);
+    $stateParams.location = $scope.removeUnderScore($stateParams.location);
     $scope.searching = true;
     $scope.noResult = false;
     $scope.status = {};
@@ -124,6 +128,11 @@ angular.module('sreizaoApp').controller('NewEquipmentListCtrl', NewEquipmentList
       }
 
       var filter = {};
+      $scope.equipmentSearchFilter.brand = $scope.removeUnderScore($scope.equipmentSearchFilter.brand);
+      $scope.equipmentSearchFilter.category = $scope.removeUnderScore($scope.equipmentSearchFilter.category);
+      $scope.equipmentSearchFilter.model = $scope.removeUnderScore($scope.equipmentSearchFilter.model);
+      $scope.equipmentSearchFilter.group = $scope.removeUnderScore($scope.equipmentSearchFilter.group);
+      $scope.equipmentSearchFilter.location = $scope.removeUnderScore($scope.equipmentSearchFilter.location);
       angular.copy($scope.equipmentSearchFilter,filter);
       filter['status'] = true;
       filter['sort'] = {featured:-1};
@@ -205,6 +214,11 @@ angular.module('sreizaoApp').controller('NewEquipmentListCtrl', NewEquipmentList
 
   function saveState(retainState){
     $scope.equipmentSearchFilter.currentPage = vm.currentPage + "";
+    $scope.equipmentSearchFilter.location = $scope.removeSpace($scope.equipmentSearchFilter.location);
+    $scope.equipmentSearchFilter.category = $scope.removeSpace($scope.equipmentSearchFilter.category);
+    $scope.equipmentSearchFilter.brand = $scope.removeSpace($scope.equipmentSearchFilter.brand);
+    $scope.equipmentSearchFilter.model = $scope.removeSpace($scope.equipmentSearchFilter.model);
+    $scope.equipmentSearchFilter.group = $scope.removeSpace($scope.equipmentSearchFilter.group);
     if(retainState)
       $state.go($state.current.name,$scope.equipmentSearchFilter,{location:'replace',notify:false});
     else

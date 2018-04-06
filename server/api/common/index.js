@@ -3,6 +3,7 @@
 var express = require('express');
 var auth = require('../../auth/auth.service');
 var controller = require('./common.controller');
+var bannerCtrl = require('./banner.controller');
 var valuationPurposeCtrl = require('./valuationpurpose.controller');
 var servicefeeCtrl = require('./servicefee.controller');
 var servicetaxCtrl = require('./servicetax.controller');
@@ -81,11 +82,11 @@ router.post('/manufacturer/save', controller.createManufacturer);
 router.put('/manufacturer/:id', controller.updateManufacturer);
 router.delete('/manufacturer/:id', controller.destroyManufacturer);
 
-router.get('/banner', controller.getAllBanner);
-router.post('/banner', controller.createBanner);
-router.put('/banner/:id', controller.updateBanner);
-router.delete('/banner/:id', controller.deleteBanner);
-router.post('/banner/onfilter', controller.getBannerOnFilter);
+router.get('/banner', bannerCtrl.get);
+router.post('/banner', bannerCtrl.createBanner);
+router.put('/banner/:id', bannerCtrl.updateBanner);
+router.delete('/banner/:id', bannerCtrl.deleteBanner);
+//router.post('/banner/onfilter', controller.getBannerOnFilter);
 router.post('/importLocation',controller.importLocation);
 
 router.get('/valuationpurpose', valuationPurposeCtrl.get);
@@ -110,7 +111,7 @@ router.delete('/vattax/:id',auth.hasRole('admin'), vattaxCtrl.destroy);
 router.post('/vattax/search',vattaxCtrl.search);
 //router.get('/vattax/getgstonproduct',vattaxCtrl.getGstOnProduct);
 
-router.get('/kyc',auth.hasRole('admin'), kycCtrl.get);
+router.get('/kyc', kycCtrl.get);
 router.post('/kyc', auth.hasRole('admin'),kycCtrl.create);
 router.put('/kyc/:id', auth.hasRole('admin'),kycCtrl.update);
 router.delete('/kyc/:id',auth.hasRole('admin'), kycCtrl.destroy);
@@ -189,7 +190,7 @@ router.post('/offer',auth.hasRole('admin'),offerCtrl.create);
 router.get('/offer/get', offerCtrl.get);
 router.put('/offer/:id', auth.hasRole('admin'),offerCtrl.update);
 router.delete('/offer/:id',auth.hasRole('admin'), offerCtrl.destroy);
-router.post('/offerrequest',auth.isAuthenticated(),offerCtrl.createOfferRequest);
+router.post('/offerrequest',offerCtrl.createOfferRequest);
 router.get('/offerrequest',auth.hasRole('admin'),offerCtrl.getOfferRequest);
 //router.get('/offer/getfilterdata', offerCtrl.getFilterData);
 

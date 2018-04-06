@@ -1,3 +1,35 @@
 <form name="createnewloan"  id="createnewloan" method="post" action="">
   <input type="hidden" name="access_token" id="access_token"></input>
-</form> 
+</form>
+
+<script type="text/ng-template" id="financeoption.html">
+	<div>
+    <div class="modal-header">
+      <button type="button" class="close" aria-hidden="true" ng-click="close()">&times;</button>
+      <h4 class="modal-title">Financing</h4>
+    </div>
+    <div class="modal-body">
+      <form class="form" name="financeoption" novalidate>      
+        <div class="row">
+          <div class="form-group col-sm-6">
+        	<div class="radio radio-info">
+        		<input type="radio" id="sreidashboard" name="financeoptioninput" value="srei" placeholder="" ng-model="optionModel.urlkey">
+        		<label for="sreidashboard" ng-if="isAdmin()">SREI Dashboard</label>
+            <label for="sreidashboard" ng-if="!isAdmin()">Old Cases</label>
+        	</div>
+          </div>
+          <div class="form-group col-sm-6">
+            <div class="radio radio-info">
+        		<input type="radio" id="multidashboard" name="financeoptioninput" value="mlp" placeholder="" ng-model="optionModel.urlkey">
+        		<label for="multidashboard" ng-if="isAdmin()">Multi-Lender Dashboard</label>
+            <label for="multidashboard" ng-if="!isAdmin()">Create New Lead</label>
+        	</div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button type="submit" class="btn btn-lg btn-warning" ng-click="proceed()">Proceed</button>
+    </div>
+</div>
+</script> 

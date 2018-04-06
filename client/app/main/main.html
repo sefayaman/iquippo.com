@@ -5,13 +5,16 @@
   <div id="slides_control">
     <uib-carousel interval="mainVm.myInterval" no-wrap="noWrapSlides">
       <uib-slide data-ng-repeat="slide in mainVm.slides">      
-      <a ng-href="{{slide.linkUrl}}" target="_blank" data-ng-if="slide.isClickable == 'Yes'">
-        <img  data-ng-src="{{uploadImagePrefix}}banner/{{slide.webImg}}" data-ng-if="!slide.default">
+      <a ng-href="{{slide.linkUrl}}" target="_blank" ng-if="!slide.default && slide.bannerClick == 'hyper_link'">
+        <img  data-ng-src="{{uploadImagePrefix}}banner/{{slide.webImg}}">
       </a>
-      <a ng-href="javascript:void(0);" data-ng-if="slide.hyperlink == 'Yes'" data-ng-click="mainVm.openBidModal(slide)">
-        <img  data-ng-src="{{uploadImagePrefix}}banner/{{slide.webImg}}" data-ng-if="!slide.default">
+      <a ng-href="javascript:void(0);" ng-if="!slide.default && slide.bannerClick == 'exp_interest'" ng-click="mainVm.openBidModal(slide)">
+        <img  data-ng-src="{{uploadImagePrefix}}banner/{{slide.webImg}}">
       </a>
-      <img  data-ng-src="{{uploadImagePrefix}}banner/{{slide.webImg}}" data-ng-if="!slide.default && slide.hyperlink != 'Yes' && slide.isClickable != 'Yes'">
+      <a ng-href="javascript:void(0);" ng-if="!slide.default && slide.bannerClick == 'lead_capture'" ng-click="mainVm.openLeadCaptureModal(slide)">
+        <img  data-ng-src="{{uploadImagePrefix}}banner/{{slide.webImg}}">
+      </a>
+      <img  data-ng-src="{{uploadImagePrefix}}banner/{{slide.webImg}}" ng-if="!slide.default && !slide.bannerClick">
       <img  data-ng-src="assets/images/{{slide.webImg}}" data-ng-if="slide.default">        
       </uib-slide>
     </uib-carousel>
@@ -24,7 +27,7 @@
 
       <div class="row" ng-if="singleBox">
 
-        <div class="col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-6">          
+        <div class="col-md-12">          
           <div class="input-group" ng-class="{'has-error': searchHome.searchstr.$invalid && submitted}">
             <input type="text" name="searchstr" placeholder="Search for Assets and More" ng-model="filter.searchstr" class="form-control"  ng-keypress="checkIfEnterKeyWasPressed($event,searchHome)" required/>
             <a href="javascript:void(0);" class="input-group-addon" ng-click="toggleSearchBox(false)">Advanced Search</a>
@@ -34,10 +37,10 @@
 
       <!-- Tab panes -->
       <div class="row" ng-if="!singleBox">
-        <div class="col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8">
+        <div class="col-md-12">
           <div class="filter">
             <div class="row" ng-class="{'has-error-filter': (searchHome.industry.$invalid || searchHome.category.$invalid || searchHome.brand.$invalid || searchHome.assetloc.$invalid) && submitted}">
-              <div class="col-sm-1 padd-left padd-right select-text">
+              <div class="col-sm-1 padd-right select-text">
                 <div class="form-control text-center back-tohome">
                   <a href="javascript:void(0);" ng-click="toggleSearchBox(true)"><i class="fa fa-angle-left fa-2x"></i></a>
                 </div>
@@ -51,7 +54,7 @@
               <div class="col-sm-2 padd-left padd-right select-text">
                 <input type="text" class="form-control" name="brand" placeholder="Brand" ng-model="filter.brandSearchText" class="form-control" uib-typeahead="address for address in getBrandHelp($viewValue)" typeahead-wait-ms="200" ng-keypress="checkIfEnterKeyWasPressed($event,searchHome)" ng-required="!filter.groupSearchText&&!filter.categorySearchText&&!filter.locationSearchText"/>
               </div>
-              <div class="col-sm-3 padd-left padd-right select-text">
+              <div class="col-sm-3 padd-left select-text">
                 <input type="text" class="form-control" name="assetloc" ng-model="filter.locationSearchText" placeholder="Asset Location" uib-typeahead="address for address in getLocationHelp($viewValue)"  class="form-control" typeahead-focus-first = "false" typeahead-wait-ms="200" ng-keypress="checkIfEnterKeyWasPressed($event,searchHome)" ng-required="!filter.groupSearchText&&!filter.categorySearchText&&!filter.brandSearchText"/>
               </div> 
               
@@ -90,6 +93,7 @@
             <!-- <span>{{auction.startTimer | date :'hh:mma'}} to {{auction.endTimer | date :'hh:mma'}}</span> -->
             <span ng-if="auction.auctionType === 'A'"><i class="fa fa-gavel"></i> Online Auction</span>
             <span ng-if="auction.auctionType === 'L'"><i class="fa fa-gavel"></i> Live Auction</span>
+            <span ng-if="auction.auctionType === 'PT'"><i class="fa fa-gavel"></i> Private Treaty</span>
           </div>
         </a>
       </div>
@@ -102,15 +106,15 @@
   <div class="container text-center">
     <div class="heading-titles">
       <h1>[ Browse By Brands ]</h1>
-      <a href="/used/brands" ng-if="!mainVm.newBrand">View All ({{mainVm.brandCount || 0}})</a>
-      <a href="/new/brands" ng-if="mainVm.newBrand">View All ({{mainVm.brandCountForNew || 0}})</a>
+      <a href="/used-equipment/brands" ng-if="!mainVm.newBrand">View All ({{mainVm.brandCount || 0}})</a>
+      <a href="/new-equipment/brands" ng-if="mainVm.newBrand">View All ({{mainVm.brandCountForNew || 0}})</a>
     </div>
     <uib-tabset justified="false">
       <uib-tab heading="Used Equipment" select="mainVm.toggleTab(0,false)">
         <div class="row">
           <div class="col-xs-12 col-sm-4 form-group text-center" ng-repeat="brand in mainVm.brands" ng-if="$index < 3">   
             <div class="brand-logo">
-              <a href="/used/brands/{{brand.name}}?currentPage=1" class="brand-name">
+              <a href="/used-equipment/brands/{{removeSpace(brand.name)}}?currentPage=1" class="brand-name">
                 <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{brand.imgSrc}}">
               </a>
             </div>
@@ -121,7 +125,7 @@
         <div class="row">
           <div class="col-xs-12 col-sm-4 form-group text-center" ng-repeat="brand in mainVm.brandsForNew" ng-if="$index < 3">   
             <div class="brand-logo">
-              <a href="/new/brands/{{brand.name}}?currentPage=1" class="brand-name">
+              <a href="/new-equipment/brands/{{removeSpace(brand.name)}}?currentPage=1" class="brand-name">
                 <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{brand.imgSrc}}">
               </a>
             </div>
@@ -138,15 +142,15 @@
   <div class="container text-center">
     <div class="heading-titles">
       <h1>[ Browse By Category ]</h1>
-      <a href="/used/allcategories" ng-if="!mainVm.newCategory">View All ({{mainVm.categoryCount || 0}})</a>
-      <a href="/new/allcategories" ng-if="mainVm.newCategory">View All ({{mainVm.categoryCountForNew || 0}})</a>
+      <a href="/used-equipment/allcategories" ng-if="!mainVm.newCategory">View All ({{mainVm.categoryCount || 0}})</a>
+      <a href="/new-equipment/allcategories" ng-if="mainVm.newCategory">View All ({{mainVm.categoryCountForNew || 0}})</a>
     </div>
     <uib-tabset justified="false">
       <uib-tab heading="Used Equipment" select="mainVm.toggleTab(1,false)">
         <div class="row">
           <div class="col-sm-4 form-group text-center" ng-repeat="category in mainVm.categoryList" ng-if="$index < 6">   
             <div class="cat-rectangle">
-              <a href="/used/{{category.group.name}}/{{category.name}}?currentPage=1">
+              <a href="/used-equipment/{{removeSpace(category.group.name)}}/{{removeSpace(category.name)}}?currentPage=1">
                 <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{category.imgSrc}}" class="category-item">
               </a>
             </div>
@@ -158,7 +162,7 @@
         <div class="row">
           <div class="col-sm-4 form-group text-center" ng-repeat="category in mainVm.categoryListForNew" ng-if="$index < 6">   
             <div class="cat-rectangle">
-              <a href="/new/{{category.group.name}}/{{category.name}}?currentPage=1">
+              <a href="/new-equipment/{{category.group.name}}/{{removeSpace(category.name)}}?currentPage=1">
                 <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{category.imgSrc}}" class="category-item">
               </a>
             </div>
@@ -180,7 +184,7 @@
       <div class="col-sm-6 form-group text-center" ng-repeat="cert in mainVm.certificationList" ng-if="$index < 2">   
         <div class="spacial-products">
           <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{cert.primaryImg}}"  width="100%" height="100%">
-            <a href="/used/spl/{{cert.name}}?currentPage=1" class="btn btn-default" ng-if="cert.name !== 'coming soon'">Shop Now</a>
+            <a href="/used-equipment/spl/{{cert.name}}?currentPage=1" class="btn btn-default" ng-if="cert.name !== 'coming soon'">Shop Now</a>
           </div>
         </div>
       </div>
@@ -197,7 +201,7 @@
        <uib-tab heading="Used Equipment" select="mainVm.toggleTab(2,true)">
         <div class="row">
           <div class="col-sm-4 form-group text-center" ng-repeat="group in mainVm.groups" ng-if="$index < 6">   
-            <a href="/used/{{group.name}}?currentPage=1" class="industy-rectangle">
+            <a href="/used-equipment/{{removeSpace(group.name)}}?currentPage=1" class="industy-rectangle">
               <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{group.imgSrc}}" class="category-item">
             </a>
             <div class="category-name">
@@ -210,7 +214,7 @@
       <uib-tab heading="New Equipment" select="mainVm.toggleTab(2,true)">
         <div class="row">
           <div class="col-sm-4 form-group text-center" ng-repeat="group in mainVm.groupsForNew" ng-if="$index < 6">   
-            <a href="/new/{{group.name}}?currentPage=1" class="industy-rectangle">
+            <a href="/new-equipment/{{removeSpace(group.name)}}?currentPage=1" class="industy-rectangle">
               <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{group.imgSrc}}" class="category-item">
             </a>
             <div class="category-name">
@@ -385,7 +389,7 @@
     <div class="modal-body text-center">
        <div class="category-block">
          <div class="search-banner search-banner-modal">        
-          <div class="search-tabs">
+          <div class="">
 
             <p class="text-center">I'M LOOKING FOR:</p>
 

@@ -6,16 +6,27 @@
           <h3>Transactions</h3>
         </div>
         <div class="col-sm-6 text-right">
-          <h3><button class="btn btn-success btn-md" ng-click="paymentListingVm.exportExcel()"><i class="fa fa-file-excel-o"></i> Export</button></h3>
+          <h3><button class="btn btn-success btn-md" ng-click="paymentListingVm.exportExcel()"><i class="fa fa-file-text-o"></i> Export</button></h3>
         </div>     
       </div>
       <hr>
       
       
-     
+        <div class="row">
+            <div class="col-sm-6">
+              <p>Showing : {{filterData.length}} Records</p>
+            </div>
+            <div class="col-sm-6">
+                <div class="tablesearch pull-right">
+                   Search: <input type="text" placeholder="Search..." ng-model="filterText" ng-model-options="{debounce:500}">
+                </div>
+                
+            </div>
+        </div>
+
         <div class="clearfix form-group"></div>
         <div class="table-responsive">
-            <table datatable="ng" dt-options="dtOptions" class="table table-bordred table-striped">
+            <table class="table table-bordred table-striped">
 
               <thead>
                 <th width="40"><input type="checkbox" ng-model="paymentListingVm.master"> All</th> 
@@ -32,11 +43,15 @@
                
               </thead>
               <tbody>
-              <tr ng-repeat="tns in paymentListingVm.transactions">
+              <tr ng-repeat="tns in filterData = (paymentListingVm.transactions | filter : filterText) | limitTo:paymentListingVm.itemsPerPage:paymentListingVm.itemsPerPage*(page-1)">
                 <td><input type="checkbox" ng-checked="paymentListingVm.master" ng-click="paymentListingVm.updateSelection($event,tns._id)"></td>
                 <td>{{tns.transactionId}}</td>
                 <td>{{tns.product.category}}</td>
-                <td>{{tns.product.name}}</td>
+                <!-- <td>{{tns.product.name}}</td> -->
+                <td>
+                  <span ng-if="tns.product.name">{{tns.product.name}}</span>
+                  <span ng-if="!tns.product.name">{{tns.product.category}} {{tns.product.brand}} {{tns.product.model}}</span>
+                </td>
                 <td>{{tns.product.status}}</td>
                 <td>{{tns.product.city}}</td>
                 <td>{{tns.requestType}}</td>
@@ -44,8 +59,8 @@
                   <td>{{tns.paymentMode}}</td>
                 <td>{{tns.createdAt | date:'MM/dd/yyyy'}}</td>
                 <td>
-                 <a class="btn btn-primary" ng-if="tns.status != 'completed' && tns.paymentMode == 'online'" href="/payment/{{tns._id}}">Pay Now</a>
-                 <a class="btn btn-primary" ng-if="tns.status != 'completed' && tns.paymentMode != 'online' && isAdmin()" href="/payment/{{tns._id}}">Confirm Payment</a>
+                 <a class="btn btn-primary" ng-if="tns.status != 'completed' && tns.paymentMode == 'online' && tns.requestType !== 'Valuation Request'" href="/payment/{{tns._id}}">Pay Now</a>
+                 <a class="btn btn-primary" ng-if="tns.status != 'completed' && tns.paymentMode != 'online' && isAdmin() && tns.requestType !== 'Valuation Request'" href="/payment/{{tns._id}}">Confirm Payment</a>
                   <!-- <a class="btn btn-info btn-md" href="javascript:void(0);" ng-click="gsettingVm.editState($index)"><i class="fa fa-pencil"></i> </a>
                   <a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deleteState($index)"><i class="fa fa-trash"></i> </a> -->
                 </td>
@@ -54,6 +69,7 @@
               </tbody>
             </table>
         </div>
+        <uib-pagination total-items="filterData.length" ng-model="page" items-per-page="paymentListingVm.itemsPerPage" max-size="paymentListingVm.maxSize" ng-change="paymentListingVm.pageChanged()" class="pagination-sm" rotate="false">  </uib-pagination>
     </div>
   </div>
 </div>

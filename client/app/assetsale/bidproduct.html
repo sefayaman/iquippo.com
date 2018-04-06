@@ -1,10 +1,10 @@
 <div>  
     <div class="row form-group">
         <div class="col-sm-12 text-right">
-            <button class="btn btn-success" ng-click="bidproductVm.exportExcel()"><i class="fa fa-file-excel-o"></i> Export Excel</button>
-            <button class="btn btn-success" ng-if="isAdmin()" ng-click="bidproductVm.exportExcel('all')"><i class="fa fa-file-excel-o"></i> All Export Excel</button>
-            <button class="btn btn-success" ng-if="!isAdmin()" ng-click="bidproductVm.exportExcel('all')"><i class="fa fa-file-excel-o"></i> All Export Excel</button>    
-            <button class="btn btn-success" ng-if="isAdmin()" ng-click="bidproductVm.exportExcel('payment')"><i class="fa fa-file-excel-o"></i> All Payment Export Excel</button>
+            <button class="btn btn-success" ng-click="bidproductVm.exportExcel()"><i class="fa fa-file-text-o"></i> Export</button>
+            <button class="btn btn-success" ng-if="isAdmin()" ng-click="bidproductVm.exportExcel('all')"><i class="fa fa-file-text-o"></i> All Export</button>
+            <button class="btn btn-success" ng-if="!isAdmin()" ng-click="bidproductVm.exportExcel('all')"><i class="fa fa-file-text-o"></i> All Export</button>    
+            <button class="btn btn-success" ng-if="isAdmin()" ng-click="bidproductVm.exportExcel('payment')"><i class="fa fa-file-text-o"></i> All Payment Export</button>
         </div>
     </div>
     <legend></legend>
@@ -61,7 +61,7 @@
                         <td ng-if="isAdmin()">{{product.assetStatus}}</td>	
                         <td>
                             <!-- seller action -->
-                            <a href="/assetsale/bidrequests?productId={{product._id}}&assetId={{product.assetId}}" class="btn btn-sm btn-primary" uib-popover="View Bids" popover-trigger="mouseenter"><i class="fa fa-eye"></i></a>
+                            <a href="/assetsale/bidrequests?productId={{product._id}}&assetId={{product.assetId}}&tab={{bidproductVm.tabNumber}}" class="btn btn-sm btn-primary" uib-popover="View Bids" popover-trigger="mouseenter"><i class="fa fa-eye"></i></a>
                             <button type="button" class="btn btn-sm btn-info" uib-popover="More Info" popover-trigger="mouseenter" ng-click="bidproductVm.openDialog(product, 'bidProductDetailPopup', 'product-preview', 'actionable')"><i class="fa fa-info"></i></button>			   				
                         </td>			   			
                     </tr>
@@ -124,7 +124,7 @@
                         <td>{{product.dealStatus}}</td>
                         <td>{{product.product.proData.assetStatus}}</td>
                         <td>
-                            <button type="button" class="btn btn-sm btn-info" uib-popover="More Information" popover-trigger="mouseenter" ng-click="bidproductVm.openDialog(product, 'bidProductDetailPopup', 'product-preview', 'closed')"><i class="fa fa-info"></i></button>	
+                            <button type="button" class="btn btn-sm btn-info" uib-popover="More Info" popover-trigger="mouseenter" ng-click="bidproductVm.openDialog(product, 'bidProductDetailPopup', 'product-preview', 'closed')"><i class="fa fa-info"></i></button>	
                         </td>
                     </tr>
                 </tbody>

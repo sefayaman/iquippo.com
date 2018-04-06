@@ -27,6 +27,7 @@
             //var filter = angular.copy(initFilter);
             //filter.bidRequestApproved = 'n';
             //getBidProducts(filter);
+            vm.tabNumber = $stateParams.t;
             if ($stateParams.t == 2)
                 vm.activeBid = 'saleinprocess';
             else if ($stateParams.t == 3)
@@ -40,6 +41,7 @@
         function onTabChange(tab, tabVal) {
             vm.activeBid = tab;
             vm.searchStr = "";
+            vm.tabNumber = tabVal;
             $state.go($state.current.name, {t: tabVal}, {location: 'replace', notify: false});
             fireCommand(true);
         }
@@ -134,13 +136,22 @@
                 angular.copy(initFilter, exportFilter);
                 exportFilter.productsWise = 'n';
                 exportFilter.bidChanged = true;
-            }
-            if (allReport === 'payment') {
+            } else if (allReport === 'payment') {
                 exportFilter = {};
                 angular.copy(initFilter, exportFilter);
                 exportFilter.productsWise = 'n';
-                exportFilter.payment = 'y';
+                exportFilter.payment = 'y';                
+            } else {
+                // name of file according to its status
+                if (vm.activeBid === 'actionable') {
+                    exportFilter.reportType = "Pending_For_Approval";
+                } else if(vm.activeBid === 'saleinprocess') {
+                    exportFilter.reportType = "Sale_In_Progress";
+                } else {
+                    exportFilter.reportType = "Closed";
+                }
             }
+            
 
             if (!Auth.isAdmin())
                 exportFilter.seller = 'y';

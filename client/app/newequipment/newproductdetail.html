@@ -4,9 +4,9 @@
       <a href="/main"> Home </a>
     </li>
     
-    <li><a href="/new"> New Equipment</a></li>
-    <li><a href="/new/viewproducts?group={{currentProduct.group.name}}">{{currentProduct.group.name}}</a></li>
-    <li ng-if="currentProduct.category.name != 'Other'"><a href="new/viewproducts?category={{currentProduct.category.name}}">{{currentProduct.category.name}}</a></li>
+    <li><a href="/new-equipment"> New Equipment</a></li>
+    <li><a href="/new-equipment/viewproducts?group={{removeSpace(currentProduct.group.name)}}">{{currentProduct.group.name}}</a></li>
+    <li ng-if="currentProduct.category.name != 'Other'"><a href="new-equipment/viewproducts?category={{removeSpace(currentProduct.category.name)}}">{{currentProduct.category.name}}</a></li>
     <li ng-if="currentProduct.category.name == 'Other'">{{currentProduct.category.otherName}}</li>
     <li><a class="active">{{currentProduct.name}}</a></li>
 <!--    {{currentProduct}}-->
@@ -132,7 +132,7 @@
               <uib-accordion-group is-open="status.cash" ng-if="offer.cash_purchase">
                 <uib-accordion-heading>
                   CASH OFFERS ({{offer.caseInfo.length}} Available)
-                  <p><!-- <small>Get additional 2 years service free from iQuippo.</small> --></p>
+                  <!-- <p><small>Get additional 2 years service free from iQuippo.</small></p> -->
                   <i class="pull-right fa" ng-class="{'fa-angle-up': status.cash, 'fa-angle-down': !status.cash}"></i>
                 </uib-accordion-heading>
                 <div class="row" ng-repeat="caseinfo in offer.caseInfo">
@@ -162,7 +162,7 @@
               <uib-accordion-group is-open="status.finance" ng-if="offer.finance">
                 <uib-accordion-heading>
                   FINANCING OFFERS ({{offer.finannceCounter}} Available)
-                  <p><!-- <small>Get additional 2 years service free from iQuippo.</small> --></p>
+                  <!-- <p><small>Get additional 2 years service free from iQuippo.</small></p> -->
                   <i class="pull-right fa" ng-class="{'fa-angle-up': status.finance, 'fa-angle-down': !status.finance}"></i>
                 </uib-accordion-heading>
                 <div ng-repeat="financeinfo in offer.financeInfo">
@@ -276,7 +276,7 @@
               <uib-accordion-group is-open="status.leasing" ng-if="offer.lease">
                 <uib-accordion-heading>
                   LEASING OFFERS ({{offer.leaseCounter}} Available)
-                  <p><!-- <small>Get additional 2 years service free from iQuippo.</small> --></p>
+                  <!-- <p><small>Get additional 2 years service free from iQuippo.</small></p> -->
                   <i class="pull-right fa" ng-class="{'fa-angle-up': status.leasing, 'fa-angle-down': !status.leasing}"></i>
                 </uib-accordion-heading>
                 <div ng-repeat="leaseinfo in offer.leaseInfo"><!--start repeat div-->
@@ -388,27 +388,16 @@
                 
               </uib-accordion-group>
             </uib-accordion>
-        <div class="asset-sale text-center">
-          <h5><small>Choose at least one offer to proceed.</small></h5>
-          <button type="button" ng-click="proceed()" class="btn btn-primary">Proceed</button>
-        </div>
+            <div class="asset-sale text-center form-group">
+              <h5><small>Choose at least one offer to proceed.</small></h5>
+              <button type="button" ng-click="proceed()" class="btn btn-primary">Proceed</button>
+            </div>
       </div>
       </form>
     </div>
   </section>
 </div>
-<script type="text/javascript">
-$(document).ready(function() {
-$('.collapse').on('shown.bs.collapse', function(){
-$(this).parent().find("i").removeClass("fa-plus").addClass("fa-minus");
-}).on('hidden.bs.collapse', function(){
-$(this).parent().find("i").removeClass("fa-minus").addClass("fa-plus");
-});
-});
-function goTo(dir){
-$('#article-photo').carousel(dir);
-}
-</script>
+
 <script type="text/ng-template" id="magnifier.html">
 <div id="magnifier-modal">
   <div class="modal-header">

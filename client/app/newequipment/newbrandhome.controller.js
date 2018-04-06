@@ -2,7 +2,7 @@
 'use strict';
 angular.module('sreizaoApp').controller('NewBrandHomeCtrl', NewBrandHomeCtrl);
 
-  function NewBrandHomeCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Auth, CartSvc, productSvc,categorySvc,SubCategorySvc,LocationSvc,brandSvc,modelSvc, groupSvc,TechSpecMasterSvc ,DTOptionsBuilder,Modal,$timeout,$window) {
+  function NewBrandHomeCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Auth, CartSvc, productSvc,categorySvc,SubCategorySvc,LocationSvc,brandSvc,modelSvc, groupSvc,TechSpecMasterSvc,Modal,$timeout,$window,UtilSvc) {
     var vm = this;
     $scope.brand = null;
     $scope.productList = [];
@@ -12,7 +12,7 @@ angular.module('sreizaoApp').controller('NewBrandHomeCtrl', NewBrandHomeCtrl);
     $scope.noResult = false;
     $scope.status = {};
     $scope.techSpecification = {};
-    $scope.displayText = $stateParams.brand;
+    $scope.displayText = UtilSvc.removeUnderScore($stateParams.brand);
 
     /* pagination flag */
     vm.itemsPerPage = 12;
@@ -33,10 +33,13 @@ angular.module('sreizaoApp').controller('NewBrandHomeCtrl', NewBrandHomeCtrl);
           $scope.status[key] = true;
       }
       var filter = {};
-      filter['brandName'] = $stateParams.brand;
+      filter['brandName'] = UtilSvc.removeUnderScore($stateParams.brand);
       filter['isForNew'] = true;
       modelSvc.getModelOnFilter(filter)
       .then(function(result) {
+        result.forEach(function(item){
+          item['key'] = UtilSvc.removeSpace(item.name);
+        });
         $scope.modelList = result;
       });
       restoreState();
@@ -46,7 +49,7 @@ angular.module('sreizaoApp').controller('NewBrandHomeCtrl', NewBrandHomeCtrl);
     function getBrandDetail(){
       $rootScope.loading = true;
       var brandFilter = {isForNew:true,enableHomeBanner:true};
-      brandFilter.name = $stateParams.brand;
+      brandFilter.name = UtilSvc.removeUnderScore($stateParams.brand);
       if(!$stateParams.brand){
         $rootScope.loading = false;
         $state.go("main");
@@ -88,17 +91,22 @@ angular.module('sreizaoApp').controller('NewBrandHomeCtrl', NewBrandHomeCtrl);
       var filter = {};
       $scope.equipmentSearchFilter.brand = $stateParams.brand;
       angular.copy($scope.equipmentSearchFilter,filter);
+       for(var key in filter){
+        if(filter[key])
+          filter[key] = UtilSvc.removeUnderScore(filter[key]);
+      }
       filter['status'] = true;
       filter['sort'] = {featured:-1};
       $scope.searching = true;
       filter.productCondition = "new";
-        productSvc.getProductOnFilter(filter)
+      productSvc.getProductOnFilter(filter)
          .then(function(result){
              $scope.searching = false;
              if(result.length > 0){
                vm.totalItems = result.length;
                $scope.noResult = false;
              }else{
+               vm.totalItems = 0;
                $scope.noResult = true;
              }
              $scope.productList = result;
@@ -169,7 +177,11 @@ angular.module('sreizaoApp').controller('NewBrandHomeCtrl', NewBrandHomeCtrl);
   function saveState(retainState){
     $scope.equipmentSearchFilter.currentPage = vm.currentPage + "";
     //if(retainState)
-      $state.go($state.current.name,$scope.equipmentSearchFilter,{location:'replace',notify:false});
+     var stsObj = {};
+     for(var key in $scope.equipmentSearchFilter){
+      stsObj[key] = UtilSvc.removeSpace($scope.equipmentSearchFilter[key]);
+     }
+      $state.go($state.current.name,stsObj,{location:'replace',notify:false});
     //else
      // $state.go("newviewproduct",$scope.equipmentSearchFilter,{location:'replace',notify:false});
   }

@@ -1,6 +1,7 @@
 'use strict';
 
 var Task = require('./task').task;
+var debug = require('debug')("Task Runner");
 var config = require('../config/environment');
 var bulkProductUpload = require('./bulkProductUpload');
 var commonController = require('../api/common/common.controller');
@@ -12,7 +13,31 @@ var utility = require('./utility.js');
 
 var Uploaded_TEMPLATE_NAME = "BulkProductUploaded"
 
+
 function getTask() {
+        util.log('Starting Tasks');
+        Task.find({
+          counter: {
+            $lte: 3
+          }
+        }).exec(function(err, data) {
+          if (err) {
+            console.error(err);
+            setTimeout(function() {
+              getTask();
+            }, 6 * 1000); //sleep 
+          } else {
+            if (data.length > 0) {
+                //console.log(data[0]);          
+              executeTask(data[0]);
+            } else
+              setTimeout(function() {
+                getTask();
+              }, 6 * 1000);
+          }
+        });
+}
+/*function getTask() {
     util.log('Starting Tasks');
     var opts = {
         localDir : config.uploadPath + '/temp',
@@ -49,17 +74,52 @@ function getTask() {
         });
     });
 }
+*/
+function downloadZip(taskData, cb){
+    var filename = "";
+      if (taskData && taskData.taskInfo && taskData.taskInfo.filename) {
+          filename = taskData.taskInfo.filename;
+        } else {
+          return cb(new Error('Invalid taskinfo/file'), taskData);
+        }
+      var opts = {
+        localFile: config.uploadPath + "temp/" + filename,
+        key: "assets/uploads/temp/" + filename
+      };
+      utility.downloadFileFromS3(opts, function(err, s3res) {
+        if (err) {
+          debug("Error in downloading file > " + filename);
+          return cb(err);
+        }
+        cb();
+      });
+}
 
 function executeTask(taskData) {
   switch (taskData.taskType) {
     case "bulkproduct":
-      bulkProductUpload.commitProduct(taskData, updateTask);
+      try{
+         bulkProductUpload.initTask(taskData, updateTask);
+       }catch(e){
+        console.log("Error in bulk product upload " + e);
+        setTimeout(function() {
+          getTask();
+        }, 6 * 1000); //sleep
+         }
+      //bulkProductUpload.commitProduct(taskData, updateTask);
       break;
     case "bulkauction":
-      bulkUpload.init(taskData, updateTask);
+        downloadZip(taskData,function(err){
+          if(err){
+            console.log("Error in downloading zip",err);
+            return;
+          }
+          bulkUpload.init(taskData, updateTask);
+        });
+      //
       break;
     case "bulkSpare" :
-      bulkUpload.init(taskData,updateTask);
+      //bulkUpload.init(taskData,updateTask);
       break;
   }
 }
@@ -131,6 +191,7 @@ module.exports.startTaskRunner = function() {
 if(require.main === module){
   (function(){
     //setInterval(function(){
+      console.log("hi");
       getTask();
     //},5000);
   }())

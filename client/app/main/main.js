@@ -11,6 +11,7 @@ angular.module('sreizaoApp')
         onEnter:function($rootScope,$stateParams,Modal,Auth,$state){
           $rootScope.choosenTitle= pagesTitles.index.title;
           $rootScope.metaDescription = pagesTitles.index.meta;
+          $rootScope.metaKeywords = pagesTitles.index.keywords;
           Auth.isLoggedInAsync(function(isLoggedin){
             if(isLoggedin){
                 $state.go('main',{promo:''},{location:'replace',notify:false});
@@ -26,7 +27,7 @@ angular.module('sreizaoApp')
         }
       })
       .state('signin', {
-        url: '/signin?state&brand&category&id&dbAuctionId&lot',
+        url: '/signin?state&brand&category&id&dbAuctionId&lot&tid',
         templateUrl: 'app/account/login/login-new.html',
         controller: 'LoginCtrl as loginVm',
         layout:'client'
@@ -47,7 +48,12 @@ angular.module('sreizaoApp')
         url: '/contactus',
         templateUrl: 'app/contactus/contactus.html',
         controller: 'ContactUsCtrl',
-        layout:'client'
+        layout:'client',
+        onEnter:function($rootScope){
+          $rootScope.choosenTitle=pagesTitles.aboutus.title;
+          $rootScope.metaDescription=pagesTitles.aboutus.meta;
+          $rootScope.metaKeywords = pagesTitles.aboutus.keywords;
+        }
       })
       .state('product', {
         url: '/product',
@@ -161,7 +167,7 @@ angular.module('sreizaoApp')
         layout:'client'
       })
       .state('viewproduct', {
-        url:"/used/viewproducts?currentPage&group&category&brand&model" + 
+        url:"/used-equipment/viewproducts?currentPage&group&category&brand&model" + 
             "&type&currencyType&currencyMin&currencyMax&" +
             "&mfgYearMin&mfgYearMax&stateName&cityName&assetId&"+
             "searchstr&operatingHour&mileage&productName&location&locationName&certificationName",
@@ -170,7 +176,7 @@ angular.module('sreizaoApp')
          layout:'client'
       })
       .state('newviewproduct', {
-        url:"/new/viewproducts?currentPage&group&category&brand&model" + 
+        url:"/new-equipment/viewproducts?currentPage&group&category&brand&modelcategorylisting" + 
             "&type&currencyType&currencyMin&currencyMax&" +
             "&mfgYearMin&mfgYearMax&stateName&cityName&assetId&"+
             "searchstr&operatingHour&mileage&productName&location&locationName&certificationName",
@@ -185,49 +191,49 @@ angular.module('sreizaoApp')
         layout:'client'
       })*/
       .state('grouplisting', {
-        url: '/used',
+        url: '/used-equipment',
         templateUrl: 'app/group/grouplisting.html',
         controller: 'GroupListingCtrl as groupListingVm',
         layout:'client'
       })
       .state('categorylisting', {
-        url: '/used/allcategories',
+        url: '/used-equipment/allcategories',
         templateUrl: 'app/category/categorylisting.html',
         controller: 'CategoryListingCtrl as categoryListingVm',
         layout:'client'
       })
       .state('brandlisting', {
-        url: '/used/brands',
+        url: '/used-equipment/brands',
         templateUrl: 'app/brand/brandlisting.html',
         controller: 'BrandListingCtrl as brandListingVm',
         layout:'client'
       })
       .state('categorybygroup', {
-        url: '/used/:group',
+        url: '/used-equipment/:group',
         templateUrl: 'app/category/categorylisting.html',
         controller: 'CategoryListingCtrl as categoryListingVm',
         layout:'client'
       })
       .state('productbybrand',{
-        url: '/used/brands/:brand?currentPage',
+        url: '/used-equipment/brands/:brand?currentPage',
         templateUrl: 'app/product/viewproducts.html',
         controller: 'ViewProductsCtrl as viewproductVm',
         layout:'client'
       })
        .state('splproduct',{
-        url: '/used/spl/:certificationName?currentPage',
+        url: '/used-equipment/spl/:certificationName?currentPage',
         templateUrl: 'app/product/viewproducts.html',
         controller: 'ViewProductsCtrl as viewproductVm',
         layout:'client'
       })
       .state('productbygrouporcategory', {
-        url: '/used/:group/:category?currentPage',
+        url: '/used-equipment/:group/:category?currentPage',
         templateUrl: 'app/product/viewproducts.html',
         controller: 'ViewProductsCtrl as viewproductVm',
         layout:'client'
       })
       .state('productdetail', {
-        url: '/used/:category/:brand/:id?lot',
+        url: '/used-equipment/:category/:brand/:id?lot',
         templateUrl: 'app/product/productdetail.html',
         controller: 'ProductDetailCtrl as productDetailVm',
         layout:'client'
@@ -240,13 +246,19 @@ angular.module('sreizaoApp')
          onEnter:function($rootScope){
           $rootScope.choosenTitle=pagesTitles.aboutus.title;
           $rootScope.metaDescription=pagesTitles.aboutus.meta;
+          $rootScope.metaKeywords = pagesTitles.aboutus.keywords;
         }
       })
       .state('manpower', {
         url:"/manpower",
         templateUrl: 'app/manpower/manpower.html',
         controller:"ManpowerCtrl as manpowerVm",
-        layout:'client'
+        layout:'client',
+        onEnter:function($rootScope){
+          $rootScope.choosenTitle=pagesTitles.aboutus.title;
+          $rootScope.metaDescription=pagesTitles.aboutus.meta;
+          $rootScope.metaKeywords = pagesTitles.aboutus.keywords;
+        }
       })
       .state('manpowerlisting', {
         url: '/manpowerlisting',
@@ -270,6 +282,7 @@ angular.module('sreizaoApp')
         onEnter:function($rootScope){
           $rootScope.choosenTitle=pagesTitles.index.title;
           $rootScope.metaDescription=pagesTitles.index.meta;
+          $rootScope.metaKeywords = pagesTitles.index.keywords;
         }
       })
       .state('valuation', {
@@ -280,6 +293,7 @@ angular.module('sreizaoApp')
         onEnter:function($rootScope){
           $rootScope.choosenTitle=pagesTitles.valuation.title;
           $rootScope.metaDescription=pagesTitles.valuation.meta;
+          $rootScope.metaKeywords = pagesTitles.valuation.keywords;
         }
       })
       // .state('financing', {
@@ -300,6 +314,7 @@ angular.module('sreizaoApp')
         onEnter:function($rootScope){
           $rootScope.choosenTitle=pagesTitles.financing.title;
           $rootScope.metaDescription=pagesTitles.financing.meta;
+          $rootScope.metaKeywords = pagesTitles.financing.keywords;
         }
       })
      .state('cme', {
@@ -316,13 +331,19 @@ angular.module('sreizaoApp')
         onEnter:function($rootScope){
           $rootScope.choosenTitle=pagesTitles.insurance.title;
           $rootScope.metaDescription=pagesTitles.insurance.meta;
+          $rootScope.metaKeywords = pagesTitles.insurance.keywords;
         }
       })
       .state('privacy', {
         url:"/privacy",
         templateUrl: 'app/staticpages/privacy.html',
         controller:"StaticCtrl",
-        layout:'client'
+        layout:'client',
+        onEnter:function($rootScope){
+          $rootScope.choosenTitle=pagesTitles.aboutus.title;
+          $rootScope.metaDescription=pagesTitles.aboutus.meta;
+          $rootScope.metaKeywords = pagesTitles.aboutus.keywords;
+        }
       })
       .state('termscondition', {
         url:"/termscondition",
@@ -464,6 +485,7 @@ angular.module('sreizaoApp')
         onEnter:function($rootScope){
           $rootScope.choosenTitle=pagesTitles.viewauctions.title;
           $rootScope.metaDescription=pagesTitles.viewauctions.meta;
+          $rootScope.metaKeywords = pagesTitles.viewauctions.keywords;
         }
       })
       .state('assetinacuction', {
@@ -479,8 +501,15 @@ angular.module('sreizaoApp')
         layout:'client'
       })
       .state('valuationrequests', {
-        url: '/valuationrequests/:mode',
+        url: '/valuationrequests',
         templateUrl: 'app/valuation/valuationlisting.html',
+        controller: 'ValuationListingCtrl as valuationListingVm',
+        authenticate:true,
+        layout:'admin'
+      })
+      .state('editvaluationrequests', {
+        url: '/editvaluationrequests',
+        templateUrl: 'app/valuation/editrequest.html',
         controller: 'ValuationListingCtrl as valuationListingVm',
         authenticate:true,
         layout:'admin'
@@ -735,7 +764,7 @@ angular.module('sreizaoApp')
         authenticate:true
       })
        .state("newequipment", {
-        url:"/new",
+        url:"/new-equipment",
         templateUrl: "app/newequipment/newequipment.html",
         controller:"NewEquipmentCtrl as newEquipmentVm",
         layout:"client",
@@ -745,7 +774,7 @@ angular.module('sreizaoApp')
         }
       })       
       .state("newequipmentlist", {
-        url: "/new/viewproducts?currentPage&group&category&brand&model" + 
+        url: "/new-equipment/viewproducts?currentPage&group&category&brand&model" + 
             "&type&currencyType&currencyMin&currencyMax&" +
             "&mfgYearMin&mfgYearMax&stateName&cityName&assetId&"+
             "searchstr&operatingHour&mileage&productName&location&locationName",
@@ -754,7 +783,7 @@ angular.module('sreizaoApp')
         layout:"client"
       })
       .state("newequipmentproduct", {
-        url: "/new/viewproducts/:id?currentPage",
+        url: "/new-equipment/viewproducts/:id?currentPage",
         templateUrl: "app/newequipment/newproducts.html",
         controller: "NewEquipmentListCtrl as newequipmentlistVm",
         layout:"client",
@@ -764,6 +793,7 @@ angular.module('sreizaoApp')
             if(res && res.data.length > 0) {
               $rootScope.choosenTitle=res.data[res.data.length-1].title;
               $rootScope.metaDescription=res.data[res.data.length-1].meta;
+              $rootScope.metaKeywords = res.data[res.data.length-1].keywords;
             }
           })
           .catch(function(err){
@@ -794,37 +824,37 @@ angular.module('sreizaoApp')
         layout:'admin'
       })
       .state('newgrouplisting', {
-        url: '/new',
+        url: '/new-equipment',
         templateUrl: 'app/group/grouplisting.html',
         controller: 'GroupListingCtrl as groupListingVm',
         layout:'client'
       })
       .state('newbulkorder', {
-        url: '/new/bulkorder',
+        url: '/new-equipment/bulkorder',
         templateUrl: 'app/newequipment/bulkorder.html',
         controller: 'BulkOrderCtrl as bulkOrderVm',
         layout:'client'
       })
       .state('newcategorylisting', {
-        url: '/new/allcategories',
+        url: '/new-equipment/allcategories',
         templateUrl: 'app/category/newcategorylisting.html',
         controller: 'NewCategoryListingCtrl as newcategoryListingVm',
         layout:'client'
       })
       .state('newbrandlisting', {
-        url: '/new/brands',
+        url: '/new-equipment/brands',
         templateUrl: 'app/brand/newbrandlisting.html',
         controller: 'NewBrandListingCtrl as newbrandListingVm',
         layout:'client'
       })
       .state('newcategorybycat', {
-        url: '/new/:category',
+        url: '/new-equipment/:category',
         templateUrl: "app/newequipment/newproducts.html",
         controller: "NewEquipmentListCtrl as newequipmentlistVm",
         layout:'client'
       })
       .state('brandHome',{
-        url: "/new/brands/:brand?currentPage&group&category&model" + 
+        url: "/new-equipment/brands/:brand?currentPage&group&category&model" + 
             "&type&currencyType&currencyMin&currencyMax&" +
             "&mfgYearMin&mfgYearMax&stateName&cityName&assetId&"+
             "searchstr&operatingHour&mileage&productName&location&locationName",
@@ -839,19 +869,19 @@ angular.module('sreizaoApp')
         layout:'client'
       })*/
        .state('newsplproduct',{
-        url: '/new/spl/:certificationName?currentPage',
+        url: '/new-equipment/spl/:certificationName?currentPage',
         templateUrl: 'app/newequipment/newproducts.html',
         controller: 'NewEquipmentListCtrl as newequipmentlistVm',
         layout:'client'
       })
       .state('newproductbygrouporcategory', {
-        url: '/new/:group/:category?currentPage',
+        url: '/new-equipment/:group/:category?currentPage',
         templateUrl: 'app/newequipment/newproducts.html',
         controller: 'NewEquipmentListCtrl as newequipmentlistVm',
         layout:'client'
       })
       .state('newproductdetail', {
-        url: '/new/:category/:brand/:id',
+        url: '/new-equipment/:category/:brand/:id',
         templateUrl: 'app/newequipment/newproductdetail.html',
         controller: 'NewProductDetailCtrl as newproductDetailVm',
         layout:'client'

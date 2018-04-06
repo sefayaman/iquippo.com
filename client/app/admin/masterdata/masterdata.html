@@ -8,7 +8,7 @@
 					Master Data
 						<div class="btn btn-success pull-right">
 					      <span class="fileinput-button">
-		                         <span><i class="fa fa-file-excel-o"></i> Import</span>
+		                         <span><i class="fa fa-file-text"></i> Import</span>
 		                         <input type="file" name="importfile" onchange="angular.element(this).scope().importMasterData(this.files,this)">
 		                     </span>
 					     </div>
@@ -26,21 +26,26 @@
 				    		<legend></legend>
                           <div class="row">
                          	 <div class="form-group col-sm-3" ng-class="{'has-error': form.errorGroup && submitted}">
+                         	 	<label>Group Name</label>
                                 <input id="groupName" name="groupName" ng-model="g.name" type="text" class="form-control" placeholder="Enter Group Name" required>
                             </div>
                             <div class="form-group col-sm-3">
+                            	<label>Group Description</label>
                                 <input id="groupDesc" name="groupDesc" ng-model="g.description" type="text" class="form-control" placeholder="Enter Group Description">
                             </div>
                              <div class="col-sm-2 form-group text-center">
+                             	<label>Equipment Type</label>
 				    	  		<div class="checkbox"><input type="checkbox" name="equipment"  id="usedequip" placeholder="" ng-model="g.isForUsed"> <label for="usedequip"> Used Equipment </label>
 				    	  		</div>
 				    	  		
 				    	  	</div>
 				    	  	<div class="col-sm-2 form-group text-center">
+				    	  		<label class="invisible">Equipment Type</label>
 				    	  		<div class="checkbox"><input type="checkbox" name="equipment"  id="newequip" placeholder="" ng-model="g.isForNew"> <label for="newequip"> New Equipment </label>
 				    	  		</div>
 				    	  	</div>
                             <div class="form-group col-sm-2">
+                            	<label>Upload Image</label>
                             	<span class="btn btn-warning fileinput-button">
 	                                <span>Browse image...</span>
 	                                <input type="file" accept="image/*" ng-model ="files" ng-change="uploadImage(files,g,'Group',0)" file>
@@ -50,12 +55,15 @@
                           </div>
                           <div class="row">
                           	<div class="col-sm-3 form-group">
+                          		<label>Priority for Used</label>
                           		<input type="number" class="form-control"  placeholder="Priority for Used" ng-model="g.priorityForUsed">
                           	</div>
                           	<div class="col-sm-3 form-group">
+                          		<label>Priority for New</label>
                           		<input type="number" class="form-control" placeholder="Priority for New" ng-model="g.priorityForNew">
                           	</div>
                           	<div class="form-group col-sm-2 pull-right">
+                          		<label class="invisible">Action</label>
                            		<button type="button" class="btn btn-primary btn-md btn-block" ng-click="masterDataVm.Save('Group')" ng-if="!groupEdit">Save</button>
                            		<button type="button" class="btn btn-primary btn-md btn-block" ng-click="masterDataVm.update('Group')" ng-if="groupEdit">Update</button>
                            	</div>
@@ -123,35 +131,46 @@
 
 				    <uib-tab heading="Product Category" select="masterDataVm.reset()">
 				    	<form name="categoryForm" role="form" novalidate class="form">
-				    		<h4>Add New Category
-				    			<div class="btn btn-success pull-right" ng-click="masterDataVm.exportMasterData('category')">
+				    		
+			    		<div class="row">
+			    			<div class="col-sm-6">
+			    				<h4>Add New Category</h4>
+			    			</div>
+			    			<div class="col-sm-6">
+			    				<button class="btn btn-success pull-right" ng-click="masterDataVm.exportMasterData('category')">
 							      <span class="fileinput-button">
-				                         <span><i class="fa fa-file-excel-o"></i> Export</span>
+				                         <span><i class="fa fa-file-text"></i> Export</span>
 				                     </span>
-							     </div>
-				    		</h4>
-				    		<legend></legend>
+							     </button>
+			    			</div>
+			    		</div>
+			    		<legend></legend>
 
 				    	  <div class="row">
 				    	  	<div class="form-group col-sm-3" ng-class="{'has-error': form.errorGroup && submitted}">
+				    	  		<label>Select Group</label>
                                  <select class="form-control" ng-model="c.group" name="groupList" ng-options="group.name for group in allGroup track by group._id" required>
 	                                <option value="" disabled>Select Group</option>
 					             </select> 
                             </div>
 				    	  				    	  	 
                             <div class="form-group col-sm-3" ng-class="{'has-error': form.errorCategory && submitted}">
+                            	<label>Category Name</label>
                                 <input id="categoryName" ng-model="c.name" type="text"  name ="categoryName" class="form-control" placeholder="Enter Category Name" required>
                             </div> 
                             <div class="col-sm-2 form-group text-center">
+                            	<label>Equipment Type</label>
 				    	  		<div class="checkbox"><input type="checkbox" name="equipment" value="" id="categoryusedequip" placeholder="" ng-model="c.isForUsed"> <label for="categoryusedequip"> Used Equipment </label>
 				    	  		</div>
 				    	  		
 				    	  	</div>
 				    	  	<div class="col-sm-2 form-group text-center">
+				    	  		<label class="invisible">Equipment Type</label>
 				    	  		<div class="checkbox"><input type="checkbox" name="equipment" value="" id="categorynewequip" placeholder="" ng-model="c.isForNew"> <label for="categorynewequip"> New Equipment </label>
 				    	  		</div>
 				    	  	</div>	
                             <div class="form-group col-sm-2">
+                            	<label>Upload Image</label>
                             	<span class="btn btn-warning fileinput-button">
 	                                <span>Browse image...</span>
 	                                <input type="file"   accept="image/*" ng-model ="files" ng-change="uploadImage(files,c,'Category',0)" file>
@@ -238,51 +257,62 @@
                                     <legend></legend>
 	                          <div class="row">
 	                         	<div class="form-group col-sm-3" ng-class="{'has-error': form.errorGroup && submitted}">
+	                         		<label>Select Group</label>
 	                                <select class="form-control" ng-model="b.group" ng-change="masterDataVm.onGroupChange(b.group)" ng-options="group.name for group in allGroup track by group._id" name="groupList" required>
 		                            <option value="" disabled>Select Group</option>
 					                </select> 
 	                            </div> 
 	                            <div class="form-group col-sm-3" ng-class="{'has-error': form.errorCategory && submitted}">
+	                            	<label>Select Category</label>
 	                                <select class="form-control" ng-model="b.category" name="categoryList" ng-options="category.name for category in categoryList track by category._id" required>
                                             <option value="" disabled>Select Category</option>
                                             <option ng-repeat="category in categoryList" ng-selected="b.category._id == category._id" value="{{category._id}}">{{category.name}}</option>
                                         </select> 
 	                            </div>	                            
 	                            <div class="col-sm-2 form-group text-center">
+	                            	<label>Equipment Type</label>
                                     <div class="checkbox"><input type="checkbox" name="brandEquipment" value="" id="Brandusedequip" ng-model="b.isForUsed"> <label for="Brandusedequip"> Used Equipment </label>
                                     </div>
 
                                 </div>
                                 <div class="col-sm-2 form-group text-center">
+                                	<label class="invisible">Equipment Type</label>
                                     <div class="checkbox"><input type="checkbox" name="brandEquipment" value="" id="Brandnewequip" ng-model="b.isForNew" ng-false-value="false"> <label for="Brandnewequip"> New Equipment </label>
                                     </div>
                                 </div>
                                 <div class="col-sm-2 form-group text-center" ng-if="b.isForNew">
+                                	<label>Brand Promotion Banner</label>
                                     <div class="checkbox"><input type="checkbox" name="brandEquipment" ng-model="b.enableHomeBanner" id="Brandbanner" ng-false-value="false"> <label for="Brandbanner"> Brand Promotion Banner </label>
                                     </div>
                                 </div>
                                 <div class="form-group col-sm-3" ng-class="{'has-error': form.errorBrand && submitted}">
+                                	<label>Brand Name</label>
                                 	<input id="brandName" name="brandName" ng-model="b.name" type="text"  class="form-control" placeholder="Enter Brand Name" required>
 	                            </div> 
 	                            <div class="col-sm-3 form-group">
+	                            	<label>Priority for Used</label>
 	                          		<input type="number" class="form-control" placeholder="Priority for Used" ng-model="b.priorityForUsed">
 	                          	</div>
 	                          	<div class="col-sm-3 form-group" ng-if="b.isForNew">
+	                          		<label>About Brand</label>
 			    	  	        	<input type="text" class="form-control" name="" ng-model="b.brandDesc" value="" placeholder="About Brand">
 			    	  	        </div> 
 			    	  	        <div class="col-sm-3 form-group" ng-if="b.isForNew">
+			    	  	        	<label>Dealership Network</label>
 			    	  	        	<input type="text" class="form-control" name="" ng-model="b.dealershipNetworkDesc" value="" placeholder="Dealership Network">
 			    	  	        </div>
 	                          	<div class="col-sm-3 form-group">
+	                          		<label>Priority for New</label>
 	                          		<input type="number" class="form-control" placeholder="Priority for New" ng-model="b.priorityForNew">
 	                          	</div>
 	                            <div class="form-group col-sm-3">
+	                            	<label>Upload Brand Logo</label>
 	                            	<span class="btn btn-warning fileinput-button">
 		                                <span>Browse Brand Logo</span>
 		                                <input type="file"   accept="image/*" ng-model ="files" ng-change="uploadImage(files,b,'Brand',0)" file>
 				                    </span>
-				                    <span>{{b.imgSrc}}</span>
-				                    <span class="invisible">image name</span>
+				                    <span>{{b.imgSrc}} <span class="invisible">image name</span></span>
+				                    
 	                            </div>
                                     
                                    <!--  <div class="form-group col-sm-3">
@@ -295,31 +325,34 @@
                                         </select>
                                     </div> -->
                                     <div class="form-group col-sm-3">
+                                    	<label>Upload Image</label>
 		                            	<span class="btn btn-warning fileinput-button">
 			                                <span>Browse image...</span>
 			                                <input type="file"   accept="image/*" ng-model ="files" ng-change="uploadImage(files,b,'Brand',0,'imgNewEquipmentSrc')" file>
-					                    </span>
-					                    <span>{{b.imgNewEquipmentSrc}}</span>
-					                    <span class="invisible">image name</span>
+					                    </span>					                    
+					                    <span>{{b.imgNewEquipmentSrc}} <span class="invisible">image name</span></span>
 		                            </div>
 
 		                            <div class="col-sm-3 form-group" ng-if="b.enableHomeBanner && b.isForNew">
+		                            	<label>Upload Top banner</label>
 		                          		<span class="btn btn-warning fileinput-button">
 			                                <span>Top banner image</span>
 			                                <input type="file" accept="image/*" ng-model ="files" ng-change="uploadImage(files,b,'Brand',0,'homeBannerTop')" file>
 					                    </span>
-					                    <span>{{b.homeBannerTop}}</span>
-					                    <span class="invisible">image name</span>
+					                    <span>{{b.homeBannerTop}} <span class="invisible">image name</span></span>
+					                    
 		                          	</div>
 		                          	<div class="col-sm-3 form-group" ng-if="b.enableHomeBanner && b.isForNew">
+		                          		<label>Upload Left banner</label>
 		                          		<span class="btn btn-warning fileinput-button">
 			                                <span>Left banner image</span>
 			                                <input type="file" accept="image/*" ng-model ="files" ng-change="uploadImage(files,b,'Brand',0,'homeBannerLeft')" file>
 					                    </span>
-					                    <span>{{b.homeBannerLeft}}</span>
-					                    <span class="invisible">image name</span>
+					                    <span>{{b.homeBannerLeft}} <span class="invisible">image name</span></span>
+					                    
 		                          	</div>				    	  	              	
                                     <div class="form-group col-sm-2 pull-right">
+                                    	<label class="invisible">Button</label>
                                         <button type="button" class="btn btn-primary btn-md btn-block" ng-click="masterDataVm.Save('Brand')" ng-if="!brandEdit">Save</button>
                                         <button type="button" class="btn btn-primary btn-md btn-block" ng-click="masterDataVm.update('Brand')" ng-if="brandEdit">Update</button>
                                     </div>
@@ -399,46 +432,60 @@
 					    </uib-tab>
 					    <uib-tab heading="Model" select="masterDataVm.reset()">
 					    	<form role="form" name="modelForm" novalidate class="form">
-					    		<h4>Add New Model
-					    			<div class="btn btn-success pull-right" ng-click="masterDataVm.exportMasterData('model')">
-								      <span class="fileinput-button">
-					                         <span><i class="fa fa-file-excel-o"></i> Export</span>
-					                     </span>
-								     </div>
-					    		</h4>
+					    		
+					    		<div class="row">
+					    			<div class="col-sm-6">
+					    				<h4>Add New Model</h4>
+					    			</div>
+					    			<div class="col-sm-6">
+					    				<button class="btn btn-success pull-right" ng-click="masterDataVm.exportMasterData('model')">
+									      <span class="fileinput-button">
+						                         <span><i class="fa fa-file-text"></i> Export</span>
+						                     </span>
+									     </button>
+					    			</div>
+					    		</div>
 					    		<legend></legend>
                               <div class="row">
                               	<div class="form-group col-sm-3" ng-class="{'has-error': form.errorGroup && submitted}">
+                              		<label>Select Group</label>
 	                                <select class="form-control" ng-model="m.group" ng-change="masterDataVm.onGroupChange(m.group)" name="groupList" ng-options="group.name for group in allGroup track by group._id" required>
 		                            	<option value="" disabled>Select Group</option>
 					                </select> 
 	                            </div>
                               	<div class="form-group col-sm-3" ng-class="{'has-error': form.errorCategory && submitted}">
+                              		<label>Select Category</label>
 	                                <select class="form-control" ng-model="m.category" ng-change="masterDataVm.onCategoryChange(m.category)" name="categoryList" ng-options="category.name for category in categoryList track by category._id" required>
 		                                <option value="" disabled>Select Category</option>
 					                </select>
 	                            </div>                             	
                                 <div class="col-sm-3 form-group text-center">
+                                	<label>Equipment Type</label>
 					    	  		<div class="checkbox"><input type="checkbox" name="brandEquipment" value="" id="modelusedequip" ng-model="m.isForUsed"> <label for="modelusedequip"> Used Equipment </label>
 					    	  		</div>
 					    	  		
 					    	  	</div>
 					    	  	<div class="col-sm-3 form-group text-center">
+					    	  		<label class="invisible">Equipment Type</label>
 					    	  		<div class="checkbox"><input type="checkbox" name="brandEquipment" value="" id="modelnewequip" ng-model="m.isForNew" ng-false-value="false"> <label for="modelnewequip"> New Equipment </label>
 					    	  		</div>
 					    	  	</div>
 					    	  	<div class="form-group col-sm-3" ng-class="{'has-error': form.errorBrand && submitted}">
+					    	  		<label>Select Brand</label>
                                     <select class="form-control" ng-model="m.brand" name="brandList" ng-options="brand.name for brand in brandList track by brand._id" required>
                                         <option value= "" disabled>Select Brand</option>           
                                     </select>
                                 </div>
                                	<div class="form-group col-sm-3" ng-class="{'has-error': form.errorModel && submitted}">
+                               		<label>Model Name</label>
                                    <input id="modelName" ng-model="m.name" name="modelName" type="text" class="form-control" placeholder="Enter Model Name" required>
                                	</div>
                                	<div class="form-group col-sm-3" ng-if="m.isForNew">
+                               		<label>About Model</label>
                                    <input type="text" class="form-control" placeholder="About Model" ng-model="m.modelDesc">
                                	</div>
                                	<div class="form-group col-sm-2 pull-right">
+                               		<label class="invisible">Button</label>
                                		<button type="button" class="btn btn-primary btn-md btn-block" ng-click="masterDataVm.Save('Model')" ng-if="!modelEdit">Save</button>
                                		<button type="button" class="btn btn-primary btn-md btn-block" ng-click="masterDataVm.update('Model')" ng-if="modelEdit">Update</button>
                                	</div>

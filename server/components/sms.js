@@ -10,10 +10,13 @@ var smsConfig = {
 var sms = {}
 sms.sendSMS = function(data, req, res, cb) {
 	
+	if(!data || !data.to){
+		if(cb)
+			cb(req, res, true);
+		return;
+	}
 	//var path = smsConfig.URL + "?user=" + smsConfig.user + "&password=" + smsConfig.password +  "&to=" + data.to+ "&from=" + smsConfig.from + "&message="+encodeURI(data.content);
 	var path = smsConfig.URL + "?authkey=" + smsConfig.authKey + "&mobiles=" + ((data.countryCode || "91") + data.to) + "&sender=" + smsConfig.sender + "&message=" + encodeURI(data.content) + "&route=" + smsConfig.route + "&country=" + data.countryCode ||  "91";
-
-	console.log(path);
 
 	request(smsConfig.host + path, {
 		timeout: 5 * 60 * 60 * 1000
@@ -47,7 +50,12 @@ sms.sendSMS = function(data, req, res, cb) {
 }
 
 sms.autoSMS = function(data, cb) {
-
+	
+	if(!data || !data.to){
+		if(cb)
+			cb(false);
+		return
+	}
 	//var path = smsConfig.URL + "?user=" + smsConfig.user + "&password=" + smsConfig.password +  "&to=" + data.to+ "&from=" + smsConfig.from + "&message="+encodeURI(data.content);
 	var path = smsConfig.URL + "?authkey=" + smsConfig.authKey + "&mobiles=" + ((data.countryCode || "91") + data.to) + "&sender=" + smsConfig.sender + "&message=" + encodeURI(data.content) + "&route=" + smsConfig.route + "&country=" + data.countryCode || "91";
 	request(smsConfig.host + path, {

@@ -4,6 +4,10 @@
 
   function ProductDetailCtrl($scope, $sce, $location, AssetSaleSvc, AuctionSvc, LocationSvc, AuctionMasterSvc, vendorSvc, NegotiationSvc, $stateParams, $rootScope, PaymentMasterSvc, $uibModal, $http, Auth, productSvc, notificationSvc, Modal, CartSvc, ProductTechInfoSvc, BuyContactSvc, userSvc, PriceTrendSvc, ValuationSvc, $state,LotSvc,userRegForAuctionSvc) {
    var vm = this;
+
+   // remove underscore from params
+    $stateParams.brand = $scope.removeUnderScore($stateParams.brand);
+    $stateParams.category = $scope.removeUnderScore($stateParams.category);
     $scope.lot = {};
     //$scope.showWidget = false;
     $scope.currentProduct = {};
@@ -45,7 +49,7 @@
     };
     //$scope.negotiate = negotiate;
 
-    vm.addProductQuote = addProductQuote;
+    //vm.addProductQuote = addProductQuote;
     vm.requestForFinance = requestForFinance;
     vm.getDateFormat = getDateFormat;
     vm.calculateRent = calculateRent;
@@ -82,6 +86,7 @@
         bidAmount: bidAmounts,
         product:$scope.currentProduct,
         stateId:$scope.state._id,
+        auction: $scope.auctionsData, 
         bid: "placebid",
         offerType: "Bid",
         callback: countBid
@@ -99,6 +104,7 @@
         bidAmount: bidAmounts,
         product: $scope.currentProduct,
         stateId:$scope.state._id,
+        auction: $scope.auctionsData, 
         bid: "buynow",
         offerType: "Buynow"
       };
@@ -145,7 +151,7 @@
 
 
 
-    $scope.changedCertified = function(mytime) {
+    /*$scope.changedCertified = function(mytime) {
       if (mytime) {
         var hours = mytime.getHours();
         var minutes = mytime.getMinutes();
@@ -159,17 +165,17 @@
 
     $scope.toggleMode = function() {
       $scope.isShow = !$scope.isShow;
-    };
+    };*/
 
 
     //date picker
-    $scope.today = function() {
-      $scope.scheduleDate = new Date();
+    /*$scope.today = function() {
+      vm.valuationReq.scheduleDate = new Date();
     };
     $scope.today();
 
     $scope.clear = function() {
-      $scope.scheduleDate = null;
+      vm.valuationReq.scheduleDate = null;
     };
 
     $scope.toggleMin = function() {
@@ -189,7 +195,7 @@
     };
 
     $scope.setDate = function(year, month, day) {
-      $scope.scheduleDate = new Date(year, month, day);
+      vm.valuationReq.scheduleDate = new Date(year, month, day);
     };
 
     $scope.dateOptions = {
@@ -206,9 +212,9 @@
 
     $scope.popup2 = {
       opened: false
-    };
+    };*/
 
-    function addProductQuote(form) {
+    /*function addProductQuote(form) {
 
 
       if (!Auth.getCurrentUser()._id) {
@@ -264,7 +270,7 @@
             });
         }
       });
-    }
+    }*/
 
 
     function loadUserDetail() {
@@ -446,11 +452,15 @@
             auctionFilter._id = $scope.currentProduct.auction._id;
             AuctionSvc.getAuctionInfoForProduct(auctionFilter)
               .then(function(aucts) {
-                $scope.auctionsData = aucts;
-                if($scope.auctionsData.allowProxyBid)
-                  $scope.allowBid = "No";
-                else
+                if(aucts.isExpired) { // when auction date is exired by Madhusudan
                   $scope.allowBid = 'Yes';
+                } else {
+                  $scope.auctionsData = aucts;
+                  if($scope.auctionsData.allowProxyBid)
+                    $scope.allowBid = "No";
+                  else
+                    $scope.allowBid = 'Yes';
+                }
               });
           } else {
             $scope.allowBid = 'Yes';

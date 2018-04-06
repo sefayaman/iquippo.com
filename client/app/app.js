@@ -18,7 +18,6 @@ angular.module('sreizaoApp',[
   'ngSanitize',
   'ui.router',
   'ui.bootstrap',
-  'datatables',
   'ui.tinymce',
   "account",
   'classifiedAd',
@@ -34,7 +33,8 @@ angular.module('sreizaoApp',[
    'yard',
    'viewhead',
    'nvd3',
-   'timer'
+   'timer',
+   'btford.socket-io'
 ])
   .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider,uiGmapGoogleMapApiProvider) {
     $urlRouterProvider
@@ -59,11 +59,12 @@ angular.module('sreizaoApp',[
         libraries: 'weather,geometry,visualization,places'
     });
   })
-  .run(function ($rootScope, $cookieStore, $location, Auth,Modal, $state,$http, groupSvc, categorySvc,$timeout, vendorSvc, $uibModal,CartSvc,modelSvc,brandSvc, settingSvc, InvitationSvc,UtilSvc,MarketingSvc,AppStateSvc, LocationSvc) {
+  .run(function ($rootScope, $cookieStore, $location, Auth, Modal, $state, $http, groupSvc, categorySvc,$timeout, vendorSvc, $uibModal,CartSvc,modelSvc,brandSvc, settingSvc, InvitationSvc,UtilSvc,MarketingSvc,AppStateSvc, LocationSvc) {
     // Redirect to login if route requires auth and you're not logged in
 
     $rootScope.uploadImagePrefix = s3Detais.baseURL+"/"+s3Detais.s3bucket+"/assets/uploads/";
     $rootScope.templateDir = $rootScope.uploadImagePrefix  + 'templates';
+    $rootScope.valuationreport = "valuationreport/"; 
     $rootScope.categoryDir = categoryDir;
     $rootScope.manpowerDir = manpowerDir;
     $rootScope.auctionDir = auctionDir;
@@ -75,6 +76,7 @@ angular.module('sreizaoApp',[
     $rootScope.financemasterDir = financemasterDir;
     $rootScope.choosenTitle=choosenTitle;
     $rootScope.metaDescription=metaDescription;
+    $rootScope.metaKeywords = metaKeywords;
     $rootScope.classifiedAdDir = classifiedAdDir;
     $rootScope.newsEventsDir = newsEventsDir;
     $rootScope.refresh = true;
@@ -113,7 +115,6 @@ angular.module('sreizaoApp',[
       $rootScope.loadingCount --;
       $rootScope.loading = $rootScope.loadingCount !=0;
     });*/
-
    categorySvc.getAllCategory().then(function(response){
       $rootScope.loadingCount --;
       $rootScope.loading = $rootScope.loadingCount !=0;
@@ -222,6 +223,8 @@ angular.module('sreizaoApp',[
     $rootScope.isBuySaleApprover = Auth.isBuySaleApprover;
     $rootScope.isBuySaleViewOnly = Auth.isBuySaleViewOnly;
     $rootScope.isAuctionRegPermission = Auth.isAuctionRegPermission;
+    $rootScope.removeSpace = UtilSvc.removeSpace;
+    $rootScope.removeUnderScore = UtilSvc.removeUnderScore;
     
     $rootScope.closeMeassage = function(){
       $rootScope.isSuccess = false;
@@ -281,15 +284,22 @@ angular.module('sreizaoApp',[
         auctionURL = "https://auctionsoftwaremarketplace.com:3007";
         ccavenueURL = "https://test.ccavenue.com";
         if(res.mode === 'development') {
+          
+          /*Payment setup for dev server*/
           currentURL = "http://dev.iquippo.com";
           accessCode = 'AVHH01FA38BL35HHLB';
+
+          /*Payment setup for localhost server*/
+         /* currentURL = "http://localhost";
+          accessCode = 'AVSW00DJ54AN50WSNA';*/
+
         } else {
           currentURL = "http://uat.iquippo.com";
           accessCode = 'AVGH01FA38BL33HGLB';
         }
       }
     }
-   
+      
    Auth.removeCookies();
     //global logout
     $rootScope.logout = function() {

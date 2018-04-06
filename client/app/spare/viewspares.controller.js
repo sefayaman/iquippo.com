@@ -2,7 +2,7 @@
 'use strict';
 angular.module('spare').controller('ViewSpareCtrl', ViewSpareCtrl);
 
-function ViewSpareCtrl($scope,$state, $stateParams, $rootScope, $uibModal, Auth, UtilSvc, CartSvc, spareSvc, categorySvc, LocationSvc, DTOptionsBuilder,Modal,$timeout, ManufacturerSvc) {
+function ViewSpareCtrl($scope,$state, $stateParams, $rootScope, $uibModal, Auth, UtilSvc, CartSvc, spareSvc, categorySvc, LocationSvc, Modal,$timeout, ManufacturerSvc) {
   var vm = this;
   vm.spareList = [];
   vm.equipmentSearchFilter = {};

@@ -196,7 +196,7 @@ function PriceTrendCtrl($scope,$rootScope,Auth,notificationSvc,categorySvc,brand
     function exportExcel(){
         PriceTrendSvc.exportExcel({})
         .then(function(buffData){
-            saveAs(new Blob([s2ab(buffData)],{type:"application/octet-stream"}), "pricetrend_"+ new Date().getTime() +".xlsx");
+            saveAs(new Blob([s2ab(buffData)],{type:"application/octet-stream"}), "pricetrend_"+ new Date().getTime() +".csv");
         });
     }
 

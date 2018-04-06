@@ -1,12 +1,13 @@
 (function() {
 	'use strict';
 	angular.module('sreizaoApp').controller('ProductBidRequestCtrl', ProductBidRequestCtrl);
-function ProductBidRequestCtrl($scope, $rootScope, $window, $uibModal, $stateParams,$state, productSvc, Modal, Auth, AssetSaleSvc,PagerSvc,uploadSvc) {
+function ProductBidRequestCtrl($scope, $rootScope, $window, $uibModal, $stateParams,$state, productSvc, socketSvc, Modal, Auth, AssetSaleSvc,PagerSvc,uploadSvc) {
 	var vm = this;
 	$scope.pager = PagerSvc.getPager();
 
 	$scope.assetId = $stateParams.assetId;
 	$scope.bidStatuses = bidStatuses;
+	$scope.tab = $stateParams.tab;
 
 	var initFilter = {actionable : 'y'};
 	vm.bidListing = [];
@@ -21,10 +22,19 @@ function ProductBidRequestCtrl($scope, $rootScope, $window, $uibModal, $statePar
 	vm.backButton = backButton;
 	//vm.activeBid = "approved";
 	//$scope.onTabChange = onTabChange;
-
+        
+        socketSvc.on('onSubmitBidSocket', function (data) {
+            $scope.pager.reset();
+            getBidData(angular.copy(initFilter));
+        });
+        socketSvc.on('onSystemUpdateBidSocket', function (data) {
+            $scope.pager.reset();
+            getBidData(angular.copy(initFilter));
+        });
+        
 	function backButton() {
-      $window.history.back();
-    }
+            $window.history.back();
+        }
 	function init() {
 		var filter = {};
 		filter._id = $stateParams.productId;
@@ -77,7 +87,7 @@ function ProductBidRequestCtrl($scope, $rootScope, $window, $uibModal, $statePar
 	}
 
 	function update(bid,action,cb){
-		
+
 		Modal.confirm(StatusChangeConfirmationMsg[action],function(retVal){
 			if(retVal === 'yes')
 				AssetSaleSvc.changeBidStatus(bid,action,cb || fireCommand);				

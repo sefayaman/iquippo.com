@@ -5,6 +5,7 @@ var auth = require('../../auth/auth.service');
 var controller = require('./enterprise.controller');
 var assetGroupCtrl = require('./assetgroup.controller');
 var scriptController=require('./scripts');
+var reportGeneratorCtr = require('./reportgenerator.controller');
 
 var router = express.Router();
 
@@ -22,8 +23,9 @@ router.put('/upload/excel',auth.isAuthenticated(),controller.bulkModify);
 router.post('/bulkUpdate',auth.isAuthenticated(),controller.bulkUpdate);
 router.post('/createinvoice',auth.hasRole('admin'),controller.createInvoice);
 router.post('/updateinvoice',auth.hasRole('admin'),controller.updateInvoice);
-router.get('/generateinvoice/:invoiceNo',auth.hasRole('admin'),controller.generateInvoice);
+router.get('/generateinvoice/:invoiceNo',auth.isAuthenticated(),controller.generateInvoice);
 router.post('/iqvl/update',controller.updateFromAgency);
+router.post('/generatereport',auth.hasRole('admin'),reportGeneratorCtr.generateReport);
 /*
 * This route should be commented once user are remapped to currect enterpriser  
 */
@@ -37,7 +39,7 @@ router.post('/updaterequest',scriptController.updateLegalEntityInRequest);
 */
 router.post('/asset/group',auth.hasRole('admin'),assetGroupCtrl.create);
 router.put('/asset/group/:id', auth.hasRole('admin'), assetGroupCtrl.update);
-router.get('/asset/group',auth.hasRole('admin'),assetGroupCtrl.fetch,assetGroupCtrl.renderJson);
+router.get('/asset/group',assetGroupCtrl.fetch,assetGroupCtrl.renderJson);
 
 router.get('/asset/group/count',auth.hasRole('admin'),assetGroupCtrl.count);
 router.post('/asset/group/upload/excel',auth.hasRole('admin'),assetGroupCtrl.uploadExcel);

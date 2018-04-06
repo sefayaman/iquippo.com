@@ -2,7 +2,7 @@
 'use strict';
 angular.module('newequipment').controller('NewEquipmentListingCtrl',NewEquipmentListingCtrl);
 
-function NewEquipmentListingCtrl($scope, $location, $rootScope, $http, productSvc, classifiedSvc, Modal, DTOptionsBuilder, $uibModal, $state, Auth, notificationSvc,uploadSvc,$timeout,$stateParams) {
+function NewEquipmentListingCtrl($scope, $location, $rootScope, $http, productSvc, classifiedSvc, Modal, $uibModal, $state, Auth, notificationSvc,uploadSvc,$timeout,$stateParams) {
   var vm  = this;
 
   //pagination variables
@@ -280,10 +280,14 @@ function NewEquipmentListingCtrl($scope, $location, $rootScope, $http, productSv
         dataToSend["userid"] = Auth.getCurrentUser()._id;
         dataToSend["role"] = Auth.getCurrentUser().role;
         dataToSend["productCondition"] = "new";
+         if(Auth.isEnterprise()){
+          d//elete dataToSend.userid;
+          dataToSend.enterpriseId = Auth.getCurrentUser().enterpriseId; 
+        }
 
         productSvc.exportProduct(dataToSend)
         .then(function(buffData){
-          saveAs(new Blob([s2ab(buffData)],{type:"application/octet-stream"}), "productlist_"+ new Date().getTime() +".xlsx")
+          saveAs(new Blob([s2ab(buffData)],{type:"application/octet-stream"}), "productlist_"+ new Date().getTime() +".csv")
         });
      }
 

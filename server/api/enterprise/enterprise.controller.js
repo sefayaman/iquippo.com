@@ -6,7 +6,7 @@ var writtenFrom = require('written-number');
 var request = require('request');
 var EnterpriseValuation = require('./enterprisevaluation.model');
 var EnterpriseValuationInvoice = require('./enterprisevaluationinvoice.model');
-
+var Product = require('../product/product.model');
 var xlsx = require('xlsx');
 var Utility = require('./../../components/utility.js');
 var config = require('./../../config/environment');
@@ -26,7 +26,7 @@ var AssetGroupModel = require('./assetgroup.model');
 var EnterpriseValuationStatuses = ['Request Initiated','Request Failed','Request Submitted','Inspection In Progress','Inspection In Completed','Valuation Report Failed','Valuation Report Submitted','Invoice Generated','Payment Received','Payment Made to valuation Partner','Completed'];
 //var EnterpriseValuationStatuses = ['Request Initiated','Request Failed','Request Submitted','Valuation Report Failed','Valuation Report Submitted','Invoice Generated','Payment Received','Payment Made to valuation Partner'];
 var updatableFields = ['customerTransactionId','assetDescription','engineNo','chassisNo','registrationNo','serialNo','yearOfManufacturing','yardParked','country','state','city','contactPerson','contactPersonTelNo','nameOfCustomerSeeking','rcDoc','invoiceDoc'];
-var validRequestType = ['Valuation','Inspection'];
+var validRequestType = ['Valuation','Inspection','GPS Installation','Photographs Only'];
 var UserModel = require('../user/user.model');
 var fs = require('fs');
 var Handlebars = require('handlebars');
@@ -38,6 +38,7 @@ var notification = require('./../../components/notification.js');
 var VALUATION_REQUEST = "ValuationRequest";
 var VALUATION_REPORT_SUBMISSION= "ValuationReportSubmission";
 var DEFAULT_PURPOSE = "Financing";
+var Encoded_Fields = ["yardParked",'disFromCustomerOffice','contactPerson','originalOwner','nameOfCustomerSeeking'];
 
 exports.get = function(req, res) {
   
@@ -122,6 +123,7 @@ function getValuationRequest(req,res){
       filter['createdAt'] = dateFilter;
 
   if (queryParam.pagination) {
+    req.lean = true;
     Utility.paginatedResult(req, res, EnterpriseValuation, filter, {});
     return;
   }
@@ -176,6 +178,7 @@ function getInvoice(req,res){
     filter['createdAt'] = dateFilter;
 
   if (queryParam.pagination) {
+    req.lean = true;
     Utility.paginatedResult(req, res, EnterpriseValuationInvoice, filter, {});
     return;
   }
@@ -1269,7 +1272,7 @@ exports.bulkModify = function(req, res) {
 
 // Updates an existing enterprise valuation in the DB.
 exports.update = function(req, res) {
-  
+  // console.log(req.body);
   var bodyData = req.body.data;
   var user = req.body.user;
   if(bodyData._id) { delete bodyData._id; }
@@ -1277,8 +1280,22 @@ exports.update = function(req, res) {
   bodyData.auditLogs = [req.enterprise];
   EnterpriseValuation.update({_id:req.params.id},{$set:bodyData},function(err){
       if (err) { return handleError(res, err); }
+      if(bodyData.status == EnterpriseValuationStatuses[6] && bodyData.assetId && (bodyData.assessedValue || bodyData.overallGeneralCondition)) {
+          updateProductFromIquippo();    
+      }
       return res.status(200).send("Enterprise valuation updated sucessfully");
   });
+
+  function updateProductFromIquippo() {
+        // updating value of fields in product db
+        var data = {
+            valuationAssessedValue: bodyData.assessedValue || 0,
+            valuationOverallGeneralCondition: bodyData.overallGeneralCondition || "",
+            valuationReport: bodyData.valuationReport || {}
+        };
+        Product.update({assetId: bodyData.assetId}, {$set:data} , function (err) {
+        }); 
+      }
 
 };
 
@@ -1354,6 +1371,10 @@ exports.submitRequest = function(req,res){
       var obj = {};
       keys.forEach(function(key){
         obj[key] = _.get(item,fieldMap[key],"");
+        if(Encoded_Fields.indexOf(fieldMap[key]) !== -1 && obj[key]){
+          var buffer = new Buffer(obj[key] || "");
+          obj[key] = buffer.toString("base64"); 
+        }
       })
 
       if(obj.brand && obj.brand == "Other")
@@ -1563,7 +1584,7 @@ exports.cancelRequest = function(req,res){
   var bodyData = req.body;
   if(!bodyData._id)
     return res.status(400).send("Invalid cancel request !!!");
-  if(req.user.role == 'admin')
+  if(req.user.role === 'admin')
     return cancelRequestAtQVAPL();
 
   EnterpriseValuation.findById(bodyData._id,function(err,entReq){
@@ -1875,7 +1896,6 @@ exports.updateFromAgency = function(req,res){
   var validActions = ['reportupload','putonhold','statusupdate'];  
   var bodyData = req.body;
   var action = req.query.action;
-
   var result = {};
   result['success'] = true;
   result['jobID'] = bodyData.jobID;
@@ -1978,10 +1998,29 @@ exports.updateFromAgency = function(req,res){
              result['success'] = false;
              result['msg'] = "System error at iQuippo";
           }
-          if(action === 'reportupload')
+
+          if(action === 'reportupload'){
+            if(valReq.assetId) 
+                updateProduct();
+
             pushNotification(valReq);
+          }
           return sendResponse();
       });
+
+      function updateProduct() {
+        // updating value of fields in product db
+        var data = {
+            valuationAssessedValue: updateObj.assessedValue || 0,
+            valuationOverallGeneralCondition: updateObj.overallGeneralCondition || "",
+            valuationReport: updateObj.valuationReport || {}
+        };
+        Product.update({assetId: valReq.assetId}, {$set:data} , function (err, res) {
+            if (err) {
+                console.error(err);
+            }
+        });  
+      }
   }
 
   function sendResponse(){
@@ -2078,7 +2117,7 @@ exports.exportExcel = function(req,res){
         filter['createdAt'] = dateFilter;
 
       var fieldMap = fieldsConfig["TRANSACTION_EXPORT"];
-      var query = EnterpriseValuation.find(filter).sort({createdAt:-1});
+      var query = EnterpriseValuation.find(filter).lean().sort({_id:-1});
       query.exec(function(err,dataArr){
           if(err) { return handleError(res, err); }
           exportExcel(req,res,fieldMap,dataArr);
@@ -2089,7 +2128,7 @@ exports.exportExcel = function(req,res){
       if(queryParam.fromDate || queryParam.toDate)
         filter['createdAt'] = dateFilter;
       var fieldMap = fieldsConfig["INVOICE_EXPORT"];
-      var query = EnterpriseValuationInvoice.find(filter).sort({createdAt:-1});
+      var query = EnterpriseValuationInvoice.find(filter).lean().sort({_id:-1});
        query.exec(function(err,dataArr){
           if(err) { return handleError(res, err); }
           var flatArr = _getformatedInvoice(dataArr);
@@ -2101,7 +2140,7 @@ exports.exportExcel = function(req,res){
        filter['paymentMade'] = true;
       if(queryParam.fromDate || queryParam.toDate)
         filter['paymentMadeDate'] = dateFilter;
-      var query = EnterpriseValuationInvoice.find(filter).sort({createdAt:-1});
+      var query = EnterpriseValuationInvoice.find(filter).lean().sort({_id:-1});
        query.exec(function(err,dataArr){
           if(err) { return handleError(res, err); }
           var jsonArr = [];
@@ -2121,7 +2160,7 @@ exports.exportExcel = function(req,res){
       if(queryParam.fromDate || queryParam.toDate)
         filter['paymentReceivedDate'] = dateFilter;
       
-      var query = EnterpriseValuationInvoice.find(filter).sort({createdAt:-1});
+      var query = EnterpriseValuationInvoice.find(filter).lean().sort({_id:-1});
        query.exec(function(err,dataArr){
           if(err) { return handleError(res, err); }
           var jsonArr = [];
@@ -2266,7 +2305,11 @@ function exportExcel(req,res,fieldMap,jsonArr){
 }
 
 function renderCsv(req,res,csv){
-   var fileName = req.query.type + "_" + new Date().getTime();
+  if(req.query.type == "transaction") {
+    // change name of file in case of transaction
+    req.query.type = "Ent_Valuation";
+  }
+  var fileName = req.query.type + "_" + new Date().getTime();
   res.setHeader('Content-Type', 'application/octet-stream');
   res.setHeader("Content-Disposition", 'attachment; filename=' + fileName + '.csv;');
   res.end(csv, 'binary'); 

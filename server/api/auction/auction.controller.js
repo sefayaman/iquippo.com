@@ -29,7 +29,7 @@ var validTimeFormat = ['DD/MM/YYYY h:mmA', 'DD/MM/YYYY h:mm A', 'MM/DD/YYYY h:mm
 var ReqSubmitStatuses = ['Request Submitted', 'Request Failed'];
 
 var dateUtil = {
-  validateAndFormatDate: function(dateString, format) {
+  validateAndFormatDate: function (dateString, format) {
     var dateFormat = format || 'YYYY-MM-DD HH:mm:ss';
     var formattedDate = moment(dateString, format).format(dateFormat);
     if (formattedDate === 'Invalid date') {
@@ -37,21 +37,21 @@ var dateUtil = {
     }
     return formattedDate;
   },
-  isValidDateTime: function(dateTimeString, format) {
-    if(!dateTimeString)
-      return {_isValid : false}
-    return moment(dateTimeString,format);
+  isValidDateTime: function (dateTimeString, format) {
+    if (!dateTimeString)
+      return { _isValid: false }
+    return moment(dateTimeString, format);
   }
 }
 
-exports.getAll = function(req, res) {
+exports.getAll = function (req, res) {
   var filter = {};
   filter.isDeleted = false;
   if (req.query.auctionId) {
     filter.auctionId = req.query.auctionId;
 
   }
-  AuctionRequest.find(filter, function(err, auctions) {
+  AuctionRequest.find(filter, function (err, auctions) {
     if (err) {
       return handleError(res, err);
     }
@@ -60,8 +60,8 @@ exports.getAll = function(req, res) {
 };
 
 // Get a single auction
-exports.getOnId = function(req, res) {
-  AuctionRequest.findById(req.params.id, function(err, auction) {
+exports.getOnId = function (req, res) {
+  AuctionRequest.findById(req.params.id, function (err, auction) {
     if (err) {
       return handleError(res, err);
     }
@@ -72,8 +72,8 @@ exports.getOnId = function(req, res) {
   });
 };
 
-exports.getAuctionInfoForProduct = function(req, res) {
-  AuctionRequest.findById(req.body._id, function(err, auction) {
+exports.getAuctionInfoForProduct = function (req, res) {
+  AuctionRequest.findById(req.body._id, function (err, auction) {
     if (err) {
       return handleError(res, err);
     }
@@ -84,21 +84,27 @@ exports.getAuctionInfoForProduct = function(req, res) {
     filter._id = auction.dbAuctionId;
     var query = AuctionMaster.find(filter);
     var auctionData = {};
-    query.exec(function(err, result) {
+    query.exec(function (err, result) {
       if (err) {
         return handleError(res, err);
       }
-      if(!result.length)
+      if (!result.length)
         return res.status(404).send("Auction not found");
-      
+
       auctionData = result[0].toObject();
       var currentDate = new Date();
       auctionData.visibleBuyNow = true;
       if (auctionData.startDate < currentDate && auctionData.endDate > currentDate)
         auctionData.visibleBuyNow = false;
       auctionData.allowProxyBid = false;
-      if (auctionData.insStartDate < currentDate && auctionData.endDate > currentDate)
+      if (auctionData.insStartDate < currentDate && auctionData.endDate > currentDate && auctionData.auctionType!='PT')
         auctionData.allowProxyBid = true;
+      if ( auctionData.auctionType==='PT' && auctionData.startDate < currentDate && auctionData.endDate > currentDate) {
+        auctionData.allowProxyBid = true;
+      }
+      if (currentDate > auctionData.endDate) {
+        auctionData.isExpired = true; // if auction date is expire 'Madhusudan'
+      }
       return res.status(200).json(auctionData);
     });
   });
@@ -110,11 +116,11 @@ function _create(data, cb) {
     return cb(new Error('Asset Id Missing'));
 
   Seq()
-    .par(function() {
+    .par(function () {
       var self = this;
       Product.find({
         assetId: data.product.assetId
-      }, function(err, prds) {
+      }, function (err, prds) {
         if (err) {
           return self(err)
         }
@@ -124,12 +130,12 @@ function _create(data, cb) {
         self();
       });
     })
-    .par(function() {
+    .par(function () {
       var self = this;
       AuctionRequest.find({
         "product.assetId": data.product.assetId,
-        "isDeleted":false
-      }, function(err, acts) {
+        "isDeleted": false
+      }, function (err, acts) {
         if (err) {
           self(err)
         }
@@ -139,7 +145,7 @@ function _create(data, cb) {
         self();
       });
     })
-    .seq(function() {
+    .seq(function () {
       if (assetIdExist)
         return cb({
           errorCode: 1,
@@ -147,74 +153,81 @@ function _create(data, cb) {
         });
       data.createdAt = new Date();
       data.updatedAt = new Date();
-      AuctionRequest.create(data, function(err, auctionAsset) {
+      AuctionRequest.create(data, function (err, auctionAsset) {
         if (err) {
           //return new Error('Unable to create auction : ', data.auctionId);
           return cb('Unable to create auction' + data.auctionId);
         }
         //return cb({errorCode: 0,message: "Success."});
-        
+
         //data._id = auction._id;
         var options = {};
-        options.dataToSend ={};
+        options.dataToSend = {};
         options.dataToSend._id = auctionAsset._id;
         options.dataToSend.assetId = auctionAsset.product.assetId;
         options.dataToSend.assetDesc = auctionAsset.product.description;
         options.dataToSend.auction_id = auctionAsset.dbAuctionId;
         options.dataToSend.auctionId = auctionAsset.auctionId;
+        options.dataToSend.auctionType = auctionAsset.auctionType;
         options.dataToSend.lot_id = auctionAsset.lot_id;
         options.dataToSend.assetDir = auctionAsset.product.assetDir;
         options.dataToSend.city = auctionAsset.product.city;
-        
+
         options.dataToSend.primaryImg = config.awsUrl + config.awsBucket + "/assets/uploads/" + auctionAsset.product.assetDir + "/" + auctionAsset.product.primaryImg;
-        if(auctionAsset.product.otherImages) {
+        if (auctionAsset.product.otherImages) {
           options.dataToSend.images = [];
-          for (var i=0; i < auctionAsset.product.otherImages.length; i++) {
+          for (var i = 0; i < auctionAsset.product.otherImages.length; i++) {
             options.dataToSend.images[options.dataToSend.images.length] = config.awsUrl + config.awsBucket + "/assets/uploads/" + auctionAsset.product.assetDir + "/" + auctionAsset.product.otherImages[i];
           }
         } else
           options.dataToSend.images = [];
-        
+
         options.dataToSend.seller = {};
         options.dataToSend.seller.contactNumber = auctionAsset.product.contactNumber;
         options.dataToSend.seller.contactName = auctionAsset.product.contactName;
         options.dataType = "assetData";
         
-        Utility.sendCompiledData(options, function(err, result) {
-             if (err || (result && result.err)) {
-              options.dataToSend.reqSubmitStatus = ReqSubmitStatuses[1];
-              updateAsset(options.dataToSend);
-              //if (result && result.err)
+        if ( auctionAsset.auctionType ==='PT' ) {
+            options.dataToSend.reqSubmitStatus = ReqSubmitStatuses[0];
+            updateAsset(options.dataToSend);
+        }
+        else {
+            Utility.sendCompiledData(options, function (err, result) {
+              if (err || (result && result.err)) {
+                options.dataToSend.reqSubmitStatus = ReqSubmitStatuses[1];
+                updateAsset(options.dataToSend);
+                //if (result && result.err)
                 //return cb(result.err);
-              //return cb({errorCode: 3,message: "Unable to post asset request. Please contact support team."});
-              return cb(err);
-            }
-            if (result) {
-              options.dataToSend.reqSubmitStatus = ReqSubmitStatuses[0];
-              updateAsset(options.dataToSend);
-              //return cb({errorCode: 0,message: "Asset request submitted successfully !!!"});
-            }
-            return cb();
-        });
+                //return cb({errorCode: 3,message: "Unable to post asset request. Please contact support team."});
+                return cb(err);
+              }
+              if (result) {
+                options.dataToSend.reqSubmitStatus = ReqSubmitStatuses[0];
+                updateAsset(options.dataToSend);
+                //return cb({errorCode: 0,message: "Asset request submitted successfully !!!"});
+              }
+              return cb();
+            });
+        }
       });
     })
-    .catch(function(err) {
+    .catch(function (err) {
       return cb(new Error(err || 'Unable to create'));
     })
 }
 
 // Creates a new valuation in the DB.
-exports.create = function(req, res, next) {
+exports.create = function (req, res, next) {
   var assetIdExist = false;
   if (!req.body.product.assetId)
     return next(new ApiError(400, "Asset Id is mandatory"));
 
   Seq()
-    .par(function() {
+    .par(function () {
       var self = this;
       Product.find({
         assetId: req.body.product.assetId
-      }, function(err, prds) {
+      }, function (err, prds) {
         if (err) {
           return self(err)
         }
@@ -225,12 +238,12 @@ exports.create = function(req, res, next) {
 
       });
     })
-    .par(function() {
+    .par(function () {
       var self = this;
       AuctionRequest.find({
         "product.assetId": req.body.product.assetId,
-        "isDeleted":false
-      }, function(err, acts) {
+        "isDeleted": false
+      }, function (err, acts) {
         if (err) {
           self(err)
         }
@@ -240,7 +253,7 @@ exports.create = function(req, res, next) {
         self();
       });
     })
-    .seq(function() {
+    .seq(function () {
       if (assetIdExist)
         return res.status(201).json({
           errorCode: 1,
@@ -248,112 +261,123 @@ exports.create = function(req, res, next) {
         });
       req.body.createdAt = new Date();
       req.body.updatedAt = new Date();
-      AuctionRequest.create(req.body, function(err, auction) {
+      AuctionRequest.create(req.body, function (err, auction) {
         //return res.status(201).json({errorCode: 0,message: "Success."});
         req.body._id = auction._id;
         postRequestAsset(req, res);
       });
     })
-    .catch(function(err) {
+    .catch(function (err) {
       return handleError(res, err);
     })
 }
-      
-  function postRequestAsset(req, res){
-    var options = {};
-    AuctionRequest.find({
-        _id: req.body._id
-      }, function(err, proResult) {
-        options.dataToSend ={};
-        if(req.body.isDeleted)
-          options.dataToSend.isDeleted = true;
-        options.dataToSend._id = req.body._id;
-        if(!proResult[0].external)
-          options.dataToSend._id = req.body.product._id;
-        options.dataToSend.assetId = req.body.product.assetId;
-        options.dataToSend.assetDesc = req.body.product.description;
-        options.dataToSend.auction_id = req.body.dbAuctionId;
-        options.dataToSend.auctionId = req.body.auctionId;
-        options.dataToSend.lot_id = req.body.lot_id;
-        options.dataToSend.assetDir = req.body.product.assetDir;
-        options.dataToSend.city = req.body.product.city;
-        options.dataToSend.primaryImg = config.awsUrl + config.awsBucket + "/assets/uploads/" + req.body.product.assetDir + "/" + req.body.product.primaryImg;
-        if(req.body.product.otherImages) {
-          options.dataToSend.images = [];
-          for (var i=0; i < req.body.product.otherImages.length; i++) {
-            options.dataToSend.images[options.dataToSend.images.length] = config.awsUrl + config.awsBucket + "/assets/uploads/" + req.body.product.assetDir + "/" + req.body.product.otherImages[i];
-          }
-        } else
-          options.dataToSend.images = [];
-        if(proResult[0].external) {
-          options.dataToSend.seller = {};
-          options.dataToSend.seller.contactNumber = req.body.product.contactNumber;
-          options.dataToSend.seller.contactName = req.body.product.contactName;
-        }
-        options.dataType = "assetData";
 
-        Utility.sendCompiledData(options, function(err, result) {
+function postRequestAsset(req, res) {
+  var options = {};
+  AuctionRequest.find({
+    _id: req.body._id
+  }, function (err, proResult) {
+    options.dataToSend = {};
+    if (req.body.isDeleted)
+      options.dataToSend.isDeleted = true;
+    options.dataToSend._id = req.body._id;
+    if (!proResult[0].external)
+      options.dataToSend._id = req.body.product._id;
+    options.dataToSend.assetId = req.body.product.assetId;
+    options.dataToSend.assetDesc = req.body.product.description;
+    options.dataToSend.auction_id = req.body.dbAuctionId;
+    options.dataToSend.auctionId = req.body.auctionId;
+    options.dataToSend.lot_id = req.body.lot_id;
+    options.dataToSend.assetDir = req.body.product.assetDir;
+    options.dataToSend.city = req.body.product.city;
+    options.dataToSend.primaryImg = config.awsUrl + config.awsBucket + "/assets/uploads/" + req.body.product.assetDir + "/" + req.body.product.primaryImg;
+    if (req.body.product.otherImages) {
+      options.dataToSend.images = [];
+      for (var i = 0; i < req.body.product.otherImages.length; i++) {
+        options.dataToSend.images[options.dataToSend.images.length] = config.awsUrl + config.awsBucket + "/assets/uploads/" + req.body.product.assetDir + "/" + req.body.product.otherImages[i];
+      }
+    } else
+      options.dataToSend.images = [];
+    if (proResult[0].external) {
+      options.dataToSend.seller = {};
+      options.dataToSend.seller.contactNumber = req.body.product.contactNumber;
+      options.dataToSend.seller.contactName = req.body.product.contactName;
+    }
+    options.dataType = "assetData";
+    
+    if (req.body.auctionType==='PT') {
+        options.dataToSend.reqSubmitStatus = ReqSubmitStatuses[0];
+        updateAsset(options.dataToSend);
+        if (req.body.isDeleted)
+          return res.status(201).json({ errorCode: 0, message: "Asset deleted successfully !!!" });
+        else if (req.isUpdate)
+          return res.status(201).json({ errorCode: 0, message: "Asset request updated successfully  !!!" });
+        else
+          return res.status(201).json({ errorCode: 0, message: "Asset request submitted successfully !!!" });
+      }
+    else {
+        Utility.sendCompiledData(options, function (err, result) {
           if (err || (result && result.err)) {
             options.dataToSend.reqSubmitStatus = ReqSubmitStatuses[1];
             updateAsset(options.dataToSend);
-            if(result && result.err)
-                return res.status(412).send(result.err);
+            if (result && result.err)
+              return res.status(412).send(result.err);
             return res.status(412).send("Unable to post asset request. Please contact support team.");
           }
-          if(result){
+          if (result) {
             options.dataToSend.reqSubmitStatus = ReqSubmitStatuses[0];
             updateAsset(options.dataToSend);
-            if(req.body.isDeleted)
-              return res.status(201).json({errorCode: 0,message: "Asset deleted successfully !!!"});
-            else if(req.isUpdate)
-              return res.status(201).json({errorCode: 0,message: "Asset request updated successfully  !!!"});
+            if (req.body.isDeleted)
+              return res.status(201).json({ errorCode: 0, message: "Asset deleted successfully !!!" });
+            else if (req.isUpdate)
+              return res.status(201).json({ errorCode: 0, message: "Asset request updated successfully  !!!" });
             else
-              return res.status(201).json({errorCode: 0,message: "Asset request submitted successfully !!!"});
+              return res.status(201).json({ errorCode: 0, message: "Asset request submitted successfully !!!" });
           }
         });
-      });
-  }
+    }
+  });
+}
 
-  function updateAsset(assetReq){
-    var id = assetReq._id;
-    delete assetReq._id;
-    AuctionRequest.update({_id:id},{$set:{"reqSubmitStatus":assetReq.reqSubmitStatus}},function(err,retVal){
-      if (err) { console.log("Error with updating auction request");}
+function updateAsset(assetReq) {
+  var id = assetReq._id;
+  delete assetReq._id;
+  AuctionRequest.update({ _id: id }, { $set: { "reqSubmitStatus": assetReq.reqSubmitStatus } }, function (err, retVal) {
+    if (err) { console.log("Error with updating auction request"); }
     console.log("Asset updated Updated");
+  });
+}
+
+exports.reSendReqToCreateAsset = function (req, res) {
+  if (!req.body.external) {
+    var options = {};
+    options.dataToSend = {};
+    var auctionReqId = req.body.assetReqId;
+    var productId = req.body._id;
+    if (req.body.assetReqId)
+      delete req.body.assetReqId;
+    if (req.body._id)
+      delete req.body._id;
+    if (req.body.external)
+      delete req.body.external;
+    options.dataToSend = req.body;
+    options.dataToSend._id = productId;
+    options.dataType = "assetData";
+    Utility.sendCompiledData(options, function (err, result) {
+      if (err || (result && result.err)) {
+        Product.findOneAndUpdate({ _id: productId }, { $set: { "reqSubmitStatus": ReqSubmitStatuses[1] } }).exec();
+        AuctionRequest.findOneAndUpdate({ _id: auctionReqId }, { $set: { "reqSubmitStatus": ReqSubmitStatuses[1] } }).exec();
+        return res.status(201).json({ errorCode: 1, message: "Unable to post asset request. Please contact support team." });
+      }
+      if (result) {
+        Product.findOneAndUpdate({ _id: productId }, { $set: { "reqSubmitStatus": ReqSubmitStatuses[0] } }).exec();
+        AuctionRequest.findOneAndUpdate({ _id: auctionReqId }, { $set: { "reqSubmitStatus": ReqSubmitStatuses[0] } }).exec();
+        return res.status(201).json({ errorCode: 0, message: "Asset request submitted successfully" });
+      }
     });
-  }
-
-  exports.reSendReqToCreateAsset=function(req,res){
-    if(!req.body.external) {
-      var options = {};
-      options.dataToSend ={};
-      var auctionReqId = req.body.assetReqId;
-      var productId = req.body._id;
-      if(req.body.assetReqId)
-        delete req.body.assetReqId;
-      if(req.body._id)
-        delete req.body._id;
-      if(req.body.external)
-        delete req.body.external;
-      options.dataToSend = req.body;
-      options.dataToSend._id = productId;
-      options.dataType = "assetData";
-
-      Utility.sendCompiledData(options, function(err, result) {
-        if (err || (result && result.err)) {
-          Product.findOneAndUpdate({_id: productId}, {$set: {"reqSubmitStatus":ReqSubmitStatuses[1]}}).exec();
-          AuctionRequest.findOneAndUpdate({_id: auctionReqId}, {$set: {"reqSubmitStatus":ReqSubmitStatuses[1]}}).exec();
-          return res.status(201).json({errorCode: 1,message: "Unable to post asset request. Please contact support team."});
-        }
-        if(result){
-          Product.findOneAndUpdate({_id: productId}, {$set: {"reqSubmitStatus":ReqSubmitStatuses[0]}}).exec();
-          AuctionRequest.findOneAndUpdate({_id: auctionReqId}, {$set: {"reqSubmitStatus":ReqSubmitStatuses[0]}}).exec();
-          return res.status(201).json({errorCode: 0,message: "Asset request submitted successfully"});
-        }
-      });
-    } else
-      postRequestAsset(req, res);
-  };
+  } else
+    postRequestAsset(req, res);
+};
 
 function validateData(data) {
   var manadatoryParams = ['auctionId', 'lotNo', 'assetId', 'category', 'brand', 'model'];
@@ -361,13 +385,13 @@ function validateData(data) {
   var err = '';
   var missingParams = [];
   //var nonNumericParams = [];
-  manadatoryParams.forEach(function(x) {
+  manadatoryParams.forEach(function (x) {
     if (!data[x] || (data.product && !data.product[x]))
       missingParams.push(x);
   });
 
-  if(data.isSold && data.isSold.replace(/[^a-zA-Z ]/g, "").trim().toLowerCase() === 'yes' ){
-    if(!data.saleVal)
+  if (data.isSold && data.isSold.replace(/[^a-zA-Z ]/g, "").trim().toLowerCase() === 'yes') {
+    if (!data.saleVal)
       missingParams.push('Sale Value');
   }
 
@@ -388,7 +412,7 @@ function validateData(data) {
   return err;
 }
 
-exports.bulkCreate = function(data, cb) {
+exports.bulkCreate = function (data, cb) {
   var errObj = [],
     sucessObj = [];
 
@@ -416,7 +440,7 @@ exports.bulkCreate = function(data, cb) {
   }
 
   function iteration(auctionData, next) {
-    _create(auctionData, function(response) {
+    _create(auctionData, function (response) {
       // AuctionRequest.create(auctionData, function(err, auction) {
       if (response instanceof Error) {
         errObj.push({
@@ -458,7 +482,7 @@ exports.bulkCreate = function(data, cb) {
 
 }
 
-exports.bulkUpload = function(req, res, next) {
+exports.bulkUpload = function (req, res, next) {
   var fileName = req.body.filename;
   var user = req.body.user;
   var workbook = null;
@@ -502,9 +526,9 @@ exports.bulkUpload = function(req, res, next) {
   var errObj = [];
   var assetIdMap = {};
 
-  data.forEach(function(x) {
+  data.forEach(function (x) {
     var obj = {};
-    Object.keys(x).forEach(function(key) {
+    Object.keys(x).forEach(function (key) {
       obj[field_map[key]] = x[key];
     })
     obj.rowCount = x.__rowNum__;
@@ -525,7 +549,7 @@ exports.bulkUpload = function(req, res, next) {
         assetIdMap[obj.assetId] = obj.auctionId;
         obj.user = user;
 
-        ['isSold', 'originalInvoice'].forEach(function(x) {
+        ['isSold', 'originalInvoice'].forEach(function (x) {
           if (obj[x] && obj[x].replace(/[^a-zA-Z ]/g, "").trim().toLowerCase() !== 'yes') {
             obj[x] = false;
           }
@@ -555,7 +579,7 @@ exports.bulkUpload = function(req, res, next) {
   uploadReqCtrl.create({
     uploadData: uploadData,
     type: 'auction'
-  }, function(err, result) {
+  }, function (err, result) {
     if (err)
       return res.sendStatus(500).send(err);
     if (errObj.length)
@@ -566,11 +590,11 @@ exports.bulkUpload = function(req, res, next) {
 };
 
 //search based on filter
-exports.getOnFilter = function(req, res) {
+exports.getOnFilter = function (req, res) {
   var filter = {};
 
   var orFilter = [];
-  filter.isDeleted=false;
+  filter.isDeleted = false;
   if (req.body.searchStr) {
 
     var term = new RegExp(req.body.searchStr, 'i');
@@ -673,7 +697,7 @@ exports.getOnFilter = function(req, res) {
 
   if (req.body.location) {
     var cityRegex = new RegExp(req.body.location, 'i');
-    filter['product.city'] = {$regex:cityRegex};
+    filter['product.city'] = { $regex: cityRegex };
   }
 
   if (req.body._id)
@@ -690,42 +714,42 @@ exports.getOnFilter = function(req, res) {
     filter["transactionId"] = req.body.tid;
   if (req.body.assetId)
     filter["product.assetId"] = req.body.assetId;
-  if(req.body.category)
-    filter["product.category"]=req.body.category;
-  if(req.body.brand)
-    filter["product.brand"]=req.body.brand;
-  if(req.body.model)
-    filter["product.model"]=req.body.model;
-  if(req.body.group)
-    filter["product.group"]= req.body.group;
-  if(req.body.notInSoldPro)
-    filter["product.isSold"] = { $ne: true};
-  
-  if(req.body.mfgYear){
+  if (req.body.category)
+    filter["product.category"] = req.body.category;
+  if (req.body.brand)
+    filter["product.brand"] = req.body.brand;
+  if (req.body.model)
+    filter["product.model"] = req.body.model;
+  if (req.body.group)
+    filter["product.group"] = req.body.group;
+  if (req.body.notInSoldPro)
+    filter["product.isSold"] = { $ne: true };
+
+  if (req.body.mfgYear) {
     var mfgYear = false;
     var mfgFilter = {};
-    if(req.body.mfgYear.min){
+    if (req.body.mfgYear.min) {
       mfgFilter['$gte'] = req.body.mfgYear.min;
       mfgYear = true;
     }
-    if(req.body.mfgYear.max){
+    if (req.body.mfgYear.max) {
       mfgFilter['$lte'] = req.body.mfgYear.max;
       mfgYear = true;
     }
-    if(mfgYear)
+    if (mfgYear)
       filter["product.mfgYear"] = mfgFilter;
- }
+  }
 
- if(req.body.mfgYearMax || req.body.mfgYearMin){
+  if (req.body.mfgYearMax || req.body.mfgYearMin) {
     var mfgFilter = {};
-    if(req.body.mfgYearMin){
+    if (req.body.mfgYearMin) {
       mfgFilter['$gte'] = parseInt(req.body.mfgYearMin);
     }
-    if(req.body.mfgYearMax){
+    if (req.body.mfgYearMax) {
       mfgFilter['$lte'] = parseInt(req.body.mfgYearMax);
     }
     filter["product.mfgYear"] = mfgFilter;
- }
+  }
   if (req.body.status)
     filter["status"] = req.body.status;
   if (req.body.external)
@@ -736,44 +760,44 @@ exports.getOnFilter = function(req, res) {
   }
   var query = AuctionRequest.find(filter);
   query.exec(
-    function(err, auctions) {
+    function (err, auctions) {
       if (err) {
         return handleError(res, err);
       }
       req.auctionReqs = auctions;
-      filterInActiveProduct(req,res);
+      filterInActiveProduct(req, res);
       //return res.status(200).json(auctions);
     }
 
   );
 };
 
-function filterInActiveProduct(req,res){
+function filterInActiveProduct(req, res) {
   var assetIds = [];
-  req.auctionReqs.forEach(function(item){
-    if(item.product && item.product._id)
+  req.auctionReqs.forEach(function (item) {
+    if (item.product && item.product._id)
       assetIds.push(item.product._id);
   });
-  if(!assetIds.length)
+  if (!assetIds.length)
     return res.status(200).json(req.auctionReqs);
 
-  Product.find({_id:{$in:assetIds}},function(err,products){
-    if(err) return handleError(res,err);
-    products.forEach(function(item){
-      if(!item.status || item.deleted){
+  Product.find({ _id: { $in: assetIds } }, function (err, products) {
+    if (err) return handleError(res, err);
+    products.forEach(function (item) {
+      if (!item.status || item.deleted) {
         for (var i = 0; i < req.auctionReqs.length; i++) {
           if (req.auctionReqs[i].product._id === item._id)
             req.auctionReqs.splice(i, 1);
         }
-      }else if(item.status && !item.deleted){
+      } else if (item.status && !item.deleted) {
         for (var i = 0; i < req.auctionReqs.length; i++) {
-          if (req.auctionReqs[i].product._id === (item._id && item._id.toString())){
-            ['operatingHour'].forEach(function(x){
-              if(item[x]){
+          if (req.auctionReqs[i].product._id === (item._id && item._id.toString())) {
+            ['operatingHour'].forEach(function (x) {
+              if (item[x]) {
                 req.auctionReqs[i].product[x] = item[x];
               }
             })
-          }   
+          }
         }
       }
     });
@@ -782,16 +806,16 @@ function filterInActiveProduct(req,res){
 }
 
 // Updates an existing auction in the DB.
-exports.update = function(req, res) {
+exports.update = function (req, res) {
   if (req.body._id) {
     delete req.body._id;
   }
   req.body.updatedAt = new Date();
   AuctionRequest.find({
     "product.assetId": req.body.product.assetId,
-    "status" : "request_approved",
-    "isDeleted" : false
-  }, function(err, auctions) {
+    "status": "request_approved",
+    "isDeleted": false
+  }, function (err, auctions) {
     if (err) {
       return handleError(res, err);
     }
@@ -807,36 +831,36 @@ exports.update = function(req, res) {
     AuctionRequest.update({
       _id: req.params.id
     }, {
-      $set: req.body
-    }, function(err) {
-      if (err) {
-        return handleError(res, err);
-      }
-      if(!req.body.external && req.body.product.isSold)
-        updateProduct(req.body);
-      
-      req.body._id = req.params.id;
-      req.isUpdate = true;
-      postRequestAsset(req, res);
-      //return res.status(200).json(req.body)
-    });
+        $set: req.body
+      }, function (err) {
+        if (err) {
+          return handleError(res, err);
+        }
+        if (!req.body.external && req.body.product.isSold)
+          updateProduct(req.body);
+
+        req.body._id = req.params.id;
+        req.isUpdate = true;
+        postRequestAsset(req, res);
+        //return res.status(200).json(req.body)
+      });
   });
 };
 
 function updateProduct(data) {
-  Product.find({assetId: data.product.assetId}, function(err, product) {
+  Product.find({ assetId: data.product.assetId }, function (err, product) {
     var proData = {};
     proData.isSold = true;
     proData.assetStatus = "sold";
     var stObj = {};
-    if(data.user && data.user._id)
+    if (data.user && data.user._id)
       stObj.userId = data.user._id;
     stObj.status = "sold";
     stObj.createdAt = new Date();
-    if(!proData.assetStatuses)
+    if (!proData.assetStatuses)
       proData.assetStatuses = [];
     proData.assetStatuses[proData.assetStatuses.length] = stObj;
-    Product.update({assetId:data.product.assetId},{$set:proData},function(err){
+    Product.update({ assetId: data.product.assetId }, { $set: proData }, function (err) {
       if (err) { console.log("err", err); }
       console.log("Product Updated");
     });
@@ -844,15 +868,15 @@ function updateProduct(data) {
 }
 
 // Deletes a auction from the DB.
-exports.destroy = function(req, res) {
-  AuctionRequest.findById(req.params.id, function(err, auction) {
+exports.destroy = function (req, res) {
+  AuctionRequest.findById(req.params.id, function (err, auction) {
     if (err) {
       return handleError(res, err);
     }
     if (!auction) {
       return res.status(404).send('Not Found');
     }
-    auction.remove(function(err) {
+    auction.remove(function (err) {
       if (err) {
         return handleError(res, err);
       }
@@ -1083,7 +1107,7 @@ function excel_from_data(data, isAdmin) {
   return ws;
 }
 
-exports.exportAuction = function(req, res) {
+exports.exportAuction = function (req, res) {
   var filter = {};
   var isAdmin = true;
   if (req.body.userid) {
@@ -1097,29 +1121,52 @@ exports.exportAuction = function(req, res) {
   var query = AuctionRequest.find(filter).sort({
     auctionId: 1
   });
-  query.exec(
-    function(err, auctions) {
+  query.lean().exec(
+    function (err, auctions) {
       if (err) {
         return handleError(res, err);
       }
-      var ws_name = "auction"
-      var wb = new Workbook();
-      var ws = excel_from_data(auctions, isAdmin);
-      wb.SheetNames.push(ws_name);
-      wb.Sheets[ws_name] = ws;
-      var wbout = xlsx.write(wb, {
-        bookType: 'xlsx',
-        bookSST: true,
-        type: 'binary'
-      });
-      res.end(wbout);
+      try {
+        return _prepareCSVResponse(res, auctions);
+      } catch (exp) {
+        return handleError(res, exp);
+      }
     });
+}
+
+function _prepareCSVResponse(res, auctions) {
+  var tempData = [];
+  try {
+    auctions.forEach(function (item, key, array) {
+      delete array[key]._id;
+      let obj = {
+        "Auction Id": item.auctionId,
+        "Asset Id": item.product['assetId'],
+        "Product Id": item.product['productId'] || "",
+        "Seller Name": item.seller ? item.seller['name'] || "" : "",
+        "Asset Name": item.product['name'] || "",
+        "Manufacturer": item.product['brand'] || "",
+        "Model": item.product['model'] || "",
+        "Manufacturing Year": item.product['mfgYear'] || "",
+        "City": item.product['city'] || "",
+        "Machine Serial No.": item.product['serialNumber'] || "",
+        "Price (Excl. Tax)": item.product['grossPrice'] || "",
+        "Start Date": item.startDate || "",
+        "End Date": item.endDate || "",
+      }
+      tempData.push(obj);
+    });
+    Utility.convertToCSV(res, tempData);
+  } catch (e) {
+    console.log(e);
+    throw e;
+  }
 }
 
 //Auction master services
 
 // Creates a new AuctionMaster in the DB.
-exports.createAuctionMaster = function(req, res) {
+exports.createAuctionMaster = function (req, res) {
   //var options = {};
   var filter = {}
   if (!req.body.auctionId)
@@ -1129,7 +1176,7 @@ exports.createAuctionMaster = function(req, res) {
   filter.auctionId = req.body.auctionId;
   filter.isDeleted = false;
   //var term = new RegExp("^" + req.body.entityName + "$", 'i');
-  AuctionMaster.find(filter, function(err, auctionData) {
+  AuctionMaster.find(filter, function (err, auctionData) {
     if (err) return handleError(res, err);
     if (auctionData.length > 0) {
       return res.status(200).json({
@@ -1138,7 +1185,7 @@ exports.createAuctionMaster = function(req, res) {
       });
     } else {
 
-      AuctionMaster.create(req.body, function(err, auctionData) {
+      AuctionMaster.create(req.body, function (err, auctionData) {
         if (err) {
           return handleError(res, err);
         }
@@ -1150,48 +1197,54 @@ exports.createAuctionMaster = function(req, res) {
 
 };
 
-function postRequest(req, res){
+function postRequest(req, res) {
   var options = {};
   AuctionMaster.find({
-      _id: req.body._id
-    }, function(err, result) {
-      options.dataToSend = result[0].toObject();
-      options.dataType = "auctionData";
+    _id: req.body._id
+  }, function (err, result) {
+    options.dataToSend = result[0].toObject();
+    options.dataType = "auctionData";
+    if (req.body.auctionType==='PT') {
+        update(req.body);
+        return res.status(201).json({ errorCode: 0, message: "Auction request submitted successfully !!!" });
+    }
+    else {
 
-      Utility.sendCompiledData(options, function(err, result) {
-        if (err || (result && result.err)) {
-          //options.dataToSend.reqSubmitStatus = ReqSubmitStatuses[1];
-          req.body.reqSubmitStatus = ReqSubmitStatuses[1];
-          update(req.body);
-          if(result && result.err)
-              return res.status(412).send(result.err);
-          return res.status(412).send("Unable to post auction request. Please contact support team.");
-        }
-        if(result){
-          //options.dataToSend.reqSubmitStatus =  ReqSubmitStatuses[0];
-          req.body.reqSubmitStatus = ReqSubmitStatuses[0];
-          update(req.body);
-          return res.status(201).json({errorCode: 0,message: "Auction request submitted successfully !!!"});
-        }
-      });
-    });
+        Utility.sendCompiledData(options, function (err, result) {
+            if (err || (result && result.err)) {
+                //options.dataToSend.reqSubmitStatus = ReqSubmitStatuses[1];
+                req.body.reqSubmitStatus = ReqSubmitStatuses[1];
+                update(req.body);
+                if (result && result.err)
+                    return res.status(412).send(result.err);
+                return res.status(412).send("Unable to post auction request. Please contact support team.");
+            }
+            if (result) {
+                //options.dataToSend.reqSubmitStatus =  ReqSubmitStatuses[0];
+                req.body.reqSubmitStatus = ReqSubmitStatuses[0];
+                update(req.body);
+                return res.status(201).json({errorCode: 0, message: "Auction request submitted successfully !!!"});
+            }
+        });
+    }
+  });
 }
 
-  function update(auctionReq){
-    var _id = auctionReq._id;
-    delete auctionReq._id;
-    AuctionMaster.update({_id:_id},{$set:{"reqSubmitStatus":auctionReq.reqSubmitStatus}},function(err,retVal){
-      if (err) { console.log("Error with updating auction request");}
-      console.log("Auction Request Updated");
-    }); 
-  }
+function update(auctionReq) {
+  var _id = auctionReq._id;
+  delete auctionReq._id;
+  AuctionMaster.update({ _id: _id }, { $set: { "reqSubmitStatus": auctionReq.reqSubmitStatus } }, function (err, retVal) {
+    if (err) { console.log("Error with updating auction request"); }
+    console.log("Auction Request Updated");
+  });
+}
 
-exports.getAssetInfo = function(req, res) {
+exports.getAssetInfo = function (req, res) {
   var filter = {};
   var data = {};
   filter._id = req.query.dbAuctionId;
   filter.isDeleted = false;
-  AuctionMaster.find(filter, function(err, results) {
+  AuctionMaster.find(filter, function (err, results) {
     if (err) {
       return handleError(res, err);
     }
@@ -1205,7 +1258,7 @@ exports.getAssetInfo = function(req, res) {
         $set: {
           "status": true
         }
-      }, function(err, resproduct) {
+      }, function (err, resproduct) {
         if (err) {
           return handleError(res, err);
         }
@@ -1221,13 +1274,13 @@ exports.getAssetInfo = function(req, res) {
   });
 };
 
-exports.updateAuctionMasterproduct = function(req, res) {
-    var _id = req.body._id;
-    AuctionMaster.update({
-      _id: _id
-    }, {
+exports.updateAuctionMasterproduct = function (req, res) {
+  var _id = req.body._id;
+  AuctionMaster.update({
+    _id: _id
+  }, {
       $set: req.body
-    }, function(err) {
+    }, function (err) {
       if (err) {
         return handleError(res, err);
       }
@@ -1238,26 +1291,26 @@ exports.updateAuctionMasterproduct = function(req, res) {
 
     });
 
+}
+// Remove field from Auction Master
+exports.removeAuctionMasterproduct = function (req, res) {
+  var _id = req.body._id;
+  var field = {};
+  if (req.body.flag == 1) {
+    field = {
+      "static_increment": 1
+    };
   }
-  // Remove field from Auction Master
-exports.removeAuctionMasterproduct = function(req, res) {
-    var _id = req.body._id;
-    var field = {};
-    if (req.body.flag == 1) {
-      field = {
-        "static_increment": 1
-      };
-    }
-    if (req.body.flag == 2) {
-      field = {
-        "bidIncrement": 1
-      };
-    }
-    AuctionMaster.update({
-      _id: _id
-    }, {
+  if (req.body.flag == 2) {
+    field = {
+      "bidIncrement": 1
+    };
+  }
+  AuctionMaster.update({
+    _id: _id
+  }, {
       $unset: field //{"static_increment":1}
-    }, function(err) {
+    }, function (err) {
       if (err) {
         return handleError(res, err);
       }
@@ -1267,14 +1320,14 @@ exports.removeAuctionMasterproduct = function(req, res) {
       });
 
     });
-  }
+}
 
-  exports.sendReqToCreateAuction=function(req,res){
-    postRequest(req, res);
-  };
+exports.sendReqToCreateAuction = function (req, res) {
+  postRequest(req, res);
+};
 
 // Creates a AuctionMaster in the DB.
-exports.updateAuctionMaster = function(req, res) {
+exports.updateAuctionMaster = function (req, res) {
   var options = {};
   var _id = req.body._id;
 
@@ -1293,7 +1346,7 @@ exports.updateAuctionMaster = function(req, res) {
   if (req.body.auctionId)
     filter.auctionId = req.body.auctionId;
   filter.isDeleted = false;
-  AuctionMaster.find(filter, function(err, auctionData) {
+  AuctionMaster.find(filter, function (err, auctionData) {
     if (err) return handleError(res, err);
     if (auctionData.length > 0) {
       return res.status(200).json({
@@ -1304,14 +1357,14 @@ exports.updateAuctionMaster = function(req, res) {
       AuctionMaster.update({
         _id: _id
       }, {
-        $set: req.body
-      }, function(err,resultData) {
-        if (err) {
-          return handleError(res, err);
-        }
-        req.body._id = req.params.id;
-        postRequest(req, res);
-      });
+          $set: req.body
+        }, function (err, resultData) {
+          if (err) {
+            return handleError(res, err);
+          }
+          req.body._id = req.params.id;
+          postRequest(req, res);
+        });
     }
   });
 }
@@ -1335,10 +1388,10 @@ exports.updateAuctionMaster = function(req, res) {
   });
 }*/
 
- 
+
 
 //search AucyionMaster based on filter 
-exports.getFilterOnAuctionMaster = function(req, res) {
+exports.getFilterOnAuctionMaster = function (req, res) {
   var searchStrReg = new RegExp(req.body.searchStr, 'i');
   var filter = {};
   filter.isDeleted = false;
@@ -1452,7 +1505,7 @@ exports.getFilterOnAuctionMaster = function(req, res) {
     filter['$or'] = arr;
   var result = {};
   if (req.body.pagination && !req.body.statusType) {
-    return Utility.paginatedResult(req, res, AuctionMaster, filter, {}, function(results) {
+    return Utility.paginatedResult(req, res, AuctionMaster, filter, {}, function (results) {
       if (req.body.addAuctionType) {
         result = auctionListing(results);
         return res.status(200).json(result);
@@ -1463,7 +1516,7 @@ exports.getFilterOnAuctionMaster = function(req, res) {
   }
   var query = AuctionMaster.find(filter);
   query.exec(
-    function(err, items) {
+    function (err, items) {
       if (err) {
         return handleError(res, err);
       }
@@ -1479,145 +1532,145 @@ exports.getFilterOnAuctionMaster = function(req, res) {
     });
 };
 
-function auctionListing(results){
-       var tempArr = [];
-       var result={};
-        if(results) {
-        results.items.forEach(function(auction) {
-          auction = auction.toObject();
-          var currentDate = new Date();
-          var startDate = auction.startDate;
-          var endDate = auction.endDate;
-          auction.endTimer = endDate.getTime();
-          var d = new Date();
-          auction.startTimer = startDate.getTime();
-          
-          if (startDate > currentDate) {
-            auction.auctionValue = "upcomingAuctions";
-          } else if (startDate < currentDate && endDate > currentDate) {
-            auction.auctionValue = "ongoingAuctions";
-          } else if (endDate < currentDate) {
-            auction.auctionValue = "closedAuctions";
-          }
-          tempArr[tempArr.length] = auction;
-        })
-      }
-        result.items=tempArr;
-        result.totalItems=results.totalItems;
-        return result;
-      }
+function auctionListing(results) {
+  var tempArr = [];
+  var result = {};
+  if (results) {
+    results.items.forEach(function (auction) {
+      auction = auction.toObject();
+      var currentDate = new Date();
+      var startDate = auction.startDate;
+      var endDate = auction.endDate;
+      auction.endTimer = endDate.getTime();
+      var d = new Date();
+      auction.startTimer = startDate.getTime();
 
-  exports.getAuctionMasterCount = function(req,res){
-    var currentDate = new Date();
-    var result = {};
-    async.parallel([upcominAuctionCount,closedAuctionCount],function(err){
-      if(err) return handleError(res,err);
-      res.status(200).json(result);
+      if (startDate > currentDate) {
+        auction.auctionValue = "upcomingAuctions";
+      } else if (startDate < currentDate && endDate > currentDate) {
+        auction.auctionValue = "ongoingAuctions";
+      } else if (endDate < currentDate) {
+        auction.auctionValue = "closedAuctions";
+      }
+      tempArr[tempArr.length] = auction;
     })
-    function upcominAuctionCount(cb){
-      var filter = {};
-      filter.isDeleted = false;
-      filter.endDate ={'$gt': currentDate};
-      var query = AuctionMaster.find(filter).count();
-      query.exec(function(err,upcomingCount){
-        if(!err && upcomingCount)
-          result.upcomingCount = upcomingCount;
-        return cb();
-      });
-        
-    }
+  }
+  result.items = tempArr;
+  result.totalItems = results.totalItems;
+  return result;
+}
 
-    function closedAuctionCount(cb){
-      var filter = {};
-      filter.isDeleted = false;
-      filter.endDate = {'$lt': currentDate};
-      var query = AuctionMaster.find(filter).count();
-        query.exec(function(err,closeCount){
-        if(!err && closeCount)
-          result.closeCount = closeCount;
-        return cb();
-      });
-    }
+exports.getAuctionMasterCount = function (req, res) {
+  var currentDate = new Date();
+  var result = {};
+  async.parallel([upcominAuctionCount, closedAuctionCount], function (err) {
+    if (err) return handleError(res, err);
+    res.status(200).json(result);
+  })
+  function upcominAuctionCount(cb) {
+    var filter = {};
+    filter.isDeleted = false;
+    filter.endDate = { '$gt': currentDate };
+    var query = AuctionMaster.find(filter).count();
+    query.exec(function (err, upcomingCount) {
+      if (!err && upcomingCount)
+        result.upcomingCount = upcomingCount;
+      return cb();
+    });
+
   }
 
-exports.getAuctionWiseProductData = function(req, res) {
+  function closedAuctionCount(cb) {
+    var filter = {};
+    filter.isDeleted = false;
+    filter.endDate = { '$lt': currentDate };
+    var query = AuctionMaster.find(filter).count();
+    query.exec(function (err, closeCount) {
+      if (!err && closeCount)
+        result.closeCount = closeCount;
+      return cb();
+    });
+  }
+}
+
+exports.getAuctionWiseProductData = function (req, res) {
   var filter = {};
   filter.isDeleted = false;
-  if(req.body.auctionIds)
-    filter['dbAuctionId'] = {$in:req.body.auctionIds};
-  if(req.body.status)
+  if (req.body.auctionIds)
+    filter['dbAuctionId'] = { $in: req.body.auctionIds };
+  if (req.body.status)
     filter['status'] = req.body.status;
   var isClosed = req.body.isClosed;
-  var auctions=[];
-  var isSoldCount=0;
+  var auctions = [];
+  var isSoldCount = 0;
   var result1 = [];
   var result2 = [];
   Seq()
-  .par(function(){
-    var self = this;
-    filter['product.isSold'] = false;
-    var query = AuctionRequest.aggregate([{"$match":filter},{
-    "$group": {
-         _id: "$dbAuctionId",
-      total_products: {
-           $sum: 1
-         }
-      }
-    }]);
-    query.exec(
-            function(err, result) {
-                  if (err) {
-                      return next(err);
-                  }
-             result1 = result;
-             self();
-   });
+    .par(function () {
+      var self = this;
+      filter['product.isSold'] = false;
+      var query = AuctionRequest.aggregate([{ "$match": filter }, {
+        "$group": {
+          _id: "$dbAuctionId",
+          total_products: {
+            $sum: 1
+          }
+        }
+      }]);
+      query.exec(
+        function (err, result) {
+          if (err) {
+            return next(err);
+          }
+          result1 = result;
+          self();
+        });
 
-  })
-  .par(function(){
-    var self = this;
-      if(isClosed === 'n')
-       return  self();
-     filter['product.isSold'] = true;
+    })
+    .par(function () {
+      var self = this;
+      if (isClosed === 'n')
+        return self();
+      filter['product.isSold'] = true;
       var query2 = AuctionRequest.aggregate([{
-            "$match": filter,
-        }, {
-             "$group": {
-                  _id: "$dbAuctionId",
-                  isSoldCount: {
-                      "$sum": 1
-        },
-               sumOfInsale: {
-                      $sum: "$product.saleVal"
-                 }
-           }
-        }]);
-        query2.exec(
-               function(err, isSoldCount) {
-                    result2 = isSoldCount;
-                  self();    
+        "$match": filter,
+      }, {
+        "$group": {
+          _id: "$dbAuctionId",
+          isSoldCount: {
+            "$sum": 1
+          },
+          sumOfInsale: {
+            $sum: "$product.saleVal"
+          }
+        }
+      }]);
+      query2.exec(
+        function (err, isSoldCount) {
+          result2 = isSoldCount;
+          self();
 
-      });
-  })
-  .seq(function(){
-          
-      result1.forEach(function(x){
-                         result2.some(function(y){
-                    if(x._id === y._id){
-                    x.isSoldCount = y.isSoldCount;
-                     x.sumOfInsale = y.sumOfInsale;
-                     return true;
-                   }
-             })
+        });
+    })
+    .seq(function () {
+
+      result1.forEach(function (x) {
+        result2.some(function (y) {
+          if (x._id === y._id) {
+            x.isSoldCount = y.isSoldCount;
+            x.sumOfInsale = y.sumOfInsale;
+            return true;
+          }
         })
+      })
       return res.status(200).json(result1);
     })
-    .catch(function(err) {
+    .catch(function (err) {
       return handleError(res, err);
     });
 }
 
-exports.auctiondetail = function(req, res) {
+exports.auctiondetail = function (req, res) {
   var filter = {};
   var queryObj = req.query;
   var currentDate = new Date();
@@ -1628,7 +1681,7 @@ exports.auctiondetail = function(req, res) {
   filter._id = queryObj.auctionId;
   filter.isDeleted = false;
   var query = AuctionMaster.find(filter);
-  query.exec(function(err, auctions) {
+  query.exec(function (err, auctions) {
     if (err) {
       return handleError(res, err);
     }
@@ -1637,7 +1690,7 @@ exports.auctiondetail = function(req, res) {
 
 }
 
-exports.getAuctionMaster = function(req, res) {
+exports.getAuctionMaster = function (req, res) {
   var filter = {};
   var queryObj = req.query;
   filter.isDeleted = false;
@@ -1667,7 +1720,7 @@ exports.getAuctionMaster = function(req, res) {
   var query = AuctionMaster.find(filter).sort({
     createdAt: -1
   })
-  query.exec(function(err, auctions) {
+  query.exec(function (err, auctions) {
     if (err) {
       return handleError(res, err);
     }
@@ -1676,9 +1729,9 @@ exports.getAuctionMaster = function(req, res) {
   });
 }
 
-exports.deleteAuctionMaster = function(req, res) {
-  AuctionMaster.findOneAndUpdate({_id: req.params.id}, {"$set": {"isDeleted": true}})
-    .exec(function(err, doc) {
+exports.deleteAuctionMaster = function (req, res) {
+  AuctionMaster.findOneAndUpdate({ _id: req.params.id }, { "$set": { "isDeleted": true } })
+    .exec(function (err, doc) {
       if (err) {
         return handleError(res, err);
       }
@@ -1687,28 +1740,36 @@ exports.deleteAuctionMaster = function(req, res) {
         "_id": req.params.id,
         "isDeleted": true,
       }
-      options.dataType="auctionData";
-      Utility.sendCompiledData(options,function(err,result){
-        if (err || (result && result.err)) {
-          //options.dataToSend.isDeleted = false;
-          //update(options.dataToSend);
-          AuctionMaster.update({_id: req.params.id}, {$set: {isDeleted: false}}).exec();
-          if(result && result.err) {
-            return res.status(412).send(result.err); 
+      options.dataType = "auctionData";
+      
+      if (req.body.auctionType==='PT') {
+          AuctionMaster.update({ _id: req.params.id }, { $set: { isDeleted: true } }).exec();
+          return res.status(201).json({ errorCode: 0, message: "Auction request deleted successfully !!!" });
+      }
+        else
+        {
+        Utility.sendCompiledData(options, function (err, result) {
+          if (err || (result && result.err)) {
+            //options.dataToSend.isDeleted = false;
+            //update(options.dataToSend);
+            AuctionMaster.update({ _id: req.params.id }, { $set: { isDeleted: false } }).exec();
+            if (result && result.err) {
+              return res.status(412).send(result.err);
+            }
+            return res.status(412).send("Unable to delete auction request. Please contact support team.");
           }
-          return res.status(412).send("Unable to delete auction request. Please contact support team.");
-        }
-        if(result){
-          //options.dataToSend.isDeleted = true;
-          //update(options.dataToSend);
-          AuctionMaster.update({_id: req.params.id}, {$set: {isDeleted: true}}).exec();
-          return res.status(201).json({errorCode: 0,message: "Auction request deleted successfully !!!"});
-        }
-      });
+          if (result) {
+            //options.dataToSend.isDeleted = true;
+            //update(options.dataToSend);
+            AuctionMaster.update({ _id: req.params.id }, { $set: { isDeleted: true } }).exec();
+            return res.status(201).json({ errorCode: 0, message: "Auction request deleted successfully !!!" });
+          }
+        });
+      }
     });
 };
 
-exports.importAuctionMaster = function(req, res) {
+exports.importAuctionMaster = function (req, res) {
   var fileName = req.body.fileName;
   var workbook = null;
   try {
@@ -1724,10 +1785,10 @@ exports.importAuctionMaster = function(req, res) {
   if (data.length === 0) {
     return res.status(500).send("There is no data in the file.");
   }
-  var headers = ['Auction_Name*', 'Auction_Start_Date*', 'Auction_End_Date*', 'Auction_ID*','Auction_Start_Time*','Auction_End_Time*','Auction_Owner_Mobile*'];
-  var date_params = ['Auction_Start_Date*','Auction_End_Date*'];
-  var time_params = ['Auction_Start_Time*','Auction_End_Time*'];
-   var time_params = ['Emd_Amount','Terms_Of_Auction','Contact_Person_Name','Contact_Person_No.'];
+  var headers = ['Auction_Name*', 'Auction_Start_Date*', 'Auction_End_Date*', 'Auction_ID*', 'Auction_Start_Time*', 'Auction_End_Time*', 'Auction_Owner_Mobile*'];
+  var date_params = ['Auction_Start_Date*', 'Auction_End_Date*'];
+  var time_params = ['Auction_Start_Time*', 'Auction_End_Time*'];
+  var time_params = ['Emd_Amount', 'Terms_Of_Auction', 'Contact_Person_Name', 'Contact_Person_No.'];
   var err = false;
   var hd = getHeaders(worksheet);
   if (!validateHeader(hd, headers)) {
@@ -1736,8 +1797,8 @@ exports.importAuctionMaster = function(req, res) {
 
   req.errors = [];
   req.totalRecords = data.length;
-  data = data.filter(function(x) {
-    headers.forEach(function(head) {
+  data = data.filter(function (x) {
+    headers.forEach(function (head) {
       if (!x[head]) {
         req.errors[req.errors.length] = {
           rowCount: x.__rowNum__,
@@ -1810,7 +1871,7 @@ function validateHeader(headersInFile, headers) {
   // if (!ret)
   //   return ret;
 
-  headers.some(function(x) {
+  headers.some(function (x) {
     if (headersInFile.indexOf(x) < 0) {
       ret = false;
       return true;
@@ -1830,36 +1891,36 @@ function importAuctionMaster(req, res, data) {
   if (req.counter < req.numberOfCount) {
     var auctionData = {};
     var field_map = {
-      'Auction_ID*' : 'auctionId',
-      'Auction_Name*' : 'name',
+      'Auction_ID*': 'auctionId',
+      'Auction_Name*': 'name',
       'Auction_Owner': 'auctionOwner',
-      'Auction_Owner_Mobile*':'auctionOwnerMobile',
-      'Auction_Start_Date*' : 'startDate',
-      'Auction_Start_Time*' : 'startTime',
-      'Auction_End_Date*' : 'endDate',
-      'Auction_End_Time*' : 'endTime',
+      'Auction_Owner_Mobile*': 'auctionOwnerMobile',
+      'Auction_Start_Date*': 'startDate',
+      'Auction_Start_Time*': 'startTime',
+      'Auction_End_Date*': 'endDate',
+      'Auction_End_Time*': 'endTime',
       'Inspection_Start_Date': 'insStartDate',
-      'Inspection_Start_Time':'insStartTime',
+      'Inspection_Start_Time': 'insStartTime',
       'Inspection_End_Date': 'insEndDate',
       'Inspection_End_Time': 'insEndTime',
       'Registration_End_Date': 'regEndDate',
       'Address_of_Auction': 'auctionAddr',
       'Emd_Amount': 'emdAmount',
       'Auction_Type': 'auctionType',
-      'Location' : 'city',
-      'Terms_Of_Auction' : 'termAuction',
-      'Contact_Person_Name' : 'contactName',
-      'Contact_Person_No.' : 'contactNumber'
+      'Location': 'city',
+      'Terms_Of_Auction': 'termAuction',
+      'Contact_Person_Name': 'contactName',
+      'Contact_Person_No.': 'contactNumber'
     };
 
     var timeMap = {
-      'startDate' : 'startTime',
-      'endDate' : 'endTime',
-      'insStartDate' : 'insStartTime',
-      'insEndDate' : 'insEndTime'
+      'startDate': 'startTime',
+      'endDate': 'endTime',
+      'insStartDate': 'insStartTime',
+      'insEndDate': 'insEndTime'
     }
 
-    Object.keys(field_map).some(function(x) {
+    Object.keys(field_map).some(function (x) {
       if (data[req.counter][x]) {
         auctionData[field_map[x]] = data[req.counter][x];
 
@@ -1878,15 +1939,15 @@ function importAuctionMaster(req, res, data) {
       }
     })
 
-    var dateObj = ['startDate','endDate','insStartDate','insEndDate','regEndDate'];
-    dateObj.forEach(function(x){
-      if(auctionData[x]){
-        var date = dateUtil.isValidDateTime(auctionData[x],validDateFormat);
-        if(date._isValid){
-          auctionData[x] = moment(auctionData[x],date._f).format('MM/DD/YYYY');
-          if(auctionData[timeMap[x]]) {
-            date =  dateUtil.isValidDateTime((auctionData[x] + ' '+auctionData[timeMap[x]]),validTimeFormat);
-            if(date._isValid){
+    var dateObj = ['startDate', 'endDate', 'insStartDate', 'insEndDate', 'regEndDate'];
+    dateObj.forEach(function (x) {
+      if (auctionData[x]) {
+        var date = dateUtil.isValidDateTime(auctionData[x], validDateFormat);
+        if (date._isValid) {
+          auctionData[x] = moment(auctionData[x], date._f).format('MM/DD/YYYY');
+          if (auctionData[timeMap[x]]) {
+            date = dateUtil.isValidDateTime((auctionData[x] + ' ' + auctionData[timeMap[x]]), validTimeFormat);
+            if (date._isValid) {
               auctionData[x] = date._d;
             }
           }
@@ -1920,7 +1981,7 @@ function importAuctionMaster(req, res, data) {
 
     AuctionMaster.find({
       auctionId: auctionData.auctionId
-    }, function(err, auction) {
+    }, function (err, auction) {
       if (err)
         handleError(err);
 
@@ -1938,7 +1999,7 @@ function importAuctionMaster(req, res, data) {
         vendorModel.find({
           'user.mobile': auctionData.auctionOwnerMobile,
           services: 'Auction'
-        }).exec(function(err, vendor) {
+        }).exec(function (err, vendor) {
           if (err || !vendor) {
             handleError(err || 'Error while searching vendor');
           }
@@ -1952,7 +2013,7 @@ function importAuctionMaster(req, res, data) {
             importAuctionMaster(req, res, data);
             return;
           }
-          
+
           //auctionData.auctionOwner = vendor[0].user.fname + ' ' + vendor[0].user.lname;
           auctionData.auctionOwner = vendor[0].entityName;
           insertData();
@@ -1966,16 +2027,16 @@ function importAuctionMaster(req, res, data) {
         //   if(error)
         //      auctionData.emdAmount = 0;
         //   auctionData.regCharges = Number(regAmount.fees);
-        AuctionMaster.create(auctionData, function(err, act) {
-            if (err) {
-              return handleError(res, err)
-            } else {
-              req.successCount++;
-              req.counter++;
-              importAuctionMaster(req, res, data);
-            }
-          })
-          //})
+        AuctionMaster.create(auctionData, function (err, act) {
+          if (err) {
+            return handleError(res, err)
+          } else {
+            req.successCount++;
+            req.counter++;
+            importAuctionMaster(req, res, data);
+          }
+        })
+        //})
       }
     })
   } else {
@@ -2025,44 +2086,44 @@ function importAuctionMaster(req, res, data) {
   });
 };*/
 /* end of auctionmaster */
-var FIELDS = ['auction_id','lot_id',"lot_status"];
-exports.validateUpdateLotStatus = function(req,res,next){
+var FIELDS = ['auction_id', 'lot_id', "lot_status"];
+exports.validateUpdateLotStatus = function (req, res, next) {
   var bodyData = req.body;
   var result = {};
   result.err = "";
   result.results = "";
 
-  for(var i=0;i<FIELDS.length;i++){
-    if(!bodyData[FIELDS[i]]){
+  for (var i = 0; i < FIELDS.length; i++) {
+    if (!bodyData[FIELDS[i]]) {
       result.err = FIELDS[i] + " is missing";
       break;
     }
   }
-  if(result.err)
+  if (result.err)
     return sendResponse();
-  if(['Closed','Sold'].indexOf(bodyData.lot_status) === -1){
+  if (['Closed', 'Sold'].indexOf(bodyData.lot_status) === -1) {
     result.err = "Invalid status";
     return sendResponse();
   }
   var parallelFns = [getLot];
-  if(bodyData.lot_status === 'Sold')
+  if (bodyData.lot_status === 'Sold')
     parallelFns[parallelFns.length] = getAssetInLot;
 
-  async.parallel(parallelFns,function(err){
-    if(err){
+  async.parallel(parallelFns, function (err) {
+    if (err) {
       result.err = err;
       return sendResponse();
     };
     var idArr = [];
-    if(req.assets) {
-      req.assets.forEach(function(item){
-        if(!item.external && item.product && item.product._id)
+    if (req.assets) {
+      req.assets.forEach(function (item) {
+        if (!item.external && item.product && item.product._id)
           idArr.push(item.product._id);
       });
     }
 
-    Product.find({_id:{$in:idArr},deleted:false},function(prErr,products){
-      if(err){
+    Product.find({ _id: { $in: idArr }, deleted: false }, function (prErr, products) {
+      if (err) {
         result.err = "Error in getting product";
         return sendResponse();
       }
@@ -2071,22 +2132,22 @@ exports.validateUpdateLotStatus = function(req,res,next){
     });
   });
 
-  function getLot(cb){
-    LotModel.find({_id:bodyData.lot_id,status:true,isDeleted:false,lotStatus:'Open'},function(err,lots){
-      if(err)
+  function getLot(cb) {
+    LotModel.find({ _id: bodyData.lot_id, status: true, isDeleted: false, lotStatus: 'Open' }, function (err, lots) {
+      if (err)
         return cb("Error in finding lot");
-      if(!lots.length)
+      if (!lots.length)
         return cb("Lot not found");
       req.lot = lots[0];
       return cb();
     });
   }
 
-  function getAssetInLot(cb){
-    AuctionRequest.find({lot_id:bodyData.lot_id,dbAuctionId:bodyData.auction_id,isDeleted:false},function(err,assets){
-      if(err)
+  function getAssetInLot(cb) {
+    AuctionRequest.find({ lot_id: bodyData.lot_id, dbAuctionId: bodyData.auction_id, isDeleted: false }, function (err, assets) {
+      if (err)
         return cb("Error in asset lot");
-      if(!assets.length)
+      if (!assets.length)
         return cb("NO asset in lot");
       req.assets = assets;
       return cb();
@@ -2094,19 +2155,19 @@ exports.validateUpdateLotStatus = function(req,res,next){
     });
   };
 
-  function sendResponse(){
-     return res.status(200).json(result);
+  function sendResponse() {
+    return res.status(200).json(result);
   }
 
 };
 
-exports.updateLotStatus = function(req,res){
+exports.updateLotStatus = function (req, res) {
   var bodyData = req.body;
   var result = {};
   result.err = "";
   result.results = "";
-  async.parallel([updateLot,updateAssetInAuction,updateProduct],function(err){
-    if(err)
+  async.parallel([updateLot, updateAssetInAuction, updateProduct], function (err) {
+    if (err)
       result.err = err;
     else
       result.results = "Lot status updated successfully";
@@ -2114,61 +2175,61 @@ exports.updateLotStatus = function(req,res){
 
   });
 
-  function updateLot(callback){
-    var updatedData = {lotStatus:bodyData.lot_status};
+  function updateLot(callback) {
+    var updatedData = { lotStatus: bodyData.lot_status };
     updatedData.updatedAt = new Date();
-    LotModel.update({_id:bodyData.lot_id},{$set:updatedData},function(err){
-      if(err)
+    LotModel.update({ _id: bodyData.lot_id }, { $set: updatedData }, function (err) {
+      if (err)
         return callback("Error in updating lot");
       return callback();
     });
   }
 
-  function updateAssetInAuction(callback){
-    if(bodyData.lot_status === 'Closed')
+  function updateAssetInAuction(callback) {
+    if (bodyData.lot_status === 'Closed')
       return callback();
-    async.eachLimit(req.assets,2,_updateAsset,function(err){
+    async.eachLimit(req.assets, 2, _updateAsset, function (err) {
       return callback(err);
     });
 
-    function _updateAsset(data,cb){
+    function _updateAsset(data, cb) {
       data = data.toObject();
       var _id = data._id;
       delete data._id;
-      if(data && data.product)
+      if (data && data.product)
         data.product.isSold = true;
-      AuctionRequest.update({_id: _id+ ""},{$set:data},function(err){
-        if(err)return cb("Error in asset in auction product update with id " + _id);
+      AuctionRequest.update({ _id: _id + "" }, { $set: data }, function (err) {
+        if (err) return cb("Error in asset in auction product update with id " + _id);
         return cb();
       });
     }
   }
 
-  function updateProduct(callback){
-     if(bodyData.lot_status === 'Closed')
+  function updateProduct(callback) {
+    if (bodyData.lot_status === 'Closed')
       return callback();
-    async.eachLimit(req.products,2,_updateProduct,function(err){
+    async.eachLimit(req.products, 2, _updateProduct, function (err) {
       return callback(err);
     });
 
-    function _updateProduct(data,cb){
-      if(data.assetStatus === 'sold')
+    function _updateProduct(data, cb) {
+      if (data.assetStatus === 'sold')
         return cb();
 
-       var updatedData = {updatedAt:new Date()};
+      var updatedData = { updatedAt: new Date() };
       updatedData.isSold = true;
       updatedData.assetStatus = "sold";
       updatedData.assetStatuses = data.assetStatuses;
-      if(!updatedData.assetStatuses || !updatedData.assetStatuses.length)
+      if (!updatedData.assetStatuses || !updatedData.assetStatuses.length)
         updatedData.assetStatuses = [];
-      var stsObj = { 
-                      createdAt:new Date(),
-                      status:'sold',
-                      userId:"Auction"
-                    };
+      var stsObj = {
+        createdAt: new Date(),
+        status: 'sold',
+        userId: "Auction"
+      };
       updatedData.assetStatuses[updatedData.assetStatuses.length] = stsObj;
-      Product.update({_id:data._id},{$set:updatedData},function(err){
-        if(err)
+      Product.update({ _id: data._id }, { $set: updatedData }, function (err) {
+        if (err)
           return cb("Error in product update for id " + data._id);
         return cb();
       });

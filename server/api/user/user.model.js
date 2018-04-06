@@ -56,6 +56,7 @@ var UserSchema = new Schema({
   }],
   enterprise:Boolean,
   enterpriseId:String,
+  valuationReport:{type:Boolean,default:false},
   buySaleViewOnly:{type:Boolean,default:false},
   buySaleApprover :{type:Boolean,default:false},
   status:{

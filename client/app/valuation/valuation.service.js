@@ -2,7 +2,7 @@
 'use strict';
 
 angular.module('sreizaoApp').factory("ValuationSvc",ValuationSvc);
-function ValuationSvc($http,$q,notificationSvc,Auth,LocationSvc){
+function ValuationSvc($http,$q,$rootScope, notificationSvc,Auth,LocationSvc){
   var svc = {};
   var path = "/api/valuation";
   svc.getAll = getAll;
@@ -12,8 +12,16 @@ function ValuationSvc($http,$q,notificationSvc,Auth,LocationSvc){
   svc.delAuction = delValuation;
   svc.getOnFilter = getOnFilter;
   svc.export = exportValuation;
-  svc.sendNotification = sendNotification;
   svc.updateStatus = updateStatus;
+  svc.generateInvoice = generateInvoice;
+  svc.validateAction = validateAction;
+  svc.submitToAgency = submitToAgency;
+  svc.cancelIndValuation = cancelIndValuation;
+  svc.resumeRequest = resumeRequest;
+
+   function generateInvoice(ivNo){
+    return path + "/generateinvoice/" + ivNo;
+   }
 
   function getAll(){
         return $http.get(path)
@@ -88,6 +96,11 @@ function ValuationSvc($http,$q,notificationSvc,Auth,LocationSvc){
       }
       stsObj.createdAt = new Date();
       stsObj.userId = Auth.getCurrentUser()._id;
+      stsObj.fname = Auth.getCurrentUser().fname;
+      stsObj.lname = Auth.getCurrentUser().lname;
+      stsObj.mobile = Auth.getCurrentUser().mobile;
+      stsObj.customerId = Auth.getCurrentUser().customerId;
+      stsObj.role = Auth.getCurrentUser().role;
       stsObj.status = toStatus;
       valReq.statuses[valReq.statuses.length] = stsObj;
       valReq.status = toStatus;
@@ -103,6 +116,21 @@ function ValuationSvc($http,$q,notificationSvc,Auth,LocationSvc){
 
     }
 
+    function cancelIndValuation(valReq){
+      var dataToSend = {_id:valReq._id};
+      dataToSend.uniqueControlNo = valReq.requestId;
+      dataToSend.jobId = valReq.jobId;
+      // dataToSend.cancellationFee = cancelFee.cancellationFee;
+      //dataToSend.cancelled = true;
+      return $http.post(path + "/cancel",dataToSend)
+            .then(function(res){
+              return res.data;
+            })
+            .catch(function(err){
+              throw err;
+            });
+    }
+
     function delValuation(data){
       return $http.delete(path + "/" + data._id)
           .then(function(res){
@@ -113,31 +141,92 @@ function ValuationSvc($http,$q,notificationSvc,Auth,LocationSvc){
           });
     }
 
-    function sendNotification(valReqData,status,sendTo){
-      var data = {};
-      if(sendTo == "customer"){
-        data['to'] = valReqData.user.email;
-        data['subject'] = 'Request for valuation/inspection';
-        valReqData.serverPath = serverPath;
-        valReqData.statusName = status;
-        notificationSvc.sendNotification('valuationCustomerEmail', data, valReqData,'email');
-        data['to'] = valReqData.user.mobile;
-        data['countryCode']=LocationSvc.getCountryCode(valReqData.user.country);
-        notificationSvc.sendNotification('valuationCustomerSms', data, valReqData,'sms');
-      }else if(sendTo == "valagency"){
-        data['to'] = valReqData.valuationAgency.email;
-        data['subject'] = 'Request for valuation/inspection';
-        valReqData.serverPath = serverPath;
-        valReqData.statusName = status;
-        notificationSvc.sendNotification('valuationAgencyEmail', data, valReqData,'email');
-        data['to'] = valReqData.valuationAgency.mobile;
-        data['countryCode']=LocationSvc.getCountryCode(valReqData.valuationAgency.country);
-        notificationSvc.sendNotification('valuationAgencySms', data, valReqData,'sms');
-      }else if(sendTo == "seller"){
-        //need to send to seller 
-      }
-      
+    function submitToAgency(valReqs,type, deferred){
+      var deferred = $q.defer();
+      $rootScope.loading = true;
+      $http.post(path + "/submitrequest?type=" + type,valReqs)
+      .then(function(res){
+        $rootScope.loading = false;
+        return deferred.resolve(res.data);
+      })
+      .catch(function(err){
+        $rootScope.loading = false;
+        deferred.reject(err);
+      });
+
+      return deferred.promise;
+  }
+  
+  function resumeRequest(valReq){
+    return $http.post(path + "/removeonhold",valReq)
+    .then(function(res){
+      return res.data;
+    })
+    .catch(function(err){
+      throw err;
+    });
+  }
+
+  function validateAction(valuation, action){
+    var retVal = false;
+    var statusesObj = [];
+    for(var i=0; i<valuation.statuses.length; i++) {
+      statusesObj.push(valuation.statuses[i].status);
     }
+
+    switch(action){
+      case 'GENERATEINVOICE':
+        if(Auth.isAdmin())
+          retVal = true;
+        if(statusesObj.indexOf(IndividualValuationStatuses[4]) > -1)
+          retVal = false;
+      break;
+      case 'ADDPAYMENT':
+        if(Auth.isAdmin())
+          retVal = true;
+        if(statusesObj.indexOf(IndividualValuationStatuses[1]) > -1)
+          retVal = false;
+      break;
+      case 'PAYNOW':
+        if(valuation.user._id == Auth.getCurrentUser()._id)
+          retVal = true;
+        if(statusesObj.indexOf(IndividualValuationStatuses[1]) > -1)
+          retVal = false;
+        break;
+      break;
+      case 'INVOICEDOWNLOAD':
+        retVal = false;
+        if(statusesObj.indexOf(IndividualValuationStatuses[4]) > -1)
+          retVal = true;
+        break;
+      case 'SUBMITTOAGENCY':
+        if(Auth.isAdmin())
+          retVal = true;
+        if(statusesObj.indexOf(IndividualValuationStatuses[3]) > -1)
+          retVal = false;
+      break;
+      case 'REPORTDOWNLOAD':
+        retVal = false;
+        if(statusesObj.indexOf(IndividualValuationStatuses[6]) > -1)
+          retVal = true;
+      break;
+      case 'STATUSCOMPLETED':
+        if(statusesObj.indexOf(IndividualValuationStatuses[1]) > -1 
+          && statusesObj.indexOf(IndividualValuationStatuses[4]) > -1 
+          && statusesObj.indexOf(IndividualValuationStatuses[6]) > -1 
+          && statusesObj.indexOf(IndividualValuationStatuses[7]) < 0 
+          && Auth.isAdmin()) {
+          retVal = true;
+        } else
+        retVal = false;
+      break;
+      default:
+        retVal = false;
+      break;
+    }
+    return retVal;
+  }
+
   return svc;
 }
 })();

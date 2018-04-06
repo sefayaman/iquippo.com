@@ -944,8 +944,11 @@ exports.getUser = function(req, res) {
 
   if (req.body.userId)
     filter["createdBy._id"] = req.body.userId;
-  if (req.body.enterpriseId)
-    filter["enterpriseId"] = req.body.enterpriseId;
+  if (req.body.enterpriseId) {
+      filter["enterpriseId"] = req.body.enterpriseId;
+  }
+  if(req.body.enterpriseId && req.body.enterpriseUsers)
+    filter["$or"] = [{"enterprise":{$exists : false}}, {"enterprise":false}]; // remove enterprise which are new selected   
   if (req.body.enterprise)
     filter["enterprise"] = req.body.enterprise;
   if (req.body.mobile)
@@ -966,9 +969,14 @@ exports.getUser = function(req, res) {
   if (req.body.role)
     filter.role= req.body.role;
   else {
-    var typeFilter = {};
-    typeFilter.$ne = "admin";
-    filter.role= typeFilter;
+    if(req.body.isAdminRole) {
+      // get users of role enterprise and channelPartner
+      filter['$or'] = [{'role':'enterprise','enterprise': true},{'role':'channelpartner'}];
+    } else {
+      var typeFilter = {};
+      typeFilter.$ne = "admin";
+      filter.role= typeFilter;
+    }
   }
 	if(req.body.onlyUser) {
       filter["role"] = {$in: ['customer', 'channelpartner']};
@@ -1485,10 +1493,10 @@ exports.exportUsers = function(req, res) {
           filter["GSTInfo"] = { $exists: true};//"GSTInfo": { $exists: true}
     }
   var query = User.find(filter).sort({
-    createdAt: -1
+    _id: -1
   });//.limit(5000);
   if ( req.body.exportType === 'gstinfo') {
-      exportUsersGSTData(query, req, res);
+    exportUsersGSTData(query, req, res);
   }
   else {
       exportUsersData(query, req, res);

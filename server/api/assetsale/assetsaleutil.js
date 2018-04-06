@@ -8,17 +8,23 @@ var config = require('./../../config/environment');
 var commonController = require('./../common/common.controller');
 var notification = require('./../../components/notification.js');
 var AssetSaleBid = require('./assetsalebid.model');
+var Utility = require('./../../components/utility.js');
 /*
 * For enterprise master filter must be like {}
 */
 
-exports.setStatus = function(bid,status,statusField,historyField,userId){ 
+exports.setStatus = function(bid,status,statusField,historyField,user){ 
         bid[statusField] = status;
         var stsObj = {};
         stsObj.status = status;
-        if(userId)
-        	stsObj.userId = userId;
-        else
+        if(user) {
+			stsObj.userId = user._id;
+	        stsObj.fname = user.fname;
+	        stsObj.lname = user.lname;
+	        stsObj.mobile = user.mobile;
+	        stsObj.customerId = user.customerId;
+	        stsObj.role = user.role;
+        } else
         stsObj.userId = "SYSTEM";
         stsObj.createdAt = new Date();
         if(!bid[historyField])
@@ -173,7 +179,7 @@ exports.sendNotification = function(bidArr){
 			return callback("Invalid bid");
 
 	    var query = AssetSaleBid.find({ticketId:bid.ticketId}).populate("user product.proData");
-	    query.exec(function(err,bids){
+	    query.lean().exec(function(err,bids){
 			if(err || !bids.length)
 				return callback(err);
 			var tplData = bids[0];
@@ -196,6 +202,8 @@ exports.sendNotification = function(bidArr){
 				case 'APPROVE':
 					tplName = "OfferApprovedEmailToBuyer";
 					subject = "Ticket ID- " + tplData.ticketId +": Your offer for " + tplData.product.name + " has been Approved.";
+					if(tplData.emdEndDate)
+						tplData.emdDueDate = Utility.toIST(tplData.emdEndDate);
 					break;
 				case 'EMDPAYMENT':
 					var totalPaidAmount = 0;
@@ -205,6 +213,8 @@ exports.sendNotification = function(bidArr){
 		            tplData.totalAtEMDPayment = totalPaidAmount;
 					tplName = "EMDReceivedEmailToBuyer";
 					subject = "Ticket ID- " + tplData.ticketId +": Your Earnest Money Deposit (EMD) for " + tplData.product.name + " has been Received.";
+					if(tplData.fullPaymentEndDate)
+						tplData.fullpaymentDueDate = Utility.toIST(tplData.fullPaymentEndDate);
 					break;
 				case 'FULLPAYMENT':
 					var totalPaidAmount = 0;
@@ -216,7 +226,7 @@ exports.sendNotification = function(bidArr){
 			                totalPaidAmount = totalPaidAmount + item.amount;
 			            });
 		            }
-		            tplData.totalAtEMDPayment = totalPaidAmount;
+                            tplData.totalAtEMDPayment = totalPaidAmount;
 					tplName = "FullpaymentReceivedEmailToBuyer";
 					subject = "Ticket ID- " + tplData.ticketId +": Your Full Payment for " + tplData.product.name + " has been Received.";
 					break;

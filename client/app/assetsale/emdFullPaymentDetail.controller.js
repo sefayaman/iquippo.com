@@ -24,10 +24,15 @@ function EmdFullPaymentCtrl($scope, $state, $rootScope, Modal, Auth, $uibModal, 
 		} else if($scope.bidData.fullPayment && $scope.bidData.fullPayment.paymentsDetail && action == 'fullPayment') {
 			vm.paymentList = [];
 			$scope.totalPaidAmount = 0;
+			$scope.receivedAmount = 0;
+			$scope.bidData.emdPayment.paymentsDetail.forEach(function(item) {
+              $scope.receivedAmount = Number($scope.receivedAmount) + Number(item.amount);
+            });
 			vm.visibleFlag = $scope.bidData.fullPayment.remainingPayment > 0 ? true : false;
 			$scope.bidData.fullPayment.paymentsDetail.forEach(function(item) {
               $scope.totalPaidAmount = Number($scope.totalPaidAmount) + Number(item.amount);
             });
+            $scope.receivedAmount = $scope.receivedAmount + $scope.totalPaidAmount;
 			angular.copy($scope.bidData.fullPayment.paymentsDetail, vm.paymentList);
 		}
     }
@@ -71,7 +76,7 @@ function EmdFullPaymentCtrl($scope, $state, $rootScope, Modal, Auth, $uibModal, 
 				msg = informationMessage.EMDPayment;
 			} else msg = informationMessage.partialEMD;
 
-			if($scope.bidData.fullPayment && $scope.bidData.emdPayment.remainingPayment === 0 && $scope.bidData.fullPayment.remainingPayment === 0){
+			if($scope.bidData.fullPayment && $scope.bidData.emdPayment.remainingPayment === 0 && $scope.bidData.fullPayment.remainingPayment <= 0){
 				serverAction = "fullpayment";
 				AssetSaleSvc.setStatus($scope.bidData,dealStatuses[8],'dealStatus','dealStatuses');
 				msg = informationMessage.Fullpayment;
@@ -95,8 +100,10 @@ function EmdFullPaymentCtrl($scope, $state, $rootScope, Modal, Auth, $uibModal, 
 			 msg = informationMessage.Fullpayment;
 			} else  msg = informationMessage.partialFullpayment;
 		}
+		$rootScope.loading = true;
 	    AssetSaleSvc.update($scope.bidData,serverAction).
 	      then(function(res) {
+	      	$rootScope.loading = false;
 	      	if(msg)
 	      		Modal.alert(msg, true);	
 	        else if(res)

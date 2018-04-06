@@ -3,7 +3,7 @@
 
 	angular.module('sreizaoApp').factory("AssetSaleSvc", AssetSaleSvc);
 
-	function AssetSaleSvc($http,Auth,UtilSvc, Modal) {
+	function AssetSaleSvc($http,$rootScope,Auth,UtilSvc, Modal) {
 		var svc = {};
 		var path='api/assetSale';
 		svc.submitBid = submitBid;
@@ -40,6 +40,11 @@
         var stsObj = {};
         stsObj.status = status;
         stsObj.userId = Auth.getCurrentUser()._id;
+        stsObj.fname = Auth.getCurrentUser().fname;
+        stsObj.lname = Auth.getCurrentUser().lname;
+        stsObj.mobile = Auth.getCurrentUser().mobile;
+        stsObj.customerId = Auth.getCurrentUser().customerId;
+        stsObj.role = Auth.getCurrentUser().role;
         stsObj.createdAt = new Date();
         if(!bid[historyField])
           bid[historyField] = [];
@@ -358,17 +363,26 @@
   function exportExcel(filter){
     var serPath = path;
     var reportType = "Product_Bid";
+
+    // name of file according to its status
+    if(filter.reportType) {
+      reportType = filter.reportType;
+    } 
+
     var queryParam = "";
     if(filter)
         queryParam = UtilSvc.buildQueryParam(filter);
     if(queryParam)
       serPath = serPath + "/export" + "?" + queryParam;
+    $rootScope.loading = true;
     return $http.get(serPath)
     .then(function(res){
-       saveAs(new Blob([s2ab(res.data)],{type:"application/octet-stream"}),reportType+"_"+ new Date().getTime() +".xlsx");
+      $rootScope.loading = false;
+       saveAs(new Blob([s2ab(res.data)],{type:"application/octet-stream"}),reportType+"_"+ new Date().getTime() +".csv");
       //return res.data
     })
     .catch(function(err){
+      $rootScope.loading = false;
       throw err;
     })
   }

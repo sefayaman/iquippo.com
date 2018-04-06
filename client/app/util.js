@@ -141,6 +141,8 @@ factory("uploadSvc",['$http','$rootScope',function($http,$rootScope){
   utilSvc.compileTemplate = compileTemplate;
   utilSvc.validateMobile = validateMobile;
   utilSvc.validateAadhaar = validateAadhaar;
+  utilSvc.removeSpace = removeSpace;
+  utilSvc.removeUnderScore = removeUnderScore;
 
   function getStatusOnCode(list,code){
       var statusObj = {};
@@ -269,6 +271,19 @@ factory("uploadSvc",['$http','$rootScope',function($http,$rootScope){
       }
     }
 
+    function removeSpace(name) {
+      if(!name) {
+        return '';
+      }
+      return name.replace(/ /g,'_');
+    }
+
+    function removeUnderScore(name) {
+      if(!name) {
+        return '';
+      }
+      return name.replace(/_/g,' ');
+    }
   return utilSvc;
 });
 
@@ -289,6 +304,7 @@ angular.module('sreizaoApp').factory('PagerSvc',PagerService);
           pager.itemsPerPage = itemsPerPage || 50;
           pager.currentPage = currentPage || 1;
           pager.totalItems = totalItems || 0;
+          pager.maxSize = 6;
           pager.prevPage = 0 ;
           pager.first_id = null;
           pager.last_id = null;

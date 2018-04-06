@@ -9,6 +9,7 @@ var Product = require('../api/product/product.model');
 var dealStatuses=['Decision Pending','Offer Rejected','Cancelled','Rejected-EMD Failed','Rejected-Full Sale Value Not Realized','Bid-Rejected','Approved','EMD Received','Full Payment Received','DO Issued','Asset Delivered','Acceptance of Delivery','Closed'];
 var bidStatuses=['In Progress','Cancelled','Bid Lost','EMD Failed','Full Payment Failed','Auto Rejected-Cooling Period','Rejected','Accepted','Auto Accepted'];
 var tradeTypeStatuses = ['SELL','BOTH','NOT_AVAILABLE'];
+var _sendAndUpdateViaSocket = require('../realTimeSocket')._sendAndUpdateViaSocket;
 
 var TimeInterval =  1*60*1000;/*Service interval*/
 
@@ -61,7 +62,7 @@ var TimeInterval =  1*60*1000;/*Service interval*/
               maxBid.product.prevTradeType = prd.tradeType;
               AssetSaleUtil.setStatus(maxBid,bidStatuses[7],'bidStatus','bidStatuses');
               AssetSaleUtil.setStatus(maxBid,dealStatuses[6],'dealStatus','dealStatuses'); 
-              AssetSaleUtil.sendNotification([{action:"APPROVE",ticketId:maxBid.ticketId}]);
+              //AssetSaleUtil.sendNotification([{action:"APPROVE",ticketId:maxBid.ticketId}]);
             }
 
             bids.forEach(function(item){
@@ -71,8 +72,10 @@ var TimeInterval =  1*60*1000;/*Service interval*/
             });
 
             async.eachLimit(bids,2,updateBid,function(err){
-              if(!err)
+              if(!err){
+                AssetSaleUtil.sendNotification([{action:"APPROVE",ticketId:maxBid.ticketId}]);
                 Product.update({_id:prd._id},{$set:{tradeType:tradeTypeStatuses[2],cooling:false,bidRequestApproved:true}}).exec();
+              }
               return cb(err);
             });
           });
@@ -139,7 +142,7 @@ var TimeInterval =  1*60*1000;/*Service interval*/
         AssetSaleUtil.setStatus(selBid,bidStatuses[7],'bidStatus','bidStatuses');
         AssetSaleUtil.setStatus(selBid,dealStatuses[6],'dealStatus','dealStatuses');
         actionableBids.push(selBid); 
-        AssetSaleUtil.sendNotification([{action:"APPROVE",ticketId:selBid.ticketId}]);
+        //AssetSaleUtil.sendNotification([{action:"APPROVE",ticketId:selBid.ticketId}]);
       }else{
         item.updateProduct = true;
         result.otherBids.forEach(function(bid){
@@ -160,7 +163,9 @@ var TimeInterval =  1*60*1000;/*Service interval*/
           return callback(err);
         if(item.updateProduct)
             Product.update({_id:item.product.proData},{$set:{tradeType:item.product.prevTradeType,bidReceived:bidRec,bidRequestApproved:false,bidCount:bidCount,highestBid:highestBid}}).exec();
-          return callback();
+        if(selBid)
+          AssetSaleUtil.sendNotification([{action:"APPROVE",ticketId:selBid.ticketId}]);
+        return callback();
       });
     }
 
@@ -210,6 +215,7 @@ function updateBid(bid,callback){
     if(err) {
       return callback(err);
     }
+    _sendAndUpdateViaSocket('onSystemUpdateBidSocket',bid);
     return callback();
   });
 }

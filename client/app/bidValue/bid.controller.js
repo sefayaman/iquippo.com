@@ -110,7 +110,7 @@
 		};
 	}
 
-	function BidListingCtrl($scope, $rootScope, Modal, Auth, BiddingSvc, DTOptionsBuilder, BannerSvc) {
+	function BidListingCtrl($scope, $rootScope, Modal, Auth, BiddingSvc, BannerSvc) {
 		var vm = this;
 
 		//pagination variables

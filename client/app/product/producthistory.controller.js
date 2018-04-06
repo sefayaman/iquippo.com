@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('sreizaoApp')
-  .controller('ProductHistoryCtrl',['$scope', '$stateParams', '$rootScope', '$http', 'productSvc', 'DTOptionsBuilder','$uibModal', 'Modal', function ($scope, $stateParams, $rootScope, $http, productSvc, DTOptionsBuilder, $uibModal, Modal) {
+  .controller('ProductHistoryCtrl',['$scope', '$stateParams', '$rootScope', '$http', 'productSvc', '$uibModal', 'Modal', function ($scope, $stateParams, $rootScope, $http, productSvc, $uibModal, Modal) {
     $scope.isCollapsed = true;
     $scope.currentProduct = {};
      $scope.allProductHistroyOnProductId = {};
@@ -11,8 +11,13 @@ angular.module('sreizaoApp')
     $scope.sellProduct.shippingQuote = {};
     $scope.sellProduct.valuationQuote = {};
     $scope.sellProduct.certifiedByIQuippoQuote = {};
+    //pagination variables
+    var prevPage = 0;
+    $scope.itemsPerPage = 50;
+    $scope.maxSize = 6;
+    $scope.page = 1;
 
-    $scope.dtOptions = DTOptionsBuilder.newOptions().withOption('bFilter', false).withOption('lengthChange', false);
+    // $scope.dtOptions = DTOptionsBuilder.newOptions().withOption('bFilter', false).withOption('lengthChange', false);
     if($stateParams.id) {
     productSvc.getProductOnId($stateParams.id).then(function(result){
       $scope.currentProduct = result;
@@ -228,4 +233,8 @@ angular.module('sreizaoApp')
   $scope.popup4 = {
     opened: false
   };
+
+  $scope.pageChanged = function(){
+    var startPos = ($scope.page - 1) * $scope.itemsPerPage;
+  }
 }]);
