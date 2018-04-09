@@ -64,8 +64,8 @@ function getEnterpriseRequest(enterprisers){
     ValuationModel.find({'enterprise.enterpriseId':{$in:enterpriseIds},status:{$in:EnterpriseValuationStatuses},
       reportDate:dateFilter,deleted:false,cancelled:false,onHold:false}
       ,function(err,entReqs){
-        if(err) return handleError(err);   
-        createCsv(entReqs);
+        if(err) return handleError(err);
+        _createXML(entReqs);
     });
   }
 
@@ -128,6 +128,65 @@ function createCsv(entReqs){
         });
   }
 
+}
+
+function _createXML(entReqs) {
+  console.log('Creating XML....');
+  var xmlStr = "";
+  var headers = Object.keys(Field_MAP);
+  console.log(entReqs.length);
+  entReqs.forEach(function (item) {
+    headers.forEach(function (key) {
+      var val = _.get(item, Field_MAP[key], "");
+      if (key === "ASSET_DETAILS") {
+        val = getAssetDetail(item);
+      }
+      xmlStr += "<" + key + ">" + val + "</" + key + ">";
+    });
+  });
+
+  var dt = new Date();
+  dt.setDate(dt.getDate() - 1);
+  var dateStr = dt.getDate() + "" + (dt.getMonth() + 1) + "" + dt.getFullYear();
+  var fileName = fileNamePrefix + dateStr + ".xml";
+  var localFilePath = config.uploadPath + "temp/" + fileName;
+  try {
+
+    fs.writeFileSync(localFilePath, xmlStr);
+    async.parallel([uploadFileonS3, uploadFileOnFtp, updateSetting], function (err) {
+      if (err) return handleError(err);
+      return setTimeout(function () { getEnterpriseUser(); }, getSleepTime());
+    });
+  } catch (e) {
+    handleError(e);
+  }
+
+  function uploadFileonS3(cb) {
+    var opts = {
+      localFile: localFilePath,
+      key: "assets/uploads/valuationreport/" + fileName,
+    };
+    var files = [{
+      path: localFilePath
+    }];
+    Utility.uploadMultipartFileOnS3(opts.localFile, opts.key, files, function (err, s3res) {
+      cb(err);
+    }, true);
+  }
+
+  function uploadFileOnFtp(cb) {
+    Utility.uploadFileOnFtp(localFilePath, config.valuationReportRemotePath + fileName, function (err) {
+      cb(err);
+    });
+  }
+
+  function updateSetting(cb) {
+    AppSettingModel.findOneAndUpdate({ key: Setting_Key },
+      { key: Setting_Key, value: fileName }, { upsert: true },
+      function (err) {
+        cb(err);
+      });
+  }
 }
 
 
