@@ -40,7 +40,7 @@ function getEnterpriseUser(){
 }
 
 function getEnterpriseRequest(enterprisers){
-
+    
     if( !enterprisers || !enterprisers.length){
       return setTimeout(function () { getEnterpriseUser(); },getSleepTime());
     }
@@ -62,7 +62,7 @@ function getEnterpriseRequest(enterprisers){
     dateFilter.$lt = toDate;
     
     ValuationModel.find({'enterprise.enterpriseId':{$in:enterpriseIds},status:{$in:EnterpriseValuationStatuses},
-      reportDate:dateFilter,deleted:false,cancelled:false,onHold:false}
+    reportDate:dateFilter,deleted:false,cancelled:false,onHold:false}
       ,function(err,entReqs){
         if(err) return handleError(err);
         _createXML(entReqs);
@@ -131,11 +131,11 @@ function createCsv(entReqs){
 }
 
 function _createXML(entReqs) {
-  console.log('Creating XML....');
-  var xmlStr = "";
+  var xmlStr = '<?xml version="1.0" encoding="UTF-8"?>';
+  xmlStr += "<document>";
   var headers = Object.keys(Field_MAP);
-  console.log(entReqs.length);
   entReqs.forEach(function (item) {
+    xmlStr += "<Valuation>";
     headers.forEach(function (key) {
       var val = _.get(item, Field_MAP[key], "");
       if (key === "ASSET_DETAILS") {
@@ -143,8 +143,10 @@ function _createXML(entReqs) {
       }
       xmlStr += "<" + key + ">" + val + "</" + key + ">";
     });
+    xmlStr += "</Valuation>";
   });
 
+  xmlStr += "</document>";
   var dt = new Date();
   dt.setDate(dt.getDate() - 1);
   var dateStr = dt.getDate() + "" + (dt.getMonth() + 1) + "" + dt.getFullYear();
