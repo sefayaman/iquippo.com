@@ -360,6 +360,7 @@ function _prepareCSVResponse(res, payments) {
     tempData.push({
       "Sr. No": key + 1,
       "Transaction Id": payment.transactionId,
+      "Order Id": payment.ccAvenueData && payment.ccAvenueData.order_id ? payment.ccAvenueData.order_id : "",
       "Category": payment.product ? payment.product.category : "",
       "Asset Id": payment.product ? payment.product['assetId'] : "",
       "Asset Name": payment.product ? payment.product['name'] : "",
@@ -413,6 +414,7 @@ var Export_Field_Mapping_InnerData = {
   "Payment Mode Type": "paymentModeType",
   "Bank Name": "bankname",
   "Branch": "branch",
+  "Order Id": "order_id",
   "Ref No": "refNo",
   "Amount": "amount",
   "Payment Date": "paymentDate"
@@ -543,7 +545,10 @@ function auctionReportAll(req, res) {
           if (successObj)
             val = _.get(successObj, Export_Field_Mapping_InnerData[innerKey], "");
           if (Export_Field_Mapping_InnerData[innerKey] === 'paymentDate' && val)
-            val = moment(val).utcOffset('+0530').format('MM/DD/YYYY');
+            val = moment(new Date(val)).utcOffset('+0530').format('MM/DD/YYYY') || "";
+            //val = moment(val).utcOffset('+0530').format('MM/DD/YYYY');
+          if (Export_Field_Mapping_InnerData[innerKey] === 'order_id' && successObj && successObj.ccAvenueData)
+            val = successObj.ccAvenueData.order_id;
           val = Util.toCsvValue(val);
           csvStr += val + ",";
         });
