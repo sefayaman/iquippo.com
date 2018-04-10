@@ -9,7 +9,7 @@
 </div>
 
 <!-- Upcoming Auction -->
-<section class="category-block upcoming-auction">
+<section class="category-block upcoming-auction used-equipment-title">
   <div class="container">
     <div class="heading-titles text-center">
       <h1 ng-if="!group">[ ALL CATEGORIES ]</h1>
@@ -24,7 +24,7 @@
              <img src="/assets/images/watermark.png" ng-if="!category.imgSrc">              
           </a>          
           <div class="media-body"> 
-            <h4>{{category.name}}</h4>                    
+            <h2>{{category.name}}</h2>                    
           </div> 
           <div class="text-center">
             <a href="/used-equipment/{{removeSpace(category.group.name)}}/{{removeSpace(category.name)}}" class="btn btn-primary">Explore</a>
