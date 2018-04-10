@@ -45,7 +45,7 @@
     		close();
     		$scope.loading = false;
     		Modal.alert("Your request - " + response.ticketId + " has been submitted successfully.");
-
+				ga('send', 'event', { eventCategory: 'Submit', eventAction: 'Button Click', eventLabel: 'TH Loader campaign'});
     	})
     	.catch(function(err){
     		$scope.loading = false;

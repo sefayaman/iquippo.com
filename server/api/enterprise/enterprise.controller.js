@@ -26,7 +26,7 @@ var AssetGroupModel = require('./assetgroup.model');
 var EnterpriseValuationStatuses = ['Request Initiated','Request Failed','Request Submitted','Inspection In Progress','Inspection In Completed','Valuation Report Failed','Valuation Report Submitted','Invoice Generated','Payment Received','Payment Made to valuation Partner','Completed'];
 //var EnterpriseValuationStatuses = ['Request Initiated','Request Failed','Request Submitted','Valuation Report Failed','Valuation Report Submitted','Invoice Generated','Payment Received','Payment Made to valuation Partner'];
 var updatableFields = ['customerTransactionId','assetDescription','engineNo','chassisNo','registrationNo','serialNo','yearOfManufacturing','yardParked','country','state','city','contactPerson','contactPersonTelNo','nameOfCustomerSeeking','rcDoc','invoiceDoc'];
-var validRequestType = ['Valuation','Inspection'];
+var validRequestType = ['Valuation','Inspection','GPS Installation','Photographs Only'];
 var UserModel = require('../user/user.model');
 var fs = require('fs');
 var Handlebars = require('handlebars');
@@ -1584,7 +1584,7 @@ exports.cancelRequest = function(req,res){
   var bodyData = req.body;
   if(!bodyData._id)
     return res.status(400).send("Invalid cancel request !!!");
-  if(req.user.role == 'admin')
+  if(req.user.role === 'admin')
     return cancelRequestAtQVAPL();
 
   EnterpriseValuation.findById(bodyData._id,function(err,entReq){

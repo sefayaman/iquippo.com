@@ -33,7 +33,8 @@ angular.module('sreizaoApp',[
    'yard',
    'viewhead',
    'nvd3',
-   'timer'
+   'timer',
+   'btford.socket-io'
 ])
   .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider,uiGmapGoogleMapApiProvider) {
     $urlRouterProvider

@@ -2,79 +2,64 @@
   <meta charset="utf-8" content="width=divice-width, initial-screen=1"/>
 </head>
 <body>
-  <table style="width:80%; margin:0 auto; padding:15px; /* [disabled]font-family:Verdana, Geneva, sans-serif; */ border: 5px solid rgba(128, 128, 128, 0.28);">
+  <table style="width:60%; margin:0 auto; padding:15px;font-family:Verdana, Geneva, sans-serif; border: 5px solid rgba(128, 128, 128, 0.28);">
     <tr>
       <td style="height:70px;padding-bottom:20px;" valign="top"><img src="{{awsBaseImagePath}}/assets/images/srei-logo-img.png"></td>
     </tr>
     <tr>
-      <td style="font-size:20px; color:#FF4342; padding-bottom:20px; font-family:Verdana, Geneva, sans-serif;">Dear Valuation Partner, </td>
+      <td style="font-size:18px; color:#FF4342; padding-bottom:10px; font-family:Verdana, Geneva, sans-serif;">Dear Valuation Partner, </td>
     </tr>
     <tr>
-      <td style="color:#01395c; font-family:Verdana, Geneva, sans-serif; font-size:14px; padding-bottom:10px;">
-        A Request for Valuation Services for {{product.name}} has been received on iQuippo.
-        
+      <td style="color:#000;font-size:13px;padding-bottom:10px;">
+           A Request for {{requestType}} has been received for the asset specified below - 
       </td>
     </tr>
-    <tr>
-      <td style="color:#01395c; font-family:Verdana, Geneva, sans-serif; font-size:14px; padding-bottom:10px;">
-        The details of the Asset that has been submitted for valuation are as follows:
-        
-      </td>
-    </tr>
-    
+   
     <tr>
       <td align="center" style=" padding-top: 10px;padding-bottom: 10px;">
-        <table style="font-size:11px;line-height:14px; border:3px solid #ccc;" border="0" cellspacing="0" cellpadding="0" width="70%" bgcolor="#ffffff">
-          <tbody>
-            <tr>
-              <td>
-                <img width="200" height="165" src="{{awsBaseImagePath}}/assets/uploads/{{product.assetDir}}/{{product.primaryImg}}">
-              </td>
-              <td>
-                <p style="font-size:14px;line-height:22px;color:#104295;font-weight:bold; font-family:Verdana, Geneva, sans-serif; text-align:left; margin-bottom: 5px;">
-                 {{product.name}}
-                </p>
-                
-                <p  style="font-size:12px;line-height:20px;color:#333333; font-family:Verdana, Geneva, sans-serif; text-align: left; margin: 5px 0;">
-                  <b>Asset Category:</b>{{product.category}}
-                </p>
-                <p  style="font-size:12px;line-height:20px;color:#333333; font-family:Verdana, Geneva, sans-serif; text-align: left; margin: 5px 0;">
-                  <b>Make/Model:</b> {{product.model}}
-                </p>
-                <p  style="font-size:12px;line-height:20px;color:#333333; font-family:Verdana, Geneva, sans-serif; text-align: left; margin: 5px 0;">
-                  <b>Price:</b> Rs.{{product.grossPrice}}
-                </p>
-                
-                <a href="{{serverPath}}/productdetail/{{product._id}}" style="font-size:14px;line-height:22px;color:#104295;padding: 5px 30px;background:#ccc; text-align: center; margin: 5px 15px 5px 0;font-weight:bold;font-family:Verdana, Geneva, sans-serif;" >
-                Click to View </a>
-                
-                
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <table style="font-size:11px;line-height:14px;" border="0" cellspacing="0" cellpadding="0" width="90%" bgcolor="#ffffff">
+              <tbody>
+                <tr>
+                  <td>
+                    <p  style="font-size:12px;line-height:20px;color:#333333; font-family:Verdana, Geneva, sans-serif; text-align: left; margin: 5px 0;">
+                      <b>Request ID:</b> {{requestId}}
+                    </p>
+                    <p  style="font-size:12px;line-height:20px;color:#333333; font-family:Verdana, Geneva, sans-serif; text-align: left; margin: 5px 0;">
+                      <b>Category:</b> {{product.category}}
+                    </p>
+                    <p  style="font-size:12px;line-height:20px;color:#333333; font-family:Verdana, Geneva, sans-serif; text-align: left; margin: 5px 0;">
+                      <b>Brand:</b>{{product.brand}}
+                    </p>
+                    <p style="font-size:12px;line-height:20px;color:#333333; font-family:Verdana, Geneva, sans-serif; text-align: left; margin: 5px 0;">
+                      <b>Model:</b> {{product.model}}
+                    </p>
+                    <p style="font-size:12px;line-height:20px;color:#333333; font-family:Verdana, Geneva, sans-serif; text-align: left; margin: 5px 0;">
+                      <b>Asset Description:</b> {{product.description}}
+                    </p>
+                    <p style="font-size:12px;line-height:20px;color:#333333; font-family:Verdana, Geneva, sans-serif; text-align: left; margin: 5px 0;">
+                      <b>Location:</b> {{product.city}}, {{product.state}}
+                    </p>
+                    <p style="font-size:12px;line-height:20px;color:#333333; font-family:Verdana, Geneva, sans-serif; text-align: left; margin: 5px 0;">
+                      <b>Payment Status:</b> Completed
+                    </p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
       </td>
       
     </tr>
     <tr>
-      <td colspan="3" style="color:#01395c; font-family:Verdana, Geneva, sans-serif; font-size:14px; padding-top:10px; padding-bottom:10px;">
-        Please update the status of this Valuation Request by clicking on the link <a="javascript:void(0);">www.iquippo.com</a>.
+      <td style="color:#000;font-size:13px;padding-bottom:10px;">
+           Please update the status of this Valuation Request on <a href="https://www.iquippo.com">www.iquippo.com</a>.
       </td>
     </tr>
     
     
     <tr>
-      <td style="color:#01395c; font-family:Verdana, Geneva, sans-serif; font-size:14px;">
-        Best Wishes,
-        
-        
-      </td>
-    </tr>
-    <tr>
-      <td style="color:#01395c; font-family:Verdana, Geneva, sans-serif; font-size:14px; padding-bottom:10px;">
-        
-        <b>iQuippo Helpdesk</b>
-        
+      <td style="color:#01395c;font-size:13px; font-weight: bold; padding-bottom:10px;">
+          Best Wishes, <br/>
+          iQuippo
       </td>
     </tr>
   </table>

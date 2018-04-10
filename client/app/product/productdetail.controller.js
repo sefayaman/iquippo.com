@@ -9,7 +9,7 @@
     $stateParams.brand = $scope.removeUnderScore($stateParams.brand);
     $stateParams.category = $scope.removeUnderScore($stateParams.category);
     $scope.lot = {};
-    $scope.showWidget = false;
+    //$scope.showWidget = false;
     $scope.currentProduct = {};
     $scope.priceTrendData = null;
     $rootScope.currntUserInfo = {};
@@ -49,7 +49,7 @@
     };
     //$scope.negotiate = negotiate;
 
-    vm.addProductQuote = addProductQuote;
+    //vm.addProductQuote = addProductQuote;
     vm.requestForFinance = requestForFinance;
     vm.getDateFormat = getDateFormat;
     vm.calculateRent = calculateRent;
@@ -151,7 +151,7 @@
 
 
 
-    $scope.changedCertified = function(mytime) {
+    /*$scope.changedCertified = function(mytime) {
       if (mytime) {
         var hours = mytime.getHours();
         var minutes = mytime.getMinutes();
@@ -165,17 +165,17 @@
 
     $scope.toggleMode = function() {
       $scope.isShow = !$scope.isShow;
-    };
+    };*/
 
 
     //date picker
-    $scope.today = function() {
-      $scope.scheduleDate = new Date();
+    /*$scope.today = function() {
+      vm.valuationReq.scheduleDate = new Date();
     };
     $scope.today();
 
     $scope.clear = function() {
-      $scope.scheduleDate = null;
+      vm.valuationReq.scheduleDate = null;
     };
 
     $scope.toggleMin = function() {
@@ -195,7 +195,7 @@
     };
 
     $scope.setDate = function(year, month, day) {
-      $scope.scheduleDate = new Date(year, month, day);
+      vm.valuationReq.scheduleDate = new Date(year, month, day);
     };
 
     $scope.dateOptions = {
@@ -212,9 +212,9 @@
 
     $scope.popup2 = {
       opened: false
-    };
+    };*/
 
-    function addProductQuote(form) {
+    /*function addProductQuote(form) {
 
 
       if (!Auth.getCurrentUser()._id) {
@@ -270,7 +270,7 @@
             });
         }
       });
-    }
+    }*/
 
 
     function loadUserDetail() {
@@ -371,7 +371,7 @@
       });
     }
 
-    function getLot(){
+    /*function getLot(){
       if(!$stateParams.lot){
         $scope.showWidget = false;
         return;
@@ -416,7 +416,7 @@
         .catch(function(err){
           $scope.showWidget = false;
         });
-    }
+    }*/
 
     function init() {
       vendorSvc.getAllVendors()
@@ -536,11 +536,11 @@
           countBid();
           getLastBidForUser();
           getPriceTrendData();
-          if(Auth.getCurrentUser()._id && $stateParams.lot)
+          /*if(Auth.getCurrentUser()._id && $stateParams.lot)
             getLot();
           else{
              $scope.showWidget = false;
-          }
+          }*/
          /* if ($scope.currentProduct.tradeType == "SELL")
             vm.showText = "To Buy"
           else if ($scope.currentProduct.tradeType == "RENT")

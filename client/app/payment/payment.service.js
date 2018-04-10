@@ -146,10 +146,7 @@ function PaymentSvc($http,$q,Auth,notificationSvc){
          mailData.auctionDate = oData.startDate;
          notificationSvc.sendNotification('auctionPaymentDetailToCustomer', data, mailData,'email');
       break;
-      case 2:
-         notificationSvc.sendNotification('valuationListingEmailToCustomer', data, mailData,'email');
-        break;
-       case 3:
+      case 3:
         mailData.product.grossPrice = oData.spares[0].grossPrice;
          notificationSvc.sendNotification('sparePurchaseEmailToCustomer', data, mailData,'email');
         break;

@@ -31,32 +31,34 @@
             <form class="signin" name="form" ng-submit="loginVm.login(form,$event)" data-ember-action="2" novalidate>
               <div class="floating-lable-form">
                 <div class="row">
-                  <div class="col-sm-6 form-group has-error">
-                    <div class="floating-label-wrapper">
+                  <div class="col-sm-6 form-group">
+                    <div class="floating-label-wrapper" ng-class="{'has-error': form.userId.$invalid && submitted}">
                       <label for="userID">Email/User ID/Mobile No.</label>
-                      <input type="text" class="form-control" id="userID" placeholder="Email/User ID/Mobile No." ng-model="loginVm.user.userId" required with-floating-label autocomplete="off">
+                      <input type="text" class="form-control" id="userID" name="userId" placeholder="Email/User ID/Mobile No." ng-model="loginVm.user.userId" required with-floating-label autocomplete="off" >
                     </div>
-                    <small class="help-block" ng-show="form.userId.$error.required && !form.password.$error.required && submitted">
-                         Please enter a valid user id.
-                      </small>
+                    <p class="has-error" ng-if="form.userId.$error.required && !form.password.$error.required && submitted">
+                         <span class="help-block">Please enter a valid user id.</span>
+                    </p>
                   </div>
                   <div class="col-sm-6 form-group has-error">
-                     <div class="floating-label-wrapper">
+                     <div class="floating-label-wrapper" ng-class="{'has-error': form.password.$invalid && submitted}">
                       <label for="password">Password</label>
-                      <input type="password" class="form-control" id="password" placeholder="Password" ng-model="loginVm.user.password" required  with-floating-label autocomplete="off">
+                      <input type="password" class="form-control" id="password" name="password" placeholder="Password" ng-model="loginVm.user.password" required  with-floating-label autocomplete="off">
                     </div>
-                    <small class="help-block" ng-show="!form.userId.$error.required && form.password.$error.required && submitted">
+                    <p class="has-error" ng-if="!form.userId.$error.required && form.password.$error.required && submitted">
+                      <span class="help-block">
                          Please enter a valid password.
-                      </small>
+                      </span>
+                    </p>
                       <h5><a href="/forgotpassword" class="text-danger">Forgot Password?</a></h5>
                   </div>
                 </div>
                  <div class="has-error">
-                      <small class="help-block" ng-show="form.userId.$error.required && form.password.$error.required && submitted">
+                      <p class="help-block" ng-if="form.userId.$error.required && form.password.$error.required && submitted">
                          Please enter your user id and password.
-                      </small>
+                      </p>
 
-                      <small class="help-block">{{ errors.other }}</small>
+                      <p class="help-block" ng-show="!form.userId.$error.required && !form.password.$error.required">{{ errors.other }}</p>
                   </div>
               </div>
 

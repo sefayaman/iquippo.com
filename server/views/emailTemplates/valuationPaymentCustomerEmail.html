@@ -1,0 +1,65 @@
+<head>
+  <meta charset="utf-8" content="width=divice-width, initial-screen=1"/>
+</head>
+<body>
+  <table style="width:60%; margin:0 auto; padding:15px;font-family:Verdana, Geneva, sans-serif; border: 5px solid rgba(128, 128, 128, 0.28);">
+    <tr>
+      <td style="height:70px;padding-bottom:20px;" valign="top"><img src="{{awsBaseImagePath}}/assets/images/srei-logo-img.png"></td>
+    </tr>
+    <tr>
+      <td style="font-size:18px; color:#FF4342; padding-bottom:10px; font-family:Verdana, Geneva, sans-serif;">Dear {{user.fname}}, </td>
+    </tr>
+    <tr>
+      <td style="color:#000;font-size:13px;padding-bottom:10px;">
+           We have received the payment for {{requestType}} request - {{requestId}}.
+      </td>
+    </tr>
+    <tr>
+      <td style="color:#000;font-size:13px;padding-bottom:10px;">
+           The payment details are specified below - 
+      </td>
+    </tr>
+    <tr>
+      <td align="center" style=" padding-top: 10px;padding-bottom: 10px;">
+        <table style="font-size:11px;line-height:14px;" border="0" cellspacing="0" cellpadding="0" width="90%" bgcolor="#ffffff">
+              <tbody>
+                <tr>
+                  <td>
+                    <p  style="font-size:12px;line-height:20px;color:#333333; font-family:Verdana, Geneva, sans-serif; text-align: left; margin: 5px 0;">
+                      <b>Amount Paid: INR</b> {{paymentDetails.amount}}
+                    </p>
+                    <p  style="font-size:12px;line-height:20px;color:#333333; font-family:Verdana, Geneva, sans-serif; text-align: left; margin: 5px 0;">
+                      <b>Payment Mode:</b> {{paymentDetails.paymentMode}} / {{paymentDetails.paymentModeType}}
+                    </p>
+                    <p style="font-size:12px;line-height:20px;color:#333333; font-family:Verdana, Geneva, sans-serif; text-align: left; margin: 5px 0;">
+                      <b>Bank Txn Reference Number:</b> {{paymentDetails.refNo}}
+                    </p>
+                    <p style="font-size:12px;line-height:20px;color:#333333; font-family:Verdana, Geneva, sans-serif; text-align: left; margin: 5px 0;">
+                      <b>Bank Name:</b> {{paymentDetails.bankname}}
+                    </p>
+                    <p style="font-size:12px;line-height:20px;color:#333333; font-family:Verdana, Geneva, sans-serif; text-align: left; margin: 5px 0;">
+                      <b>Date of Transaction:</b> {{paymentDetails.paymentDate}}
+                    </p>
+                    <p style="font-size:12px;line-height:20px;color:#333333; font-family:Verdana, Geneva, sans-serif; text-align: left; margin: 5px 0;">
+                      <b>Payment Status:</b> Completed
+                    </p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+      </td>
+      
+    </tr>
+    <tr>
+      <td style="color:#000;font-size:13px;padding-bottom:10px;">
+           Please feel free to email us at <a href="mailto:info@iquippo.com">info@iquippo.com</a> for any queries or support.
+      </td>
+    </tr>
+    <tr>
+      <td style="color:#01395c;font-size:13px; font-weight: bold; padding-bottom:10px;">
+          Best Wishes, <br/>
+          iQuippo
+      </td>
+    </tr>
+  </table>
+</body>

@@ -48,15 +48,22 @@ function PaymentCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,$location,
  		var tid = $stateParams.tid;
  		PaymentSvc.getOnFilter({_id:tid})
  		.then(function(result){
- 			if(result.length == 0){
+ 			if(result.length == 0 || Auth.getCurrentUser()._id + "" !== result[0].user._id + ""){
  				$state.go("main");
  				Modal.alert("Invalid payment access");
             return;
  			}
 
  			vm.payTransaction = result[0];
+         if(vm.payTransaction.status === 'completed' 
+            && vm.payTransaction.requestType === 'Valuation Request') {
+            $state.go("main");
+            Modal.alert("You have already paid.");
+            return;
+         }
  			vm.prevStatus = vm.payTransaction.status;
          vm.enablePayment = vm.prevStatus != transactionStatuses[5].code && vm.prevStatus != transactionStatuses[3].code?true:false;
+         vm.payTransaction.paymentMode = 'online';
 
  			if(vm.payTransaction.paymentMode === 'online' && vm.payTransaction.requestType !== 'Auction Request')
 	 		     PaymentSvc.updateStatus(vm.payTransaction,transactionStatuses[1].code);
@@ -97,7 +104,7 @@ function PaymentCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,$location,
       return;
    }
  	   var bodyRequest = "";
-      bodyRequest = "merchant_id=111628&order_id=" + vm.payTransaction._id;
+      //bodyRequest = "merchant_id=111628&order_id=" + vm.payTransaction._id;
       bodyRequest += "&currency=INR&amount=" + vm.payTransaction.totalAmount;
       bodyRequest += "&redirect_url=" + encodeURIComponent(serverPath + '/api/payment/paymentresponse')
       bodyRequest += "&cancel_url=" + encodeURIComponent(serverPath + '/api/payment/paymentresponse');
@@ -134,6 +141,7 @@ function PaymentCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,$location,
       bodyRequest += "&merchant_param1="+ encodeURIComponent($location.host());
       bodyRequest += "&merchant_param2="+ vm.payTransaction.user._id;
       bodyRequest += "&merchant_param3=main";
+      bodyRequest += "&merchant_param5=" + vm.payTransaction._id;
       if(vm.payTransaction.requestType === 'Auction Request')
          bodyRequest += "&merchant_param4=auction_request";
       PaymentSvc.encrypt({ 'rawstr' : bodyRequest})

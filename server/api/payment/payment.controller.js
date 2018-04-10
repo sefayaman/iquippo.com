@@ -3,7 +3,8 @@
 var _ = require('lodash');
 var crypto = require('crypto');
 var Payment = require('./payment.model');
-var xlsx = require('xlsx');
+var ValuationReq = require('./../valuation/valuation.model');
+var  xlsx = require('xlsx');
 var config = require('./../../config/environment');
 var async = require('async');
 var Util = require('./../../components/utility.js');
@@ -12,6 +13,7 @@ var Utility = require('./../../components/utility.js');
 
 var trasactionStatuses = ['failed', 'pending', 'completed'];
 var ReqSubmitStatuses = ['Request Submitted', 'Request Failed'];
+var sequence = require('./../../components/seqgenerator').sequence();
 
 // Get list of payment transaction
 exports.getAll = function (req, res) {
@@ -85,13 +87,33 @@ exports.getOnFilter = function (req, res) {
   }
 
   var query = Payment.find(filter).sort({ createdAt: -1 });
-  query.lean().exec(
-    function (err, payments) {
-      if (err) { return handleError(res, err); }
-      return res.status(200).json(payments);
-    }
+  query.exec(
+               function (err, payments) {
+                      if(err) { return handleError(res, err); }
+                      if(payments[0] && payments[0].requestType && payments[0].requestType === 'Valuation Request')
+                        addValuationData(req, res, payments);
+                      else
+                        return res.status(200).json(payments);
+               }
   );
 };
+
+  function addValuationData(req,res,payments) {
+    ValuationReq.find({
+        "transactionId": req.body._id,
+      }, function(err, valResult) {
+        if(err) { return handleError(res, err); }
+        var tempPaymentArr = [];
+        payments.forEach(function(item){
+          item = item.toObject();
+          item.valuationData = {};
+          item.valuationData = valResult[0];
+          tempPaymentArr.push(item);
+        });
+        return res.status(200).json(tempPaymentArr);
+      });
+  }
+
 // Updates an existing payment in the DB.
 exports.update = function (req, res) {
   if (req.body._id) { delete req.body._id; }
@@ -569,9 +591,12 @@ exports.encrypt = function (req, res) {
   var key = m.digest();
   var iv = '\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f';
   var cipher = crypto.createCipheriv('aes-128-cbc', key, iv);
-  var encoded = cipher.update(req.body.rawstr, 'utf8', 'hex');
-  encoded += cipher.final('hex');
-  return res.status(200).json(encoded);
+  sequence.next(function(nextSeq){
+    var rawStr = "merchant_id=111628&order_id=" + nextSeq + req.body.rawstr;
+    var encoded = cipher.update(rawStr, 'utf8', 'hex');
+    encoded += cipher.final('hex');
+    return res.status(200).json(encoded);
+  },'paymentOrderId',1000000002);
 }
 
 exports.paymentResponse = function (req, res) {
@@ -603,7 +628,7 @@ exports.paymentResponse = function (req, res) {
   });
 
   var status = resPayment.order_status.toString().toLowerCase().trim();
-  Payment.findById(resPayment.order_id, function (err, payment) {
+  Payment.findById(resPayment.merchant_param5, function (err, payment) {
     if (err) { return handleError(res, err); }
     if (!payment) { return res.status(404).send('Not Found'); }
 
@@ -618,7 +643,10 @@ exports.paymentResponse = function (req, res) {
     paymentVal.tracking_id = resPayment.tracking_id;
     payment.ccAvenueRes = paymentVal;
     payment.ccAvenueData = resPayment;
-
+    
+    if (!payment.ccAvenueHistory || !payment.ccAvenueHistory.length)
+      payment.ccAvenueHistory = [];
+    payment.ccAvenueHistory.push(resPayment);
     if (status == "success")
       payment.statusCode = 0;
     else
@@ -642,9 +670,9 @@ function sendPaymentRes(req, res, resPayment) {
     else
       res.redirect('http://mobile?payment=success');
   } else if (resPayment.merchant_param4 === "auction_request")
-    res.redirect(config.serverPath + "/auctionpaymentresponse/" + resPayment.order_id);
+    res.redirect(config.serverPath + "/auctionpaymentresponse/" + resPayment.merchant_param5);
   else
-    res.redirect(config.serverPath + "/paymentresponse/" + resPayment.order_id);
+    res.redirect(config.serverPath + "/paymentresponse/" + resPayment.merchant_param5);
 }
 
 function handleError(res, err) {

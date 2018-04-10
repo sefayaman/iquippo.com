@@ -173,7 +173,7 @@
 
   //Valuation controller function
 
-  function ValuationCtrl($scope, $rootScope, PaymentMasterSvc, Auth, $http, $log, Modal, ValuationPurposeSvc, notificationSvc, LocationSvc, ValuationSvc, userSvc, categorySvc, brandSvc, modelSvc, MarketingSvc, UtilSvc, $state, AssetGroupSvc, vendorSvc, EnterpriseSvc) {
+  function ValuationCtrl($scope, $rootScope, $cookieStore, PaymentMasterSvc, Auth, $http, $log, Modal, ValuationPurposeSvc, notificationSvc, LocationSvc, ValuationSvc, userSvc, categorySvc, brandSvc, modelSvc, MarketingSvc, UtilSvc, $state, AssetGroupSvc, vendorSvc, EnterpriseSvc) {
 
     //NJ Start: set valuationStartTime
     $scope.valuationStartTime = new Date();
@@ -190,26 +190,47 @@
     $scope.onPrdStateChange = onPrdStateChange;
     $scope.getVendors = getVendors;
 
-    $scope.valuationQuote = {};
-    $scope.valuationQuote.requestType = "Valuation";
-    $scope.valuationQuote.product = {};
-    $scope.valuationService = {};
+    $scope.valuationReq = {};
+    $scope.valuationReq.requestType = "Valuation";
+    $scope.valuationReq.product = {};
     $scope.currentYear = new Date().getFullYear();
     var filter = {};
-    $scope.valuationQuote.product.country = "India";
-    $scope.valuationQuote.valuation = "Financing";
+    $scope.valuationReq.product.country = "India";
+    $scope.valuationReq.purpose = "Financing";
+    $scope.valuationReq.initiatedBy = "buyer";
+    $scope.valuationReq.valuationAgency = {};
+    $scope.assetCategoryList = [];
+    $scope.iqvlOtherGroupId = iqvlOtherGroupId;
 
     function init() {
       loadCategory();
-      if ($scope.valuationQuote.product && $scope.valuationQuote.product.country)
-        onPrdCountryChange($scope.valuationQuote.product.country)
+      getAssetGroup();
+      if($cookieStore.get('copyValuationData')) {
+        $scope.valuationReq = angular.copy($cookieStore.get('copyValuationData'));
+        onCategoryChange($scope.valuationReq.product.category, true);
+        onBrandChange($scope.valuationReq.product.brand, true);
+        onPrdCountryChange($scope.valuationReq.product.country, true);
+        onPrdStateChange($scope.valuationReq.product.state, true);
+        $scope.valuationReq.product.brand = $scope.valuationReq.product.brand;
+        $scope.valuationReq.product.model = $scope.valuationReq.product.model;
+        $scope.valuationReq.product.state = $scope.valuationReq.product.state;
+        $scope.valuationReq.product.city = $scope.valuationReq.product.city;
+        $scope.valuationReq.product.engineNo = $scope.valuationReq.product.engineNo;
+        $scope.valuationReq.product.chassisNo = $scope.valuationReq.product.chassisNo;
+        $scope.valuationReq.product.registrationNo = $scope.valuationReq.product.registrationNo;
+        $scope.valuationReq.product.serialNumber = $scope.valuationReq.product.serialNumber;
+        $cookieStore.remove('copyValuationData');
+      } else {
+        if ($scope.valuationReq.product && $scope.valuationReq.product.country)
+          onPrdCountryChange($scope.valuationReq.product.country);
+      }
       ValuationPurposeSvc.get(null)
       .then(function(result) {
         $scope.valuationList = result;
       });
       vendorSvc.getAllVendors()
        .then(function(){
-         $scope.vendorList = vendorSvc.getVendorsOnCode($scope.valuationQuote.requestType);
+         $scope.vendorList = vendorSvc.getVendorsOnCode($scope.valuationReq.requestType);
        });
 
        PaymentMasterSvc.getAll();
@@ -232,10 +253,18 @@
       $scope.ismeridian = true;
     }
 
+    function getAssetGroup() {
+      var serData = {};
+      AssetGroupSvc.get(serData)
+        .then(function(result){
+           $scope.assetCategoryList = result;
+        });
+    };
+
     function onCountryChange(country, noChange) {
       if (!noChange) {
-        $scope.valuationQuote.state = "";
-        $scope.valuationQuote.city = "";
+        $scope.valuationReq.state = "";
+        $scope.valuationReq.city = "";
       }
       $scope.stateList = [];
       $scope.locationList = [];
@@ -251,7 +280,7 @@
 
     function onStateChange(state, noChange) {
       if (!noChange)
-        $scope.valuationQuote.city = "";
+        $scope.valuationReq.city = "";
       $scope.locationList = [];
       if (!state)
         return;
@@ -263,9 +292,11 @@
       });
     }
 
-    function onPrdCountryChange(country) {
-      $scope.valuationQuote.product.state = "";
-      $scope.valuationQuote.product.city = "";
+    function onPrdCountryChange(country, noChange) {
+      if(!noChange) {
+        $scope.valuationReq.product.state = "";
+        $scope.valuationReq.product.city = "";
+      }
       $scope.prdStateList = [];
       $scope.prdLocationList = [];
       if (!country)
@@ -277,8 +308,10 @@
       });
     }
 
-    function onPrdStateChange(state) {
-      $scope.valuationQuote.product.city = "";
+    function onPrdStateChange(state, noChange) {
+      if(!noChange) {
+        $scope.valuationReq.product.city = "";
+      }
       $scope.prdLocationList = [];
       if (!state)
         return;
@@ -292,27 +325,32 @@
     function setUser() {
       if (Auth.getCurrentUser()._id) {
         var currUser = Auth.getCurrentUser();
-        $scope.valuationQuote.fname = currUser.fname;
-        $scope.valuationQuote.mname = currUser.mname;
-        $scope.valuationQuote.lname = currUser.lname;
-        $scope.valuationQuote.mobile = currUser.mobile;
+        $scope.valuationReq.user = {};
+        $scope.valuationReq.user._id = currUser._id;
+        $scope.valuationReq.user.fname = currUser.fname;
+        $scope.valuationReq.user.mname = currUser.mname;
+        $scope.valuationReq.user.lname = currUser.lname;
+        $scope.valuationReq.user.mobile = currUser.mobile;
         if (currUser.email)
-          $scope.valuationQuote.email = currUser.email;
-        $scope.valuationQuote.phone = currUser.phone;
-        $scope.valuationQuote.country = currUser.country;
-        $scope.valuationQuote.state = currUser.state;
-        $scope.valuationQuote.city = currUser.city;
-        $scope.valuationQuote.customerId = currUser.customerId;
+          $scope.valuationReq.user.email = currUser.email;
+        $scope.valuationReq.user.phone = currUser.phone;
+        $scope.valuationReq.user.country = currUser.country;
+        $scope.valuationReq.user.state = currUser.state;
+        $scope.valuationReq.user.city = currUser.city;
+        $scope.valuationReq.user.customerId = currUser.customerId;
         onCountryChange(currUser.country, true);
         onStateChange(currUser.state, true);
       }
     }
 
-    function onCategoryChange(categoryName) {
+    function onCategoryChange(categoryName, noChange) {
+      if(!noChange) {
+        $scope.valuationReq.product.brand = "";
+        $scope.valuationReq.product.model = "";
+      }
       $scope.brandList = [];
       $scope.modelList = [];
-      $scope.valuationQuote.product.brand = "";
-      $scope.valuationQuote.product.model = "";
+        
       if (!categoryName)
         return;
       var filter = {};
@@ -326,15 +364,16 @@
         })
     }
 
-    function onBrandChange(brandName) {
-      
+    function onBrandChange(brandName, noChange) {
+      if(!noChange) {
+        $scope.valuationReq.product.model = "";
+      }
       $scope.modelList = [];
-      $scope.valuationQuote.product.model = "";
       if (!brandName)
         return;
       var filter = {};
       filter['brandName'] = brandName;
-      filter.categoryName= $scope.valuationQuote.product.category;
+      filter.categoryName= $scope.valuationReq.product.category;
       modelSvc.getModelOnFilter(filter)
         .then(function(result) {
           $scope.modelList = result;
@@ -348,16 +387,16 @@
 
     function onChange(val) {
       if (val == 'contactPerson') {
-        if ($scope.valuationQuote.product.contactPersonAsAbove)
-          $scope.valuationQuote.product.contactPerson = $scope.valuationQuote.fname + " " + $scope.valuationQuote.lname;
+        if ($scope.valuationReq.product.contactPersonAsAbove)
+          $scope.valuationReq.product.contactPerson = $scope.valuationReq.fname + " " + $scope.valuationReq.lname;
         else
-          $scope.valuationQuote.product.contactPerson = "";
+          $scope.valuationReq.product.contactPerson = "";
       }
       if (val == 'contactNumber') {
-        if ($scope.valuationQuote.product.contactNumberAsAbove)
-          $scope.valuationQuote.product.contactNumber = $scope.valuationQuote.mobile;
+        if ($scope.valuationReq.product.contactNumberAsAbove)
+          $scope.valuationReq.product.contactNumber = $scope.valuationReq.mobile;
         else
-          $scope.valuationQuote.product.contactNumber = "";
+          $scope.valuationReq.product.contactNumber = "";
       }
     }
 
@@ -371,63 +410,81 @@
     function addValuationQuote(form) {
       
       if (!Auth.getCurrentUser()._id) {
-        //Modal.alert("Please Login/Register for submitting your Valuation Request.", true);
         $scope.submitted = false;
+        $cookieStore.put('copyValuationData', $scope.valuationReq);
         Auth.goToLogin();
         return;
       }
 
       var ret = false;
-      /*if ($scope.valuationQuote.country && $scope.valuationQuote.mobile) {
-        var value = UtilSvc.validateMobile($scope.valuationQuote.country, $scope.valuationQuote.mobile);
-        if (!value) {
-          form.mobile.$invalid = true;
-          ret = true;
-        } else {
-          form.mobile.$invalid = false;
-          ret = false;
-        }
-      }*/
 
-      if ($scope.valuationQuote.schedule == 'yes') {
-        if (angular.isUndefined($scope.valuationQuote.scheduleDate))
+      if ($scope.valuationReq.schedule == 'yes') {
+        if (angular.isUndefined($scope.valuationReq.scheduleDate))
           form.scheduleDate.$invalid = true;
         else
           form.scheduleDate.$invalid = false;
       }
-
       if (form.$invalid || ret) {
         $scope.submitted = true;
         return;
       }
-
-      if ($scope.valuationQuote.product.contactPersonAsAbove)
-        $scope.valuationQuote.product.contactPerson = $scope.valuationQuote.fname + " " + $scope.valuationQuote.lname;
-
-      if ($scope.valuationQuote.product.contactNumberAsAbove)
-        $scope.valuationQuote.product.contactNumber = $scope.valuationQuote.mobile;
-        valuationQuoteSave();
-
+      Modal.confirm("Do you want to submit?", function(ret) {
+        if (ret == "yes") {
+          submitValuationReq();
+        }
+      });  
     }
 
 
-    function valuationQuoteSave() {
+    function submitValuationReq() {
+      $scope.valuationReq.status = IndividualValuationStatuses[0];
+      $scope.valuationReq.statuses = [];
+      var stsObj = {};
+      stsObj.createdAt = new Date();
+      stsObj.userId = $scope.valuationReq.user._id;
+      stsObj.status = IndividualValuationStatuses[0];
+      $scope.valuationReq.statuses[$scope.valuationReq.statuses.length] = stsObj;
+      for (var i = 0; $scope.vendorList.length; i++) {
+        if ($scope.vendorList[i]._id == $scope.valuationReq.valuationAgency._id) {
+          $scope.valuationReq.valuationAgency.name = $scope.vendorList[i].name;
+          $scope.valuationReq.valuationAgency.email = $scope.vendorList[i].email;
+          $scope.valuationReq.valuationAgency.mobile = $scope.vendorList[i].mobile;
+          $scope.valuationReq.valuationAgency.countryCode = LocationSvc.getCountryCode($scope.vendorList[i].country);
+          break;
+        }
+      }
+      var existCat = false;
+      for (var i = 0; i < $scope.assetCategoryList.length; i++) {
+        if($scope.assetCategoryList[i].assetCategory && $scope.assetCategoryList[i].assetCategory.toLowerCase() === $scope.valuationReq.product.category.toLowerCase()){
+          $scope.valuationReq.assetCategory = $scope.assetCategoryList[i].assetCategory || "";
+          $scope.valuationReq.valuerGroupId = $scope.assetCategoryList[i].valuerGroupId || "";
+          existCat = true;
+          break;
+        }
+      }
+      if(!existCat) {
+        $scope.valuationReq.assetCategory = "";
+        $scope.valuationReq.valuerGroupId = $scope.iqvlOtherGroupId;
+      }
 
       var paymentTransaction = {};
       paymentTransaction.payments = [];
       paymentTransaction.totalAmount = 0;
-      paymentTransaction.requestType = $scope.valuationQuote.requestType;
+      paymentTransaction.requestType = 'Valuation Request';
 
       var payObj = {};
-      var pyMaster = PaymentMasterSvc.getPaymentMasterOnSvcCode($scope.valuationQuote.requestType, $scope.valuationQuote.partnerId);
+      var pyMaster = PaymentMasterSvc.getPaymentMasterOnSvcCode($scope.valuationReq.requestType, $scope.valuationReq.valuationAgency._id);
       if(!pyMaster)
-        pyMaster = PaymentMasterSvc.getPaymentMasterOnSvcCode($scope.enterpriseValuation.requestType);
-
-      payObj.type = "valuationEnquiries";
-      payObj.charge = pyMaster.fees || 5000;
-      paymentTransaction.totalAmount += payObj.charge;
-      paymentTransaction.payments[paymentTransaction.payments.length] = payObj;
-      paymentTransaction.product = $scope.valuationQuote.product;
+        pyMaster = PaymentMasterSvc.getPaymentMasterOnSvcCode($scope.valuationReq.requestType);
+      if(!pyMaster || !pyMaster.fees) {
+        Modal.alert("Valuation fee is not define for this vendor.", true);
+        return;
+      }
+      //payObj.type = "valuationreq";
+      //payObj.amount = pyMaster.fees || 5000;
+      paymentTransaction.totalAmount = pyMaster.fees;
+      //paymentTransaction.payments[paymentTransaction.payments.length] = payObj;
+      paymentTransaction.product = $scope.valuationReq.product;
       paymentTransaction.user = {};
       paymentTransaction.user._id = Auth.getCurrentUser()._id;
       paymentTransaction.user.fname = Auth.getCurrentUser().fname;
@@ -445,15 +502,13 @@
       sObj.status = transactionStatuses[0].code;
       sObj.userId = Auth.getCurrentUser()._id;
       paymentTransaction.statuses[paymentTransaction.statuses.length] = sObj;
-      paymentTransaction.paymentMode = "online";
+      //paymentTransaction.paymentMode = "online";
 
-      if (!$scope.valuationQuote.scheduledTime && $scope.valuationQuote.schedule == "yes")
+      if (!$scope.valuationReq.scheduledTime && $scope.valuationReq.schedule == "yes")
         $scope.changed($scope.mytime);
-      $scope.valuationService.type = "valuation";
-      $scope.valuationService.quote = $scope.valuationQuote;
 
-      ValuationSvc.saveService({
-          valuation: $scope.valuationService,
+      ValuationSvc.save({
+          valuation: $scope.valuationReq,
           payment: paymentTransaction
         })
         .then(function(result) {
@@ -464,41 +519,36 @@
           }
           if (result.transactionId){
             MarketingSvc.googleConversion();
-          if (!facebookConversionSent) {
-            MarketingSvc.facebookConversion();
-            facebookConversionSent = true;
+            if (!facebookConversionSent) {
+              MarketingSvc.facebookConversion();
+              facebookConversionSent = true;
+            }
+
+            var paymentScope = $rootScope.$new();
+            paymentScope.tid = result.transactionId;
+            paymentScope.valuation = result.valuation;
+            paymentScope.resetData = true;
+            Modal.openDialog('paymentOption',paymentScope);
           }
-      var data = {};
-      data['to'] = supportMail;
-      data['subject'] = 'Valuation';
-      var dataToSend={};
-      dataToSend=$scope.valuationService.quote;
-      dataToSend.serverPath=serverPath;
-      dataToSend.transactionId=result.transactionId;
-      notificationSvc.sendNotification('enquiriesQuoteValuationEmailToAdmin', data, dataToSend,'email');
-      
-      data={};
-      data['to'] = $scope.valuationService.quote.email;
-      data['subject'] = 'Your request has been initiated successfully';
-      dataToSend={};
-      dataToSend.serverPath=serverPath;
-      notificationSvc.sendNotification('enquiriesQuoteServicesEmailToCustomer', data,dataToSend,'email');
-        $state.go('payment', {
-            tid: result.transactionId
-          });
-      }
         })
         .catch(function(err) {
-          Modal.alert('Error while sending email');
+          //Modal.alert('Error while sending email');
         });
     }
+    
+    $scope.$on('refreshValuationData',function(){
+      resetData();
+    });
 
     function resetData() {
-      $scope.valuationQuote = {};
-      $scope.valuationQuote.requestType = "Valuation";
-      $scope.valuationQuote.product = {};
-      $scope.valuationQuote.valuation = "Financing";
-      $scope.valuationQuote.product.country = "India";
+      $scope.valuationReq = {};
+      $scope.valuationReq.requestType = "Valuation";
+      $scope.valuationReq.product = {};
+      $scope.valuationReq.purpose = "Financing";
+      $scope.valuationReq.product.country = "India";
+      $scope.valuationReq.initiatedBy = "buyer";
+      $scope.valuationReq.valuationAgency = {};
+      $scope.currentYear = new Date().getFullYear();
       $scope.submitted = false;
       setUser();
     }
@@ -511,7 +561,7 @@
         hours = hours % 12;
         hours = hours ? hours : 12; // the hour '0' should be '12'
         minutes = minutes < 10 ? '0' + minutes : minutes;
-        $scope.valuationQuote.scheduledTime = hours + ':' + minutes + ' ' + ampm;
+        $scope.valuationReq.scheduledTime = hours + ':' + minutes + ' ' + ampm;
       }
     };
 
@@ -978,7 +1028,7 @@
     }
 
     function resetClick() {
-      $scope.valuationQuote = {};
+      $scope.insuranceQuote = {};
       $scope.insuranceQuote.product = {};
       setUserData();
     };

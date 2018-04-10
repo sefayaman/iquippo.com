@@ -1,10 +1,10 @@
 <div>  
     <div class="row form-group">
         <div class="col-sm-12 text-right">
-            <button class="btn btn-success" ng-click="bidproductVm.exportExcel()"><i class="fa fa-file-excel-o"></i> Export Excel</button>
-            <button class="btn btn-success" ng-if="isAdmin()" ng-click="bidproductVm.exportExcel('all')"><i class="fa fa-file-excel-o"></i> All Export Excel</button>
-            <button class="btn btn-success" ng-if="!isAdmin()" ng-click="bidproductVm.exportExcel('all')"><i class="fa fa-file-excel-o"></i> All Export Excel</button>    
-            <button class="btn btn-success" ng-if="isAdmin()" ng-click="bidproductVm.exportExcel('payment')"><i class="fa fa-file-excel-o"></i> All Payment Export Excel</button>
+            <button class="btn btn-success" ng-click="bidproductVm.exportExcel()"><i class="fa fa-file-text-o"></i> Export</button>
+            <button class="btn btn-success" ng-if="isAdmin()" ng-click="bidproductVm.exportExcel('all')"><i class="fa fa-file-text-o"></i> All Export</button>
+            <button class="btn btn-success" ng-if="!isAdmin()" ng-click="bidproductVm.exportExcel('all')"><i class="fa fa-file-text-o"></i> All Export</button>    
+            <button class="btn btn-success" ng-if="isAdmin()" ng-click="bidproductVm.exportExcel('payment')"><i class="fa fa-file-text-o"></i> All Payment Export</button>
         </div>
     </div>
     <legend></legend>

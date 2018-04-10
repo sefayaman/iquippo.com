@@ -90,6 +90,12 @@ function getTokenAndRedirectUrl(req,res){
             var financer = getFinancer(enterprises[0]);
             if(financer && financer !== 'MLP')
                 result.actionUrl = config.REDIRECT_URL;
+            if(financer && financer === 'MLP'){
+               delete result.actionUrl;
+               result.mlp = config.MLP_REDIRECT_URL;
+               result.srei = config.REDIRECT_URL;
+               result.openOptionPopup = true;
+            }
             return res.status(200).json(result);
         });
       }else

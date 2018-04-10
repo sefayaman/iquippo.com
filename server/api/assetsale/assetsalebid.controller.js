@@ -17,6 +17,7 @@ var Vendor = require('../vendor/vendor.model');
 var VatModel = require('../common/vattax.model');
 var MarkupPrice = require('../common/markupprice.model');
 var fieldConfig = require('./fieldsConfig');
+var _sendAndUpdateViaSocket = require('../../realTimeSocket')._sendAndUpdateViaSocket;
 
 var tradeTypeStatuses = ['SELL', 'BOTH', 'NOT_AVAILABLE'];
 var dealStatuses = ['Decision Pending', 'Offer Rejected', 'Cancelled', 'Rejected-EMD Failed', 'Rejected-Full Sale Value Not Realized', 'Bid-Rejected', 'Approved', 'EMD Received', 'Full Payment Received', 'DO Issued', 'Asset Delivered', 'Acceptance of Delivery', 'Closed'];
@@ -34,7 +35,7 @@ exports.getEMDBasedOnUser = function (req, res) {
 
         return res.status(200).json(result);
     });
-}
+};
 
 exports.calculateGst = function (req, res, next) {
     req.result = {};
@@ -95,7 +96,7 @@ exports.calculateGst = function (req, res, next) {
                 cb(null, null);
         });
     }
-}
+};
 
 exports.calculateTcs = function (req, res, next) {
     if (Number(req.query.bidAmount) + Number(req.result.taxRate) > 1000000)
@@ -105,7 +106,7 @@ exports.calculateTcs = function (req, res, next) {
     req.result.tcs = Math.round(req.result.tcs || 0);
 
     return next();
-}
+};
 
 exports.callculateParkingCharge = function (req, res, next) {
     var prdId = req.query.productId;
@@ -123,13 +124,13 @@ exports.callculateParkingCharge = function (req, res, next) {
         req.result.parkingCharges = Math.round(req.result.parkingCharges);
         return next();
 
-    })
-}
+    });
+};
 
 exports.getBidOrBuyCalculation = function (req, res) {
     req.result.total = Math.round(req.result.taxRate + req.result.tcs + req.result.parkingCharges + parseInt(req.query.bidAmount));
     res.status(200).json(req.result);
-}
+};
 
 // Updates an existing record in the DB.
 exports.update = function (req, res, next) {
@@ -162,7 +163,7 @@ exports.update = function (req, res, next) {
             cb(err);
         });
     }
-}
+};
 
 function sendStatusMail(bid) {
     var bidArr = [];
@@ -469,14 +470,16 @@ exports.validateUpdate = function (req, res, next) {
             return callback();
         });
     }
-}
+};
 
 exports.postUpdate = function (req, res, next) {
     var postAction = req.query.action;
     if (req.updateProduct)
         updateProduct();
-    else
+    else {
+        _sendAndUpdateViaSocket('onSubmitBidSocket',req.product);
         return res.status(200).send("Bid request updated successfully");
+    }
 
     function updateProduct() {
         var productId = req.product._id + "";
@@ -484,11 +487,12 @@ exports.postUpdate = function (req, res, next) {
         Product.update({_id: productId}, {$set: req.product}, function (error, retData) {
             if (error)
                 return handleError(res, error);
+            _sendAndUpdateViaSocket('onSubmitBidSocket',req.product);
             return res.status(200).send("Bid updated successfully.");
         });
     }
 
-}
+};
 
 exports.validateSubmitBid = function (req, res, next) {
 
@@ -632,6 +636,7 @@ exports.verifyCalculation = function (req, res, next) {
 
 exports.submitBid = function (req, res) {
     async.series([newBidData, updateBidAndProduct], function (err) {
+        
         if (err)
             return res.status(500).send(err);
         var msg = ""

@@ -179,7 +179,9 @@
           if (!initFlag) {
             if (result.errorCode === 0 && Auth.getCurrentUser()._id) {
               $scope.redirectToLiveAuction = true;
-              var liveAuctionUrl = auctionURL + "/liveAuction/" + dbAuctionId + "/" + Auth.getCurrentUser()._id;
+              var liveAuctionUrl = auctionURL + "/liveAuction/"+dbAuctionId+"/"+Auth.getCurrentUser()._id;
+              if($scope.auctionData.auctionType === 'A')
+                liveAuctionUrl = auctionURL + "/onlineAuction/"+dbAuctionId+"/"+Auth.getCurrentUser()._id;
               $scope.liveAuctionURLSCE = $sce.trustAsResourceUrl(liveAuctionUrl);
             }
             return;
@@ -187,7 +189,9 @@
 
           if (result.errorCode === 0) {
             $scope.redirectToLiveAuction = true;
-            var liveAuctionUrl = auctionURL + "/liveAuction/" + dbAuctionId + "/" + Auth.getCurrentUser()._id;
+            var liveAuctionUrl = auctionURL + "/liveAuction/"+dbAuctionId+"/"+Auth.getCurrentUser()._id;
+            if($scope.auctionData.auctionType === 'A')
+                liveAuctionUrl = auctionURL + "/onlineAuction/"+dbAuctionId+"/"+Auth.getCurrentUser()._id;
             $scope.liveAuctionURLSCE = $sce.trustAsResourceUrl(liveAuctionUrl);
             //window.open(liveAuctionURLSCE,'_blank');
           }

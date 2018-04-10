@@ -3,7 +3,7 @@
 'use strict';
 angular.module('sreizaoApp').controller('OfflinePaymentCtrl',OfflinePaymentCtrl);
 
-function OfflinePaymentCtrl($scope,$rootScope,Modal,$stateParams,$state,$uibModalInstance, PaymentSvc,Auth,userRegForAuctionSvc) {
+function OfflinePaymentCtrl($scope,$rootScope,Modal,$stateParams,$state,$uibModalInstance, ValuationSvc,PaymentSvc,Auth,userRegForAuctionSvc) {
    
   var vm = this;
   vm.dataModel = {};
@@ -69,8 +69,10 @@ function OfflinePaymentCtrl($scope,$rootScope,Modal,$stateParams,$state,$uibModa
     stsObj.createdAt = new Date();
     stsObj.paymentStatus = "success";
     vm.dataModel.payments[vm.dataModel.payments.length] = stsObj;
-    vm.dataModel.reqSubmitStatus = ReqSubmitStatuses[1];
-    vm.dataModel.userDataSendToAuction = true;
+    if(!$scope.iValuationFlag) {
+      vm.dataModel.reqSubmitStatus = ReqSubmitStatuses[1];
+      vm.dataModel.userDataSendToAuction = true;
+    }
     $rootScope.loading = true;
     PaymentSvc.updateStatus(vm.dataModel, transactionStatuses[5].code)
     .then(function(res){
@@ -80,8 +82,14 @@ function OfflinePaymentCtrl($scope,$rootScope,Modal,$stateParams,$state,$uibModa
           $scope.generateKitCallback(vm.dataModel);
         else
           $rootScope.$broadcast('refreshPaymentHistroyList');*/
-         generateKit(vm.dataModel);
-         vm.dataModel = {};
+		    if(!$scope.iValuationFlag) {
+          //$rootScope.$broadcast('refreshPaymentHistroyList');
+          generateKit(vm.dataModel);
+        } else {
+          ValuationSvc.updateStatus($scope.valuation, IndividualValuationStatuses[1]);
+          //submitToAgency($scope.valuation,'Mjobcreation');
+        }
+        //generateKit(vm.dataModel);
         Modal.alert(res.message);
         closeDialog();
     })
@@ -93,6 +101,21 @@ function OfflinePaymentCtrl($scope,$rootScope,Modal,$stateParams,$state,$uibModa
       closeDialog();
     });
   }
+
+  /*function submitToAgency(valuation,type){
+    //api integration
+    ValuationSvc.submitToAgency(valuation,type)
+    .then(function(resList){
+      if($scope.callback)
+        $scope.callback(true);
+    })
+    .catch(function(err){
+      if(err && err.data)
+        Modal.alert(err.data);
+      if($scope.callback)
+        $scope.callback(true);
+    });
+  }*/
 
   function generateKit(tns){
     if(!tns)
