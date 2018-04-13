@@ -348,15 +348,15 @@ exports.validateUpdate = function (req, res, next) {
                         if (entData.emdPeriod)
                             selBid.emdEndDate = new Date().addDays(entData.emdPeriod || 0);
                         selBid.product.prevTradeType = req.bid.product.prevTradeType;
-                        AssetSaleUtil.setStatus(selBid, bidStatuses[7], 'bidStatus', 'bidStatuses',req.user);
-                        AssetSaleUtil.setStatus(selBid, dealStatuses[6], 'dealStatus', 'dealStatuses',req.user);
+                        AssetSaleUtil.setStatus(selBid, bidStatuses[7], 'bidStatus', 'bidStatuses');
+                        AssetSaleUtil.setStatus(selBid, dealStatuses[6], 'dealStatus', 'dealStatuses');
                         req.bids.push(selBid);
                         //AssetSaleUtil.sendNotification([{action: "APPROVE", ticketId: selBid.ticketId}]);
                     } else {
                         req.updateProduct = true;
                         req.otherBids.forEach(function (item) {
-                            AssetSaleUtil.setStatus(item, dealStatuses[0], 'dealStatus', 'dealStatuses',req.user);
-                            AssetSaleUtil.setStatus(item, bidStatuses[0], 'bidStatus', 'bidStatuses',req.user);
+                            AssetSaleUtil.setStatus(item, dealStatuses[0], 'dealStatus', 'dealStatuses');
+                            AssetSaleUtil.setStatus(item, bidStatuses[0], 'bidStatus', 'bidStatuses');
                             req.bids.push(item);
                         });
                         var bidCount = req.otherBids.length || 0;

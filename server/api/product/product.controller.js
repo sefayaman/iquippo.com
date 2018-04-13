@@ -892,7 +892,8 @@ function updateProduct(req, res) {
 
                 if(bids && bids.length){
                     return res.status(404).send("Asset Trade Type can't be modified as there is an active bid on it");    
-                }
+                } 
+                else {return updateProductData();}
             });
         } else if (req.body.featured) {
             var imgPath = config.uploadPath + req.body.assetDir + "/" + req.body.primaryImg;
