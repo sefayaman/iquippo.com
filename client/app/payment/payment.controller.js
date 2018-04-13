@@ -104,7 +104,7 @@ function PaymentCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,$location,
       return;
    }
  	   var bodyRequest = "";
-      bodyRequest = "merchant_id=111628&order_id=" + vm.payTransaction._id;
+      //bodyRequest = "merchant_id=111628&order_id=" + vm.payTransaction._id;
       bodyRequest += "&currency=INR&amount=" + vm.payTransaction.totalAmount;
       bodyRequest += "&redirect_url=" + encodeURIComponent(serverPath + '/api/payment/paymentresponse')
       bodyRequest += "&cancel_url=" + encodeURIComponent(serverPath + '/api/payment/paymentresponse');
@@ -141,6 +141,7 @@ function PaymentCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,$location,
       bodyRequest += "&merchant_param1="+ encodeURIComponent($location.host());
       bodyRequest += "&merchant_param2="+ vm.payTransaction.user._id;
       bodyRequest += "&merchant_param3=main";
+      bodyRequest += "&merchant_param5=" + vm.payTransaction._id;
       if(vm.payTransaction.requestType === 'Auction Request')
          bodyRequest += "&merchant_param4=auction_request";
       PaymentSvc.encrypt({ 'rawstr' : bodyRequest})

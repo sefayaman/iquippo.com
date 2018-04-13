@@ -13,6 +13,7 @@ var Utility = require('./../../components/utility.js');
 
 var trasactionStatuses = ['failed', 'pending', 'completed'];
 var ReqSubmitStatuses = ['Request Submitted', 'Request Failed'];
+var sequence = require('./../../components/seqgenerator').sequence();
 
 // Get list of payment transaction
 exports.getAll = function (req, res) {
@@ -89,7 +90,7 @@ exports.getOnFilter = function (req, res) {
   query.exec(
                function (err, payments) {
                       if(err) { return handleError(res, err); }
-                      if(payments[0].requestType === 'Valuation Request')
+                      if(payments[0] && payments[0].requestType && payments[0].requestType === 'Valuation Request')
                         addValuationData(req, res, payments);
                       else
                         return res.status(200).json(payments);
@@ -359,6 +360,7 @@ function _prepareCSVResponse(res, payments) {
     tempData.push({
       "Sr. No": key + 1,
       "Transaction Id": payment.transactionId,
+      "Order Id": payment.ccAvenueData && payment.ccAvenueData.order_id ? payment.ccAvenueData.order_id : "",
       "Category": payment.product ? payment.product.category : "",
       "Asset Id": payment.product ? payment.product['assetId'] : "",
       "Asset Name": payment.product ? payment.product['name'] : "",
@@ -412,6 +414,7 @@ var Export_Field_Mapping_InnerData = {
   "Payment Mode Type": "paymentModeType",
   "Bank Name": "bankname",
   "Branch": "branch",
+  "Order Id": "order_id",
   "Ref No": "refNo",
   "Amount": "amount",
   "Payment Date": "paymentDate"
@@ -542,7 +545,10 @@ function auctionReportAll(req, res) {
           if (successObj)
             val = _.get(successObj, Export_Field_Mapping_InnerData[innerKey], "");
           if (Export_Field_Mapping_InnerData[innerKey] === 'paymentDate' && val)
-            val = moment(val).utcOffset('+0530').format('MM/DD/YYYY');
+            val = moment(new Date(val)).utcOffset('+0530').format('MM/DD/YYYY') || "";
+            //val = moment(val).utcOffset('+0530').format('MM/DD/YYYY');
+          if (Export_Field_Mapping_InnerData[innerKey] === 'order_id' && successObj && successObj.ccAvenueData)
+            val = successObj.ccAvenueData.order_id;
           val = Util.toCsvValue(val);
           csvStr += val + ",";
         });
@@ -590,9 +596,12 @@ exports.encrypt = function (req, res) {
   var key = m.digest();
   var iv = '\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f';
   var cipher = crypto.createCipheriv('aes-128-cbc', key, iv);
-  var encoded = cipher.update(req.body.rawstr, 'utf8', 'hex');
-  encoded += cipher.final('hex');
-  return res.status(200).json(encoded);
+  sequence.next(function(nextSeq){
+    var rawStr = "merchant_id=111628&order_id=" + nextSeq + req.body.rawstr;
+    var encoded = cipher.update(rawStr, 'utf8', 'hex');
+    encoded += cipher.final('hex');
+    return res.status(200).json(encoded);
+  },'paymentOrderId',1000000002);
 }
 
 exports.paymentResponse = function (req, res) {
@@ -624,7 +633,7 @@ exports.paymentResponse = function (req, res) {
   });
 
   var status = resPayment.order_status.toString().toLowerCase().trim();
-  Payment.findById(resPayment.order_id, function (err, payment) {
+  Payment.findById(resPayment.merchant_param5, function (err, payment) {
     if (err) { return handleError(res, err); }
     if (!payment) { return res.status(404).send('Not Found'); }
 
@@ -666,9 +675,9 @@ function sendPaymentRes(req, res, resPayment) {
     else
       res.redirect('http://mobile?payment=success');
   } else if (resPayment.merchant_param4 === "auction_request")
-    res.redirect(config.serverPath + "/auctionpaymentresponse/" + resPayment.order_id);
+    res.redirect(config.serverPath + "/auctionpaymentresponse/" + resPayment.merchant_param5);
   else
-    res.redirect(config.serverPath + "/paymentresponse/" + resPayment.order_id);
+    res.redirect(config.serverPath + "/paymentresponse/" + resPayment.merchant_param5);
 }
 
 function handleError(res, err) {
