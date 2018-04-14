@@ -222,6 +222,7 @@ exports.validateUpdate = function (req, res, next) {
                       maxBid.emdStartDate = new Date(); 
                       maxBid.emdEndDate = new Date().addDays(entData.emdPeriod);
                       maxBid.product.prevTradeType = req.product.tradeType;
+                      maxBid.lastAccepted = true;
                       req.product.cooling = false;
                       req.product.tradeType = tradeTypeStatuses[2];
                       req.product.bidRequestApproved = true;
@@ -351,6 +352,18 @@ exports.validateUpdate = function (req, res, next) {
                         AssetSaleUtil.setStatus(selBid, bidStatuses[7], 'bidStatus', 'bidStatuses');
                         AssetSaleUtil.setStatus(selBid, dealStatuses[6], 'dealStatus', 'dealStatuses');
                         req.bids.push(selBid);
+                        if(req.bid.lastAccepted){
+                          var largerBids = req.otherBids.filter(function(bid){
+                                return bid.bidAmount >= req.bid.bidAmount; 
+                            });
+                          if(largerBids && largerBids.length){
+                            largerBids.sort(function(a,b){
+                              return a.bidAmount - b.bidAmount;
+                            });
+                            largerBids[0].lastAccepted = true;
+                            req.bids.push(largerBids[0]);
+                          }
+                        }
                         //AssetSaleUtil.sendNotification([{action: "APPROVE", ticketId: selBid.ticketId}]);
                     } else {
                         req.updateProduct = true;
@@ -401,13 +414,15 @@ exports.validateUpdate = function (req, res, next) {
 
     function nextApprovableBid(bid, otherBids) {
         var selBid = null;
-        if (bid.lastAccepted || !otherBids.length || bid.autoApprove)
+        if (!otherBids.length || bid.autoApprove)
             return selBid;
         otherBids.sort(function (a, b) {
             return a.bidAmount - b.bidAmount;
         });
         otherBids.reverse();
         selBid = otherBids[0];
+        if(bid.lastAccepted && selBid.bidAmount < bid.bidAmount)
+            selBid = null;
         return selBid;
     }
 
