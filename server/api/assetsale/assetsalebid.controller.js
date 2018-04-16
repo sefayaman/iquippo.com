@@ -221,28 +221,43 @@ exports.validateUpdate = function (req, res, next) {
                     if(maxBid){
                       maxBid.emdStartDate = new Date(); 
                       maxBid.emdEndDate = new Date().addDays(entData.emdPeriod);
-                      maxBid.product.prevTradeType = req.product.tradeType;
-                      maxBid.lastAccepted = true;
-                      req.product.cooling = false;
-                      req.product.tradeType = tradeTypeStatuses[2];
-                      req.product.bidRequestApproved = true;
-                      AssetSaleUtil.setStatus(maxBid,bidStatuses[7],'bidStatus','bidStatuses',req.user);
-                      AssetSaleUtil.setStatus(maxBid,dealStatuses[6],'dealStatus','dealStatuses',req.user); 
-                      //AssetSaleUtil.sendNotification([{action:"APPROVE",ticketId:maxBid.ticketId}]);
-                    }
 
-                    req.otherBids.forEach(function(item){
-                        if(item._id == maxBid._id )
-                            return;
-                        if (item.bidStatus === bidStatuses[7]) {
-                            item.lastAccepted = false;
-                            AssetSaleUtil.setStatus(item, bidStatuses[0], 'bidStatus', 'bidStatuses', req.user);
-                        }
-                        AssetSaleUtil.setStatus(item,bidStatuses[5],'bidStatus','bidStatuses',req.user);
-                        req.bids.push(item);
-                    });
-                    req.updateProduct = true;
-                    return next();
+                      AssetSaleUtil.checkHolidayExistAndAdd(maxBid.emdStartDate, maxBid.emdEndDate, entData.emdPeriod, function(err, revisedDate) {
+                        maxBid.emdEndDate = revisedDate;
+                        maxBid.product.prevTradeType = req.product.tradeType;
+                        req.product.cooling = false;
+                        req.product.tradeType = tradeTypeStatuses[2];
+                        req.product.bidRequestApproved = true;
+                        AssetSaleUtil.setStatus(maxBid,bidStatuses[7],'bidStatus','bidStatuses',req.user);
+                        AssetSaleUtil.setStatus(maxBid,dealStatuses[6],'dealStatus','dealStatuses',req.user); 
+                      });
+                      //AssetSaleUtil.sendNotification([{action:"APPROVE",ticketId:maxBid.ticketId}]);
+                        req.otherBids.forEach(function(item){
+                            if(item._id == maxBid._id )
+                                return;
+                            if (item.bidStatus === bidStatuses[7]) {
+                                item.lastAccepted = false;
+                                AssetSaleUtil.setStatus(item, bidStatuses[0], 'bidStatus', 'bidStatuses', req.user);
+                            }
+                            AssetSaleUtil.setStatus(item,bidStatuses[5],'bidStatus','bidStatuses',req.user);
+                            req.bids.push(item);
+                        });
+                        req.updateProduct = true;
+                        return next();
+                    } else {
+                        req.otherBids.forEach(function(item){
+                            if(item._id == maxBid._id )
+                                return;
+                            if (item.bidStatus === bidStatuses[7]) {
+                                item.lastAccepted = false;
+                                AssetSaleUtil.setStatus(item, bidStatuses[0], 'bidStatus', 'bidStatuses', req.user);
+                            }
+                            AssetSaleUtil.setStatus(item,bidStatuses[5],'bidStatus','bidStatuses',req.user);
+                            req.bids.push(item);
+                        });
+                        req.updateProduct = true;
+                        return next();
+                    }
                 }
                 if (!req.product.cooling) {
                     req.product.cooling = true;
@@ -283,16 +298,22 @@ exports.validateUpdate = function (req, res, next) {
                     return res.status(404).send("Full payment period is not found");
                 req.body.fullPaymentStartDate = new Date();
                 req.body.fullPaymentEndDate = new Date().addDays(entData.fullPaymentPeriod);
+
+                AssetSaleUtil.checkHolidayExistAndAdd(req.body.fullPaymentStartDate, req.body.fullPaymentEndDate, entData.fullPaymentPeriod, function(err, revisedDate) {
+                    req.body.fullPaymentEndDate = revisedDate;
+                    console.log('REVISED PAyMENT DATE --- ', revisedDate);
+                    req.otherBids.forEach(function (item) {
+                        item.status = false;
+                        AssetSaleUtil.setStatus(item, bidStatuses[2], 'bidStatus', 'bidStatuses', req.user);
+                        AssetSaleUtil.setStatus(item, dealStatuses[5], 'dealStatus', 'dealStatuses', req.user);
+                        req.bids.push(item);
+                    });
+                    req.bidLost = true;
+                    next();
+                });
+
                 //if(req.body.fullPaymentEndDate)
                 //	req.body.fullPaymentEndDate = req.body.fullPaymentEndDate.setHours(24,0,0,0);
-                req.otherBids.forEach(function (item) {
-                    item.status = false;
-                    AssetSaleUtil.setStatus(item, bidStatuses[2], 'bidStatus', 'bidStatuses', req.user);
-                    AssetSaleUtil.setStatus(item, dealStatuses[5], 'dealStatus', 'dealStatuses', req.user);
-                    req.bids.push(item);
-                });
-                req.bidLost = true;
-                next();
             });
             //}
             //else

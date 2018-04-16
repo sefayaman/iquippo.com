@@ -24,6 +24,7 @@
 
         vm.save = function (form) {
             if (form.$invalid || !_validate()) {
+                vm.submitted = true;
                 return;
             }
             $rootScope.loading = true;
@@ -98,7 +99,10 @@
                 vm.errorMessage = "Invalid date selection.";
                 return false;
             }
-            if (__IsExist(sdt, edt)) {
+            if(__isBeforeToday()) {
+                return false;
+            }
+            if (__isExist(sdt, edt)) {
                 vm.errorMessage = "Event date already exist!"
                 return false;
             }
@@ -118,13 +122,27 @@
             return false;
         }
 
-        function __IsExist(sdt, edt) {
+        function __isBeforeToday() {
+            var dt = new Date(vm.event['start']);
+            var today = new Date();
+            if(dt < today) {
+                vm.errorMessage = "Cannot select date older than current date!";
+                return true;
+            }
+            return false;
+        }
+
+        function __isExist(sdt, edt) {
+            var eventStartDate = new Date(sdt).toUTCString();
+            var eventEndDate = new Date(edt).toUTCString();
             var flag = false;
+
             vm.events.forEach(function (event) {
-                if (moment(vm.event.start).isBetween(moment(event.start), moment(event.end)) ||
-                    moment(vm.event.end).isBetween(moment(event.start), moment(event.end)) ||
-                    moment(event.start).isSame(sdt, 'day') ||
-                    moment(event.end).isSame(edt, 'day')) {
+                if (moment(eventStartDate).isBetween(moment(event.start), moment(event.end)) ||
+                    moment(eventEndDate).isBetween(moment(event.start), moment(event.end)) ||
+                    moment(event.start).isSame(eventStartDate, 'day') || moment(event.end).isSame(eventEndDate, 'day') ||
+                    moment(event.start).isSame(eventEndDate, 'day') || moment(event.end).isSame(eventStartDate, 'day')
+                ) {
                     flag = true;
                     return;
                 }

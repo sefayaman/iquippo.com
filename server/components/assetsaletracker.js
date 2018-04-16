@@ -60,8 +60,11 @@ var TimeInterval =  1*60*1000;/*Service interval*/
               maxBid.emdStartDate = new Date(); 
               maxBid.emdEndDate = new Date().addDays(entMasterData.emdPeriod);
 
-              _checkHolidayExistAndAdd(maxBid.emdStartDate, maxBid.emdEndDate, function(err, revisedDate) {
+              console.log('EMD PERIOD --- ', entMasterData.emdPeriod);
+
+              AssetSaleUtil.checkHolidayExistAndAdd(maxBid.emdStartDate, maxBid.emdEndDate, entMasterData.emdPeriod, function(err, revisedDate) {
                 maxBid.emdEndDate = revisedDate;
+                console.log('Revised Date --- ', revisedDate.toString());
                 maxBid.product.prevTradeType = prd.tradeType;
                 AssetSaleUtil.setStatus(maxBid,bidStatuses[7],'bidStatus','bidStatuses');
                 AssetSaleUtil.setStatus(maxBid,dealStatuses[6],'dealStatus','dealStatuses');
@@ -124,8 +127,9 @@ var TimeInterval =  1*60*1000;/*Service interval*/
               item.findNextBid = true;
             item.status = false;
             async.parallel({saleProcessData:getSaleProcessMaster,otherBids:getOtherBids},processBids);
-         }else
-           return cb();
+         }else {
+          return cb();
+         }
 
         }else if(item.dealStatus == dealStatuses[7]){
             var isExpired = checkExpiryDate(item.fullPaymentEndDate);
@@ -135,10 +139,12 @@ var TimeInterval =  1*60*1000;/*Service interval*/
               AssetSaleUtil.sendNotification([{action:"FULLPAYMENTFAILED",ticketId:item.ticketId}]);
                item.status = false;
               async.parallel({otherBids:getOtherBids},processBids);
-          }else
+          }else {
             return cb();
-        }else
+          }
+        }else {
           return cb();
+        }
 
     function processBids(err,result){
       if(err)
@@ -189,8 +195,9 @@ var TimeInterval =  1*60*1000;/*Service interval*/
         bidRec = false;
 
       if(selBid) {
-        _checkHolidayExistAndAdd(selBid.startDate, selBid.emdEndDate, function(err, revisedDate) {
-          selBid.endDate = revisedDate;
+        AssetSaleUtil.checkHolidayExistAndAdd(selBid.emdStartDate, selBid.emdEndDate, (result.saleProcessData.emdPeriod || 0), function(err, revisedDate) {
+          selBid.emdEndDate = revisedDate;
+
           async.eachLimit(actionableBids,3,updateBid,function(err){
             if(err)
               return callback(err);
@@ -201,14 +208,16 @@ var TimeInterval =  1*60*1000;/*Service interval*/
             return callback();
           });
         });
+        
       } else {
         async.eachLimit(actionableBids,3,updateBid,function(err){
-          if(err)
-            return callback(err);
-          if(item.updateProduct)
-              Product.update({_id:item.product.proData},{$set:{tradeType:item.product.prevTradeType,bidReceived:bidRec,bidRequestApproved:false,bidCount:bidCount,highestBid:highestBid}}).exec();
-          if(selBid)
+          if(err) { return callback(err); }
+          if(item.updateProduct) {
+            Product.update({_id:item.product.proData},{$set:{tradeType:item.product.prevTradeType,bidReceived:bidRec,bidRequestApproved:false,bidCount:bidCount,highestBid:highestBid}}).exec();
+          }
+          if(selBid) {
             AssetSaleUtil.sendNotification([{action:"APPROVE",ticketId:selBid.ticketId}]);
+          }
           return callback();
         });
       }
@@ -287,44 +296,16 @@ function checkExpiryDate(date){
     return false;
 }
 
-function _checkHolidayExistAndAdd(startDate, endDate, cb) {
-  var sdt = startDate
-  var edt = endDate;
-  var filter = {
-    start: { $gte: startDate },
-    end: { $lte: endDate }
-  };
-  Event.find(filter).lean().exec(function(err, events) {
-    if(!err && events) {
-      events.forEach(function(obj) {
-        edt = _calculateHolidayRange(obj, edt);
-      });
-    }
-    return cb(null, edt);
-  });
-}
-
-// Checks if emd period/payment period start date is same as day listed in holidays
-// function _handleIfSameDay(sdt, edt) {
-//   var mins = 60 - sdt.getMinutes();
-//   if(mins > 0) {
-//     var hours = 23 - sdt.getHours();
-//   } else {
-//     var hours = 24 - sdt.getHours();
-//   }
-//   edt = edt.addHours(hours);
-//   edt = edt.addMinutes(mins);
-//   return edt;
-// }
-
 // If holiday is in date range
 function _calculateHolidayRange(obj, emdEndDate) {
-  var sdt = moment(obj.start);
-  var edt = moment(obj.end);
+  var sdt = moment(obj.start).startOf('day');
+  var edt = moment(obj.end).startOf('day');
 
-  if(sdt < edt) {
+  if(sdt < edt) { // Ranged holiday
     var dayCount = edt.diff(sdt, 'days');
     emdEndDate = emdEndDate.addDays(dayCount+1);
+  } else { // Single day holiday
+    emdEndDate = emdEndDate.addDays(1);
   }
   return emdEndDate;
 }

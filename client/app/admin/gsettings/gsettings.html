@@ -4410,12 +4410,12 @@
                 <div ng-if="gsettingVm.tabValue == 'holidaymaster'"  ng-controller="EventCtrl as eventVm">
                 <h4>Add Holiday Calendar</h4>
                 <legend></legend>
-                <form name="eventForm">
+                <form name="eventForm" novalidate>
                     <div class="row">
-                        <div class="col-sm-3 form-group" ng-class="{ 'has-error': form.eventName.$invalid }">
-                            <input id="eventName" name="eventName" ng-model="eventVm.event.name" type="text" class="form-control" placeholder="Event name" required>
+                        <div class="col-sm-3 form-group" ng-class="{ 'has-error': eventForm.eventName.$invalid && eventVm.submitted }">
+                            <input id="eventName" name="eventName" ng-model="eventVm.event.name" type="text" class="form-control" placeholder="Event Name" required>
                         </div>
-                        <div class="col-sm-3 form-group">
+                        <div class="col-sm-3 form-group" ng-class="{ 'has-error': eventForm.startDate.$invalid && eventVm.submitted }">
                             <div class="input-group">
                                 <input class="form-control" datetime-picker readonly name="startDate" ng-model="eventVm.event.start" id="EstartDate" placeholder="Event Start Date" date-only date-format="MM/dd/yyyy" required/>
                                 <label for="EstartDate" class="input-group-addon">
@@ -4423,19 +4423,19 @@
                                 </label>
                             </div>
                         </div>
-                        <div class="col-sm-3 form-group">
+                        <div class="col-sm-3 form-group" ng-class="{ 'has-error': eventForm.endDate.$invalid && eventVm.submitted }">
                             <div class="input-group">
-                                <input class="form-control" datetime-picker readonly name="endDate" ng-model="eventVm.event.end" id="EendDate" placeholder="Event end Date" date-only date-format="MM/dd/yyyy" required/>
+                                <input class="form-control" datetime-picker readonly name="endDate" ng-model="eventVm.event.end" id="EendDate" placeholder="Event End Date" date-only date-format="MM/dd/yyyy" required/>
                                 <label for="EendDate" class="input-group-addon">
                                     <i class="fa fa-calendar"></i>
                                 </label>
                             </div>
                         </div>
                     </div>
-                    <div class="text-right form-group row">
-                        <div class="col-sm-4 pull-left" ng-show="eventVm.errorMessage">
-                            <p class="help-block">
-                                {{ eventVm.errorMessage }}
+                    <div class="text-right row">
+                        <div class="col-sm-4 form-group pull-left" ng-class="{'has-error': eventVm.submitted }" ng-show="eventVm.errorMessage">
+                            <p class="help-block pull-left">
+                                *{{ eventVm.errorMessage }}
                             </p>
                         </div>
                         <!-- <div class="col-sm-2 pull-right" ng-show="eventVm.isEdit">
