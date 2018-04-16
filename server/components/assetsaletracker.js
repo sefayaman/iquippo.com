@@ -149,7 +149,6 @@ var TimeInterval =  1*60*1000;/*Service interval*/
       var selBid = null;
       if(item.findNextBid)
         selBid = nextApprovableBid(item,result.otherBids);
-
       if(selBid){
         selBid.emdStartDate = new Date();
         if(result.saleProcessData && result.saleProcessData.emdPeriod) 
@@ -160,6 +159,18 @@ var TimeInterval =  1*60*1000;/*Service interval*/
         AssetSaleUtil.setStatus(selBid,bidStatuses[7],'bidStatus','bidStatuses');
         AssetSaleUtil.setStatus(selBid,dealStatuses[6],'dealStatus','dealStatuses');
         actionableBids.push(selBid); 
+        if(item.lastAccepted){
+          var largerBids = result.otherBids.filter(function(bid){
+                return bid.bidAmount >= item.bidAmount; 
+            });
+          if(largerBids && largerBids.length){
+            largerBids.sort(function(a,b){
+              return a.bidAmount - b.bidAmount;
+            });
+            largerBids[0].lastAccepted = true;
+            actionableBids.push(largerBids[0]);
+          }
+        }
         //AssetSaleUtil.sendNotification([{action:"APPROVE",ticketId:selBid.ticketId}]);
       }else{
         item.updateProduct = true;
@@ -231,13 +242,15 @@ var TimeInterval =  1*60*1000;/*Service interval*/
 
 function nextApprovableBid(bid,otherBids){
   var selBid = null;
-  if(bid.lastAccepted || !otherBids.length || bid.autoApprove)
+  if(!otherBids.length || bid.autoApprove)
     return selBid;
   otherBids.sort(function(a,b){
     return a.bidAmount - b.bidAmount;
   });
   otherBids.reverse();
   selBid = otherBids[0];
+ if(bid.lastAccepted && selBid.bidAmount < bid.bidAmount)
+   selBid = null;
   return selBid;
 }
 
