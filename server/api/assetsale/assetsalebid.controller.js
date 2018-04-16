@@ -236,9 +236,9 @@ exports.validateUpdate = function (req, res, next) {
                             return;
                         if (item.bidStatus === bidStatuses[7]) {
                             item.lastAccepted = false;
-                            AssetSaleUtil.setStatus(item, bidStatuses[0], 'bidStatus', 'bidStatuses', req.user);
+                            AssetSaleUtil.setStatus(item, bidStatuses[0], 'bidStatus', 'bidStatuses');
                         }
-                        AssetSaleUtil.setStatus(item,bidStatuses[5],'bidStatus','bidStatuses',req.user);
+                        AssetSaleUtil.setStatus(item,bidStatuses[5],'bidStatus','bidStatuses');
                         req.bids.push(item);
                     });
                     req.updateProduct = true;
@@ -266,7 +266,7 @@ exports.validateUpdate = function (req, res, next) {
                 req.otherBids.forEach(function (item) {
                     if (item.bidStatus === bidStatuses[7]) {
                         item.lastAccepted = false;
-                        AssetSaleUtil.setStatus(item, bidStatuses[0], 'bidStatus', 'bidStatuses', req.user);
+                        AssetSaleUtil.setStatus(item, bidStatuses[0], 'bidStatus', 'bidStatuses');
                         req.bids.push(item);
                     }
                 });
@@ -287,8 +287,8 @@ exports.validateUpdate = function (req, res, next) {
                 //	req.body.fullPaymentEndDate = req.body.fullPaymentEndDate.setHours(24,0,0,0);
                 req.otherBids.forEach(function (item) {
                     item.status = false;
-                    AssetSaleUtil.setStatus(item, bidStatuses[2], 'bidStatus', 'bidStatuses', req.user);
-                    AssetSaleUtil.setStatus(item, dealStatuses[5], 'dealStatus', 'dealStatuses', req.user);
+                    AssetSaleUtil.setStatus(item, bidStatuses[2], 'bidStatus', 'bidStatuses');
+                    AssetSaleUtil.setStatus(item, dealStatuses[5], 'dealStatus', 'dealStatuses');
                     req.bids.push(item);
                 });
                 req.bidLost = true;
@@ -303,8 +303,8 @@ exports.validateUpdate = function (req, res, next) {
                 return res.status(412).send("Invalid status update");
             req.otherBids.forEach(function (item) {
                 item.status = false;
-                AssetSaleUtil.setStatus(item, bidStatuses[2], 'bidStatus', 'bidStatuses', req.user);
-                AssetSaleUtil.setStatus(item, dealStatuses[5], 'dealStatus', 'dealStatuses', req.user);
+                AssetSaleUtil.setStatus(item, bidStatuses[2], 'bidStatus', 'bidStatuses');
+                AssetSaleUtil.setStatus(item, dealStatuses[5], 'dealStatus', 'dealStatuses');
                 req.bids.push(item);
             });
             req.bidLost = true;

@@ -54,10 +54,10 @@ var Export_Field_Mapping = {
   "Bank Name":"BKName",
   "Branch Name":"BrName",
   "GST Details Provided":"GSTUploaded",
-  "Creation Date" : "createdAt"//,
-  /*"Enterprise Id" : "enterpriseId",
+  "Creation Date" : "createdAt",
+  "Enterprise Id" : "enterpriseId",
   "Enterprise Name" : "enterpriseName",
-  "Access" : "access"*/
+  "Access" : "access"
 };
 
 var Export_GST_Field_Mapping = {
