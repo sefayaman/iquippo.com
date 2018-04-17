@@ -298,7 +298,7 @@ exports.validateUpdate = function (req, res, next) {
             //else
             //	return res.status(412).send("EMD payment remaining");		
         } else if (req.query.action === 'fullpayment') {
-            var isValidStatus = bidStatuses.indexOf(req.bid.bidStatus) > 6 && req.bid.dealStatus === dealStatuses[7] ? true:false;
+            var isValidStatus = bidStatuses.indexOf(req.bid.bidStatus) > 6 && [dealStatuses[6],dealStatuses[7]].indexOf(req.bid.dealStatus) !== -1 ? true:false;
             if(!isValidStatus)
                 return res.status(412).send("Invalid status update");
             req.otherBids.forEach(function (item) {
