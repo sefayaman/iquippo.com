@@ -339,7 +339,7 @@ exports.checkHolidayExistAndAdd = function (startDate, endDate, timePeriod, cb) 
 }
 
 function __check(startDate, timePeriod, holidays) {
-	console.log('CHECKING...', timePeriod);
+	console.log('CHECKING...', timePeriod, '---', startDate);
 	var today = startDate;
 	var nextDay = today;
 	var i = 0;
@@ -351,7 +351,7 @@ function __check(startDate, timePeriod, holidays) {
 		}
 
 	}
-	console.log('NEXT DAY -- ', nextDay);
+	console.log('NEXT DAY -- ', nextDay.toString());
 	return nextDay;
 }
 
