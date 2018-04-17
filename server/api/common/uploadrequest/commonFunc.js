@@ -61,7 +61,7 @@ function fetchProduct(assetId, cb) {
 function fetchAuctionMaster(auctionId, cb) {
 	AuctionMasterModel.find({
 		auctionId: auctionId,
-		startDate: {
+		endDate: {
 			'$gt': new Date()
 		}
 	}).exec(function(err, auction) {
