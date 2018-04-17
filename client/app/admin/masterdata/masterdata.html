@@ -509,35 +509,37 @@
 					              </div>
 					            </div>
 					        </div>
-                            <table class="table table-bordred table-striped">
-                                <thead>
-                                	<tr>
-                                		<th>Model</th>
-	                                    <th>Brand</th>
-	                                    <th>Product Category</th>
-	                                    <th>Equipment Type</th>
-	                                    <th>Product Group</th>
-	                                    <th>Actions</th>
-                                	</tr>
-                                </thead>
-                         		<tbody>
-                                  <tr ng-repeat="model in filteredModel|startFrom:(masterDataVm.mCurrentPage -1 )*masterDataVm.itemsPerPage|limitTo:masterDataVm.itemsPerPage">
-                                  	<td>{{model.name}}</td>
-									<td>{{model.brand.name}}</td>
-									<td>{{model.category.name}}</td>
-									<td>
-										<span ng-if="model.isForUsed">For Used</span>
-										<span ng-if="model.isForNew && model.isForUsed">&</span>
-										<span ng-if="model.isForNew">For New</span></td>
-									</td>
-									<td>{{model.group.name}}</td>
-									<td>
-										 <a class="btn btn-primary btn-sm" href="javascript:void(0);" ng-click="masterDataVm.editClick('Model',model)" ><i class="fa fa-pencil"></i> </a>
-										<a class="btn btn-danger btn-sm" href="javascript:void(0);" ng-click="masterDataVm.deleteClick('Model',model)"><i class="fa fa-trash"></i> </a>
-									</td> 
-								  </tr>
-                                </tbody>
-                            </table>
+                            <div class="table-responsive">
+                            	<table class="table table-bordred table-striped">
+	                                <thead>
+	                                	<tr>
+	                                		<th>Model</th>
+		                                    <th>Brand</th>
+		                                    <th>Product Category</th>
+		                                    <th>Equipment Type</th>
+		                                    <th>Product Group</th>
+		                                    <th>Actions</th>
+	                                	</tr>
+	                                </thead>
+	                         		<tbody>
+	                                  <tr ng-repeat="model in filteredModel|startFrom:(masterDataVm.mCurrentPage -1 )*masterDataVm.itemsPerPage|limitTo:masterDataVm.itemsPerPage">
+	                                  	<td>{{model.name}}</td>
+										<td>{{model.brand.name}}</td>
+										<td>{{model.category.name}}</td>
+										<td>
+											<span ng-if="model.isForUsed">For Used</span>
+											<span ng-if="model.isForNew && model.isForUsed">&</span>
+											<span ng-if="model.isForNew">For New</span></td>
+										</td>
+										<td>{{model.group.name}}</td>
+										<td>
+											 <a class="btn btn-primary btn-sm" href="javascript:void(0);" ng-click="masterDataVm.editClick('Model',model)" ><i class="fa fa-pencil"></i> </a>
+											<a class="btn btn-danger btn-sm" href="javascript:void(0);" ng-click="masterDataVm.deleteClick('Model',model)"><i class="fa fa-trash"></i> </a>
+										</td> 
+									  </tr>
+	                                </tbody>
+	                            </table>
+                            </div>
         					<uib-pagination total-items="masterDataVm.mTotalItems" ng-model="masterDataVm.mCurrentPage" items-per-page="masterDataVm.itemsPerPage" max-size="masterDataVm.maxSize" class="pagination-sm" rotate="false">  </uib-pagination>
 				</uib-tabset>
 
