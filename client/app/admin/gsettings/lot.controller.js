@@ -392,7 +392,7 @@ function LotCtrl($scope, $rootScope,$window, $state,Modal,Auth,PagerSvc,$filter,
   });
 
   function dateCheckValidation(startDate, endDate) {
-      if(startDate && endDate && (startDate > endDate))
+      if(startDate && endDate && (new Date(startDate) > new Date(endDate)))
           return true;
       return false;
   }

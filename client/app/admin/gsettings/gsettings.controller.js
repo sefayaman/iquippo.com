@@ -2219,7 +2219,7 @@
         }
 
         function dateCheckValidation(startDate, endDate) {
-            if(startDate && endDate && (startDate > endDate))
+            if(startDate && endDate && (new Date(startDate) > new Date(endDate)))
                 return true;
             return false;
         }
