@@ -865,6 +865,8 @@ exports.fetchBid = function (req, res) {
         filter['product.seller._id'] = req.query.userid + "";
     if (req.sellers && req.sellers.length)
         filter['product.seller._id'] = {$in: req.sellers};
+    if (req.sellers && req.sellers.length && req.defaultPartner)
+        filter['product.seller._id'] = {$nin: req.sellers};
     if (req.query.pagination) {
         paginatedResult(req, res, AssetSaleBid, filter);
         return;
@@ -1013,6 +1015,8 @@ exports.getSellers = function (req, res, next) {
         if (err) {
             console.log("error", err);
         }
+        if(defaultPartner === 'y')
+            req.defaultPartner = true;
         req.sellers = users;
         return next();
     });
@@ -1037,8 +1041,11 @@ exports.getSellers = function (req, res, next) {
         filter.enterprise = true;
         filter.role = "enterprise";
         filter.$or = [{FAPartnerId: partnerId}];
-        if (defaultPartner === 'y')
-            filter.$or[filter.$or.length] = {FAPartnerId: {$exists: false}};
+        if (defaultPartner === 'y'){
+            delete filter.$or;
+            filter.FAPartnerId = {$exists:true,$nin:[partnerId,'']};
+            //filter.$or[filter.$or.length] = {FAPartnerId: {$exists: false}};
+        }
         User.find(filter, function (err, enterprises) {
             if (err) {
                 return callback("Error in getting user")
@@ -1056,7 +1063,7 @@ exports.getSellers = function (req, res, next) {
                     return callback("Error in getting user")
                 }
                 ;
-                finalUsers.forEach(function (user) {
+                 finalUsers.forEach(function (user) {
                     users.push(user._id + "");
                 })
                 return callback();
@@ -1070,8 +1077,11 @@ exports.getSellers = function (req, res, next) {
         filter.status = true;
         filter.$or = [{FAPartnerId: partnerId}];
         filter.role = {$in: ['customer', 'channelpartner']};
-        if (defaultPartner === 'y')
-            filter.$or[filter.$or.length] = {FAPartnerId: {$exists: false}};
+        if (defaultPartner === 'y'){
+            //filter.$or[filter.$or.length] = {FAPartnerId: {$exists: false}};
+            delete filter.$or;
+            filter.FAPartnerId = {$exists:true,$nin:[partnerId,'']};
+        }
         User.find(filter, function (err, finalUsers) {
             if (err) {
                 return callback("Error in getting user")
@@ -1088,7 +1098,7 @@ exports.getSellers = function (req, res, next) {
 
 exports.getBidProduct = function (req, res, next) {
     if (req.body.userType === 'FA') {
-        if (!req.sellers.length)
+        if (!req.sellers.length && !req.defaultPartner)
             return res.status(200).json({totalItems: 0, products: []});
         req.bidRequestApproved = true;
     }
@@ -1107,6 +1117,9 @@ exports.getProductsList = function (req, res, next) {
     productFilter.deleted = false;
     if (req.sellers && req.sellers.length)
         productFilter["seller._id"] = {$in: req.sellers};
+    if (req.sellers && req.sellers.length && req.defaultPartner)
+        productFilter["seller._id"] = {$nin: req.sellers};
+    
     if (req.query.bidRequestApproved && req.query.bidRequestApproved === 'y')
         productFilter.bidRequestApproved = true;
     if (req.query.bidRequestApproved && req.query.bidRequestApproved === 'n')
@@ -1188,6 +1201,8 @@ exports.exportExcel = function (req, res) {
 		filter.bidStatus = queryParam.bidStatus;
 	if (req.sellers && req.sellers.length)
 		filter['product.seller._id'] = { $in: req.sellers || [] };
+    if (req.sellers && req.sellers.length && req.defaultPartner)
+        filter['product.seller._id'] = { $nin: req.sellers || [] };
 
 	var query = AssetSaleBid.find(filter).populate('user product.proData');
 	query.lean().exec(function (err, resList) {

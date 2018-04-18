@@ -323,6 +323,8 @@ exports.search = function (req, res) {
 
   if (req.sellers && req.sellers.length)
     filter["seller._id"] = { $in: req.sellers };
+  if (req.sellers && req.sellers.length && req.defaultPartner)
+    filter["seller._id"] = { $nin: req.sellers };
   if (req.body.bidRequestApproved && req.body.bidRequestApproved === 'y')
     filter.bidRequestApproved = true;
   if (req.body.bidRequestApproved && req.body.bidRequestApproved === 'n')

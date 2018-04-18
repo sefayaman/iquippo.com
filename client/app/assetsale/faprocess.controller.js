@@ -64,7 +64,8 @@
                 getClosedBids(filter);
             else
                 getBidProducts(filter);
-                getBidProductAll(filterAll);
+                //getBidProductAll(filterAll);
+            
             /*if(vm.activeBid === 'auctionable')
              getBidProducts(filter);
              else
@@ -152,15 +153,16 @@
             } else if (vm.tabVal === 'closed') {
                 exportFilter.actionable = 'n';
                 exportFilter.dealStatuses = dealStatuses[12];
-            } else {
+            } /*else {
+
                 if (vm.dataListAll) {
                     exportFilter.productIds = [];
                     vm.dataListAll.forEach(function (item) {
                         exportFilter.productIds.push(item._id);
                     });
                 }
-            }
-
+            }*/
+            exportFilter.productsWise = "n";
             exportFilter.fa = 'y';
             AssetSaleSvc.exportExcel(exportFilter);
         }
