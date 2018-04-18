@@ -12,7 +12,7 @@
     "angular-cookies": "~1.4.0",
     "angular-sanitize": "~1.4.0",
     "angular-bootstrap": "~0.14.0",
-    "font-awesome": ">=4.1.0",
+    "font-awesome": "~4.7.0",
     "lodash": "~4.11.2",
     "angular-ui-router": "~0.2.15",
     "angular-file-upload": "~2.1.4",
