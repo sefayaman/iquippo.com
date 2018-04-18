@@ -63,12 +63,12 @@
                 filter.bidRequestApproved = 'n';
                 filterAll.bidRequestApproved = 'n';
                 getBidProducts(filter);
-                getBidProductAll(filterAll);
+                //getBidProductAll(filterAll);
             } else if (vm.activeBid === 'saleinprocess') {
                 filter.bidRequestApproved = 'y';
                 filterAll.bidRequestApproved = 'y';
                 getBidProducts(filter);
-                getBidProductAll(filterAll);
+                //getBidProductAll(filterAll);
             } else
                 getClosedBids(filter);
         }
