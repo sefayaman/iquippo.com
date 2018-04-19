@@ -32,7 +32,6 @@ angular.module('sreizaoApp',[
    'uiGmapgoogle-maps',
    'yard',
    'viewhead',
-   'nvd3',
    'timer',
    'btford.socket-io'
 ])
