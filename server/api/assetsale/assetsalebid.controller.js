@@ -375,13 +375,13 @@ exports.validateUpdate = function (req, res, next) {
             //else
             //	return res.status(412).send("EMD payment remaining");		
         } else if (req.query.action === 'fullpayment') {
-            var isValidStatus = bidStatuses.indexOf(req.bid.bidStatus) > 6 && req.bid.dealStatus === dealStatuses[7] ? true : false;
-            if (!isValidStatus)
+            var isValidStatus = bidStatuses.indexOf(req.bid.bidStatus) > 6 && [dealStatuses[6],dealStatuses[7]].indexOf(req.bid.dealStatus) !== -1 ? true:false;
+            if(!isValidStatus)
                 return res.status(412).send("Invalid status update");
             req.otherBids.forEach(function (item) {
                 item.status = false;
-                AssetSaleUtil.setStatus(item, bidStatuses[2], 'bidStatus', 'bidStatuses', req.user);
-                AssetSaleUtil.setStatus(item, dealStatuses[5], 'dealStatus', 'dealStatuses', req.user);
+                AssetSaleUtil.setStatus(item, bidStatuses[2], 'bidStatus', 'bidStatuses');
+                AssetSaleUtil.setStatus(item, dealStatuses[5], 'dealStatus', 'dealStatuses');
                 req.bids.push(item);
             });
             req.bidLost = true;
@@ -946,7 +946,9 @@ exports.fetchBid = function (req, res) {
     if (req.query.userid)
         filter['product.seller._id'] = req.query.userid + "";
     if (req.sellers && req.sellers.length)
-        filter['product.seller._id'] = { $in: req.sellers };
+        filter['product.seller._id'] = {$in: req.sellers};
+    if (req.sellers && req.sellers.length && req.defaultPartner)
+        filter['product.seller._id'] = {$nin: req.sellers};
     if (req.query.pagination) {
         paginatedResult(req, res, AssetSaleBid, filter);
         return;
@@ -1095,6 +1097,8 @@ exports.getSellers = function (req, res, next) {
         if (err) {
             console.log("error", err);
         }
+        if(defaultPartner === 'y')
+            req.defaultPartner = true;
         req.sellers = users;
         return next();
     });
@@ -1118,9 +1122,12 @@ exports.getSellers = function (req, res, next) {
         filter.status = true;
         filter.enterprise = true;
         filter.role = "enterprise";
-        filter.$or = [{ FAPartnerId: partnerId }];
-        if (defaultPartner === 'y')
-            filter.$or[filter.$or.length] = { FAPartnerId: { $exists: false } };
+        filter.$or = [{FAPartnerId: partnerId}];
+        if (defaultPartner === 'y'){
+            delete filter.$or;
+            filter.FAPartnerId = {$exists:true,$nin:[partnerId,'']};
+            //filter.$or[filter.$or.length] = {FAPartnerId: {$exists: false}};
+        }
         User.find(filter, function (err, enterprises) {
             if (err) {
                 return callback("Error in getting user")
@@ -1138,7 +1145,7 @@ exports.getSellers = function (req, res, next) {
                     return callback("Error in getting user")
                 }
                 ;
-                finalUsers.forEach(function (user) {
+                 finalUsers.forEach(function (user) {
                     users.push(user._id + "");
                 })
                 return callback();
@@ -1150,10 +1157,13 @@ exports.getSellers = function (req, res, next) {
         var filter = {};
         filter.deleted = false;
         filter.status = true;
-        filter.$or = [{ FAPartnerId: partnerId }];
-        filter.role = { $in: ['customer', 'channelpartner'] };
-        if (defaultPartner === 'y')
-            filter.$or[filter.$or.length] = { FAPartnerId: { $exists: false } };
+        filter.$or = [{FAPartnerId: partnerId}];
+        filter.role = {$in: ['customer', 'channelpartner']};
+        if (defaultPartner === 'y'){
+            //filter.$or[filter.$or.length] = {FAPartnerId: {$exists: false}};
+            delete filter.$or;
+            filter.FAPartnerId = {$exists:true,$nin:[partnerId,'']};
+        }
         User.find(filter, function (err, finalUsers) {
             if (err) {
                 return callback("Error in getting user")
@@ -1170,8 +1180,8 @@ exports.getSellers = function (req, res, next) {
 
 exports.getBidProduct = function (req, res, next) {
     if (req.body.userType === 'FA') {
-        if (!req.sellers.length)
-            return res.status(200).json({ totalItems: 0, products: [] });
+        if (!req.sellers.length && !req.defaultPartner)
+            return res.status(200).json({totalItems: 0, products: []});
         req.bidRequestApproved = true;
     }
     req.body.bidReceived = true;
@@ -1188,7 +1198,10 @@ exports.getProductsList = function (req, res, next) {
     var productFilter = {};
     productFilter.deleted = false;
     if (req.sellers && req.sellers.length)
-        productFilter["seller._id"] = { $in: req.sellers };
+        productFilter["seller._id"] = {$in: req.sellers};
+    if (req.sellers && req.sellers.length && req.defaultPartner)
+        productFilter["seller._id"] = {$nin: req.sellers};
+    
     if (req.query.bidRequestApproved && req.query.bidRequestApproved === 'y')
         productFilter.bidRequestApproved = true;
     if (req.query.bidRequestApproved && req.query.bidRequestApproved === 'n')
@@ -1224,81 +1237,83 @@ exports.getApproverUserList = function (req, res, next) {
 }
 
 exports.exportExcel = function (req, res) {
-    var filter = {};
-    var user = req.user;
-    var queryParam = req.query;
-    var fieldsMap = {};
-    if (!req.query.bidChanged)
-        filter.bidChanged = false;
+	var filter = {};
+	var user = req.user;
+	var queryParam = req.query;
+	var fieldsMap = {};
+	if (!req.query.bidChanged)
+		filter.bidChanged = false;
 
-    if (req.query.actionable === 'y')
-        filter.status = true;
+	if (req.query.actionable === 'y')
+		filter.status = true;
 
-    if (req.query.actionable === 'n')
-        filter.status = false;
+	if (req.query.actionable === 'n')
+		filter.status = false;
 
-    if (queryParam.seller == 'y') {
-        filter['product.seller._id'] = req.user._id + "";
-        fieldsMap = fieldConfig['SELLER_FIELDS'];
-    }
+	if (queryParam.seller == 'y') {
+		filter['product.seller._id'] = req.user._id + "";
+		fieldsMap = fieldConfig['SELLER_FIELDS'];
+	}
 
-    if (queryParam.buyer == 'y') {
-        filter.user = req.user._id + "";
-        fieldsMap = fieldConfig['BUYER_FIELDS'];
-    }
+	if (queryParam.buyer == 'y') {
+		filter.user = req.user._id + "";
+		fieldsMap = fieldConfig['BUYER_FIELDS'];
+	}
 
-    if (queryParam.fa == 'y') {
-        filter['product.seller._id'] = { $in: req.sellers || [] };
-        fieldsMap = fieldConfig['FA_FIELDS'];
-    };
+	if (queryParam.fa == 'y') {
+		filter['product.seller._id'] = { $in: req.sellers || [] };
+		fieldsMap = fieldConfig['FA_FIELDS'];
+	};
 
-    if (user.role == 'admin')
-        fieldsMap = fieldConfig['ADMIN_FIELDS'];
-    if (user.role == 'admin' && queryParam.payment === 'y') {
-        fieldsMap = fieldConfig['EXPORT_PAYMENT'];
-    }
-    if (req.productIds)
-        filter['product.proData'] = { $in: req.productIds || [] };
+	if (user.role == 'admin')
+		fieldsMap = fieldConfig['ADMIN_FIELDS'];
+	if (user.role == 'admin' && queryParam.payment === 'y') {
+		fieldsMap = fieldConfig['EXPORT_PAYMENT'];
+	}
+	if (req.productIds)
+		filter['product.proData'] = { $in: req.productIds || [] };
 
-    if (queryParam.offerStatus)
-        filter.offerStatus = queryParam.offerStatus;
+	if (queryParam.offerStatus)
+		filter.offerStatus = queryParam.offerStatus;
 
-    if (queryParam.dealStatuses)
-        filter.dealStatus = { $in: queryParam.dealStatuses.split(',') };
+	if (queryParam.dealStatuses)
+		filter.dealStatus = { $in: queryParam.dealStatuses.split(',') };
 
-    if (queryParam.bidStatus)
-        filter.bidStatus = queryParam.bidStatus;
-    if (req.sellers && req.sellers.length)
-        filter['product.seller._id'] = { $in: req.sellers || [] };
+	if (queryParam.bidStatus)
+		filter.bidStatus = queryParam.bidStatus;
+	if (req.sellers && req.sellers.length)
+		filter['product.seller._id'] = { $in: req.sellers || [] };
+    if (req.sellers && req.sellers.length && req.defaultPartner)
+        filter['product.seller._id'] = { $nin: req.sellers || [] };
 
-    var query = AssetSaleBid.find(filter).populate('user product.proData');
-    query.lean().exec(function (err, resList) {
-        if (err) return handleError(res, err);
-        if (queryParam.payment === 'y' && resList) {
-            var jsonArr = [];
-            resList.forEach(function (item, index) {
-                if (item.emdPayment && item.emdPayment.paymentsDetail) {
-                    item.emdPayment.paymentsDetail.forEach(function (innerItem) {
-                        _formatPayments(item, innerItem, jsonArr);
-                    });
-                }
-                if (item.fullPayment && item.fullPayment.paymentsDetail) {
-                    item.fullPayment.paymentsDetail.forEach(function (innerItem) {
-                        _formatPayments(item, innerItem, jsonArr);
-                    });
-                }
-            });
-            resList = [];
-            if (jsonArr.length > 0) {
-                resList = jsonArr.slice();
-            }
-        }
-        renderExcel(res, resList);
-    });
+	var query = AssetSaleBid.find(filter).populate('user product.proData');
+	query.lean().exec(function (err, resList) {
+		if (err) return handleError(res, err);
+		if (queryParam.payment === 'y' && resList) {
+			var jsonArr = [];
+			resList.forEach(function (item, index) {
+				if (item.emdPayment && item.emdPayment.paymentsDetail) {
+					item.emdPayment.paymentsDetail.forEach(function (innerItem) {
+						_formatPayments(item, innerItem, jsonArr);
+					});
+				}
+				if (item.fullPayment && item.fullPayment.paymentsDetail) {
+					item.fullPayment.paymentsDetail.forEach(function (innerItem) {
+						_formatPayments(item, innerItem, jsonArr);
+					});
+				}
+			});
+			resList = [];
+			if (jsonArr.length > 0) {
+				resList = jsonArr.slice();
+			}
+		}
+		renderExcel(res, resList);
+	});
 
-    function renderExcel(res, resList) {
-        var dataArr = [];
-        var headers = Object.keys(fieldsMap);
+	function renderExcel(res, resList) {
+		var dataArr = [];
+		var headers = Object.keys(fieldsMap);
 
 		/* removing items from csv in case of Pending for Approval
 			* Madhusudan Mishra

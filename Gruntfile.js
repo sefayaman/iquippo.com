@@ -231,7 +231,12 @@ module.exports = function (grunt) {
       target: {
         src: '<%= yeoman.client %>/index.html',
         ignorePath: '<%= yeoman.client %>/',
-        exclude: [/bootstrap-sass-official/, '/json3/', '/es5-shim/', /font-awesome.css/ ,/markerclusterer.js/,/markerwithlabel.js/,/infobox.js/,/keydragzoom.js/,/richmarker.js/]
+        exclude: [/bootstrap-sass-official/, '/json3/', '/es5-shim/', /font-awesome.css/ ,/markerclusterer.js/,/markerwithlabel.js/,/infobox.js/,/keydragzoom.js/,/richmarker.js/],
+        overrides: {
+                    'socket.io-client': {
+                        main: 'client/dist/socket.io.js'
+                    }
+                }
       }
     },
 

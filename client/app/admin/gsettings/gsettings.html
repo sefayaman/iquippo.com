@@ -440,17 +440,17 @@
                                             <div class="row">
                                                 <div class="col-xs-4 padd-right" ng-class="{'has-error': auctionDateForm.auctionType.$invalid && submitted}">
                                                     <div class="radio radio-info">
-                                                        <input type="radio" id="inlineRadio1" name="auctionType" ng-disabled="gsettingVm.auctionData.auctionType==='PT'" ng-model="gsettingVm.auctionData.auctionType" value="L" ng-required="!gsettingVm.auctionData.auctionType"> <label for="inlineRadio1">Live Auction </label>
+                                                        <input type="radio" id="inlineRadio1" name="auctionType" ng-disabled="(gsettingVm.auctionData.auctionType==='PT' && gsettingVm.auctionEdit)" ng-model="gsettingVm.auctionData.auctionType" value="L" ng-required="!gsettingVm.auctionData.auctionType"> <label for="inlineRadio1">Live Auction </label>
                                                     </div>
                                                 </div>
                                                 <div class="col-xs-4" ng-class="{'has-error': auctionDateForm.auctionType.$invalid && submitted}">
                                                     <div class="radio radio-info">
-                                                        <input type="radio" id="inlineRadio2" name="auctionType" ng-disabled="gsettingVm.auctionData.auctionType==='PT'" ng-model="gsettingVm.auctionData.auctionType" value="A" ng-required="!gsettingVm.auctionData.auctionType"> <label for="inlineRadio2">On-Line Auction </label>
+                                                        <input type="radio" id="inlineRadio2" name="auctionType" ng-disabled="(gsettingVm.auctionData.auctionType==='PT' && gsettingVm.auctionEdit)" ng-model="gsettingVm.auctionData.auctionType" value="A" ng-required="!gsettingVm.auctionData.auctionType"> <label for="inlineRadio2">On-Line Auction </label>
                                                     </div>
                                                 </div>
                                                 <div class="col-xs-4" ng-class="{'has-error': auctionDateForm.auctionType.$invalid && submitted}">
                                                     <div class="radio radio-info">
-                                                        <input type="radio" id="inlineRadio3" name="auctionType" ng-disabled="gsettingVm.auctionData.auctionType==='L' || gsettingVm.auctionData.auctionType==='A'" ng-model="gsettingVm.auctionData.auctionType" value="PT" ng-required="!gsettingVm.auctionData.auctionType"> <label for="inlineRadio3">Private Treaty </label>
+                                                        <input type="radio" id="inlineRadio3" name="auctionType" ng-disabled="((gsettingVm.auctionData.auctionType==='L' || gsettingVm.auctionData.auctionType==='A') && gsettingVm.auctionEdit)" ng-model="gsettingVm.auctionData.auctionType" value="PT" ng-required="!gsettingVm.auctionData.auctionType"> <label for="inlineRadio3">Private Treaty </label>
                                                     </div>
                                                 </div>
                                             </div>

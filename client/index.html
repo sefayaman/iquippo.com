@@ -82,6 +82,14 @@
     })(window,document,'script','https://u.heatmap.it/log.js');
     </script>
 <!--Code added by jagdish for Pixel tracking user behavior on 3-Aug 2017 End-->
+
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-T95GQS7');</script>
+    <!-- End Google Tag Manager -->
   </head>
   <body>
       <!-- Facebook Pixel Code -->
@@ -115,23 +123,28 @@
         Purpose: Add GTM Tag (IQUIPPO Live Server)
         -->
         <!-- Google Tag Manager -->
-        <noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-KT5NKB"
+        <!-- <noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-KT5NKB"
         height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
         new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
         j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         '//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-        })(window,document,'script','dataLayer','GTM-KT5NKB');</script>
+        })(window,document,'script','dataLayer','GTM-KT5NKB');</script> -->
 
         <!-- NJ: get login user id -->
-        <script>
+<!--         <script>
           if (window.sessionStorage.currentUser != undefined) {
             dataLayer.push({'userID': window.sessionStorage.currentUser});
           }
-        </script>
+        </script> -->
         <!-- End Google Tag Manager -->
 
-<!-- Hotjar Tracking Code for http://iq.com -->
+        <!-- Google Tag Manager (noscript) -->
+        <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T95GQS7"
+        height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+        <!-- End Google Tag Manager (noscript) -->
+
+    <!-- Hotjar Tracking Code for http://iq.com -->
 
 
     <footer data-ng-if="!isAdminLayout">
@@ -176,9 +189,9 @@
       <script src="bower_components/angular-timer/dist/angular-timer.js"></script>
       <script src="bower_components/js-xlsx/dist/xlsx.full.min.js"></script>
       <script src="bower_components/angular-socket-io/socket.js"></script>
+      <script src="bower_components/socket.io-client/dist/socket.io.js"></script>
       <!-- endbower -->
     <!-- endbuild -->
-        <script src="/socket.io/socket.io.js"></script>
 
         <!-- build:js(.tmp) app/app.js -->
 
@@ -232,7 +245,6 @@
           <script src="app/admin/gsettings/newEquipmentBanners.service.js"></script>
           <script src="app/admin/gsettings/newequipment.controller.js"></script>
           <script src="app/admin/gsettings/newequipment.service.js"></script>
-          <script src="app/admin/gsettings/offer.controller-vin.js"></script>
           <script src="app/admin/gsettings/offer.controller.js"></script>
           <script src="app/admin/gsettings/offer.service.js"></script>
           <script src="app/admin/gsettings/saleprocessmaster.controller.js"></script>
