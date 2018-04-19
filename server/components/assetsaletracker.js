@@ -45,7 +45,7 @@ function trackCoolingPeriod(callback) {
       if (!entMasterData || !entMasterData.emdPeriod) {
         return cb("emd period not found");
       }
-      if (entMasterData.coolingPeriod > 0) {
+      if (entMasterData.coolingPeriod && entMasterData.coolingPeriod > 0) {
         var filterObj = {};
         filterObj.dealStatus = dealStatuses[0];
         filterObj['product.proData'] = prd._id + "";
