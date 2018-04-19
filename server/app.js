@@ -59,7 +59,7 @@ app.get('/_status', function (req, res) {
 
 require('./config/express')(app);
 require('./routes')(app);
-require('./phantomMiddleWare');    // add phantom js middleware to generate site text version
+require('./phantomMiddleWare');    // add phantom js middleware to generate site text version @MADHUSUDAN
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, req.uplPath);
