@@ -36,7 +36,7 @@ var BulkProductUpload = require('./components/bulkProductUpload.js');
 var utility = require('./components/utility.js');
 var path = require('path');
 var userExportsService = require('./components/userExports.js');
-require('./components/sitemap').init();
+// require('./components/sitemap').init();
 
 // Connect to database
 mongoose.connect(config.mongo.uri, config.mongo.options);
