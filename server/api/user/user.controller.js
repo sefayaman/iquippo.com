@@ -197,14 +197,14 @@ exports.parseImportExcel = function(req, res, next) {
     return next(new APIError(412, 'Missing mandatory parameter: ' + ret));
   if(!body.excelData.length)
     return next(new APIError(412, 'No data found to upload'));
-   req.excelData = body.excelData.filter(function(x) {
+   req.excelData = body.excelData.filter(function(x, index) {
     Object.keys(x).forEach(function(key) {
       if (userFieldsMap[key]) {
         x[userFieldsMap[key]] = trim(x[key] || "");
       }
       delete x[key];
-    })
-    x.rowCount = x.__rowNum__;
+    });
+    x.rowCount = index + 2;
     return x;
   });
 
