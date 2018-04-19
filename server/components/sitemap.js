@@ -91,9 +91,11 @@ function _createProductsSitemap(cb) {
             if (err) { return cb(err); }
             for (var i in products) {
                 var xml = "";
-                xml += '<url>';
-                xml += '<loc>' + config.serverPath + '/' + products[i].productCondition + '-equipment/' + _transformUrl(products[i].category.name) + '/' + _transformUrl((products[i].brand.name).replace('&', "&amp;")) + '/' + products[i].assetId + '/' + '</loc>';
-                xml += '</url>';
+                if (products[i].category && products[i].brand) {
+                    xml += '<url>';
+                    xml += '<loc>' + config.serverPath + '/' + products[i].productCondition + '-equipment/' + _transformUrl(products[i].category.name) + '/' + _transformUrl((products[i].brand.name).replace('&', "&amp;")) + '/' + products[i].assetId + '/' + '</loc>';
+                    xml += '</url>';
+                }
 
                 if (products[i].group) {
                     xml += '<url>';
