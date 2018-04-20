@@ -71,6 +71,7 @@ function OfflinePaymentCtrl($scope,$rootScope,Modal,$stateParams,$state,$uibModa
     vm.dataModel.payments[vm.dataModel.payments.length] = stsObj;
     if(!$scope.iValuationFlag) {
       vm.dataModel.reqSubmitStatus = ReqSubmitStatuses[1];
+      vm.dataModel.trnRefNo = vm.dataModel.refNo;
       vm.dataModel.userDataSendToAuction = true;
     }
     $rootScope.loading = true;

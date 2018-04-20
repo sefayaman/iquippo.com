@@ -590,6 +590,10 @@ exports.submitRequest = function(req,res){
       obj[key] = _.get(valReqs,fieldMap[key],"");
       if(fieldMap[key] === 'customerName' && valReqs.user)
         obj[key] = valReqs.user.fname + " " + valReqs.user.lname;
+      if(fieldMap[key] === 'contactPerson' && obj[key]){
+        var buffer = new Buffer(obj[key] || "");
+        obj[key] = buffer.toString("base64"); 
+      }
       if(fieldMap[key] === 'customerInvoiceDate' && valReqs.invoiceData && valReqs.invoiceData.invoiceDate)
         obj[key] = valReqs.invoiceData.invoiceDate;
     })
