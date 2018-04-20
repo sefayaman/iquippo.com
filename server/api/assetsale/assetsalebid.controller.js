@@ -421,49 +421,65 @@ exports.validateUpdate = function (req, res, next) {
                 if (!req.bid.autoApprove)
                     selBid = nextApprovableBid(req.bid, req.otherBids);
                 getSaleProcessMaster(function (entData) {
-                    if (selBid) {
-                        selBid.emdStartDate = new Date();
-                        if (entData.emdPeriod)
-                            selBid.emdEndDate = new Date().addDays(entData.emdPeriod || 0);
-                        selBid.product.prevTradeType = req.bid.product.prevTradeType;
-                        AssetSaleUtil.setStatus(selBid, bidStatuses[7], 'bidStatus', 'bidStatuses');
-                        AssetSaleUtil.setStatus(selBid, dealStatuses[6], 'dealStatus', 'dealStatuses');
-                        req.bids.push(selBid);
-                        if (req.bid.lastAccepted) {
-                            var largerBids = req.otherBids.filter(function (bid) {
-                                return bid.bidAmount >= req.bid.bidAmount;
-                            });
-                            if (largerBids && largerBids.length) {
-                                largerBids.sort(function (a, b) {
-                                    return a.bidAmount - b.bidAmount;
+
+                    async.waterfall([
+                        function(callback) {
+                            if (selBid) {
+                                selBid.emdStartDate = new Date();
+                                if (entData.emdPeriod) {
+                                    selBid.emdEndDate = new Date().addDays(entData.emdPeriod || 0);
+                                }
+        
+                                AssetSaleUtil.checkHolidayExistAndAdd(selBid.emdStartDate, selBid.emdEndDate, entData.emdPeriod, function (err, revisedDate) {
+                                    selBid.emdEndDate = revisedDate;
+                                    selBid.product.prevTradeType = req.bid.product.prevTradeType;
+                                    AssetSaleUtil.setStatus(selBid, bidStatuses[7], 'bidStatus', 'bidStatuses');
+                                    AssetSaleUtil.setStatus(selBid, dealStatuses[6], 'dealStatus', 'dealStatuses');
+                                    req.bids.push(selBid);
+                                    if (req.bid.lastAccepted) {
+                                        var largerBids = req.otherBids.filter(function (bid) {
+                                            return bid.bidAmount >= req.bid.bidAmount;
+                                        });
+                                        if (largerBids && largerBids.length) {
+                                            largerBids.sort(function (a, b) {
+                                                return a.bidAmount - b.bidAmount;
+                                            });
+                                            largerBids[0].lastAccepted = true;
+                                            req.bids.push(largerBids[0]);
+                                        }
+                                    }
+                                    callback(null);
                                 });
-                                largerBids[0].lastAccepted = true;
-                                req.bids.push(largerBids[0]);
+                                //AssetSaleUtil.sendNotification([{action: "APPROVE", ticketId: selBid.ticketId}]);
+                            } else {
+                                req.updateProduct = true;
+                                req.otherBids.forEach(function (item) {
+                                    AssetSaleUtil.setStatus(item, dealStatuses[0], 'dealStatus', 'dealStatuses');
+                                    AssetSaleUtil.setStatus(item, bidStatuses[0], 'bidStatus', 'bidStatuses');
+                                    req.bids.push(item);
+                                });
+                                var bidCount = req.otherBids.length || 0;
+                                var highestBid = 0;
+                                if (req.otherBids.length)
+                                    highestBid = getMaxBid(req.otherBids).bidAmount || 0;
+                                var bidRec = true;
+                                if (bidCount === 0)
+                                    bidRec = false;
+                                req.product.tradeType = req.bid.product.prevTradeType;
+                                req.product.bidReceived = bidRec;
+                                req.product.bidRequestApproved = false;
+                                req.product.bidCount = bidCount;
+                                req.product.highestBid = highestBid;
+                                callback(null);
                             }
                         }
-                        //AssetSaleUtil.sendNotification([{action: "APPROVE", ticketId: selBid.ticketId}]);
-                    } else {
-                        req.updateProduct = true;
-                        req.otherBids.forEach(function (item) {
-                            AssetSaleUtil.setStatus(item, dealStatuses[0], 'dealStatus', 'dealStatuses');
-                            AssetSaleUtil.setStatus(item, bidStatuses[0], 'bidStatus', 'bidStatuses');
-                            req.bids.push(item);
-                        });
-                        var bidCount = req.otherBids.length || 0;
-                        var highestBid = 0;
-                        if (req.otherBids.length)
-                            highestBid = getMaxBid(req.otherBids).bidAmount || 0;
-                        var bidRec = true;
-                        if (bidCount === 0)
-                            bidRec = false;
-                        req.product.tradeType = req.bid.product.prevTradeType;
-                        req.product.bidReceived = bidRec;
-                        req.product.bidRequestApproved = false;
-                        req.product.bidCount = bidCount;
-                        req.product.highestBid = highestBid;
-                    }
-                    req.bids[0].status = false;
-                    next();
+                    ], function(err, result) {
+                        if(err) {
+                            console.log(err);
+                        }
+                        req.bids[0].status = false;
+                        next();
+                    });
                 });
             } else {
                 if (req.bid.dealStatus === dealStatuses[0] && req.bid.bidStatus === bidStatuses[7] && req.bid.lastAccepted)
