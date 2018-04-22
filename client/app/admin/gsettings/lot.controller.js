@@ -64,8 +64,12 @@ function LotCtrl($scope, $rootScope,$window, $state,Modal,Auth,PagerSvc,$filter,
     vm.dataModel.startDate = moment(rowData.startDate).format('MM/DD/YYYY hh:mm A');
     vm.dataModel.endDate =  moment(rowData.endDate).format('MM/DD/YYYY hh:mm A');
     // Adding extra keys to pass Auction start and end date.
-    vm.dataModel.auctionStartDate = vm.dataModel.startDate;
-    vm.dataModel.auctionEndDate = vm.dataModel.endDate;
+    var selectedAuction = vm.auctionListing.map(function(data) {
+      if(rowData.auction_id == data._id)
+        return data;
+    })
+    vm.dataModel.auctionStartDate = selectedAuction[0].startDate;
+    vm.dataModel.auctionEndDate = selectedAuction[0].endDate;
     if (rowData.bidIncrement && rowData.bidIncrement[0] && rowData.bidIncrement.length > 0) {
       for (var i = 0; i < rowData.bidIncrement.length; i++) {
         if (rowData.bidIncrement[i] && rowData.bidIncrement[i].bidFrom)
