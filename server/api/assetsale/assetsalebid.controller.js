@@ -277,6 +277,8 @@ exports.validateUpdate = function (req, res, next) {
                                 // return next();
                                 cb(null);
                             }
+                        } else {
+                            cb(null);
                         }
                     }
                 ], function (err, result) {
