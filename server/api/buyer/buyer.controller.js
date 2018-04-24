@@ -192,7 +192,7 @@ function _prepareResponse(res, users) {
       "Email Address": user.email,
       "Method of Contact": user.contact,
       "Amount to be Financed": user.financeInfo,
-      "Date of Request": user.createdAt
+      "Date of Request":  Utility.toDanishDate(user.createdAt)
     });
   });
 

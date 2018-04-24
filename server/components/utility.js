@@ -42,6 +42,7 @@ var client = s3.createClient(options);
 var request = require('request');
 
 exports.toIST = toIST;
+exports.toDanishDate = toDanishDate;
 exports.toCsvValue = toCsvValue;
 exports.convertQVAPLStatus = convertQVAPLStatus;
 exports.paginatedResult = paginatedResult;
@@ -594,6 +595,14 @@ function toIST(value) {
     return '';
 
   return moment(value).utcOffset('+0530').format('MM/DD/YYYY hh:mm a');
+}
+
+// @added by :- Madhusudan Mishra for (YYYY-DD-MM) date format
+function toDanishDate(value) {
+  if (!value)
+    return '';
+
+  return moment(value).utcOffset('+0530').format('YYYY-DD-MM hh:mm a');
 }
 
 function paginatedResult(req, res, modelRef, filter, result, callback) {

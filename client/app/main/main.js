@@ -50,9 +50,9 @@ angular.module('sreizaoApp')
         controller: 'ContactUsCtrl',
         layout:'client',
         onEnter:function($rootScope){
-          $rootScope.choosenTitle=pagesTitles.aboutus.title;
-          $rootScope.metaDescription=pagesTitles.aboutus.meta;
-          $rootScope.metaKeywords = pagesTitles.aboutus.keywords;
+          $rootScope.choosenTitle=pagesTitles.contactus.title;
+          $rootScope.metaDescription=pagesTitles.contactus.meta;
+          $rootScope.metaKeywords = pagesTitles.contactus.keywords;
         }
       })
       .state('product', {
@@ -255,9 +255,9 @@ angular.module('sreizaoApp')
         controller:"ManpowerCtrl as manpowerVm",
         layout:'client',
         onEnter:function($rootScope){
-          $rootScope.choosenTitle=pagesTitles.aboutus.title;
-          $rootScope.metaDescription=pagesTitles.aboutus.meta;
-          $rootScope.metaKeywords = pagesTitles.aboutus.keywords;
+          $rootScope.choosenTitle=pagesTitles.manpower.title;
+          $rootScope.metaDescription=pagesTitles.manpower.meta;
+          $rootScope.metaKeywords = pagesTitles.manpower.keywords;
         }
       })
       .state('manpowerlisting', {
@@ -280,9 +280,9 @@ angular.module('sreizaoApp')
         controller:"ShippingCtrl",
     	  layout:'client',
         onEnter:function($rootScope){
-          $rootScope.choosenTitle=pagesTitles.index.title;
-          $rootScope.metaDescription=pagesTitles.index.meta;
-          $rootScope.metaKeywords = pagesTitles.index.keywords;
+          $rootScope.choosenTitle=pagesTitles.shipping.title;
+          $rootScope.metaDescription=pagesTitles.shipping.meta;
+          $rootScope.metaKeywords = pagesTitles.shipping.keywords;
         }
       })
       .state('valuation', {
@@ -340,9 +340,9 @@ angular.module('sreizaoApp')
         controller:"StaticCtrl",
         layout:'client',
         onEnter:function($rootScope){
-          $rootScope.choosenTitle=pagesTitles.aboutus.title;
-          $rootScope.metaDescription=pagesTitles.aboutus.meta;
-          $rootScope.metaKeywords = pagesTitles.aboutus.keywords;
+          $rootScope.choosenTitle=pagesTitles.privacy.title;
+          $rootScope.metaDescription=pagesTitles.privacy.meta;
+          $rootScope.metaKeywords = pagesTitles.privacy.keywords;
         }
       })
       .state('termscondition', {
