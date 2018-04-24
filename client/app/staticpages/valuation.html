@@ -70,13 +70,33 @@
                         </div>
                         <div class="row">
                             <div class="col-xs-12 col-sm-3">
+                                <div class="form-group floating-label-wrapper">
+                                    <label>Name of Customer*</label>
+                                    <input type="text" name="" class="form-control" placeholder="Name of Customer" required>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-3">
+                                <div class="form-group floating-label-wrapper">
+                                    <label>Invoice Date</label>
+                                    <div class="input-group">
+                                      <input  class="form-control" name="" id="customerInvoiceDate" ng-model="dt" placeholder="Invoice Date" datetime-picker readonly date-format="MM/dd/yyyy" date-only>
+                                      <label for="customerInvoiceDate" class="input-group-addon"><i class="fa fa-calendar-o fa-2x"></i></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-3">
+                                <div class="form-group floating-label-wrapper">
+                                    <label>Invoice Value</label>
+                                    <input type="number" name="" class="form-control" placeholder="Invoice Value" required>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-3">
                                 <div class="floating-label-wrapper form-group" ng-class="{'has-error': form.proCategory.$invalid && submitted}">
                                     <label>Category*</label>
                                     <select class="form-control" name="proCategory" ng-model="valuationReq.product.category" ng-change="onCategoryChange(valuationReq.product.category)" required>
                                         <option value="">Select Category</option>
                                         <option value="{{cat.name}}" ng-repeat="cat in allCategory| orderBy:'name'">{{cat.name}}</option>
-                                    </select>
-
+                                    </select>                                
                                 </div>
                             </div>
                             <div class="col-xs-12 col-sm-3">
@@ -85,8 +105,15 @@
                                     <select class="form-control" name="proBrand" ng-model="valuationReq.product.brand" ng-change="onBrandChange(valuationReq.product.brand)" required>
                                         <option value="">Select Brand</option>
                                         <option value="{{br.name}}" ng-repeat="br in brandList| orderBy:'name'">{{br.name}}</option>
+                                        <option>Other</option>
                                     </select>
 
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-3">
+                                <div class="floating-label-wrapper form-group">
+                                    <label>Other*</label>
+                                    <input type="text" class="form-control" name="" value="" placeholder="Other">                               
                                 </div>
                             </div>
                             <div class="col-xs-12 col-sm-3">
@@ -95,8 +122,15 @@
                                     <select class="form-control" name="proModel" ng-model="valuationReq.product.model" required>
                                         <option value="">Select Model</option>
                                         <option value="{{md.name}}" ng-repeat="md in modelList| orderBy:'name'">{{md.name}}</option>
+                                        <option>Other</option>
                                     </select>
 
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-3">
+                                <div class="floating-label-wrapper form-group">
+                                    <label>Other*</label>
+                                    <input type="text" class="form-control" name="" value="" placeholder="Other">                               
                                 </div>
                             </div>
                             <div class="col-xs-12 col-sm-3">
@@ -107,8 +141,8 @@
                             </div>
                             <div class="col-xs-12 col-sm-3">
                                 <div class="form-group floating-label-wrapper">
-                                    <label>Asset Description</label>
-                                    <input type="text" name="prddescription" class="form-control" placeholder="Enter Asset Description" ng-model="valuationReq.product.description">
+                                    <label>Asset Name*</label>
+                                    <input type="text" name="prddescription" class="form-control" placeholder="Enter Asset Name" ng-model="valuationReq.product.description">
                                 </div>
                             </div>
                             <div class="col-xs-12 col-sm-3">
@@ -184,8 +218,6 @@
                                     </p>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
                             <div class="col-xs-12 col-sm-3">
                                 <div class="form-group floating-label-wrapper" ng-class="{'has-error': form.valagency.$invalid && submitted }">
                                     <label>Partner</label>
@@ -204,13 +236,31 @@
                                     </select>
                                 </div>
                             </div>
-
-
                             <div class="col-xs-6 col-sm-3">
                                 <div class="floating-label-wrapper form-group" ng-class="{'has-error': form.otherName.$invalid && submitted }">
                                     <label>Other*</label>
                                     <input class="form-control" type="text" name="otherName" ng-model="valuationReq.otherName" ng-disabled ="valuationReq.purpose != 'Other'" placeholder="Other" ng-required= "valuationReq.purpose == 'Other'">
                                 </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-3">
+                                <div class="floating-label-wrapper">
+                                    <label>Invoice Upload</label>
+                                    <span class="btn btn-default fileinput-button">
+                                     <input type="file" name="">
+                                      <span><i class="fa fa-upload"></i> Invoice Upload</span>
+                                    </span>
+                                </div>
+                                <a href="javascript:void(0)"><span></span></a>
+                            </div>
+                            <div class="col-xs-12 col-sm-3">
+                                <div class="floating-label-wrapper">
+                                    <label>RC Upload</label>
+                                    <span class="btn btn-default fileinput-button">
+                                     <input type="file" name="">
+                                      <span><i class="fa fa-upload"></i> RC Upload</span>
+                                    </span>
+                                </div>
+                                <a href="javascript:void(0)"><span></span></a>
                             </div>
                         </div>
                         <div class="row">

@@ -554,6 +554,27 @@
           <div ng-controller="ValuationRequestCtrl as valuationVm">
             <form  novalidate class="valReqForm" name="valReqForm">
               <div class="row">
+                <div class="col-sm-3">
+                    <div class="form-group floating-label-wrapper">
+                        <label>Name of Customer*</label>
+                        <input type="text" name="" class="form-control" placeholder="Name of Customer" required>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group floating-label-wrapper">
+                        <label>Invoice Date</label>
+                        <div class="input-group">
+                          <input  class="form-control" name="" id="customerInvoiceDate" ng-model="dt" placeholder="Invoice Date" datetime-picker readonly date-format="MM/dd/yyyy" date-only>
+                          <label for="customerInvoiceDate" class="input-group-addon"><i class="fa fa-calendar-o fa-2x"></i></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group floating-label-wrapper">
+                        <label>Invoice Value</label>
+                        <input type="number" name="" class="form-control" placeholder="Invoice Value" required>
+                    </div>
+                </div>
                 <div class="col-sm-3 form-group">
                   <div class="floating-label-wrapper">
                     <label>Category</label>
@@ -654,6 +675,26 @@
                     <input class="form-control" type="text" name="otherName" ng-model="valuationVm.valuationReq.otherName" ng-disabled ="valuationVm.valuationReq.purpose != 'Other'" placeholder="*Other" ng-required= "valuationVm.valuationReq.purpose == 'Other'">
                   </div>
                 </div>
+                <div class="col-sm-3">
+                    <div class="floating-label-wrapper">
+                        <label>Invoice Upload</label>
+                        <span class="btn btn-default fileinput-button">
+                         <input type="file" name="">
+                          <span><i class="fa fa-upload"></i> Invoice Upload</span>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0)"><span></span></a>
+                </div>
+                <div class="col-sm-3">
+                    <div class="floating-label-wrapper">
+                        <label>RC Upload</label>
+                        <span class="btn btn-default fileinput-button">
+                         <input type="file" name="">
+                          <span><i class="fa fa-upload"></i> RC Upload</span>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0)"><span></span></a>
+                </div>
                 <div class="col-xs-12 col-sm-6 form-group">
                   <div class="floating-label-wrapper">
                     <label>Schedule a call</label>
@@ -719,6 +760,27 @@
           <div ng-controller="ValuationRequestCtrl as valuationVm">
             <form  novalidate class="reqForCertify" name="reqForCertify">
               <div class="row text-left">
+                <div class="col-sm-3">
+                    <div class="form-group floating-label-wrapper">
+                        <label>Name of Customer*</label>
+                        <input type="text" name="" class="form-control" placeholder="Name of Customer" required>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group floating-label-wrapper">
+                        <label>Invoice Date</label>
+                        <div class="input-group">
+                          <input  class="form-control" name="" id="customerInvoiceDate" ng-model="dt" placeholder="Invoice Date" datetime-picker readonly date-format="MM/dd/yyyy" date-only>
+                          <label for="customerInvoiceDate" class="input-group-addon"><i class="fa fa-calendar-o fa-2x"></i></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group floating-label-wrapper">
+                        <label>Invoice Value</label>
+                        <input type="number" name="" class="form-control" placeholder="Invoice Value" required>
+                    </div>
+                </div>
                 <div class="col-sm-3 form-group">
                   <div class="floating-label-wrapper">
                     <label>Category</label>
@@ -812,7 +874,26 @@
                     <input class="form-control" type="text" name="otherName" ng-model="valuationVm.valuationReq.otherName" ng-disabled ="valuationVm.valuationReq.purpose != 'Other'" placeholder="*Other" ng-required= "valuationVm.valuationReq.purpose == 'Other'">
                   </div>
                 </div>
-               
+                <div class="col-sm-3">
+                    <div class="floating-label-wrapper">
+                        <label>Invoice Upload</label>
+                        <span class="btn btn-default fileinput-button">
+                         <input type="file" name="">
+                          <span><i class="fa fa-upload"></i> Invoice Upload</span>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0)"><span></span></a>
+                </div>
+                <div class="col-sm-3">
+                    <div class="floating-label-wrapper">
+                        <label>RC Upload</label>
+                        <span class="btn btn-default fileinput-button">
+                         <input type="file" name="">
+                          <span><i class="fa fa-upload"></i> RC Upload</span>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0)"><span></span></a>
+                </div>
                 <div class="col-xs-12 col-sm-6 form-group">
                   <div class="floating-label-wrapper">
                     <label>Schedule a call</label>
