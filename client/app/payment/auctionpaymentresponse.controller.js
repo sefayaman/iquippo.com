@@ -103,7 +103,7 @@ function AuctionPaymentResponseCtrl($scope,$rootScope,Modal,$stateParams,$state,
       paymentObj.paymentStatus = "success";
     else
       paymentObj.paymentStatus = transactionStatuses[2].code;
-
+    vm.payTransaction.trnRefNo = payTran.ccAvenueRes.bank_ref_no;
     vm.payTransaction.payments[vm.payTransaction.payments.length] = paymentObj;
   }
 

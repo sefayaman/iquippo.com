@@ -63,9 +63,6 @@ function LotCtrl($scope, $rootScope,$window, $state,Modal,Auth,PagerSvc,$filter,
     vm.dataModel.reservePrice = rowData.reservePrice;
     vm.dataModel.startDate = moment(rowData.startDate).format('MM/DD/YYYY hh:mm A');
     vm.dataModel.endDate =  moment(rowData.endDate).format('MM/DD/YYYY hh:mm A');
-    // Adding extra keys to pass Auction start and end date.
-    vm.dataModel.auctionStartDate = vm.dataModel.startDate;
-    vm.dataModel.auctionEndDate = vm.dataModel.endDate;
     if (rowData.bidIncrement && rowData.bidIncrement[0] && rowData.bidIncrement.length > 0) {
       for (var i = 0; i < rowData.bidIncrement.length; i++) {
         if (rowData.bidIncrement[i] && rowData.bidIncrement[i].bidFrom)
@@ -122,8 +119,8 @@ function LotCtrl($scope, $rootScope,$window, $state,Modal,Auth,PagerSvc,$filter,
             return;
         }
         // Lot end Date shouldn't be less than Auction end Date
-        if(vm.dateCheckValidation(moment(vm.auctionListing[i].endDate).format('MM/DD/YYYY hh:mm A'), vm.dataModel.endDate)) {
-            Modal.alert("Lot End Date/Time should be greater than or equal to Auction End Date Time", true);
+        if(vm.dateCheckValidation(vm.dataModel.endDate, moment(vm.auctionListing[i].endDate).format('MM/DD/YYYY hh:mm A'))) {
+            Modal.alert("Lot End Date/Time should be less than or equal to Auction End Date Time", true);
             return;
         }
         break;
@@ -176,6 +173,15 @@ function LotCtrl($scope, $rootScope,$window, $state,Modal,Auth,PagerSvc,$filter,
         Modal.alert("Lot Start Date/Time should be less than Lot End Date Time", true);
         return;
     }
+    // Adding extra keys to pass Auction start and end date.
+    vm.auctionListing.map(function(data) {
+      if(vm.dataModel.auction_id == data._id) {
+        vm.dataModel.auctionId = data.auctionId;
+        vm.dataModel.auctionStartDate = data.startDate;
+        vm.dataModel.auctionEndDate = data.endDate;
+        return;
+      }
+    })
     // Lot start Date shouldn't be less than Auction Start Date
     if(vm.dateCheckValidation(vm.dataModel.auctionStartDate, vm.dataModel.startDate)) {
         Modal.alert("Lot Start Date/Time should be greater than or equal to Auction Start Date Time", true);
@@ -187,8 +193,8 @@ function LotCtrl($scope, $rootScope,$window, $state,Modal,Auth,PagerSvc,$filter,
         return;
     }
     // Lot end Date shouldn't be less than Auction end Date
-    if(vm.dateCheckValidation(vm.dataModel.auctionEndDate, vm.dataModel.endDate)) {
-        Modal.alert("Lot End Date/Time should be greater than or equal to Auction End Date Time", true);
+    if(vm.dateCheckValidation(vm.dataModel.endDate, vm.dataModel.auctionEndDate)) {
+        Modal.alert("Lot End Date/Time should be less than or equal to Auction End Date Time", true);
         return;
     }
     /* End */

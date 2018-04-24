@@ -13,9 +13,9 @@
 		              <option ng-repeat="mode in modeOfPayment" value="{{mode.name}}">{{mode.name}}</option>
 		            </select>
 				</div>
-				<div class="col-sm-6 form-group text-left">
-					<label>Payment Reference No.</label>
-					<input type="text" class="form-control" name="" ng-model="offlinePaymentVm.dataModel.refNo" placeholder="Payment Reference No.">
+				<div class="col-sm-6 form-group text-left" ng-class="{'has-error': offlineform.refNo.$invalid && submitted}">
+					<label>*Payment Reference No.</label>
+					<input type="text" class="form-control" name="refNo" ng-model="offlinePaymentVm.dataModel.refNo" placeholder="Payment Reference No." required>
 				</div>
 			</div>
 			<div class="row">

@@ -145,8 +145,8 @@ function postRequest(req, res) {
     options.dataToSend.user = {};
     options.dataToSend.user.user_id = paymentResult[0].user._id;
     options.dataToSend.user.iq_id = paymentResult[0].user.customerId;
-    if (paymentResult[0].user.batonNo)
-      options.dataToSend.user.iq_id = paymentResult[0].user.batonNo;
+    // if (paymentResult[0].user.batonNo)
+    //   options.dataToSend.user.iq_id = paymentResult[0].user.batonNo;
     options.dataToSend.user.fname = paymentResult[0].user.fname;
     options.dataToSend.user.lname = paymentResult[0].user.lname;
     options.dataToSend.user.email = paymentResult[0].user.email;
@@ -154,6 +154,10 @@ function postRequest(req, res) {
     options.dataToSend.amountPaid = paymentResult[0].totalAmount;
     options.dataToSend.auction_id = paymentResult[0].auction_id + "";
     options.dataToSend.selectedLots = paymentResult[0].selectedLots;
+    if(paymentResult[0].user.batonNo)
+      options.dataToSend.BattonNo = paymentResult[0].user.batonNo;
+    if(req.body.trnRefNo)
+      options.dataToSend.TransactionID = req.body.trnRefNo;
     options.dataType = "userInfo";
     console.log('paymentauctiontype',paymentResult[0].auctionType);
     if ( paymentResult[0].auctionType==='PT' ) {

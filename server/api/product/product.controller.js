@@ -888,9 +888,8 @@ function updateProduct(req, res) {
             filter['product.assetId'] = req.body.assetId;
             filter['bidStatus'] = 'Accepted';
             AssetSaleModel.find(filter,function(err,bids){
-                if(err || !bids.length){
-                    return handleError(res, err);
-                };
+                if(err)
+                  return handleError(res, err);
 
                 if(bids && bids.length){
                     return res.status(404).send("Asset Trade Type can't be modified as there is an active bid on it");    
