@@ -117,7 +117,7 @@ exports.exportContactus = function (req, res) {
         "Mobile No.": contact.mobile,
         "Email Address": contact.email,
         "Comments": contact.message,
-        "Date of Request": contact.createdAt
+        "Date of Request": Utility.toDanishDate(contact.createdAt)
       });
     });
 

@@ -154,7 +154,7 @@ var reports = {
 						_.get(x, 'quote.allowed', ''),
 						_.get(x, 'quote.packaging', ''),
 						_.get(x, 'quote.comment', ''),
-						utility.toIST(_.get(x, 'createdAt', ''))
+						utility.toDanishDate(_.get(x, 'createdAt', ''))
 					);
 					break;
 				case 'valuation':
@@ -183,7 +183,7 @@ var reports = {
 						_.get(x, 'quote.valuation') || _.get(x, 'quote.otherName', ''),
 						_.get(x, 'quote.schedule', ''),
 						_.get(x, 'quote.comment', ''),
-						utility.toIST(_.get(x, 'createdAt', ''))
+						utility.toDanishDate(_.get(x, 'createdAt', ''))
 					);
 					break;
 				case 'finance':
@@ -210,7 +210,7 @@ var reports = {
 						_.get(x, 'quote.periodInMonths', ''),
 						_.get(x, 'quote.contactMethod', ''),
 						_.get(x, 'quote.comment', ''),
-						utility.toIST(_.get(x, 'createdAt', ''))
+						utility.toDanishDate(_.get(x, 'createdAt', ''))
 					);
 					break;
 				case 'insurance':
@@ -236,7 +236,7 @@ var reports = {
 						_.get(x, 'quote.amountToBeFinanced', ''),
 						_.get(x, 'quote.contactMethod', ''),
 						_.get(x, 'quote.comment', ''),
-						utility.toIST(_.get(x, 'createdAt', ''))
+						utility.toDanishDate(_.get(x, 'createdAt', ''))
 					);
 					break;
 				default:

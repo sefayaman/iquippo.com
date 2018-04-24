@@ -76,7 +76,7 @@ exports.exportCsv = function(req,res){
           val = item.fname + " " + item.lname;
          if(CSV_HEADER[key] == 'createdAt'){
           console.log("date123",val);
-           val = Utility.toIST(val);
+           val = Utility.toDanishDate(val);
            console.log("date",val);
          }
          

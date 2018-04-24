@@ -1584,7 +1584,7 @@ function exportUsersData(query, req, res) {
                         else
                             val = 'No';
                     } else if (key === 'createdAt') {
-                        val = Utility.toIST(_.get(item, 'createdAt', ''));
+                        val = Utility.toDanishDate(_.get(item, 'createdAt', ''));
                     }else if(key == 'enterpriseName' && item.enterpriseId && req.enterprises && req.enterprises[item.enterpriseId]){
                       val = req.enterprises[item.enterpriseId].fname || "" + " " + req.enterprises[item.enterpriseId].lname || "";
                     }else if(key == 'access' && item.availedServices && item.availedServices.length){
@@ -1647,7 +1647,7 @@ function exportUsersGSTData( query, req, res ) {
                         else
                             val = 'No';
                     } else if (key === 'updatedAt') {
-                        val = Utility.toIST(_.get(item, 'updatedAt', ''));
+                        val = Utility.toDanishDate(_.get(item, 'updatedAt', ''));
                     } else
                         val = _.get(item, key, "");
                     
@@ -1668,7 +1668,7 @@ function exportUsersGSTData( query, req, res ) {
                                 val = field.registrationNo;
                             }
                             if (Export_GST_Field_Mapping_Data[key] === "updatedAt") {
-                                val = Utility.toIST(_.get(item, 'updatedAt', ''));
+                                val = Utility.toDanishDate(_.get(item, 'updatedAt', ''));
                             }
                             val = Utility.toCsvValue(val);
                             row.push(val);

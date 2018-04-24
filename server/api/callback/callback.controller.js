@@ -122,7 +122,7 @@ function _prepareResponse(res, users) {
       "Mobile No": user.mobile,
       "Phone No": user.phone,
       "Email Address": user.email,
-      "Date of Request": moment(user.createdAt).utcOffset('+0530').format('MM/DD/YYYY')+' at ' + moment(user.createdAt).utcOffset('+0530').format('hh:mm A'),
+      "Date of Request": moment(user.createdAt).utcOffset('+0530').format('YYYY-DD-MM')+' at ' + moment(user.createdAt).utcOffset('+0530').format('hh:mm A'),
       "Comment": Utility.toCsvValue(user.comment)
     });
   });

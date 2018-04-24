@@ -325,7 +325,7 @@ function _prepareResponse(res, data) {
       "User Name": item.user['fname'] + ' ' + item.user['lname'],
       "Mobile": _.get(item, 'user.mobile', ''),
       "Email": _.get(item, 'user.email', ''),
-      "Date of Request": _.get(item, 'createdAt')
+      "Date of Request": Utility.toDanishDate(_.get(item, 'createdAt'))
     });
   });
 

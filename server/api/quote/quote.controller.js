@@ -173,7 +173,7 @@ function _prepareResponse(res, users) {
       "Mobile No": user.mobile,
       "Phone No": user.phone,
       "Email Address": user.email,
-      "Date of Request": user.createdAt,
+      "Date of Request": Utility.toDanishDate(user.createdAt),
       "Category": user.category,
       "Brand": user.brand,
       "Model No.": user.model,

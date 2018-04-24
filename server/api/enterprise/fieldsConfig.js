@@ -318,7 +318,7 @@ module.exports = {
 		"Bank Name":{key:"bankName"},
 		"Branch Name":{key:"branchName"},
 		"Cheque No":{key:"chequeNo"},
-		"Cheque Date":{key:"chequeDate"},
+		"Cheque Date":{key:"chequeDate",type:'date'},
 		"Cheque Value":{key:"chequeValue"},
 		"Deducted TDS":{key:"deductedTds"}
 	},
