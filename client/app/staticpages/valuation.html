@@ -70,16 +70,16 @@
                         </div>
                         <div class="row">
                             <div class="col-xs-12 col-sm-3">
-                                <div class="form-group floating-label-wrapper">
+                                <div class="form-group floating-label-wrapper" ng-class="{'has-error': form.nameOfCustomerSeeking.$invalid && submitted}">
                                     <label>Name of Customer*</label>
-                                    <input type="text" name="" class="form-control" placeholder="Name of Customer" required>
+                                    <input type="text" class="form-control" name="nameOfCustomerSeeking" ng-model="valuationReq.nameOfCustomerSeeking" placeholder="Name of Customer" required>
                                 </div>
                             </div>
                             <div class="col-xs-12 col-sm-3">
                                 <div class="form-group floating-label-wrapper">
                                     <label>Invoice Date</label>
                                     <div class="input-group">
-                                      <input  class="form-control" name="" id="customerInvoiceDate" ng-model="dt" placeholder="Invoice Date" datetime-picker readonly date-format="MM/dd/yyyy" date-only>
+                                      <input  class="form-control" name="customerInvoiceDate" id="customerInvoiceDate" ng-model="valuationReq.customerInvoiceDate" placeholder="Invoice Date" datetime-picker readonly date-format="MM/dd/yyyy" date-only>
                                       <label for="customerInvoiceDate" class="input-group-addon"><i class="fa fa-calendar-o fa-2x"></i></label>
                                     </div>
                                 </div>
@@ -87,7 +87,7 @@
                             <div class="col-xs-12 col-sm-3">
                                 <div class="form-group floating-label-wrapper">
                                     <label>Invoice Value</label>
-                                    <input type="number" name="" class="form-control" placeholder="Invoice Value" required>
+                                    <input type="number" class="form-control" name="customerInvoiceValue" ng-model="valuationReq.customerInvoiceValue" min="0" placeholder="Invoice Value">
                                 </div>
                             </div>
                             <div class="col-xs-12 col-sm-3">
@@ -105,15 +105,14 @@
                                     <select class="form-control" name="proBrand" ng-model="valuationReq.product.brand" ng-change="onBrandChange(valuationReq.product.brand)" required>
                                         <option value="">Select Brand</option>
                                         <option value="{{br.name}}" ng-repeat="br in brandList| orderBy:'name'">{{br.name}}</option>
-                                        <option>Other</option>
                                     </select>
 
                                 </div>
                             </div>
                             <div class="col-xs-12 col-sm-3">
-                                <div class="floating-label-wrapper form-group">
+                                <div class="floating-label-wrapper form-group" ng-class="{'has-error': form.otherBrand.$invalid && submitted}">
                                     <label>Other*</label>
-                                    <input type="text" class="form-control" name="" value="" placeholder="Other">                               
+                                    <input type="text" class="form-control" name="otherBrand" ng-model="valuationReq.product.otherBrand" placeholder="Other" ng-required = "valuationReq.product.brand == 'Other'" ng-disabled="valuationReq.product.brand !== 'Other'">                               
                                 </div>
                             </div>
                             <div class="col-xs-12 col-sm-3">
@@ -122,15 +121,14 @@
                                     <select class="form-control" name="proModel" ng-model="valuationReq.product.model" required>
                                         <option value="">Select Model</option>
                                         <option value="{{md.name}}" ng-repeat="md in modelList| orderBy:'name'">{{md.name}}</option>
-                                        <option>Other</option>
                                     </select>
 
                                 </div>
                             </div>
                             <div class="col-xs-12 col-sm-3">
-                                <div class="floating-label-wrapper form-group">
+                                <div class="floating-label-wrapper form-group" ng-class="{'has-error': form.otherModel.$invalid && submitted}">
                                     <label>Other*</label>
-                                    <input type="text" class="form-control" name="" value="" placeholder="Other">                               
+                                    <input type="text" class="form-control" name="otherModel" ng-model="valuationReq.product.otherModel" placeholder="Other" ng-required = "valuationReq.product.model == 'Other'" ng-disabled="valuationReq.product.model !== 'Other'">                               
                                 </div>
                             </div>
                             <div class="col-xs-12 col-sm-3">
@@ -140,9 +138,9 @@
                                 </div>
                             </div>
                             <div class="col-xs-12 col-sm-3">
-                                <div class="form-group floating-label-wrapper">
+                                <div class="form-group floating-label-wrapper" ng-class="{'has-error': form.prdDescription.$invalid && submitted }">
                                     <label>Asset Name*</label>
-                                    <input type="text" name="prddescription" class="form-control" placeholder="Enter Asset Name" ng-model="valuationReq.product.description">
+                                    <input type="text" name="prdDescription" class="form-control" placeholder="Enter Asset Name" ng-model="valuationReq.product.description" required>
                                 </div>
                             </div>
                             <div class="col-xs-12 col-sm-3">
@@ -246,21 +244,21 @@
                                 <div class="floating-label-wrapper">
                                     <label>Invoice Upload</label>
                                     <span class="btn btn-default fileinput-button">
-                                     <input type="file" name="">
+                                     <input type="file" id="upload" name="upload" onchange="angular.element(this).scope().upload(this.files,'invoiceDoc')">
                                       <span><i class="fa fa-upload"></i> Invoice Upload</span>
                                     </span>
                                 </div>
-                                <a href="javascript:void(0)"><span></span></a>
+                                <a href="javascript:void(0)" ng-click="downloadFile(valuationReq.invoiceDoc,valuationReq.assetDir)"><span>{{valuationReq.invoiceDoc.filename}}</span></a>
                             </div>
                             <div class="col-xs-12 col-sm-3">
                                 <div class="floating-label-wrapper">
                                     <label>RC Upload</label>
                                     <span class="btn btn-default fileinput-button">
-                                     <input type="file" name="">
+                                     <input type="file" id="upload" name="upload" data-filetype="doc" onchange="angular.element(this).scope().upload(this.files,'rcDoc')">
                                       <span><i class="fa fa-upload"></i> RC Upload</span>
                                     </span>
                                 </div>
-                                <a href="javascript:void(0)"><span></span></a>
+                                <a href="javascript:void(0)" ng-click="downloadFile(valuationReq.invoiceDoc,valuationReq.assetDir)"><span>{{valuationReq.rcDoc.filename}}</span></a>
                             </div>
                         </div>
                         <div class="row">

@@ -31,6 +31,12 @@ var ValuationRequestSchema = new Schema({
   scheduleDate:Date,
   scheduledTime:String,
   payOption:String,
+  nameOfCustomerSeeking : String,
+  customerInvoiceDate:Date,
+  customerInvoiceValue:Number,
+  invoiceDoc:{},
+  rcDoc:{},
+  assetDir:String,
   /*Admin update field*/
   onHold:{type:Boolean,default:false},
   onHoldDate:Date,

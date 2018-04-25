@@ -23,6 +23,7 @@ var fieldsConfig = require('./fieldsConfig');
 var ApiError = require('./../../components/_error.js');
 var IndividualValuationStatuses = ['Request Initiated','Payment Completed','Request Failed','Request Submitted','Invoice Generated','Valuation Report Failed','Valuation Report Submitted','Completed', 'Cancelled'];
 var _sendAndUpdateViaSocket = require('../../realTimeSocket')._sendAndUpdateViaSocket;
+var Encoded_Fields = ['contactPerson','nameOfCustomerSeeking'];
 // Get list of Valuation
 exports.getAll = function (req, res) {
   ValuationReq.find(function (err, valuations) {
@@ -590,7 +591,7 @@ exports.submitRequest = function(req,res){
       obj[key] = _.get(valReqs,fieldMap[key],"");
       if(fieldMap[key] === 'customerName' && valReqs.user)
         obj[key] = valReqs.user.fname + " " + valReqs.user.lname;
-      if(fieldMap[key] === 'contactPerson' && obj[key]){
+      if(Encoded_Fields.indexOf(fieldMap[key]) !== -1 && obj[key]){
         var buffer = new Buffer(obj[key] || "");
         obj[key] = buffer.toString("base64"); 
       }
@@ -600,14 +601,22 @@ exports.submitRequest = function(req,res){
     // if(obj && obj.customerName) {
 
     // }
-    // if(obj.brand && obj.brand == "Other")
-    //   obj.brand = valReqs.otherBrand;
+    if(valReqs.product && valReqs.product.brand)
+      obj.brand = valReqs.product.brand == "Other" ? valReqs.product.otherBrand : valReqs.product.brand;
 
-    // if(obj.model && obj.model == "Other")
-    //   obj.model = valReqs.otherModel;
+    if(valReqs.product && valReqs.product.model)
+      obj.model = valReqs.product.model == "Other" ? valReqs.product.otherModel : valReqs.product.model;
 
     if(type === 'Mjobupdation' && valReqs.jobId)
       obj.jobId = valReqs.jobId;
+
+    var s3Path = "";
+    if(valReqs.assetDir)
+      s3Path = config.awsUrl + config.awsBucket + config.awsBucketPrefix + valReqs.assetDir + "/";
+    if(s3Path && valReqs.invoiceDoc && valReqs.invoiceDoc.filename)
+        obj.invoiceDoc = s3Path + valReqs.invoiceDoc.filename;
+    if(s3Path && valReqs.rcDoc && valReqs.rcDoc.filename)
+    obj.rcDoc = s3Path + valReqs.rcDoc.filename;
 
     dataArr[dataArr.length] = obj;
 

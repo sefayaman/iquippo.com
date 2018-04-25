@@ -173,7 +173,7 @@
 
   //Valuation controller function
 
-  function ValuationCtrl($scope, $rootScope, $cookieStore, PaymentMasterSvc, Auth, $http, $log, Modal, ValuationPurposeSvc, notificationSvc, LocationSvc, ValuationSvc, userSvc, categorySvc, brandSvc, modelSvc, MarketingSvc, UtilSvc, $state, AssetGroupSvc, vendorSvc, EnterpriseSvc) {
+  function ValuationCtrl($scope, $rootScope, $window, $cookieStore, PaymentMasterSvc, Auth, $http, $log, Modal, ValuationPurposeSvc, notificationSvc, LocationSvc, ValuationSvc, userSvc, categorySvc, brandSvc, modelSvc, MarketingSvc, UtilSvc, $state, AssetGroupSvc, vendorSvc, EnterpriseSvc, uploadSvc) {
 
     //NJ Start: set valuationStartTime
     $scope.valuationStartTime = new Date();
@@ -201,6 +201,8 @@
     $scope.valuationReq.valuationAgency = {};
     $scope.assetCategoryList = [];
     $scope.iqvlOtherGroupId = iqvlOtherGroupId;
+    $scope.upload = upload;
+    $scope.downloadFile = downloadFile;
 
     function init() {
       loadCategory();
@@ -260,6 +262,33 @@
            $scope.assetCategoryList = result;
         });
     };
+
+    function upload(files,fieldName){
+      if(files.length == 0)
+        return;
+      $rootScope.loading = true;
+      uploadSvc.upload(files[0],$scope.valuationReq.assetDir)
+      .then(function(res){
+        $scope.valuationReq.assetDir = res.data.assetDir;
+        $scope.valuationReq[fieldName] = {external:false,filename:res.data.filename};
+        $rootScope.loading = false;
+      })
+      .catch(function(){
+        $rootScope.loading = false;
+      });
+    }
+
+    function downloadFile(fileObj,assetDir){
+      var url = "";
+      if(fileObj.external)
+        url = fileObj.filename;
+      else if(assetDir)
+        url = $rootScope.uploadImagePrefix + assetDir + "/" + fileObj.filename;
+      else
+        url = "";
+      if(url)
+        $window.open(url,'_blank');
+    }
 
     function onCountryChange(country, noChange) {
       if (!noChange) {

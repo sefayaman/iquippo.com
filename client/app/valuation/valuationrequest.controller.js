@@ -2,7 +2,7 @@
 	'use strict';
 	angular.module('sreizaoApp').controller('ValuationRequestCtrl', ValuationRequestCtrl);
 
-	function ValuationRequestCtrl($scope, $rootScope, Modal, Auth,ValuationPurposeSvc,AssetGroupSvc,ValuationSvc, LocationSvc, PaymentMasterSvc, vendorSvc, $state, notificationSvc) {
+	function ValuationRequestCtrl($scope, $rootScope, $window, Modal, Auth, uploadSvc, ValuationPurposeSvc,AssetGroupSvc,ValuationSvc, LocationSvc, PaymentMasterSvc, vendorSvc, $state, notificationSvc) {
 		var vm = this;
 		//vm.close = close;
 		vm.submitValuationReq = submitValuationReq;
@@ -13,6 +13,8 @@
 	    $scope.ismeridian = true;
 	    $scope.assetCategoryList = [];
 	    $scope.iqvlOtherGroupId = iqvlOtherGroupId;
+	    $scope.upload = upload;
+	    vm.downloadFile = downloadFile;
 
 		function init() {
 		  getAssetGroup();
@@ -61,6 +63,7 @@
 			vm.valuationReq.product.assetDir = $scope.currentProduct.assetDir;
 			vm.valuationReq.product.primaryImg = $scope.currentProduct.primaryImg;
 			vm.valuationReq.product.name = $scope.currentProduct.name;
+			vm.valuationReq.product.description = $scope.currentProduct.name;
 			vm.valuationReq.product.category = $scope.currentProduct.category.name;
 			vm.valuationReq.product.brand = $scope.currentProduct.brand.name;
 			vm.valuationReq.product.model = $scope.currentProduct.model.name;
@@ -120,6 +123,33 @@
 			$scope.valSubmitted = false;
 			init();
 		});
+
+		function upload(files,fieldName){
+			if(files.length == 0)
+				return;
+			$rootScope.loading = true;
+			uploadSvc.upload(files[0],vm.valuationReq.assetDir)
+			.then(function(res){
+				vm.valuationReq.assetDir = res.data.assetDir;
+				vm.valuationReq[fieldName] = {external:false,filename:res.data.filename};
+				$rootScope.loading = false;
+			})
+			.catch(function(){
+				$rootScope.loading = false;
+			});
+		}
+
+		function downloadFile(fileObj,assetDir){
+			var url = "";
+			if(fileObj.external)
+				url = fileObj.filename;
+			else if(assetDir)
+				url = $rootScope.uploadImagePrefix + assetDir + "/" + fileObj.filename;
+			else
+				url = "";
+			if(url)
+				$window.open(url,'_blank');
+		}
 
 		//init();
 		function submitValuationReq(form, valType) {

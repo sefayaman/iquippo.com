@@ -142,13 +142,17 @@ module.exports = {
       'serialNo':'product.serialNumber',
       'yearOfManufacturing' :'product.mfgYear',
       'category':'product.category',
-      'brand':'product.brand',
-      'model':'product.model',
+      'brand':'brand',
+      'model':'model',
       'country':'product.country',
       'state':'product.state',
       'city':'product.city',
       'contactPerson':'contactPerson',
       'contactPersonTelNo':'contactNumber',
-      'invoiceDate':'customerInvoiceDate'
+      'invoiceDate':'customerInvoiceDate',
+      'customerSeekingFinance':'nameOfCustomerSeeking',
+      'invoiceValue':'customerInvoiceValue',
+      'invoiceDoc':'invoiceDoc',
+      'rcDoc':'rcDoc'
 	}
 }
