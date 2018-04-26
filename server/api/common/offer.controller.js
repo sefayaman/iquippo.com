@@ -480,7 +480,7 @@ function renderExcel(req, res) {
             val = "";
         }
         if (Data_Excel_Header[key] == "createdAt") {
-          val = moment(item.createdAt).utcOffset('+0530').format('YYYY-DD-MM');
+          val = moment(item.createdAt).utcOffset('+0530').format('YYYY-MM-DD');
         }
         row.push(val);
       });

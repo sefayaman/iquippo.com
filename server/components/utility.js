@@ -597,12 +597,12 @@ function toIST(value) {
   return moment(value).utcOffset('+0530').format('MM/DD/YYYY hh:mm a');
 }
 
-// @added by :- Madhusudan Mishra for (YYYY-DD-MM) date format
+// @added by :- Madhusudan Mishra for (YYYY-MM-DD) date format
 function toDanishDate(value) {
   if (!value)
     return '';
 
-  return moment(value).utcOffset('+0530').format('YYYY-DD-MM hh:mm a');
+  return moment(value).utcOffset('+0530').format('YYYY-MM-DD hh:mm a');
 }
 
 function paginatedResult(req, res, modelRef, filter, result, callback) {

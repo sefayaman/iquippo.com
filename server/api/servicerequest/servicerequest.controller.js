@@ -146,7 +146,7 @@ exports.exportData = function (req, res) {
             dataArr[idx + 1].push(_.get(item, 'user.fname', '') + ' ' + _.get(item, 'user.lname', ''));
           else if (FIELD_MAP[header] == 'scheduledDateTime') {
             if (item.request.scheduleDate)
-              dataArr[idx + 1].push(moment(_.get(item, 'request.scheduleDate', '')).format('YYYY-DD-MM') + ' ' + _.get(item, 'request.scheduledTime', ''));
+              dataArr[idx + 1].push(moment(_.get(item, 'request.scheduleDate', '')).format('YYYY-MM-DD') + ' ' + _.get(item, 'request.scheduledTime', ''));
             else
               dataArr[idx + 1].push('');
           } else if (FIELD_MAP[header] == 'createdAt') {

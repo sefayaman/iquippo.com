@@ -511,9 +511,9 @@ function exportExcel(req,res,fieldMap,jsonArr){
       if(keyObj.type && keyObj.type == 'boolean')
           val = val?'YES':'NO';
       if(keyObj.type && keyObj.type == 'date' && val)
-        val = moment(val).utcOffset('+0530').format('YYYY-DD-MM');
+        val = moment(val).utcOffset('+0530').format('YYYY-MM-DD');
       if(keyObj.type && keyObj.type == 'datetime' && val)
-        val = moment(val).utcOffset('+0530').format('YYYY-DD-MM HH:mm');
+        val = moment(val).utcOffset('+0530').format('YYYY-MM-DD HH:mm');
       if(keyObj.type && keyObj.type == 'url' && val){
         if(val.filename){
           if(val.external === true)

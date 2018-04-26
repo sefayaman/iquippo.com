@@ -97,7 +97,7 @@ function renderExcel(req, res) {
       dataKeys.forEach(function (key) {
         var val = _.get(order, Data_Excel_Header[key], "");
         if (Data_Excel_Header[key] == "createdAt")
-          val = moment(item.createdAt).utcOffset('+0530').format('YYYY-DD-MM');
+          val = moment(item.createdAt).utcOffset('+0530').format('YYYY-MM-DD');
         row.push(val);
       });
       dataArr.push(row);
