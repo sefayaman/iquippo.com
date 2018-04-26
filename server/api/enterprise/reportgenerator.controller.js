@@ -27,7 +27,7 @@ exports.generateReport = function(req,res){
     var dt = new Date();
     dt.setDate(dt.getDate() -1);
     var dateStr = dt.getDate()+ "" + (dt.getMonth() + 1)+ "" + dt.getFullYear();
-    var fileName = fileNamePrefix + dateStr + ".csv";
+    var fileName = fileNamePrefix + dateStr + ".xml";
     var localFilePath = config.uploadPath + "temp/" + fileName; 
 
   function getEnterpriseRequest(enterprisers){
@@ -53,36 +53,51 @@ exports.generateReport = function(req,res){
     ValuationModel.find({'enterprise.enterpriseId':{$in:enterpriseIds},status:{$in:EnterpriseValuationStatuses},
       reportDate:dateFilter,deleted:false,cancelled:false,onHold:false}
       ,function(err,entReqs){
-        if(err) return handleError(err);   
-        createCsv(entReqs);
+        if(err) return handleError(err);
+        console.log("ent reqs",entReqs.length);   
+        _createXML(entReqs);
     });
   }
 
-function createCsv(entReqs){
-  var csvStr = "";
-  var headers = Object.keys(Field_MAP);
-  csvStr +=  headers.join(",");
-  csvStr += "\r\n";
-  entReqs.forEach(function(item){
-    headers.forEach(function(key){
-        var val = _.get(item,Field_MAP[key],"");
-        if(key === "ASSET_DETAILS")
+function _createXML(entReqs) {
+    var xmlStr = '<?xml version="1.0" encoding="UTF-8"?>';
+    xmlStr += "<document>";
+    var headers = Object.keys(Field_MAP);
+    entReqs.forEach(function (item) {
+      xmlStr += "<Valuation>";
+      headers.forEach(function (key) {
+        var val = _.get(item, Field_MAP[key], "");
+        if (key === "ASSET_DETAILS") {
           val = getAssetDetail(item);
-        val = Utility.toCsvValue(val);
-         csvStr += val + ",";
+        }
+        if(key === 'GPSID' && val){
+          var isValid = /^RCR/i.test(val);
+          if(!isValid)
+            val = "";
+        }
+
+        xmlStr += "<" + key + ">" + val + "</" + key + ">";
+      });
+      xmlStr += "</Valuation>";
     });
-    csvStr += "\r\n";
-  });
-  try{
-     fs.writeFileSync(localFilePath, new Buffer(csvStr, 'binary'));
-      async.parallel([uploadFileonS3,uploadFileOnFtp,updateSetting],function(err){
+
+    xmlStr += "</document>";
+    var dt = new Date();
+    dt.setDate(dt.getDate() - 1);
+    var dateStr = dt.getDate() + "" + (dt.getMonth() + 1) + "" + dt.getFullYear();
+    var fileName = fileNamePrefix + dateStr + ".xml";
+    var localFilePath = config.uploadPath + "temp/" + fileName;
+    try {
+
+      fs.writeFileSync(localFilePath, xmlStr);
+      async.parallel([uploadFileonS3, uploadFileOnFtp, updateSetting], function (err) {
         if(err) return  handleError(err);
         return res.status(200).send("Report generarted and uploaded successfully.");
       });
-  }catch(e){
-    handleError(e);
+    } catch (e) {
+      handleError(e);
+    }
   }
-}
 
   function uploadFileonS3(cb){
       var opts = {

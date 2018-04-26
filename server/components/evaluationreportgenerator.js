@@ -69,67 +69,6 @@ function getEnterpriseRequest(enterprisers){
     });
   }
 
-function createCsv(entReqs){
-  var csvStr = "";
-  var headers = Object.keys(Field_MAP);
-  csvStr +=  headers.join(",");
-  csvStr += "\r\n";
-  entReqs.forEach(function(item){
-    headers.forEach(function(key){
-        var val = _.get(item,Field_MAP[key],"");
-        if(key === "ASSET_DETAILS")
-          val = getAssetDetail(item);
-        val = Utility.toCsvValue(val);
-         csvStr += val + ",";
-    });
-    csvStr += "\r\n";
-  });
-
-  var dt = new Date();
-  dt.setDate(dt.getDate() -1);
-  var dateStr = dt.getDate()+ "" + (dt.getMonth() + 1)+ "" + dt.getFullYear();
-  var fileName = fileNamePrefix + dateStr + ".csv";
-  var localFilePath = config.uploadPath + "temp/" + fileName; 
-  try{
-    
-     fs.writeFileSync(localFilePath, new Buffer(csvStr, 'binary'));
-      async.parallel([uploadFileonS3,uploadFileOnFtp,updateSetting],function(err){
-        if(err) return  handleError(err);
-        return setTimeout(function () { getEnterpriseUser(); },getSleepTime());
-      });
-  }catch(e){
-    handleError(e);
-  }
-
-  function uploadFileonS3(cb){
-      var opts = {
-        localFile: localFilePath,
-        key: "assets/uploads/valuationreport/" + fileName,
-      };
-      var files = [{
-        path:localFilePath
-      }];
-      Utility.uploadMultipartFileOnS3(opts.localFile,opts.key,files,function(err, s3res) {
-        cb(err);
-      },true);
-  }
-
-  function uploadFileOnFtp(cb){
-    Utility.uploadFileOnFtp(localFilePath,config.valuationReportRemotePath + fileName,function(err){
-      cb(err);
-    });
-  }
-
-  function updateSetting(cb){
-    AppSettingModel.findOneAndUpdate({key:Setting_Key},
-        {key:Setting_Key,value:fileName},{upsert:true},
-        function(err){
-          cb(err);
-        });
-  }
-
-}
-
 function _createXML(entReqs) {
   var xmlStr = '<?xml version="1.0" encoding="UTF-8"?>';
   xmlStr += "<document>";
@@ -141,6 +80,12 @@ function _createXML(entReqs) {
       if (key === "ASSET_DETAILS") {
         val = getAssetDetail(item);
       }
+      if(key === 'GPSID' && val){
+        var isValid = /^RCR/i.test(val);
+        if(!isValid)
+          val = "";
+      }
+
       xmlStr += "<" + key + ">" + val + "</" + key + ">";
     });
     xmlStr += "</Valuation>";

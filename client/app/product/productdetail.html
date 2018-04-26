@@ -554,6 +554,27 @@
           <div ng-controller="ValuationRequestCtrl as valuationVm">
             <form  novalidate class="valReqForm" name="valReqForm">
               <div class="row">
+                <div class="col-sm-3">
+                    <div class="form-group floating-label-wrapper" ng-class="{'has-error': valReqForm.nameOfCustomerSeeking.$invalid && valSubmitted }">
+                        <label>Name of Customer*</label>
+                        <input type="text" class="form-control" name="nameOfCustomerSeeking" ng-model="valuationVm.valuationReq.nameOfCustomerSeeking" placeholder="Name of Customer" required>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group floating-label-wrapper">
+                        <label>Invoice Date</label>
+                        <div class="input-group">
+                          <input  class="form-control" name="customerInvoiceDate" id="customerInvoiceDate" ng-model="valuationVm.valuationReq.customerInvoiceDate" placeholder="Invoice Date" datetime-picker readonly date-format="MM/dd/yyyy" date-only>
+                          <label for="customerInvoiceDate" class="input-group-addon"><i class="fa fa-calendar-o fa-2x"></i></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group floating-label-wrapper">
+                        <label>Invoice Value</label>
+                        <input type="number" class="form-control" name="customerInvoiceValue" ng-model="valuationVm.valuationReq.customerInvoiceValue" min="0" placeholder="Invoice Value">
+                    </div>
+                </div>
                 <div class="col-sm-3 form-group">
                   <div class="floating-label-wrapper">
                     <label>Category</label>
@@ -561,17 +582,17 @@
                   </div>
                 </div>
                 <div class="col-sm-3 form-group">
-                  <div class="floating-label-wrapper">
-                    <label>Asset Name</label>
-                    <input type="text" class="form-control" ng-value="valuationVm.valuationReq.product.name" placeholder="Enter Asset Name" disabled>
+                  <div class="floating-label-wrapper" ng-class="{'has-error': valReqForm.prdDescription.$invalid && valSubmitted }">
+                    <label>Asset Name*</label>
+                    <input type="text" name="prdDescription" class="form-control" ng-model="valuationVm.valuationReq.product.description" placeholder="Enter Asset Name" disabled required>
                   </div>
                 </div>
-                 <div class="col-xs-12 col-sm-3">
+                 <!-- <div class="col-xs-12 col-sm-3">
                     <div class="form-group floating-label-wrapper">
                         <label>Asset Description</label>
                         <input type="text" name="prddescription" class="form-control" placeholder="Enter Asset Description" ng-model="valuationVm.valuationReq.product.description">
                     </div>
-                </div>
+                </div> -->
                 <!-- <div class="col-sm-3 form-group">
                   <div class="floating-label-wrapper">
                     <label>Serial Number</label>
@@ -654,6 +675,26 @@
                     <input class="form-control" type="text" name="otherName" ng-model="valuationVm.valuationReq.otherName" ng-disabled ="valuationVm.valuationReq.purpose != 'Other'" placeholder="*Other" ng-required= "valuationVm.valuationReq.purpose == 'Other'">
                   </div>
                 </div>
+                <div class="col-sm-3">
+                    <div class="floating-label-wrapper">
+                        <label>Invoice Upload</label>
+                        <span class="btn btn-default fileinput-button">
+                         <input type="file" id="upload" name="upload" onchange="angular.element(this).scope().upload(this.files,'invoiceDoc')">
+                          <span><i class="fa fa-upload"></i> Invoice Upload</span>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0)" ng-click="valuationVm.downloadFile(valuationVm.valuationReq.invoiceDoc,valuationVm.valuationReq.assetDir)"><span>{{valuationVm.valuationReq.invoiceDoc.filename}}</span></a>
+                </div>
+                <div class="col-sm-3">
+                    <div class="floating-label-wrapper">
+                        <label>RC Upload</label>
+                        <span class="btn btn-default fileinput-button">
+                         <input type="file" id="upload" name="upload" data-filetype="doc" onchange="angular.element(this).scope().upload(this.files,'rcDoc')">
+                          <span><i class="fa fa-upload"></i> RC Upload</span>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0)" ng-click="valuationVm.downloadFile(valuationVm.valuationReq.invoiceDoc,valuationVm.valuationReq.assetDir)"><span>{{valuationVm.valuationReq.rcDoc.filename}}</span></a>
+                </div>
                 <div class="col-xs-12 col-sm-6 form-group">
                   <div class="floating-label-wrapper">
                     <label>Schedule a call</label>
@@ -677,7 +718,6 @@
                   <div class="col-sm-6 form-group" ng-if="valuationVm.valuationReq.schedule == 'yes'">
                     <small>Pick Date</small>
                     <div class="input-group" ng-class="{'has-error': valReqForm.scheduleDate.$invalid && valSubmitted}">
-                      <!-- <input type="text" class="form-control pick-width" ng-model="valuationVm.valuationReq.scheduleDate" uib-datepicker-popup="{{format}}" ng-name="scheduleDate" ng-value="" is-open="popup2.opened" min-date="minDate" max-date="maxDate" datepicker-options="datepickerOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" placeholder="dd/mm/yyyy" /> -->
                       <input type="text" class="form-control" ng-model="valuationVm.valuationReq.scheduleDate" uib-datepicker-popup="{{format}}" name="scheduleDate" ng-value="" is-open="popup1.opened" min-date="minDate" max-date="maxDate" datepicker-options="datepickerOptions" date-disabled="disabled(date, mode)" ng-required="valuationReq.schedule == 'yes'" close-text="Close" alt-input-formats="altInputFormats" placeholder="dd/mm/yyyy" />
                       <span class="input-group-addon">
                         <a href class="btn btn-default" ng-click="open1()"><i class="fa fa-calendar-o"></i></a>
@@ -688,7 +728,6 @@
                   <div class="col-sm-6 form-group" ng-if="valuationVm.valuationReq.schedule == 'yes'">
                     <small>Set Time</small>
                     <div class="input-group">
-                      <!-- <input type="text" class="form-control" placeholder="HH:MM" ng-model="valuationVm.valuationReq.scheduledTime" is-open=""  ng-value="{{valuationVm.valuationReq.scheduledTime | date:'shortTime' }}" timepicker-options="timepickerOptions"> -->
                       <input type="text" class="form-control" name="otherName" placeholder="HH:MM" ng-model="valuationVm.valuationReq.scheduledTime" is-open=""  ng-value="{{valuationVm.valuationReq.scheduledTime| date:'shortTime' }}" timepicker-options="timepickerOptions">
                       <span class="input-group-addon">
                         <button class="btn btn-default" ng-click="toggleMode()"><i class="fa fa-clock-o"></i></button>
@@ -719,6 +758,27 @@
           <div ng-controller="ValuationRequestCtrl as valuationVm">
             <form  novalidate class="reqForCertify" name="reqForCertify">
               <div class="row text-left">
+                <div class="col-sm-3">
+                    <div class="form-group floating-label-wrapper" ng-class="{'has-error': reqForCertify.nameOfCustomerSeeking.$invalid && valSubmitted }">
+                        <label>Name of Customer*</label>
+                        <input type="text" class="form-control" name="nameOfCustomerSeeking" ng-model="valuationVm.valuationReq.nameOfCustomerSeeking" placeholder="Name of Customer" required>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group floating-label-wrapper">
+                        <label>Invoice Date</label>
+                        <div class="input-group">
+                          <input  class="form-control" name="customerInvoiceDateIns" id="customerInvoiceDateIns" ng-model="valuationVm.valuationReq.customerInvoiceDate" placeholder="Invoice Date" datetime-picker readonly date-format="MM/dd/yyyy" date-only>
+                          <label for="customerInvoiceDateIns" class="input-group-addon"><i class="fa fa-calendar-o fa-2x"></i></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group floating-label-wrapper">
+                        <label>Invoice Value</label>
+                        <input type="number" class="form-control" name="customerInvoiceValue" ng-model="valuationVm.valuationReq.customerInvoiceValue" min="0" placeholder="Invoice Value">
+                    </div>
+                </div>
                 <div class="col-sm-3 form-group">
                   <div class="floating-label-wrapper">
                     <label>Category</label>
@@ -726,17 +786,17 @@
                   </div>
                 </div>
                 <div class="col-sm-3 form-group">
-                  <div class="floating-label-wrapper">
-                    <label>Asset Name</label>
-                    <input type="text" class="form-control" ng-value="valuationVm.valuationReq.product.name" placeholder="Enter Asset Name" disabled>
+                  <div class="floating-label-wrapper" ng-class="{'has-error': reqForCertify.prdDescription.$invalid && valSubmitted }">
+                    <label>Asset Name*</label>
+                    <input type="text" name="prdDescription" class="form-control" ng-model="valuationVm.valuationReq.product.description" placeholder="Enter Asset Name" disabled required>
                   </div>
                 </div>
-                <div class="col-xs-12 col-sm-3">
+                <!-- <div class="col-xs-12 col-sm-3">
                   <div class="form-group floating-label-wrapper">
                       <label>Asset Description</label>
                       <input type="text" name="prddescription" class="form-control" placeholder="Enter Asset Description" ng-model="valuationVm.valuationReq.product.description">
                   </div>
-                </div> 
+                </div> --> 
                 <div class="col-sm-3 form-group">
                   <div class="floating-label-wrapper">
                     <label>Asset Location</label>
@@ -812,7 +872,26 @@
                     <input class="form-control" type="text" name="otherName" ng-model="valuationVm.valuationReq.otherName" ng-disabled ="valuationVm.valuationReq.purpose != 'Other'" placeholder="*Other" ng-required= "valuationVm.valuationReq.purpose == 'Other'">
                   </div>
                 </div>
-               
+                <div class="col-sm-3">
+                    <div class="floating-label-wrapper">
+                        <label>Invoice Upload</label>
+                        <span class="btn btn-default fileinput-button">
+                         <input type="file" id="upload" name="upload" onchange="angular.element(this).scope().upload(this.files,'invoiceDoc')">
+                          <span><i class="fa fa-upload"></i> Invoice Upload</span>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0)" ng-click="valuationVm.downloadFile(valuationVm.valuationReq.invoiceDoc,valuationVm.valuationReq.assetDir)"><span>{{valuationVm.valuationReq.invoiceDoc.filename}}</span></a>
+                </div>
+                <div class="col-sm-3">
+                    <div class="floating-label-wrapper">
+                        <label>RC Upload</label>
+                        <span class="btn btn-default fileinput-button">
+                         <input type="file" id="upload" name="upload" data-filetype="doc" onchange="angular.element(this).scope().upload(this.files,'rcDoc')">
+                          <span><i class="fa fa-upload"></i> RC Upload</span>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0)" ng-click="valuationVm.downloadFile(valuationVm.valuationReq.invoiceDoc,valuationVm.valuationReq.assetDir)"><span>{{valuationVm.valuationReq.rcDoc.filename}}</span></a>
+                </div>
                 <div class="col-xs-12 col-sm-6 form-group">
                   <div class="floating-label-wrapper">
                     <label>Schedule a call</label>
@@ -836,7 +915,6 @@
                   <div class="col-sm-6 form-group" ng-if="valuationVm.valuationReq.schedule == 'yes'">
                     <small>Pick Date</small>
                     <div class="input-group" ng-class="{'has-error': reqForCertify.scheduleDate.$invalid && valSubmitted}">
-                      <!-- <input type="text" class="form-control pick-width" ng-model="valuationVm.valuationReq.scheduleDate" uib-datepicker-popup="{{format}}" ng-name="scheduleDate" ng-value="" is-open="popup2.opened" min-date="minDate" max-date="maxDate" datepicker-options="datepickerOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" placeholder="dd/mm/yyyy" /> -->
                       <input type="text" class="form-control" ng-model="valuationVm.valuationReq.scheduleDate" uib-datepicker-popup="{{format}}" name="scheduleDate" ng-value="" is-open="popup1.opened" min-date="minDate" max-date="maxDate" datepicker-options="datepickerOptions" date-disabled="disabled(date, mode)" ng-required="valuationReq.schedule == 'yes'" close-text="Close" alt-input-formats="altInputFormats" placeholder="dd/mm/yyyy" />
                       <span class="input-group-addon">
                         <a href class="btn btn-default" ng-click="open1()"><i class="fa fa-calendar-o"></i></a>
@@ -847,7 +925,6 @@
                   <div class="col-sm-6 form-group" ng-if="valuationVm.valuationReq.schedule == 'yes'">
                     <small>Set Time</small>
                     <div class="input-group">
-                      <!-- <input type="text" class="form-control" placeholder="HH:MM" ng-model="valuationVm.valuationReq.scheduledTime" is-open=""  ng-value="{{valuationVm.valuationReq.scheduledTime | date:'shortTime' }}" timepicker-options="timepickerOptions"> -->
                       <input type="text" class="form-control" name="otherName" placeholder="HH:MM" ng-model="valuationVm.valuationReq.scheduledTime" is-open=""  ng-value="{{valuationVm.valuationReq.scheduledTime| date:'shortTime' }}" timepicker-options="timepickerOptions">
                       <span class="input-group-addon">
                         <button class="btn btn-default" ng-click="toggleMode()"><i class="fa fa-clock-o"></i></button>

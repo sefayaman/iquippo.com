@@ -70,13 +70,33 @@
                         </div>
                         <div class="row">
                             <div class="col-xs-12 col-sm-3">
+                                <div class="form-group floating-label-wrapper" ng-class="{'has-error': form.nameOfCustomerSeeking.$invalid && submitted}">
+                                    <label>Name of Customer*</label>
+                                    <input type="text" class="form-control" name="nameOfCustomerSeeking" ng-model="valuationReq.nameOfCustomerSeeking" placeholder="Name of Customer" required>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-3">
+                                <div class="form-group floating-label-wrapper">
+                                    <label>Invoice Date</label>
+                                    <div class="input-group">
+                                      <input  class="form-control" name="customerInvoiceDate" id="customerInvoiceDate" ng-model="valuationReq.customerInvoiceDate" placeholder="Invoice Date" datetime-picker readonly date-format="MM/dd/yyyy" date-only>
+                                      <label for="customerInvoiceDate" class="input-group-addon"><i class="fa fa-calendar-o fa-2x"></i></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-3">
+                                <div class="form-group floating-label-wrapper">
+                                    <label>Invoice Value</label>
+                                    <input type="number" class="form-control" name="customerInvoiceValue" ng-model="valuationReq.customerInvoiceValue" min="0" placeholder="Invoice Value">
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-3">
                                 <div class="floating-label-wrapper form-group" ng-class="{'has-error': form.proCategory.$invalid && submitted}">
                                     <label>Category*</label>
                                     <select class="form-control" name="proCategory" ng-model="valuationReq.product.category" ng-change="onCategoryChange(valuationReq.product.category)" required>
                                         <option value="">Select Category</option>
                                         <option value="{{cat.name}}" ng-repeat="cat in allCategory| orderBy:'name'">{{cat.name}}</option>
-                                    </select>
-
+                                    </select>                                
                                 </div>
                             </div>
                             <div class="col-xs-12 col-sm-3">
@@ -90,6 +110,12 @@
                                 </div>
                             </div>
                             <div class="col-xs-12 col-sm-3">
+                                <div class="floating-label-wrapper form-group" ng-class="{'has-error': form.otherBrand.$invalid && submitted}">
+                                    <label>Other*</label>
+                                    <input type="text" class="form-control" name="otherBrand" ng-model="valuationReq.product.otherBrand" placeholder="Other" ng-required = "valuationReq.product.brand == 'Other'" ng-disabled="valuationReq.product.brand !== 'Other'">                               
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-3">
                                 <div class="form-group floating-label-wrapper" ng-class="{'has-error': form.proModel.$invalid && submitted}">
                                     <label>Model*</label>
                                     <select class="form-control" name="proModel" ng-model="valuationReq.product.model" required>
@@ -100,15 +126,21 @@
                                 </div>
                             </div>
                             <div class="col-xs-12 col-sm-3">
+                                <div class="floating-label-wrapper form-group" ng-class="{'has-error': form.otherModel.$invalid && submitted}">
+                                    <label>Other*</label>
+                                    <input type="text" class="form-control" name="otherModel" ng-model="valuationReq.product.otherModel" placeholder="Other" ng-required = "valuationReq.product.model == 'Other'" ng-disabled="valuationReq.product.model !== 'Other'">                               
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-3">
                                 <div class="form-group floating-label-wrapper" ng-class="{'has-error': form.prdMfg.$invalid && submitted}">
                                     <label>Manufacturing Year*</label>
                                     <input type="number" name="prdMfg" class="form-control" placeholder="Enter Manufacturing Year" ng-model="valuationReq.product.mfgYear" ng-minlength="4" ng-maxlength="4" min="1900" max="currentYear" string-to-number required>
                                 </div>
                             </div>
                             <div class="col-xs-12 col-sm-3">
-                                <div class="form-group floating-label-wrapper">
-                                    <label>Asset Description</label>
-                                    <input type="text" name="prddescription" class="form-control" placeholder="Enter Asset Description" ng-model="valuationReq.product.description">
+                                <div class="form-group floating-label-wrapper" ng-class="{'has-error': form.prdDescription.$invalid && submitted }">
+                                    <label>Asset Name*</label>
+                                    <input type="text" name="prdDescription" class="form-control" placeholder="Enter Asset Name" ng-model="valuationReq.product.description" required>
                                 </div>
                             </div>
                             <div class="col-xs-12 col-sm-3">
@@ -184,8 +216,6 @@
                                     </p>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
                             <div class="col-xs-12 col-sm-3">
                                 <div class="form-group floating-label-wrapper" ng-class="{'has-error': form.valagency.$invalid && submitted }">
                                     <label>Partner</label>
@@ -204,13 +234,31 @@
                                     </select>
                                 </div>
                             </div>
-
-
                             <div class="col-xs-6 col-sm-3">
                                 <div class="floating-label-wrapper form-group" ng-class="{'has-error': form.otherName.$invalid && submitted }">
                                     <label>Other*</label>
                                     <input class="form-control" type="text" name="otherName" ng-model="valuationReq.otherName" ng-disabled ="valuationReq.purpose != 'Other'" placeholder="Other" ng-required= "valuationReq.purpose == 'Other'">
                                 </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-3">
+                                <div class="floating-label-wrapper">
+                                    <label>Invoice Upload</label>
+                                    <span class="btn btn-default fileinput-button">
+                                     <input type="file" id="upload" name="upload" onchange="angular.element(this).scope().upload(this.files,'invoiceDoc')">
+                                      <span><i class="fa fa-upload"></i> Invoice Upload</span>
+                                    </span>
+                                </div>
+                                <a href="javascript:void(0)" ng-click="downloadFile(valuationReq.invoiceDoc,valuationReq.assetDir)"><span>{{valuationReq.invoiceDoc.filename}}</span></a>
+                            </div>
+                            <div class="col-xs-12 col-sm-3">
+                                <div class="floating-label-wrapper">
+                                    <label>RC Upload</label>
+                                    <span class="btn btn-default fileinput-button">
+                                     <input type="file" id="upload" name="upload" data-filetype="doc" onchange="angular.element(this).scope().upload(this.files,'rcDoc')">
+                                      <span><i class="fa fa-upload"></i> RC Upload</span>
+                                    </span>
+                                </div>
+                                <a href="javascript:void(0)" ng-click="downloadFile(valuationReq.invoiceDoc,valuationReq.assetDir)"><span>{{valuationReq.rcDoc.filename}}</span></a>
                             </div>
                         </div>
                         <div class="row">
