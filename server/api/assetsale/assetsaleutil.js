@@ -9,6 +9,8 @@ var commonController = require('./../common/common.controller');
 var notification = require('./../../components/notification.js');
 var AssetSaleBid = require('./assetsalebid.model');
 var Utility = require('./../../components/utility.js');
+var Event = require("../common/event.model");
+var _ = require("lodash");
 /*
 * For enterprise master filter must be like {}
 */
@@ -304,6 +306,65 @@ exports.sendNotification = function(bidArr){
 		}
 	});
 }*/
+
+exports.checkHolidayExistAndAdd = function (startDate, endDate, timePeriod, cb) {
+	var sdt = startDate;
+	var edt = endDate;
+
+	Event.find().sort({ start: 1 }).lean().exec(function (err, events) {
+		if (!err && events) {
+
+			var eventCollections = [];
+			var arr = _.cloneDeep(events);
+
+			arr.forEach(function (item, key) {
+				if (item.start < item.end) {
+
+					while (item.start <= item.end) {
+						eventCollections.push(_.clone(item.start));
+						item.start.addDays(1);
+					}
+				} else {
+					eventCollections.push(item.start);
+				}
+			});
+			console.log(eventCollections);
+
+			edt = __check(sdt, timePeriod, eventCollections);
+
+		}
+
+		return cb(null, edt);
+	});
+}
+
+function __check(startDate, timePeriod, holidays) {
+	console.log('CHECKING...', timePeriod, '---', startDate);
+	var today = startDate;
+	var nextDay = today;
+	var i = 0;
+
+	while (i < timePeriod) {
+		nextDay.addDays(1);
+		if (!holidays.contains(nextDay)) {
+			i++;
+		}
+
+	}
+	console.log('NEXT DAY -- ', nextDay.toString());
+	return nextDay;
+}
+
+Array.prototype.contains = function (item) {
+	var i;
+	for (i in this) {
+		var dt = new Date(this[i]);
+		if (dt.getDate() == item.getDate() && dt.getMonth() == item.getMonth() && dt.getFullYear() == item.getFullYear()) {
+			return true;
+		}
+	}
+	return false;
+}
 
 
 

@@ -26,6 +26,7 @@ var bookADemoCtrl = require('./bookademo.controller');
 var legalEntityTypeCtrl = require('./legalentitytype.controller');
 var bankMasterCtrl = require('./bankmaster.controller');
 var IquippoGstMasterCtrl = require('./iquippogstmaster.controller');
+var eventCtrl = require('./event.controller');
 var json2xls = require('json2xls');
 var router = express.Router();
 
@@ -213,5 +214,10 @@ router.put('/iquippogst/:id', auth.hasRole('admin'),IquippoGstMasterCtrl.update)
 router.delete('/iquippogst/:id',auth.hasRole('admin'), IquippoGstMasterCtrl.destroy);
 
 router.get('/newequipmentotherinfo', controller.getNewEquipmentOtherInfo);
+
+router.get('/events', eventCtrl.index);
+router.post('/events', eventCtrl.create);
+router.put('/events/:id', eventCtrl.update);
+router.delete('/events/:id', eventCtrl.delete);
 
 module.exports = router;

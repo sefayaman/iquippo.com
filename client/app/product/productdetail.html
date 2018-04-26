@@ -555,13 +555,13 @@
             <form  novalidate class="valReqForm" name="valReqForm">
               <div class="row">
                 <div class="col-sm-3">
-                    <div class="form-group floating-label-wrapper" ng-class="{'has-error': valReqForm.nameOfCustomerSeeking.$invalid && valSubmitted }">
+                    <div class="floating-label-wrapper" ng-class="{'has-error': valReqForm.nameOfCustomerSeeking.$invalid && valSubmitted }">
                         <label>Name of Customer*</label>
                         <input type="text" class="form-control" name="nameOfCustomerSeeking" ng-model="valuationVm.valuationReq.nameOfCustomerSeeking" placeholder="Name of Customer" required>
                     </div>
                 </div>
                 <div class="col-sm-3">
-                    <div class="form-group floating-label-wrapper">
+                    <div class="floating-label-wrapper">
                         <label>Invoice Date</label>
                         <div class="input-group">
                           <input  class="form-control" name="customerInvoiceDate" id="customerInvoiceDate" ng-model="valuationVm.valuationReq.customerInvoiceDate" placeholder="Invoice Date" datetime-picker readonly date-format="MM/dd/yyyy" date-only>
@@ -570,25 +570,25 @@
                     </div>
                 </div>
                 <div class="col-sm-3">
-                    <div class="form-group floating-label-wrapper">
+                    <div class="floating-label-wrapper">
                         <label>Invoice Value</label>
                         <input type="number" class="form-control" name="customerInvoiceValue" ng-model="valuationVm.valuationReq.customerInvoiceValue" min="0" placeholder="Invoice Value">
                     </div>
                 </div>
-                <div class="col-sm-3 form-group">
+                <div class="col-sm-3">
                   <div class="floating-label-wrapper">
                     <label>Category</label>
                     <input type="text" class="form-control" ng-value="valuationVm.valuationReq.product.category" placeholder="Enter Category" disabled>
                   </div>
                 </div>
-                <div class="col-sm-3 form-group">
+                <div class="col-sm-3">
                   <div class="floating-label-wrapper" ng-class="{'has-error': valReqForm.prdDescription.$invalid && valSubmitted }">
                     <label>Asset Name*</label>
                     <input type="text" name="prdDescription" class="form-control" ng-model="valuationVm.valuationReq.product.description" placeholder="Enter Asset Name" disabled required>
                   </div>
                 </div>
                  <!-- <div class="col-xs-12 col-sm-3">
-                    <div class="form-group floating-label-wrapper">
+                    <div class="floating-label-wrapper">
                         <label>Asset Description</label>
                         <input type="text" name="prddescription" class="form-control" placeholder="Enter Asset Description" ng-model="valuationVm.valuationReq.product.description">
                     </div>
@@ -599,32 +599,32 @@
                     <input type="text" class="form-control" ng-value="valuationVm.valuationReq.product.serialNumber" placeholder="Enter Serial Number" disabled>
                   </div>
                 </div> -->
-                <div class="col-sm-3 form-group">
+                <div class="col-sm-3">
                   <div class="floating-label-wrapper">
                     <label>Asset Location</label>
                     <input type="text" class="form-control" ng-value="valuationVm.valuationReq.product.city" placeholder="Enter Asset Location" disabled>
                   </div>
                 </div>
                 <div class="col-xs-12 col-sm-3">
-                    <div class="form-group floating-label-wrapper" ng-class="{'has-error': (valReqForm.engineNo.$invalid || valReqForm.chassisNo.$invalid || valReqForm.registrationNo.$invalid || valReqForm.serialNumber.$invalid) && valSubmitted}">
+                    <div class="floating-label-wrapper" ng-class="{'has-error': (valReqForm.engineNo.$invalid || valReqForm.chassisNo.$invalid || valReqForm.registrationNo.$invalid || valReqForm.serialNumber.$invalid) && valSubmitted}">
                         <label>Engine No.</label>
                         <input type="text" name="engineNo" ng-model="valuationVm.valuationReq.product.engineNo" class="form-control" placeholder="Engine No." ng-required="!(valuationVm.valuationReq.product.chassisNo || valuationVm.valuationReq.product.registrationNo || valuationVm.valuationReq.product.serialNumber || valuationVm.valuationReq.product.engineNo)" ng-disabled ="engineNoDisable">
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-3">
-                    <div class="form-group floating-label-wrapper" ng-class="{'has-error': (valReqForm.engineNo.$invalid || valReqForm.chassisNo.$invalid || valReqForm.registrationNo.$invalid || valReqForm.serialNumber.$invalid) && valSubmitted}">
+                    <div class="floating-label-wrapper" ng-class="{'has-error': (valReqForm.engineNo.$invalid || valReqForm.chassisNo.$invalid || valReqForm.registrationNo.$invalid || valReqForm.serialNumber.$invalid) && valSubmitted}">
                         <label>Chassis No.</label>
                         <input type="text" name="chassisNo" ng-model="valuationVm.valuationReq.product.chassisNo" class="form-control" placeholder="Chassis No." ng-required="!(valuationVm.valuationReq.product.chassisNo || valuationVm.valuationReq.product.registrationNo || valuationVm.valuationReq.product.serialNumber || valuationVm.valuationReq.product.engineNo)" ng-disabled ="chassisNoDisable">
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-3">
-                    <div class="form-group floating-label-wrapper" ng-class="{'has-error': (valReqForm.engineNo.$invalid || valReqForm.chassisNo.$invalid || valReqForm.registrationNo.$invalid || valReqForm.serialNumber.$invalid) && valSubmitted}">
+                    <div class="floating-label-wrapper" ng-class="{'has-error': (valReqForm.engineNo.$invalid || valReqForm.chassisNo.$invalid || valReqForm.registrationNo.$invalid || valReqForm.serialNumber.$invalid) && valSubmitted}">
                         <label>Registration No.</label>
                         <input type="text" name="registrationNo" ng-model="valuationVm.valuationReq.product.registrationNo" class="form-control"  placeholder="Registration No." ng-required="!(valuationVm.valuationReq.product.chassisNo || valuationVm.valuationReq.product.registrationNo || valuationVm.valuationReq.product.serialNumber || valuationVm.valuationReq.product.engineNo)" ng-disabled ="registrationNoDisable">
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-3">
-                    <div class="form-group floating-label-wrapper" ng-class="{'has-error': (valReqForm.engineNo.$invalid || valReqForm.chassisNo.$invalid || valReqForm.registrationNo.$invalid || valReqForm.serialNumber.$invalid) && valSubmitted}">
+                    <div class="floating-label-wrapper" ng-class="{'has-error': (valReqForm.engineNo.$invalid || valReqForm.chassisNo.$invalid || valReqForm.registrationNo.$invalid || valReqForm.serialNumber.$invalid) && valSubmitted}">
                         <label>Serial No.</label>
                         <input type="text" name="serialNumber" ng-model="valuationVm.valuationReq.product.serialNumber" class="form-control" placeholder="Serial No." ng-required="!(valuationVm.valuationReq.product.chassisNo || valuationVm.valuationReq.product.registrationNo || valuationVm.valuationReq.product.serialNumber || valuationVm.valuationReq.product.engineNo)" ng-disabled ="serialNumberDisable">
                     </div>
@@ -635,13 +635,13 @@
                     </p>
                 </div>
                 <div class="col-xs-12 col-sm-3">
-                    <div class="form-group floating-label-wrapper" ng-class="{'has-error': valReqForm.contactPerson.$invalid && valSubmitted }">
+                    <div class="floating-label-wrapper" ng-class="{'has-error': valReqForm.contactPerson.$invalid && valSubmitted }">
                         <label>Contact Person*</label>
                         <input type="text" name="contactPerson" class="form-control" placeholder="Contact Person"  ng-model="valuationVm.valuationReq.contactPerson" required>
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-3">
-                    <div class="form-group floating-label-wrapper" ng-class="{'has-error': valReqForm.contactNumber.$invalid && valSubmitted }">
+                    <div class="floating-label-wrapper" ng-class="{'has-error': valReqForm.contactNumber.$invalid && valSubmitted }">
                         <label>Contact Number*</label>
                         <input type="text" name="contactNumber" class="form-control" ng-model="valuationVm.valuationReq.contactNumber" placeholder="Contact Number" ng-pattern="/^[0-9]{10,10}$/" required>
                         <p class="help-block" ng-if="valReqForm.contactNumber.$error.pattern && valSubmitted">
@@ -649,7 +649,7 @@
                         </p>
                     </div>
                 </div>
-                <div class="col-sm-3 form-group" >
+                <div class="col-sm-3" >
                   <div class="floating-label-wrapper" ng-class="{'has-error':valReqForm.valagency.$invalid && valSubmitted}">
                     <label>Agency Name*</label>
                     <select class="form-control" name="valagency" required ng-model="valuationVm.valuationReq.valuationAgency._id">
@@ -658,7 +658,7 @@
                     </select>
                   </div>
                 </div>
-                <div class="col-sm-3 form-group">
+                <div class="col-sm-3">
                   <div class="floating-label-wrapper" ng-class="{'has-error': valReqForm.purpose.$invalid && valSubmitted}">
                     <label>Purpose of Valuation*</label>
                     <select class="form-control" name="purpose" ng-model="valuationVm.valuationReq.purpose" required>
@@ -669,7 +669,7 @@
                   </div>
                   
                 </div>
-                <div class="col-sm-3 form-group">
+                <div class="col-sm-3">
                   <div class="floating-label-wrapper" ng-class="{'has-error': valReqForm.otherName.$invalid && valSubmitted}">
                     <label>Others</label>
                     <input class="form-control" type="text" name="otherName" ng-model="valuationVm.valuationReq.otherName" ng-disabled ="valuationVm.valuationReq.purpose != 'Other'" placeholder="*Other" ng-required= "valuationVm.valuationReq.purpose == 'Other'">
@@ -738,7 +738,7 @@
                   </div>
                 </div> 
                 <div class="col-sm-12">
-                  <div class="form-group floating-label-wrapper">
+                  <div class="floating-label-wrapper form-group">
                     <label>Comment</label>
                     <input type="text" class="form-control" name="comment" ng-model="valuationVm.valuationReq.comment" placeholder="Write Comments (if any)">
                   </div>
@@ -759,13 +759,13 @@
             <form  novalidate class="reqForCertify" name="reqForCertify">
               <div class="row text-left">
                 <div class="col-sm-3">
-                    <div class="form-group floating-label-wrapper" ng-class="{'has-error': reqForCertify.nameOfCustomerSeeking.$invalid && valSubmitted }">
+                    <div class="floating-label-wrapper" ng-class="{'has-error': reqForCertify.nameOfCustomerSeeking.$invalid && valSubmitted }">
                         <label>Name of Customer*</label>
                         <input type="text" class="form-control" name="nameOfCustomerSeeking" ng-model="valuationVm.valuationReq.nameOfCustomerSeeking" placeholder="Name of Customer" required>
                     </div>
                 </div>
                 <div class="col-sm-3">
-                    <div class="form-group floating-label-wrapper">
+                    <div class="floating-label-wrapper">
                         <label>Invoice Date</label>
                         <div class="input-group">
                           <input  class="form-control" name="customerInvoiceDateIns" id="customerInvoiceDateIns" ng-model="valuationVm.valuationReq.customerInvoiceDate" placeholder="Invoice Date" datetime-picker readonly date-format="MM/dd/yyyy" date-only>
@@ -774,55 +774,55 @@
                     </div>
                 </div>
                 <div class="col-sm-3">
-                    <div class="form-group floating-label-wrapper">
+                    <div class="floating-label-wrapper">
                         <label>Invoice Value</label>
                         <input type="number" class="form-control" name="customerInvoiceValue" ng-model="valuationVm.valuationReq.customerInvoiceValue" min="0" placeholder="Invoice Value">
                     </div>
                 </div>
-                <div class="col-sm-3 form-group">
+                <div class="col-sm-3">
                   <div class="floating-label-wrapper">
                     <label>Category</label>
                     <input type="text" class="form-control" ng-value="valuationVm.valuationReq.product.category" placeholder="Enter Category" disabled>
                   </div>
                 </div>
-                <div class="col-sm-3 form-group">
+                <div class="col-sm-3">
                   <div class="floating-label-wrapper" ng-class="{'has-error': reqForCertify.prdDescription.$invalid && valSubmitted }">
                     <label>Asset Name*</label>
                     <input type="text" name="prdDescription" class="form-control" ng-model="valuationVm.valuationReq.product.description" placeholder="Enter Asset Name" disabled required>
                   </div>
                 </div>
                 <!-- <div class="col-xs-12 col-sm-3">
-                  <div class="form-group floating-label-wrapper">
+                  <div class="floating-label-wrapper">
                       <label>Asset Description</label>
                       <input type="text" name="prddescription" class="form-control" placeholder="Enter Asset Description" ng-model="valuationVm.valuationReq.product.description">
                   </div>
                 </div> --> 
-                <div class="col-sm-3 form-group">
+                <div class="col-sm-3">
                   <div class="floating-label-wrapper">
                     <label>Asset Location</label>
                     <input type="text" class="form-control" ng-value="valuationVm.valuationReq.product.city" placeholder="Enter Asset Location" disabled>
                   </div>
                 </div>  
                 <div class="col-xs-12 col-sm-3">
-                    <div class="form-group floating-label-wrapper" ng-class="{'has-error': (reqForCertify.engineNo.$invalid || reqForCertify.chassisNo.$invalid || reqForCertify.registrationNo.$invalid || reqForCertify.serialNumber.$invalid) && valSubmitted}">
+                    <div class="floating-label-wrapper" ng-class="{'has-error': (reqForCertify.engineNo.$invalid || reqForCertify.chassisNo.$invalid || reqForCertify.registrationNo.$invalid || reqForCertify.serialNumber.$invalid) && valSubmitted}">
                         <label>Engine No.</label>
                         <input type="text" name="engineNo" ng-model="valuationVm.valuationReq.product.engineNo" class="form-control" placeholder="Engine No." ng-required="!(valuationVm.valuationReq.product.chassisNo || valuationVm.valuationReq.product.registrationNo || valuationVm.valuationReq.product.serialNumber || valuationVm.valuationReq.product.engineNo)" ng-disabled ="engineNoDisable">
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-3">
-                    <div class="form-group floating-label-wrapper" ng-class="{'has-error': (reqForCertify.engineNo.$invalid || reqForCertify.chassisNo.$invalid || reqForCertify.registrationNo.$invalid || reqForCertify.serialNumber.$invalid) && valSubmitted}">
+                    <div class="floating-label-wrapper" ng-class="{'has-error': (reqForCertify.engineNo.$invalid || reqForCertify.chassisNo.$invalid || reqForCertify.registrationNo.$invalid || reqForCertify.serialNumber.$invalid) && valSubmitted}">
                         <label>Chassis No.</label>
                         <input type="text" name="chassisNo" ng-model="valuationVm.valuationReq.product.chassisNo" class="form-control" placeholder="Chassis No." ng-required="!(valuationVm.valuationReq.product.chassisNo || valuationVm.valuationReq.product.registrationNo || valuationVm.valuationReq.product.serialNumber || valuationVm.valuationReq.product.engineNo)" ng-disabled ="chassisNoDisable">
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-3">
-                    <div class="form-group floating-label-wrapper" ng-class="{'has-error': (reqForCertify.engineNo.$invalid || reqForCertify.chassisNo.$invalid || reqForCertify.registrationNo.$invalid || reqForCertify.serialNumber.$invalid) && valSubmitted}">
+                    <div class="floating-label-wrapper" ng-class="{'has-error': (reqForCertify.engineNo.$invalid || reqForCertify.chassisNo.$invalid || reqForCertify.registrationNo.$invalid || reqForCertify.serialNumber.$invalid) && valSubmitted}">
                         <label>Registration No.</label>
                         <input type="text" name="registrationNo" ng-model="valuationVm.valuationReq.product.registrationNo" class="form-control"  placeholder="Registration No." ng-required="!(valuationVm.valuationReq.product.chassisNo || valuationVm.valuationReq.product.registrationNo || valuationVm.valuationReq.product.serialNumber || valuationVm.valuationReq.product.engineNo)" ng-disabled ="registrationNoDisable">
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-3">
-                    <div class="form-group floating-label-wrapper" ng-class="{'has-error': (reqForCertify.engineNo.$invalid || reqForCertify.chassisNo.$invalid || reqForCertify.registrationNo.$invalid || reqForCertify.serialNumber.$invalid) && valSubmitted}">
+                    <div class="floating-label-wrapper" ng-class="{'has-error': (reqForCertify.engineNo.$invalid || reqForCertify.chassisNo.$invalid || reqForCertify.registrationNo.$invalid || reqForCertify.serialNumber.$invalid) && valSubmitted}">
                         <label>Serial No.</label>
                         <input type="text" name="serialNumber" ng-model="valuationVm.valuationReq.product.serialNumber" class="form-control" placeholder="Serial No." ng-required="!(valuationVm.valuationReq.product.chassisNo || valuationVm.valuationReq.product.registrationNo || valuationVm.valuationReq.product.serialNumber || valuationVm.valuationReq.product.engineNo)" ng-disabled ="serialNumberDisable">
                     </div>
@@ -833,13 +833,13 @@
                     </p>
                 </div>
                 <div class="col-xs-12 col-sm-3">
-                    <div class="form-group floating-label-wrapper" ng-class="{'has-error': reqForCertify.contactPerson.$invalid && valSubmitted }">
+                    <div class="floating-label-wrapper" ng-class="{'has-error': reqForCertify.contactPerson.$invalid && valSubmitted }">
                         <label>Contact Person*</label>
                         <input type="text" name="contactPerson" class="form-control" placeholder="Contact Person"  ng-model="valuationVm.valuationReq.contactPerson" required>
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-3">
-                    <div class="form-group floating-label-wrapper" ng-class="{'has-error': reqForCertify.contactNumber.$invalid && valSubmitted }">
+                    <div class="floating-label-wrapper" ng-class="{'has-error': reqForCertify.contactNumber.$invalid && valSubmitted }">
                         <label>Contact Number*</label>
                         <input type="text" name="contactNumber" class="form-control" ng-model="valuationVm.valuationReq.contactNumber" placeholder="Contact Number" ng-pattern="/^[0-9]{10,10}$/" required>
                         <p class="help-block" ng-if="reqForCertify.contactNumber.$error.pattern && valSubmitted">
@@ -847,7 +847,7 @@
                         </p>
                     </div>
                 </div>
-                <div class="col-xs-12 col-sm-3 form-group">
+                <div class="col-xs-12 col-sm-3">
                     <div class="floating-label-wrapper" ng-class="{'has-error': reqForCertify.valagency.$invalid && valSubmitted}">
                       <label>Agency Name*</label>
                       <select class="form-control" name="valagency" required ng-model="valuationVm.valuationReq.valuationAgency._id">
@@ -856,7 +856,7 @@
                       </select>
                     </div>
                 </div>
-                <div class="col-xs-12 col-sm-3 form-group">
+                <div class="col-xs-12 col-sm-3">
                   <div class="floating-label-wrapper" ng-class="{'has-error': reqForCertify.purpose.$invalid && valSubmitted}">
                     <label>Purpose of Inspection*</label>
                     <select class="form-control" ng-model="valuationVm.valuationReq.purpose" name="purpose" required>
@@ -866,7 +866,7 @@
                     </select>
                   </div>
                 </div>
-                <div class="col-xs-12 col-sm-3 form-group">
+                <div class="col-xs-12 col-sm-3">
                   <div class="floating-label-wrapper" ng-class="{'has-error': reqForCertify.otherName.$invalid && valSubmitted}">
                     <label>Others</label>
                     <input class="form-control" type="text" name="otherName" ng-model="valuationVm.valuationReq.otherName" ng-disabled ="valuationVm.valuationReq.purpose != 'Other'" placeholder="*Other" ng-required= "valuationVm.valuationReq.purpose == 'Other'">
@@ -937,7 +937,7 @@
               </div>
               <div class="row">                 
                   <div class="col-xs-12">
-                    <div class="form-group floating-label-wrapper">
+                    <div class="floating-label-wrapper">
                       <label>Comment</label>
                       <input type="text" class="form-control" placeholder="Write Comments (if any)" ng-model="valuationVm.valuationReq.comment">
                     </div>
