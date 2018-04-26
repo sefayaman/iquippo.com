@@ -156,42 +156,55 @@ function trackPaymentPeriod(callback) {
         return cb(err);
       }
 
-      if (result.saleProcessData && result.saleProcessData.coolingPeriod > 0) {
-        var actionableBids = [];
-        actionableBids.push(item);
-        var selBid = null;
-        if (item.findNextBid)
-          selBid = nextApprovableBid(item, result.otherBids);
-        if (selBid) {
-          selBid.emdStartDate = new Date();
-          if (result.saleProcessData && result.saleProcessData.emdPeriod)
-            selBid.emdEndDate = new Date().addDays(result.saleProcessData.emdPeriod || 0);
-          //if(selBid.emdEndDate)
-          //selBid.emdEndDate.setHours(24,0,0,0);
-          selBid.product.prevTradeType = item.product.prevTradeType;
-          AssetSaleUtil.setStatus(selBid, bidStatuses[7], 'bidStatus', 'bidStatuses');
-          AssetSaleUtil.setStatus(selBid, dealStatuses[6], 'dealStatus', 'dealStatuses');
-          actionableBids.push(selBid);
-          if (item.lastAccepted) {
-            var largerBids = result.otherBids.filter(function (bid) {
-              return bid.bidAmount >= item.bidAmount;
+      var actionableBids = [];
+      actionableBids.push(item);
+      var selBid = null;
+      if (item.findNextBid)
+        selBid = nextApprovableBid(item, result.otherBids);
+
+      async.waterfall([
+        function (done) {
+          if (selBid) {
+            selBid.emdStartDate = new Date();
+            if (result.saleProcessData && result.saleProcessData.emdPeriod)
+              selBid.emdEndDate = new Date().addDays(result.saleProcessData.emdPeriod || 0);
+            //if(selBid.emdEndDate)
+            //selBid.emdEndDate.setHours(24,0,0,0);
+
+            AssetSaleUtil.checkHolidayExistAndAdd(selBid.emdStartDate, selBid.emdEndDate, result.saleProcessData.emdPeriod, function (err, revisedDate) {
+              selBid.emdEndDate = revisedDate;
+              selBid.product.prevTradeType = item.product.prevTradeType;
+              AssetSaleUtil.setStatus(selBid, bidStatuses[7], 'bidStatus', 'bidStatuses');
+              AssetSaleUtil.setStatus(selBid, dealStatuses[6], 'dealStatus', 'dealStatuses');
+              actionableBids.push(selBid);
+              if (item.lastAccepted) {
+                var largerBids = result.otherBids.filter(function (bid) {
+                  return bid.bidAmount >= item.bidAmount;
+                });
+                if (largerBids && largerBids.length) {
+                  largerBids.sort(function (a, b) {
+                    return a.bidAmount - b.bidAmount;
+                  });
+                  largerBids[0].lastAccepted = true;
+                  actionableBids.push(largerBids[0]);
+                }
+              }
+              done(null);
             });
-            if (largerBids && largerBids.length) {
-              largerBids.sort(function (a, b) {
-                return a.bidAmount - b.bidAmount;
-              });
-              largerBids[0].lastAccepted = true;
-              actionableBids.push(largerBids[0]);
-            }
+            //AssetSaleUtil.sendNotification([{action:"APPROVE",ticketId:selBid.ticketId}]);
+          } else {
+            item.updateProduct = true;
+            result.otherBids.forEach(function (bid) {
+              AssetSaleUtil.setStatus(bid, dealStatuses[0], 'dealStatus', 'dealStatuses');
+              AssetSaleUtil.setStatus(bid, bidStatuses[0], 'bidStatus', 'bidStatuses');
+              actionableBids.push(bid);
+            });
+            done(null);
           }
-          //AssetSaleUtil.sendNotification([{action:"APPROVE",ticketId:selBid.ticketId}]);
-        } else {
-          item.updateProduct = true;
-          result.otherBids.forEach(function (bid) {
-            AssetSaleUtil.setStatus(bid, dealStatuses[0], 'dealStatus', 'dealStatuses');
-            AssetSaleUtil.setStatus(bid, bidStatuses[0], 'bidStatus', 'bidStatuses');
-            actionableBids.push(bid);
-          });
+        }
+      ], function (err) {
+        if (err) {
+          return callback(err);
         }
         var bidCount = result.otherBids.length || 0;
         var highestBid = 0;
@@ -201,36 +214,18 @@ function trackPaymentPeriod(callback) {
         if (bidCount === 0)
           bidRec = false;
 
-        if (selBid) {
-          AssetSaleUtil.checkHolidayExistAndAdd(selBid.emdStartDate, selBid.emdEndDate, (result.saleProcessData.emdPeriod || 0), function (err, revisedDate) {
-            selBid.emdEndDate = revisedDate;
+        async.eachLimit(actionableBids, 3, updateBid, function (err) {
+          if (err) { return callback(err); }
+          if (item.updateProduct) {
+            Product.update({ _id: item.product.proData }, { $set: { tradeType: item.product.prevTradeType, bidReceived: bidRec, bidRequestApproved: false, bidCount: bidCount, highestBid: highestBid } }).exec();
+          }
+          if (selBid) {
+            AssetSaleUtil.sendNotification([{ action: "APPROVE", ticketId: selBid.ticketId }]);
+          }
+          return callback();
+        });
+      });
 
-            async.eachLimit(actionableBids, 3, updateBid, function (err) {
-              if (err)
-                return callback(err);
-              if (item.updateProduct)
-                Product.update({ _id: item.product.proData }, { $set: { tradeType: item.product.prevTradeType, bidReceived: bidRec, bidRequestApproved: false, bidCount: bidCount, highestBid: highestBid } }).exec();
-              if (selBid)
-                AssetSaleUtil.sendNotification([{ action: "APPROVE", ticketId: selBid.ticketId }]);
-              return callback();
-            });
-          });
-
-        } else {
-          async.eachLimit(actionableBids, 3, updateBid, function (err) {
-            if (err) { return callback(err); }
-            if (item.updateProduct) {
-              Product.update({ _id: item.product.proData }, { $set: { tradeType: item.product.prevTradeType, bidReceived: bidRec, bidRequestApproved: false, bidCount: bidCount, highestBid: highestBid } }).exec();
-            }
-            if (selBid) {
-              AssetSaleUtil.sendNotification([{ action: "APPROVE", ticketId: selBid.ticketId }]);
-            }
-            return callback();
-          });
-        }
-      } else {
-        return cb("Cannot track payment since cooling period is 0.");
-      }
     }
 
     function getOtherBids(innerCallback) {
