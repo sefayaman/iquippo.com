@@ -209,18 +209,18 @@ function setIquippoGstin(state){
     $scope.invoice.createdBy._id = Auth.getCurrentUser()._id;
     $scope.invoice.createdBy.name = Auth.getCurrentUser().fname + " " + Auth.getCurrentUser().lname;
     $scope.invoice.createdBy.customerId = Auth.getCurrentUser().customerId;
-    
+
     $scope.invoice.uniqueControlNo = $scope.valuation.requestId;
-    
-    $scope.valuation.invoiceData = {};
-    $scope.valuation.invoiceData = $scope.invoice;
-    $scope.valuation.invoiceDate = $scope.invoice.invoiceDate;
     $scope.invoice.invoiceNo = $scope.valuation.invoiceNo;
     $scope.invoice.selectedTaxes = $scope.selectedTax;
     if($scope.updateAmountReq) {
       $scope.invoice.actualInvoiceAmount = ($scope.totalAmount || 0) - ($scope.totalTax || 0);
       $scope.invoice.invoiceAmount = $scope.totalAmount;
     }
+
+    $scope.valuation.invoiceData = {};
+    $scope.valuation.invoiceData = $scope.invoice;
+    $scope.valuation.invoiceDate = $scope.invoice.invoiceDate;
 
     var stsObj = {};
     stsObj.createdAt = new Date();
