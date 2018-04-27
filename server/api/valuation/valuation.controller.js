@@ -523,6 +523,11 @@ function exportExcel(req,res,fieldMap,jsonArr){
         }else
           val = "";
       }
+      if (keyObj.key && keyObj.key === 'brand' && item.product.brand)
+        val = item.product.brand === 'Other' ? "Other / " + item.product.otherBrand || '' : item.product.brand;
+      if (keyObj.key && keyObj.key === 'model' && item.product.model)
+        val = item.product.model === 'Other' ? "Other / " + item.product.otherModel || '' : item.product.model;
+
       if (keyObj.key && keyObj.key === 'userName' && item.user)
         val = item.user.fname + " " + item.user.lname;
       if(keyObj.key === 'paymentReceived' && keyObj.type && keyObj.type == 'boolean') {

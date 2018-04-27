@@ -118,7 +118,7 @@
                             <div class="col-xs-12 col-sm-3">
                                 <div class="floating-label-wrapper" ng-class="{'has-error': form.proModel.$invalid && submitted}">
                                     <label>Model*</label>
-                                    <select class="form-control" name="proModel" ng-model="valuationReq.product.model" required>
+                                    <select class="form-control" name="proModel" ng-model="valuationReq.product.model" ng-change="onModelChange(valuationReq.product.model)" required>
                                         <option value="">Select Model</option>
                                         <option value="{{md.name}}" ng-repeat="md in modelList| orderBy:'name'">{{md.name}}</option>
                                     </select>

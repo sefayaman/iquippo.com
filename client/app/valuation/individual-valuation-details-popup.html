@@ -58,12 +58,12 @@
                 <tr>
                   <td><b>Customer Invoice date:</b></td>
                   <td>
-                    {{valuation.invoiceData.invoiceDate | date:'MM/dd/yyyy'}}
+                    {{valuation.customerInvoiceDate | date:'MM/dd/yyyy'}}
                   </td>
                 
                   <td><b>Customer Invoice Value:</b></td>
                   <td>
-                    {{valuation.invoiceData.invoiceAmount}}
+                    {{valuation.customerInvoiceValue}}
                   </td> 
                 </tr>
                 <tr>
@@ -74,13 +74,15 @@
                                  
                   <td><b>Brand/Make:</b></td>
                   <td>
-                    {{valuation.product.brand}}
+                    <span ng-if="valuation.product.brand !== 'Other'">{{valuation.product.brand}}</span>
+                    <span ng-if="valuation.product.brand === 'Other'"> Other / {{valuation.product.otherBrand}}</span>
                   </td>
                 </tr>
                 <tr>
                   <td><b>Model:</b></td>
                   <td>
-                    {{valuation.product.model}}
+                    <span ng-if="valuation.product.model !== 'Other'">{{valuation.product.model}}</span>
+                    <span ng-if="valuation.product.model === 'Other'"> Other / {{valuation.product.otherModel}}</span>
                   </td>                   
                                
                   <td><b>Asset Name:</b></td>
@@ -220,10 +222,12 @@
                 </tr>
                 <tr>
                   <td><b>Payment Received</b></td>
-                  <td colspan="3">
+                  <td>
                     <span ng-if="valuation.paymentReceived">Yes</span>
                     <span ng-if="!valuation.paymentReceived">No</span>
                   </td>
+                  <td><b>Invoice Generated Value</b></td>
+                  <td>{{valuation.invoiceData.invoiceAmount}}</td>
                 </tr>
               </table>
             </div>

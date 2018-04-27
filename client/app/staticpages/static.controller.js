@@ -183,6 +183,7 @@
     $scope.resetClick = resetData;
     $scope.onCategoryChange = onCategoryChange;
     $scope.onBrandChange = onBrandChange;
+    $scope.onModelChange = onModelChange;
     $scope.onChange = onChange;
     $scope.onCountryChange = onCountryChange;
     $scope.onStateChange = onStateChange;
@@ -396,6 +397,8 @@
     function onBrandChange(brandName, noChange) {
       if(!noChange) {
         $scope.valuationReq.product.model = "";
+        $scope.valuationReq.product.otherBrand = "";
+        $scope.valuationReq.product.otherModel = "";
       }
       $scope.modelList = [];
       if (!brandName)
@@ -410,6 +413,11 @@
         .catch(function(res) {
           console.log("error in fetching model", res);
         })
+    }
+
+    function onModelChange(modelName) {
+      if(modelName !== 'Other')
+        $scope.valuationReq.product.otherModel = "";
     }
 
     init();
