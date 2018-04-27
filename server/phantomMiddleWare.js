@@ -1,10 +1,16 @@
 var express = require('express');
 var app = express();
 
+// add sript path for development
+var sriptPath = 'server/phantom-server.js';
+
+if(process.env.NODE_EN === 'production')
+    sriptPath = 'dist/server/phantom-server.js';
+
 app.use(function (req, res, next) {
     var content = '';
     var url = req.protocol + '://' + req.get('host') + req.originalUrl;
-    var phantom = require('child_process').spawn('phantomjs', ['server/phantom-server.js', url]);
+    var phantom = require('child_process').spawn('phantomjs', [sriptPath, url]);
     phantom.stdout.setEncoding('utf8');
     phantom.stdout.on('data', function(data) {
         content += data.toString();
@@ -13,7 +19,7 @@ app.use(function (req, res, next) {
         if (status_code !== 0) {
             console.log('error');
         } else {
-            res.send(content);  
+            res.send(content);
         }
     });
 });
