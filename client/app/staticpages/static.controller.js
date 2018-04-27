@@ -377,6 +377,8 @@
       if(!noChange) {
         $scope.valuationReq.product.brand = "";
         $scope.valuationReq.product.model = "";
+        $scope.valuationReq.product.otherBrand = "";
+        $scope.valuationReq.product.otherModel = "";
       }
       $scope.brandList = [];
       $scope.modelList = [];
