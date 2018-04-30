@@ -9,6 +9,7 @@ angular.module('sreizaoApp').controller('CallbackCtrl',CallbackCtrl);
     //End
     var vm = this;
     vm.callback = {};
+    vm.disable = false;
     vm.sendCallback = sendCallback;
     vm.closeDialog = closeDialog;
     var facebookConversionSent = false;
@@ -111,6 +112,7 @@ angular.module('sreizaoApp').controller('CallbackCtrl',CallbackCtrl);
           $state.go('myaccount');
           return;
         }
+        vm.disable = true;
         vm.callback['fname'] = Auth.getCurrentUser().fname;
         vm.callback['mname'] = Auth.getCurrentUser().mname;
         vm.callback['lname'] = Auth.getCurrentUser().lname;
