@@ -7,9 +7,13 @@
               
               <table class="table table-bordred">               
                 <tr>
-                  <td class="col-sm-3"><b>Unique Control No:</b></td>
-                  <td class="col-sm-9" colspan="3">
+                  <td><b>Unique Control No:</b></td>
+                  <td>
                     {{valuation.requestId}}
+                  </td>
+                  <td><b>Name of Customer:</b></td>
+                  <td>
+                    {{valuation.nameOfCustomerSeeking}}
                   </td>                                   
                 </tr>
                 <tr>
@@ -65,6 +69,12 @@
                   <td>
                     {{valuation.customerInvoiceValue}}
                   </td> 
+                </tr>
+                <tr>
+                  <td><b>Invoice Upload:</b></td>
+                  <td class="text-ellips"><a href="javascript:void(0);" ng-click="downloadFile(valuation.invoiceDoc,valuation.assetDir)">{{valuation.invoiceDoc.filename}}</a></td>
+                  <td><b>RC Upload:</b></td>
+                  <td class="text-ellips"><a href="javascript:void(0);" ng-click="downloadFile(valuation.rcDoc,valuation.assetDir)">{{valuation.rcDoc.filename}}</a> </td>                    
                 </tr>
                 <tr>
                   <td><b>Asset Category:</b></td>

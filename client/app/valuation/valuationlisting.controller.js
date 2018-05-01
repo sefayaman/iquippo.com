@@ -113,6 +113,18 @@ function ValuationListingCtrl($scope,$window,$stateParams,$state,$uibModal,Modal
             size: 'lg'
         });
 
+		scope.downloadFile = function(fileObj, assetDir){
+			var url = "";
+			if(fileObj.external)
+				url = fileObj.filename;
+			else if(assetDir)
+				url = $rootScope.uploadImagePrefix + assetDir + "/" + fileObj.filename;
+			else
+				url = "";
+			if(url)
+				$window.open(url,'_blank');
+		}
+
         scope.close = function () {
           formModal.dismiss('cancel');
         };
