@@ -82,7 +82,7 @@
                         $scope.pager.update(result.products, result.totalItems);
                     })
                     .catch(function (err) {
-                        Modal.alert(err);
+                       // Modal.alert(err);
                     });
         }
         
@@ -92,7 +92,7 @@
                         vm.dataListAll = result.products;
                     })
                     .catch(function (err) {
-                        Modal.alert(err);
+                       // Modal.alert(err);
                     });
         }
 
