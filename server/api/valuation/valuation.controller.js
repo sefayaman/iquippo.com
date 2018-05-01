@@ -517,9 +517,10 @@ function exportExcel(req,res,fieldMap,jsonArr){
       if(keyObj.type && keyObj.type == 'url' && val){
         if(val.filename){
           if(val.external === true)
-          val = val.filename;
-          else
-            val =  req.protocol + "://" + req.headers.host + "/download/"+ item.assetDir + "/" + val.filename || "";
+            val = val.filename;
+          else 
+            val =  config.awsUrl + config.awsBucket + "/assets/uploads/"+ item.assetDir + "/" + val.filename || "";
+            //val =  req.protocol + "://" + req.headers.host + "/download/"+ item.assetDir + "/" + val.filename || "";
         }else
           val = "";
       }
