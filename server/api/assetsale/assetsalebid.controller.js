@@ -431,7 +431,7 @@ exports.validateUpdate = function (req, res, next) {
                                 if (entData.emdPeriod) {
                                     selBid.emdEndDate = new Date().addDays(entData.emdPeriod || 0);
                                 }
-        
+
                                 AssetSaleUtil.checkHolidayExistAndAdd(selBid.emdStartDate, selBid.emdEndDate, entData.emdPeriod, function (err, revisedDate) {
                                     selBid.emdEndDate = revisedDate;
                                     selBid.product.prevTradeType = req.bid.product.prevTradeType;
@@ -656,18 +656,32 @@ exports.validateSubmitBid = function (req, res, next) {
             req.body.emdEndDate = new Date().addDays(saleProcessData.emdPeriod);
             //if(req.body.emdEndDate)
             //	req.body.emdEndDate.setHours(24,0,0,0);
-            req.body.product.prevTradeType = req.product.tradeType;
-            req.product.tradeType = tradeTypeStatuses[2];
-            var otherBids = req.otherBids;
-            req.otherBids = [];
-            otherBids.forEach(function (item) {
-                AssetSaleUtil.setStatus(item, bidStatuses[5], 'bidStatus', 'bidStatuses');
-                req.otherBids.push(item);
-            });
 
-            req.autoApprove = true;
-            req.buyNowApprovalValue = saleProcessData.buyNowPriceApproval;
-            next();
+            async.waterfall([
+                function (done) {
+                    AssetSaleUtil.checkHolidayExistAndAdd(req.body.emdStartDate, req.body.emdEndDate, saleProcessData.emdPeriod, function (err, revisedDate) {
+                        if (err) { done(err); }
+                        req.body.emdEndDate = revisedDate;
+                        done(null);
+                    });
+                }
+            ], function (err) {
+                if(err) {
+                    console.log(err);
+                }
+                req.body.product.prevTradeType = req.product.tradeType;
+                req.product.tradeType = tradeTypeStatuses[2];
+                var otherBids = req.otherBids;
+                req.otherBids = [];
+                otherBids.forEach(function (item) {
+                    AssetSaleUtil.setStatus(item, bidStatuses[5], 'bidStatus', 'bidStatuses');
+                    req.otherBids.push(item);
+                });
+
+                req.autoApprove = true;
+                req.buyNowApprovalValue = saleProcessData.buyNowPriceApproval;
+                next();
+            });
 
         });
 
@@ -1163,7 +1177,7 @@ exports.getSellers = function (req, res, next) {
                     return callback("Error in getting user")
                 }
                 ;
-                 finalUsers.forEach(function (user) {
+                finalUsers.forEach(function (user) {
                     users.push(user._id + "");
                 })
                 return callback();
@@ -1219,7 +1233,7 @@ exports.getProductsList = function (req, res, next) {
         productFilter["seller._id"] = {$in: req.sellers};
     if (req.sellers && req.sellers.length && req.defaultPartner)
         productFilter["seller._id"] = {$nin: req.sellers};
-    
+
     if (req.query.bidRequestApproved && req.query.bidRequestApproved === 'y')
         productFilter.bidRequestApproved = true;
     if (req.query.bidRequestApproved && req.query.bidRequestApproved === 'n')
@@ -1255,83 +1269,83 @@ exports.getApproverUserList = function (req, res, next) {
 }
 
 exports.exportExcel = function (req, res) {
-	var filter = {};
-	var user = req.user;
-	var queryParam = req.query;
-	var fieldsMap = {};
-	if (!req.query.bidChanged)
-		filter.bidChanged = false;
+    var filter = {};
+    var user = req.user;
+    var queryParam = req.query;
+    var fieldsMap = {};
+    if (!req.query.bidChanged)
+        filter.bidChanged = false;
 
-	if (req.query.actionable === 'y')
-		filter.status = true;
+    if (req.query.actionable === 'y')
+        filter.status = true;
 
-	if (req.query.actionable === 'n')
-		filter.status = false;
+    if (req.query.actionable === 'n')
+        filter.status = false;
 
-	if (queryParam.seller == 'y') {
-		filter['product.seller._id'] = req.user._id + "";
-		fieldsMap = fieldConfig['SELLER_FIELDS'];
-	}
+    if (queryParam.seller == 'y') {
+        filter['product.seller._id'] = req.user._id + "";
+        fieldsMap = fieldConfig['SELLER_FIELDS'];
+    }
 
-	if (queryParam.buyer == 'y') {
-		filter.user = req.user._id + "";
-		fieldsMap = fieldConfig['BUYER_FIELDS'];
-	}
+    if (queryParam.buyer == 'y') {
+        filter.user = req.user._id + "";
+        fieldsMap = fieldConfig['BUYER_FIELDS'];
+    }
 
-	if (queryParam.fa == 'y') {
-		filter['product.seller._id'] = { $in: req.sellers || [] };
-		fieldsMap = fieldConfig['FA_FIELDS'];
-	};
+    if (queryParam.fa == 'y') {
+        filter['product.seller._id'] = { $in: req.sellers || [] };
+        fieldsMap = fieldConfig['FA_FIELDS'];
+    };
 
-	if (user.role == 'admin')
-		fieldsMap = fieldConfig['ADMIN_FIELDS'];
-	if (user.role == 'admin' && queryParam.payment === 'y') {
-		fieldsMap = fieldConfig['EXPORT_PAYMENT'];
-	}
-	if (req.productIds)
-		filter['product.proData'] = { $in: req.productIds || [] };
+    if (user.role == 'admin')
+        fieldsMap = fieldConfig['ADMIN_FIELDS'];
+    if (user.role == 'admin' && queryParam.payment === 'y') {
+        fieldsMap = fieldConfig['EXPORT_PAYMENT'];
+    }
+    if (req.productIds)
+        filter['product.proData'] = { $in: req.productIds || [] };
 
-	if (queryParam.offerStatus)
-		filter.offerStatus = queryParam.offerStatus;
+    if (queryParam.offerStatus)
+        filter.offerStatus = queryParam.offerStatus;
 
-	if (queryParam.dealStatuses)
-		filter.dealStatus = { $in: queryParam.dealStatuses.split(',') };
+    if (queryParam.dealStatuses)
+        filter.dealStatus = { $in: queryParam.dealStatuses.split(',') };
 
-	if (queryParam.bidStatus)
-		filter.bidStatus = queryParam.bidStatus;
-	if (req.sellers && req.sellers.length)
-		filter['product.seller._id'] = { $in: req.sellers || [] };
+    if (queryParam.bidStatus)
+        filter.bidStatus = queryParam.bidStatus;
+    if (req.sellers && req.sellers.length)
+        filter['product.seller._id'] = { $in: req.sellers || [] };
     if (req.sellers && req.sellers.length && req.defaultPartner)
         filter['product.seller._id'] = { $nin: req.sellers || [] };
 
-	var query = AssetSaleBid.find(filter).populate('user product.proData');
-	query.lean().exec(function (err, resList) {
-		if (err) return handleError(res, err);
-		if (queryParam.payment === 'y' && resList) {
-			var jsonArr = [];
-			resList.forEach(function (item, index) {
-				if (item.emdPayment && item.emdPayment.paymentsDetail) {
-					item.emdPayment.paymentsDetail.forEach(function (innerItem) {
-						_formatPayments(item, innerItem, jsonArr);
-					});
-				}
-				if (item.fullPayment && item.fullPayment.paymentsDetail) {
-					item.fullPayment.paymentsDetail.forEach(function (innerItem) {
-						_formatPayments(item, innerItem, jsonArr);
-					});
-				}
-			});
-			resList = [];
-			if (jsonArr.length > 0) {
-				resList = jsonArr.slice();
-			}
-		}
-		renderExcel(res, resList);
-	});
+    var query = AssetSaleBid.find(filter).populate('user product.proData');
+    query.lean().exec(function (err, resList) {
+        if (err) return handleError(res, err);
+        if (queryParam.payment === 'y' && resList) {
+            var jsonArr = [];
+            resList.forEach(function (item, index) {
+                if (item.emdPayment && item.emdPayment.paymentsDetail) {
+                    item.emdPayment.paymentsDetail.forEach(function (innerItem) {
+                        _formatPayments(item, innerItem, jsonArr);
+                    });
+                }
+                if (item.fullPayment && item.fullPayment.paymentsDetail) {
+                    item.fullPayment.paymentsDetail.forEach(function (innerItem) {
+                        _formatPayments(item, innerItem, jsonArr);
+                    });
+                }
+            });
+            resList = [];
+            if (jsonArr.length > 0) {
+                resList = jsonArr.slice();
+            }
+        }
+        renderExcel(res, resList);
+    });
 
-	function renderExcel(res, resList) {
-		var dataArr = [];
-		var headers = Object.keys(fieldsMap);
+    function renderExcel(res, resList) {
+        var dataArr = [];
+        var headers = Object.keys(fieldsMap);
 
 		/* removing items from csv in case of Pending for Approval
 			* Madhusudan Mishra
