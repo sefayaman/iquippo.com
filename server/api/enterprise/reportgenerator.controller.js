@@ -76,6 +76,14 @@ function _createXML(entReqs) {
             val = "";
         }
 
+        if(key === 'MAKE' && val && val === 'Other'){
+          val = _.get(item,'otherBrand', "");
+        }
+
+        if(key === 'MODEL' && val && val === 'Other'){
+          val = _.get(item,'otherModel', "");
+        }
+
         xmlStr += "<" + key + ">" + val + "</" + key + ">";
       });
       xmlStr += "</Valuation>";

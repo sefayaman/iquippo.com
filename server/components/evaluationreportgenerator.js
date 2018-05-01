@@ -16,9 +16,11 @@ var Field_MAP = {
     "GPSID": "gpsDeviceNo",
     "VALUATION_NO":"uniqueControlNo",
     "ASSET_DETAILS" : "assetDetails",
-    "YEAROFMFG" : "agencyYearOfManufacturing",
-    "ENGINENO":"agencyEngineNo",
-    "CHASISNO":"agencyChassisNo",
+    "MAKE":"brand",
+    "MODEL":"model",
+    "YEAR_OF_MFG" : "agencyYearOfManufacturing",
+    "ENGINE_NO":"agencyEngineNo",
+    "CHASIS_NO":"agencyChassisNo",
     "REGISTRATION_NO" : "agencyRegistrationNo",
     "SERIAL_NO" : "agencySerialNo",
     "INSERT_DATETIME":"INSERT_DATETIME",
@@ -86,6 +88,14 @@ function _createXML(entReqs) {
           val = "";
       }
 
+      if(key === 'MAKE' && val && val === 'Other'){
+          val =  _.get(item,'otherBrand', "");
+        }
+
+        if(key === 'MODEL' && val && val === 'Other'){
+          val = _.get(item,'otherModel', "");
+        }
+
       xmlStr += "<" + key + ">" + val + "</" + key + ">";
     });
     xmlStr += "</Valuation>";
@@ -98,7 +108,6 @@ function _createXML(entReqs) {
   var fileName = fileNamePrefix + dateStr + ".xml";
   var localFilePath = config.uploadPath + "temp/" + fileName;
   try {
-
     fs.writeFileSync(localFilePath, xmlStr);
     async.parallel([uploadFileonS3, uploadFileOnFtp, updateSetting], function (err) {
       if (err) return handleError(err);
