@@ -159,7 +159,7 @@ angular.module('sreizaoApp')
       //   notificationSvc.sendNotification('callbackEmailToCustomer',data,dataToServer,'email');
       //     Modal.alert(informationMessage.callbackSuccess,true);
       // } else {
-        $scope.openDialog('callback');
+        $scope.openDialog('callback',null,'callback-modal');
       // }
     }
 

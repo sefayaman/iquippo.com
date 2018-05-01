@@ -1384,8 +1384,14 @@ footer .subscribe{height: 40px;}
 .freecost{line-height: 4em;}
 .panel-default.charges-spacified .panel-body{padding: 0 15px;}
 .panel-default.charges-spacified small{color: #333;}
-.callback-request{text-transform: uppercase; font-weight: bold; margin-top:0; }
-.reach-us{ border-top:1px solid #ccc; border-bottom:1px solid #ccc; padding: 10px; margin-top: 15px;}
+.callback-modal .modal-dialog{width: 900px; top: 15%;}
+.callback-form{padding: 0 2.5rem;}
+.reach-us{border-left:1px dashed #ccc; padding-bottom: 3.3rem;}
+.reach-us h3, .callback-request{margin-top:1rem; margin-bottom: 2rem; text-transform: uppercase; font-weight: bold; font-size: 1.6rem;}
+.reach-us .contacts{padding:0 3rem 3rem;}
+.reach-us .contacts p{font-size: 1.6rem; color: #555; margin-bottom: 4rem;}
+.reach-us .contacts h4{margin-bottom: 3rem; font-size: 1.8rem; padding-left: 2.5rem;}
+.reach-us .contacts h4 i{margin-right:2rem;}
 /* admin menu */
 /* Side Navigation */
 .side-nav{position:fixed;top:55px;left:225px;width:235px;margin-left:-225px;border:none;border-radius:0;overflow-y:auto;background-color:#e3000f;bottom:0;overflow-x:hidden;padding-bottom:7em;height:100vh;}
