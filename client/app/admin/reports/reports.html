@@ -944,7 +944,8 @@
                     <th>Model</th>
                     <th>Country</th> 
                     <th>State</th> 
-                    <th>City</th>              
+                    <th>City</th>
+                    <th>Date of Request</th>
                   </tr>           
                 </thead>
                 <tbody>
@@ -959,6 +960,7 @@
                     <td>{{demoReq.country}}</td>
                      <td>{{demoReq.state}}</td> 
                     <td>{{demoReq.city}}</td>  
+                    <td>{{demoReq.createdAt | date:'MM/dd/yyyy hh:mm a'}}</td>  
                                                                      
                   </tr>
                 </tbody>
