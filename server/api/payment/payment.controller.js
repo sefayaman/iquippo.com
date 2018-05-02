@@ -419,8 +419,12 @@ var Export_Field_Mapping_InnerData = {
   "Bank Name": "bankname",
   "Branch": "branch",
   "Order Id": "order_id",
-  "Ref No": "refNo",
+  "CCAvenue Ref Id": "tracking_id",
+  "Bank Ref No": "refNo",
   "Amount": "amount",
+  "Fees": "trans_fee",
+  "Service Tax": "service_tax",
+  "Total Amount": "totAmount",
   "Payment Date": "paymentDate"
 };
 
