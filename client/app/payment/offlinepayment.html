@@ -48,41 +48,43 @@
 			</div>
 		</form>
 		<div ng-if="viewMode === 'paymentView'">
-			<table class="table table-bordered">
-		        <thead>
-		          <tr>
-					<th>Payment Mode</th>
-					<th>Order Id</th>
-		            <th>CCAvenue <br>Reference No.</th>
-		            <th>Bank <br>Reference No. </th>
-		            <!-- <th>Payment <br>Reference No. </th> -->
-		            <th>Bank / Branch Name</th>
-		            <th>Date of Payment</th>
-		            <th>Date of Entry</th>
-		            <th>Amount</th>
-		            <th>Fees</th>
-		            <th>Service Tax</th>
-		            <th>Total Amount</th>
-		            <th>Status</th>
-		          </tr>
-		        </thead>
-		        <tbody>
-		          <tr ng-repeat="payment in offlinePayment.payments">
-		            <td>{{payment.paymentModeType}}</td>
-		            <td>{{payment.ccAvenueData.order_id}}</td>
-		            <td>{{payment.tracking_id}}</td>
-		            <td>{{payment.refNo}}</td>
-		            <td>{{payment.bankname}} / {{payment.branch}}</td>
-		            <td>{{payment.paymentDate | date:'MM/dd/yyyy'}}</td>
-		            <td>{{payment.createdAt | date:'MM/dd/yyyy'}}</td>
-		            <td>{{payment.amount}}</td>
-		            <td>{{payment.trans_fee}}</td>
-		            <td>{{payment.service_tax}}</td>
-		            <td>{{payment.totAmount}}</td>
-		            <td><span ng-if="payment.paymentStatus === 'failed'">Failed</span><span ng-if="!payment.paymentStatus || payment.paymentStatus === 'success'">Success</span></td>
-		          </tr>
-		        </tbody>
-			</table>
+			<div class="table-responsive">
+				<table class="table table-bordered">
+			        <thead>
+			          <tr>
+						<th>Payment <br>Mode</th>
+						<th>Order <br>Id</th>
+			            <th>CCAvenue <br>Reference No.</th>
+			            <th>Bank <br>Reference No. </th>
+			            <!-- <th>Payment <br>Reference No. </th> -->
+			            <th>Bank / <br>Branch Name</th>
+			            <th>Date of <br>Payment</th>
+			            <th>Date of <br>Entry</th>
+			            <th>Amount</th>
+			            <th>Fees</th>
+			            <th>Service <br>Tax</th>
+			            <th>Total <br>Amount</th>
+			            <th>Status</th>
+			          </tr>
+			        </thead>
+			        <tbody>
+			          <tr ng-repeat="payment in offlinePayment.payments">
+			            <td>{{payment.paymentModeType}}</td>
+			            <td>{{payment.ccAvenueData.order_id}}</td>
+			            <td>{{payment.tracking_id}}</td>
+			            <td>{{payment.refNo}}</td>
+			            <td>{{payment.bankname}} / {{payment.branch}}</td>
+			            <td>{{payment.paymentDate | date:'MM/dd/yyyy'}}</td>
+			            <td>{{payment.createdAt | date:'MM/dd/yyyy'}}</td>
+			            <td>{{payment.amount}}</td>
+			            <td>{{payment.trans_fee}}</td>
+			            <td>{{payment.service_tax}}</td>
+			            <td>{{payment.totAmount}}</td>
+			            <td><span ng-if="payment.paymentStatus === 'failed'">Failed</span><span ng-if="!payment.paymentStatus || payment.paymentStatus === 'success'">Success</span></td>
+			          </tr>
+			        </tbody>
+				</table>
+			</div>
 			<div class="row" ng-if="totalPaidAmount > 0">
 				<div class="col-sm-offset-7 col-sm-2 text-right"><strong>Total :</strong></div>
 				<div class="col-sm-3 text-left"> {{totalPaidAmount}}</div>
