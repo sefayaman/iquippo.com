@@ -19,8 +19,8 @@ module.exports = {
   REDIRECT_URL:"http://finance-uat.iquippo.com/customer-portal-iquippo/sso",
 
   awsEndpoint: 's3.ap-south-1.amazonaws.com',
-  awsAccessKeyId: 'AKIAIEW6UDFVW7GEQAGQ',
-  awsSecretAccessKey: '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',
+  awsAccessKeyId: 'AKIAJFRNQ25NUJFOULUA',
+  awsSecretAccessKey: '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',
   awsBucket: 'iquippo-image-upload-dev',
   awsUrl: 'https://s3.ap-south-1.amazonaws.com/',
   
